@@ -26,7 +26,7 @@ struct FieldView: View {
                 }
 
                 Text("🐷")
-                    .font(.system(size: board.cell * 0.72))
+                    .font(.system(size: board.cell * 0.78))
                     .opacity(pigOpacity)
                     .position(board.center(of: pigTile))
                     .allowsHitTesting(false)
