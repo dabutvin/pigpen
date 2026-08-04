@@ -1,8 +1,27 @@
 # Pigpen
 
-An iOS game built around the [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher) — the tic-tac-toe-and-X alphabet you scribbled in notebooks as a kid.
+An iOS puzzle game about trapping a pig. You get a grid, a pig, and a strict number of
+fence pieces. Pen the pig in — and pen in as much mud as you can while you are at it.
 
-Right now the app is a single static title screen. Game mechanics come next.
+## The Game
+
+- **The pig** starts on a fixed tile and walks up, down, left or right, never diagonally.
+- **Fences** go on the lines between tiles. You have a fixed budget of pieces per puzzle.
+- **Water** — rivers and lakes — is a permanent boundary that neither the pig nor a fence
+  can cross, and it costs nothing. Build against it instead of spending fences.
+- **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
+  of the map, it walks out and the attempt fails.
+- **Score.** The mud tiles inside a pen that holds. A four-piece box around the pig always
+  works and scores 1, so the puzzle is not whether you can pen it but how much ground you
+  can take with the same budget.
+
+The one puzzle so far, **River Bend**, hands you 16 fence pieces. A free-standing box that
+size holds 16 tiles; hugging the river and the pond holds 49, which is the most those 16
+pieces can ever enclose. Special tiles (cupcakes, frying pans) and more puzzles come next.
+
+The wordmark on the title screen is written in the
+[pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
+a lot like fence posts.
 
 ## Tech Stack
 
@@ -63,15 +82,15 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 
 | Workflow | Trigger | Action |
 |---|---|---|
-| `ci.yml` | PR to main, push to main | Build for simulator, no signing |
-| `screenshots.yml` | PR to main | Build, boot a simulator, capture light + dark screenshots, post/update a PR comment |
+| `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
+| `screenshots.yml` | PR to main | Build, boot a simulator, capture the title screen and the board in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, cloud-sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 
 Notes on the details:
 
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes a `-puzzle` launch argument so the board can be captured without tapping through the title screen.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. TestFlight uploads never cancel each other, so two merges in quick succession both ship.
 - **Doc-only changes.** Pushes that only touch `*.md` or `.gitignore` skip the TestFlight workflow.
 
@@ -106,9 +125,17 @@ Pigpen/
 ├── App/
 │   └── PigpenApp.swift          # App entry point
 ├── Models/
-│   └── PigpenGlyph.swift        # Cipher letter → drawable geometry
+│   ├── GridPoint.swift          # Tile coordinates and the four directions
+│   ├── Fence.swift              # A fence piece: one line between two tiles
+│   ├── PuzzleLevel.swift        # Terrain, pig start, budget, and the shipped map
+│   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
+│   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
+│   └── PigpenGlyph.swift        # Cipher letter → drawable geometry, for the wordmark
 ├── Views/
-│   ├── TitleScreenView.swift    # The static start screen
+│   ├── TitleScreenView.swift    # Start screen
+│   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
+│   ├── FieldView.swift          # Draws the field and turns taps into fence lines
+│   ├── GamePalette.swift        # Colours
 │   └── PigpenGlyphView.swift    # Renders glyphs and words
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
@@ -117,6 +144,9 @@ PigpenTests/                     # Unit tests
 Tools/
 └── generate_app_icon.py         # Redraws the app icon PNGs
 ```
+
+The model layer is plain Swift with no UI imports, so all of the game rules — escape
+detection, water boundaries, budgets, scoring — are covered by unit tests.
 
 ## License
 

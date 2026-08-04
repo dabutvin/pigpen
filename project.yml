@@ -31,6 +31,9 @@ targets:
         CODE_SIGN_ENTITLEMENTS: Pigpen/Resources/Pigpen.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets:
+        - PigpenTests
     info:
       path: Pigpen/Resources/Info.plist
       properties:
