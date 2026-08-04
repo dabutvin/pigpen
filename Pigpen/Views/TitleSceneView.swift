@@ -93,8 +93,10 @@ private struct TitleScene {
         }
     }
 
+    /// The sun and the clouds keep to the band of sky below the wordmark, where they have
+    /// the place to themselves.
     private func drawDisc(in context: inout GraphicsContext) {
-        let center = CGPoint(x: x(0.79), y: y(0.145))
+        let center = CGPoint(x: x(0.80), y: y(0.375))
         let radius = x(0.072) * CGFloat(1 + 0.04 * sin(elapsed * 0.8))
 
         for halo in [3.1, 2.2, 1.5] {
@@ -121,9 +123,9 @@ private struct TitleScene {
     /// drifted clear of the right edge.
     private func drawClouds(in context: inout GraphicsContext) {
         let clouds: [(head: Double, height: Double, width: Double, speed: Double)] = [
-            (0.05, 0.10, 0.36, 0.011),
-            (0.48, 0.20, 0.26, 0.018),
-            (0.76, 0.30, 0.31, 0.007)
+            (0.05, 0.335, 0.34, 0.011),
+            (0.46, 0.425, 0.24, 0.018),
+            (0.74, 0.475, 0.28, 0.007)
         ]
 
         for cloud in clouds {
@@ -208,9 +210,9 @@ private struct TitleScene {
         context.fill(path, with: .color(colors.farHill))
     }
 
-    /// A pond in the middle distance, because water is half of the game.
+    /// A lake in the valley between the hills, because water is half of the game.
     private func drawLake(in context: inout GraphicsContext) {
-        let bounds = CGRect(x: x(0.10), y: y(0.578), width: x(0.24), height: y(0.030))
+        let bounds = CGRect(x: x(0.34), y: y(0.567), width: x(0.24), height: y(0.024))
         context.fill(Path(ellipseIn: bounds), with: .color(colors.lake))
 
         for band in [0.4, 0.68] {
