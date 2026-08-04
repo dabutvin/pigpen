@@ -38,7 +38,7 @@ a lot like fence posts.
 
 ### Prerequisites
 
-- Xcode 26+ (for local dev) or just use GitHub Actions (no laptop needed, once the [one-time signing setup](#one-time-signing-setup) is done)
+- Xcode 26+ (for local dev) or just use GitHub Actions — no laptop needed, including for [signing setup](#signing-setup-from-the-actions-tab)
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen): `brew install xcodegen`
 
 ### Build locally
@@ -86,6 +86,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | `screenshots.yml` | PR to main | Build, boot a simulator, capture the title screen and the board in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
+| `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
 
 Notes on the details:
 
@@ -112,32 +113,52 @@ Set these in GitHub repo settings → Secrets and variables → Actions.
 | `APP_STORE_CONNECT_API_KEY_ID` | API key ID, for uploading builds | App Store Connect → Users and Access → Integrations → Keys |
 | `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID | Same page as above |
 | `APP_STORE_CONNECT_API_KEY_CONTENT` | API key (`.p8` file contents), **raw text** | Paste the full text including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----` |
-| `APPLE_DISTRIBUTION_CERT_P12` | Apple Distribution certificate **and its private key**, base64 | One-time setup below |
-| `APPLE_DISTRIBUTION_CERT_PASSWORD` | Password the `.p12` was exported with | You choose it during the export |
-| `APPLE_PROVISIONING_PROFILE` | App Store provisioning profile for `com.pigpen.app`, base64 | One-time setup below |
+| `APPLE_DISTRIBUTION_CERT_P12` | Distribution certificate **and its private key**, base64 | Signing setup below |
+| `APPLE_DISTRIBUTION_CERT_PASSWORD` | Password protecting that `.p12` | Signing setup below |
+| `APPLE_PROVISIONING_PROFILE` | App Store provisioning profile for `com.pigpen.app`, base64 | Signing setup below |
 
 The App Store Connect app record must exist with bundle ID `com.pigpen.app` (see `project.yml`) before the first TestFlight upload.
 
-### One-time signing setup
+### Signing setup, from the Actions tab
 
-A distribution certificate's private key only exists on the machine that created it, and Apple caps each account at a couple of them. So the certificate has to be created once, by hand, and then handed to CI — which is what the three `APPLE_*` secrets are for.
+A distribution certificate is only usable together with the private key it was created from, and Apple caps each account at a couple of certificates — so one certificate gets created once and handed to CI, which is what the three `APPLE_*` secrets are for. Apple's own instructions have you make that key in Keychain Access on a Mac, but nothing requires it: the key can be generated anywhere, the signing request submitted over the App Store Connect API, and the `.p12` assembled with openssl. `Tools/bootstrap_signing.py` does exactly that, and `signing-setup.yml` runs it on a Linux runner, so the whole thing can be done from a phone.
 
-1. **Certificate.** In Xcode → Settings → Accounts, select the team, click *Manage Certificates*, then `+` → *Apple Distribution*. (Or make a CSR in Keychain Access and upload it at developer.apple.com → Certificates.) If your team already has one and its key is on another Mac, export it from there instead of making a new one — Apple will refuse once you are at the limit.
-2. **Export it.** Keychain Access → *My Certificates* → right-click the `Apple Distribution: …` row → *Export*, save as `.p12`, and set a password. Expanding the row must show a private key; if it does not, this Mac does not have the key and the export is useless.
-3. **Profile.** developer.apple.com → Profiles → `+` → *App Store Connect* → App ID `com.pigpen.app` → pick the certificate from step 1 → download the `.mobileprovision`.
-4. **Check and encode them**, which also verifies the profile was actually issued for that certificate:
+1. Create a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new) scoped to this repository with **Secrets: read and write**, and save it as a secret named `SIGNING_BOOTSTRAP_PAT`. The token that workflows get by default cannot write secrets, and this is the only reason a PAT is needed.
+2. Actions → **Signing Setup** → *Run workflow* → task `create`. It registers the App ID if missing, creates the certificate and profile, and sets the three `APPLE_*` secrets.
+3. Delete `SIGNING_BOOTSTRAP_PAT`, then merge anything to main — the TestFlight build now signs.
+
+The same workflow's `list` task shows the account's certificates and profiles with their ids, and `revoke` takes those ids. That is the way out of "your account has reached the maximum number of certificates": revoke the ones you no longer hold a key for, then run `create` again.
+
+Certificates last a year and profiles expire with them, so this repeats at renewal time. Nothing in the build path creates or renews them on its own, which is deliberate — a build that cannot sign fails loudly instead of quietly burning through the account's certificate allowance.
+
+The same script runs locally against any machine with python3 and openssl:
+
+```bash
+export APP_STORE_CONNECT_API_KEY_ID=... APP_STORE_CONNECT_ISSUER_ID=...
+export APP_STORE_CONNECT_API_KEY_CONTENT="$(cat ~/Downloads/AuthKey_XXXXXX.p8)"
+
+Tools/bootstrap_signing.py list
+Tools/bootstrap_signing.py create   # writes the three values to .signing-secrets/
+```
+
+Run this way it leaves the `.p12` on disk, which is worth keeping: a GitHub secret can be written but never read back, so a certificate created by the workflow lives only inside Actions. That is recoverable — revoke and run `create` again — but if you also want to sign from Xcode with the same identity, take the local route and keep the `.p12`.
+
+### Signing setup, from a Mac
+
+If you would rather use Xcode's own certificate flow:
+
+1. Xcode → Settings → Accounts → select the team → *Manage Certificates* → `+` → *Apple Distribution*.
+2. Keychain Access → *My Certificates* → right-click the `Apple Distribution: …` row → *Export*, save as `.p12`, set a password. Expanding the row must reveal a private key; if it does not, this Mac does not have the key and the export is useless.
+3. developer.apple.com → Profiles → `+` → *App Store Connect* → App ID `com.pigpen.app` → pick that certificate → download the `.mobileprovision`.
+4. Check and encode the pair, which also confirms the profile was really issued for that certificate:
 
 ```bash
 Tools/prepare_signing_secrets.sh ~/Downloads/Certificates.p12 ~/Downloads/Pigpen_AppStore.mobileprovision
 ```
 
-5. Set the three secrets with the `gh secret set` commands it prints, delete the generated `.signing-secrets/` directory, and keep the `.p12` and its password somewhere safe — it is the only copy of the private key.
+5. Set the three secrets with the `gh secret set` commands it prints, then delete `.signing-secrets/` and keep the `.p12` and its password somewhere safe.
 
-Both files expire (the certificate after a year, the profile after a year), so this repeats at renewal time. Nothing in the build creates or renews them on its own, which is the point: a build that cannot sign fails loudly instead of quietly burning through the account's certificate allowance.
-
-Already over the limit? Go to developer.apple.com → Certificates and revoke the stray ones — keep only the certificate whose `.p12` you hold — then re-run the workflow.
-
-Local builds are unaffected: `project.yml` keeps `CODE_SIGN_STYLE: Automatic`, so Xcode signs with your personal team, and only the release workflows override it with the shared identity.
+Local development needs none of this: `project.yml` keeps `CODE_SIGN_STYLE: Automatic`, so Xcode signs with your personal team, and only the release workflows override it with the shared identity.
 
 ## Project Structure
 
@@ -165,7 +186,8 @@ Pigpen/
 PigpenTests/                     # Unit tests
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
-└── prepare_signing_secrets.sh   # Checks and encodes the signing secrets, once
+├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API
+└── prepare_signing_secrets.sh   # Checks and encodes a certificate exported from a Mac
 ```
 
 The model layer is plain Swift with no UI imports, so all of the game rules — escape
