@@ -31,14 +31,14 @@ a lot like fence posts.
 | UI | SwiftUI |
 | Min iOS | 17.0 |
 | Project | XcodeGen (no `.xcodeproj` in repo) |
-| CI/CD | GitHub Actions + Apple cloud signing |
+| CI/CD | GitHub Actions |
 | Distribution | TestFlight + App Store |
 
 ## Development
 
 ### Prerequisites
 
-- Xcode 26+ (for local dev) or just use GitHub Actions (no laptop needed)
+- Xcode 26+ (for local dev) or just use GitHub Actions (no laptop needed, once the [one-time signing setup](#one-time-signing-setup) is done)
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen): `brew install xcodegen`
 
 ### Build locally
@@ -84,11 +84,12 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
 | `screenshots.yml` | PR to main | Build, boot a simulator, capture the title screen and the board in light + dark, post/update a PR comment |
-| `testflight.yml` | Push to main | Archive, cloud-sign, upload to TestFlight |
+| `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 
 Notes on the details:
 
+- **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import one long-lived distribution certificate and one App Store provisioning profile from secrets into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run**, and after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates."
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
 - **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes a `-puzzle` launch argument so the board can be captured without tapping through the title screen.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. TestFlight uploads never cancel each other, so two merges in quick succession both ship.
@@ -103,20 +104,40 @@ git push origin v0.2.0
 
 ## Required Secrets
 
-Uses **Apple cloud-managed signing** — no certificates or provisioning profiles to manage. Just an API key.
-
-Set these in GitHub repo settings → Secrets and variables → Actions:
+Set these in GitHub repo settings → Secrets and variables → Actions.
 
 | Secret | Purpose | How to get it |
 |---|---|---|
 | `TEAM_ID` | Apple Developer Team ID | developer.apple.com → Membership |
-| `APP_STORE_CONNECT_API_KEY_ID` | API key ID | App Store Connect → Users and Access → Integrations → Keys |
+| `APP_STORE_CONNECT_API_KEY_ID` | API key ID, for uploading builds | App Store Connect → Users and Access → Integrations → Keys |
 | `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID | Same page as above |
 | `APP_STORE_CONNECT_API_KEY_CONTENT` | API key (`.p8` file contents), **raw text** | Paste the full text including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----` |
-
-That's it — 4 secrets, all plain text. Apple handles certificates and provisioning profiles in the cloud.
+| `APPLE_DISTRIBUTION_CERT_P12` | Apple Distribution certificate **and its private key**, base64 | One-time setup below |
+| `APPLE_DISTRIBUTION_CERT_PASSWORD` | Password the `.p12` was exported with | You choose it during the export |
+| `APPLE_PROVISIONING_PROFILE` | App Store provisioning profile for `com.pigpen.app`, base64 | One-time setup below |
 
 The App Store Connect app record must exist with bundle ID `com.pigpen.app` (see `project.yml`) before the first TestFlight upload.
+
+### One-time signing setup
+
+A distribution certificate's private key only exists on the machine that created it, and Apple caps each account at a couple of them. So the certificate has to be created once, by hand, and then handed to CI — which is what the three `APPLE_*` secrets are for.
+
+1. **Certificate.** In Xcode → Settings → Accounts, select the team, click *Manage Certificates*, then `+` → *Apple Distribution*. (Or make a CSR in Keychain Access and upload it at developer.apple.com → Certificates.) If your team already has one and its key is on another Mac, export it from there instead of making a new one — Apple will refuse once you are at the limit.
+2. **Export it.** Keychain Access → *My Certificates* → right-click the `Apple Distribution: …` row → *Export*, save as `.p12`, and set a password. Expanding the row must show a private key; if it does not, this Mac does not have the key and the export is useless.
+3. **Profile.** developer.apple.com → Profiles → `+` → *App Store Connect* → App ID `com.pigpen.app` → pick the certificate from step 1 → download the `.mobileprovision`.
+4. **Check and encode them**, which also verifies the profile was actually issued for that certificate:
+
+```bash
+Tools/prepare_signing_secrets.sh ~/Downloads/Certificates.p12 ~/Downloads/Pigpen_AppStore.mobileprovision
+```
+
+5. Set the three secrets with the `gh secret set` commands it prints, delete the generated `.signing-secrets/` directory, and keep the `.p12` and its password somewhere safe — it is the only copy of the private key.
+
+Both files expire (the certificate after a year, the profile after a year), so this repeats at renewal time. Nothing in the build creates or renews them on its own, which is the point: a build that cannot sign fails loudly instead of quietly burning through the account's certificate allowance.
+
+Already over the limit? Go to developer.apple.com → Certificates and revoke the stray ones — keep only the certificate whose `.p12` you hold — then re-run the workflow.
+
+Local builds are unaffected: `project.yml` keeps `CODE_SIGN_STYLE: Automatic`, so Xcode signs with your personal team, and only the release workflows override it with the shared identity.
 
 ## Project Structure
 
@@ -143,7 +164,8 @@ Pigpen/
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests
 Tools/
-└── generate_app_icon.py         # Redraws the app icon PNGs
+├── generate_app_icon.py         # Redraws the app icon PNGs
+└── prepare_signing_secrets.sh   # Checks and encodes the signing secrets, once
 ```
 
 The model layer is plain Swift with no UI imports, so all of the game rules — escape
