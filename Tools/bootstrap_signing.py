@@ -204,6 +204,17 @@ def create_certificate(api: AppStoreConnect, common_name: str) -> tuple[Path, di
     return key_path, response["data"]
 
 
+def all_profiles(api: AppStoreConnect) -> list[dict]:
+    return api.request("GET", "/v1/profiles", params={"limit": "200"}).get("data", [])
+
+
+def profile_certificate_ids(api: AppStoreConnect, profile_id: str) -> list[str]:
+    certificates = api.request("GET", f"/v1/profiles/{profile_id}/certificates").get(
+        "data", []
+    )
+    return [certificate["id"] for certificate in certificates]
+
+
 def ensure_bundle_id(api: AppStoreConnect, identifier: str, name: str) -> str:
     found = api.request(
         "GET", "/v1/bundleIds", params={"filter[identifier]": identifier, "limit": "200"}
@@ -370,6 +381,53 @@ def command_revoke(api: AppStoreConnect, args: argparse.Namespace) -> None:
     )
 
 
+def command_cleanup(api: AppStoreConnect, args: argparse.Namespace) -> None:
+    """Retire the certificates earlier builds created.
+
+    Builds that mint their own certificate name the profile after the run, so the
+    profile names identify which certificates belong to CI and which belong to a
+    person. Anything matching the prefix goes, along with the certificates it was
+    issued for.
+    """
+    doomed: set[str] = set()
+    for profile in all_profiles(api):
+        name = profile["attributes"].get("name", "")
+        if not name.startswith(args.profile_prefix) or name == args.keep:
+            continue
+        doomed.update(profile_certificate_ids(api, profile["id"]))
+        api.request("DELETE", f"/v1/profiles/{profile['id']}")
+        print(f"Deleted profile {name}")
+
+    if args.include_orphans:
+        # A run that died between creating the certificate and creating the profile
+        # leaves a certificate nothing points at, which the sweep above cannot see.
+        still_used: set[str] = set()
+        for profile in all_profiles(api):
+            still_used.update(profile_certificate_ids(api, profile["id"]))
+        for certificate in distribution_certificates(api):
+            if certificate["id"] not in still_used:
+                doomed.add(certificate["id"])
+
+    kept = 0
+    for certificate in distribution_certificates(api):
+        if certificate["id"] not in doomed:
+            continue
+        if certificate["attributes"].get("serialNumber") in args.keep_serial:
+            doomed.discard(certificate["id"])
+            kept += 1
+            print(f"Keeping {describe_certificate(certificate)}")
+
+    for certificate_id in sorted(doomed):
+        api.request("DELETE", f"/v1/certificates/{certificate_id}")
+        print(f"Revoked certificate {certificate_id}")
+
+    remaining = distribution_certificates(api)
+    print(
+        f"{len(doomed)} certificate(s) revoked, {kept} kept by serial, "
+        f"{len(remaining)} left on the account."
+    )
+
+
 def command_create(api: AppStoreConnect, args: argparse.Namespace) -> None:
     key_path, certificate = create_certificate(api, args.common_name)
     attributes = certificate["attributes"]
@@ -396,7 +454,14 @@ def command_create(api: AppStoreConnect, args: argparse.Namespace) -> None:
         "APPLE_PROVISIONING_PROFILE": profile["attributes"]["profileContent"],
     }
 
-    if args.set_secrets:
+    if args.ephemeral:
+        write_secret_files(Path(args.out_dir), values)
+        print(
+            f"\nWrote the certificate to {args.out_dir}/ for this build to sign with. "
+            "A later build retires it:\n  Tools/bootstrap_signing.py cleanup "
+            f"--profile-prefix '{args.profile_name.rsplit(' ', 1)[0]} '"
+        )
+    elif args.set_secrets:
         for name, value in values.items():
             set_github_secret(name, value, args.repo)
         print("\nTestFlight builds can sign now. Nothing was written to disk.")
@@ -429,6 +494,24 @@ def main(argv: list[str]) -> int:
     revoke.add_argument("certificate_id", nargs="+")
     revoke.set_defaults(handler=command_revoke)
 
+    cleanup = subparsers.add_parser(
+        "cleanup", help="retire the certificates and profiles earlier builds created"
+    )
+    cleanup.add_argument("--profile-prefix", default="Pigpen CI ")
+    cleanup.add_argument("--keep", default="", help="profile name to leave alone")
+    cleanup.add_argument(
+        "--keep-serial",
+        action="append",
+        default=[],
+        help="serial number never to revoke; repeatable",
+    )
+    cleanup.add_argument(
+        "--include-orphans",
+        action="store_true",
+        help="also revoke distribution certificates no profile references",
+    )
+    cleanup.set_defaults(handler=command_cleanup)
+
     create = subparsers.add_parser(
         "create", help="create a certificate and profile, and emit the three secrets"
     )
@@ -442,6 +525,12 @@ def main(argv: list[str]) -> int:
         "--set-secrets",
         action="store_true",
         help="store the values as GitHub secrets with gh instead of writing files",
+    )
+    create.add_argument(
+        "--ephemeral",
+        action="store_true",
+        help="the certificate is for one build and will be retired, so skip the "
+        "advice about keeping it",
     )
     create.add_argument("--repo", help="owner/name to pass to gh, when it cannot be inferred")
     create.set_defaults(handler=command_create)

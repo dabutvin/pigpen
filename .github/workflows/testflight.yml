@@ -7,8 +7,10 @@ on:
       - '*.md'
       - '.gitignore'
 
+# Shared with release.yml and signing-setup.yml: only one run at a time may be
+# creating or revoking certificates on the account.
 concurrency:
-  group: testflight
+  group: apple-signing
   cancel-in-progress: false
 
 jobs:
@@ -16,6 +18,12 @@ jobs:
     name: Build & Upload to TestFlight
     runs-on: macos-26
     timeout-minutes: 45
+    env:
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+      TEAM_ID: ${{ secrets.TEAM_ID }}
+      PROFILE_PREFIX: 'Pigpen CI '
 
     steps:
       - name: Checkout
@@ -31,8 +39,6 @@ jobs:
         run: brew install xcodegen
 
       - name: Generate Xcode project
-        env:
-          TEAM_ID: ${{ secrets.TEAM_ID }}
         run: xcodegen generate
 
       - name: Resolve packages
@@ -42,18 +48,46 @@ jobs:
             -scheme Pigpen
 
       - name: Set up App Store Connect API key
-        env:
-          API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
-          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
         run: |
           mkdir -p ./private_keys
-          echo "$API_KEY_CONTENT" > ./private_keys/AuthKey_${API_KEY_ID}.p8
-          echo "API_KEY_PATH=$(pwd)/private_keys/AuthKey_${API_KEY_ID}.p8" >> $GITHUB_ENV
+          KEY_PATH="$(pwd)/private_keys/AuthKey_${APP_STORE_CONNECT_API_KEY_ID}.p8"
+          echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > "$KEY_PATH"
+          echo "API_KEY_PATH=$KEY_PATH" >> $GITHUB_ENV
+
+      - name: Choose signing source
+        id: source
+        env:
+          STORED_CERTIFICATE: ${{ secrets.APPLE_DISTRIBUTION_CERT_P12 }}
+        run: |
+          if [ -n "$STORED_CERTIFICATE" ]; then
+            echo "mode=stored" >> $GITHUB_OUTPUT
+            echo "Signing with the certificate in APPLE_DISTRIBUTION_CERT_P12."
+          else
+            echo "mode=per-build" >> $GITHUB_OUTPUT
+            echo "No stored certificate, so this build makes its own and retires it."
+          fi
+
+      # Sweeping at the start of the next build rather than the end of this one keeps
+      # revocation well clear of App Store Connect still processing the upload, and
+      # picks up anything a cancelled run left behind. One certificate sits idle
+      # between builds; the account never holds more than two.
+      - name: Retire earlier builds' certificates
+        if: steps.source.outputs.mode == 'per-build'
+        run: Tools/bootstrap_signing.py cleanup --profile-prefix "$PROFILE_PREFIX" --include-orphans
+
+      - name: Create this build's certificate
+        if: steps.source.outputs.mode == 'per-build'
+        run: |
+          Tools/bootstrap_signing.py create \
+            --ephemeral \
+            --profile-name "$PROFILE_PREFIX$GITHUB_RUN_ID" \
+            --out-dir "$RUNNER_TEMP/minted"
 
       - name: Set up code signing
         id: signing
         uses: ./.github/actions/setup-signing
         with:
+          secrets-directory: ${{ steps.source.outputs.mode == 'per-build' && format('{0}/minted', runner.temp) || '' }}
           certificate-p12: ${{ secrets.APPLE_DISTRIBUTION_CERT_P12 }}
           certificate-password: ${{ secrets.APPLE_DISTRIBUTION_CERT_PASSWORD }}
           provisioning-profile: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
@@ -64,8 +98,6 @@ jobs:
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
       - name: Archive
-        env:
-          TEAM_ID: ${{ secrets.TEAM_ID }}
         run: |
           set -o pipefail
           xcodebuild archive \
@@ -82,7 +114,6 @@ jobs:
 
       - name: Configure export options
         env:
-          TEAM_ID: ${{ secrets.TEAM_ID }}
           IDENTITY: ${{ steps.signing.outputs.identity }}
           PROFILE_NAME: ${{ steps.signing.outputs.profile-name }}
         run: |
@@ -100,22 +131,18 @@ jobs:
             -exportPath $RUNNER_TEMP/export
 
       - name: Upload to TestFlight
-        env:
-          API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          API_KEY_ISSUER: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           xcrun altool --upload-app \
             --type ios \
             --file $RUNNER_TEMP/export/Pigpen.ipa \
-            --apiKey "$API_KEY_ID" \
-            --apiIssuer "$API_KEY_ISSUER"
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
 
       - name: Clean up signing material
         if: always()
         run: |
-          rm -rf ./private_keys
+          rm -rf ./private_keys "$RUNNER_TEMP/minted" "$RUNNER_TEMP/code-signing"
           security delete-keychain "${{ steps.signing.outputs.keychain-path }}" 2>/dev/null || true
-          rm -rf "$RUNNER_TEMP/code-signing"
 
       - name: Post build info
         if: success()

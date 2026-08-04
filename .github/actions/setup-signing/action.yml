@@ -1,19 +1,30 @@
 name: Set up code signing
 description: >
-  Import the App Store distribution certificate and provisioning profile from secrets
-  into a throwaway keychain, so every run signs with the same long-lived identity
-  instead of asking Apple to issue a new certificate.
+  Import a distribution certificate and provisioning profile into a throwaway
+  keychain, so the build signs with an identity it was handed rather than asking
+  Apple to issue a new certificate of its own.
 
 inputs:
+  secrets-directory:
+    description: >
+      Directory holding APPLE_DISTRIBUTION_CERT_P12.txt, APPLE_DISTRIBUTION_CERT_PASSWORD.txt
+      and APPLE_PROVISIONING_PROFILE.txt, as bootstrap_signing.py writes them. Takes
+      precedence over the inputs below, which keeps freshly minted material out of
+      workflow expressions.
+    required: false
+    default: ''
   certificate-p12:
-    description: Base64-encoded Apple Distribution certificate and private key (.p12)
-    required: true
+    description: Base64-encoded distribution certificate and private key (.p12)
+    required: false
+    default: ''
   certificate-password:
     description: Password the .p12 was exported with
-    required: true
+    required: false
+    default: ''
   provisioning-profile:
     description: Base64-encoded App Store provisioning profile (.mobileprovision)
-    required: true
+    required: false
+    default: ''
   bundle-identifier:
     description: Bundle ID the profile is expected to cover
     required: false
@@ -36,6 +47,7 @@ runs:
     - id: import
       shell: bash
       env:
+        SECRETS_DIR: ${{ inputs.secrets-directory }}
         CERT_P12: ${{ inputs.certificate-p12 }}
         CERT_PASSWORD: ${{ inputs.certificate-password }}
         PROFILE_B64: ${{ inputs.provisioning-profile }}
@@ -43,12 +55,25 @@ runs:
       run: |
         set -euo pipefail
 
+        if [ -n "$SECRETS_DIR" ]; then
+          for NAME in APPLE_DISTRIBUTION_CERT_P12 APPLE_DISTRIBUTION_CERT_PASSWORD \
+                      APPLE_PROVISIONING_PROFILE; do
+            if [ ! -s "$SECRETS_DIR/$NAME.txt" ]; then
+              echo "::error::$SECRETS_DIR/$NAME.txt is missing or empty — did the certificate step run?"
+              exit 1
+            fi
+          done
+          CERT_P12=$(cat "$SECRETS_DIR/APPLE_DISTRIBUTION_CERT_P12.txt")
+          CERT_PASSWORD=$(cat "$SECRETS_DIR/APPLE_DISTRIBUTION_CERT_PASSWORD.txt")
+          PROFILE_B64=$(cat "$SECRETS_DIR/APPLE_PROVISIONING_PROFILE.txt")
+        fi
+
         MISSING=""
         [ -n "$CERT_P12" ] || MISSING="$MISSING APPLE_DISTRIBUTION_CERT_P12"
         [ -n "$CERT_PASSWORD" ] || MISSING="$MISSING APPLE_DISTRIBUTION_CERT_PASSWORD"
         [ -n "$PROFILE_B64" ] || MISSING="$MISSING APPLE_PROVISIONING_PROFILE"
         if [ -n "$MISSING" ]; then
-          echo "::error::Missing signing secrets:$MISSING. Run Tools/prepare_signing_secrets.sh, then see \"Required Secrets\" in README.md."
+          echo "::error::No certificate to sign with. Missing:$MISSING. See \"Signing\" in README.md."
           exit 1
         fi
 

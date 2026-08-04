@@ -1,9 +1,11 @@
 name: Signing Setup
 
-# Creates the certificate and profile the release workflows sign with, and stores
-# them as secrets, entirely through the App Store Connect API — no Mac involved.
-# Run it from the Actions tab (or the GitHub mobile app) when setting signing up
-# for the first time, when a certificate expires, or to clear out old certificates.
+# Manages the account's signing certificates through the App Store Connect API — no
+# Mac involved. Run it from the Actions tab or the GitHub mobile app.
+#
+# Builds mint and retire their own certificate by default, so `create` is only for
+# switching to one stored certificate that every build reuses. `list` and `revoke`
+# are how you inspect the account and clear out certificates whose keys are gone.
 
 on:
   workflow_dispatch:
@@ -24,8 +26,10 @@ on:
 permissions:
   contents: read
 
+# Shared with testflight.yml and release.yml: only one run at a time may be
+# creating or revoking certificates on the account.
 concurrency:
-  group: signing-setup
+  group: apple-signing
 
 jobs:
   signing:
@@ -61,7 +65,7 @@ jobs:
           esac
           Tools/bootstrap_signing.py revoke $CERTIFICATE_IDS
 
-      - name: Create certificate and profile, and store the secrets
+      - name: Create a stored certificate and profile, and set the secrets
         if: github.event.inputs.task == 'create'
         env:
           # Repository secrets cannot be written with the built-in token.
@@ -78,7 +82,8 @@ jobs:
         run: |
           {
             echo "### Signing secrets stored"
-            echo "The next push to main signs with this certificate. Then:"
+            echo "Builds now reuse this certificate instead of minting their own. Then:"
             echo "- Delete the \`SIGNING_BOOTSTRAP_PAT\` secret — it is not needed again."
             echo "- Revoke any older certificates with the \`revoke\` task, since their keys are gone."
+            echo "- Renew this one before it expires in a year."
           } >> $GITHUB_STEP_SUMMARY
