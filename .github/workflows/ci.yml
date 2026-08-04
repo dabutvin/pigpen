@@ -51,3 +51,35 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee build.log
           if grep -q "BUILD FAILED" build.log; then exit 1; fi
+
+      - name: Pick simulator
+        run: |
+          set -euo pipefail
+          AVAILABLE=$(xcrun simctl list devices available)
+          DEVICE=""
+          for name in "iPhone 17 Pro" "iPhone 17" "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15"; do
+            if grep -q "^ *$name (" <<< "$AVAILABLE"; then DEVICE="$name"; break; fi
+          done
+          if [ -z "$DEVICE" ]; then
+            DEVICE=$(grep -oE '^ *iPhone[^(]*' <<< "$AVAILABLE" | head -1 | xargs || true)
+          fi
+          if [ -z "$DEVICE" ]; then
+            echo "ERROR: No iPhone simulator available"
+            exit 1
+          fi
+          echo "Using simulator: $DEVICE"
+          echo "DEVICE=$DEVICE" >> $GITHUB_ENV
+
+      - name: Test
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Pigpen.xcodeproj \
+            -scheme Pigpen \
+            -destination "platform=iOS Simulator,name=${{ env.DEVICE }},OS=latest" \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee test.log
+          if grep -q "TEST FAILED\|BUILD FAILED" test.log; then exit 1; fi

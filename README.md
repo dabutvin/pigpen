@@ -71,7 +71,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 
 | Workflow | Trigger | Action |
 |---|---|---|
-| `ci.yml` | PR to main, push to main | Build for simulator, no signing |
+| `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
 | `screenshots.yml` | PR to main | Build, boot a simulator, capture light + dark screenshots, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, cloud-sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
