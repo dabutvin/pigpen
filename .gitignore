@@ -60,3 +60,16 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# XcodeGen — the project and Info.plist are generated from project.yml
+*.xcodeproj
+*.xcworkspace
+Pigpen/Resources/Info.plist
+
+# Build output
+DerivedData/
+build/
+build.log
+screenshots/
+Package.resolved
+.swiftpm/
