@@ -10,8 +10,6 @@ struct TitleScreenView: View {
     @State private var planted: Double = 0
     /// The lettering, the sign and the button all arrive a beat behind the glyphs.
     @State private var arrived = false
-    /// Keeps a slow breath on the button while the player reads the rest.
-    @State private var breathing = false
     @State private var isPlaying = false
 
     private let level = PuzzleLevel.riverBend
@@ -105,11 +103,7 @@ struct TitleScreenView: View {
                 .frame(maxWidth: 180)
             }
             .buttonStyle(ChunkyButtonStyle())
-            .scaleEffect(breathing ? 1.03 : 1)
-            .animation(
-                reduceMotion ? nil : .easeInOut(duration: 1.6).repeatForever(autoreverses: true),
-                value: breathing
-            )
+            .modifier(Breathing(active: !reduceMotion))
 
             signpost
         }
@@ -145,11 +139,29 @@ struct TitleScreenView: View {
         }
         withAnimation(.spring(duration: 0.9, bounce: 0.4)) { planted = 1 }
         withAnimation(.spring(duration: 0.6, bounce: 0.3).delay(0.45)) { arrived = true }
-        breathing = true
     }
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.0"
+    }
+}
+
+/// A slow pulse to hold the eye on the button. It has to be a phase animator rather than a
+/// repeating animation on a flag: the flag flips as the button is arriving, and a repeating
+/// animation would take the arrival with it and swing the button about the screen for good.
+private struct Breathing: ViewModifier {
+    let active: Bool
+
+    func body(content: Content) -> some View {
+        if active {
+            content.phaseAnimator([1.0, 1.04]) { button, scale in
+                button.scaleEffect(CGFloat(scale))
+            } animation: { _ in
+                .easeInOut(duration: 1.5)
+            }
+        } else {
+            content
+        }
     }
 }
 
