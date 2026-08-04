@@ -75,7 +75,7 @@ jobs:
             -archivePath $RUNNER_TEMP/Pigpen.xcarchive \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM="$TEAM_ID" \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGN_IDENTITY="${{ steps.signing.outputs.identity }}" \
             PROVISIONING_PROFILE_SPECIFIER="${{ steps.signing.outputs.profile-name }}" \
             MARKETING_VERSION=${{ env.VERSION }} \
             CURRENT_PROJECT_VERSION=${{ env.BUILD_NUMBER }}
@@ -83,10 +83,12 @@ jobs:
       - name: Configure export options
         env:
           TEAM_ID: ${{ secrets.TEAM_ID }}
+          IDENTITY: ${{ steps.signing.outputs.identity }}
           PROFILE_NAME: ${{ steps.signing.outputs.profile-name }}
         run: |
           /usr/libexec/PlistBuddy \
             -c "Add :teamID string $TEAM_ID" \
+            -c "Add :signingCertificate string $IDENTITY" \
             -c "Add :provisioningProfiles:com.pigpen.app string $PROFILE_NAME" \
             ExportOptions.plist
 

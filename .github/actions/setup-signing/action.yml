@@ -20,6 +20,9 @@ inputs:
     default: com.pigpen.app
 
 outputs:
+  identity:
+    description: Imported signing identity's name, for CODE_SIGN_IDENTITY
+    value: ${{ steps.import.outputs.identity }}
   profile-name:
     description: Installed profile's name, for PROVISIONING_PROFILE_SPECIFIER
     value: ${{ steps.import.outputs.profile-name }}
@@ -71,9 +74,11 @@ runs:
         # xcodebuild only looks at keychains in the user search list, so prepend ours.
         security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
 
-        IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" | grep -c "Apple Distribution" || true)
-        if [ "$IDENTITY" -eq 0 ]; then
-          echo "::error::The imported certificate has no valid Apple Distribution identity. It may be expired, revoked, or a development certificate."
+        # "Apple Distribution" and the older "iPhone Distribution" both sign App Store builds.
+        IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" \
+          | sed -nE 's/^.*"((Apple|iPhone) Distribution:.*)"$/\1/p' | head -1)
+        if [ -z "$IDENTITY" ]; then
+          echo "::error::The imported certificate has no valid distribution identity. It may be expired, revoked, or a development certificate."
           security find-identity -v -p codesigning "$KEYCHAIN" || true
           exit 1
         fi
@@ -96,8 +101,10 @@ runs:
           cp "$WORK/profile.mobileprovision" "$DIR/$PROFILE_UUID.mobileprovision"
         done
 
+        echo "identity=$IDENTITY" >> "$GITHUB_OUTPUT"
         echo "profile-name=$PROFILE_NAME" >> "$GITHUB_OUTPUT"
         echo "keychain-path=$KEYCHAIN" >> "$GITHUB_OUTPUT"
 
         echo "Signing with the certificate from secrets (no new certificate requested)."
+        echo "Identity: $IDENTITY"
         echo "Profile: $PROFILE_NAME ($PROFILE_UUID), expires $PROFILE_EXPIRY"
