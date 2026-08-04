@@ -76,3 +76,11 @@ Package.resolved
 
 # Tools/
 __pycache__/
+
+# Code signing — never commit certificates, keys or profiles
+.signing-secrets/
+*.p12
+*.mobileprovision
+*.p8
+*.cer
+*.certSigningRequest
