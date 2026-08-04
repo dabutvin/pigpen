@@ -1,17 +1,18 @@
 import SwiftUI
 
-/// Draws the field — terrain, fences, pen and pig — and turns taps into the fence
-/// line nearest the finger.
+/// Draws the field — terrain, fences, pen and pig — and turns taps into the tile
+/// under the finger.
 struct FieldView: View {
     let level: PuzzleLevel
-    let fences: Set<Fence>
+    /// The tiles filled in with fencing.
+    let fences: Set<GridPoint>
     /// Mud tiles to wash in gold once the pen is proven closed.
     let penTiles: Set<GridPoint>
     /// How far along the pen's celebration wash is, 0 to 1.
     let penGlow: Double
     let pigTile: GridPoint
     let pigOpacity: Double
-    let onTapLine: (Fence) -> Void
+    let onTapTile: (GridPoint) -> Void
 
     var body: some View {
         GeometryReader { proxy in
@@ -34,8 +35,8 @@ struct FieldView: View {
             .contentShape(Rectangle())
             .gesture(
                 SpatialTapGesture().onEnded { tap in
-                    if let fence = board.line(nearest: tap.location) {
-                        onTapLine(fence)
+                    if let tile = board.tile(at: tap.location) {
+                        onTapTile(tile)
                     }
                 }
             )
@@ -131,38 +132,28 @@ struct FieldView: View {
         context.stroke(Path(rim), with: .color(GamePalette.post.opacity(0.5)), lineWidth: 3)
     }
 
+    /// A fenced tile is a square of timber: two rails with three posts across them, which
+    /// still reads as a fence at the size a tile gets on a phone.
     private func drawFences(in context: inout GraphicsContext, board: BoardGeometry) {
-        guard !fences.isEmpty else { return }
+        for tile in fences {
+            let plot = board.rect(for: tile).insetBy(dx: board.cell * 0.06, dy: board.cell * 0.06)
+            let timber = Path(roundedRect: plot, cornerRadius: board.cell * 0.14)
+            context.fill(timber, with: .color(GamePalette.rail))
 
-        var rails = Path()
-        var posts = Path()
-        let postRadius = board.cell * 0.09
-
-        for fence in fences {
-            let (start, end) = board.endpoints(of: fence)
-            rails.move(to: start)
-            rails.addLine(to: end)
-            for endpoint in [start, end] {
-                posts.addEllipse(in: CGRect(
-                    x: endpoint.x - postRadius,
-                    y: endpoint.y - postRadius,
-                    width: postRadius * 2,
-                    height: postRadius * 2
-                ))
+            var slats = Path()
+            for rail in [0.32, 0.68] {
+                let y = plot.minY + plot.height * rail
+                slats.move(to: CGPoint(x: plot.minX, y: y))
+                slats.addLine(to: CGPoint(x: plot.maxX, y: y))
             }
+            for post in [0.24, 0.5, 0.76] {
+                let x = plot.minX + plot.width * post
+                slats.move(to: CGPoint(x: x, y: plot.minY))
+                slats.addLine(to: CGPoint(x: x, y: plot.maxY))
+            }
+            context.stroke(slats, with: .color(GamePalette.post), lineWidth: max(1, board.cell * 0.09))
+            context.stroke(timber, with: .color(GamePalette.post), lineWidth: max(1, board.cell * 0.05))
         }
-
-        context.stroke(
-            rails,
-            with: .color(GamePalette.post),
-            style: StrokeStyle(lineWidth: board.cell * 0.20, lineCap: .round)
-        )
-        context.stroke(
-            rails,
-            with: .color(GamePalette.rail),
-            style: StrokeStyle(lineWidth: board.cell * 0.09, lineCap: .round)
-        )
-        context.fill(posts, with: .color(GamePalette.post))
     }
 }
 
@@ -170,14 +161,14 @@ struct FieldView: View {
     FieldView(
         level: .riverBend,
         fences: [
-            Fence(side: .up, of: GridPoint(row: 6, column: 2)),
-            Fence(side: .left, of: GridPoint(row: 6, column: 2))
+            GridPoint(row: 5, column: 2),
+            GridPoint(row: 6, column: 1)
         ],
         penTiles: [],
         penGlow: 0,
         pigTile: PuzzleLevel.riverBend.pigStart,
         pigOpacity: 1,
-        onTapLine: { _ in }
+        onTapTile: { _ in }
     )
     .padding()
 }

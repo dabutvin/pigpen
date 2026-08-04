@@ -38,7 +38,7 @@ struct PuzzleView: View {
                     penGlow: penGlow,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
-                    onTapLine: { place($0) }
+                    onTapTile: { place($0) }
                 )
                 .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
 
@@ -205,9 +205,9 @@ struct PuzzleView: View {
 
     // MARK: - Actions
 
-    private func place(_ fence: Fence) {
-        let existing = game.fences.contains(fence)
-        guard game.toggleFence(fence) else {
+    private func place(_ tile: GridPoint) {
+        let existing = game.fences.contains(tile)
+        guard game.toggleFence(on: tile) else {
             withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
             UINotificationFeedbackGenerator().notificationOccurred(.warning)
             return

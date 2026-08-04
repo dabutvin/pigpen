@@ -38,14 +38,12 @@ struct PuzzleLevel: Identifiable, Sendable {
         terrain(at: point) == .mud
     }
 
-    /// A fence can only be driven into mud, so any line that already has water on
-    /// either side is refused: the water is doing that job for free. Lines along the
-    /// outer edge of the map are fair game, since that is where the pig runs off.
-    func canBuildFence(_ fence: Fence) -> Bool {
-        let (first, second) = fence.separatedTiles
-        let sides = [terrain(at: first), terrain(at: second)]
-        guard sides.contains(.mud) else { return false }
-        return !sides.contains(.water)
+    /// A fence takes up a whole tile, so it can only be built on open mud: never in the
+    /// water, which is already a boundary and free, and never on the tile the pig is
+    /// standing on. Tiles along the outer edge of the map are fair game, and usually where
+    /// the fencing has to go, since that is the ground the pig runs off from.
+    func canBuildFence(on tile: GridPoint) -> Bool {
+        terrain(at: tile) == .mud && tile != pigStart
     }
 
     var mudTileCount: Int {
@@ -110,17 +108,18 @@ extension PuzzleLevel {
     /// The one puzzle the game ships with so far.
     ///
     /// A river runs in from the west, turns south and pools into a pond, which hands
-    /// the player two free sides of a large pen. Fencing the remaining two sides with
-    /// all 16 pieces pens 49 of the map's 83 mud tiles, which is the provable maximum;
-    /// the same budget spent on a free-standing box would only hold 16.
+    /// the player two free sides of a large pen. Walling the remaining two sides with
+    /// all 12 pieces pens 35 of the map's 83 mud tiles, which is the provable maximum —
+    /// every tile the pig can be shut into without standing on the rim of the map.
+    /// The same budget spent on a free-standing box would only hold 9.
     static let riverBend: PuzzleLevel = {
         guard let level = PuzzleLevel(
             id: "river-bend",
             name: "River Bend",
             hint: "Water costs nothing. Build the pen against it.",
-            fenceBudget: 16,
-            twoStarArea: 30,
-            threeStarArea: 46,
+            fenceBudget: 12,
+            twoStarArea: 20,
+            threeStarArea: 33,
             map: """
                 .........
                 .........
