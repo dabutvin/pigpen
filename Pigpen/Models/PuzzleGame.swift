@@ -1,6 +1,6 @@
 import Observation
 
-/// The state of one puzzle in progress: the fences built so far, and what the pig
+/// The state of one puzzle in progress: the tiles fenced off so far, and what the pig
 /// did the last time it was let out.
 @MainActor
 @Observable
@@ -15,7 +15,8 @@ final class PuzzleGame {
     }
 
     let level: PuzzleLevel
-    private(set) var fences: Set<Fence> = []
+    /// The tiles filled in with fencing. The pig cannot walk onto any of them.
+    private(set) var fences: Set<GridPoint> = []
     private(set) var phase: Phase = .building
     /// The largest pen managed so far, so a second attempt can be compared to the first.
     private(set) var bestArea = 0
@@ -36,18 +37,18 @@ final class PuzzleGame {
         if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
     }
 
-    /// Puts a fence piece on a line, or takes it back off. Returns whether anything changed,
+    /// Fills a tile in with fencing, or clears it again. Returns whether anything changed,
     /// so the caller can tell a refused tap from an accepted one.
     @discardableResult
-    func toggleFence(_ fence: Fence) -> Bool {
+    func toggleFence(on tile: GridPoint) -> Bool {
         guard isBuilding else { return false }
 
-        if fences.contains(fence) {
-            fences.remove(fence)
+        if fences.contains(tile) {
+            fences.remove(tile)
             return true
         }
-        guard level.canBuildFence(fence), fencesRemaining > 0 else { return false }
-        fences.insert(fence)
+        guard level.canBuildFence(on: tile), fencesRemaining > 0 else { return false }
+        fences.insert(tile)
         return true
     }
 
