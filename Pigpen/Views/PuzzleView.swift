@@ -12,6 +12,8 @@ struct PuzzleView: View {
     /// Held back until the pig has finished its walk, so the verdict lands after the action.
     @State private var showsVerdict = false
     @State private var budgetShake: CGFloat = 0
+    /// Whether the press in progress has already been turned down once.
+    @State private var refusedThisPress = false
 
     init(level: PuzzleLevel) {
         _game = State(initialValue: PuzzleGame(level: level))
@@ -38,7 +40,7 @@ struct PuzzleView: View {
                     penGlow: penGlow,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
-                    onTapTile: { place($0) }
+                    onStroke: { build($0) }
                 )
                 .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
 
@@ -205,14 +207,32 @@ struct PuzzleView: View {
 
     // MARK: - Actions
 
-    private func place(_ tile: GridPoint) {
-        let existing = game.fences.contains(tile)
-        guard game.toggleFence(on: tile) else {
-            withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
-            UINotificationFeedbackGenerator().notificationOccurred(.warning)
-            return
+    /// Works one tile of a press: the tile a tap landed on, or each tile a drag reaches.
+    private func build(_ stroke: FenceStroke) {
+        if stroke.isFirst { refusedThisPress = false }
+
+        switch stroke.mode {
+        case .building:
+            // Dragging back over your own fencing is not a refusal, it is just nothing to do.
+            guard !game.fences.contains(stroke.tile) else { return }
+            guard game.buildFence(on: stroke.tile) else {
+                refuse()
+                return
+            }
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+        case .clearing:
+            guard game.clearFence(on: stroke.tile) else { return }
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
         }
-        UIImpactFeedbackGenerator(style: existing ? .light : .rigid).impactOccurred()
+    }
+
+    /// Says no to a tile the map or the budget will not take, once per press: a finger
+    /// dragged across the field on a spent budget should not shake the counter at every tile.
+    private func refuse() {
+        guard !refusedThisPress else { return }
+        refusedThisPress = true
+        withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
+        UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
 
     /// Plays out whatever the game just decided: the pig's walk to freedom, or the gold

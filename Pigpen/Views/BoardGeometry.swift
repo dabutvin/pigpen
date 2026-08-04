@@ -54,4 +54,34 @@ struct BoardGeometry {
             column: min(max(Int(x.rounded(.down)), 0), columnCount - 1)
         )
     }
+
+    /// The tiles a finger crosses travelling in a straight line from one point to the
+    /// next, in the order it meets them. Touches only arrive every so often, so a quick
+    /// drag lands several tiles away from where it was last seen, and the tiles in
+    /// between have to be walked rather than jumped over.
+    ///
+    /// Only tiles the line actually passes through are returned: a slanted drag comes
+    /// back as a run with diagonal steps in it, not as a staircase of tiles the finger
+    /// never touched.
+    func tiles(from start: CGPoint, to end: CGPoint) -> [GridPoint] {
+        guard cell > 0 else { return [] }
+
+        // Half a tile between samples would be enough to never skip one; a quarter also
+        // keeps the order right where the line clips a corner.
+        let distance = hypot(end.x - start.x, end.y - start.y)
+        let steps = max(Int((distance / (cell / 4)).rounded(.up)), 1)
+
+        var crossed: [GridPoint] = []
+        for step in 0...steps {
+            let progress = CGFloat(step) / CGFloat(steps)
+            let point = CGPoint(
+                x: start.x + (end.x - start.x) * progress,
+                y: start.y + (end.y - start.y) * progress
+            )
+            if let tile = tile(at: point), tile != crossed.last {
+                crossed.append(tile)
+            }
+        }
+        return crossed
+    }
 }
