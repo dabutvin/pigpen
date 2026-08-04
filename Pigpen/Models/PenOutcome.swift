@@ -9,11 +9,11 @@ enum PenOutcome: Equatable, Sendable {
 
 extension PuzzleLevel {
     /// Walks the pig outwards from its home tile, one step at a time, to see whether the
-    /// fences and water together close every way off the map.
+    /// fenced tiles and the water together close every way off the map.
     ///
-    /// A single missing piece is enough to lose: the pig tries every route, so the pen
-    /// has to be a closed loop.
-    func releasePig(fences: Set<Fence>) -> PenOutcome {
+    /// A single missing piece is enough to lose: the pig tries every route, so the ring
+    /// around the pen has to be unbroken.
+    func releasePig(fences: Set<GridPoint>) -> PenOutcome {
         var reached: Set<GridPoint> = [pigStart]
         var cameFrom: [GridPoint: GridPoint] = [:]
         var queue: [GridPoint] = [pigStart]
@@ -25,13 +25,13 @@ extension PuzzleLevel {
             next += 1
 
             for direction in Direction.allCases {
-                guard !fences.contains(Fence(side: direction, of: tile)) else { continue }
                 let step = tile.stepped(direction)
 
                 guard contains(step) else {
                     return .escaped(route: route(to: tile, cameFrom: cameFrom) + [step])
                 }
-                guard isWalkable(step), !reached.contains(step) else { continue }
+                guard isWalkable(step), !fences.contains(step), !reached.contains(step)
+                else { continue }
 
                 reached.insert(step)
                 cameFrom[step] = tile

@@ -1,7 +1,7 @@
 import Foundation
 
-/// Maps between tiles, fence lines and points on screen. Tiles are square, and the board
-/// is centred in whatever space it is handed.
+/// Maps between tiles and points on screen. Tiles are square, and the board is centred
+/// in whatever space it is handed.
 struct BoardGeometry {
     /// The side of one tile.
     let cell: CGFloat
@@ -41,40 +41,17 @@ struct BoardGeometry {
         CGPoint(x: rect(for: tile).midX, y: rect(for: tile).midY)
     }
 
-    /// Where to draw a fence: along the top of its anchor tile if horizontal, down the
-    /// left of it if vertical.
-    func endpoints(of fence: Fence) -> (CGPoint, CGPoint) {
-        let corner = CGPoint(
-            x: origin.x + CGFloat(fence.anchor.column) * cell,
-            y: origin.y + CGFloat(fence.anchor.row) * cell
-        )
-        switch fence.orientation {
-        case .horizontal:
-            return (corner, CGPoint(x: corner.x + cell, y: corner.y))
-        case .vertical:
-            return (corner, CGPoint(x: corner.x, y: corner.y + cell))
-        }
-    }
-
-    /// The fence line closest to a touch. The tile under the finger decides which four
-    /// lines are in play and the nearest of its sides wins, so every tap lands on a line
-    /// rather than on a dead spot. A touch that strays just off the board is pulled back
-    /// to the nearest edge tile, which is how the outer rim gets fenced.
-    func line(nearest location: CGPoint) -> Fence? {
+    /// The tile under a touch. A touch that strays just off the board is pulled back to
+    /// the nearest tile, so the rim of the map — where the fencing usually has to go — is
+    /// as easy to hit as the middle.
+    func tile(at location: CGPoint) -> GridPoint? {
         guard cell > 0, rowCount > 0, columnCount > 0 else { return nil }
 
         let x = (location.x - origin.x) / cell
         let y = (location.y - origin.y) / cell
-        let column = min(max(Int(x.rounded(.down)), 0), columnCount - 1)
-        let row = min(max(Int(y.rounded(.down)), 0), rowCount - 1)
-        let sides: [(distance: CGFloat, side: Direction)] = [
-            (y - CGFloat(row), .up),
-            (CGFloat(row + 1) - y, .down),
-            (x - CGFloat(column), .left),
-            (CGFloat(column + 1) - x, .right)
-        ]
-
-        guard let nearest = sides.min(by: { $0.distance < $1.distance }) else { return nil }
-        return Fence(side: nearest.side, of: GridPoint(row: row, column: column))
+        return GridPoint(
+            row: min(max(Int(y.rounded(.down)), 0), rowCount - 1),
+            column: min(max(Int(x.rounded(.down)), 0), columnCount - 1)
+        )
     }
 }

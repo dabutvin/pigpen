@@ -6,18 +6,22 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 ## The Game
 
 - **The pig** starts on a fixed tile and walks up, down, left or right, never diagonally.
-- **Fences** go on the lines between tiles. You have a fixed budget of pieces per puzzle.
-- **Water** — rivers and lakes — is a permanent boundary that neither the pig nor a fence
-  can cross, and it costs nothing. Build against it instead of spending fences.
+- **Fences** fill in whole tiles. Tap a tile to wall it off; the pig cannot walk through it.
+  You have a fixed budget of pieces per puzzle. Corners cost nothing, since a pig cannot
+  cut across one.
+- **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
+  build on it and you never need to: it walls the pen for free. Build against it instead of
+  spending fences.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
-- **Score.** The mud tiles inside a pen that holds. A four-piece box around the pig always
-  works and scores 1, so the puzzle is not whether you can pen it but how much ground you
-  can take with the same budget.
+- **Score.** The mud tiles inside a pen that holds. Four pieces boxed in around the pig
+  always work and score 1, so the puzzle is not whether you can pen it but how much ground
+  you can take with the same budget.
 
-The one puzzle so far, **River Bend**, hands you 16 fence pieces. A free-standing box that
-size holds 16 tiles; hugging the river and the pond holds 49, which is the most those 16
-pieces can ever enclose. Special tiles (cupcakes, frying pans) and more puzzles come next.
+The one puzzle so far, **River Bend**, hands you 12 fence pieces. A free-standing box that
+size holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can
+be shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
+walks off it. Special tiles (cupcakes, frying pans) and more puzzles come next.
 
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
@@ -126,7 +130,6 @@ Pigpen/
 │   └── PigpenApp.swift          # App entry point
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
-│   ├── Fence.swift              # A fence piece: one line between two tiles
 │   ├── PuzzleLevel.swift        # Terrain, pig start, budget, and the shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
@@ -134,8 +137,8 @@ Pigpen/
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
-│   ├── FieldView.swift          # Draws the field and turns taps into fence lines
-│   ├── BoardGeometry.swift      # Tiles and fence lines ↔ points on screen
+│   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
+│   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── GamePalette.swift        # Colours
 │   └── PigpenGlyphView.swift    # Renders glyphs and words
 └── Resources/
