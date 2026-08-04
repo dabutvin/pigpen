@@ -29,6 +29,8 @@ struct PuzzleView: View {
             VStack(spacing: 14) {
                 budgetBar
 
+                Spacer(minLength: 0)
+
                 FieldView(
                     level: level,
                     fences: game.fences,
@@ -39,6 +41,8 @@ struct PuzzleView: View {
                     onTapLine: { place($0) }
                 )
                 .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
+
+                Spacer(minLength: 0)
 
                 if showsVerdict {
                     verdict
@@ -63,15 +67,15 @@ struct PuzzleView: View {
             statPill(
                 title: "Fences left",
                 value: "\(game.fencesRemaining)",
-                tint: game.fencesRemaining == 0 ? .orange : GamePalette.post
+                tint: game.fencesRemaining == 0 ? .orange : .primary
             )
             .modifier(Shake(amount: budgetShake))
 
-            statPill(
-                title: game.bestArea > 0 ? "Best pen" : "Mud to pen",
-                value: game.bestArea > 0 ? "\(game.bestArea)" : "\(level.mudTileCount)",
-                tint: GamePalette.post
-            )
+            if game.bestArea > 0 {
+                statPill(title: "Your best pen", value: "\(game.bestArea)", tint: .primary)
+            } else {
+                statPill(title: "Three stars at", value: "\(level.threeStarArea)", tint: .primary)
+            }
         }
         .frame(maxWidth: .infinity)
     }
@@ -135,7 +139,7 @@ struct PuzzleView: View {
         case .penned(let pen):
             verdictCard(
                 headline: "Penned in",
-                detail: "\(pen.count) mud tiles enclosed with \(game.fences.count) fence pieces.",
+                detail: pennedDetail(pen: pen),
                 tint: .green
             ) {
                 HStack(spacing: 10) {
@@ -153,6 +157,16 @@ struct PuzzleView: View {
         case .building:
             EmptyView()
         }
+    }
+
+    private func pennedDetail(pen: Set<GridPoint>) -> String {
+        let detail = "\(counted(pen.count, "mud tile")) held with \(counted(game.fences.count, "fence piece"))."
+        guard game.bestArea > pen.count else { return detail }
+        return detail + " Your best so far is \(game.bestArea)."
+    }
+
+    private func counted(_ number: Int, _ noun: String) -> String {
+        "\(number) \(noun)\(number == 1 ? "" : "s")"
     }
 
     private func verdictCard<Actions: View>(
