@@ -101,12 +101,19 @@ private struct TitleScene {
         let center = CGPoint(x: x(0.80), y: y(0.375))
         let radius = x(0.072) * CGFloat(1 + 0.04 * sin(elapsed * 0.8))
 
-        for halo in [3.1, 2.2, 1.5] {
-            context.fill(
-                circle(at: center, radius: radius * CGFloat(halo)),
-                with: .color(colors.discHalo.opacity(0.10))
+        let glow = radius * 3.4
+        context.fill(
+            circle(at: center, radius: glow),
+            with: .radialGradient(
+                Gradient(colors: [
+                    colors.discHalo.opacity(colors.isNight ? 0.45 : 0.35),
+                    colors.discHalo.opacity(0)
+                ]),
+                center: center,
+                startRadius: radius * 0.7,
+                endRadius: glow
             )
-        }
+        )
         context.fill(circle(at: center, radius: radius), with: .color(colors.disc))
 
         guard colors.isNight else { return }
@@ -164,19 +171,20 @@ private struct TitleScene {
         return path
     }
 
+    /// Three birds keeping loose company, crossing the same band of sky as the clouds.
     private func drawBirds(in context: inout GraphicsContext) {
-        let birds: [(head: Double, height: Double, speed: Double, span: Double)] = [
-            (0.18, 0.23, 0.021, 1.0),
-            (0.34, 0.18, 0.027, 0.72),
-            (0.02, 0.30, 0.016, 0.58)
+        let flock: [(lead: Double, height: Double, span: Double)] = [
+            (0.00, 0.315, 0.030),
+            (0.08, 0.288, 0.024),
+            (0.14, 0.345, 0.021)
         ]
+        let drift = (0.06 + elapsed * 0.016).truncatingRemainder(dividingBy: 1.4) - 0.2
 
-        for bird in birds {
-            let drift = (bird.head + elapsed * bird.speed).truncatingRemainder(dividingBy: 1.25) - 0.12
-            let bob = sin(elapsed * 0.9 + bird.head * 9) * 0.006
-            let center = CGPoint(x: x(drift), y: y(bird.height + bob))
-            let wing = x(0.024 * bird.span)
-            let flap = CGFloat(0.3 + 0.6 * abs(sin(elapsed * 4.4 + bird.head * 8)))
+        for bird in flock {
+            let bob = sin(elapsed * 0.9 + bird.lead * 18) * 0.004
+            let center = CGPoint(x: x(drift + bird.lead), y: y(bird.height + bob))
+            let wing = x(bird.span)
+            let flap = CGFloat(0.3 + 0.55 * abs(sin(elapsed * 4.0 + bird.lead * 16)))
 
             var path = Path()
             path.move(to: CGPoint(x: center.x - wing, y: center.y))
@@ -187,8 +195,8 @@ private struct TitleScene {
             )
             context.stroke(
                 path,
-                with: .color(.black.opacity(0.22)),
-                style: StrokeStyle(lineWidth: max(1, wing * 0.16), lineCap: .round)
+                with: .color(.black.opacity(0.25)),
+                style: StrokeStyle(lineWidth: max(1.5, wing * 0.15), lineCap: .round)
             )
         }
     }
@@ -310,10 +318,26 @@ private struct TitleScene {
             width: x(trot.to - trot.from + 0.16),
             height: y(0.024)
         )
-        context.fill(
-            Path(ellipseIn: bounds),
-            with: .color(GamePalette.mud.opacity(colors.isNight ? 0.35 : 0.55))
-        )
+        let worn = GamePalette.mud.opacity(colors.isNight ? 0.3 : 0.45)
+
+        // Overlapping lobes filled as one shape, so the trail has a trodden edge rather
+        // than the outline of an ellipse.
+        var trail = Path()
+        for lobe in [
+            (along: 0.5, width: 1.0, height: 1.0, rise: 0.0),
+            (along: 0.22, width: 0.46, height: 0.78, rise: -0.22),
+            (along: 0.76, width: 0.38, height: 0.70, rise: 0.24)
+        ] {
+            let width = bounds.width * CGFloat(lobe.width)
+            let height = bounds.height * CGFloat(lobe.height)
+            trail.addEllipse(in: CGRect(
+                x: bounds.minX + bounds.width * CGFloat(lobe.along) - width / 2,
+                y: bounds.midY + bounds.height * CGFloat(lobe.rise) - height / 2,
+                width: width,
+                height: height
+            ))
+        }
+        context.fill(trail, with: .color(worn))
 
         var scatter = Scatter(seed: 61)
         for _ in 0..<14 {
@@ -329,29 +353,34 @@ private struct TitleScene {
         }
     }
 
-    /// Wildflowers in the near field, so the run down to the button is not bare grass.
+    /// Wildflowers in the near field, spaced along it so the run down to the button is
+    /// neither bare grass nor a clump.
     private func drawFlowers(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 83)
-        let petal = x(0.0075)
+        let count = 12
+        let petal = x(0.010)
 
-        for _ in 0..<11 {
-            let center = CGPoint(x: x(0.03 + scatter.next() * 0.94), y: y(0.708 + scatter.next() * 0.038))
-            let nod = CGFloat(sin(elapsed * 1.3 + scatter.next() * 6.3)) * petal * 0.25
+        for index in 0..<count {
+            let center = CGPoint(
+                x: x((Double(index) + 0.15 + scatter.next() * 0.7) / Double(count)),
+                y: y(0.706 + scatter.next() * 0.042)
+            )
+            let nod = CGFloat(sin(elapsed * 1.3 + Double(index) * 1.1)) * petal * 0.3
 
             var petals = Path()
-            for turn in 0..<4 {
-                let angle = Double(turn) * .pi / 2
+            for turn in 0..<5 {
+                let angle = Double(turn) * 2 * .pi / 5
                 petals.addEllipse(in: CGRect(
-                    x: center.x + nod + petal * CGFloat(cos(angle)) - petal * 0.5,
-                    y: center.y + petal * CGFloat(sin(angle)) - petal * 0.5,
-                    width: petal,
-                    height: petal
+                    x: center.x + nod + petal * 0.6 * CGFloat(cos(angle)) - petal * 0.55,
+                    y: center.y + petal * 0.6 * CGFloat(sin(angle)) - petal * 0.55,
+                    width: petal * 1.1,
+                    height: petal * 1.1
                 ))
             }
-            context.fill(petals, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.35 : 0.85)))
+            context.fill(petals, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.4 : 0.9)))
             context.fill(
-                circle(at: CGPoint(x: center.x + nod, y: center.y), radius: petal * 0.5),
-                with: .color(GamePalette.pen.opacity(colors.isNight ? 0.4 : 0.95))
+                circle(at: CGPoint(x: center.x + nod, y: center.y), radius: petal * 0.42),
+                with: .color(GamePalette.pen.opacity(colors.isNight ? 0.45 : 0.95))
             )
         }
     }
