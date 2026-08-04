@@ -41,15 +41,26 @@ final class PuzzleGame {
     /// so the caller can tell a refused tap from an accepted one.
     @discardableResult
     func toggleFence(on tile: GridPoint) -> Bool {
-        guard isBuilding else { return false }
+        fences.contains(tile) ? clearFence(on: tile) : buildFence(on: tile)
+    }
 
-        if fences.contains(tile) {
-            fences.remove(tile)
-            return true
-        }
+    /// Fills a tile in with fencing. Returns whether anything changed: a tile that is
+    /// already fenced, or that the map or the budget refuses, leaves the field as it was.
+    @discardableResult
+    func buildFence(on tile: GridPoint) -> Bool {
+        guard isBuilding, !fences.contains(tile) else { return false }
         guard level.canBuildFence(on: tile), fencesRemaining > 0 else { return false }
+
         fences.insert(tile)
         return true
+    }
+
+    /// Takes the fencing back out of a tile, giving the piece back. Returns whether
+    /// anything changed.
+    @discardableResult
+    func clearFence(on tile: GridPoint) -> Bool {
+        guard isBuilding else { return false }
+        return fences.remove(tile) != nil
     }
 
     /// Opens the gate and sees what the pig makes of the fences.

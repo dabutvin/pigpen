@@ -1,7 +1,24 @@
 import SwiftUI
 
-/// Draws the field — terrain, fences, pen and pig — and turns taps into the tile
-/// under the finger.
+/// One tile touched during a single unbroken press: a tap, or one of the tiles a finger
+/// crossed on its way across the field.
+struct FenceStroke {
+    /// Which way the press is working. Settled by the tile it starts on and held for the
+    /// rest of the drag, so a press that begins on open ground builds a run of fencing and
+    /// one that begins on a fence tears a run of it out — a finger never undoes its own work.
+    enum Mode {
+        case building
+        case clearing
+    }
+
+    let mode: Mode
+    let tile: GridPoint
+    /// True for the tile the press started on, before the finger moved.
+    let isFirst: Bool
+}
+
+/// Draws the field — terrain, fences, pen and pig — and turns a tap or a drag into the
+/// tiles under the finger.
 struct FieldView: View {
     let level: PuzzleLevel
     /// The tiles filled in with fencing.
@@ -12,7 +29,18 @@ struct FieldView: View {
     let penGlow: Double
     let pigTile: GridPoint
     let pigOpacity: Double
-    let onTapTile: (GridPoint) -> Void
+    let onStroke: (FenceStroke) -> Void
+
+    /// The press in progress, if a finger is down: which way it is working, where it was
+    /// last seen, and the tiles it has already handed over. A finger wandering about
+    /// inside one tile must not toggle it over and over.
+    @State private var press: Press?
+
+    private struct Press {
+        var mode: FenceStroke.Mode
+        var location: CGPoint
+        var touched: Set<GridPoint>
+    }
 
     var body: some View {
         GeometryReader { proxy in
@@ -34,14 +62,32 @@ struct FieldView: View {
             }
             .contentShape(Rectangle())
             .gesture(
-                SpatialTapGesture().onEnded { tap in
-                    if let tile = board.tile(at: tap.location) {
-                        onTapTile(tile)
-                    }
-                }
+                // Zero minimum distance so the touch counts the moment it lands: a press
+                // that never moves is a tap on one tile, and one that moves paints a run.
+                DragGesture(minimumDistance: 0)
+                    .onChanged { drag in touch(at: drag.location, on: board) }
+                    .onEnded { _ in press = nil }
             )
         }
         .aspectRatio(CGFloat(level.columnCount) / CGFloat(level.rowCount), contentMode: .fit)
+    }
+
+    /// Follows the finger, handing over each new tile it reaches once.
+    private func touch(at location: CGPoint, on board: BoardGeometry) {
+        guard var current = press else {
+            guard let tile = board.tile(at: location) else { return }
+            let mode: FenceStroke.Mode = fences.contains(tile) ? .clearing : .building
+            onStroke(FenceStroke(mode: mode, tile: tile, isFirst: true))
+            press = Press(mode: mode, location: location, touched: [tile])
+            return
+        }
+
+        for tile in board.tiles(from: current.location, to: location) {
+            guard current.touched.insert(tile).inserted else { continue }
+            onStroke(FenceStroke(mode: current.mode, tile: tile, isFirst: false))
+        }
+        current.location = location
+        press = current
     }
 
     private func drawTerrain(in context: inout GraphicsContext, board: BoardGeometry) {
@@ -184,7 +230,7 @@ struct FieldView: View {
         penGlow: 0,
         pigTile: PuzzleLevel.riverBend.pigStart,
         pigOpacity: 1,
-        onTapTile: { _ in }
+        onStroke: { _ in }
     )
     .padding()
 }

@@ -7,8 +7,9 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 
 - **The pig** starts on a fixed tile and walks up, down, left or right, never diagonally.
 - **Fences** fill in whole tiles. Tap a tile to wall it off; the pig cannot walk through it.
-  You have a fixed budget of pieces per puzzle. Corners cost nothing, since a pig cannot
-  cut across one.
+  Press and drag to lay a whole run at once — starting the drag on a fence tears out
+  everything you drag over instead. You have a fixed budget of pieces per puzzle. Corners
+  cost nothing, since a pig cannot cut across one.
 - **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
   build on it and you never need to: it walls the pen for free. Build against it instead of
   spending fences.
