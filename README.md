@@ -25,7 +25,10 @@ walks off it. Special tiles (cupcakes, frying pans) and more puzzles come next.
 
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
-a lot like fence posts.
+a lot like fence posts. It plants itself one glyph at a time over a pasture — drifting
+clouds by day, fireflies at dusk — with a pig trotting up and down a run of fence. The
+whole backdrop is drawn in code from one clock and stops dead when the system asks for
+reduced motion.
 
 ## Tech Stack
 
@@ -136,10 +139,12 @@ Pigpen/
 │   └── PigpenGlyph.swift        # Cipher letter → drawable geometry, for the wordmark
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
+│   ├── TitleSceneView.swift     # The animated pasture behind the title
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
-│   ├── GamePalette.swift        # Colours
+│   ├── ChunkyButtonStyle.swift  # The wooden button the title screen is built on
+│   ├── GamePalette.swift        # Colours, including the pasture's day and dusk sets
 │   └── PigpenGlyphView.swift    # Renders glyphs and words
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
