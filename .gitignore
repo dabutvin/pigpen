@@ -73,3 +73,6 @@ build.log
 screenshots/
 Package.resolved
 .swiftpm/
+
+# Tools/
+__pycache__/
