@@ -31,6 +31,17 @@ open Pigpen.xcodeproj
 
 `Pigpen.xcodeproj` and `Pigpen/Resources/Info.plist` are both generated from `project.yml` and are gitignored — edit `project.yml`, never the generated project.
 
+### App icon
+
+The icon is a pig face drawn in code, so it can be tweaked without a design tool. `Tools/generate_app_icon.py` writes the three PNGs the asset catalog expects — the standard icon, the dark variant, and the grayscale tinted variant:
+
+```bash
+pip install cairosvg pillow
+python3 Tools/generate_app_icon.py
+```
+
+Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the script; the shapes are one SVG shared by all three. Commit the regenerated PNGs — the build reads them, not the script.
+
 ### Build from phone (no laptop)
 
 1. Edit code on GitHub (mobile app or web)
@@ -103,6 +114,8 @@ Pigpen/
     ├── Assets.xcassets          # App icon, accent color
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests
+Tools/
+└── generate_app_icon.py         # Redraws the app icon PNGs
 ```
 
 ## License
