@@ -135,6 +135,7 @@ Pigpen/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fence lines
+│   ├── BoardGeometry.swift      # Tiles and fence lines ↔ points on screen
 │   ├── GamePalette.swift        # Colours
 │   └── PigpenGlyphView.swift    # Renders glyphs and words
 └── Resources/
