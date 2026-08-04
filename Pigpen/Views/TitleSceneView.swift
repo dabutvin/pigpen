@@ -59,6 +59,8 @@ private struct TitleScene {
         drawFarHills(in: &context)
         drawLake(in: &context)
         drawGround(in: &context)
+        drawPath(in: &context)
+        drawFlowers(in: &context)
         drawFence(in: &context)
         drawPig(in: &context)
         drawForeground(in: &context)
@@ -298,6 +300,60 @@ private struct TitleScene {
             with: .color(colors.blade),
             style: StrokeStyle(lineWidth: max(1, height * 0.14), lineCap: .round)
         )
+    }
+
+    /// The grass along the fence, walked back to bare mud — the same mud the board is made of.
+    private func drawPath(in context: inout GraphicsContext) {
+        let bounds = CGRect(
+            x: x(trot.from - 0.08),
+            y: pigFeet - y(0.011),
+            width: x(trot.to - trot.from + 0.16),
+            height: y(0.024)
+        )
+        context.fill(
+            Path(ellipseIn: bounds),
+            with: .color(GamePalette.mud.opacity(colors.isNight ? 0.35 : 0.55))
+        )
+
+        var scatter = Scatter(seed: 61)
+        for _ in 0..<14 {
+            let stone = x(0.004) * CGFloat(0.6 + scatter.next())
+            let center = CGPoint(
+                x: bounds.minX + bounds.width * CGFloat(0.06 + scatter.next() * 0.88),
+                y: bounds.midY + bounds.height * CGFloat(scatter.next() - 0.5) * 0.6
+            )
+            context.fill(
+                circle(at: center, radius: stone),
+                with: .color(GamePalette.mudSpeckle.opacity(0.3))
+            )
+        }
+    }
+
+    /// Wildflowers in the near field, so the run down to the button is not bare grass.
+    private func drawFlowers(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 83)
+        let petal = x(0.0075)
+
+        for _ in 0..<11 {
+            let center = CGPoint(x: x(0.03 + scatter.next() * 0.94), y: y(0.708 + scatter.next() * 0.038))
+            let nod = CGFloat(sin(elapsed * 1.3 + scatter.next() * 6.3)) * petal * 0.25
+
+            var petals = Path()
+            for turn in 0..<4 {
+                let angle = Double(turn) * .pi / 2
+                petals.addEllipse(in: CGRect(
+                    x: center.x + nod + petal * CGFloat(cos(angle)) - petal * 0.5,
+                    y: center.y + petal * CGFloat(sin(angle)) - petal * 0.5,
+                    width: petal,
+                    height: petal
+                ))
+            }
+            context.fill(petals, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.35 : 0.85)))
+            context.fill(
+                circle(at: CGPoint(x: center.x + nod, y: center.y), radius: petal * 0.5),
+                with: .color(GamePalette.pen.opacity(colors.isNight ? 0.4 : 0.95))
+            )
+        }
     }
 
     // MARK: - Fence and pig
