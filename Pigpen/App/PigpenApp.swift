@@ -4,7 +4,9 @@ import SwiftUI
 struct PigpenApp: App {
     var body: some Scene {
         WindowGroup {
-            TitleScreenView()
+            NavigationStack {
+                TitleScreenView()
+            }
         }
     }
 }

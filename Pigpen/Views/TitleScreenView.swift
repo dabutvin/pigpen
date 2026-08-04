@@ -23,7 +23,7 @@ struct TitleScreenView: View {
                         .font(.system(size: 40, weight: .bold, design: .rounded))
                         .tracking(10)
 
-                    Text("Decode the message")
+                    Text("Fence in the pig")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -33,12 +33,19 @@ struct TitleScreenView: View {
             VStack(spacing: 14) {
                 Spacer()
 
-                Text("Coming soon")
+                NavigationLink {
+                    PuzzleView(level: .riverBend)
+                } label: {
+                    Text("Play")
+                        .font(.title3.weight(.bold))
+                        .frame(maxWidth: 220)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+
+                Text("Puzzle 1 · \(PuzzleLevel.riverBend.name)")
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 10)
-                    .background(.ultraThinMaterial, in: Capsule())
 
                 Text("Version \(appVersion)")
                     .font(.caption2)
@@ -46,6 +53,7 @@ struct TitleScreenView: View {
             }
             .padding(.bottom, 20)
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 
     private var appVersion: String {
@@ -54,5 +62,7 @@ struct TitleScreenView: View {
 }
 
 #Preview {
-    TitleScreenView()
+    NavigationStack {
+        TitleScreenView()
+    }
 }
