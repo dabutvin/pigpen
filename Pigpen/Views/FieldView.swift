@@ -26,7 +26,7 @@ struct FieldView: View {
                 }
 
                 Text("🐷")
-                    .font(.system(size: board.cell * 0.72))
+                    .font(.system(size: board.cell * 0.78))
                     .opacity(pigOpacity)
                     .position(board.center(of: pigTile))
                     .allowsHitTesting(false)
@@ -163,75 +163,6 @@ struct FieldView: View {
             style: StrokeStyle(lineWidth: board.cell * 0.09, lineCap: .round)
         )
         context.fill(posts, with: .color(GamePalette.post))
-    }
-}
-
-/// Maps between tiles, fence lines and points on screen.
-private struct BoardGeometry {
-    let cell: CGFloat
-    let origin: CGPoint
-    let level: PuzzleLevel
-
-    init(size: CGSize, level: PuzzleLevel) {
-        let cell = min(
-            size.width / CGFloat(max(level.columnCount, 1)),
-            size.height / CGFloat(max(level.rowCount, 1))
-        )
-        self.cell = cell
-        self.level = level
-        self.origin = CGPoint(
-            x: (size.width - cell * CGFloat(level.columnCount)) / 2,
-            y: (size.height - cell * CGFloat(level.rowCount)) / 2
-        )
-    }
-
-    var width: CGFloat { cell * CGFloat(level.columnCount) }
-    var height: CGFloat { cell * CGFloat(level.rowCount) }
-
-    func rect(for tile: GridPoint) -> CGRect {
-        CGRect(
-            x: origin.x + CGFloat(tile.column) * cell,
-            y: origin.y + CGFloat(tile.row) * cell,
-            width: cell,
-            height: cell
-        )
-    }
-
-    func center(of tile: GridPoint) -> CGPoint {
-        CGPoint(x: rect(for: tile).midX, y: rect(for: tile).midY)
-    }
-
-    func endpoints(of fence: Fence) -> (CGPoint, CGPoint) {
-        let corner = CGPoint(
-            x: origin.x + CGFloat(fence.anchor.column) * cell,
-            y: origin.y + CGFloat(fence.anchor.row) * cell
-        )
-        switch fence.orientation {
-        case .horizontal:
-            return (corner, CGPoint(x: corner.x + cell, y: corner.y))
-        case .vertical:
-            return (corner, CGPoint(x: corner.x, y: corner.y + cell))
-        }
-    }
-
-    /// The fence line closest to a touch: the tile under the finger decides which four
-    /// lines are in play, and whichever of its sides the finger sits nearest wins.
-    func line(nearest location: CGPoint) -> Fence? {
-        guard cell > 0 else { return nil }
-
-        let x = (location.x - origin.x) / cell
-        let y = (location.y - origin.y) / cell
-        let column = min(max(Int(x.rounded(.down)), 0), level.columnCount - 1)
-        let row = min(max(Int(y.rounded(.down)), 0), level.rowCount - 1)
-        let sides: [(distance: CGFloat, side: Direction)] = [
-            (y - CGFloat(row), .up),
-            (CGFloat(row + 1) - y, .down),
-            (x - CGFloat(column), .left),
-            (CGFloat(column + 1) - x, .right)
-        ]
-
-        guard let nearest = sides.min(by: { $0.distance < $1.distance }) else { return nil }
-        return Fence(side: nearest.side, of: GridPoint(row: row, column: column))
     }
 }
 
