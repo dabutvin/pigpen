@@ -104,30 +104,27 @@ jobs:
 
           BUNDLE_ID="com.pigpen.app"
 
-          # --- Light Mode Screenshots ---
-          xcrun simctl ui "$DEVICE" appearance light
-          sleep 1
+          # Each screen is shot in both appearances. `-puzzle` is a launch argument the
+          # app understands, so the board can be captured without tapping through.
+          capture() {
+            local file="$1"
+            local appearance="$2"
+            shift 2
 
-          xcrun simctl launch "$DEVICE" "$BUNDLE_ID"
-          sleep 4
+            xcrun simctl ui "$DEVICE" appearance "$appearance"
+            sleep 1
+            xcrun simctl launch "$DEVICE" "$BUNDLE_ID" "$@"
+            sleep 4
+            xcrun simctl io "$DEVICE" screenshot "screenshots/$file"
+            echo "Captured: $file"
+            xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
+            sleep 1
+          }
 
-          xcrun simctl io "$DEVICE" screenshot screenshots/01_main_light.png
-          echo "Captured: main screen (light)"
-
-          xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
-          sleep 1
-
-          # --- Dark Mode Screenshots ---
-          xcrun simctl ui "$DEVICE" appearance dark
-          sleep 1
-
-          xcrun simctl launch "$DEVICE" "$BUNDLE_ID"
-          sleep 4
-
-          xcrun simctl io "$DEVICE" screenshot screenshots/02_main_dark.png
-          echo "Captured: main screen (dark)"
-
-          xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
+          capture 01_title_light.png light
+          capture 02_title_dark.png dark
+          capture 03_puzzle_light.png light -puzzle
+          capture 04_puzzle_dark.png dark -puzzle
 
           # Clean up status bar override
           xcrun simctl status_bar "$DEVICE" clear
@@ -225,19 +222,32 @@ jobs:
             let body = `## 📱 App Screenshots\n\n`;
             body += `> Automatically captured from commit \`${commitSha}\` on **${context.payload.pull_request.head.ref}**\n\n`;
 
-            const lightImg = images.find(i => i.name.includes('light'));
-            const darkImg = images.find(i => i.name.includes('dark'));
+            // Screenshots are named <order>_<screen>_<appearance>.png, so each screen
+            // gets its own light/dark row.
+            const screens = [];
+            const loose = [];
+            for (const img of images) {
+              const match = img.name.match(/^\d+_(.+)_(light|dark)\.png$/);
+              if (!match) { loose.push(img); continue; }
+              const [, name, appearance] = match;
+              let screen = screens.find(s => s.name === name);
+              if (!screen) { screen = { name }; screens.push(screen); }
+              screen[appearance] = img.url;
+            }
 
-            if (lightImg && darkImg) {
+            const cell = (url) => url ? `<img src="${url}?v=${cacheBust}" width="300" />` : '—';
+
+            for (const screen of screens) {
+              const label = screen.name.replace(/_/g, ' ');
+              body += `### ${label.charAt(0).toUpperCase()}${label.slice(1)}\n\n`;
               body += `| Light Mode | Dark Mode |\n`;
               body += `|:---:|:---:|\n`;
-              body += `| <img src="${lightImg.url}?v=${cacheBust}" width="300" /> | <img src="${darkImg.url}?v=${cacheBust}" width="300" /> |\n`;
-            } else {
-              for (const img of images) {
-                const label = img.name.replace(/^\d+_/, '').replace('.png', '').replace(/_/g, ' ');
-                body += `### ${label}\n`;
-                body += `<img src="${img.url}?v=${cacheBust}" width="350" />\n\n`;
-              }
+              body += `| ${cell(screen.light)} | ${cell(screen.dark)} |\n\n`;
+            }
+
+            for (const img of loose) {
+              body += `### ${img.name.replace('.png', '').replace(/_/g, ' ')}\n`;
+              body += `<img src="${img.url}?v=${cacheBust}" width="350" />\n\n`;
             }
 
             body += `\n<sub>📦 Full-resolution screenshots available in the <a href="${context.payload.pull_request.html_url}/checks">workflow artifacts</a>.</sub>\n`;
