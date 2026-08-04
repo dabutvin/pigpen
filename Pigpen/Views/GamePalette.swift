@@ -10,6 +10,8 @@ enum GamePalette {
     static let pen = Color(red: 0.98, green: 0.78, blue: 0.33)
     static let post = Color(red: 0.27, green: 0.17, blue: 0.10)
     static let rail = Color(red: 0.62, green: 0.42, blue: 0.24)
+    /// Pale, freshly cut timber, light enough to stand out against the mud.
+    static let picket = Color(red: 0.78, green: 0.60, blue: 0.39)
     /// Everything past the edge of the map: open country, and a lost pig.
     static let beyond = Color(red: 0.47, green: 0.68, blue: 0.38)
     /// Painted board: lettering and signage that has to read against sky or grass alike.
