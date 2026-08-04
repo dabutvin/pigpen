@@ -132,27 +132,43 @@ struct FieldView: View {
         context.stroke(Path(rim), with: .color(GamePalette.post.opacity(0.5)), lineWidth: 3)
     }
 
-    /// A fenced tile is a square of timber: two rails with three posts across them, which
-    /// still reads as a fence at the size a tile gets on a phone.
+    /// A fenced tile is a whole square given over to fencing: three pointed pickets with
+    /// two rails across them, on ground churned dark. Drawn head-on rather than from
+    /// above, which is the only way it still reads at the size a tile gets on a phone.
     private func drawFences(in context: inout GraphicsContext, board: BoardGeometry) {
         for tile in fences {
             let plot = board.rect(for: tile).insetBy(dx: board.cell * 0.06, dy: board.cell * 0.06)
-            let timber = Path(roundedRect: plot, cornerRadius: board.cell * 0.14)
-            context.fill(timber, with: .color(GamePalette.rail))
+            context.fill(
+                Path(roundedRect: plot, cornerRadius: board.cell * 0.14),
+                with: .color(GamePalette.post)
+            )
 
-            var slats = Path()
-            for rail in [0.32, 0.68] {
+            var pickets = Path()
+            let width = plot.width * 0.16
+            let top = plot.minY + plot.height * 0.10
+            let foot = plot.minY + plot.height * 0.92
+            for picket in [0.2, 0.5, 0.8] {
+                let x = plot.minX + plot.width * picket
+                pickets.move(to: CGPoint(x: x - width / 2, y: foot))
+                pickets.addLine(to: CGPoint(x: x - width / 2, y: top))
+                pickets.addLine(to: CGPoint(x: x, y: top - plot.height * 0.06))
+                pickets.addLine(to: CGPoint(x: x + width / 2, y: top))
+                pickets.addLine(to: CGPoint(x: x + width / 2, y: foot))
+                pickets.closeSubpath()
+            }
+            context.fill(pickets, with: .color(GamePalette.picket))
+
+            var rails = Path()
+            for rail in [0.40, 0.72] {
                 let y = plot.minY + plot.height * rail
-                slats.move(to: CGPoint(x: plot.minX, y: y))
-                slats.addLine(to: CGPoint(x: plot.maxX, y: y))
+                rails.move(to: CGPoint(x: plot.minX + plot.width * 0.06, y: y))
+                rails.addLine(to: CGPoint(x: plot.maxX - plot.width * 0.06, y: y))
             }
-            for post in [0.24, 0.5, 0.76] {
-                let x = plot.minX + plot.width * post
-                slats.move(to: CGPoint(x: x, y: plot.minY))
-                slats.addLine(to: CGPoint(x: x, y: plot.maxY))
-            }
-            context.stroke(slats, with: .color(GamePalette.post), lineWidth: max(1, board.cell * 0.09))
-            context.stroke(timber, with: .color(GamePalette.post), lineWidth: max(1, board.cell * 0.05))
+            context.stroke(
+                rails,
+                with: .color(GamePalette.rail),
+                style: StrokeStyle(lineWidth: plot.width * 0.13, lineCap: .round)
+            )
         }
     }
 }
