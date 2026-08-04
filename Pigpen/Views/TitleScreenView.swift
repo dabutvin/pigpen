@@ -6,7 +6,7 @@ struct TitleScreenView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color.accentColor.opacity(0.22),
+                    Color.accentColor.opacity(0.28),
                     Color(uiColor: .systemBackground)
                 ],
                 startPoint: .top,
@@ -14,9 +14,7 @@ struct TitleScreenView: View {
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 32) {
-                Spacer()
-
+            VStack(spacing: 30) {
                 PigpenWordView(word: "PIGPEN", glyphSize: 46, lineWidth: 5)
                     .foregroundStyle(Color.accentColor)
 
@@ -29,7 +27,10 @@ struct TitleScreenView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
+            }
+            .padding(.horizontal, 24)
 
+            VStack(spacing: 14) {
                 Spacer()
 
                 Text("Coming soon")
@@ -42,9 +43,8 @@ struct TitleScreenView: View {
                 Text("Version \(appVersion)")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
-                    .padding(.bottom, 12)
             }
-            .padding(.horizontal, 24)
+            .padding(.bottom, 20)
         }
     }
 
