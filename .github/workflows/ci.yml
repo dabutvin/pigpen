@@ -37,28 +37,14 @@ jobs:
       - name: Install XcodeGen
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
 
-      # Waking the simulator is the longest thing this job does and it needs
-      # nothing from the build, so it starts here and runs alongside everything
-      # below rather than after it. Homebrew goes first only because a download
-      # racing the boot for the machine makes both of them slower.
-      - name: Start the simulator warming up
-        id: simulator
-        uses: ./.github/actions/simulator
-        with:
-          display: 'false'
-
       - name: Generate Xcode project
         run: xcodegen generate
 
       # `build-for-testing` builds the app and the test bundle once, and the test
-      # step below runs them without building anything again.
-      #
-      # The destination is generic on purpose. Naming the device makes xcodebuild
-      # ask CoreSimulator about it before it will plan anything, and a simulator
-      # that is halfway through booting takes minutes to answer — so the build
-      # would sit and wait for the very thing it is supposed to be running
-      # alongside. `ARCHS` keeps a generic destination from compiling every
-      # architecture the simulator platform has.
+      # step below runs them without building anything again. The destination is
+      # generic so that nothing here has to wait on a simulator, and `ARCHS`
+      # keeps a generic destination from compiling every architecture the
+      # simulator platform has.
       - name: Build
         run: |
           set -o pipefail
@@ -76,10 +62,12 @@ jobs:
             2>&1 | tee build.log
           if grep -q "BUILD FAILED" build.log; then exit 1; fi
 
-      - name: Wait for the simulator
+      # After the build rather than beside it: booting takes every core a runner
+      # has, and sharing them made the build four times slower for no gain.
+      - name: Wake up the simulator
+        id: simulator
         uses: ./.github/actions/simulator
         with:
-          wait: installed
           display: 'false'
 
       - name: Test

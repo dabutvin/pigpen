@@ -1,34 +1,33 @@
 #!/bin/bash
 #
-# Wakes a simulator up in the background while the job gets on with the build.
-# Each stage that finishes leaves a file behind in the state directory for the
-# waiting step to notice: booted, installed, warm.
+# Takes a simulator from cold to ready. The timings it prints are worth reading
+# when a job gets slower: they are where the minutes are.
 #
-# Nothing here except the boot itself is allowed to matter. A stage that fails
-# only means the job pays for that piece of the cold start itself, later, which
-# is exactly where it was paying for it before.
+# Only the boot is allowed to fail the job. Everything after it is warm-up — if
+# it does not happen, the job pays for that piece of the cold start itself,
+# later, which is exactly where it was paying for it before.
 
 set -uo pipefail
 
 UDID="$1"
-STATE="$2"
-STUB="$3"
+STUB="$2"
+WORK="$3"
 DISPLAY_WARMUP="$4"
 
 BUNDLE_ID="com.pigpen.simwarmup"
+APP="$WORK/SimWarmup.app"
 START=$SECONDS
 
-log() { printf '[%4ds] %s\n' "$((SECONDS - START))" "$*"; }
-reached() { log "reached: $1"; : > "$STATE/$1"; }
+mkdir -p "$WORK"
 
-APP="$STATE/SimWarmup.app"
+log() { printf '[%4ds] %s\n' "$((SECONDS - START))" "$*"; }
 
 # The first app to be installed and launched on a fresh simulator pays for
 # installd starting up and for the runtime's shared cache being built, which is
 # minutes of the cold start and has nothing to do with which app it is. So a
-# stub app pays it here, next to the build, and the real one arrives to a
-# simulator that has done all that already. Linking UIKit and SwiftUI without
-# using them is deliberate: loading them is the point.
+# stub app pays it, and the real one arrives to a simulator that has done all
+# that already. Linking UIKit and SwiftUI without using them is deliberate:
+# loading them is the point.
 build_stub() {
   [ -d "$STUB" ] || return 1
 
@@ -58,31 +57,17 @@ fi
 
 if ! xcrun simctl bootstatus "$UDID" -b; then
   log "boot failed"
-  : > "$STATE/failed"
   exit 1
 fi
-reached booted
-
-# Booting is mostly waiting, so it is happy to share the machine with a build.
-# The first launch is not: it builds the runtime's shared cache, which wants
-# every core there is, and a runner has three. So it holds off until the job has
-# nothing left to do but wait for the simulator, which is what the waiting step
-# says by leaving `machine-free` behind. Waiting for a job that never gets there
-# would be worse than the contention, hence the cap.
-WAITED=0
-while [ ! -f "$STATE/machine-free" ] && [ "$WAITED" -lt 300 ]; do
-  sleep 2
-  WAITED=$((WAITED + 2))
-done
-[ -f "$STATE/machine-free" ] || log "gave up waiting for the build to finish"
+log "booted"
 
 if [ "$STUB_BUILT" = "yes" ]; then
-  log "installing the stub app"
+  log "installing and launching the stub app"
   xcrun simctl install "$UDID" "$APP" && xcrun simctl launch "$UDID" "$BUNDLE_ID"
   xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
   xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
+  log "the shared cache is built and installd is up"
 fi
-reached installed
 
 # Dressing the simulator and grabbing one frame off it starts the display
 # service, which the first screenshot would otherwise wait minutes for.
@@ -96,6 +81,7 @@ if [ "$DISPLAY_WARMUP" = "true" ]; then
     --cellularBars 4
   xcrun simctl ui "$UDID" appearance dark
   xcrun simctl ui "$UDID" appearance light
-  xcrun simctl io "$UDID" screenshot "$STATE/warm-up.png"
+  xcrun simctl io "$UDID" screenshot "$WORK/warm-up.png" > /dev/null
 fi
-reached warm
+
+log "ready"
