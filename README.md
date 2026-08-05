@@ -24,6 +24,11 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   how a skull gets buried for the price of one piece — and how an apple gets wasted.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
+- **The boss keeps two.** The last puzzle in the meadow stands a deer on the field as well
+  as the pig, and one budget has to hold both of them. One pen round the pair or a pen
+  apiece is up to you — a pen holds whatever ground it shuts in, whether that ground is in
+  one piece or two — but an animal left loose loses the field however well the other one
+  is held.
 - **A pen that closes colours itself in.** The moment the last gap is filled, the ground the
   fencing holds washes gold, so you can see the pen you have made before you commit to it.
   Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
@@ -51,20 +56,33 @@ holds 9 tiles; hugging the river and the pond holds 35, which is every tile the 
 shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
 walks off it. That 35 is the level's `maximumScore`, and the pen it goes rainbow for.
 
-The last two puzzles put apples and skulls on the ground, so the best pen there is no longer
+The next two puzzles put apples and skulls on the ground, so the best pen there is no longer
 the widest one. **Windfall Orchard** hands out 12 pieces for a map with four apples on it:
 the pen that scores highest holds 27 tiles and narrows as it goes south to bring two of the
 apples inside, which is worth more than the ground it gives up doing so. **Sour Ground** adds
 two skulls, and the best pen there buries both of them under a piece of fencing rather than
 paying five tiles apiece to shut them in.
 
+**Stag Mere** is the boss, and it is everything at once: a mere across the middle of the map
+with the pig grazing north of it and a stag south, apples on both shores and a skull on
+each. The 20 pieces — the biggest budget in the game — go out as two enclosures rather than
+one, because the water is a wall both of them can lean on and a single pen round the pair
+would spend its whole budget getting there. Every piece given to the pig is a piece the stag
+does not get, which is the puzzle. The best split holds 31 tiles and three apples: 46.
+
 ## The World
 
-Play opens **Mudlark Meadow**: eight puzzles as eight signposts up one winding trail, with
+Play opens **Mudlark Meadow**: nine puzzles as nine signposts up one winding trail, with
 the pig standing at the furthest one it has reached and mist over everything past that. The
-first six are fencing and water alone; the last two scatter apples and skulls as well.
+first six are fencing and water alone, the next two scatter apples and skulls as well, and
+the last is the boss.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
+- **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
+  hold, on top of them all being beaten, and its signpost carries the price from the first
+  time you see it. Scraping through the meadow is not enough to get in: you have to go back
+  down the trail and better the pens you rushed. The star that pays it opens the level
+  wherever on the trail it was won, and the pig sets off up the meadow for it there and then.
 - **The pig walks there.** Come back from a level you have just beaten and it sets off up
   a length of trail that was not there before, the map scrolling along behind it, and the
   mist pulls back off the signpost it arrives at.
@@ -83,11 +101,12 @@ first six are fencing and water alone; the last two scatter apples and skulls as
 | 6 | The Big Meadow | 16 | — | 33 |
 | 7 | Windfall Orchard | 12 | 4 apples | 37 |
 | 8 | Sour Ground | 14 | 3 apples, 2 skulls | 32 |
+| 9 | Stag Mere | 20 | a deer, 3 apples, 2 skulls | 46 |
 
 "Best pen" is the most that budget can be made to score on that map: the level's
 `maximumScore`, the number the third star is set just under, and the pen each level goes
 rainbow for. On the first six maps it is a count of mud, since mud is all there is to hold;
-on the last two it is mud and fruit against skulls. Either way it is a search rather than a
+after that it is mud and fruit against skulls. Either way it is a search rather than a
 sum — `Tools/level_search.py` does the searching, and a test pins every one of them to a pen
 that actually holds, so no level can promise a rainbow that is not there.
 
@@ -145,7 +164,7 @@ Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the scrip
 
 ### Adding a level
 
-A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
+A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
 
 ```bash
 Tools/level_search.py --budget 12 --plan <<'MAP'
@@ -158,6 +177,8 @@ MAP
 ```
 
 It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+
+A map with a `D` on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
 ### Build from phone (no laptop)
 
@@ -190,7 +211,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-tutorial` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
