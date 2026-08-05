@@ -34,6 +34,9 @@ struct FieldView: View {
     let pigTile: GridPoint
     let pigOpacity: Double
     let onStroke: (FenceStroke) -> Void
+    /// Told when the finger comes up, so everything one press laid or tore out can be
+    /// taken back together.
+    let onStrokeEnd: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The press in progress, if a finger is down: which way it is working, where it was
@@ -76,7 +79,10 @@ struct FieldView: View {
                 // that never moves is a tap on one tile, and one that moves paints a run.
                 DragGesture(minimumDistance: 0)
                     .onChanged { drag in touch(at: drag.location, on: board) }
-                    .onEnded { _ in press = nil }
+                    .onEnded { _ in
+                        press = nil
+                        onStrokeEnd()
+                    }
             )
         }
         .aspectRatio(CGFloat(level.columnCount) / CGFloat(level.rowCount), contentMode: .fit)
@@ -281,7 +287,8 @@ struct FieldView: View {
         isAsBigAsItGets: false,
         pigTile: PuzzleLevel.riverBend.pigStart,
         pigOpacity: 1,
-        onStroke: { _ in }
+        onStroke: { _ in },
+        onStrokeEnd: {}
     )
     .padding()
 }
@@ -303,7 +310,8 @@ struct FieldView: View {
         isAsBigAsItGets: true,
         pigTile: level.pigStart,
         pigOpacity: 1,
-        onStroke: { _ in }
+        onStroke: { _ in },
+        onStrokeEnd: {}
     )
     .padding()
 }

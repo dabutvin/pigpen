@@ -60,7 +60,8 @@ struct PuzzleView: View {
                     isAsBigAsItGets: game.isPenAsBigAsItGets,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
-                    onStroke: { build($0) }
+                    onStroke: { build($0) },
+                    onStrokeEnd: { game.endStroke() }
                 )
                 .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
                 // The board is the screen, so it is given all the width there is to give.
@@ -109,13 +110,23 @@ struct PuzzleView: View {
         .accessibilityLabel("\(game.fences.count) of \(level.fenceBudget) fence pieces used")
     }
 
+    /// Undo, redo and clear sit to the left of the button that ends the turn, small and
+    /// always in the same place so the board keeps the room and the thumb learns where
+    /// they are. Each greys out rather than vanishing when there is nothing for it to do.
     private var buildingControls: some View {
         HStack(spacing: 10) {
-            if !game.fences.isEmpty {
-                Button { game.startOver() } label: {
-                    Label("Clear", systemImage: "arrow.counterclockwise")
-                }
-                .buttonStyle(.bordered)
+            fieldButton("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
+                game.undo()
+            }
+            .keyboardShortcut("z", modifiers: .command)
+
+            fieldButton("Redo", systemImage: "arrow.uturn.forward", enabled: game.canRedo) {
+                game.redo()
+            }
+            .keyboardShortcut("z", modifiers: [.command, .shift])
+
+            fieldButton("Clear the field", systemImage: "trash", enabled: !game.fences.isEmpty) {
+                game.startOver()
             }
 
             Button {
@@ -128,6 +139,28 @@ struct PuzzleView: View {
             .buttonStyle(.borderedProminent)
             .disabled(game.fences.isEmpty)
         }
+    }
+
+    /// One of the small square buttons that work the fencing already down.
+    private func fieldButton(
+        _ title: String,
+        systemImage: String,
+        enabled: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        } label: {
+            Label(title, systemImage: systemImage)
+                .labelStyle(.iconOnly)
+                .font(.body.weight(.semibold))
+                // One box for all three, so a wider glyph does not make a wider button.
+                .frame(width: 24, height: 24)
+        }
+        .buttonStyle(.bordered)
+        .disabled(!enabled)
+        .accessibilityLabel(title)
     }
 
     @ViewBuilder
@@ -253,7 +286,11 @@ struct PuzzleView: View {
 
     /// Works one tile of a press: the tile a tap landed on, or each tile a drag reaches.
     private func build(_ stroke: FenceStroke) {
-        if stroke.isFirst { refusedThisPress = false }
+        if stroke.isFirst {
+            refusedThisPress = false
+            // Whatever the press goes on to do to the field, it undoes in one go.
+            game.beginStroke()
+        }
 
         switch stroke.mode {
         case .building:
