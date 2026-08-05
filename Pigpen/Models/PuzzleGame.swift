@@ -30,6 +30,15 @@ final class PuzzleGame {
     /// What the pig would do if it were let out this instant, kept up to date as the
     /// fencing changes so a closed pen can be shown as closed the moment it closes.
     private var outcome: PenOutcome
+    /// The field as it stood before each change made to it, oldest first, and the fields
+    /// undone waiting to be laid back down. One press is one step, so a drag that lays a
+    /// run of fencing comes back out in a single undo.
+    private var past: [Set<GridPoint>] = []
+    private var future: [Set<GridPoint>] = []
+    /// Whether a press is underway, and whether it has already put the field it started
+    /// from away. Only the first tile a press changes does that; the rest join it.
+    private var pressIsOpen = false
+    private var pressIsRemembered = false
 
     init(level: PuzzleLevel) {
         self.level = level
@@ -66,6 +75,13 @@ final class PuzzleGame {
         if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
     }
 
+    /// Whether there is a change to the field to take back. Nothing can be undone while
+    /// the pig is out; fetch it back first.
+    var canUndo: Bool { isBuilding && !past.isEmpty }
+
+    /// Whether a change that was taken back can be laid down again.
+    var canRedo: Bool { isBuilding && !future.isEmpty }
+
     /// Whether the field stands somewhere other than on its best pen, so putting it back
     /// is worth offering. False while the pig is out, and until a pen has closed at all.
     var canRestoreBestPen: Bool {
@@ -74,12 +90,15 @@ final class PuzzleGame {
     }
 
     /// Puts the fencing back the way it stood when it held the best pen of the session,
-    /// so a rearrangement that turned out worse costs nothing. Returns whether anything
-    /// changed.
+    /// however many presses ago that was, so a rearrangement that turned out worse costs
+    /// nothing. It is one step of its own, so `undo` takes the field off the best pen
+    /// again. Returns whether anything changed.
     @discardableResult
     func restoreBestPen() -> Bool {
+        endStroke()
         guard canRestoreBestPen, let bestPen else { return false }
 
+        remember()
         fences = bestPen.fences
         reconsider()
         return true
@@ -99,6 +118,7 @@ final class PuzzleGame {
         guard isBuilding, !fences.contains(tile) else { return false }
         guard level.canBuildFence(on: tile), fencesRemaining > 0 else { return false }
 
+        remember()
         fences.insert(tile)
         reconsider()
         return true
@@ -108,7 +128,49 @@ final class PuzzleGame {
     /// anything changed.
     @discardableResult
     func clearFence(on tile: GridPoint) -> Bool {
-        guard isBuilding, fences.remove(tile) != nil else { return false }
+        guard isBuilding, fences.contains(tile) else { return false }
+
+        remember()
+        fences.remove(tile)
+        reconsider()
+        return true
+    }
+
+    /// Opens a press, so everything it goes on to change is undone in one step. A tap
+    /// works one tile and a drag a whole run of them; either way the finger's whole
+    /// journey is one thing the player did, and one thing they can take back.
+    func beginStroke() {
+        pressIsOpen = true
+        pressIsRemembered = false
+    }
+
+    /// Closes the press, so the next change starts a step of its own.
+    func endStroke() {
+        pressIsOpen = false
+        pressIsRemembered = false
+    }
+
+    /// Puts the field back as it was before the last thing the player did to it. Returns
+    /// whether there was anything to take back.
+    @discardableResult
+    func undo() -> Bool {
+        endStroke()
+        guard isBuilding, let previous = past.popLast() else { return false }
+
+        future.append(fences)
+        fences = previous
+        reconsider()
+        return true
+    }
+
+    /// Lays back down what `undo` took away. Returns whether there was anything to put back.
+    @discardableResult
+    func redo() -> Bool {
+        endStroke()
+        guard isBuilding, let next = future.popLast() else { return false }
+
+        past.append(fences)
+        fences = next
         reconsider()
         return true
     }
@@ -116,6 +178,7 @@ final class PuzzleGame {
     /// Opens the gate and sees what the pig makes of the fences.
     func releasePig() {
         guard isBuilding else { return }
+        endStroke()
 
         switch outcome {
         case .escaped(let route):
@@ -130,11 +193,16 @@ final class PuzzleGame {
         phase = .building
     }
 
-    /// Tears every fence back out and starts the field over. The best pen of the session
-    /// outlives it, so a field cleared by mistake can still be put back.
+    /// Tears every fence back out and starts the field over. A field cleared by accident
+    /// is one `undo` away from coming back, and the best pen of the session outlives the
+    /// clearing either way.
     func startOver() {
-        fences.removeAll()
-        reconsider()
+        endStroke()
+        if !fences.isEmpty {
+            remember()
+            fences.removeAll()
+            reconsider()
+        }
         phase = .building
     }
 
@@ -155,5 +223,33 @@ final class PuzzleGame {
         return pen.count == bestPen.area
             ? fences.count < bestPen.fences.count
             : pen.count > bestPen.area
+    }
+
+    /// Files the field away, so whatever is about to change about it can be undone. A press
+    /// files it once however many tiles it goes on to work, and whatever was undone before
+    /// is given up: a new fence is a new course, not a way back onto the old one.
+    private func remember() {
+        if pressIsOpen {
+            guard !pressIsRemembered else { return }
+            pressIsRemembered = true
+        }
+
+        past.append(fences)
+        future.removeAll()
+    }
+}
+
+extension PuzzleGame {
+    /// River Bend with its west wall part way down, so previews and the screenshots CI
+    /// takes show a board with fencing on it and something for undo to take back. Each
+    /// piece is laid as a press of its own, the way a player lays them one tap at a time.
+    static func partWayThrough() -> PuzzleGame {
+        let game = PuzzleGame(level: .riverBend)
+        for row in 5...9 {
+            game.beginStroke()
+            game.buildFence(on: GridPoint(row: row, column: 0))
+            game.endStroke()
+        }
+        return game
     }
 }

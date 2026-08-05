@@ -5,6 +5,15 @@ import UIKit
 /// pig go, and find out whether it holds.
 @MainActor
 struct PuzzleView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    /// Told how many stars a pen was worth, every time one holds.
+    ///
+    /// Nothing is listening when a level is played on its own — the previews and the
+    /// screenshot runs open one straight — and that is also how the screen knows whether
+    /// there is a world map behind it to offer a way back to.
+    private let onPenned: ((Int) -> Void)?
+
     @State private var game: PuzzleGame
     @State private var pigTile: GridPoint
     @State private var pigOpacity: Double = 1
@@ -14,9 +23,16 @@ struct PuzzleView: View {
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
 
-    init(level: PuzzleLevel) {
-        _game = State(initialValue: PuzzleGame(level: level))
-        _pigTile = State(initialValue: level.pigStart)
+    init(level: PuzzleLevel, onPenned: ((Int) -> Void)? = nil) {
+        self.init(game: PuzzleGame(level: level), onPenned: onPenned)
+    }
+
+    /// Opens the screen on a puzzle already in progress, which is how the previews and the
+    /// screenshot runs show a field with fencing on it.
+    init(game: PuzzleGame, onPenned: ((Int) -> Void)? = nil) {
+        self.onPenned = onPenned
+        _game = State(initialValue: game)
+        _pigTile = State(initialValue: game.level.pigStart)
     }
 
     private var level: PuzzleLevel { game.level }
@@ -50,7 +66,8 @@ struct PuzzleView: View {
                     isAsBigAsItGets: game.isPenAsBigAsItGets,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
-                    onStroke: { build($0) }
+                    onStroke: { build($0) },
+                    onStrokeEnd: { game.endStroke() }
                 )
                 .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
                 // The board is the screen, so it is given all the width there is to give.
@@ -99,16 +116,28 @@ struct PuzzleView: View {
         .accessibilityLabel("\(game.fences.count) of \(level.fenceBudget) fence pieces used")
     }
 
+    /// Undo, redo and clear sit to the left of the button that ends the turn, small and
+    /// always in the same place so the board keeps the room and the thumb learns where
+    /// they are. Each greys out rather than vanishing when there is nothing for it to do.
+    /// The tally of the best pen sits above them, since it has something to say only once
+    /// a pen has closed.
     private var buildingControls: some View {
         VStack(spacing: 10) {
             bestPenTally
 
             HStack(spacing: 10) {
-                if !game.fences.isEmpty {
-                    Button { game.startOver() } label: {
-                        Label("Clear", systemImage: "arrow.counterclockwise")
-                    }
-                    .buttonStyle(.bordered)
+                fieldButton("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
+                    game.undo()
+                }
+                .keyboardShortcut("z", modifiers: .command)
+
+                fieldButton("Redo", systemImage: "arrow.uturn.forward", enabled: game.canRedo) {
+                    game.redo()
+                }
+                .keyboardShortcut("z", modifiers: [.command, .shift])
+
+                fieldButton("Clear the field", systemImage: "trash", enabled: !game.fences.isEmpty) {
+                    game.startOver()
                 }
 
                 Button {
@@ -129,6 +158,8 @@ struct PuzzleView: View {
     /// What the field is holding, set against the most it has held, and the way back to it.
     /// A pen counts from the moment it closes, so the fencing can be pulled about, seen to
     /// fall short, and put back the way it was without the pig ever leaving its tile.
+    /// Undo walks back a press at a time; this goes straight to the best, however long ago
+    /// it was, which is why it wears the trophy rather than an arrow.
     @ViewBuilder
     private var bestPenTally: some View {
         if game.bestArea > 0 {
@@ -144,7 +175,7 @@ struct PuzzleView: View {
 
                 if game.canRestoreBestPen {
                     Button { restoreBestPen() } label: {
-                        Label("Put it back", systemImage: "arrow.uturn.backward")
+                        Label("Put it back", systemImage: "trophy")
                             .font(.footnote.weight(.semibold))
                     }
                     .buttonStyle(.bordered)
@@ -169,6 +200,28 @@ struct PuzzleView: View {
         return holding >= game.bestArea
             ? "Your best yet: \(counted(holding, "mud tile"))"
             : "Holding \(holding), best \(game.bestArea)"
+    }
+
+    /// One of the small square buttons that work the fencing already down.
+    private func fieldButton(
+        _ title: String,
+        systemImage: String,
+        enabled: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        } label: {
+            Label(title, systemImage: systemImage)
+                .labelStyle(.iconOnly)
+                .font(.body.weight(.semibold))
+                // One box for all three, so a wider glyph does not make a wider button.
+                .frame(width: 24, height: 24)
+        }
+        .buttonStyle(.bordered)
+        .disabled(!enabled)
+        .accessibilityLabel(title)
     }
 
     @ViewBuilder
@@ -199,26 +252,47 @@ struct PuzzleView: View {
     }
 
     /// A pen that can still be widened sends the player back out to try; one that cannot
-    /// leaves nothing to do but take the field again from scratch.
+    /// leaves nothing to do but take the field again from scratch. A level opened from
+    /// the world map has one more way out of both: the map itself, where the stars just
+    /// earned are waiting on the signpost.
     @ViewBuilder
     private var pennedActions: some View {
-        if game.isPenAsBigAsItGets {
-            Button { game.startOver() } label: {
-                Label("Start over", systemImage: "arrow.counterclockwise")
-            }
-            .buttonStyle(.borderedProminent)
-        } else {
-            HStack(spacing: 10) {
-                Button { game.startOver() } label: {
-                    Label("Start over", systemImage: "arrow.counterclockwise")
+        if onPenned == nil {
+            if game.isPenAsBigAsItGets {
+                startOver.buttonStyle(.borderedProminent)
+            } else {
+                HStack(spacing: 10) {
+                    startOver.buttonStyle(.bordered)
+                    goBigger.buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.bordered)
+            }
+        } else {
+            VStack(spacing: 10) {
+                HStack(spacing: 10) {
+                    startOver.buttonStyle(.bordered)
+                    if !game.isPenAsBigAsItGets {
+                        goBigger.buttonStyle(.bordered)
+                    }
+                }
 
-                Button { game.resumeBuilding() } label: {
-                    Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
+                Button { dismiss() } label: {
+                    Label("Back to the map", systemImage: "signpost.right.fill")
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
             }
+        }
+    }
+
+    private var startOver: some View {
+        Button { game.startOver() } label: {
+            Label("Start over", systemImage: "arrow.counterclockwise")
+        }
+    }
+
+    private var goBigger: some View {
+        Button { game.resumeBuilding() } label: {
+            Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
         }
     }
 
@@ -273,7 +347,11 @@ struct PuzzleView: View {
 
     /// Works one tile of a press: the tile a tap landed on, or each tile a drag reaches.
     private func build(_ stroke: FenceStroke) {
-        if stroke.isFirst { refusedThisPress = false }
+        if stroke.isFirst {
+            refusedThisPress = false
+            // Whatever the press goes on to do to the field, it undoes in one go.
+            game.beginStroke()
+        }
 
         switch stroke.mode {
         case .building:
@@ -290,10 +368,11 @@ struct PuzzleView: View {
         }
     }
 
-    /// Puts the fencing back the way it stood on the best pen of the session.
+    /// Puts the fencing back the way it stood on the best pen of the session, with the
+    /// same soft knock the other buttons that work the fencing already down give.
     private func restoreBestPen() {
         guard game.restoreBestPen() else { return }
-        UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
     }
 
     /// Says no to a tile the map or the budget will not take, once per press: a finger
@@ -320,6 +399,9 @@ struct PuzzleView: View {
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
+            // Told to whoever is keeping score before any of the celebrating, so a player
+            // who leaves the moment the pen holds still keeps the stars for it.
+            onPenned?(game.starRating ?? 1)
             // The wash is already on the field — it deepens itself as the phase changes,
             // and the verdict waits for it to settle.
             try? await Task.sleep(for: .milliseconds(350))
@@ -357,8 +439,14 @@ private struct Shake: GeometryEffect {
     }
 }
 
-#Preview {
+#Preview("A fresh field") {
     NavigationStack {
         PuzzleView(level: .riverBend)
+    }
+}
+
+#Preview("Part way through") {
+    NavigationStack {
+        PuzzleView(game: .partWayThrough())
     }
 }

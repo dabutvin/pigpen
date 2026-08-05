@@ -11,8 +11,11 @@ struct TitleScreenView: View {
     /// The lettering, the sign and the button all arrive a beat behind the glyphs.
     @State private var arrived = false
     @State private var isPlaying = false
+    /// Read off the saved progress each time the title comes back, so a player returning
+    /// from the map sees the stars they just took.
+    @State private var earnedStars = 0
 
-    private let level = PuzzleLevel.riverBend
+    private let world = WorldMap.mudlarkMeadow
 
     var body: some View {
         ZStack {
@@ -32,9 +35,12 @@ struct TitleScreenView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $isPlaying) {
-            PuzzleView(level: level)
+            WorldMapView()
         }
-        .onAppear(perform: raiseTheCurtain)
+        .onAppear {
+            earnedStars = WorldProgress(world: world).totalStars
+            raiseTheCurtain()
+        }
     }
 
     // MARK: - Wordmark
@@ -111,13 +117,13 @@ struct TitleScreenView: View {
         .offset(y: arrived ? 0 : 26)
     }
 
-    /// What the one puzzle in the game is, and what it hands the player to solve it with.
-    /// How much mud three stars takes is left for the player to find out by taking it.
+    /// Where Play leads, and how much of it is left. How much mud three stars takes on
+    /// any given puzzle is left for the player to find out by taking it.
     private var signpost: some View {
         VStack(spacing: 3) {
-            Text("Puzzle 1 · \(level.name)")
+            Text("\(world.name) · \(world.count) puzzles")
                 .font(.footnote.weight(.heavy))
-            Text("\(level.fenceBudget) fence pieces · pen in as much mud as you can")
+            Text("\(earnedStars) of \(world.starTotal) stars · pen in as much mud as you can")
                 .font(.caption2.weight(.semibold))
                 .opacity(0.85)
             Text("Version \(appVersion)")

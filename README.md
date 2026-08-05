@@ -10,6 +10,10 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   Press and drag to lay a whole run at once — starting the drag on a fence tears out
   everything you drag over instead. You have a fixed budget of pieces per puzzle. Corners
   cost nothing, since a pig cannot cut across one.
+- **Undo and redo** walk back and forth through the field a press at a time, so a drag laid
+  in the wrong place comes out in one go rather than tile by tile. Clearing the field is a
+  press like any other and one undo brings the whole thing back. Laying a new piece gives up
+  whatever was waiting to be redone.
 - **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
   build on it and you never need to: it walls the pen for free. Build against it instead of
   spending fences.
@@ -28,16 +32,47 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   until it is the biggest pen the map has in it, which the game knows and says so.
 - **Your best pen is kept, and you can go back to it.** A pen counts the moment it closes,
   so the running best is yours without letting the pig go. Rearrange the fencing, see the
-  tally say the new arrangement holds less ground than the old one, and *Put it back*
-  stands every piece exactly where it stood on your best — even after clearing the field.
-  It lasts as long as you stay on the puzzle. Same ground held with a piece to spare
-  replaces the best too, since the piece it hands back is one more to widen with.
+  tally say the new arrangement holds less ground than the old one, and *Put it back* — the
+  trophy beside the tally — stands every piece exactly where it stood on your best, however
+  many presses ago that was and even after clearing the field. Undo walks back a press at a
+  time; this goes the whole way in one, and is itself one press to undo. It lasts as long as
+  you stay on the puzzle. Holding the same ground with a piece to spare replaces the best
+  too, since the spare piece is one more to widen with.
 
-The one puzzle so far, **River Bend**, hands you 12 fence pieces. A free-standing box that
-size holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can
-be shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
+The first puzzle, **River Bend**, hands you 12 fence pieces. A free-standing box that size
+holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can be
+shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
 walks off it. That 35 is the level's `maximumArea`, and the pen it goes rainbow for. Special
-tiles (cupcakes, frying pans) and more puzzles come next.
+tiles (cupcakes, frying pans) come next.
+
+## The World
+
+Play opens **Mudlark Meadow**: six puzzles as six signposts up one winding trail, with the
+pig standing at the furthest one it has reached and mist over everything past that.
+
+- **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
+- **The pig walks there.** Come back from a level you have just beaten and it sets off up
+  a length of trail that was not there before, the map scrolling along behind it, and the
+  mist pulls back off the signpost it arrives at.
+- **Stars stay on the signpost.** Each one shows the best you have ever done there, so a
+  level replayed badly costs you nothing and a level replayed well is worth going back for.
+- **You can go back down the trail** to any level already open, and the pig trots down to
+  it before the puzzle opens.
+
+| # | Level | Pieces | Biggest pen |
+|---|---|---|---|
+| 1 | River Bend | 12 | 35 |
+| 2 | Puddle Corner | 8 | 26 |
+| 3 | Horseshoe Lake | 6 | 24 |
+| 4 | The Narrows | 10 | 22 |
+| 5 | Otter Ford | 12 | 24 |
+| 6 | The Big Meadow | 16 | 33 |
+
+"Biggest pen" is the most mud that budget can shut a pig into on that map: the level's
+`maximumArea`, the number the third star is set just under, and the pen each level goes
+rainbow for. It is a search rather than a sum — `Tools/level_search.py` does the searching,
+and a test pins every one of them to a pen that actually holds, so no level can promise a
+rainbow that is not there.
 
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
@@ -84,6 +119,21 @@ python3 Tools/generate_app_icon.py
 
 Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the script; the shapes are one SVG shared by all three. Commit the regenerated PNGs — the build reads them, not the script.
 
+### Adding a level
+
+A level is an ASCII map and four numbers: the fence budget, the areas the second and third stars are worth, and `maximumArea` — the biggest pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "biggest pen there is" verdict forever or hands it out for a pen that could still be widened. `Tools/level_search.py` works it out:
+
+```bash
+Tools/level_search.py --budget 12 <<'MAP'
+.........
+~~~~~~~..
+..P...~..
+.........
+MAP
+```
+
+It prints the best pen it found, marked out on the map, along with `maximumArea` and star thresholds in the proportions the shipped levels use. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the printed `#` tiles — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+
 ### Build from phone (no laptop)
 
 1. Edit code on GitHub (mobile app or web)
@@ -115,7 +165,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes a `-puzzle` launch argument so the board can be captured without tapping through the title screen.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map` and `-puzzle` launch arguments so the world map and the board can be captured without tapping through the title screen; both open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
 - **Doc-only changes.** Pushes that only touch `*.md` or `.gitignore` skip the TestFlight workflow.
 
@@ -203,18 +253,25 @@ Pigpen/
 │   └── PigpenApp.swift          # App entry point
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
-│   ├── PuzzleLevel.swift        # Terrain, pig start, budget, and the shipped map
+│   ├── PuzzleLevel.swift        # Terrain, pig start, budget, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
+│   ├── WorldMap.swift           # The levels of a world and where their signposts stand
+│   ├── WorldProgress.swift      # Best stars per level, what that unlocks, and where it is kept
 │   └── PigpenGlyph.swift        # Cipher letter → drawable geometry, for the wordmark
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
+│   ├── WorldMapView.swift       # The world map: signposts, the walking pig, the trail
+│   ├── WorldMapScene.swift      # The meadow the trail runs through
+│   ├── WorldTrail.swift         # Stops ↔ points on screen, and the curve between them
+│   ├── LevelSignpost.swift      # One stop on the map: stars, number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden button the title screen is built on
 │   ├── GamePalette.swift        # Colours, including the pasture's day and dusk sets
+│   ├── Scatter.swift            # The seeded generator every drawn scene scatters things with
 │   └── PigpenGlyphView.swift    # Renders glyphs and words
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
@@ -222,6 +279,7 @@ Pigpen/
 PigpenTests/                     # Unit tests
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
+├── level_search.py              # Finds the biggest pen a map and budget allow
 ├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API
 └── prepare_signing_secrets.sh   # Checks and encodes a certificate exported from a Mac
 ```

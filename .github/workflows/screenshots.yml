@@ -104,8 +104,9 @@ jobs:
 
           BUNDLE_ID="com.pigpen.app"
 
-          # Each screen is shot in both appearances. `-puzzle` is a launch argument the
-          # app understands, so the board can be captured without tapping through.
+          # Each screen is shot in both appearances. `-map` and `-puzzle` are launch
+          # arguments the app understands, so the world map and the board can be
+          # captured without tapping through the title screen.
           capture() {
             local file="$1"
             local appearance="$2"
@@ -123,8 +124,10 @@ jobs:
 
           capture 01_title_light.png light
           capture 02_title_dark.png dark
-          capture 03_puzzle_light.png light -puzzle
-          capture 04_puzzle_dark.png dark -puzzle
+          capture 03_map_light.png light -map
+          capture 04_map_dark.png dark -map
+          capture 05_puzzle_light.png light -puzzle
+          capture 06_puzzle_dark.png dark -puzzle
 
           # Clean up status bar override
           xcrun simctl status_bar "$DEVICE" clear
