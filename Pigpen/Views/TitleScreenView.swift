@@ -11,11 +11,19 @@ struct TitleScreenView: View {
     /// The lettering, the sign and the button all arrive a beat behind the glyphs.
     @State private var arrived = false
     @State private var isPlaying = false
-    /// Read off the saved progress each time the title comes back, so a player returning
-    /// from the map sees the stars they just took.
-    @State private var earnedStars = 0
+    @State private var showsSettings = false
+    /// The same progress the map is handed, so the stars on the signpost below are the
+    /// ones just won — and go the moment they are cleared from the settings sheet.
+    @State private var progress: WorldProgress
 
-    private let world = WorldMap.mudlarkMeadow
+    /// - Parameter showsSettings: Opens with the settings sheet already up, which is how
+    ///   CI photographs it without tapping through the title screen.
+    init(progress: WorldProgress = WorldProgress(), showsSettings: Bool = false) {
+        _progress = State(initialValue: progress)
+        _showsSettings = State(initialValue: showsSettings)
+    }
+
+    private var world: WorldMap { progress.world }
 
     var body: some View {
         ZStack {
@@ -23,6 +31,8 @@ struct TitleScreenView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
+                settingsBar
+
                 wordmark
 
                 Spacer(minLength: 12)
@@ -35,12 +45,46 @@ struct TitleScreenView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $isPlaying) {
-            WorldMapView()
+            WorldMapView(progress: progress)
+        }
+        .sheet(isPresented: $showsSettings) {
+            SettingsView(progress: progress)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         .onAppear {
-            earnedStars = WorldProgress(world: world).totalStars
+            // The map keeps its own copy of the stars while it is up; read them back so a
+            // player coming off the trail sees the ones they have just taken.
+            progress.reload()
             raiseTheCurtain()
         }
+    }
+
+    // MARK: - Settings
+
+    /// A gear in the corner, small and well away from Play. What is behind it — the
+    /// version, and a button that throws away every star — is nothing a player needs
+    /// while they are playing.
+    private var settingsBar: some View {
+        HStack(spacing: 0) {
+            Spacer(minLength: 0)
+
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                showsSettings = true
+            } label: {
+                Image(systemName: "gearshape.fill")
+                    .font(.system(size: 17, weight: .black))
+                    .foregroundStyle(GamePalette.post)
+                    .frame(width: 38, height: 38)
+                    .background(Circle().fill(GamePalette.cream.opacity(0.94)))
+                    .overlay(Circle().strokeBorder(GamePalette.post.opacity(0.18), lineWidth: 1))
+                    .shadow(color: .black.opacity(0.25), radius: 4, y: 3)
+            }
+            .accessibilityLabel("Settings")
+        }
+        .opacity(arrived ? 1 : 0)
+        .padding(.bottom, 10)
     }
 
     // MARK: - Wordmark
@@ -123,13 +167,9 @@ struct TitleScreenView: View {
         VStack(spacing: 3) {
             Text("\(world.name) · \(world.count) puzzles")
                 .font(.footnote.weight(.heavy))
-            Text("\(earnedStars) of \(world.starTotal) stars · pen in as much mud as you can")
+            Text("\(progress.totalStars) of \(world.starTotal) stars · pen in as much mud as you can")
                 .font(.caption2.weight(.semibold))
                 .opacity(0.85)
-            Text("Version \(appVersion)")
-                .font(.caption2)
-                .opacity(0.55)
-                .padding(.top, 2)
         }
         .foregroundStyle(GamePalette.cream)
         .multilineTextAlignment(.center)
@@ -146,10 +186,6 @@ struct TitleScreenView: View {
         }
         withAnimation(.spring(duration: 0.9, bounce: 0.4)) { planted = 1 }
         withAnimation(.spring(duration: 0.6, bounce: 0.3).delay(0.45)) { arrived = true }
-    }
-
-    private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.0"
     }
 }
 
@@ -175,5 +211,11 @@ private struct Breathing: ViewModifier {
 #Preview {
     NavigationStack {
         TitleScreenView()
+    }
+}
+
+#Preview("Settings up") {
+    NavigationStack {
+        TitleScreenView(progress: .partWayThrough(), showsSettings: true)
     }
 }

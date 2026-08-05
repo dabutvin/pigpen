@@ -9,6 +9,8 @@ import Observation
 protocol ProgressStore {
     func loadStars() -> [String: Int]
     func save(_ stars: [String: Int])
+    /// Throws the lot away, for the player who wants the game back as they found it.
+    func erase()
 }
 
 /// The real thing: stars survive the app being closed.
@@ -27,6 +29,10 @@ struct StoredProgress: ProgressStore {
     func save(_ stars: [String: Int]) {
         defaults.set(stars, forKey: Self.key)
     }
+
+    func erase() {
+        defaults.removeObject(forKey: Self.key)
+    }
 }
 
 /// A world that forgets everything the moment it is put down.
@@ -40,6 +46,8 @@ final class RememberedProgress: ProgressStore {
     func loadStars() -> [String: Int] { stars }
 
     func save(_ stars: [String: Int]) { self.stars = stars }
+
+    func erase() { stars = [:] }
 }
 
 /// How far a player has got through a world: the best rating earned on every level, and
@@ -110,6 +118,20 @@ final class WorldProgress {
             store.save(bestStars)
         }
         return frontier > before
+    }
+
+    /// Reads the store again, for a screen that has been sitting behind another one while
+    /// the stars were being won. The title screen does this every time it comes back.
+    func reload() {
+        bestStars = store.loadStars()
+    }
+
+    /// Forgets every star ever earned, on the device as well as on the screen, which shuts
+    /// the world back to its first level. There is no undoing it, so nothing calls this
+    /// without asking first.
+    func eraseEverything() {
+        bestStars = [:]
+        store.erase()
     }
 }
 
