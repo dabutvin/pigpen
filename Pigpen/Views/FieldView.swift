@@ -18,21 +18,38 @@ struct FenceStroke {
     let isFirst: Bool
 }
 
-/// Draws the field — terrain, fences, pen and pig — and turns a tap or a drag into the
-/// tiles under the finger.
+/// An animal as the field draws it: what it is, the tile it is standing on this instant,
+/// and how solid it is — one that has walked off the map fades out where it left.
+struct AnimalMark: Equatable, Identifiable {
+    let kind: Animal
+    var tile: GridPoint
+    var opacity: Double
+
+    var id: Animal { kind }
+}
+
+extension Array where Element == AnimalMark {
+    /// Every animal a level stands on its ground, on the tile the map puts it.
+    static func standing(on level: PuzzleLevel) -> [AnimalMark] {
+        level.animals.map { AnimalMark(kind: $0.kind, tile: $0.tile, opacity: 1) }
+    }
+}
+
+/// Draws the field — terrain, fences, pen and animals — and turns a tap or a drag into
+/// the tiles under the finger.
 struct FieldView: View {
     let level: PuzzleLevel
     /// The tiles filled in with fencing.
     let fences: Set<GridPoint>
-    /// The mud tiles the fencing shuts the pig into, washed in as soon as the pen closes.
+    /// The mud tiles the fencing shuts the animals into, washed in as soon as the pen closes.
     let penTiles: Set<GridPoint>
     /// How deep that wash goes, 0 to 1.
     let penGlow: Double
     /// Whether the pen is the best the map has in it, which turns the wash from gold
     /// to a drifting rainbow.
     let isAsGoodAsItGets: Bool
-    let pigTile: GridPoint
-    let pigOpacity: Double
+    /// Everything standing on the field, wherever it is standing this instant.
+    let animals: [AnimalMark]
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -79,11 +96,13 @@ struct FieldView: View {
 
                 highlights(board: board)
 
-                Text("🐷")
-                    .font(.system(size: board.cell * 0.78))
-                    .opacity(pigOpacity)
-                    .position(board.center(of: pigTile))
-                    .allowsHitTesting(false)
+                ForEach(animals) { animal in
+                    Text(animal.kind.glyph)
+                        .font(.system(size: board.cell * 0.78))
+                        .opacity(animal.opacity)
+                        .position(board.center(of: animal.tile))
+                        .allowsHitTesting(false)
+                }
             }
             .contentShape(Rectangle())
             .gesture(
@@ -350,8 +369,7 @@ struct FieldView: View {
         penTiles: [],
         penGlow: 0,
         isAsGoodAsItGets: false,
-        pigTile: PuzzleLevel.riverBend.pigStart,
-        pigOpacity: 1,
+        animals: .standing(on: .riverBend),
         onStroke: { _ in },
         onStrokeEnd: {}
     )
@@ -373,8 +391,7 @@ struct FieldView: View {
         penTiles: pen,
         penGlow: 0.8,
         isAsGoodAsItGets: true,
-        pigTile: level.pigStart,
-        pigOpacity: 1,
+        animals: .standing(on: level),
         onStroke: { _ in },
         onStrokeEnd: {}
     )
@@ -390,7 +407,7 @@ struct FieldView: View {
         [GridPoint(row: row, column: max(0, row - 5)), GridPoint(row: row, column: 12 - row)]
     })
     var pen: Set<GridPoint> = []
-    if case .penned(let held) = level.releasePig(fences: fences) {
+    if case .penned(let held) = level.release(fences: fences) {
         pen = held
     }
 
@@ -400,8 +417,26 @@ struct FieldView: View {
         penTiles: pen,
         penGlow: 0.8,
         isAsGoodAsItGets: true,
-        pigTile: level.pigStart,
-        pigOpacity: 1,
+        animals: .standing(on: level),
+        onStroke: { _ in },
+        onStrokeEnd: {}
+    )
+    .padding()
+}
+
+/// The best pen Stag Mere has in it: the mere walls one side of each enclosure, so the
+/// twenty pieces hold the pig on the north shore and the stag on the south for less than
+/// one pen round the pair of them would cost.
+#Preview("Two to hold") {
+    let game = PuzzleGame.theStagMeresBestPen()
+
+    return FieldView(
+        level: game.level,
+        fences: game.fences,
+        penTiles: game.penTiles,
+        penGlow: 0.8,
+        isAsGoodAsItGets: game.isPenAsGoodAsItGets,
+        animals: .standing(on: game.level),
         onStroke: { _ in },
         onStrokeEnd: {}
     )

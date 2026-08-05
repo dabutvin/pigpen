@@ -4,8 +4,8 @@
 `PuzzleLevel` carries a `maximumScore` that the game uses to tell a player there is
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
-an apple, `x` a skull, `P` the pig's tile) and a budget and it prints the best pen, an
-example of it, and star thresholds in the proportions the shipped levels use.
+an apple, `x` a skull, `P` the pig's tile, `D` a deer's) and a budget and it prints the
+best pen, an example of it, and star thresholds in the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -15,13 +15,18 @@ example of it, and star thresholds in the proportions the shipped levels use.
     .........
     MAP
 
-A pen is any connected run of mud holding the pig and no tile on the rim of the map —
-the pig walks straight off the rim — and it costs one fence piece for every mud tile
+A pen is any run of mud holding every animal on the map and no tile on the rim — an
+animal walks straight off the rim — and it costs one fence piece for every mud tile
 around its edge. Water costs nothing, which is the whole game. A tile the pen grows
 around rather than over is a mud tile on that edge like any other, so burying a skull
 under a piece of fencing is a pen with a hole in it, and the search finds those too.
 
-A pen scores a point per tile of ground, five more for an apple shut in with the pig
+A map with a deer on it as well as the pig is held by ground in two pieces just as
+happily as by one, since what has to hold is each animal rather than the pen: the search
+grows out from both animals at once and the ground it ends up with is connected to one
+or the other, so a wall shared between two enclosures is paid for once, like any other.
+
+A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
 search grows a pen outwards a tile at a time, keeping the cheapest few thousand pens
 of each size along with the ones holding the most for what they cost, which finds the
@@ -34,6 +39,8 @@ import sys
 NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
 # What shutting a tile into the pen is worth, over and above the ground itself.
 WORTH = {"a": 5, "x": -5}
+# The animals a map can stand on its ground, and the tile each one starts on.
+ANIMALS = ("P", "D")
 
 
 def parse(map_text):
@@ -42,14 +49,14 @@ def parse(map_text):
     if any(len(line) != width for line in lines):
         raise SystemExit("The map is ragged: every row must be the same width")
 
-    mud, treats, start = set(), {}, None
+    mud, treats, starts = set(), {}, {}
     for row, line in enumerate(lines):
         for column, character in enumerate(line):
-            if character == "P":
-                if start is not None:
-                    raise SystemExit("The map names more than one starting tile")
-                start = (row, column)
-                mud.add(start)
+            if character in ANIMALS:
+                if character in starts:
+                    raise SystemExit(f"The map stands more than one {character!r} on it")
+                starts[character] = (row, column)
+                mud.add((row, column))
             elif character in WORTH:
                 mud.add((row, column))
                 treats[(row, column)] = character
@@ -57,9 +64,9 @@ def parse(map_text):
                 mud.add((row, column))
             elif character != "~":
                 raise SystemExit(f"Unknown terrain {character!r}")
-    if start is None:
+    if "P" not in starts:
         raise SystemExit("The map names no starting tile")
-    return mud, treats, start, len(lines), width
+    return mud, treats, starts, len(lines), width
 
 
 def score(pen, treats):
@@ -81,20 +88,21 @@ def fences_around(pen, mud):
     return edge
 
 
-def search(mud, treats, start, rows, columns, budget, beam):
+def search(mud, treats, starts, rows, columns, budget, beam):
     """The best pen within budget, as (score, tiles)."""
 
     def on_rim(tile):
         return tile[0] in (0, rows - 1) or tile[1] in (0, columns - 1)
 
     pennable = {tile for tile in mud if not on_rim(tile)}
-    if start not in pennable:
-        raise SystemExit("The pig starts on the rim of the map, where no pen can hold it")
+    for animal, start in starts.items():
+        if start not in pennable:
+            raise SystemExit(f"{animal!r} starts on the rim of the map, where no pen can hold it")
 
     def cost(pen):
         return len(fences_around(pen, mud))
 
-    alone = frozenset({start})
+    alone = frozenset(starts.values())
     best = (score(alone, treats), alone) if cost(alone) <= budget else (0, frozenset())
     live = {alone}
 
@@ -129,8 +137,9 @@ def search(mud, treats, start, rows, columns, budget, beam):
     return best
 
 
-def draw(mud, treats, start, rows, columns, pen, plan_only=False):
+def draw(mud, treats, starts, rows, columns, pen, plan_only=False):
     edge = fences_around(pen, mud)
+    standing = {tile: animal for animal, tile in starts.items()}
 
     lines = []
     for row in range(rows):
@@ -141,8 +150,8 @@ def draw(mud, treats, start, rows, columns, pen, plan_only=False):
                 line += "#"
             elif plan_only:
                 line += "."
-            elif tile == start:
-                line += "P"
+            elif tile in standing:
+                line += standing[tile]
             elif tile in treats:
                 line += treats[tile]
             elif tile in pen:
@@ -167,15 +176,15 @@ def main():
     parser.add_argument("map", nargs="?", type=argparse.FileType(), default=sys.stdin)
     options = parser.parse_args()
 
-    mud, treats, start, rows, columns = parse(options.map.read())
-    points, pen = search(mud, treats, start, rows, columns, options.budget, options.beam)
+    mud, treats, starts, rows, columns = parse(options.map.read())
+    points, pen = search(mud, treats, starts, rows, columns, options.budget, options.beam)
     if not pen:
         raise SystemExit("No pen holds within that budget")
 
-    print(draw(mud, treats, start, rows, columns, pen))
+    print(draw(mud, treats, starts, rows, columns, pen))
     if options.plan:
         print()
-        print(draw(mud, treats, start, rows, columns, pen, plan_only=True))
+        print(draw(mud, treats, starts, rows, columns, pen, plan_only=True))
     print()
     print(f"mud tiles      {len(mud)}")
     print(f"fence budget   {options.budget}")

@@ -8,8 +8,7 @@ struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var lesson = TutorialLesson()
-    @State private var pigTile: GridPoint = PuzzleLevel.practicePen.pigStart
-    @State private var pigOpacity: Double = 1
+    @State private var pig = AnimalMark(kind: .pig, tile: PuzzleLevel.practicePen.pigStart, opacity: 1)
     @State private var budgetShake: CGFloat = 0
     @State private var refusedThisPress = false
 
@@ -45,8 +44,7 @@ struct TutorialView: View {
                     penTiles: game.penTiles,
                     penGlow: penGlow,
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
-                    pigTile: pigTile,
-                    pigOpacity: pigOpacity,
+                    animals: [pig],
                     highlightedTiles: lesson.highlightedTiles,
                     onStroke: { build($0) },
                     onStrokeEnd: { lesson.endStroke() }
@@ -178,12 +176,12 @@ struct TutorialView: View {
     private func reactToPhase() async {
         switch game.phase {
         case .building:
-            pigTile = level.pigStart
-            withAnimation(.easeOut(duration: 0.25)) { pigOpacity = 1 }
-        case .escaped(let route):
+            pig.tile = level.pigStart
+            withAnimation(.easeOut(duration: 0.25)) { pig.opacity = 1 }
+        case .escaped(let escapes):
             // The scripted pen holds, so this path is only a safety net if the field is
             // somehow opened early — walk the pig out and leave the coach where it is.
-            await walk(route)
+            await walk(escapes.first?.route ?? [])
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
             lesson.reconsider()
@@ -194,10 +192,10 @@ struct TutorialView: View {
 
     private func walk(_ route: [GridPoint]) async {
         for tile in route.dropFirst() {
-            withAnimation(.easeInOut(duration: 0.2)) { pigTile = tile }
+            withAnimation(.easeInOut(duration: 0.2)) { pig.tile = tile }
             try? await Task.sleep(for: .milliseconds(220))
         }
-        withAnimation(.easeIn(duration: 0.35)) { pigOpacity = 0 }
+        withAnimation(.easeIn(duration: 0.35)) { pig.opacity = 0 }
         try? await Task.sleep(for: .milliseconds(350))
     }
 }

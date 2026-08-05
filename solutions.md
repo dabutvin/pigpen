@@ -15,7 +15,8 @@ up what it promises.
 ```
 #  a fence piece            o  ground inside the pen
 P  the pig                  .  mud outside the pen
-~  water                    a  an apple        x  a skull
+D  the deer                 ~  water
+a  an apple                 x  a skull
 ```
 
 A treat inside the pen shows as its own letter on `o` ground. A treat with a `#` on it has
@@ -34,12 +35,13 @@ five fewer for every skull.
 | 6 | The Big Meadow | 16 | 33 | — | 33 |
 | 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 |
 | 8 | Sour Ground | 14 | 22 | 2 apples, 2 skulls buried | 32 |
+| 9 | Stag Mere | 20 | 31 | 3 apples, 2 skulls buried | 46 |
 
 Every one of these spends its whole budget.
 
 ## What the solutions have in common
 
-Four ideas cover all eight maps, and every level is one of them dressed differently.
+Four ideas cover all nine maps, and every level is one of them dressed differently.
 
 - **Water is a wall you already own.** Build against it, never near it. Half of what looks
   like a hard budget is a map where the shore does most of the walling for free.
@@ -53,6 +55,10 @@ Four ideas cover all eight maps, and every level is one of them dressed differen
   that reaches its limit is one whose wall runs along the edge of the world.
 - **Fence just short of a gap, not in it.** Plugging a one-tile gap from the near side
   costs the same one piece and hands you the gap tile as ground. Otter Ford turns on this.
+
+The boss adds a fifth: **two pens can share a wall.** Water between two animals is one
+boundary doing two jobs, so holding them apart costs less than dragging a single pen round
+both — and then the only question left is how to split the budget between the two.
 
 ## 1. River Bend — 12 pieces, 35
 
@@ -226,6 +232,42 @@ So the pen is shaped to make its own wall pass over both skulls. The wall would 
 a piece somewhere near each of them anyway; putting it exactly there buries them for free.
 The pen then reaches north for one apple and east for another, leaves the third out in the
 south, and holds 22 tiles with two apples and no skulls: 32.
+
+## 9. Stag Mere — 20 pieces, 46
+
+```
+...###....
+..#ooa#...
+.#Poooo#..
+#oo#ooo#..
+.~~~~~~...
+.~~~~~~...
+#oooooo#..
+.#aooooD#.
+..#oooo#..
+...#ao#...
+....##....
+```
+
+The boss, and the only map with two animals on it: the pig north of the mere, the stag
+south, and one budget for both. Both have to be held, but *how* they are held is open —
+a pen holds whatever ground it shuts in, in one piece or two.
+
+One pen round the pair of them has to go the whole way round the mere, and there is no
+budget in the game long enough to do that and hold anything worth having. Two pens, one on
+each shore, use the same water as a wall twice over and pay for it once — which is the
+answer, and then the puzzle is only where to split twenty pieces.
+
+Ten pieces go to each, and each side is the octagon the earlier levels teach, tucked up
+against the water and cut to reach the apple on its own shore. The skull below the pig sits
+where that pen's wall wants to be anyway, so a piece lands on it and buries it; the skull by
+the stag goes the same way. The pig holds 13 tiles and an apple, the stag 18 tiles and two:
+31 tiles, three apples, 46.
+
+Boxing the pig into its own tile for four pieces and pouring the other sixteen into the
+stag's shore is the tempting shortcut. It is worth 40 — the north shore gives up far more
+than four pieces' worth of ground when it is abandoned, which is what makes the split the
+puzzle.
 
 ## Working one out yourself
 

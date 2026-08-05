@@ -1,16 +1,16 @@
 import Observation
 
-/// The state of one puzzle in progress: the tiles fenced off so far, and what the pig
-/// did the last time it was let out.
+/// The state of one puzzle in progress: the tiles fenced off so far, and what the animals
+/// did the last time the gate was opened.
 @MainActor
 @Observable
 final class PuzzleGame {
     enum Phase: Equatable {
         /// Fences can be added and removed.
         case building
-        /// The pig walked `route` and is gone.
-        case escaped(route: [GridPoint])
-        /// The pig is penned in `pen`.
+        /// Something walked out, and `escapes` is the walk each one that did took.
+        case escaped(escapes: [Escape])
+        /// Everything is penned in `pen`.
         case penned(pen: Set<GridPoint>)
     }
 
@@ -29,8 +29,8 @@ final class PuzzleGame {
     /// The best pen closed so far this session, fencing and all, so a rearrangement
     /// that turns out worse can be measured against it and put back.
     private(set) var bestPen: Pen?
-    /// What the pig would do if it were let out this instant, kept up to date as the
-    /// fencing changes so a closed pen can be shown as closed the moment it closes.
+    /// What the animals would do if the gate were opened this instant, kept up to date as
+    /// the fencing changes so a closed pen can be shown as closed the moment it closes.
     private var outcome: PenOutcome
     /// The field as it stood before each change made to it, oldest first, and the fields
     /// undone waiting to be laid back down. One press is one step, so a drag that lays a
@@ -44,7 +44,7 @@ final class PuzzleGame {
 
     init(level: PuzzleLevel) {
         self.level = level
-        self.outcome = level.releasePig(fences: [])
+        self.outcome = level.release(fences: [])
     }
 
     var isBuilding: Bool { phase == .building }
@@ -52,14 +52,14 @@ final class PuzzleGame {
     /// The most any pen has been worth this session, and 0 before one has closed.
     var bestScore: Int { bestPen?.score ?? 0 }
 
-    /// Whether the fencing and the water together already shut the pig in — true as soon as
-    /// the last gap is filled, without waiting for the pig to be let out and prove it.
+    /// Whether the fencing and the water together already shut every animal in — true as
+    /// soon as the last gap is filled, without waiting for the gate to be opened and prove it.
     var isPenClosed: Bool {
         if case .penned = outcome { true } else { false }
     }
 
-    /// The mud tiles the fencing shuts the pig into, and an empty set while a way off the
-    /// map remains.
+    /// The mud tiles the fencing shuts the animals into, and an empty set while a way off
+    /// the map remains.
     var penTiles: Set<GridPoint> {
         if case .penned(let pen) = outcome { pen } else { [] }
     }
@@ -78,22 +78,22 @@ final class PuzzleGame {
         return level.isMaximumScore(penTally.score)
     }
 
-    /// The stars for the pen the pig has actually been let loose in. Nothing is scored
-    /// until the pig has been released.
+    /// The stars for the pen the animals have actually been let loose in. Nothing is
+    /// scored until the gate has been opened.
     var starRating: Int? {
         guard case .penned(let pen) = phase else { return nil }
         return level.starRating(forScore: level.tally(for: pen).score)
     }
 
     /// Whether there is a change to the field to take back. Nothing can be undone while
-    /// the pig is out; fetch it back first.
+    /// the animals are out; fetch them back first.
     var canUndo: Bool { isBuilding && !past.isEmpty }
 
     /// Whether a change that was taken back can be laid down again.
     var canRedo: Bool { isBuilding && !future.isEmpty }
 
     /// Whether the field stands somewhere other than on its best pen, so putting it back
-    /// is worth offering. False while the pig is out, and until a pen has closed at all.
+    /// is worth offering. False while the animals are out, and until a pen has closed at all.
     var canRestoreBestPen: Bool {
         guard isBuilding, let bestPen else { return false }
         return bestPen.fences != fences
@@ -185,20 +185,21 @@ final class PuzzleGame {
         return true
     }
 
-    /// Opens the gate and sees what the pig makes of the fences.
-    func releasePig() {
+    /// Opens the gate and sees what the animals make of the fences.
+    func openTheGate() {
         guard isBuilding else { return }
         endStroke()
 
         switch outcome {
-        case .escaped(let route):
-            phase = .escaped(route: route)
+        case .escaped(let escapes):
+            phase = .escaped(escapes: escapes)
         case .penned(let pen):
             phase = .penned(pen: pen)
         }
     }
 
-    /// Fetches the pig back, leaving the fences up so a gap can be patched or a pen widened.
+    /// Fetches the animals back, leaving the fences up so a gap can be patched or a pen
+    /// widened.
     func resumeBuilding() {
         phase = .building
     }
@@ -216,11 +217,11 @@ final class PuzzleGame {
         phase = .building
     }
 
-    /// Walks the pig out again on paper, after the fencing has changed, and remembers the
-    /// fencing if it is worth more than anything before it. A pen counts from the
-    /// moment it closes: the pig does not have to be let out for the score to stand.
+    /// Walks the animals out again on paper, after the fencing has changed, and remembers
+    /// the fencing if it is worth more than anything before it. A pen counts from the
+    /// moment it closes: nothing has to be let out for the score to stand.
     private func reconsider() {
-        outcome = level.releasePig(fences: fences)
+        outcome = level.release(fences: fences)
 
         guard case .penned(let pen) = outcome else { return }
         let tally = level.tally(for: pen)
@@ -303,6 +304,36 @@ extension PuzzleGame {
             game.beginStroke()
             game.buildFence(on: tile)
             game.endStroke()
+        }
+        return game
+    }
+
+    /// Stag Mere with the best pen the meadow has in it standing, which is the board to
+    /// look at when the question is what a second animal does: two enclosures leaning on
+    /// the same water, one round the pig and one round the stag, three apples shut in
+    /// between them and a skull buried under each wall.
+    static func theStagMeresBestPen() -> PuzzleGame {
+        let game = PuzzleGame(level: .stagMere)
+        let plan = """
+            ...###....
+            ..#...#...
+            .#.....#..
+            #..#...#..
+            ..........
+            ..........
+            #......#..
+            .#......#.
+            ..#....#..
+            ...#..#...
+            ....##....
+            """
+
+        for (row, line) in plan.split(whereSeparator: \.isNewline).enumerated() {
+            for (column, character) in line.enumerated() where character == "#" {
+                game.beginStroke()
+                game.buildFence(on: GridPoint(row: row, column: column))
+                game.endStroke()
+            }
         }
         return game
     }

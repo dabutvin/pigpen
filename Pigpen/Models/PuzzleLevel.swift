@@ -50,7 +50,7 @@ struct PenTally: Equatable, Sendable {
     }
 }
 
-/// One puzzle: a map, a pig, and a fence budget.
+/// One puzzle: a map, the animals on it, and a fence budget.
 struct PuzzleLevel: Identifiable, Sendable {
     let id: String
     let name: String
@@ -59,6 +59,11 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// What is lying about on the mud, by tile. Treats are scattered rather than everywhere,
     /// so they are held apart from the terrain instead of as a second grid.
     let treats: [GridPoint: Treat]
+    /// Everything on the map that has to be shut in, in the order the map writes it down.
+    /// Every level stands a pig on its ground; the meadow's last one stands a deer there too.
+    let animals: [AnimalStart]
+    /// The pig's own tile. Kept beside `animals` because every map has exactly one pig and
+    /// most of the game only ever has the one animal to think about.
     let pigStart: GridPoint
     let fenceBudget: Int
     /// The score needed for the second and third star. Any pen at all earns one.
@@ -89,17 +94,22 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// something other than a count of ground.
     var holdsTreats: Bool { !treats.isEmpty }
 
-    /// Whether the pig can stand on a tile. Off-map tiles are not walkable — they are freedom.
+    /// Whether there is more than the pig to hold, which is what turns one enclosure into
+    /// a budget split between two.
+    var holdsAHerd: Bool { animals.count > 1 }
+
+    /// Whether an animal can stand on a tile. Off-map tiles are not walkable — they are
+    /// freedom.
     func isWalkable(_ point: GridPoint) -> Bool {
         terrain(at: point) == .mud
     }
 
     /// A fence takes up a whole tile, so it can only be built on open mud: never in the
-    /// water, which is already a boundary and free, and never on the tile the pig is
+    /// water, which is already a boundary and free, and never on a tile an animal is
     /// standing on. Tiles along the outer edge of the map are fair game, and usually where
-    /// the fencing has to go, since that is the ground the pig runs off from.
+    /// the fencing has to go, since that is the ground the animals run off from.
     func canBuildFence(on tile: GridPoint) -> Bool {
-        terrain(at: tile) == .mud && tile != pigStart
+        terrain(at: tile) == .mud && !animals.contains { $0.tile == tile }
     }
 
     var mudTileCount: Int {
@@ -127,11 +137,11 @@ struct PuzzleLevel: Identifiable, Sendable {
     }
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
-    /// apple and `x` a skull — both of which lie on mud — and a single `P` for the mud
-    /// tile the pig starts on.
+    /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
+    /// the pig starts on, and an optional `D` for a deer's.
     ///
-    /// Returns `nil` if the map is empty, ragged, holds an unknown character, or
-    /// does not name exactly one starting tile.
+    /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
+    /// same animal on it twice, or has no pig on it at all.
     init?(
         id: String,
         name: String,
@@ -147,13 +157,13 @@ struct PuzzleLevel: Identifiable, Sendable {
 
         var terrain: [[Terrain]] = []
         var treats: [GridPoint: Treat] = [:]
-        var pigStart: GridPoint?
+        var animals: [AnimalStart] = []
         for (row, line) in lines.enumerated() {
             var tiles: [Terrain] = []
             for (column, character) in line.enumerated() {
-                if character == "P" {
-                    guard pigStart == nil else { return nil }
-                    pigStart = GridPoint(row: row, column: column)
+                if let animal = Animal(rawValue: character) {
+                    guard !animals.contains(where: { $0.kind == animal }) else { return nil }
+                    animals.append(AnimalStart(kind: animal, tile: GridPoint(row: row, column: column)))
                     tiles.append(.mud)
                 } else if let treat = Treat(rawValue: character) {
                     treats[GridPoint(row: row, column: column)] = treat
@@ -167,12 +177,13 @@ struct PuzzleLevel: Identifiable, Sendable {
             terrain.append(tiles)
         }
 
-        guard let pigStart else { return nil }
+        guard let pigStart = animals.first(where: { $0.kind == .pig })?.tile else { return nil }
 
         self.id = id
         self.name = name
         self.terrain = terrain
         self.treats = treats
+        self.animals = animals
         self.pigStart = pigStart
         self.fenceBudget = fenceBudget
         self.twoStarScore = twoStarScore
@@ -395,6 +406,36 @@ extension PuzzleLevel {
             ...~P.....
             ..~~~.x...
             .~~~~.....
+            ....a.....
+            ..........
+            """
+    )
+
+    /// The meadow's boss, and the only map with a second animal on it: a mere lies across
+    /// the middle, the pig grazes north of it and a stag south, and one budget has to hold
+    /// them both. Neither shore is worth walling alone, and the water is the one wall both
+    /// pens can lean on, so the twenty pieces go out as two enclosures rather than one —
+    /// which is the whole puzzle, since every piece spent on the pig is a piece the stag
+    /// does not get. Apples on both shores are worth going out of the way for and a skull
+    /// on each is worth burying, the way Sour Ground taught. 31 tiles and three apples
+    /// come to 46.
+    static let stagMere = authored(
+        id: "stag-mere",
+        name: "Stag Mere",
+        fenceBudget: 20,
+        twoStarScore: 26,
+        threeStarScore: 43,
+        maximumScore: 46,
+        map: """
+            ..........
+            .....a....
+            ..P.......
+            ...x......
+            .~~~~~~...
+            .~~~~~~...
+            .......x..
+            ..a....D..
+            ..........
             ....a.....
             ..........
             """
