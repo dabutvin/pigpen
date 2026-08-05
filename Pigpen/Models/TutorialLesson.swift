@@ -175,7 +175,7 @@ final class TutorialLesson {
     /// Lets the pig go when the coach asks for it.
     func releasePig() {
         guard allowsRelease else { return }
-        game.releasePig()
+        game.openTheGate()
         reconsider()
     }
 

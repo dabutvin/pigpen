@@ -1,8 +1,8 @@
 import SwiftUI
 import UIKit
 
-/// One puzzle, end to end: build a pen out of a fixed number of fence pieces, let the
-/// pig go, and find out whether it holds.
+/// One puzzle, end to end: build a pen out of a fixed number of fence pieces, open the
+/// gate, and find out whether it holds.
 @MainActor
 struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
@@ -15,9 +15,10 @@ struct PuzzleView: View {
     private let onPenned: ((Int) -> Void)?
 
     @State private var game: PuzzleGame
-    @State private var pigTile: GridPoint
-    @State private var pigOpacity: Double = 1
-    /// Held back until the pig has finished its walk, so the verdict lands after the action.
+    /// Where each animal is standing this instant, which is its own tile until the gate
+    /// is opened on a pen with a gap in it.
+    @State private var marks: [AnimalMark]
+    /// Held back until the walking is over, so the verdict lands after the action.
     @State private var showsVerdict = false
     @State private var budgetShake: CGFloat = 0
     /// Whether the press in progress has already been turned down once.
@@ -32,13 +33,19 @@ struct PuzzleView: View {
     init(game: PuzzleGame, onPenned: ((Int) -> Void)? = nil) {
         self.onPenned = onPenned
         _game = State(initialValue: game)
-        _pigTile = State(initialValue: game.level.pigStart)
+        _marks = State(initialValue: .standing(on: game.level))
     }
 
     private var level: PuzzleLevel { game.level }
 
+    /// What the screen calls whatever it is holding: the pig on every map but the last,
+    /// where a stag stands on the other shore.
+    private var quarry: String {
+        level.holdsAHerd ? "the animals" : "the \(level.animals[0].kind.name)"
+    }
+
     /// How deep the pen's wash goes. Fencing that closes colours the pen in straight away;
-    /// letting the pig go and watching it fail to find a way out takes it the rest of the way.
+    /// opening the gate and watching nothing find a way out takes it the rest of the way.
     private var penGlow: Double {
         if game.penTiles.isEmpty {
             0
@@ -64,8 +71,7 @@ struct PuzzleView: View {
                     penTiles: game.penTiles,
                     penGlow: penGlow,
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
-                    pigTile: pigTile,
-                    pigOpacity: pigOpacity,
+                    animals: marks,
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
@@ -141,9 +147,9 @@ struct PuzzleView: View {
                 }
 
                 Button {
-                    game.releasePig()
+                    game.openTheGate()
                 } label: {
-                    Text("Release the pig")
+                    Text("Release \(quarry)")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
@@ -226,10 +232,10 @@ struct PuzzleView: View {
     @ViewBuilder
     private var verdict: some View {
         switch game.phase {
-        case .escaped:
+        case .escaped(let escapes):
             verdictCard(
-                headline: "The pig got out",
-                detail: "It found a way to the edge of the map. Follow its trail and close the gap.",
+                headline: escapedHeadline(escapes),
+                detail: escapedDetail(escapes),
                 tint: .orange
             ) {
                 Button { game.resumeBuilding() } label: {
@@ -295,10 +301,26 @@ struct PuzzleView: View {
         }
     }
 
+    /// Who got out, which on the meadow's last map may be one of the two rather than both.
+    private func escapedHeadline(_ escapes: [Escape]) -> String {
+        guard escapes.count == 1 else { return "They both got out" }
+        return "The \(escapes[0].animal.kind.name) got out"
+    }
+
+    private func escapedDetail(_ escapes: [Escape]) -> String {
+        guard escapes.count == 1 else {
+            return "Both of them found a way to the edge of the map. Follow the trails and close the gaps."
+        }
+        guard level.holdsAHerd else {
+            return "It found a way to the edge of the map. Follow its trail and close the gap."
+        }
+        return "It found a way to the edge of the map while the other stayed put — and both of them have to be held. Follow its trail and close the gap."
+    }
+
     private func pennedDetail(tally: PenTally) -> String {
         var detail = "\(counted(tally.area, "mud tile")) held with \(counted(game.fences.count, "fence piece"))"
         if let spoils = spoils(in: tally) {
-            detail += ", and \(spoils) shut in with the pig — \(counted(tally.score, "point"))."
+            detail += ", and \(spoils) shut in with \(quarry) — \(counted(tally.score, "point"))."
         } else {
             detail += "."
         }
@@ -406,18 +428,22 @@ struct PuzzleView: View {
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
 
-    /// Plays out whatever the game just decided: the pig's walk to freedom, or a beat on a
-    /// pen that held. The verdict card waits until the animation is done.
+    /// Plays out whatever the game just decided: the walk to freedom, or a beat on a pen
+    /// that held. The verdict card waits until the animation is done.
     private func reactToPhase() async {
         switch game.phase {
         case .building:
-            pigTile = level.pigStart
+            // The tiles snap back rather than animating, so nothing is seen trotting home
+            // from the edge of the map; only the fading back in is played.
+            sendHome()
             withAnimation(.easeOut(duration: 0.25)) {
                 showsVerdict = false
-                pigOpacity = 1
+                for index in marks.indices {
+                    marks[index].opacity = 1
+                }
             }
-        case .escaped(let route):
-            await walk(route)
+        case .escaped(let escapes):
+            await walk(escapes)
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
@@ -432,14 +458,45 @@ struct PuzzleView: View {
         }
     }
 
-    /// Walks the pig along its escape route and off the edge of the map.
-    private func walk(_ route: [GridPoint]) async {
-        for tile in route.dropFirst() {
-            withAnimation(.easeInOut(duration: 0.2)) { pigTile = tile }
+    /// Walks everything that got out along its own route and off the edge of the map. Two
+    /// animals leave at the same pace and each one fades as it takes its last step, so a
+    /// short way out is a quick exit rather than a wait for the other one to finish.
+    private func walk(_ escapes: [Escape]) async {
+        let longest = escapes.map(\.route.count).max() ?? 0
+        guard longest > 1 else { return }
+
+        for step in 1..<longest {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                for escape in escapes where step < escape.route.count {
+                    move(escape.animal.kind, to: escape.route[step])
+                }
+            }
             try? await Task.sleep(for: .milliseconds(220))
+
+            withAnimation(.easeIn(duration: 0.35)) {
+                for escape in escapes where step == escape.route.count - 1 {
+                    vanish(escape.animal.kind)
+                }
+            }
         }
-        withAnimation(.easeIn(duration: 0.35)) { pigOpacity = 0 }
         try? await Task.sleep(for: .milliseconds(350))
+    }
+
+    private func move(_ kind: Animal, to tile: GridPoint) {
+        guard let index = marks.firstIndex(where: { $0.kind == kind }) else { return }
+        marks[index].tile = tile
+    }
+
+    /// Puts every animal back on the tile the map starts it on.
+    private func sendHome() {
+        for animal in level.animals {
+            move(animal.kind, to: animal.tile)
+        }
+    }
+
+    private func vanish(_ kind: Animal) {
+        guard let index = marks.firstIndex(where: { $0.kind == kind }) else { return }
+        marks[index].opacity = 0
     }
 
     private func reveal() {
@@ -476,5 +533,11 @@ struct Shake: GeometryEffect {
 #Preview("Apples and skulls") {
     NavigationStack {
         PuzzleView(level: .sourGround)
+    }
+}
+
+#Preview("The boss") {
+    NavigationStack {
+        PuzzleView(level: .stagMere)
     }
 }

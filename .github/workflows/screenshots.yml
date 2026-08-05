@@ -85,8 +85,8 @@ jobs:
           # read the colour scheme out of the environment, so flipping the
           # simulator under a running app re-draws it, and the two shots then show
           # the same board rather than two rolls of the dice. `-map`, `-puzzle`,
-          # `-orchard`, `-sour`, `-tutorial` and `-settings` are launch arguments the
-          # app understands, so the world map, the boards, the practice pen and the
+          # `-orchard`, `-sour`, `-boss`, `-tutorial` and `-settings` are launch arguments
+          # the app understands, so the world map, the boards, the practice pen and the
           # settings sheet can be captured without tapping through the title screen.
           capture() {
             local order="$1"
@@ -116,7 +116,8 @@ jobs:
           capture 7 puzzle -puzzle
           capture 9 orchard -orchard
           capture 11 sour -sour
-          capture 13 settings -settings
+          capture 13 boss -boss
+          capture 15 settings -settings
 
           xcrun simctl status_bar "$UDID" clear
 

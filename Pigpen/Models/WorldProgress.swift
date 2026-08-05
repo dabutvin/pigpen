@@ -57,6 +57,11 @@ final class RememberedProgress: ProgressStore {
 /// only ever be blocked by a puzzle you have not solved — never by one you solved badly.
 /// Going back to an old level and doing worse than last time changes nothing: the map
 /// keeps the best you have ever done.
+///
+/// The one exception is a stop with a star toll on it. The meadow's boss wants most of the
+/// stars the trail below it holds, so beating the level before it is not enough — the
+/// player has to go back and better their pens, and the stars they win doing it open it
+/// wherever on the trail they happen to be standing.
 @MainActor
 @Observable
 final class WorldProgress {
@@ -81,20 +86,47 @@ final class WorldProgress {
 
     func isCleared(_ index: Int) -> Bool { stars(at: index) > 0 }
 
-    /// The stop the pig stands at when nothing else has moved it: the first level still
-    /// to be cleared, or the last stop on the map once the whole world is done.
-    var frontier: Int {
+    /// How far along the trail play has got: the first level still to be cleared, or the
+    /// last stop on the map once the whole world is done. A stop with a star toll on it
+    /// can still be shut inside that.
+    private var reached: Int {
         for index in world.nodes.indices where !isCleared(index) {
             return index
         }
         return max(world.count - 1, 0)
     }
 
-    /// Whether a level can be played. Everything up to and including the frontier is
-    /// open, which is what lets a player walk back down the trail to a level they have
-    /// already beaten.
+    /// The stop the pig stands at when nothing else has moved it: the furthest one open
+    /// to it. A boss whose toll has not been paid is not a stop to stand at, so the pig
+    /// waits below it until the stars for it are in.
+    var frontier: Int {
+        var stop = reached
+        while stop > 0, !isTollPaid(stop) {
+            stop -= 1
+        }
+        return stop
+    }
+
+    /// Whether a level can be played: the trail has to have reached it and any stars it
+    /// asks for have to be won already. Everything behind the frontier stays open, which
+    /// is what lets a player walk back down the trail to a level they have already beaten
+    /// — and what lets them go back for the stars a boss is waiting on.
     func isUnlocked(_ index: Int) -> Bool {
-        index >= 0 && index <= frontier
+        index >= 0 && index <= reached && isTollPaid(index)
+    }
+
+    /// Whether the world holds the stars a stop asks for. Every level but the boss asks
+    /// for none, so this is true of all of them.
+    func isTollPaid(_ index: Int) -> Bool {
+        guard world.nodes.indices.contains(index) else { return false }
+        return totalStars >= world[index].starToll
+    }
+
+    /// How many more stars a stop wants before it will open, and 0 for one that is only
+    /// waiting on the trail.
+    func starsOwed(_ index: Int) -> Int {
+        guard world.nodes.indices.contains(index) else { return 0 }
+        return max(world[index].starToll - totalStars, 0)
     }
 
     var clearedCount: Int {
