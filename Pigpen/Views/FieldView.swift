@@ -252,17 +252,16 @@ struct FieldView: View {
                 Path(ellipseIn: rect.insetBy(dx: board.cell * 0.16, dy: board.cell * 0.16)),
                 with: .color(.white.opacity(0.18))
             )
-            context.draw(
-                Text(glyph(for: treat)).font(.system(size: board.cell * 0.58)),
-                at: board.center(of: tile)
-            )
+            context.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
         }
     }
 
-    private func glyph(for treat: Treat) -> String {
+    /// A treat as it is drawn on a tile `cell` across. Emoji fill the box they are given
+    /// differently, so the skull is set larger than the apple to carry the same weight.
+    private func mark(for treat: Treat, cell: CGFloat) -> Text {
         switch treat {
-        case .apple: "🍎"
-        case .skull: "☠️"
+        case .apple: Text("🍎").font(.system(size: cell * 0.58))
+        case .skull: Text("☠️").font(.system(size: cell * 0.68))
         }
     }
 
