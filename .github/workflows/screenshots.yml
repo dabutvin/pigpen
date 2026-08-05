@@ -84,9 +84,10 @@ jobs:
           # Each screen is shot in both appearances off a single launch: the views
           # read the colour scheme out of the environment, so flipping the
           # simulator under a running app re-draws it, and the two shots then show
-          # the same board rather than two rolls of the dice. `-map` and `-puzzle`
-          # are launch arguments the app understands, so the world map and the
-          # board can be captured without tapping through the title screen.
+          # the same board rather than two rolls of the dice. `-map`, `-puzzle`,
+          # `-orchard` and `-sour` are launch arguments the app understands, so the
+          # world map and the boards can be captured without tapping through the
+          # title screen.
           capture() {
             local order="$1"
             local screen="$2"
@@ -112,6 +113,8 @@ jobs:
           capture 1 title
           capture 3 map -map
           capture 5 puzzle -puzzle
+          capture 7 orchard -orchard
+          capture 9 sour -sour
 
           xcrun simctl status_bar "$UDID" clear
 

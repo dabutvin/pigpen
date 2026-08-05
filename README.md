@@ -17,19 +17,26 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 - **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
   build on it and you never need to: it walls the pen for free. Build against it instead of
   spending fences.
+- **Apples and skulls** lie on the mud rather than being mud of their own. An apple shut
+  into the pen is worth five ordinary tiles, so a pen that goes out of its way for one is
+  usually worth the ground it gives up getting there. A skull costs five, so it is ground
+  you would rather leave outside. Either can be fenced over like any other tile, which is
+  how a skull gets buried for the price of one piece — and how an apple gets wasted.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
 - **A pen that closes colours itself in.** The moment the last gap is filled, the ground the
   fencing holds washes gold, so you can see the pen you have made before you commit to it.
   Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
   Take a piece back out and the wash goes with it.
-- **The biggest pen the map has in it goes rainbow.** A pen that big drifts through the
+- **The best pen the map has in it goes rainbow.** A pen worth that much drifts through the
   spectrum instead of sitting gold, from the moment you close it. There is nothing above it
   to aim for.
-- **Score.** The mud tiles inside a pen that holds. Four pieces boxed in around the pig
-  always work and score 1, so the puzzle is not whether you can pen it but how much ground
-  you can take with the same budget. A pen that holds invites you back out to widen it —
-  until it is the biggest pen the map has in it, which the game knows and says so.
+- **Score.** A point for every mud tile inside a pen that holds, five more for every apple
+  in it and five fewer for every skull — and never less than a point, however sour the
+  ground. Four pieces boxed in around the pig always work and score 1, so the puzzle is not
+  whether you can pen it but how much the same budget can be made to hold. A pen that holds
+  invites you back out to better it — until it is the best pen the map has in it, which the
+  game knows and says so.
 - **Your best pen is kept, and you can go back to it.** A pen counts the moment it closes,
   so the running best is yours without letting the pig go. Rearrange the fencing, see the
   tally say the new arrangement holds less ground than the old one, and *Put it back* — the
@@ -42,13 +49,20 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 The first puzzle, **River Bend**, hands you 12 fence pieces. A free-standing box that size
 holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can be
 shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
-walks off it. That 35 is the level's `maximumArea`, and the pen it goes rainbow for. Special
-tiles (cupcakes, frying pans) come next.
+walks off it. That 35 is the level's `maximumScore`, and the pen it goes rainbow for.
+
+The last two puzzles put apples and skulls on the ground, so the best pen there is no longer
+the widest one. **Windfall Orchard** hands out 12 pieces for a map with four apples on it:
+the pen that scores highest holds 27 tiles and narrows as it goes south to bring two of the
+apples inside, which is worth more than the ground it gives up doing so. **Sour Ground** adds
+two skulls, and the best pen there buries both of them under a piece of fencing rather than
+paying five tiles apiece to shut them in.
 
 ## The World
 
-Play opens **Mudlark Meadow**: six puzzles as six signposts up one winding trail, with the
-pig standing at the furthest one it has reached and mist over everything past that.
+Play opens **Mudlark Meadow**: eight puzzles as eight signposts up one winding trail, with
+the pig standing at the furthest one it has reached and mist over everything past that. The
+first six are fencing and water alone; the last two scatter apples and skulls as well.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The pig walks there.** Come back from a level you have just beaten and it sets off up
@@ -59,20 +73,23 @@ pig standing at the furthest one it has reached and mist over everything past th
 - **You can go back down the trail** to any level already open, and the pig trots down to
   it before the puzzle opens.
 
-| # | Level | Pieces | Biggest pen |
-|---|---|---|---|
-| 1 | River Bend | 12 | 35 |
-| 2 | Puddle Corner | 8 | 26 |
-| 3 | Horseshoe Lake | 6 | 24 |
-| 4 | The Narrows | 10 | 22 |
-| 5 | Otter Ford | 12 | 24 |
-| 6 | The Big Meadow | 16 | 33 |
+| # | Level | Pieces | On the ground | Best pen |
+|---|---|---|---|---|
+| 1 | River Bend | 12 | — | 35 |
+| 2 | Puddle Corner | 8 | — | 26 |
+| 3 | Horseshoe Lake | 6 | — | 24 |
+| 4 | The Narrows | 10 | — | 22 |
+| 5 | Otter Ford | 12 | — | 24 |
+| 6 | The Big Meadow | 16 | — | 33 |
+| 7 | Windfall Orchard | 12 | 4 apples | 37 |
+| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 32 |
 
-"Biggest pen" is the most mud that budget can shut a pig into on that map: the level's
-`maximumArea`, the number the third star is set just under, and the pen each level goes
-rainbow for. It is a search rather than a sum — `Tools/level_search.py` does the searching,
-and a test pins every one of them to a pen that actually holds, so no level can promise a
-rainbow that is not there.
+"Best pen" is the most that budget can be made to score on that map: the level's
+`maximumScore`, the number the third star is set just under, and the pen each level goes
+rainbow for. On the first six maps it is a count of mud, since mud is all there is to hold;
+on the last two it is mud and fruit against skulls. Either way it is a search rather than a
+sum — `Tools/level_search.py` does the searching, and a test pins every one of them to a pen
+that actually holds, so no level can promise a rainbow that is not there.
 
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
@@ -121,18 +138,19 @@ Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the scrip
 
 ### Adding a level
 
-A level is an ASCII map and four numbers: the fence budget, the areas the second and third stars are worth, and `maximumArea` — the biggest pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "biggest pen there is" verdict forever or hands it out for a pen that could still be widened. `Tools/level_search.py` works it out:
+A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
 
 ```bash
-Tools/level_search.py --budget 12 <<'MAP'
+Tools/level_search.py --budget 12 --plan <<'MAP'
 .........
 ~~~~~~~..
+...a..~..
 ..P...~..
 .........
 MAP
 ```
 
-It prints the best pen it found, marked out on the map, along with `maximumArea` and star thresholds in the proportions the shipped levels use. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the printed `#` tiles — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
 
 ### Build from phone (no laptop)
 
@@ -156,7 +174,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the map and the board in light + dark, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the map and three boards in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -165,7 +183,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map` and `-puzzle` launch arguments so the world map and the board can be captured without tapping through the title screen; both open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard` and `-sour` launch arguments so the world map and the boards can be captured without tapping through the title screen; the first two open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The other two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -255,7 +273,7 @@ Pigpen/
 │   └── PigpenApp.swift          # App entry point
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
-│   ├── PuzzleLevel.swift        # Terrain, pig start, budget, and every shipped map
+│   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
@@ -281,7 +299,7 @@ Pigpen/
 PigpenTests/                     # Unit tests
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
-├── level_search.py              # Finds the biggest pen a map and budget allow
+├── level_search.py              # Finds the best pen a map and budget allow
 ├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API
 └── prepare_signing_secrets.sh   # Checks and encodes a certificate exported from a Mac
 ```

@@ -28,9 +28,9 @@ struct FieldView: View {
     let penTiles: Set<GridPoint>
     /// How deep that wash goes, 0 to 1.
     let penGlow: Double
-    /// Whether the pen is the biggest the map has in it, which turns the wash from gold
+    /// Whether the pen is the best the map has in it, which turns the wash from gold
     /// to a drifting rainbow.
-    let isAsBigAsItGets: Bool
+    let isAsGoodAsItGets: Bool
     let pigTile: GridPoint
     let pigOpacity: Double
     let onStroke: (FenceStroke) -> Void
@@ -66,6 +66,13 @@ struct FieldView: View {
                 }
 
                 penWash(board: board)
+
+                // Above the wash, like the pig: an apple shut into a finished pen has to
+                // still read as an apple and not as a patch of the colour laid over it.
+                Canvas { context, _ in
+                    drawTreats(in: &context, board: board)
+                }
+                .allowsHitTesting(false)
 
                 Text("🐷")
                     .font(.system(size: board.cell * 0.78))
@@ -116,7 +123,7 @@ struct FieldView: View {
         return ZStack(alignment: .topLeading) {
             pen.fill(GamePalette.pen.opacity(0.55))
 
-            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isAsBigAsItGets)) { timeline in
+            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isAsGoodAsItGets)) { timeline in
                 // One turn round the colour wheel every twelve seconds.
                 let phase = reduceMotion ? 0 : timeline.date.timeIntervalSince(opened) / 12
 
@@ -136,12 +143,12 @@ struct FieldView: View {
                     )
                 }
             }
-            .opacity(isAsBigAsItGets ? 0.8 : 0)
+            .opacity(isAsGoodAsItGets ? 0.8 : 0)
         }
         .opacity(penGlow)
         .allowsHitTesting(false)
         .animation(.easeOut(duration: 0.28), value: penGlow)
-        .animation(.easeInOut(duration: 0.5), value: isAsBigAsItGets)
+        .animation(.easeInOut(duration: 0.5), value: isAsGoodAsItGets)
     }
 
     /// The pen as one shape, so it washes in a single pass with no seams between tiles.
@@ -234,6 +241,30 @@ struct FieldView: View {
         context.stroke(Path(rim), with: .color(GamePalette.post.opacity(0.5)), lineWidth: 3)
     }
 
+    /// What is lying about on the mud: an apple worth five tiles of ground to shut in with
+    /// the pig, a skull worth five fewer. Each sits on a pale scuff of ground so it reads
+    /// against the mud, and a tile with fencing on it is covered over, treat and all —
+    /// which is how a skull gets buried and how an apple gets wasted.
+    private func drawTreats(in context: inout GraphicsContext, board: BoardGeometry) {
+        for (tile, treat) in level.treats where !fences.contains(tile) {
+            let rect = board.rect(for: tile)
+            context.fill(
+                Path(ellipseIn: rect.insetBy(dx: board.cell * 0.16, dy: board.cell * 0.16)),
+                with: .color(.white.opacity(0.18))
+            )
+            context.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
+        }
+    }
+
+    /// A treat as it is drawn on a tile `cell` across. Emoji fill the box they are given
+    /// differently, so the skull is set larger than the apple to carry the same weight.
+    private func mark(for treat: Treat, cell: CGFloat) -> Text {
+        switch treat {
+        case .apple: Text("🍎").font(.system(size: cell * 0.58))
+        case .skull: Text("☠️").font(.system(size: cell * 0.68))
+        }
+    }
+
     /// A fenced tile is a whole square given over to fencing: three pointed pickets with
     /// two rails across them, on ground churned dark. Drawn head-on rather than from
     /// above, which is the only way it still reads at the size a tile gets on a phone.
@@ -284,7 +315,7 @@ struct FieldView: View {
         ],
         penTiles: [],
         penGlow: 0,
-        isAsBigAsItGets: false,
+        isAsGoodAsItGets: false,
         pigTile: PuzzleLevel.riverBend.pigStart,
         pigOpacity: 1,
         onStroke: { _ in },
@@ -296,7 +327,7 @@ struct FieldView: View {
 /// The par solution to River Bend: the river and the pond wall two sides of the pen and the
 /// whole budget walls the other two, which holds every tile the map can shut a pig into —
 /// so the wash is a rainbow.
-#Preview("The biggest pen there is") {
+#Preview("The best pen there is") {
     let level = PuzzleLevel.riverBend
     let fences = Set((1...5).map { GridPoint(row: 10, column: $0) })
         .union((3...9).map { GridPoint(row: $0, column: 0) })
@@ -307,7 +338,34 @@ struct FieldView: View {
         fences: fences,
         penTiles: pen,
         penGlow: 0.8,
-        isAsBigAsItGets: true,
+        isAsGoodAsItGets: true,
+        pigTile: level.pigStart,
+        pigOpacity: 1,
+        onStroke: { _ in },
+        onStrokeEnd: {}
+    )
+    .padding()
+}
+
+/// The best pen Windfall Orchard has in it: the fencing narrows as it goes south so that
+/// two of the four apples end up inside, which is worth more than the ground given up to
+/// reach them. The two apples left out sit under fencing, spent for nothing.
+#Preview("Fruit worth reaching for") {
+    let level = PuzzleLevel.windfallOrchard
+    let fences = Set((3...8).flatMap { row in
+        [GridPoint(row: row, column: max(0, row - 5)), GridPoint(row: row, column: 12 - row)]
+    })
+    var pen: Set<GridPoint> = []
+    if case .penned(let held) = level.releasePig(fences: fences) {
+        pen = held
+    }
+
+    return FieldView(
+        level: level,
+        fences: fences,
+        penTiles: pen,
+        penGlow: 0.8,
+        isAsGoodAsItGets: true,
         pigTile: level.pigStart,
         pigOpacity: 1,
         onStroke: { _ in },
