@@ -182,6 +182,26 @@ struct PuzzleLevel: Identifiable, Sendable {
 }
 
 extension PuzzleLevel {
+    /// The practice field the title screen walks a new player through. Water takes the
+    /// north and west for free; six pieces close the other two sides and hold 11 tiles.
+    /// It is not on the world map — it is only ever opened from Tutorial.
+    static let practicePen = authored(
+        id: "practice-pen",
+        name: "Practice Pen",
+        fenceBudget: 6,
+        twoStarScore: 6,
+        threeStarScore: 10,
+        maximumScore: 11,
+        map: """
+            ~~~~~
+            ~....
+            ~.P..
+            ~....
+            ~....
+            .....
+            """
+    )
+
     /// The first puzzle, and the one that teaches the whole game.
     ///
     /// A river runs in from the west, turns south and pools into a pond, which hands

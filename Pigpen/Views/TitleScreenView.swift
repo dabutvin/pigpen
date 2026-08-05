@@ -2,7 +2,8 @@ import SwiftUI
 import UIKit
 
 /// The start screen: a pasture with a pig loose in it, a wordmark that plants itself like a
-/// run of fence, and one button that is impossible to miss.
+/// run of fence, a Play button that is impossible to miss, and a Tutorial beside it for
+/// anyone who wants the walkthrough before the meadow.
 @MainActor
 struct TitleScreenView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -11,6 +12,7 @@ struct TitleScreenView: View {
     /// The lettering, the sign and the button all arrive a beat behind the glyphs.
     @State private var arrived = false
     @State private var isPlaying = false
+    @State private var isTutorial = false
     @State private var showsSettings = false
     /// The same progress the map is handed, so the stars on the signpost below are the
     /// ones just won — and go the moment they are cleared from the settings sheet.
@@ -46,6 +48,9 @@ struct TitleScreenView: View {
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $isPlaying) {
             WorldMapView(progress: progress)
+        }
+        .navigationDestination(isPresented: $isTutorial) {
+            TutorialView()
         }
         .sheet(isPresented: $showsSettings) {
             SettingsView(progress: progress)
@@ -154,6 +159,21 @@ struct TitleScreenView: View {
             }
             .buttonStyle(ChunkyButtonStyle())
             .modifier(Breathing(active: !reduceMotion))
+
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                isTutorial = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "hand.tap.fill")
+                    Text("Tutorial")
+                }
+                .font(.system(size: 17, weight: .heavy, design: .rounded))
+                .foregroundStyle(GamePalette.cream)
+                .frame(maxWidth: 180)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .accessibilityHint("Walk through how to fence in the pig")
 
             signpost
         }
