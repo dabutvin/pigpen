@@ -252,4 +252,21 @@ extension PuzzleGame {
         }
         return game
     }
+
+    /// River Bend with a pen closed but not at its widest: eleven pieces wall the west
+    /// and the south, the river and the pond wall the other two sides, and 28 tiles are
+    /// shut in. Previews show the field with the wash on the ground, the tally of the
+    /// best so far, and the release button counting what it holds — with a piece still
+    /// in hand and room on the map to do better.
+    static func holdingAPen() -> PuzzleGame {
+        let game = PuzzleGame(level: .riverBend)
+        let wall = (3...9).map { GridPoint(row: $0, column: 1) }
+            + (2...5).map { GridPoint(row: 10, column: $0) }
+        for tile in wall {
+            game.beginStroke()
+            game.buildFence(on: tile)
+            game.endStroke()
+        }
+        return game
+    }
 }

@@ -23,6 +23,11 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   fencing holds washes gold, so you can see the pen you have made before you commit to it.
   Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
   Take a piece back out and the wash goes with it.
+- **A closed pen counts itself on the button.** *Release the pig* picks up a second line —
+  *holds 28 tiles* — as soon as the fencing shuts, so the score is in hand before the pig
+  is let go, and it goes back to plain *Release the pig* the moment a gap opens. The count
+  sits under the title rather than beside it, so a pen of any size leaves the row of
+  buttons exactly where it was.
 - **The biggest pen the map has in it goes rainbow.** A pen that big drifts through the
   spectrum instead of sitting gold, from the moment you close it. There is nothing above it
   to aim for.
@@ -32,12 +37,12 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   until it is the biggest pen the map has in it, which the game knows and says so.
 - **Your best pen is kept, and you can go back to it.** A pen counts the moment it closes,
   so the running best is yours without letting the pig go. Rearrange the fencing, see the
-  tally say the new arrangement holds less ground than the old one, and *Put it back* — the
-  trophy beside the tally — stands every piece exactly where it stood on your best, however
-  many presses ago that was and even after clearing the field. Undo walks back a press at a
-  time; this goes the whole way in one, and is itself one press to undo. It lasts as long as
-  you stay on the puzzle. Holding the same ground with a piece to spare replaces the best
-  too, since the spare piece is one more to widen with.
+  button count out less ground than the tally's best, and *Put it back* — the trophy beside
+  the tally — stands every piece exactly where it stood on your best, however many presses
+  ago that was and even after clearing the field. Undo walks back a press at a time; this
+  goes the whole way in one, and is itself one press to undo. It lasts as long as you stay
+  on the puzzle. Holding the same ground with a piece to spare replaces the best too, since
+  the spare piece is one more to widen with.
 
 The first puzzle, **River Bend**, hands you 12 fence pieces. A free-standing box that size
 holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can be

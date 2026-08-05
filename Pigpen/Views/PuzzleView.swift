@@ -143,16 +143,46 @@ struct PuzzleView: View {
                 Button {
                     game.releasePig()
                 } label: {
-                    Text("Release the pig")
-                        .font(.headline)
+                    releaseLabel
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(game.fences.isEmpty)
+                .accessibilityLabel(releaseDescription)
             }
         }
         .animation(.easeInOut(duration: 0.25), value: game.bestArea)
         .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
+        .animation(.easeInOut(duration: 0.25), value: game.penTiles.count)
+    }
+
+    /// The button that ends the turn, and what taking the field as it stands is worth: a
+    /// pen that has closed already knows how much ground it holds, so the count goes on
+    /// the button rather than waiting for the pig to prove it. Fencing with a gap still
+    /// in it has no number to give, and the button just offers the release.
+    ///
+    /// The count sits under the title rather than beside it, so the widest the button ever
+    /// gets is the width of "Release the pig" — a pen going from 9 tiles to 35 cannot
+    /// shunt the three small buttons along the row, whatever the type size.
+    private var releaseLabel: some View {
+        VStack(spacing: 2) {
+            Text("Release the pig")
+                .font(.headline)
+
+            if game.isPenClosed {
+                Text("holds \(counted(game.penTiles.count, "tile"))")
+                    .font(.caption.weight(.semibold))
+                    .opacity(0.85)
+                    .contentTransition(.numericText())
+            }
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.75)
+    }
+
+    private var releaseDescription: String {
+        guard game.isPenClosed else { return "Release the pig" }
+        return "Release the pig. Your fencing holds \(counted(game.penTiles.count, "mud tile"))"
     }
 
     /// What the field is holding, set against the most it has held, and the way back to it.
@@ -190,16 +220,14 @@ struct PuzzleView: View {
         }
     }
 
-    /// Reads out the best pen of the session, and what the fencing holds now when that is
-    /// something other than the best.
+    /// Reads out the best pen of the session. What the fencing holds this instant is on
+    /// the release button below, so the tally is left to say only whether that beats
+    /// everything before it, and what there is to beat when it does not.
     private var tallySummary: String {
-        guard game.isPenClosed else {
+        guard game.isPenClosed, game.penTiles.count >= game.bestArea else {
             return "Best so far: \(counted(game.bestArea, "mud tile"))"
         }
-        let holding = game.penTiles.count
-        return holding >= game.bestArea
-            ? "Your best yet: \(counted(holding, "mud tile"))"
-            : "Holding \(holding), best \(game.bestArea)"
+        return "That is your best yet"
     }
 
     /// One of the small square buttons that work the fencing already down.
@@ -448,5 +476,11 @@ private struct Shake: GeometryEffect {
 #Preview("Part way through") {
     NavigationStack {
         PuzzleView(game: .partWayThrough())
+    }
+}
+
+#Preview("A pen that holds") {
+    NavigationStack {
+        PuzzleView(game: .holdingAPen())
     }
 }
