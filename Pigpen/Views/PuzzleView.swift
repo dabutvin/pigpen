@@ -5,6 +5,15 @@ import UIKit
 /// pig go, and find out whether it holds.
 @MainActor
 struct PuzzleView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    /// Told how many stars a pen was worth, every time one holds.
+    ///
+    /// Nothing is listening when a level is played on its own — the previews and the
+    /// screenshot runs open one straight — and that is also how the screen knows whether
+    /// there is a world map behind it to offer a way back to.
+    private let onPenned: ((Int) -> Void)?
+
     @State private var game: PuzzleGame
     @State private var pigTile: GridPoint
     @State private var pigOpacity: Double = 1
@@ -15,7 +24,8 @@ struct PuzzleView: View {
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
 
-    init(level: PuzzleLevel) {
+    init(level: PuzzleLevel, onPenned: ((Int) -> Void)? = nil) {
+        self.onPenned = onPenned
         _game = State(initialValue: PuzzleGame(level: level))
         _pigTile = State(initialValue: level.pigStart)
     }
@@ -136,26 +146,47 @@ struct PuzzleView: View {
     }
 
     /// A pen that can still be widened sends the player back out to try; one that cannot
-    /// leaves nothing to do but take the field again from scratch.
+    /// leaves nothing to do but take the field again from scratch. A level opened from
+    /// the world map has one more way out of both: the map itself, where the stars just
+    /// earned are waiting on the signpost.
     @ViewBuilder
     private var pennedActions: some View {
-        if game.isPenAsBigAsItGets {
-            Button { game.startOver() } label: {
-                Label("Start over", systemImage: "arrow.counterclockwise")
-            }
-            .buttonStyle(.borderedProminent)
-        } else {
-            HStack(spacing: 10) {
-                Button { game.startOver() } label: {
-                    Label("Start over", systemImage: "arrow.counterclockwise")
+        if onPenned == nil {
+            if game.isPenAsBigAsItGets {
+                startOver.buttonStyle(.borderedProminent)
+            } else {
+                HStack(spacing: 10) {
+                    startOver.buttonStyle(.bordered)
+                    goBigger.buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.bordered)
+            }
+        } else {
+            VStack(spacing: 10) {
+                HStack(spacing: 10) {
+                    startOver.buttonStyle(.bordered)
+                    if !game.isPenAsBigAsItGets {
+                        goBigger.buttonStyle(.bordered)
+                    }
+                }
 
-                Button { game.resumeBuilding() } label: {
-                    Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
+                Button { dismiss() } label: {
+                    Label("Back to the map", systemImage: "signpost.right.fill")
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
             }
+        }
+    }
+
+    private var startOver: some View {
+        Button { game.startOver() } label: {
+            Label("Start over", systemImage: "arrow.counterclockwise")
+        }
+    }
+
+    private var goBigger: some View {
+        Button { game.resumeBuilding() } label: {
+            Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
         }
     }
 
@@ -252,6 +283,9 @@ struct PuzzleView: View {
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
+            // Told to whoever is keeping score before any of the celebrating, so a player
+            // who leaves the moment the pen holds still keeps the stars for it.
+            onPenned?(game.starRating ?? 1)
             withAnimation(.easeOut(duration: 0.5)) { penGlow = 1 }
             try? await Task.sleep(for: .milliseconds(350))
             reveal()
