@@ -3,8 +3,16 @@ name: CI
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
   push:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -26,60 +34,55 @@ jobs:
           if [ -n "$XCODE" ]; then sudo xcode-select -s "$XCODE/Contents/Developer"; fi
           xcodebuild -version
 
+      # Starting the simulator is the longest thing this job does and it needs
+      # nothing from the build, so it goes first and runs alongside everything
+      # below rather than after it.
+      - name: Start the simulator warming up
+        id: simulator
+        uses: ./.github/actions/simulator
+        with:
+          display: 'false'
+
       - name: Install XcodeGen
-        run: brew install xcodegen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
 
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Resolve packages
-        run: |
-          xcodebuild -resolvePackageDependencies \
-            -project Pigpen.xcodeproj \
-            -scheme Pigpen
-
+      # `build-for-testing` builds the app and the test bundle once, for the
+      # simulator the tests will run on. Building for a generic destination first
+      # would compile every architecture the simulator platform has and then get
+      # thrown away by the test build.
       - name: Build
         run: |
           set -o pipefail
-          xcodebuild build \
+          xcodebuild build-for-testing \
             -project Pigpen.xcodeproj \
             -scheme Pigpen \
-            -destination "generic/platform=iOS Simulator" \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
             -configuration Debug \
+            -derivedDataPath DerivedData \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee build.log
           if grep -q "BUILD FAILED" build.log; then exit 1; fi
 
-      - name: Pick simulator
-        run: |
-          set -euo pipefail
-          AVAILABLE=$(xcrun simctl list devices available)
-          DEVICE=""
-          for name in "iPhone 17 Pro" "iPhone 17" "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15"; do
-            if grep -q "^ *$name (" <<< "$AVAILABLE"; then DEVICE="$name"; break; fi
-          done
-          if [ -z "$DEVICE" ]; then
-            DEVICE=$(grep -oE '^ *iPhone[^(]*' <<< "$AVAILABLE" | head -1 | xargs || true)
-          fi
-          if [ -z "$DEVICE" ]; then
-            echo "ERROR: No iPhone simulator available"
-            exit 1
-          fi
-          echo "Using simulator: $DEVICE"
-          echo "DEVICE=$DEVICE" >> $GITHUB_ENV
+      - name: Wait for the simulator
+        uses: ./.github/actions/simulator
+        with:
+          wait: installed
+          display: 'false'
 
       - name: Test
         run: |
           set -o pipefail
-          xcodebuild test \
+          xcodebuild test-without-building \
             -project Pigpen.xcodeproj \
             -scheme Pigpen \
-            -destination "platform=iOS Simulator,name=${{ env.DEVICE }},OS=latest" \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
             -configuration Debug \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath DerivedData \
             2>&1 | tee test.log
           if grep -q "TEST FAILED\|BUILD FAILED" test.log; then exit 1; fi

@@ -1,0 +1,142 @@
+name: Warm up an iPhone simulator
+description: >
+  Pick an iPhone simulator and start it waking up in the background, so a job can
+  build while it happens rather than after it. A simulator that has never been
+  booted on a fresh runner spends five or six minutes getting to the point where
+  it can install and run an app — booting, starting installd, building the
+  runtime's shared cache on the first launch, attaching a display for the first
+  screen grab — and none of that competes with a build for anything but a little
+  CPU. Call the action once with no `wait` to set it going, then again with the
+  stage the job needs to block on.
+
+inputs:
+  wait:
+    description: >
+      Stage to block on. `none` returns as soon as the warm-up is under way;
+      `booted` waits for the boot itself; `installed` also waits for a throwaway
+      app to have been installed and launched, which is what makes the first real
+      install fast; `warm` also waits for both appearances and a screen grab.
+    required: false
+    default: none
+  display:
+    description: >
+      Whether the simulator is going to be photographed. Sets the status bar to
+      the usual 9:41 with everything full, and has the warm-up exercise the
+      appearance switch and the display grab. Jobs that only run tests can leave
+      this off.
+    required: false
+    default: 'true'
+  timeout:
+    description: >
+      Seconds to wait for the stage before giving up. Giving up is not a failure:
+      the job carries on and pays the cold start itself.
+    required: false
+    default: '600'
+
+outputs:
+  udid:
+    description: Identifier of the chosen simulator, for `-destination "id=..."`
+    value: ${{ steps.pick.outputs.udid }}
+  device:
+    description: Name of the chosen simulator, for the logs
+    value: ${{ steps.pick.outputs.device }}
+
+runs:
+  using: composite
+  steps:
+    - id: pick
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        STATE="$RUNNER_TEMP/simulator"
+        mkdir -p "$STATE"
+        echo "state=$STATE" >> "$GITHUB_OUTPUT"
+
+        # The device is chosen once per job and remembered, so that a later call
+        # waits on the simulator the first call started rather than picking a
+        # different one.
+        if [ ! -f "$STATE/device" ]; then
+          AVAILABLE=$(xcrun simctl list devices available)
+          LINE=""
+          for NAME in "iPhone 17 Pro" "iPhone 17" "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15"; do
+            LINE=$(grep -m1 "^ *$NAME (" <<< "$AVAILABLE" || true)
+            [ -n "$LINE" ] && break
+          done
+          if [ -z "$LINE" ]; then
+            LINE=$(grep -m1 -E "^ *iPhone .*\([0-9A-Fa-f-]{36}\)" <<< "$AVAILABLE" || true)
+          fi
+          if [ -z "$LINE" ]; then
+            echo "ERROR: No iPhone simulator available"
+            xcrun simctl list devices available
+            exit 1
+          fi
+
+          sed -E 's/^ *(.*) \(([0-9A-Fa-f-]{36})\).*/\1/' <<< "$LINE" > "$STATE/device"
+          sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/' <<< "$LINE" > "$STATE/udid"
+          echo "Chose simulator: $(cat "$STATE/device") ($(cat "$STATE/udid"))"
+        fi
+
+        echo "device=$(cat "$STATE/device")" >> "$GITHUB_OUTPUT"
+        echo "udid=$(cat "$STATE/udid")" >> "$GITHUB_OUTPUT"
+
+    - id: start
+      shell: bash
+      env:
+        STATE: ${{ steps.pick.outputs.state }}
+        UDID: ${{ steps.pick.outputs.udid }}
+        DISPLAY_WARMUP: ${{ inputs.display }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        set -euo pipefail
+
+        if [ -f "$STATE/started" ]; then
+          echo "Warm-up is already under way"
+          exit 0
+        fi
+        : > "$STATE/started"
+
+        # Detached, with its output on a file, so the step finishes now and the
+        # simulator carries on waking up through the steps that follow.
+        nohup bash "$ACTION_PATH/warm-up.sh" \
+          "$UDID" "$STATE" "$ACTION_PATH/stub" "$DISPLAY_WARMUP" \
+          > "$STATE/warm-up.log" 2>&1 &
+        echo "Warming up ${{ steps.pick.outputs.device }} in the background (pid $!)"
+
+    - id: wait
+      if: ${{ inputs.wait != 'none' }}
+      shell: bash
+      env:
+        STATE: ${{ steps.pick.outputs.state }}
+        UDID: ${{ steps.pick.outputs.udid }}
+        STAGE: ${{ inputs.wait }}
+        DISPLAY_WARMUP: ${{ inputs.display }}
+        TIMEOUT: ${{ inputs.timeout }}
+      run: |
+        set -uo pipefail
+
+        DEADLINE=$((SECONDS + TIMEOUT))
+        while [ ! -f "$STATE/$STAGE" ]; do
+          if [ -f "$STATE/failed" ] || [ "$SECONDS" -ge "$DEADLINE" ]; then
+            echo "::warning::Simulator warm-up did not reach '$STAGE'; carrying on cold"
+            break
+          fi
+          sleep 2
+        done
+
+        echo "--- warm-up log ---"
+        cat "$STATE/warm-up.log" 2>/dev/null || true
+        echo "-------------------"
+
+        # Whatever the warm-up managed, the simulator is booted and dressed by
+        # the time this step returns. Both commands are instant once warm.
+        set -e
+        xcrun simctl bootstatus "$UDID" -b
+        if [ "$DISPLAY_WARMUP" = "true" ]; then
+          xcrun simctl status_bar "$UDID" override \
+            --time "9:41" \
+            --batteryState charged \
+            --batteryLevel 100 \
+            --wifiBars 3 \
+            --cellularBars 4
+        fi
