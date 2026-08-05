@@ -193,3 +193,18 @@ final class PuzzleGame {
         future.removeAll()
     }
 }
+
+extension PuzzleGame {
+    /// River Bend with its west wall part way down, so previews and the screenshots CI
+    /// takes show a board with fencing on it and something for undo to take back. Each
+    /// piece is laid as a press of its own, the way a player lays them one tap at a time.
+    static func partWayThrough() -> PuzzleGame {
+        let game = PuzzleGame(level: .riverBend)
+        for row in 5...9 {
+            game.beginStroke()
+            game.buildFence(on: GridPoint(row: row, column: 0))
+            game.endStroke()
+        }
+        return game
+    }
+}

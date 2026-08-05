@@ -24,9 +24,15 @@ struct PuzzleView: View {
     @State private var refusedThisPress = false
 
     init(level: PuzzleLevel, onPenned: ((Int) -> Void)? = nil) {
+        self.init(game: PuzzleGame(level: level), onPenned: onPenned)
+    }
+
+    /// Opens the screen on a puzzle already in progress, which is how the previews and the
+    /// screenshot runs show a field with fencing on it.
+    init(game: PuzzleGame, onPenned: ((Int) -> Void)? = nil) {
         self.onPenned = onPenned
-        _game = State(initialValue: PuzzleGame(level: level))
-        _pigTile = State(initialValue: level.pigStart)
+        _game = State(initialValue: game)
+        _pigTile = State(initialValue: game.level.pigStart)
     }
 
     private var level: PuzzleLevel { game.level }
@@ -371,8 +377,14 @@ private struct Shake: GeometryEffect {
     }
 }
 
-#Preview {
+#Preview("A fresh field") {
     NavigationStack {
         PuzzleView(level: .riverBend)
+    }
+}
+
+#Preview("Part way through") {
+    NavigationStack {
+        PuzzleView(game: .partWayThrough())
     }
 }
