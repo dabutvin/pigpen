@@ -111,16 +111,26 @@ struct FieldView: View {
             pen.fill(GamePalette.pen.opacity(0.55))
 
             TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isOptimal)) { timeline in
-                pen.fill(
-                    LinearGradient(
-                        gradient: GamePalette.rainbow,
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                // One turn round the colour wheel every twelve seconds.
+                let phase = reduceMotion ? 0 : timeline.date.timeIntervalSince(opened) / 12
+
+                Canvas { context, _ in
+                    let bounds = pen.boundingRect
+                    guard !bounds.isNull else { return }
+
+                    // Corner to corner of the pen itself, so a pen of any size and shape
+                    // holds the whole spectrum rather than a slice of the board's.
+                    context.fill(
+                        pen,
+                        with: .linearGradient(
+                            GamePalette.rainbow(phase: phase),
+                            startPoint: CGPoint(x: bounds.minX, y: bounds.minY),
+                            endPoint: CGPoint(x: bounds.maxX, y: bounds.maxY)
+                        )
                     )
-                )
-                .hueRotation(.degrees(reduceMotion ? 0 : timeline.date.timeIntervalSince(opened) * 26))
+                }
             }
-            .opacity(isOptimal ? 0.7 : 0)
+            .opacity(isOptimal ? 0.8 : 0)
         }
         .opacity(penGlow)
         .allowsHitTesting(false)
