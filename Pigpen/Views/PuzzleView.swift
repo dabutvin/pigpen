@@ -63,7 +63,7 @@ struct PuzzleView: View {
                     fences: game.fences,
                     penTiles: game.penTiles,
                     penGlow: penGlow,
-                    isAsBigAsItGets: game.isPenAsBigAsItGets,
+                    isAsGoodAsItGets: game.isPenAsGoodAsItGets,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
                     onStroke: { build($0) },
@@ -151,7 +151,7 @@ struct PuzzleView: View {
                 .disabled(game.fences.isEmpty)
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: game.bestArea)
+        .animation(.easeInOut(duration: 0.25), value: game.bestScore)
         .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
     }
 
@@ -162,7 +162,7 @@ struct PuzzleView: View {
     /// it was, which is why it wears the trophy rather than an arrow.
     @ViewBuilder
     private var bestPenTally: some View {
-        if game.bestArea > 0 {
+        if game.bestScore > 0 {
             HStack(spacing: 10) {
                 Text(tallySummary)
                     .font(.footnote.weight(.semibold))
@@ -181,7 +181,7 @@ struct PuzzleView: View {
                     .buttonStyle(.bordered)
                     .controlSize(.small)
                     .accessibilityLabel(
-                        "Put the fencing back to your best pen, \(counted(game.bestArea, "mud tile"))"
+                        "Put the fencing back to your best pen, \(scored(game.bestScore))"
                     )
                     .transition(.opacity.combined(with: .scale))
                 }
@@ -193,13 +193,12 @@ struct PuzzleView: View {
     /// Reads out the best pen of the session, and what the fencing holds now when that is
     /// something other than the best.
     private var tallySummary: String {
-        guard game.isPenClosed else {
-            return "Best so far: \(counted(game.bestArea, "mud tile"))"
+        guard let holding = game.penTally?.score else {
+            return "Best so far: \(scored(game.bestScore))"
         }
-        let holding = game.penTiles.count
-        return holding >= game.bestArea
-            ? "Your best yet: \(counted(holding, "mud tile"))"
-            : "Holding \(holding), best \(game.bestArea)"
+        return holding >= game.bestScore
+            ? "Your best yet: \(scored(holding))"
+            : "Holding \(holding), best \(game.bestScore)"
     }
 
     /// One of the small square buttons that work the fencing already down.
@@ -240,8 +239,8 @@ struct PuzzleView: View {
             }
         case .penned(let pen):
             verdictCard(
-                headline: game.isPenAsBigAsItGets ? "The biggest pen there is" : "Penned in",
-                detail: pennedDetail(pen: pen),
+                headline: game.isPenAsGoodAsItGets ? "The best pen there is" : "Penned in",
+                detail: pennedDetail(tally: level.tally(for: pen)),
                 tint: .green
             ) {
                 pennedActions
@@ -258,7 +257,7 @@ struct PuzzleView: View {
     @ViewBuilder
     private var pennedActions: some View {
         if onPenned == nil {
-            if game.isPenAsBigAsItGets {
+            if game.isPenAsGoodAsItGets {
                 startOver.buttonStyle(.borderedProminent)
             } else {
                 HStack(spacing: 10) {
@@ -270,7 +269,7 @@ struct PuzzleView: View {
             VStack(spacing: 10) {
                 HStack(spacing: 10) {
                     startOver.buttonStyle(.bordered)
-                    if !game.isPenAsBigAsItGets {
+                    if !game.isPenAsGoodAsItGets {
                         goBigger.buttonStyle(.bordered)
                     }
                 }
@@ -296,13 +295,36 @@ struct PuzzleView: View {
         }
     }
 
-    private func pennedDetail(pen: Set<GridPoint>) -> String {
-        let detail = "\(counted(pen.count, "mud tile")) held with \(counted(game.fences.count, "fence piece"))."
-        if game.isPenAsBigAsItGets {
-            return detail + " Not one more tile can be shut in on this map."
+    private func pennedDetail(tally: PenTally) -> String {
+        var detail = "\(counted(tally.area, "mud tile")) held with \(counted(game.fences.count, "fence piece"))"
+        if let spoils = spoils(in: tally) {
+            detail += ", and \(spoils) shut in with the pig — \(counted(tally.score, "point"))."
+        } else {
+            detail += "."
         }
-        guard game.bestArea > pen.count else { return detail }
-        return detail + " Your best so far is \(game.bestArea)."
+
+        if game.isPenAsGoodAsItGets {
+            return detail + (level.holdsTreats
+                ? " There is no better pen on this map."
+                : " Not one more tile can be shut in on this map.")
+        }
+        guard game.bestScore > tally.score else { return detail }
+        return detail + " Your best so far is \(game.bestScore)."
+    }
+
+    /// What a pen caught besides ground: apples worth having in it, skulls worth keeping out.
+    private func spoils(in tally: PenTally) -> String? {
+        var caught: [String] = []
+        if tally.apples > 0 { caught.append(counted(tally.apples, "apple")) }
+        if tally.skulls > 0 { caught.append(counted(tally.skulls, "skull")) }
+        return caught.isEmpty ? nil : caught.joined(separator: " and ")
+    }
+
+    /// A score reads as ground on a map with nothing lying about on it, since that is all
+    /// it counts, and as points on one where an apple or a skull is worth more or less than
+    /// the tile it sits on.
+    private func scored(_ score: Int) -> String {
+        counted(score, level.holdsTreats ? "point" : "mud tile")
     }
 
     private func counted(_ number: Int, _ noun: String) -> String {
@@ -448,5 +470,11 @@ private struct Shake: GeometryEffect {
 #Preview("Part way through") {
     NavigationStack {
         PuzzleView(game: .partWayThrough())
+    }
+}
+
+#Preview("Apples and skulls") {
+    NavigationStack {
+        PuzzleView(level: .sourGround)
     }
 }

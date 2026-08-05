@@ -6,21 +6,68 @@ enum Terrain: Character, CaseIterable, Sendable {
     case water = "~"
 }
 
+/// Something lying on a tile of mud, worth having inside the pen or worth keeping out of it.
+///
+/// A treat does not change what the ground underneath it is: the pig walks over it, and a
+/// fence can be laid on top of it like on any other tile — which is how a skull gets
+/// buried, and how an apple gets wasted.
+enum Treat: Character, CaseIterable, Sendable {
+    /// A windfall apple. Ground with an apple on it is worth five ordinary tiles.
+    case apple = "a"
+    /// A skull staked in the mud. Sour ground, and it costs five tiles to shut a pig in with.
+    case skull = "x"
+
+    /// What shutting the tile into the pen is worth, over and above the ground itself,
+    /// counted in mud tiles.
+    var worth: Int {
+        switch self {
+        case .apple: 5
+        case .skull: -5
+        }
+    }
+}
+
+/// What a pen is worth: the ground it holds, what was lying on that ground, and the score
+/// the two come to together.
+struct PenTally: Equatable, Sendable {
+    /// The mud tiles the pen holds, treats and all.
+    let area: Int
+    let apples: Int
+    let skulls: Int
+
+    init(area: Int, apples: Int = 0, skulls: Int = 0) {
+        self.area = area
+        self.apples = apples
+        self.skulls = skulls
+    }
+
+    /// A point for every tile of ground, five more for an apple shut in with the pig and
+    /// five fewer for a skull. A pen that closes is never worth nothing, however sour the
+    /// ground inside it; a field with no pen on it is worth nothing at all.
+    var score: Int {
+        guard area > 0 else { return 0 }
+        return max(1, area + apples * Treat.apple.worth + skulls * Treat.skull.worth)
+    }
+}
+
 /// One puzzle: a map, a pig, and a fence budget.
 struct PuzzleLevel: Identifiable, Sendable {
     let id: String
     let name: String
     /// Row-major, every row the same width.
     let terrain: [[Terrain]]
+    /// What is lying about on the mud, by tile. Treats are scattered rather than everywhere,
+    /// so they are held apart from the terrain instead of as a second grid.
+    let treats: [GridPoint: Treat]
     let pigStart: GridPoint
     let fenceBudget: Int
-    /// Penned mud tiles needed for the second and third star. Any pen at all earns one.
-    let twoStarArea: Int
-    let threeStarArea: Int
-    /// The biggest pen this map and budget allow. Finding it is a search rather than a
+    /// The score needed for the second and third star. Any pen at all earns one.
+    let twoStarScore: Int
+    let threeStarScore: Int
+    /// The best pen this map and budget allow. Finding it is a search rather than a
     /// sum, so it is authored alongside the star thresholds: a player who matches it has
     /// nothing left to beat, and the game stops asking them to go bigger.
-    let maximumArea: Int
+    let maximumScore: Int
 
     var rowCount: Int { terrain.count }
     var columnCount: Int { terrain.first?.count ?? 0 }
@@ -34,6 +81,13 @@ struct PuzzleLevel: Identifiable, Sendable {
         guard contains(point) else { return nil }
         return terrain[point.row][point.column]
     }
+
+    /// What is lying on a tile, if anything is.
+    func treat(at point: GridPoint) -> Treat? { treats[point] }
+
+    /// Whether this map has anything lying about on it, which is what makes a score
+    /// something other than a count of ground.
+    var holdsTreats: Bool { !treats.isEmpty }
 
     /// Whether the pig can stand on a tile. Off-map tiles are not walkable — they are freedom.
     func isWalkable(_ point: GridPoint) -> Bool {
@@ -52,18 +106,29 @@ struct PuzzleLevel: Identifiable, Sendable {
         terrain.reduce(0) { $0 + $1.filter { $0 == .mud }.count }
     }
 
-    /// Stars earned for penning `area` mud tiles.
-    func starRating(forArea area: Int) -> Int {
-        if area >= threeStarArea { 3 } else if area >= twoStarArea { 2 } else { 1 }
+    /// What a pen is worth: the ground it holds and whatever was lying on that ground.
+    func tally(for pen: Set<GridPoint>) -> PenTally {
+        let caught = pen.compactMap { treats[$0] }
+        return PenTally(
+            area: pen.count,
+            apples: caught.filter { $0 == .apple }.count,
+            skulls: caught.filter { $0 == .skull }.count
+        )
     }
 
-    /// Whether a pen of `area` tiles is the biggest this map has in it.
-    func isMaximumArea(_ area: Int) -> Bool {
-        area >= maximumArea
+    /// Stars earned for a pen worth `score`.
+    func starRating(forScore score: Int) -> Int {
+        if score >= threeStarScore { 3 } else if score >= twoStarScore { 2 } else { 1 }
     }
 
-    /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water,
-    /// and a single `P` for the mud tile the pig starts on.
+    /// Whether a pen worth `score` is the best this map has in it.
+    func isMaximumScore(_ score: Int) -> Bool {
+        score >= maximumScore
+    }
+
+    /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
+    /// apple and `x` a skull — both of which lie on mud — and a single `P` for the mud
+    /// tile the pig starts on.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, or
     /// does not name exactly one starting tile.
@@ -71,9 +136,9 @@ struct PuzzleLevel: Identifiable, Sendable {
         id: String,
         name: String,
         fenceBudget: Int,
-        twoStarArea: Int,
-        threeStarArea: Int,
-        maximumArea: Int,
+        twoStarScore: Int,
+        threeStarScore: Int,
+        maximumScore: Int,
         map: String
     ) {
         let lines = map.split(whereSeparator: \.isNewline)
@@ -81,6 +146,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         else { return nil }
 
         var terrain: [[Terrain]] = []
+        var treats: [GridPoint: Treat] = [:]
         var pigStart: GridPoint?
         for (row, line) in lines.enumerated() {
             var tiles: [Terrain] = []
@@ -88,6 +154,9 @@ struct PuzzleLevel: Identifiable, Sendable {
                 if character == "P" {
                     guard pigStart == nil else { return nil }
                     pigStart = GridPoint(row: row, column: column)
+                    tiles.append(.mud)
+                } else if let treat = Treat(rawValue: character) {
+                    treats[GridPoint(row: row, column: column)] = treat
                     tiles.append(.mud)
                 } else if let tile = Terrain(rawValue: character) {
                     tiles.append(tile)
@@ -103,11 +172,12 @@ struct PuzzleLevel: Identifiable, Sendable {
         self.id = id
         self.name = name
         self.terrain = terrain
+        self.treats = treats
         self.pigStart = pigStart
         self.fenceBudget = fenceBudget
-        self.twoStarArea = twoStarArea
-        self.threeStarArea = threeStarArea
-        self.maximumArea = maximumArea
+        self.twoStarScore = twoStarScore
+        self.threeStarScore = threeStarScore
+        self.maximumScore = maximumScore
     }
 }
 
@@ -123,9 +193,9 @@ extension PuzzleLevel {
         id: "river-bend",
         name: "River Bend",
         fenceBudget: 12,
-        twoStarArea: 20,
-        threeStarArea: 33,
-        maximumArea: 35,
+        twoStarScore: 20,
+        threeStarScore: 33,
+        maximumScore: 35,
         map: """
             .........
             .........
@@ -148,9 +218,9 @@ extension PuzzleLevel {
         id: "puddle-corner",
         name: "Puddle Corner",
         fenceBudget: 8,
-        twoStarArea: 15,
-        threeStarArea: 24,
-        maximumArea: 26,
+        twoStarScore: 15,
+        threeStarScore: 24,
+        maximumScore: 26,
         map: """
             ~~~~~~~~
             ~.......
@@ -170,9 +240,9 @@ extension PuzzleLevel {
         id: "horseshoe-lake",
         name: "Horseshoe Lake",
         fenceBudget: 6,
-        twoStarArea: 16,
-        threeStarArea: 23,
-        maximumArea: 24,
+        twoStarScore: 16,
+        threeStarScore: 23,
+        maximumScore: 24,
         map: """
             ..........
             ..~~~~~~..
@@ -194,9 +264,9 @@ extension PuzzleLevel {
         id: "the-narrows",
         name: "The Narrows",
         fenceBudget: 10,
-        twoStarArea: 13,
-        threeStarArea: 21,
-        maximumArea: 22,
+        twoStarScore: 13,
+        threeStarScore: 21,
+        maximumScore: 22,
         map: """
             ..........
             ..~~~.....
@@ -218,9 +288,9 @@ extension PuzzleLevel {
         id: "otter-ford",
         name: "Otter Ford",
         fenceBudget: 12,
-        twoStarArea: 14,
-        threeStarArea: 23,
-        maximumArea: 24,
+        twoStarScore: 14,
+        threeStarScore: 23,
+        maximumScore: 24,
         map: """
             ..........
             ..........
@@ -241,9 +311,9 @@ extension PuzzleLevel {
         id: "big-meadow",
         name: "The Big Meadow",
         fenceBudget: 16,
-        twoStarArea: 19,
-        threeStarArea: 31,
-        maximumArea: 33,
+        twoStarScore: 19,
+        threeStarScore: 31,
+        maximumScore: 33,
         map: """
             ..........
             .~~~~~....
@@ -259,28 +329,79 @@ extension PuzzleLevel {
             """
     )
 
+    /// The first orchard: a river bars the whole north of the map, so the ground under it
+    /// is cheap to wall, and four windfall apples lie in rows further south where the
+    /// walling is dear. An apple is worth five tiles, which is more than the ground the
+    /// pen gives up narrowing itself to reach one — so the best pen is not the roundest.
+    /// The 12 pieces hold 27 tiles and two of the apples, and 37 is what that comes to.
+    static let windfallOrchard = authored(
+        id: "windfall-orchard",
+        name: "Windfall Orchard",
+        fenceBudget: 12,
+        twoStarScore: 21,
+        threeStarScore: 35,
+        maximumScore: 37,
+        map: """
+            ..........
+            .~~~~~~~~.
+            .~~~~~~~~.
+            ..........
+            ...P......
+            ..........
+            ..a..a....
+            ..........
+            ..a..a....
+            ..........
+            """
+    )
+
+    /// Sour ground: two skulls staked in the mud, each costing five tiles to shut a pig
+    /// in with, and three apples worth five apiece. A skull is mud like any other, so a
+    /// piece of fencing laid over it buries it — and the best pen here does exactly that
+    /// with both of them, holding 22 tiles and two apples for 32.
+    static let sourGround = authored(
+        id: "sour-ground",
+        name: "Sour Ground",
+        fenceBudget: 14,
+        twoStarScore: 18,
+        threeStarScore: 30,
+        maximumScore: 32,
+        map: """
+            ..........
+            ....a.....
+            ..........
+            ...x..a...
+            ..........
+            ...~P.....
+            ..~~~.x...
+            .~~~~.....
+            ....a.....
+            ..........
+            """
+    )
+
     /// A level written into the game itself, where a malformed map is a mistake in the
     /// source rather than anything a player could bring about.
     ///
-    /// `maximumArea` is the one number here that cannot be worked out by eye. It comes
-    /// from `Tools/level_search.py`, which searches a map for the biggest pen its budget
+    /// `maximumScore` is the one number here that cannot be worked out by eye. It comes
+    /// from `Tools/level_search.py`, which searches a map for the best pen its budget
     /// can hold, and `PuzzleLevelTests` pins each one to a pen that actually holds it.
     private static func authored(
         id: String,
         name: String,
         fenceBudget: Int,
-        twoStarArea: Int,
-        threeStarArea: Int,
-        maximumArea: Int,
+        twoStarScore: Int,
+        threeStarScore: Int,
+        maximumScore: Int,
         map: String
     ) -> PuzzleLevel {
         guard let level = PuzzleLevel(
             id: id,
             name: name,
             fenceBudget: fenceBudget,
-            twoStarArea: twoStarArea,
-            threeStarArea: threeStarArea,
-            maximumArea: maximumArea,
+            twoStarScore: twoStarScore,
+            threeStarScore: threeStarScore,
+            maximumScore: maximumScore,
             map: map
         ) else {
             preconditionFailure("The built-in \(name) map is malformed")

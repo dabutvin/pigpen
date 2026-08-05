@@ -35,8 +35,9 @@ struct WorldMap: Sendable {
 }
 
 extension WorldMap {
-    /// The world the game ships with: six puzzles up a winding trail, starting at the
-    /// bottom of the meadow and climbing towards the hills.
+    /// The world the game ships with: eight puzzles up a winding trail, starting at the
+    /// bottom of the meadow and climbing towards the hills. The first six are fencing and
+    /// water alone; the last two put apples and skulls on the ground as well.
     static let mudlarkMeadow = WorldMap(
         name: "Mudlark Meadow",
         nodes: [
@@ -45,7 +46,9 @@ extension WorldMap {
             WorldNode(level: .horseshoeLake, across: 0.26, up: 2.06),
             WorldNode(level: .theNarrows, across: 0.78, up: 3.02),
             WorldNode(level: .otterFord, across: 0.22, up: 4.08),
-            WorldNode(level: .bigMeadow, across: 0.62, up: 5.02)
+            WorldNode(level: .bigMeadow, across: 0.62, up: 5.02),
+            WorldNode(level: .windfallOrchard, across: 0.24, up: 6.06),
+            WorldNode(level: .sourGround, across: 0.74, up: 7.00)
         ]
     )
 }

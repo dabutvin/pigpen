@@ -14,17 +14,19 @@ final class PuzzleGame {
         case penned(pen: Set<GridPoint>)
     }
 
-    /// A pen that held, kept whole: the ground it held and the fencing that held it.
+    /// A pen that held, kept whole: what it was worth and the fencing that held it.
     struct Pen: Equatable {
         let fences: Set<GridPoint>
-        let area: Int
+        let tally: PenTally
+
+        var score: Int { tally.score }
     }
 
     let level: PuzzleLevel
     /// The tiles filled in with fencing. The pig cannot walk onto any of them.
     private(set) var fences: Set<GridPoint> = []
     private(set) var phase: Phase = .building
-    /// The biggest pen closed so far this session, fencing and all, so a rearrangement
+    /// The best pen closed so far this session, fencing and all, so a rearrangement
     /// that turns out worse can be measured against it and put back.
     private(set) var bestPen: Pen?
     /// What the pig would do if it were let out this instant, kept up to date as the
@@ -47,8 +49,8 @@ final class PuzzleGame {
 
     var isBuilding: Bool { phase == .building }
     var fencesRemaining: Int { level.fenceBudget - fences.count }
-    /// The most ground any pen has held this session, and 0 before one has closed.
-    var bestArea: Int { bestPen?.area ?? 0 }
+    /// The most any pen has been worth this session, and 0 before one has closed.
+    var bestScore: Int { bestPen?.score ?? 0 }
 
     /// Whether the fencing and the water together already shut the pig in — true as soon as
     /// the last gap is filled, without waiting for the pig to be let out and prove it.
@@ -62,17 +64,25 @@ final class PuzzleGame {
         if case .penned(let pen) = outcome { pen } else { [] }
     }
 
-    /// Whether the pen is the biggest the map has in it — true as soon as the fencing that
-    /// holds it is down, so the field can say so, and there is no wider pen left to send
+    /// What the fencing is holding — ground, apples and skulls — and nothing while a way
+    /// off the map remains.
+    var penTally: PenTally? {
+        if case .penned(let pen) = outcome { level.tally(for: pen) } else { nil }
+    }
+
+    /// Whether the pen is the best the map has in it — true as soon as the fencing that
+    /// holds it is down, so the field can say so, and there is no better pen left to send
     /// the player back out after.
-    var isPenAsBigAsItGets: Bool {
-        isPenClosed && level.isMaximumArea(penTiles.count)
+    var isPenAsGoodAsItGets: Bool {
+        guard let penTally else { return false }
+        return level.isMaximumScore(penTally.score)
     }
 
     /// The stars for the pen the pig has actually been let loose in. Nothing is scored
     /// until the pig has been released.
     var starRating: Int? {
-        if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
+        guard case .penned(let pen) = phase else { return nil }
+        return level.starRating(forScore: level.tally(for: pen).score)
     }
 
     /// Whether there is a change to the field to take back. Nothing can be undone while
@@ -207,22 +217,24 @@ final class PuzzleGame {
     }
 
     /// Walks the pig out again on paper, after the fencing has changed, and remembers the
-    /// fencing if it holds more ground than anything before it. A pen counts from the
+    /// fencing if it is worth more than anything before it. A pen counts from the
     /// moment it closes: the pig does not have to be let out for the score to stand.
     private func reconsider() {
         outcome = level.releasePig(fences: fences)
 
-        guard case .penned(let pen) = outcome, isWorthRemembering(pen) else { return }
-        bestPen = Pen(fences: fences, area: pen.count)
+        guard case .penned(let pen) = outcome else { return }
+        let tally = level.tally(for: pen)
+        guard isWorthRemembering(tally) else { return }
+        bestPen = Pen(fences: fences, tally: tally)
     }
 
-    /// Whether a pen beats the one being kept: more ground, or the same ground held with
+    /// Whether a pen beats the one being kept: a better score, or the same score held with
     /// pieces to spare, which is the same score with more budget left to widen it.
-    private func isWorthRemembering(_ pen: Set<GridPoint>) -> Bool {
+    private func isWorthRemembering(_ tally: PenTally) -> Bool {
         guard let bestPen else { return true }
-        return pen.count == bestPen.area
+        return tally.score == bestPen.score
             ? fences.count < bestPen.fences.count
-            : pen.count > bestPen.area
+            : tally.score > bestPen.score
     }
 
     /// Files the field away, so whatever is about to change about it can be undone. A press
@@ -248,6 +260,20 @@ extension PuzzleGame {
         for row in 5...9 {
             game.beginStroke()
             game.buildFence(on: GridPoint(row: row, column: 0))
+            game.endStroke()
+        }
+        return game
+    }
+
+    /// Windfall Orchard with the best pen the map has in it standing, which is the board to
+    /// look at when the question is what an apple does: two of them are inside the pen and
+    /// worth five tiles apiece, and the other two are under the fencing that got there.
+    static func theOrchardsBestPen() -> PuzzleGame {
+        let game = PuzzleGame(level: .windfallOrchard)
+        for row in 3...8 {
+            game.beginStroke()
+            game.buildFence(on: GridPoint(row: row, column: max(0, row - 5)))
+            game.buildFence(on: GridPoint(row: row, column: 12 - row))
             game.endStroke()
         }
         return game
