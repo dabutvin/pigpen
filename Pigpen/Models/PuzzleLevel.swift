@@ -112,37 +112,179 @@ struct PuzzleLevel: Identifiable, Sendable {
 }
 
 extension PuzzleLevel {
-    /// The one puzzle the game ships with so far.
+    /// The first puzzle, and the one that teaches the whole game.
     ///
     /// A river runs in from the west, turns south and pools into a pond, which hands
     /// the player two free sides of a large pen. Walling the remaining two sides with
     /// all 12 pieces pens 35 of the map's 83 mud tiles, which is the provable maximum —
     /// every tile the pig can be shut into without standing on the rim of the map.
     /// The same budget spent on a free-standing box would only hold 9.
-    static let riverBend: PuzzleLevel = {
+    static let riverBend = authored(
+        id: "river-bend",
+        name: "River Bend",
+        fenceBudget: 12,
+        twoStarArea: 20,
+        threeStarArea: 33,
+        maximumArea: 35,
+        map: """
+            .........
+            .........
+            ~~~~~~~..
+            ......~..
+            ......~..
+            ......~..
+            ..P...~..
+            ......~..
+            ......~~.
+            ......~~.
+            .........
+            """
+    )
+
+    /// The same lesson on a smaller board: two whole sides are water, so the pen only
+    /// ever needs two walls of its own. Eight pieces cut the corner off at its widest
+    /// and hold 26 tiles; the same eight spent anywhere out in the open hold 9.
+    static let puddleCorner = authored(
+        id: "puddle-corner",
+        name: "Puddle Corner",
+        fenceBudget: 8,
+        twoStarArea: 15,
+        threeStarArea: 24,
+        maximumArea: 26,
+        map: """
+            ~~~~~~~~
+            ~.......
+            ~.......
+            ~..P....
+            ~.......
+            ~.......
+            ~.......
+            ........
+            """
+    )
+
+    /// A lake bent right round the pig, leaving a mouth four tiles wide at the bottom.
+    /// Plugging the mouth costs four pieces and holds 20 tiles, which is the whole point
+    /// — but the two pieces left over buy four more tiles out past the arms of the lake.
+    static let horseshoeLake = authored(
+        id: "horseshoe-lake",
+        name: "Horseshoe Lake",
+        fenceBudget: 6,
+        twoStarArea: 16,
+        threeStarArea: 23,
+        maximumArea: 24,
+        map: """
+            ..........
+            ..~~~~~~..
+            .~~~~~~~~.
+            .~~....~~.
+            .~~....~~.
+            .~~....~~.
+            .~~.P..~~.
+            .~~....~~.
+            ..........
+            ..........
+            """
+    )
+
+    /// Two lakes almost meeting, with the pig in the gap between them. Neither lake is
+    /// any use on its own; a pen thrown across the neck leans on both at once and holds
+    /// 22 tiles for ten pieces.
+    static let theNarrows = authored(
+        id: "the-narrows",
+        name: "The Narrows",
+        fenceBudget: 10,
+        twoStarArea: 13,
+        threeStarArea: 21,
+        maximumArea: 22,
+        map: """
+            ..........
+            ..~~~.....
+            .~~~~~....
+            ..~~~.....
+            ..........
+            ....P.....
+            ..~~~~....
+            .~~~~~~...
+            ..~~~~....
+            ..........
+            """
+    )
+
+    /// A river across the whole map, broken by a single dry tile. That one tile is the
+    /// only way north and costs one piece to shut, which buys the entire far bank as a
+    /// free wall — the other eleven pieces then have only three sides left to close.
+    static let otterFord = authored(
+        id: "otter-ford",
+        name: "Otter Ford",
+        fenceBudget: 12,
+        twoStarArea: 14,
+        threeStarArea: 23,
+        maximumArea: 24,
+        map: """
+            ..........
+            ..........
+            ..........
+            ~~~~~.~~~~
+            ..........
+            ....P.....
+            ..........
+            ..........
+            ..........
+            """
+    )
+
+    /// The widest board in the meadow, with a lake down one side and open ground
+    /// everywhere else. Sixteen pieces and no corner to hide in: the pen has to be cut
+    /// to the shape of the shore, and only then does it reach 33 tiles.
+    static let bigMeadow = authored(
+        id: "big-meadow",
+        name: "The Big Meadow",
+        fenceBudget: 16,
+        twoStarArea: 19,
+        threeStarArea: 31,
+        maximumArea: 33,
+        map: """
+            ..........
+            .~~~~~....
+            .~~~~~~...
+            ..~~~~~~..
+            ...~~~~~..
+            ....~~~...
+            ..P.......
+            ..........
+            ..........
+            ..........
+            ..........
+            """
+    )
+
+    /// A level written into the game itself, where a malformed map is a mistake in the
+    /// source rather than anything a player could bring about.
+    ///
+    /// `maximumArea` is the one number here that cannot be worked out by eye. It comes
+    /// from `Tools/level_search.py`, which searches a map for the biggest pen its budget
+    /// can hold, and `PuzzleLevelTests` pins each one to a pen that actually holds it.
+    private static func authored(
+        id: String,
+        name: String,
+        fenceBudget: Int,
+        twoStarArea: Int,
+        threeStarArea: Int,
+        maximumArea: Int,
+        map: String
+    ) -> PuzzleLevel {
         guard let level = PuzzleLevel(
-            id: "river-bend",
-            name: "River Bend",
-            fenceBudget: 12,
-            twoStarArea: 20,
-            threeStarArea: 33,
-            maximumArea: 35,
-            map: """
-                .........
-                .........
-                ~~~~~~~..
-                ......~..
-                ......~..
-                ......~..
-                ..P...~..
-                ......~..
-                ......~~.
-                ......~~.
-                .........
-                """
+            id: id,
+            name: name,
+            fenceBudget: fenceBudget,
+            twoStarArea: twoStarArea,
+            threeStarArea: threeStarArea,
+            maximumArea: maximumArea,
+            map: map
         ) else {
-            preconditionFailure("The built-in River Bend map is malformed")
+            preconditionFailure("The built-in \(name) map is malformed")
         }
         return level
-    }()
+    }
 }

@@ -28,6 +28,10 @@ enum GamePalette {
     static let beyond = Color(red: 0.47, green: 0.68, blue: 0.38)
     /// Painted board: lettering and signage that has to read against sky or grass alike.
     static let cream = Color(red: 0.99, green: 0.95, blue: 0.87)
+    /// The barn at the bottom of the world map, and the only red in the game.
+    static let barn = Color(red: 0.70, green: 0.27, blue: 0.22)
+    /// A signpost for a level that is still shut: weathered, unpainted, and dull on purpose.
+    static let stone = Color(red: 0.55, green: 0.53, blue: 0.50)
 
     /// The pasture on the title screen. The board itself keeps one set of colours whatever
     /// the system appearance; only this backdrop moves from daylight to dusk.
@@ -43,6 +47,9 @@ enum GamePalette {
         let foreground: Color
         let blade: Color
         let lake: Color
+        /// The trees along the world map's trail, lit and shaded.
+        let canopy: Color
+        let canopyShade: Color
         /// Dusk gets stars and fireflies where daylight gets birds and pollen.
         let isNight: Bool
     }
@@ -60,6 +67,8 @@ extension GamePalette.Pasture {
         foreground: Color(red: 0.38, green: 0.59, blue: 0.30),
         blade: Color(red: 0.30, green: 0.50, blue: 0.24),
         lake: Color(red: 0.44, green: 0.70, blue: 0.84),
+        canopy: Color(red: 0.36, green: 0.61, blue: 0.31),
+        canopyShade: Color(red: 0.25, green: 0.46, blue: 0.24),
         isNight: false
     )
 
@@ -74,6 +83,8 @@ extension GamePalette.Pasture {
         foreground: Color(red: 0.08, green: 0.14, blue: 0.13),
         blade: Color(red: 0.05, green: 0.10, blue: 0.09),
         lake: Color(red: 0.16, green: 0.30, blue: 0.45),
+        canopy: Color(red: 0.12, green: 0.21, blue: 0.20),
+        canopyShade: Color(red: 0.07, green: 0.13, blue: 0.13),
         isNight: true
     )
 }
