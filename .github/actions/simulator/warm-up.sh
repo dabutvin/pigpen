@@ -77,21 +77,32 @@ else
   log "could not build the stub app"
 fi
 
+# An install spends its time waiting for installd, and installd comes up as part
+# of the boot, so asking for the install now rather than after the boot has
+# finished folds the two waits into one.
+INSTALLED=no
+if [ "$STUB_BUILT" = "yes" ] && bounded 240 xcrun simctl install "$UDID" "$APP"; then
+  INSTALLED=yes
+  log "installd is up and the stub app is installed"
+fi
+
 if ! xcrun simctl bootstatus "$UDID" -b; then
   log "boot failed"
   exit 1
 fi
 log "booted"
 
-if [ "$STUB_BUILT" = "yes" ]; then
-  log "installing the stub app"
-  if bounded 180 xcrun simctl install "$UDID" "$APP"; then
-    log "installd is up; launching the stub app"
-    bounded 180 xcrun simctl launch "$UDID" "$BUNDLE_ID"
-    log "the shared cache is built"
-    xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
-    xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
-  fi
+if [ "$STUB_BUILT" = "yes" ] && [ "$INSTALLED" = "no" ]; then
+  log "installing the stub app, now that the boot has finished"
+  bounded 240 xcrun simctl install "$UDID" "$APP" && INSTALLED=yes
+fi
+
+if [ "$INSTALLED" = "yes" ]; then
+  log "launching the stub app"
+  bounded 180 xcrun simctl launch "$UDID" "$BUNDLE_ID"
+  log "the shared cache is built"
+  xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
+  xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
 fi
 
 # Dressing the simulator and grabbing one frame off it starts the display
