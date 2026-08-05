@@ -19,18 +19,19 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   fencing holds washes gold, so you can see the pen you have made before you commit to it.
   Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
   Take a piece back out and the wash goes with it.
-- **The best pen on the map goes rainbow.** Each puzzle knows the largest pen its map and
-  budget allow, and a pen that big drifts through the spectrum instead of sitting gold. There
-  is nothing above it to aim for.
+- **The biggest pen the map has in it goes rainbow.** A pen that big drifts through the
+  spectrum instead of sitting gold, from the moment you close it. There is nothing above it
+  to aim for.
 - **Score.** The mud tiles inside a pen that holds. Four pieces boxed in around the pig
   always work and score 1, so the puzzle is not whether you can pen it but how much ground
-  you can take with the same budget.
+  you can take with the same budget. A pen that holds invites you back out to widen it —
+  until it is the biggest pen the map has in it, which the game knows and says so.
 
 The one puzzle so far, **River Bend**, hands you 12 fence pieces. A free-standing box that
 size holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can
 be shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
-walks off it. That 35 is the level's optimum, and the pen it goes rainbow for. Special tiles
-(cupcakes, frying pans) and more puzzles come next.
+walks off it. That 35 is the level's `maximumArea`, and the pen it goes rainbow for. Special
+tiles (cupcakes, frying pans) and more puzzles come next.
 
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look

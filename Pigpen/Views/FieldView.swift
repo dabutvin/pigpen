@@ -28,9 +28,9 @@ struct FieldView: View {
     let penTiles: Set<GridPoint>
     /// How deep that wash goes, 0 to 1.
     let penGlow: Double
-    /// Whether the pen holds all the ground the puzzle allows, which turns the wash from
-    /// gold to a drifting rainbow.
-    let isOptimal: Bool
+    /// Whether the pen is the biggest the map has in it, which turns the wash from gold
+    /// to a drifting rainbow.
+    let isAsBigAsItGets: Bool
     let pigTile: GridPoint
     let pigOpacity: Double
     let onStroke: (FenceStroke) -> Void
@@ -101,16 +101,16 @@ struct FieldView: View {
     }
 
     /// The pen's wash, laid over the board rather than drawn into it so that it can fade
-    /// in the moment the fencing closes and bloom into a rainbow when the pen is as big as
-    /// the puzzle allows. The rainbow sits on top of the gold rather than replacing it, so
-    /// the last piece of a perfect pen colours over the wash already there.
+    /// in the moment the fencing closes and bloom into a rainbow when the pen is the biggest
+    /// the map has in it. The rainbow sits on top of the gold rather than replacing it, so
+    /// the piece that finishes the best pen there is colours over the wash already there.
     private func penWash(board: BoardGeometry) -> some View {
         let pen = penPath(board: board)
 
         return ZStack(alignment: .topLeading) {
             pen.fill(GamePalette.pen.opacity(0.55))
 
-            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isOptimal)) { timeline in
+            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isAsBigAsItGets)) { timeline in
                 // One turn round the colour wheel every twelve seconds.
                 let phase = reduceMotion ? 0 : timeline.date.timeIntervalSince(opened) / 12
 
@@ -130,12 +130,12 @@ struct FieldView: View {
                     )
                 }
             }
-            .opacity(isOptimal ? 0.8 : 0)
+            .opacity(isAsBigAsItGets ? 0.8 : 0)
         }
         .opacity(penGlow)
         .allowsHitTesting(false)
         .animation(.easeOut(duration: 0.28), value: penGlow)
-        .animation(.easeInOut(duration: 0.5), value: isOptimal)
+        .animation(.easeInOut(duration: 0.5), value: isAsBigAsItGets)
     }
 
     /// The pen as one shape, so it washes in a single pass with no seams between tiles.
@@ -278,7 +278,7 @@ struct FieldView: View {
         ],
         penTiles: [],
         penGlow: 0,
-        isOptimal: false,
+        isAsBigAsItGets: false,
         pigTile: PuzzleLevel.riverBend.pigStart,
         pigOpacity: 1,
         onStroke: { _ in }
@@ -287,9 +287,9 @@ struct FieldView: View {
 }
 
 /// The par solution to River Bend: the river and the pond wall two sides of the pen and the
-/// whole budget walls the other two, which holds as much ground as the map allows — so the
-/// wash is a rainbow.
-#Preview("Optimal pen") {
+/// whole budget walls the other two, which holds every tile the map can shut a pig into —
+/// so the wash is a rainbow.
+#Preview("The biggest pen there is") {
     let level = PuzzleLevel.riverBend
     let fences = Set((1...5).map { GridPoint(row: 10, column: $0) })
         .union((3...9).map { GridPoint(row: $0, column: 0) })
@@ -300,7 +300,7 @@ struct FieldView: View {
         fences: fences,
         penTiles: pen,
         penGlow: 0.8,
-        isOptimal: true,
+        isAsBigAsItGets: true,
         pigTile: level.pigStart,
         pigOpacity: 1,
         onStroke: { _ in }

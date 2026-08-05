@@ -17,9 +17,10 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// Penned mud tiles needed for the second and third star. Any pen at all earns one.
     let twoStarArea: Int
     let threeStarArea: Int
-    /// The largest pen the map and the budget allow between them. A pen this size is the
-    /// answer to the puzzle rather than another attempt at it, so the field says so.
-    let optimalArea: Int
+    /// The biggest pen this map and budget allow. Finding it is a search rather than a
+    /// sum, so it is authored alongside the star thresholds: a player who matches it has
+    /// nothing left to beat, and the game stops asking them to go bigger.
+    let maximumArea: Int
 
     var rowCount: Int { terrain.count }
     var columnCount: Int { terrain.first?.count ?? 0 }
@@ -56,6 +57,11 @@ struct PuzzleLevel: Identifiable, Sendable {
         if area >= threeStarArea { 3 } else if area >= twoStarArea { 2 } else { 1 }
     }
 
+    /// Whether a pen of `area` tiles is the biggest this map has in it.
+    func isMaximumArea(_ area: Int) -> Bool {
+        area >= maximumArea
+    }
+
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water,
     /// and a single `P` for the mud tile the pig starts on.
     ///
@@ -67,7 +73,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         fenceBudget: Int,
         twoStarArea: Int,
         threeStarArea: Int,
-        optimalArea: Int,
+        maximumArea: Int,
         map: String
     ) {
         let lines = map.split(whereSeparator: \.isNewline)
@@ -101,7 +107,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         self.fenceBudget = fenceBudget
         self.twoStarArea = twoStarArea
         self.threeStarArea = threeStarArea
-        self.optimalArea = optimalArea
+        self.maximumArea = maximumArea
     }
 }
 
@@ -120,7 +126,7 @@ extension PuzzleLevel {
             fenceBudget: 12,
             twoStarArea: 20,
             threeStarArea: 33,
-            optimalArea: 35,
+            maximumArea: 35,
             map: """
                 .........
                 .........

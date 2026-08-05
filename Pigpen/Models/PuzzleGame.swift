@@ -44,9 +44,12 @@ final class PuzzleGame {
         if case .penned(let pen) = outcome { pen } else { [] }
     }
 
-    /// Whether the pen holds as much ground as the puzzle allows. An open field holds
-    /// nothing, so this only ever means a closed pen with nothing left to beat.
-    var isOptimal: Bool { penTiles.count >= level.optimalArea }
+    /// Whether the pen is the biggest the map has in it — true as soon as the fencing that
+    /// holds it is down, so the field can say so, and there is no wider pen left to send
+    /// the player back out after.
+    var isPenAsBigAsItGets: Bool {
+        isPenClosed && level.isMaximumArea(penTiles.count)
+    }
 
     /// The stars for the pen the pig has actually been let loose in. Nothing is scored
     /// until the pig has been released.

@@ -47,7 +47,7 @@ struct PuzzleView: View {
                     fences: game.fences,
                     penTiles: game.penTiles,
                     penGlow: penGlow,
-                    isOptimal: game.isOptimal,
+                    isAsBigAsItGets: game.isPenAsBigAsItGets,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
                     onStroke: { build($0) }
@@ -136,31 +136,45 @@ struct PuzzleView: View {
             }
         case .penned(let pen):
             verdictCard(
-                headline: "Penned in",
+                headline: game.isPenAsBigAsItGets ? "The biggest pen there is" : "Penned in",
                 detail: pennedDetail(pen: pen),
                 tint: .green
             ) {
-                HStack(spacing: 10) {
-                    Button { game.startOver() } label: {
-                        Label("Start over", systemImage: "arrow.counterclockwise")
-                    }
-                    .buttonStyle(.bordered)
-
-                    Button { game.resumeBuilding() } label: {
-                        Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
+                pennedActions
             }
         case .building:
             EmptyView()
         }
     }
 
+    /// A pen that can still be widened sends the player back out to try; one that cannot
+    /// leaves nothing to do but take the field again from scratch.
+    @ViewBuilder
+    private var pennedActions: some View {
+        if game.isPenAsBigAsItGets {
+            Button { game.startOver() } label: {
+                Label("Start over", systemImage: "arrow.counterclockwise")
+            }
+            .buttonStyle(.borderedProminent)
+        } else {
+            HStack(spacing: 10) {
+                Button { game.startOver() } label: {
+                    Label("Start over", systemImage: "arrow.counterclockwise")
+                }
+                .buttonStyle(.bordered)
+
+                Button { game.resumeBuilding() } label: {
+                    Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+    }
+
     private func pennedDetail(pen: Set<GridPoint>) -> String {
         let detail = "\(counted(pen.count, "mud tile")) held with \(counted(game.fences.count, "fence piece"))."
-        if game.isOptimal {
-            return detail + " There is no bigger pen on this map."
+        if game.isPenAsBigAsItGets {
+            return detail + " Not one more tile can be shut in on this map."
         }
         guard game.bestArea > pen.count else { return detail }
         return detail + " Your best so far is \(game.bestArea)."
