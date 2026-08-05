@@ -37,6 +37,12 @@ final class PuzzleGame {
         if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
     }
 
+    /// Whether the pen that just held is the biggest the map has in it, so there is no
+    /// wider pen left to send the player back out after.
+    var isPenAsBigAsItGets: Bool {
+        if case .penned(let pen) = phase { level.isMaximumArea(pen.count) } else { false }
+    }
+
     /// Fills a tile in with fencing, or clears it again. Returns whether anything changed,
     /// so the caller can tell a refused tap from an accepted one.
     @discardableResult
