@@ -122,13 +122,6 @@ final class WorldProgress {
         return totalStars >= world[index].starToll
     }
 
-    /// How many more stars a stop wants before it will open, and 0 for one that is only
-    /// waiting on the trail.
-    func starsOwed(_ index: Int) -> Int {
-        guard world.nodes.indices.contains(index) else { return 0 }
-        return max(world[index].starToll - totalStars, 0)
-    }
-
     var clearedCount: Int {
         world.nodes.indices.filter { isCleared($0) }.count
     }
