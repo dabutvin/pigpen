@@ -161,9 +161,11 @@ struct PuzzleView: View {
     /// the button rather than waiting for the pig to prove it. Fencing with a gap still
     /// in it has no number to give, and the button just offers the release.
     ///
-    /// The count sits under the title rather than beside it, so the widest the button ever
-    /// gets is the width of "Release the pig" — a pen going from 9 tiles to 35 cannot
-    /// shunt the three small buttons along the row, whatever the type size.
+    /// The count sits under the title rather than beside it, so it never has to share the
+    /// title's line. The button is as wide as the row leaves it either way — the three
+    /// small buttons keep their places whatever the pen holds — and a line of its own is
+    /// what stops a two-figure count from squeezing "Release the pig" to fit beside it.
+    /// It shrinks a little before it wraps, and wraps before it goes short of the number.
     private var releaseLabel: some View {
         VStack(spacing: 2) {
             Text("Release the pig")
@@ -176,8 +178,8 @@ struct PuzzleView: View {
                     .contentTransition(.numericText())
             }
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.75)
+        .multilineTextAlignment(.center)
+        .minimumScaleFactor(0.8)
     }
 
     private var releaseDescription: String {

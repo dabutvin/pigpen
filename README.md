@@ -26,8 +26,8 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 - **A closed pen counts itself on the button.** *Release the pig* picks up a second line —
   *holds 28 tiles* — as soon as the fencing shuts, so the score is in hand before the pig
   is let go, and it goes back to plain *Release the pig* the moment a gap opens. The count
-  sits under the title rather than beside it, so a pen of any size leaves the row of
-  buttons exactly where it was.
+  gets a line of its own rather than sharing the title's, so a two-figure pen never
+  squeezes the words beside it, and the row of buttons stays exactly where it was.
 - **The biggest pen the map has in it goes rainbow.** A pen that big drifts through the
   spectrum instead of sitting gold, from the moment you close it. There is nothing above it
   to aim for.
