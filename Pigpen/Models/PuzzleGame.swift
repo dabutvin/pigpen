@@ -181,8 +181,8 @@ final class PuzzleGame {
     }
 
     /// Files the field away, so whatever is about to change about it can be undone. A press
-    /// files it once however many tiles it goes on to work, and anything undone before this
-    /// change stays undone: a new fence is a new course, not a way back onto the old one.
+    /// files it once however many tiles it goes on to work, and whatever was undone before
+    /// is given up: a new fence is a new course, not a way back onto the old one.
     private func remember() {
         if pressIsOpen {
             guard !pressIsRemembered else { return }
