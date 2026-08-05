@@ -22,6 +22,28 @@ mkdir -p "$WORK"
 
 log() { printf '[%4ds] %s\n' "$((SECONDS - START))" "$*"; }
 
+# simctl occasionally sits on a cold simulator for as long as you will let it.
+# Anything here is worth waiting a while for and nothing here is worth waiting
+# forever for, so each command gets a leash.
+bounded() {
+  local limit="$1" waited=0 pid
+  shift
+
+  "$@" &
+  pid=$!
+  while kill -0 "$pid" 2>/dev/null; do
+    if [ "$waited" -ge "$limit" ]; then
+      log "gave up after ${limit}s: $*"
+      kill "$pid" 2>/dev/null
+      wait "$pid" 2>/dev/null
+      return 1
+    fi
+    sleep 2
+    waited=$((waited + 2))
+  done
+  wait "$pid"
+}
+
 # The first app to be installed and launched on a fresh simulator pays for
 # installd starting up and for the runtime's shared cache being built, which is
 # minutes of the cold start and has nothing to do with which app it is. So a
@@ -62,11 +84,14 @@ fi
 log "booted"
 
 if [ "$STUB_BUILT" = "yes" ]; then
-  log "installing and launching the stub app"
-  xcrun simctl install "$UDID" "$APP" && xcrun simctl launch "$UDID" "$BUNDLE_ID"
-  xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
-  xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
-  log "the shared cache is built and installd is up"
+  log "installing the stub app"
+  if bounded 180 xcrun simctl install "$UDID" "$APP"; then
+    log "installd is up; launching the stub app"
+    bounded 180 xcrun simctl launch "$UDID" "$BUNDLE_ID"
+    log "the shared cache is built"
+    xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
+    xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
+  fi
 fi
 
 # Dressing the simulator and grabbing one frame off it starts the display
