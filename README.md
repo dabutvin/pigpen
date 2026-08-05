@@ -17,7 +17,8 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   of the map, it walks out and the attempt fails.
 - **Score.** The mud tiles inside a pen that holds. Four pieces boxed in around the pig
   always work and score 1, so the puzzle is not whether you can pen it but how much ground
-  you can take with the same budget.
+  you can take with the same budget. A pen that holds invites you back out to widen it —
+  until it is the biggest pen the map has in it, which the game knows and says so.
 
 The one puzzle so far, **River Bend**, hands you 12 fence pieces. A free-standing box that
 size holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can
