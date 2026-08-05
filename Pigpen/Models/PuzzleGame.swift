@@ -23,6 +23,15 @@ final class PuzzleGame {
     /// What the pig would do if it were let out this instant, kept up to date as the
     /// fencing changes so a closed pen can be shown as closed the moment it closes.
     private var outcome: PenOutcome
+    /// The field as it stood before each change made to it, oldest first, and the fields
+    /// undone waiting to be laid back down. One press is one step, so a drag that lays a
+    /// run of fencing comes back out in a single undo.
+    private var past: [Set<GridPoint>] = []
+    private var future: [Set<GridPoint>] = []
+    /// Whether a press is underway, and whether it has already put the field it started
+    /// from away. Only the first tile a press changes does that; the rest join it.
+    private var pressIsOpen = false
+    private var pressIsRemembered = false
 
     init(level: PuzzleLevel) {
         self.level = level
@@ -57,6 +66,13 @@ final class PuzzleGame {
         if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
     }
 
+    /// Whether there is a change to the field to take back. Nothing can be undone while
+    /// the pig is out; fetch it back first.
+    var canUndo: Bool { isBuilding && !past.isEmpty }
+
+    /// Whether a change that was taken back can be laid down again.
+    var canRedo: Bool { isBuilding && !future.isEmpty }
+
     /// Fills a tile in with fencing, or clears it again. Returns whether anything changed,
     /// so the caller can tell a refused tap from an accepted one.
     @discardableResult
@@ -71,6 +87,7 @@ final class PuzzleGame {
         guard isBuilding, !fences.contains(tile) else { return false }
         guard level.canBuildFence(on: tile), fencesRemaining > 0 else { return false }
 
+        remember()
         fences.insert(tile)
         reconsider()
         return true
@@ -80,7 +97,49 @@ final class PuzzleGame {
     /// anything changed.
     @discardableResult
     func clearFence(on tile: GridPoint) -> Bool {
-        guard isBuilding, fences.remove(tile) != nil else { return false }
+        guard isBuilding, fences.contains(tile) else { return false }
+
+        remember()
+        fences.remove(tile)
+        reconsider()
+        return true
+    }
+
+    /// Opens a press, so everything it goes on to change is undone in one step. A tap
+    /// works one tile and a drag a whole run of them; either way the finger's whole
+    /// journey is one thing the player did, and one thing they can take back.
+    func beginStroke() {
+        pressIsOpen = true
+        pressIsRemembered = false
+    }
+
+    /// Closes the press, so the next change starts a step of its own.
+    func endStroke() {
+        pressIsOpen = false
+        pressIsRemembered = false
+    }
+
+    /// Puts the field back as it was before the last thing the player did to it. Returns
+    /// whether there was anything to take back.
+    @discardableResult
+    func undo() -> Bool {
+        endStroke()
+        guard isBuilding, let previous = past.popLast() else { return false }
+
+        future.append(fences)
+        fences = previous
+        reconsider()
+        return true
+    }
+
+    /// Lays back down what `undo` took away. Returns whether there was anything to put back.
+    @discardableResult
+    func redo() -> Bool {
+        endStroke()
+        guard isBuilding, let next = future.popLast() else { return false }
+
+        past.append(fences)
+        fences = next
         reconsider()
         return true
     }
@@ -88,6 +147,7 @@ final class PuzzleGame {
     /// Opens the gate and sees what the pig makes of the fences.
     func releasePig() {
         guard isBuilding else { return }
+        endStroke()
 
         switch outcome {
         case .escaped(let route):
@@ -103,15 +163,33 @@ final class PuzzleGame {
         phase = .building
     }
 
-    /// Tears every fence back out and starts the field over.
+    /// Tears every fence back out and starts the field over. A field cleared by accident
+    /// is one `undo` away from coming back.
     func startOver() {
-        fences.removeAll()
-        reconsider()
+        endStroke()
+        if !fences.isEmpty {
+            remember()
+            fences.removeAll()
+            reconsider()
+        }
         phase = .building
     }
 
     /// Walks the pig out again on paper, after the fencing has changed.
     private func reconsider() {
         outcome = level.releasePig(fences: fences)
+    }
+
+    /// Files the field away, so whatever is about to change about it can be undone. A press
+    /// files it once however many tiles it goes on to work, and anything undone before this
+    /// change stays undone: a new fence is a new course, not a way back onto the old one.
+    private func remember() {
+        if pressIsOpen {
+            guard !pressIsRemembered else { return }
+            pressIsRemembered = true
+        }
+
+        past.append(fences)
+        future.removeAll()
     }
 }
