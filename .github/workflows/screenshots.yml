@@ -3,6 +3,10 @@ name: PR Screenshots
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
 
 concurrency:
   group: screenshots-${{ github.head_ref }}
@@ -29,108 +33,87 @@ jobs:
           xcodebuild -version
 
       - name: Install XcodeGen
-        run: brew install xcodegen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
 
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Resolve packages
-        run: |
-          xcodebuild -resolvePackageDependencies \
-            -project Pigpen.xcodeproj \
-            -scheme Pigpen
-
-      - name: Pick simulator
-        run: |
-          set -euo pipefail
-          AVAILABLE=$(xcrun simctl list devices available)
-          DEVICE=""
-          for name in "iPhone 17 Pro" "iPhone 17" "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15"; do
-            if grep -q "^ *$name (" <<< "$AVAILABLE"; then DEVICE="$name"; break; fi
-          done
-          if [ -z "$DEVICE" ]; then
-            DEVICE=$(grep -oE '^ *iPhone[^(]*' <<< "$AVAILABLE" | head -1 | xargs || true)
-          fi
-          if [ -z "$DEVICE" ]; then
-            echo "ERROR: No iPhone simulator available"
-            exit 1
-          fi
-          echo "Using simulator: $DEVICE"
-          echo "DEVICE=$DEVICE" >> $GITHUB_ENV
-
+      # The destination is generic so that nothing here has to wait on a
+      # simulator, and `ARCHS` keeps a generic destination from compiling every
+      # architecture the simulator platform has.
       - name: Build for Simulator
         run: |
           set -o pipefail
           xcodebuild build \
             -project Pigpen.xcodeproj \
             -scheme Pigpen \
-            -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=${{ env.DEVICE }},OS=latest" \
+            -destination "generic/platform=iOS Simulator" \
             -configuration Debug \
             -derivedDataPath DerivedData \
+            ARCHS="$(uname -m)" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee build.log
           if grep -q "BUILD FAILED" build.log; then exit 1; fi
 
+      # After the build rather than beside it: booting takes every core a runner
+      # has, and sharing them made the build four times slower for no gain.
+      - name: Wake up the simulator
+        id: simulator
+        uses: ./.github/actions/simulator
+
       - name: Capture screenshots
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
         run: |
           set -euo pipefail
           mkdir -p screenshots
 
-          DEVICE="${{ env.DEVICE }}"
+          BUNDLE_ID="com.pigpen.app"
 
-          # Boot the simulator
-          xcrun simctl boot "$DEVICE" 2>/dev/null || true
-          sleep 5
-
-          # Clean status bar: 9:41, full signal, full wifi, full battery
-          xcrun simctl status_bar "$DEVICE" override \
-            --time "9:41" \
-            --batteryState charged \
-            --batteryLevel 100 \
-            --wifiBars 3 \
-            --cellularBars 4
-
-          # Find and install the built app
           APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
           if [ -z "$APP_PATH" ]; then
             echo "ERROR: Could not find built .app bundle"
             exit 1
           fi
           echo "Installing: $APP_PATH"
-          xcrun simctl install "$DEVICE" "$APP_PATH"
+          xcrun simctl install "$UDID" "$APP_PATH"
 
-          BUNDLE_ID="com.pigpen.app"
-
-          # Each screen is shot in both appearances. `-map` and `-puzzle` are launch
-          # arguments the app understands, so the world map and the board can be
-          # captured without tapping through the title screen.
+          # Each screen is shot in both appearances off a single launch: the views
+          # read the colour scheme out of the environment, so flipping the
+          # simulator under a running app re-draws it, and the two shots then show
+          # the same board rather than two rolls of the dice. `-map` and `-puzzle`
+          # are launch arguments the app understands, so the world map and the
+          # board can be captured without tapping through the title screen.
           capture() {
-            local file="$1"
-            local appearance="$2"
+            local order="$1"
+            local screen="$2"
             shift 2
 
-            xcrun simctl ui "$DEVICE" appearance "$appearance"
-            sleep 1
-            xcrun simctl launch "$DEVICE" "$BUNDLE_ID" "$@"
-            sleep 4
-            xcrun simctl io "$DEVICE" screenshot "screenshots/$file"
-            echo "Captured: $file"
-            xcrun simctl terminate "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
-            sleep 1
+            local light dark
+            light=$(printf 'screenshots/%02d_%s_light.png' "$order" "$screen")
+            dark=$(printf 'screenshots/%02d_%s_dark.png' "$((order + 1))" "$screen")
+
+            xcrun simctl ui "$UDID" appearance light
+            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
+            sleep 3
+            xcrun simctl io "$UDID" screenshot "$light"
+
+            xcrun simctl ui "$UDID" appearance dark
+            sleep 2
+            xcrun simctl io "$UDID" screenshot "$dark"
+
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            echo "Captured: $light, $dark"
           }
 
-          capture 01_title_light.png light
-          capture 02_title_dark.png dark
-          capture 03_map_light.png light -map
-          capture 04_map_dark.png dark -map
-          capture 05_puzzle_light.png light -puzzle
-          capture 06_puzzle_dark.png dark -puzzle
+          capture 1 title
+          capture 3 map -map
+          capture 5 puzzle -puzzle
 
-          # Clean up status bar override
-          xcrun simctl status_bar "$DEVICE" clear
+          xcrun simctl status_bar "$UDID" clear
 
           echo "All screenshots captured:"
           ls -la screenshots/
