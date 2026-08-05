@@ -53,7 +53,7 @@ final class TutorialLesson {
 
     /// Every tile the walkthrough asks the player to fence, in order.
     static var scriptedFences: Set<GridPoint> {
-        [firstPost].union(eastRun).union(closingRun)
+        Set([firstPost]).union(eastRun).union(closingRun)
     }
 
     // MARK: - What the step allows
