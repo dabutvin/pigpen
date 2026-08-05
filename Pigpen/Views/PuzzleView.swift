@@ -137,6 +137,10 @@ struct PuzzleView: View {
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .contentTransition(.numericText())
+                    // Sits on one line beside the button rather than pushing it off the
+                    // screen when the type is large.
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
 
                 if game.canRestoreBestPen {
                     Button { restoreBestPen() } label: {
