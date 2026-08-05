@@ -10,6 +10,10 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   Press and drag to lay a whole run at once — starting the drag on a fence tears out
   everything you drag over instead. You have a fixed budget of pieces per puzzle. Corners
   cost nothing, since a pig cannot cut across one.
+- **Undo and redo** walk back and forth through the field a press at a time, so a drag laid
+  in the wrong place comes out in one go rather than tile by tile. Clearing the field is a
+  press like any other and one undo brings the whole thing back. Laying a new piece gives up
+  whatever was waiting to be redone.
 - **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
   build on it and you never need to: it walls the pen for free. Build against it instead of
   spending fences.
