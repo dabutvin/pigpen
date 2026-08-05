@@ -6,6 +6,7 @@ import UIKit
 @MainActor
 struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var lesson = TutorialLesson()
     @State private var pig = AnimalMark(kind: .pig, tile: PuzzleLevel.practicePen.pigStart, opacity: 1)
@@ -177,6 +178,7 @@ struct TutorialView: View {
         switch game.phase {
         case .building:
             pig.tile = level.pigStart
+            pig.hop = 0
             withAnimation(.easeOut(duration: 0.25)) { pig.opacity = 1 }
         case .escaped(let escapes):
             // The scripted pen holds, so this path is only a safety net if the field is
@@ -185,9 +187,24 @@ struct TutorialView: View {
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
             lesson.reconsider()
-            try? await Task.sleep(for: .milliseconds(350))
+            await celebrate()
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
+    }
+
+    /// The pig's lap of honour round the practice pen, which is the first thing a new
+    /// player sees a pen that holds do.
+    private func celebrate() async {
+        guard !reduceMotion else {
+            try? await Task.sleep(for: .milliseconds(350))
+            return
+        }
+
+        await Celebration(
+            laps: game.victoryLaps,
+            move: { _, tile in pig.tile = tile },
+            lift: { pig.hop = $0 }
+        ).run()
     }
 
     private func walk(_ route: [GridPoint]) async {

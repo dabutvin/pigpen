@@ -78,6 +78,13 @@ final class PuzzleGame {
         return level.isMaximumScore(penTally.score)
     }
 
+    /// The little circle each animal runs once the gate has been opened on a pen that
+    /// holds, and nothing while the field is still being built or something has got out.
+    var victoryLaps: [VictoryLap] {
+        guard case .penned(let pen) = phase else { return [] }
+        return level.victoryLaps(inside: pen)
+    }
+
     /// The stars for the pen the animals have actually been let loose in. Nothing is
     /// scored until the gate has been opened.
     var starRating: Int? {

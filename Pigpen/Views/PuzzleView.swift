@@ -6,6 +6,7 @@ import UIKit
 @MainActor
 struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Told how many stars a pen was worth, every time one holds.
     ///
@@ -428,8 +429,8 @@ struct PuzzleView: View {
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
 
-    /// Plays out whatever the game just decided: the walk to freedom, or a beat on a pen
-    /// that held. The verdict card waits until the animation is done.
+    /// Plays out whatever the game just decided: the walk to freedom, or the lap of honour
+    /// on a pen that held. The verdict card waits until the animation is done.
     private func reactToPhase() async {
         switch game.phase {
         case .building:
@@ -450,12 +451,33 @@ struct PuzzleView: View {
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
             onPenned?(game.starRating ?? 1)
-            // The wash is already on the field — it deepens itself as the phase changes,
-            // and the verdict waits for it to settle.
-            try? await Task.sleep(for: .milliseconds(350))
+            // The wash is already on the field — it deepens itself as the phase changes.
+            // The animals take their turn on it, and the verdict waits for them.
+            await celebrate()
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
+    }
+
+    /// The animals' turn on a pen that holds: a little circle round the ground they are
+    /// shut into and a hop or two at the end of it, before the verdict card comes up over
+    /// the field. A player who would rather the board kept still gets the same beat of
+    /// nothing the wash used to have to itself.
+    private func celebrate() async {
+        guard !reduceMotion else {
+            try? await Task.sleep(for: .milliseconds(350))
+            return
+        }
+
+        await Celebration(
+            laps: game.victoryLaps,
+            move: { kind, tile in move(kind, to: tile) },
+            lift: { height in
+                for index in marks.indices {
+                    marks[index].hop = height
+                }
+            }
+        ).run()
     }
 
     /// Walks everything that got out along its own route and off the edge of the map. Two
@@ -487,10 +509,14 @@ struct PuzzleView: View {
         marks[index].tile = tile
     }
 
-    /// Puts every animal back on the tile the map starts it on.
+    /// Puts every animal back on the tile the map starts it on, feet on the ground: a
+    /// celebration cut short by a field being cleared leaves nothing hanging in the air.
     private func sendHome() {
         for animal in level.animals {
             move(animal.kind, to: animal.tile)
+        }
+        for index in marks.indices {
+            marks[index].hop = 0
         }
     }
 
