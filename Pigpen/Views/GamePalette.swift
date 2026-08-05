@@ -8,6 +8,18 @@ enum GamePalette {
     static let water = Color(red: 0.24, green: 0.55, blue: 0.76)
     static let waterRipple = Color(red: 0.76, green: 0.90, blue: 0.98)
     static let pen = Color(red: 0.98, green: 0.78, blue: 0.33)
+    /// The wash for a pen with nothing left to beat: the whole colour wheel laid across it,
+    /// starting `phase` turns round from red. Turning the phase over time is what makes the
+    /// rainbow drift, and the last stop is the same hue as the first, so it never seams.
+    static func rainbow(phase: Double) -> Gradient {
+        Gradient(colors: (0...6).map { stop in
+            Color(
+                hue: (phase + Double(stop) / 6).truncatingRemainder(dividingBy: 1),
+                saturation: 0.78,
+                brightness: 0.96
+            )
+        })
+    }
     static let post = Color(red: 0.27, green: 0.17, blue: 0.10)
     static let rail = Color(red: 0.62, green: 0.42, blue: 0.24)
     /// Pale, freshly cut timber, light enough to stand out against the mud.

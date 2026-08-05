@@ -15,6 +15,13 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   spending fences.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
+- **A pen that closes colours itself in.** The moment the last gap is filled, the ground the
+  fencing holds washes gold, so you can see the pen you have made before you commit to it.
+  Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
+  Take a piece back out and the wash goes with it.
+- **The biggest pen the map has in it goes rainbow.** A pen that big drifts through the
+  spectrum instead of sitting gold, from the moment you close it. There is nothing above it
+  to aim for.
 - **Score.** The mud tiles inside a pen that holds. Four pieces boxed in around the pig
   always work and score 1, so the puzzle is not whether you can pen it but how much ground
   you can take with the same budget. A pen that holds invites you back out to widen it —
@@ -23,7 +30,8 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 The first puzzle, **River Bend**, hands you 12 fence pieces. A free-standing box that size
 holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can be
 shut into — a wider pen would have to hold ground on the rim of the map, and the pig just
-walks off it. Special tiles (cupcakes, frying pans) come next.
+walks off it. That 35 is the level's `maximumArea`, and the pen it goes rainbow for. Special
+tiles (cupcakes, frying pans) come next.
 
 ## The World
 
@@ -48,10 +56,11 @@ pig standing at the furthest one it has reached and mist over everything past th
 | 5 | Otter Ford | 12 | 24 |
 | 6 | The Big Meadow | 16 | 33 |
 
-"Biggest pen" is the most mud that budget can shut a pig into on that map, which is the
-number the third star is set just under and the number the game uses to tell you there is
-nothing left to beat. It is a search rather than a sum — `Tools/level_search.py` does the
-searching, and a test pins every one of them to a pen that actually holds.
+"Biggest pen" is the most mud that budget can shut a pig into on that map: the level's
+`maximumArea`, the number the third star is set just under, and the pen each level goes
+rainbow for. It is a search rather than a sum — `Tools/level_search.py` does the searching,
+and a test pins every one of them to a pen that actually holds, so no level can promise a
+rainbow that is not there.
 
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
