@@ -24,6 +24,9 @@ struct AnimalMark: Equatable, Identifiable {
     let kind: Animal
     var tile: GridPoint
     var opacity: Double
+    /// How far off the ground it is, 0 standing on its tile and 1 at the top of a hop.
+    /// What a pen that holds gets celebrated with.
+    var hop: Double = 0
 
     var id: Animal { kind }
 }
@@ -101,6 +104,7 @@ struct FieldView: View {
                         .font(.system(size: board.cell * 0.78))
                         .opacity(animal.opacity)
                         .position(board.center(of: animal.tile))
+                        .offset(y: -board.cell * 0.3 * animal.hop)
                         .allowsHitTesting(false)
                 }
             }
