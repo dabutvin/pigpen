@@ -26,6 +26,12 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   always work and score 1, so the puzzle is not whether you can pen it but how much ground
   you can take with the same budget. A pen that holds invites you back out to widen it —
   until it is the biggest pen the map has in it, which the game knows and says so.
+- **Your best pen is kept, and you can go back to it.** A pen counts the moment it closes,
+  so the running best is yours without letting the pig go. Rearrange the fencing, see the
+  tally say the new arrangement holds less ground than the old one, and *Put it back*
+  stands every piece exactly where it stood on your best — even after clearing the field.
+  It lasts as long as you stay on the puzzle. Same ground held with a piece to spare
+  replaces the best too, since the piece it hands back is one more to widen with.
 
 The one puzzle so far, **River Bend**, hands you 12 fence pieces. A free-standing box that
 size holds 9 tiles; hugging the river and the pond holds 35, which is every tile the pig can

@@ -14,12 +14,19 @@ final class PuzzleGame {
         case penned(pen: Set<GridPoint>)
     }
 
+    /// A pen that held, kept whole: the ground it held and the fencing that held it.
+    struct Pen: Equatable {
+        let fences: Set<GridPoint>
+        let area: Int
+    }
+
     let level: PuzzleLevel
     /// The tiles filled in with fencing. The pig cannot walk onto any of them.
     private(set) var fences: Set<GridPoint> = []
     private(set) var phase: Phase = .building
-    /// The largest pen managed so far, so a second attempt can be compared to the first.
-    private(set) var bestArea = 0
+    /// The biggest pen closed so far this session, fencing and all, so a rearrangement
+    /// that turns out worse can be measured against it and put back.
+    private(set) var bestPen: Pen?
     /// What the pig would do if it were let out this instant, kept up to date as the
     /// fencing changes so a closed pen can be shown as closed the moment it closes.
     private var outcome: PenOutcome
@@ -31,6 +38,8 @@ final class PuzzleGame {
 
     var isBuilding: Bool { phase == .building }
     var fencesRemaining: Int { level.fenceBudget - fences.count }
+    /// The most ground any pen has held this session, and 0 before one has closed.
+    var bestArea: Int { bestPen?.area ?? 0 }
 
     /// Whether the fencing and the water together already shut the pig in — true as soon as
     /// the last gap is filled, without waiting for the pig to be let out and prove it.
@@ -55,6 +64,25 @@ final class PuzzleGame {
     /// until the pig has been released.
     var starRating: Int? {
         if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
+    }
+
+    /// Whether the field stands somewhere other than on its best pen, so putting it back
+    /// is worth offering. False while the pig is out, and until a pen has closed at all.
+    var canRestoreBestPen: Bool {
+        guard isBuilding, let bestPen else { return false }
+        return bestPen.fences != fences
+    }
+
+    /// Puts the fencing back the way it stood when it held the best pen of the session,
+    /// so a rearrangement that turned out worse costs nothing. Returns whether anything
+    /// changed.
+    @discardableResult
+    func restoreBestPen() -> Bool {
+        guard canRestoreBestPen, let bestPen else { return false }
+
+        fences = bestPen.fences
+        reconsider()
+        return true
     }
 
     /// Fills a tile in with fencing, or clears it again. Returns whether anything changed,
@@ -94,7 +122,6 @@ final class PuzzleGame {
             phase = .escaped(route: route)
         case .penned(let pen):
             phase = .penned(pen: pen)
-            bestArea = max(bestArea, pen.count)
         }
     }
 
@@ -103,15 +130,30 @@ final class PuzzleGame {
         phase = .building
     }
 
-    /// Tears every fence back out and starts the field over.
+    /// Tears every fence back out and starts the field over. The best pen of the session
+    /// outlives it, so a field cleared by mistake can still be put back.
     func startOver() {
         fences.removeAll()
         reconsider()
         phase = .building
     }
 
-    /// Walks the pig out again on paper, after the fencing has changed.
+    /// Walks the pig out again on paper, after the fencing has changed, and remembers the
+    /// fencing if it holds more ground than anything before it. A pen counts from the
+    /// moment it closes: the pig does not have to be let out for the score to stand.
     private func reconsider() {
         outcome = level.releasePig(fences: fences)
+
+        guard case .penned(let pen) = outcome, isWorthRemembering(pen) else { return }
+        bestPen = Pen(fences: fences, area: pen.count)
+    }
+
+    /// Whether a pen beats the one being kept: more ground, or the same ground held with
+    /// pieces to spare, which is the same score with more budget left to widen it.
+    private func isWorthRemembering(_ pen: Set<GridPoint>) -> Bool {
+        guard let bestPen else { return true }
+        return pen.count == bestPen.area
+            ? fences.count < bestPen.fences.count
+            : pen.count > bestPen.area
     }
 }

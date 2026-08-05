@@ -100,24 +100,71 @@ struct PuzzleView: View {
     }
 
     private var buildingControls: some View {
-        HStack(spacing: 10) {
-            if !game.fences.isEmpty {
-                Button { game.startOver() } label: {
-                    Label("Clear", systemImage: "arrow.counterclockwise")
-                }
-                .buttonStyle(.bordered)
-            }
+        VStack(spacing: 10) {
+            bestPenTally
 
-            Button {
-                game.releasePig()
-            } label: {
-                Text("Release the pig")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 10) {
+                if !game.fences.isEmpty {
+                    Button { game.startOver() } label: {
+                        Label("Clear", systemImage: "arrow.counterclockwise")
+                    }
+                    .buttonStyle(.bordered)
+                }
+
+                Button {
+                    game.releasePig()
+                } label: {
+                    Text("Release the pig")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(game.fences.isEmpty)
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(game.fences.isEmpty)
         }
+        .animation(.easeInOut(duration: 0.25), value: game.bestArea)
+        .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
+    }
+
+    /// What the field is holding, set against the most it has held, and the way back to it.
+    /// A pen counts from the moment it closes, so the fencing can be pulled about, seen to
+    /// fall short, and put back the way it was without the pig ever leaving its tile.
+    @ViewBuilder
+    private var bestPenTally: some View {
+        if game.bestArea > 0 {
+            HStack(spacing: 10) {
+                Text(tallySummary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .contentTransition(.numericText())
+
+                if game.canRestoreBestPen {
+                    Button { restoreBestPen() } label: {
+                        Label("Put it back", systemImage: "arrow.uturn.backward")
+                            .font(.footnote.weight(.semibold))
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .accessibilityLabel(
+                        "Put the fencing back to your best pen, \(counted(game.bestArea, "mud tile"))"
+                    )
+                    .transition(.opacity.combined(with: .scale))
+                }
+            }
+            .transition(.opacity)
+        }
+    }
+
+    /// Reads out the best pen of the session, and what the fencing holds now when that is
+    /// something other than the best.
+    private var tallySummary: String {
+        guard game.isPenClosed else {
+            return "Best so far: \(counted(game.bestArea, "mud tile"))"
+        }
+        let holding = game.penTiles.count
+        return holding >= game.bestArea
+            ? "Your best yet: \(counted(holding, "mud tile"))"
+            : "Holding \(holding), best \(game.bestArea)"
     }
 
     @ViewBuilder
@@ -237,6 +284,12 @@ struct PuzzleView: View {
             guard game.clearFence(on: stroke.tile) else { return }
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         }
+    }
+
+    /// Puts the fencing back the way it stood on the best pen of the session.
+    private func restoreBestPen() {
+        guard game.restoreBestPen() else { return }
+        UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
     }
 
     /// Says no to a tile the map or the budget will not take, once per press: a finger
