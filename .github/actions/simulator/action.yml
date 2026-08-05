@@ -115,6 +115,11 @@ runs:
       run: |
         set -uo pipefail
 
+        # A job that has started waiting on the simulator has nothing else to
+        # do, so the warm-up can stop tiptoeing around the build and take the
+        # machine for the expensive part.
+        : > "$STATE/machine-free"
+
         DEADLINE=$((SECONDS + TIMEOUT))
         while [ ! -f "$STATE/$STAGE" ]; do
           if [ -f "$STATE/failed" ] || [ "$SECONDS" -ge "$DEADLINE" ]; then

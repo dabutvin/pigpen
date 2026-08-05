@@ -63,6 +63,19 @@ if ! xcrun simctl bootstatus "$UDID" -b; then
 fi
 reached booted
 
+# Booting is mostly waiting, so it is happy to share the machine with a build.
+# The first launch is not: it builds the runtime's shared cache, which wants
+# every core there is, and a runner has three. So it holds off until the job has
+# nothing left to do but wait for the simulator, which is what the waiting step
+# says by leaving `machine-free` behind. Waiting for a job that never gets there
+# would be worse than the contention, hence the cap.
+WAITED=0
+while [ ! -f "$STATE/machine-free" ] && [ "$WAITED" -lt 300 ]; do
+  sleep 2
+  WAITED=$((WAITED + 2))
+done
+[ -f "$STATE/machine-free" ] || log "gave up waiting for the build to finish"
+
 if [ "$STUB_BUILT" = "yes" ]; then
   log "installing the stub app"
   xcrun simctl install "$UDID" "$APP" && xcrun simctl launch "$UDID" "$BUNDLE_ID"
