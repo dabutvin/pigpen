@@ -50,19 +50,25 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
-      # `build-for-testing` builds the app and the test bundle once, for the
-      # simulator the tests will run on. Building for a generic destination first
-      # would compile every architecture the simulator platform has and then get
-      # thrown away by the test build.
+      # `build-for-testing` builds the app and the test bundle once, and the test
+      # step below runs them without building anything again.
+      #
+      # The destination is generic on purpose. Naming the device makes xcodebuild
+      # ask CoreSimulator about it before it will plan anything, and a simulator
+      # that is halfway through booting takes minutes to answer — so the build
+      # would sit and wait for the very thing it is supposed to be running
+      # alongside. `ARCHS` keeps a generic destination from compiling every
+      # architecture the simulator platform has.
       - name: Build
         run: |
           set -o pipefail
           xcodebuild build-for-testing \
             -project Pigpen.xcodeproj \
             -scheme Pigpen \
-            -destination "id=${{ steps.simulator.outputs.udid }}" \
+            -destination "generic/platform=iOS Simulator" \
             -configuration Debug \
             -derivedDataPath DerivedData \
+            ARCHS="$(uname -m)" \
             COMPILER_INDEX_STORE_ENABLE=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
