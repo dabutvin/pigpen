@@ -10,8 +10,6 @@ enum Terrain: Character, CaseIterable, Sendable {
 struct PuzzleLevel: Identifiable, Sendable {
     let id: String
     let name: String
-    /// A one-line nudge shown under the board.
-    let hint: String
     /// Row-major, every row the same width.
     let terrain: [[Terrain]]
     let pigStart: GridPoint
@@ -63,7 +61,6 @@ struct PuzzleLevel: Identifiable, Sendable {
     init?(
         id: String,
         name: String,
-        hint: String,
         fenceBudget: Int,
         twoStarArea: Int,
         threeStarArea: Int,
@@ -95,7 +92,6 @@ struct PuzzleLevel: Identifiable, Sendable {
 
         self.id = id
         self.name = name
-        self.hint = hint
         self.terrain = terrain
         self.pigStart = pigStart
         self.fenceBudget = fenceBudget
@@ -116,7 +112,6 @@ extension PuzzleLevel {
         guard let level = PuzzleLevel(
             id: "river-bend",
             name: "River Bend",
-            hint: "Water costs nothing. Build the pen against it.",
             fenceBudget: 12,
             twoStarArea: 20,
             threeStarArea: 33,

@@ -111,12 +111,13 @@ struct TitleScreenView: View {
         .offset(y: arrived ? 0 : 26)
     }
 
-    /// What the one puzzle in the game is, and what it takes to beat it properly.
+    /// What the one puzzle in the game is, and what it hands the player to solve it with.
+    /// How much mud three stars takes is left for the player to find out by taking it.
     private var signpost: some View {
         VStack(spacing: 3) {
             Text("Puzzle 1 · \(level.name)")
                 .font(.footnote.weight(.heavy))
-            Text("\(level.fenceBudget) fence pieces · \(level.threeStarArea) mud tiles for three stars")
+            Text("\(level.fenceBudget) fence pieces · pen in as much mud as you can")
                 .font(.caption2.weight(.semibold))
                 .opacity(0.85)
             Text("Version \(appVersion)")
