@@ -21,7 +21,41 @@ START=$SECONDS
 log() { printf '[%4ds] %s\n' "$((SECONDS - START))" "$*"; }
 reached() { log "reached: $1"; : > "$STATE/$1"; }
 
+APP="$STATE/SimWarmup.app"
+
+# The first app to be installed and launched on a fresh simulator pays for
+# installd starting up and for the runtime's shared cache being built, which is
+# minutes of the cold start and has nothing to do with which app it is. So a
+# stub app pays it here, next to the build, and the real one arrives to a
+# simulator that has done all that already. Linking UIKit and SwiftUI without
+# using them is deliberate: loading them is the point.
+build_stub() {
+  [ -d "$STUB" ] || return 1
+
+  local arch sdk
+  arch=$(uname -m)
+  [ "$arch" = "arm64" ] || arch=x86_64
+  sdk=$(xcrun --sdk iphonesimulator --show-sdk-path) || return 1
+
+  mkdir -p "$APP"
+  cp "$STUB/Info.plist" "$APP/Info.plist"
+  xcrun clang -target "$arch-apple-ios17.0-simulator" -isysroot "$sdk" \
+    -framework UIKit -framework SwiftUI \
+    -o "$APP/SimWarmup" "$STUB/main.c"
+}
+
+# Kicking the boot off first means the stub app is compiled while the device
+# comes up rather than after it.
 log "booting $UDID"
+xcrun simctl boot "$UDID" > /dev/null 2>&1 || true
+
+STUB_BUILT=no
+if build_stub; then
+  STUB_BUILT=yes
+else
+  log "could not build the stub app"
+fi
+
 if ! xcrun simctl bootstatus "$UDID" -b; then
   log "boot failed"
   : > "$STATE/failed"
@@ -29,30 +63,11 @@ if ! xcrun simctl bootstatus "$UDID" -b; then
 fi
 reached booted
 
-# The first app to be installed and launched on a fresh simulator pays for
-# installd starting up and for the runtime's shared cache being built, which is
-# minutes of the cold start and has nothing to do with which app it is. So a
-# stub app pays it here, next to the build, and the real one arrives to a
-# simulator that has done all that already.
-if [ -d "$STUB" ]; then
-  ARCH=$(uname -m)
-  [ "$ARCH" = "arm64" ] || ARCH=x86_64
-  APP="$STATE/SimWarmup.app"
-
-  mkdir -p "$APP"
-  cp "$STUB/Info.plist" "$APP/Info.plist"
-
-  if SDK=$(xcrun --sdk iphonesimulator --show-sdk-path) &&
-     xcrun clang -target "$ARCH-apple-ios17.0-simulator" -isysroot "$SDK" \
-       -framework UIKit -framework SwiftUI \
-       -o "$APP/SimWarmup" "$STUB/main.c"; then
-    log "installing the stub app"
-    xcrun simctl install "$UDID" "$APP" && xcrun simctl launch "$UDID" "$BUNDLE_ID"
-    xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
-    xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
-  else
-    log "could not build the stub app"
-  fi
+if [ "$STUB_BUILT" = "yes" ]; then
+  log "installing the stub app"
+  xcrun simctl install "$UDID" "$APP" && xcrun simctl launch "$UDID" "$BUNDLE_ID"
+  xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null
+  xcrun simctl uninstall "$UDID" "$BUNDLE_ID" 2>/dev/null
 fi
 reached installed
 

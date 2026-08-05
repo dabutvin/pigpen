@@ -32,14 +32,16 @@ jobs:
           if [ -n "$XCODE" ]; then sudo xcode-select -s "$XCODE/Contents/Developer"; fi
           xcodebuild -version
 
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
       # Waking the simulator up takes several times as long as building the app,
       # so it starts here and happens while the build does, rather than after it.
+      # Homebrew goes first only because a download racing the boot for the
+      # machine makes both of them slower.
       - name: Start the simulator warming up
         id: simulator
         uses: ./.github/actions/simulator
-
-      - name: Install XcodeGen
-        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
 
       - name: Generate Xcode project
         run: xcodegen generate
