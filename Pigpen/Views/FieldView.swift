@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 /// One tile touched during a single unbroken press: a tap, or one of the tiles a finger
@@ -23,18 +24,25 @@ struct FieldView: View {
     let level: PuzzleLevel
     /// The tiles filled in with fencing.
     let fences: Set<GridPoint>
-    /// Mud tiles to wash in gold once the pen is proven closed.
+    /// The mud tiles the fencing shuts the pig into, washed in as soon as the pen closes.
     let penTiles: Set<GridPoint>
-    /// How far along the pen's celebration wash is, 0 to 1.
+    /// How deep that wash goes, 0 to 1.
     let penGlow: Double
+    /// Whether the pen holds all the ground the puzzle allows, which turns the wash from
+    /// gold to a drifting rainbow.
+    let isOptimal: Bool
     let pigTile: GridPoint
     let pigOpacity: Double
     let onStroke: (FenceStroke) -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The press in progress, if a finger is down: which way it is working, where it was
     /// last seen, and the tiles it has already handed over. A finger wandering about
     /// inside one tile must not toggle it over and over.
     @State private var press: Press?
+    /// When the board came up, so the rainbow drifts from a fixed point rather than from
+    /// whenever it happened to be switched on.
+    @State private var opened = Date()
 
     private struct Press {
         var mode: FenceStroke.Mode
@@ -53,6 +61,8 @@ struct FieldView: View {
                     drawBorder(in: &context, board: board)
                     drawFences(in: &context, board: board)
                 }
+
+                penWash(board: board)
 
                 Text("🐷")
                     .font(.system(size: board.cell * 0.78))
@@ -90,6 +100,43 @@ struct FieldView: View {
         press = current
     }
 
+    /// The pen's wash, laid over the board rather than drawn into it so that it can fade
+    /// in the moment the fencing closes and bloom into a rainbow when the pen is as big as
+    /// the puzzle allows. The rainbow sits on top of the gold rather than replacing it, so
+    /// the last piece of a perfect pen colours over the wash already there.
+    private func penWash(board: BoardGeometry) -> some View {
+        let pen = penPath(board: board)
+
+        return ZStack(alignment: .topLeading) {
+            pen.fill(GamePalette.pen.opacity(0.55))
+
+            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isOptimal)) { timeline in
+                pen.fill(
+                    LinearGradient(
+                        gradient: GamePalette.rainbow,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .hueRotation(.degrees(reduceMotion ? 0 : timeline.date.timeIntervalSince(opened) * 26))
+            }
+            .opacity(isOptimal ? 0.7 : 0)
+        }
+        .opacity(penGlow)
+        .allowsHitTesting(false)
+        .animation(.easeOut(duration: 0.28), value: penGlow)
+        .animation(.easeInOut(duration: 0.5), value: isOptimal)
+    }
+
+    /// The pen as one shape, so it washes in a single pass with no seams between tiles.
+    private func penPath(board: BoardGeometry) -> Path {
+        Path { path in
+            for tile in penTiles {
+                path.addRect(board.rect(for: tile))
+            }
+        }
+    }
+
     private func drawTerrain(in context: inout GraphicsContext, board: BoardGeometry) {
         for row in 0..<level.rowCount {
             for column in 0..<level.columnCount {
@@ -103,13 +150,6 @@ struct FieldView: View {
                 case .water:
                     context.fill(Path(rect), with: .color(GamePalette.water))
                     drawRipples(in: &context, rect: rect, tile: tile)
-                }
-
-                if penTiles.contains(tile) {
-                    context.fill(
-                        Path(rect),
-                        with: .color(GamePalette.pen.opacity(0.55 * penGlow))
-                    )
                 }
             }
         }
@@ -219,7 +259,7 @@ struct FieldView: View {
     }
 }
 
-#Preview {
+#Preview("Building") {
     FieldView(
         level: .riverBend,
         fences: [
@@ -228,7 +268,30 @@ struct FieldView: View {
         ],
         penTiles: [],
         penGlow: 0,
+        isOptimal: false,
         pigTile: PuzzleLevel.riverBend.pigStart,
+        pigOpacity: 1,
+        onStroke: { _ in }
+    )
+    .padding()
+}
+
+/// The par solution to River Bend: the river and the pond wall two sides of the pen and the
+/// whole budget walls the other two, which holds as much ground as the map allows — so the
+/// wash is a rainbow.
+#Preview("Optimal pen") {
+    let level = PuzzleLevel.riverBend
+    let fences = Set((1...5).map { GridPoint(row: 10, column: $0) })
+        .union((3...9).map { GridPoint(row: $0, column: 0) })
+    let pen = Set((3...9).flatMap { row in (1...5).map { GridPoint(row: row, column: $0) } })
+
+    return FieldView(
+        level: level,
+        fences: fences,
+        penTiles: pen,
+        penGlow: 0.8,
+        isOptimal: true,
+        pigTile: level.pigStart,
         pigOpacity: 1,
         onStroke: { _ in }
     )

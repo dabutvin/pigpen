@@ -17,6 +17,9 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// Penned mud tiles needed for the second and third star. Any pen at all earns one.
     let twoStarArea: Int
     let threeStarArea: Int
+    /// The largest pen the map and the budget allow between them. A pen this size is the
+    /// answer to the puzzle rather than another attempt at it, so the field says so.
+    let optimalArea: Int
 
     var rowCount: Int { terrain.count }
     var columnCount: Int { terrain.first?.count ?? 0 }
@@ -64,6 +67,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         fenceBudget: Int,
         twoStarArea: Int,
         threeStarArea: Int,
+        optimalArea: Int,
         map: String
     ) {
         let lines = map.split(whereSeparator: \.isNewline)
@@ -97,6 +101,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         self.fenceBudget = fenceBudget
         self.twoStarArea = twoStarArea
         self.threeStarArea = threeStarArea
+        self.optimalArea = optimalArea
     }
 }
 
@@ -115,6 +120,7 @@ extension PuzzleLevel {
             fenceBudget: 12,
             twoStarArea: 20,
             threeStarArea: 33,
+            optimalArea: 35,
             map: """
                 .........
                 .........

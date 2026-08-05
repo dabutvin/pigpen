@@ -8,6 +8,16 @@ enum GamePalette {
     static let water = Color(red: 0.24, green: 0.55, blue: 0.76)
     static let waterRipple = Color(red: 0.76, green: 0.90, blue: 0.98)
     static let pen = Color(red: 0.98, green: 0.78, blue: 0.33)
+    /// A pen with nothing left to beat gets this instead of plain gold — bright enough to
+    /// read as a wash over mud, and drifting, so a solved puzzle is unmistakable.
+    static let rainbow = Gradient(colors: [
+        Color(red: 0.95, green: 0.33, blue: 0.35),
+        Color(red: 0.98, green: 0.63, blue: 0.26),
+        Color(red: 0.98, green: 0.86, blue: 0.31),
+        Color(red: 0.44, green: 0.82, blue: 0.44),
+        Color(red: 0.29, green: 0.64, blue: 0.93),
+        Color(red: 0.62, green: 0.43, blue: 0.91)
+    ])
     static let post = Color(red: 0.27, green: 0.17, blue: 0.10)
     static let rail = Color(red: 0.62, green: 0.42, blue: 0.24)
     /// Pale, freshly cut timber, light enough to stand out against the mud.

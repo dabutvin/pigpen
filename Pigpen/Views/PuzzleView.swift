@@ -8,7 +8,6 @@ struct PuzzleView: View {
     @State private var game: PuzzleGame
     @State private var pigTile: GridPoint
     @State private var pigOpacity: Double = 1
-    @State private var penGlow: Double = 0
     /// Held back until the pig has finished its walk, so the verdict lands after the action.
     @State private var showsVerdict = false
     @State private var budgetShake: CGFloat = 0
@@ -21,6 +20,18 @@ struct PuzzleView: View {
     }
 
     private var level: PuzzleLevel { game.level }
+
+    /// How deep the pen's wash goes. Fencing that closes colours the pen in straight away;
+    /// letting the pig go and watching it fail to find a way out takes it the rest of the way.
+    private var penGlow: Double {
+        if game.penTiles.isEmpty {
+            0
+        } else if game.isBuilding {
+            0.8
+        } else {
+            1
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -36,6 +47,7 @@ struct PuzzleView: View {
                     fences: game.fences,
                     penTiles: game.penTiles,
                     penGlow: penGlow,
+                    isOptimal: game.isOptimal,
                     pigTile: pigTile,
                     pigOpacity: pigOpacity,
                     onStroke: { build($0) }
@@ -147,6 +159,9 @@ struct PuzzleView: View {
 
     private func pennedDetail(pen: Set<GridPoint>) -> String {
         let detail = "\(counted(pen.count, "mud tile")) held with \(counted(game.fences.count, "fence piece"))."
+        if game.isOptimal {
+            return detail + " There is no bigger pen on this map."
+        }
         guard game.bestArea > pen.count else { return detail }
         return detail + " Your best so far is \(game.bestArea)."
     }
@@ -219,15 +234,14 @@ struct PuzzleView: View {
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
     }
 
-    /// Plays out whatever the game just decided: the pig's walk to freedom, or the gold
-    /// wash over a pen that held. The verdict card waits until the animation is done.
+    /// Plays out whatever the game just decided: the pig's walk to freedom, or a beat on a
+    /// pen that held. The verdict card waits until the animation is done.
     private func reactToPhase() async {
         switch game.phase {
         case .building:
             pigTile = level.pigStart
             withAnimation(.easeOut(duration: 0.25)) {
                 showsVerdict = false
-                penGlow = 0
                 pigOpacity = 1
             }
         case .escaped(let route):
@@ -235,7 +249,8 @@ struct PuzzleView: View {
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
-            withAnimation(.easeOut(duration: 0.5)) { penGlow = 1 }
+            // The wash is already on the field — it deepens itself as the phase changes,
+            // and the verdict waits for it to settle.
             try? await Task.sleep(for: .milliseconds(350))
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.success)

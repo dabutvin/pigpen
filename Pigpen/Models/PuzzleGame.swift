@@ -20,19 +20,36 @@ final class PuzzleGame {
     private(set) var phase: Phase = .building
     /// The largest pen managed so far, so a second attempt can be compared to the first.
     private(set) var bestArea = 0
+    /// What the pig would do if it were let out this instant, kept up to date as the
+    /// fencing changes so a closed pen can be shown as closed the moment it closes.
+    private var outcome: PenOutcome
 
     init(level: PuzzleLevel) {
         self.level = level
+        self.outcome = level.releasePig(fences: [])
     }
 
     var isBuilding: Bool { phase == .building }
     var fencesRemaining: Int { level.fenceBudget - fences.count }
 
-    /// The mud tiles of the finished pen, or an empty set while the pen is unproven.
-    var penTiles: Set<GridPoint> {
-        if case .penned(let pen) = phase { pen } else { [] }
+    /// Whether the fencing and the water together already shut the pig in — true as soon as
+    /// the last gap is filled, without waiting for the pig to be let out and prove it.
+    var isPenClosed: Bool {
+        if case .penned = outcome { true } else { false }
     }
 
+    /// The mud tiles the fencing shuts the pig into, and an empty set while a way off the
+    /// map remains.
+    var penTiles: Set<GridPoint> {
+        if case .penned(let pen) = outcome { pen } else { [] }
+    }
+
+    /// Whether the pen holds as much ground as the puzzle allows. An open field holds
+    /// nothing, so this only ever means a closed pen with nothing left to beat.
+    var isOptimal: Bool { penTiles.count >= level.optimalArea }
+
+    /// The stars for the pen the pig has actually been let loose in. Nothing is scored
+    /// until the pig has been released.
     var starRating: Int? {
         if case .penned(let pen) = phase { level.starRating(forArea: pen.count) } else { nil }
     }
@@ -52,6 +69,7 @@ final class PuzzleGame {
         guard level.canBuildFence(on: tile), fencesRemaining > 0 else { return false }
 
         fences.insert(tile)
+        reconsider()
         return true
     }
 
@@ -59,15 +77,16 @@ final class PuzzleGame {
     /// anything changed.
     @discardableResult
     func clearFence(on tile: GridPoint) -> Bool {
-        guard isBuilding else { return false }
-        return fences.remove(tile) != nil
+        guard isBuilding, fences.remove(tile) != nil else { return false }
+        reconsider()
+        return true
     }
 
     /// Opens the gate and sees what the pig makes of the fences.
     func releasePig() {
         guard isBuilding else { return }
 
-        switch level.releasePig(fences: fences) {
+        switch outcome {
         case .escaped(let route):
             phase = .escaped(route: route)
         case .penned(let pen):
@@ -84,6 +103,12 @@ final class PuzzleGame {
     /// Tears every fence back out and starts the field over.
     func startOver() {
         fences.removeAll()
+        reconsider()
         phase = .building
+    }
+
+    /// Walks the pig out again on paper, after the fencing has changed.
+    private func reconsider() {
+        outcome = level.releasePig(fences: fences)
     }
 }
