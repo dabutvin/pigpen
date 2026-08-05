@@ -200,27 +200,36 @@ private struct Meadow {
 
         var down = horizon + 34
         while down < size.height - 40 {
-            var across: CGFloat = 24
-            while across < size.width - 24 {
+            var across: CGFloat = 22
+            while across < size.width - 22 {
                 let spot = CGPoint(
-                    x: across + CGFloat(scatter.next(in: -20...20)),
-                    y: down + CGFloat(scatter.next(in: -20...20))
+                    x: across + CGFloat(scatter.next(in: -18...18)),
+                    y: down + CGFloat(scatter.next(in: -18...18))
                 )
                 let kind = growth(scatter.next())
                 let scale = CGFloat(scatter.next(in: 0.8...1.25))
-                across += 76
+                across += 68
 
                 let room = nearest(to: spot, among: waymarks)
-                guard room > 56, nearest(to: spot, among: stops) > 92 else { continue }
+                guard room > 54,
+                      nearest(to: spot, among: stops) > 92,
+                      distance(from: spot, to: barnStand) > 96
+                else { continue }
                 candidates.append(Place(at: spot, growth: kind, size: scale, room: room))
             }
-            down += 74
+            down += 66
         }
 
+        // A pond needs a whole clear field of its own: well down from the hills at the top
+        // of the world, in from both sides, and not on top of the other pond.
         var ponds: [CGPoint] = []
         for candidate in candidates.sorted(by: { $0.room > $1.room }) {
             guard ponds.count < 2, candidate.room > 104 else { break }
-            guard ponds.allSatisfy({ abs($0.y - candidate.at.y) > 260 }) else { continue }
+            guard candidate.at.y > horizon + 110,
+                  candidate.at.x > 54,
+                  candidate.at.x < size.width - 54,
+                  ponds.allSatisfy({ abs($0.y - candidate.at.y) > 260 })
+            else { continue }
             ponds.append(candidate.at)
         }
 
@@ -402,13 +411,17 @@ private struct Meadow {
         }
     }
 
-    /// The barn the pig came out of, standing in the grass below the first signpost.
-    private func drawBarn(in context: inout GraphicsContext) {
-        let start = trail.point(of: 0)
-        let centre = CGPoint(
-            x: start.x < size.width / 2 ? size.width - 74 : 74,
+    /// Where the barn the pig came out of stands: down in the grass below the first
+    /// signpost, on whichever side of the world the trail does not start on.
+    private var barnStand: CGPoint {
+        CGPoint(
+            x: trail.point(of: 0).x < size.width / 2 ? size.width - 74 : 74,
             y: size.height - WorldTrail.apron * 0.42
         )
+    }
+
+    private func drawBarn(in context: inout GraphicsContext) {
+        let centre = barnStand
         let wide: CGFloat = 78
         let tall: CGFloat = 50
 

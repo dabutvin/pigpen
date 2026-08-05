@@ -120,8 +120,8 @@ struct WorldMapView: View {
         return VStack(spacing: 0) {
             LinearGradient(
                 stops: [
-                    Gradient.Stop(color: mist.opacity(0.52), location: 0),
-                    Gradient.Stop(color: mist.opacity(0.46), location: 0.55),
+                    Gradient.Stop(color: mist.opacity(0.46), location: 0),
+                    Gradient.Stop(color: mist.opacity(0.4), location: 0.55),
                     Gradient.Stop(color: mist.opacity(0), location: 1)
                 ],
                 startPoint: .top,

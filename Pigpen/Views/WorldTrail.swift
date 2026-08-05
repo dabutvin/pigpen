@@ -14,7 +14,7 @@ struct WorldTrail {
     /// Meadow kept below the first stop and above the last, so neither is jammed against
     /// the end of the world.
     static let apron: CGFloat = 130
-    static let headroom: CGFloat = 150
+    static let headroom: CGFloat = 168
     /// How close to the side of the screen a signpost may stand.
     static let verge: CGFloat = 62
     /// How far a length of trail bows out to the side, as a fraction of its own length.
