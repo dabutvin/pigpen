@@ -278,4 +278,32 @@ extension PuzzleGame {
         }
         return game
     }
+
+    /// Sour Ground with the three columns beside the pig boxed off from row 3 to row 6 and
+    /// the water walling the rest, which is the board that has an apple and a skull on it at
+    /// once. One of each is inside the pen, where they cancel out and leave it worth exactly
+    /// the eleven tiles it holds; the other skull is buried under the fencing that got there.
+    static func applesAndSkulls() -> PuzzleGame {
+        let game = PuzzleGame(level: .sourGround)
+        let rows = 3...6
+        let columns = 4...6
+
+        var ring: [GridPoint] = []
+        for column in columns {
+            ring.append(GridPoint(row: rows.lowerBound - 1, column: column))
+            ring.append(GridPoint(row: rows.upperBound + 1, column: column))
+        }
+        for row in rows {
+            ring.append(GridPoint(row: row, column: columns.lowerBound - 1))
+            ring.append(GridPoint(row: row, column: columns.upperBound + 1))
+        }
+
+        // The water takes three of these tiles, which is three pieces the pen never spends.
+        for tile in ring {
+            game.beginStroke()
+            game.buildFence(on: tile)
+            game.endStroke()
+        }
+        return game
+    }
 }

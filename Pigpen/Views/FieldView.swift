@@ -62,11 +62,17 @@ struct FieldView: View {
                     drawTerrain(in: &context, board: board)
                     drawGridLines(in: &context, board: board)
                     drawBorder(in: &context, board: board)
-                    drawTreats(in: &context, board: board)
                     drawFences(in: &context, board: board)
                 }
 
                 penWash(board: board)
+
+                // Above the wash, like the pig: an apple shut into a finished pen has to
+                // still read as an apple and not as a patch of the colour laid over it.
+                Canvas { context, _ in
+                    drawTreats(in: &context, board: board)
+                }
+                .allowsHitTesting(false)
 
                 Text("🐷")
                     .font(.system(size: board.cell * 0.78))
