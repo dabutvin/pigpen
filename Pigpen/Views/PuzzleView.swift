@@ -448,7 +448,7 @@ struct PuzzleView: View {
 }
 
 /// Nudges a view sideways when a tap is refused — used when the fence budget is spent.
-private struct Shake: GeometryEffect {
+struct Shake: GeometryEffect {
     var amount: CGFloat
 
     var animatableData: CGFloat {

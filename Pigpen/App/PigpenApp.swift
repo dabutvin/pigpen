@@ -2,9 +2,9 @@ import SwiftUI
 
 @main
 struct PigpenApp: App {
-    /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-map` or `-settings` so the
-    /// pull request screenshots can show the boards, the world map and the settings sheet
-    /// rather than only the title screen.
+    /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-map`, `-tutorial` or
+    /// `-settings` so the pull request screenshots can show the boards, the world map, the
+    /// practice pen and the settings sheet rather than only the title screen.
     /// The world and the plain board are shown part-way through, since an untouched world
     /// has nothing on it yet and an untouched field has no fencing and not a control on it
     /// lit. The other two boards are the ones with something lying on the ground: the
@@ -26,6 +26,8 @@ struct PigpenApp: App {
                     PuzzleView(game: .applesAndSkulls())
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
+                } else if launch.contains("-tutorial") {
+                    TutorialView()
                 } else if launch.contains("-settings") {
                     TitleScreenView(progress: .partWayThrough(), showsSettings: true)
                 } else {

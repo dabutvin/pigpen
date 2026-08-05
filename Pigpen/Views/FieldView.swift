@@ -33,6 +33,9 @@ struct FieldView: View {
     let isAsGoodAsItGets: Bool
     let pigTile: GridPoint
     let pigOpacity: Double
+    /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
+    /// "this one" without covering the board in labels. Empty during ordinary play.
+    var highlightedTiles: Set<GridPoint> = []
     let onStroke: (FenceStroke) -> Void
     /// Told when the finger comes up, so everything one press laid or tore out can be
     /// taken back together.
@@ -74,6 +77,8 @@ struct FieldView: View {
                 }
                 .allowsHitTesting(false)
 
+                highlights(board: board)
+
                 Text("🐷")
                     .font(.system(size: board.cell * 0.78))
                     .opacity(pigOpacity)
@@ -93,6 +98,35 @@ struct FieldView: View {
             )
         }
         .aspectRatio(CGFloat(level.columnCount) / CGFloat(level.rowCount), contentMode: .fit)
+    }
+
+    /// Soft rings on the tiles a tutorial is asking for, pulsing so they read as a target
+    /// rather than as fencing already down.
+    @ViewBuilder
+    private func highlights(board: BoardGeometry) -> some View {
+        if !highlightedTiles.isEmpty {
+            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion)) { timeline in
+                let pulse = reduceMotion
+                    ? 0.55
+                    : 0.35 + 0.35 * (sin(timeline.date.timeIntervalSinceReferenceDate * 3) + 1) / 2
+
+                Canvas { context, _ in
+                    for tile in highlightedTiles {
+                        let rect = board.rect(for: tile).insetBy(dx: board.cell * 0.08, dy: board.cell * 0.08)
+                        context.fill(
+                            Path(roundedRect: rect, cornerRadius: board.cell * 0.18),
+                            with: .color(GamePalette.pen.opacity(0.22 + pulse * 0.25))
+                        )
+                        context.stroke(
+                            Path(roundedRect: rect, cornerRadius: board.cell * 0.18),
+                            with: .color(GamePalette.cream.opacity(0.55 + pulse * 0.35)),
+                            lineWidth: max(2, board.cell * 0.08)
+                        )
+                    }
+                }
+            }
+            .allowsHitTesting(false)
+        }
     }
 
     /// Follows the finger, handing over each new tile it reaches once.
