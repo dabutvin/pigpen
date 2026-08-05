@@ -91,6 +91,9 @@ on the last two it is mud and fruit against skulls. Either way it is a search ra
 sum — `Tools/level_search.py` does the searching, and a test pins every one of them to a pen
 that actually holds, so no level can promise a rainbow that is not there.
 
+Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
+the first line.
+
 The wordmark on the title screen is written in the
 [pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
 a lot like fence posts. It plants itself one glyph at a time over a pasture — drifting
