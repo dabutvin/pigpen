@@ -275,7 +275,7 @@ struct PuzzleView: View {
                 }
 
                 Button { dismiss() } label: {
-                    Label("Back to the map", systemImage: "signpost.right.fill")
+                    Label("Continue", systemImage: "signpost.right.fill")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
