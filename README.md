@@ -10,6 +10,10 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   Press and drag to lay a whole run at once — starting the drag on a fence tears out
   everything you drag over instead. You have a fixed budget of pieces per puzzle. Corners
   cost nothing, since a pig cannot cut across one.
+- **Undo and redo** walk back and forth through the field a press at a time, so a drag laid
+  in the wrong place comes out in one go rather than tile by tile. Clearing the field is a
+  press like any other and one undo brings the whole thing back. Laying a new piece gives up
+  whatever was waiting to be redone.
 - **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
   build on it and you never need to: it walls the pen for free. Build against it instead of
   spending fences.
@@ -153,7 +157,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map` and `-puzzle` launch arguments so the world map and the board can be captured without tapping through the title screen; `-map` shows a world two levels in, since an untouched one has nothing on it to look at.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map` and `-puzzle` launch arguments so the world map and the board can be captured without tapping through the title screen; both open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
 - **Doc-only changes.** Pushes that only touch `*.md` or `.gitignore` skip the TestFlight workflow.
 
