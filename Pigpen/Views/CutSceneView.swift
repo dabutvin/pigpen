@@ -1142,14 +1142,18 @@ private struct Film {
     }
 
     /// The ground a pen would take in round an animal standing at `feet`.
+    private func penBounds(round feet: CGPoint, width: Double, height: Double, drop: Double) -> CGRect {
+        CGRect(
+            x: feet.x - x(width) / 2,
+            y: feet.y + y(drop) - y(height),
+            width: x(width),
+            height: y(height)
+        )
+    }
+
     private func penRect(round feet: CGPoint, width: Double, height: Double, drop: Double) -> Path {
         Path(
-            roundedRect: CGRect(
-                x: feet.x - x(width) / 2,
-                y: feet.y + y(drop) - y(height),
-                width: x(width),
-                height: y(height)
-            ),
+            roundedRect: penBounds(round: feet, width: width, height: height, drop: drop),
             cornerRadius: x(0.025),
             style: .continuous
         )
@@ -1185,11 +1189,15 @@ private struct Film {
     ) {
         context.fill(
             penRect(round: feet, width: width, height: height, drop: drop),
-            with: .color(GamePalette.pen.opacity(0.55))
+            with: .color(GamePalette.pen.opacity(0.8))
         )
     }
 
-    /// The fencing round a pen that holds: dark timber with the light down the middle of it.
+    /// The fencing round a pen that holds: posts in the ground with a rail between them.
+    ///
+    /// Drawn as actual posts rather than as a line round the edge. A stroked rectangle at
+    /// any weight reads as the frame round a picture — it is the posts standing up out of
+    /// the grass at intervals that say fence, and nothing else does.
     private func drawPenFence(
         in context: inout GraphicsContext,
         round feet: CGPoint,
@@ -1197,11 +1205,42 @@ private struct Film {
         height: Double,
         drop: Double
     ) {
-        // Thin. Timber this size at the weight the board draws it reads as the frame round
-        // a picture rather than as a fence round a field.
-        let pen = penRect(round: feet, width: width, height: height, drop: drop)
-        context.stroke(pen, with: .color(GamePalette.post), lineWidth: max(2, x(0.010)))
-        context.stroke(pen, with: .color(GamePalette.picket), lineWidth: max(1, x(0.004)))
+        let pen = penBounds(round: feet, width: width, height: height, drop: drop)
+
+        var rails = Path()
+        rails.addRect(pen)
+        context.stroke(
+            rails,
+            with: .color(GamePalette.rail),
+            lineWidth: max(1.5, x(0.005))
+        )
+
+        // A post every so often along the run, standing up out of the line rather than
+        // sitting on it, with the near ones taller than the far ones.
+        var posts = Path()
+        let across = 7
+        let down = 3
+        let timber = max(2, x(0.009))
+
+        func post(at foot: CGPoint, tall: CGFloat) {
+            posts.addRoundedRect(
+                in: CGRect(x: foot.x - timber / 2, y: foot.y - tall, width: timber, height: tall),
+                cornerSize: CGSize(width: timber * 0.4, height: timber * 0.4)
+            )
+        }
+
+        for step in 0...across {
+            let along = pen.minX + pen.width * CGFloat(step) / CGFloat(across)
+            post(at: CGPoint(x: along, y: pen.minY), tall: y(0.014))
+            post(at: CGPoint(x: along, y: pen.maxY), tall: y(0.022))
+        }
+        for step in 1..<down {
+            let along = pen.minY + pen.height * CGFloat(step) / CGFloat(down)
+            let tall = y(0.014) + y(0.008) * CGFloat(step) / CGFloat(down)
+            post(at: CGPoint(x: pen.minX, y: along), tall: tall)
+            post(at: CGPoint(x: pen.maxX, y: along), tall: tall)
+        }
+        context.fill(posts, with: .color(GamePalette.post))
     }
 
     // MARK: - The meadow, and what is past it
