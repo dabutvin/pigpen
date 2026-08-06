@@ -35,34 +35,42 @@ struct OpeningView: View {
     }
 
     var body: some View {
-        ZStack {
-            // Under everything, so a shot that does not reach a corner leaves black there
-            // rather than whatever the screen had on it before.
-            Color.black
+        GeometryReader { proxy in
+            // The bars, the type and the way out are all set as a fraction of the screen
+            // for the same reason the shots are: an opening that composes itself on one
+            // phone should do it on the small one and on a tablet as well.
+            let bar = proxy.size.height * 0.072
 
-            TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: still != nil)) { timeline in
-                let elapsed = still ?? timeline.date.timeIntervalSince(opening.start)
+            ZStack {
+                // Under everything, so a shot that does not reach a corner leaves black
+                // there rather than whatever the screen had on it before.
+                Color.black
 
-                ZStack {
-                    if let frame = opening.frame(secondsIn: elapsed) {
-                        Canvas { context, size in
-                            Film(size: size, frame: frame, moves: !reduceMotion).draw(in: &context)
+                TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: still != nil)) { timeline in
+                    let elapsed = still ?? timeline.date.timeIntervalSince(opening.start)
+
+                    ZStack {
+                        if let frame = opening.frame(secondsIn: elapsed) {
+                            Canvas { context, size in
+                                Film(size: size, frame: frame, moves: !reduceMotion).draw(in: &context)
+                            }
+                            .accessibilityHidden(true)
+
+                            bars(landed: opening.letterbox(secondsIn: elapsed), depth: bar)
+                            caption(frame, clear: bar)
                         }
-                        .accessibilityHidden(true)
 
-                        bars(landed: opening.letterbox(secondsIn: elapsed))
-                        caption(frame)
+                        // Over the picture and the type alike: the film comes up out of
+                        // black and goes back into it, bars and all.
+                        Color.black
+                            .opacity(opening.curtain(secondsIn: elapsed))
+                            .allowsHitTesting(false)
                     }
-
-                    // Over the picture and the type alike: the film comes up out of black
-                    // and goes back into it, and the bars are part of what fades.
-                    Color.black
-                        .opacity(opening.curtain(secondsIn: elapsed))
-                        .allowsHitTesting(false)
                 }
-            }
 
-            skip
+                skip(under: bar)
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .ignoresSafeArea()
         .task {
@@ -88,10 +96,8 @@ struct OpeningView: View {
 
     /// The black bars a film is shown between, sliding in as it opens. They are what says
     /// "watch this" without a word of instruction.
-    private func bars(landed: Double) -> some View {
-        let depth: CGFloat = 62
-
-        return VStack(spacing: 0) {
+    private func bars(landed: Double, depth: CGFloat) -> some View {
+        VStack(spacing: 0) {
             Rectangle()
                 .fill(Color.black)
                 .frame(height: depth)
@@ -111,7 +117,7 @@ struct OpeningView: View {
     /// canvas, so a player listening to the screen instead of watching it still gets the
     /// story read out to them.
     @ViewBuilder
-    private func caption(_ frame: Opening.Frame) -> some View {
+    private func caption(_ frame: Opening.Frame, clear bar: CGFloat) -> some View {
         let words = Text(frame.shot.caption)
             .multilineTextAlignment(.center)
             .foregroundStyle(GamePalette.cream)
@@ -129,14 +135,15 @@ struct OpeningView: View {
 
                 words.font(.system(size: 18, weight: .heavy, design: .rounded))
             }
-            .padding(.bottom, 88)
+            // Clear of the bottom bar rather than on it.
+            .padding(.bottom, bar + 26)
         }
     }
 
     /// A way out, for the player who has seen it or does not want it. It says *Skip* rather
     /// than being a tap anywhere on the screen: an opening worth watching should not be
     /// lost to a thumb resting on the glass.
-    private var skip: some View {
+    private func skip(under bar: CGFloat) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 Spacer(minLength: 0)
@@ -162,7 +169,8 @@ struct OpeningView: View {
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 20)
-        .padding(.top, 78)
+        // Below the top bar, so it sits on the picture rather than in the letterbox.
+        .padding(.top, bar + 16)
         .opacity(offersTheWayOut ? 1 : 0)
         .allowsHitTesting(offersTheWayOut)
     }
