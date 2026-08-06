@@ -28,6 +28,12 @@ struct BoardGeometry {
     var width: CGFloat { cell * CGFloat(columnCount) }
     var height: CGFloat { cell * CGFloat(rowCount) }
 
+    /// The whole board as one rectangle, which is what the rim is drawn round and what
+    /// everything drawn on the field is kept inside.
+    var frame: CGRect {
+        CGRect(origin: origin, size: CGSize(width: width, height: height))
+    }
+
     func rect(for tile: GridPoint) -> CGRect {
         CGRect(
             x: origin.x + CGFloat(tile.column) * cell,

@@ -82,10 +82,7 @@ struct FieldView: View {
 
             ZStack(alignment: .topLeading) {
                 Canvas { context, _ in
-                    drawTerrain(in: &context, board: board)
-                    drawGridLines(in: &context, board: board)
-                    drawBorder(in: &context, board: board)
-                    drawFences(in: &context, board: board)
+                    draw(in: &context, board: board)
                 }
 
                 penWash(board: board)
@@ -93,7 +90,9 @@ struct FieldView: View {
                 // Above the wash, like the pig: an apple shut into a finished pen has to
                 // still read as an apple and not as a patch of the colour laid over it.
                 Canvas { context, _ in
-                    drawTreats(in: &context, board: board)
+                    var field = context
+                    field.clip(to: rim(board))
+                    drawTreats(in: &field, board: board)
                 }
                 .allowsHitTesting(false)
 
@@ -102,6 +101,13 @@ struct FieldView: View {
                 ForEach(animals) { animal in
                     Text(animal.kind.glyph)
                         .font(.system(size: board.cell * 0.78))
+                        // Standing on the ground rather than floating over it, and further
+                        // off it the higher a lap of honour throws it.
+                        .shadow(
+                            color: .black.opacity(0.3),
+                            radius: board.cell * (0.04 + 0.05 * animal.hop),
+                            y: board.cell * (0.03 + 0.09 * animal.hop)
+                        )
                         .opacity(animal.opacity)
                         .position(board.center(of: animal.tile))
                         .offset(y: -board.cell * 0.3 * animal.hop)
@@ -175,10 +181,15 @@ struct FieldView: View {
     /// the map has in it. The rainbow sits on top of the gold rather than replacing it, so
     /// the piece that finishes the best pen there is colours over the wash already there.
     private func penWash(board: BoardGeometry) -> some View {
-        let pen = penPath(board: board)
+        let pen = run(of: penTiles, board: board, radius: board.cell * 0.3)
 
         return ZStack(alignment: .topLeading) {
-            pen.fill(GamePalette.pen.opacity(0.55))
+            pen.fill(GamePalette.pen.opacity(0.5))
+
+            // Brighter just inside the walls, so the pen reads as a pool of light the
+            // fencing is holding in rather than a stain spilt on the ground.
+            pen.stroke(GamePalette.pen.opacity(0.8), lineWidth: board.cell * 0.18)
+                .clipShape(pen)
 
             TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: reduceMotion || !isAsGoodAsItGets)) { timeline in
                 // One turn round the colour wheel every twelve seconds.
@@ -208,31 +219,107 @@ struct FieldView: View {
         .animation(.easeInOut(duration: 0.5), value: isAsGoodAsItGets)
     }
 
-    /// The pen as one shape, so it washes in a single pass with no seams between tiles.
-    private func penPath(board: BoardGeometry) -> Path {
-        Path { path in
-            for tile in penTiles {
-                path.addRect(board.rect(for: tile))
+    // MARK: - Drawing the field
+
+    /// The field, in the order the ground was made: mud, the water lying in it, the lines
+    /// between the tiles, and whatever fencing has been laid. All of it is kept inside the
+    /// board's rim, so the corners of the map are rounded off rather than cut square.
+    private func draw(in context: inout GraphicsContext, board: BoardGeometry) {
+        let lake = run(of: waterTiles, board: board, radius: board.cell * 0.42)
+
+        var field = context
+        field.clip(to: rim(board))
+
+        drawGround(in: &field, board: board)
+        drawWater(in: &field, board: board, lake: lake)
+        drawGridLines(in: &field, board: board, lake: lake)
+        drawFences(in: &field, board: board)
+
+        drawRim(in: &context, board: board)
+    }
+
+    /// The mud the whole board is cut out of: lit from above like everything else in the
+    /// game, mottled tile by tile so it does not read as one flat slab, and with a scatter
+    /// of stones over it.
+    private func drawGround(in context: inout GraphicsContext, board: BoardGeometry) {
+        context.fill(
+            Path(board.frame),
+            with: .linearGradient(
+                Gradient(colors: [GamePalette.mudLit, GamePalette.mud, GamePalette.mudShade]),
+                startPoint: CGPoint(x: board.frame.midX, y: board.frame.minY),
+                endPoint: CGPoint(x: board.frame.midX, y: board.frame.maxY)
+            )
+        )
+
+        for row in 0..<level.rowCount {
+            for column in 0..<level.columnCount where level.terrain[row][column] == .mud {
+                let tile = GridPoint(row: row, column: column)
+                let rect = board.rect(for: tile)
+                if let patch = patch(on: tile) {
+                    context.fill(Path(rect), with: .color(patch))
+                }
+                drawSpeckles(in: &context, rect: rect, tile: tile)
             }
         }
     }
 
-    private func drawTerrain(in context: inout GraphicsContext, board: BoardGeometry) {
-        for row in 0..<level.rowCount {
-            for column in 0..<level.columnCount {
-                let tile = GridPoint(row: row, column: column)
-                let rect = board.rect(for: tile)
+    /// A touch of light or shade on one tile of ground, worked out from the tile's own
+    /// coordinates so the field is mottled the same way every time it is drawn.
+    private func patch(on tile: GridPoint) -> Color? {
+        switch (tile.row * 5 + tile.column * 3) % 4 {
+        case 0: Color.white.opacity(0.04)
+        case 2: Color.black.opacity(0.04)
+        default: nil
+        }
+    }
 
-                switch level.terrain[row][column] {
-                case .mud:
-                    context.fill(Path(rect), with: .color(GamePalette.mud))
-                    drawSpeckles(in: &context, rect: rect, tile: tile)
-                case .water:
-                    context.fill(Path(rect), with: .color(GamePalette.water))
-                    drawRipples(in: &context, rect: rect, tile: tile)
-                }
+    /// The water, drawn as one body of it rather than tile by tile: a lake with its
+    /// outside corners taken off, silt along the bank, and the light on the surface. Water
+    /// is a wall the pen never pays for, so it is worth its looking like one.
+    private func drawWater(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
+        guard !lake.isEmpty else { return }
+
+        // Laid on the mud first and then covered over by the water itself, which leaves
+        // the silt showing only on the bank.
+        context.stroke(
+            lake,
+            with: .color(GamePalette.shore.opacity(0.5)),
+            lineWidth: board.cell * 0.18
+        )
+
+        context.fill(
+            lake,
+            with: .linearGradient(
+                Gradient(colors: [GamePalette.water, GamePalette.waterDeep]),
+                startPoint: CGPoint(x: board.frame.midX, y: board.frame.minY),
+                endPoint: CGPoint(x: board.frame.midX, y: board.frame.maxY)
+            )
+        )
+
+        // Everything from here on belongs in the water, so it is stopped at the shore.
+        var surface = context
+        surface.clip(to: lake)
+
+        surface.stroke(
+            lake,
+            with: .color(GamePalette.waterRipple.opacity(0.4)),
+            lineWidth: board.cell * 0.16
+        )
+        for tile in waterTiles {
+            drawRipples(in: &surface, rect: board.rect(for: tile), tile: tile)
+        }
+    }
+
+    /// Every tile the map has water on. They are drawn as one lake, so the shape of the
+    /// shore matters more than the tiles it is made of.
+    private var waterTiles: Set<GridPoint> {
+        var tiles: Set<GridPoint> = []
+        for row in 0..<level.rowCount {
+            for column in 0..<level.columnCount where level.terrain[row][column] == .water {
+                tiles.insert(GridPoint(row: row, column: column))
             }
         }
+        return tiles
     }
 
     /// A couple of stones per tile, placed from the tile's own coordinates so the
@@ -273,7 +360,9 @@ struct FieldView: View {
         }
     }
 
-    private func drawGridLines(in context: inout GraphicsContext, board: BoardGeometry) {
+    /// The lines between the tiles, ruled over the ground and stopped at the water. A lake
+    /// is one sheet of it; squaring it off would only make the map look like a spreadsheet.
+    private func drawGridLines(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
         var lines = Path()
         for row in 0...level.rowCount {
             let y = board.origin.y + CGFloat(row) * board.cell
@@ -285,17 +374,102 @@ struct FieldView: View {
             lines.move(to: CGPoint(x: x, y: board.origin.y))
             lines.addLine(to: CGPoint(x: x, y: board.origin.y + board.height))
         }
-        context.stroke(lines, with: .color(.black.opacity(0.10)), lineWidth: 1)
+
+        var ground = context
+        ground.clip(to: lake, options: .inverse)
+        // Scratched into the mud rather than drawn on top of it: a light line under a dark
+        // one, which is what makes a furrow of a line at this size.
+        ground.translateBy(x: 0, y: 1)
+        ground.stroke(lines, with: .color(GamePalette.mudLit.opacity(0.35)), lineWidth: 1)
+        ground.translateBy(x: 0, y: -1)
+        ground.stroke(lines, with: .color(GamePalette.mudShade.opacity(0.5)), lineWidth: 1)
     }
 
-    /// The rim of the map. Everything past it is open country, which is exactly where
-    /// the pig is trying to get to.
-    private func drawBorder(in context: inout GraphicsContext, board: BoardGeometry) {
-        let rim = CGRect(
-            origin: board.origin,
-            size: CGSize(width: board.width, height: board.height)
+    /// The rim of the map: a lip of turned earth all the way round, with the light catching
+    /// the inside of it. Everything past it is open country, which is exactly where the pig
+    /// is trying to get to.
+    private func drawRim(in context: inout GraphicsContext, board: BoardGeometry) {
+        let timber = max(2, board.cell * 0.1)
+        context.stroke(
+            rim(board, inset: timber / 2),
+            with: .color(GamePalette.post.opacity(0.85)),
+            lineWidth: timber
         )
-        context.stroke(Path(rim), with: .color(GamePalette.post.opacity(0.5)), lineWidth: 3)
+        context.stroke(
+            rim(board, inset: timber * 1.5),
+            with: .color(GamePalette.cream.opacity(0.14)),
+            lineWidth: max(1, board.cell * 0.03)
+        )
+    }
+
+    /// The board's own outline, and the shape everything drawn on the field is kept inside.
+    /// The corners are taken off only lightly: enough that the map reads as a plot of ground
+    /// somebody staked out, not so much that a fence laid in the corner of it looks bitten.
+    private func rim(_ board: BoardGeometry, inset: CGFloat = 0) -> Path {
+        Path(
+            roundedRect: board.frame.insetBy(dx: inset, dy: inset),
+            cornerRadius: max(board.cell * 0.3 - inset, 0),
+            style: .continuous
+        )
+    }
+
+    /// A run of tiles as a single shape, with its outside corners taken off.
+    ///
+    /// Tiles inside the run meet square, so the whole run fills in one pass with no seams
+    /// between them, and a corner is only rounded where the run actually turns. Ground off
+    /// the edge of the map counts as part of the run, so a river that reaches the rim of
+    /// the board is not rounded away from it.
+    private func run(of tiles: Set<GridPoint>, board: BoardGeometry, radius: CGFloat) -> Path {
+        func belongs(_ row: Int, _ column: Int) -> Bool {
+            let tile = GridPoint(row: row, column: column)
+            return tiles.contains(tile) || !level.contains(tile)
+        }
+
+        var path = Path()
+        for tile in tiles {
+            let rect = board.rect(for: tile)
+            let up = belongs(tile.row - 1, tile.column)
+            let down = belongs(tile.row + 1, tile.column)
+            let left = belongs(tile.row, tile.column - 1)
+            let right = belongs(tile.row, tile.column + 1)
+
+            let topLeft = up || left ? 0 : radius
+            let topRight = up || right ? 0 : radius
+            let bottomRight = down || right ? 0 : radius
+            let bottomLeft = down || left ? 0 : radius
+
+            path.move(to: CGPoint(x: rect.minX + topLeft, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX - topRight, y: rect.minY))
+            if topRight > 0 {
+                path.addQuadCurve(
+                    to: CGPoint(x: rect.maxX, y: rect.minY + topRight),
+                    control: CGPoint(x: rect.maxX, y: rect.minY)
+                )
+            }
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - bottomRight))
+            if bottomRight > 0 {
+                path.addQuadCurve(
+                    to: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY),
+                    control: CGPoint(x: rect.maxX, y: rect.maxY)
+                )
+            }
+            path.addLine(to: CGPoint(x: rect.minX + bottomLeft, y: rect.maxY))
+            if bottomLeft > 0 {
+                path.addQuadCurve(
+                    to: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft),
+                    control: CGPoint(x: rect.minX, y: rect.maxY)
+                )
+            }
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + topLeft))
+            if topLeft > 0 {
+                path.addQuadCurve(
+                    to: CGPoint(x: rect.minX + topLeft, y: rect.minY),
+                    control: CGPoint(x: rect.minX, y: rect.minY)
+                )
+            }
+            path.closeSubpath()
+        }
+        return path
     }
 
     /// What is lying about on the mud: an apple worth five tiles of ground to shut in with
@@ -306,8 +480,18 @@ struct FieldView: View {
         for (tile, treat) in level.treats where !fences.contains(tile) {
             let rect = board.rect(for: tile)
             context.fill(
-                Path(ellipseIn: rect.insetBy(dx: board.cell * 0.16, dy: board.cell * 0.16)),
-                with: .color(.white.opacity(0.18))
+                Path(ellipseIn: rect.insetBy(dx: board.cell * 0.15, dy: board.cell * 0.15)),
+                with: .color(.white.opacity(0.2))
+            )
+            // A shadow on the ground under it, so it lies on the mud rather than in it.
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: rect.minX + board.cell * 0.24,
+                    y: rect.maxY - board.cell * 0.28,
+                    width: board.cell * 0.52,
+                    height: board.cell * 0.14
+                )),
+                with: .color(.black.opacity(0.16))
             )
             context.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
         }
@@ -323,37 +507,62 @@ struct FieldView: View {
     }
 
     /// A fenced tile is a whole square given over to fencing: three pointed pickets with
-    /// two rails across them, on ground churned dark. Drawn head-on rather than from
-    /// above, which is the only way it still reads at the size a tile gets on a phone.
+    /// two rails across them, on ground churned dark and throwing a shadow onto the mud.
+    /// Drawn head-on rather than from above, which is the only way it still reads at the
+    /// size a tile gets on a phone, and lit down one side of every piece of timber, which
+    /// is what keeps it from looking like a sticker.
     private func drawFences(in context: inout GraphicsContext, board: BoardGeometry) {
         for tile in fences {
-            let plot = board.rect(for: tile).insetBy(dx: board.cell * 0.06, dy: board.cell * 0.06)
+            let plot = board.rect(for: tile).insetBy(dx: board.cell * 0.05, dy: board.cell * 0.05)
+            let corner = board.cell * 0.15
+
             context.fill(
-                Path(roundedRect: plot, cornerRadius: board.cell * 0.14),
+                Path(
+                    roundedRect: plot.offsetBy(dx: 0, dy: board.cell * 0.06),
+                    cornerRadius: corner
+                ),
+                with: .color(.black.opacity(0.22))
+            )
+            context.fill(
+                Path(roundedRect: plot, cornerRadius: corner),
                 with: .color(GamePalette.post)
             )
 
             var pickets = Path()
-            let width = plot.width * 0.16
-            let top = plot.minY + plot.height * 0.10
-            let foot = plot.minY + plot.height * 0.92
+            var lit = Path()
+            let width = plot.width * 0.17
+            let top = plot.minY + plot.height * 0.11
+            let foot = plot.minY + plot.height * 0.93
             for picket in [0.2, 0.5, 0.8] {
                 let x = plot.minX + plot.width * picket
                 pickets.move(to: CGPoint(x: x - width / 2, y: foot))
                 pickets.addLine(to: CGPoint(x: x - width / 2, y: top))
-                pickets.addLine(to: CGPoint(x: x, y: top - plot.height * 0.06))
+                pickets.addLine(to: CGPoint(x: x, y: top - plot.height * 0.07))
                 pickets.addLine(to: CGPoint(x: x + width / 2, y: top))
                 pickets.addLine(to: CGPoint(x: x + width / 2, y: foot))
                 pickets.closeSubpath()
+
+                lit.addRect(CGRect(x: x - width / 2, y: top, width: width * 0.36, height: foot - top))
             }
             context.fill(pickets, with: .color(GamePalette.picket))
+            context.fill(lit, with: .color(.white.opacity(0.2)))
 
             var rails = Path()
+            var under = Path()
             for rail in [0.40, 0.72] {
                 let y = plot.minY + plot.height * rail
-                rails.move(to: CGPoint(x: plot.minX + plot.width * 0.06, y: y))
-                rails.addLine(to: CGPoint(x: plot.maxX - plot.width * 0.06, y: y))
+                let from = CGPoint(x: plot.minX + plot.width * 0.06, y: y)
+                let to = CGPoint(x: plot.maxX - plot.width * 0.06, y: y)
+                rails.move(to: from)
+                rails.addLine(to: to)
+                under.move(to: CGPoint(x: from.x, y: y + plot.height * 0.06))
+                under.addLine(to: CGPoint(x: to.x, y: y + plot.height * 0.06))
             }
+            context.stroke(
+                under,
+                with: .color(.black.opacity(0.2)),
+                style: StrokeStyle(lineWidth: plot.width * 0.1, lineCap: .round)
+            )
             context.stroke(
                 rails,
                 with: .color(GamePalette.rail),
