@@ -4,9 +4,17 @@ import SwiftUI
 /// can be the two things that catch the eye.
 enum GamePalette {
     static let mud = Color(red: 0.64, green: 0.49, blue: 0.36)
+    /// The same mud with the light full on it and with the light off it, so the field can
+    /// be lit from above the way every other drawn thing in the game is.
+    static let mudLit = Color(red: 0.71, green: 0.56, blue: 0.42)
+    static let mudShade = Color(red: 0.55, green: 0.41, blue: 0.29)
     static let mudSpeckle = Color(red: 0.44, green: 0.32, blue: 0.22)
     static let water = Color(red: 0.24, green: 0.55, blue: 0.76)
+    /// Out in the middle of a lake, where the bottom of it is further down.
+    static let waterDeep = Color(red: 0.16, green: 0.42, blue: 0.64)
     static let waterRipple = Color(red: 0.76, green: 0.90, blue: 0.98)
+    /// Wet silt along a bank, where the water gives out and the mud starts.
+    static let shore = Color(red: 0.82, green: 0.72, blue: 0.54)
     static let pen = Color(red: 0.98, green: 0.78, blue: 0.33)
     /// The wash for a pen with nothing left to beat: the whole colour wheel laid across it,
     /// starting `phase` turns round from red. Turning the phase over time is what makes the
@@ -28,8 +36,11 @@ enum GamePalette {
     static let beyond = Color(red: 0.47, green: 0.68, blue: 0.38)
     /// Painted board: lettering and signage that has to read against sky or grass alike.
     static let cream = Color(red: 0.99, green: 0.95, blue: 0.87)
-    /// The barn at the bottom of the world map, and the only red in the game.
+    /// The barn at the bottom of the world map, and the only red in the game. It doubles as
+    /// the colour of bad news on a painted board: a pig out on the loose, a budget spent.
     static let barn = Color(red: 0.70, green: 0.27, blue: 0.22)
+    /// Good news on a painted board: a pen that held, dark enough to read against cream.
+    static let clover = Color(red: 0.17, green: 0.43, blue: 0.22)
     /// A signpost for a level that is still shut: weathered, unpainted, and dull on purpose.
     static let stone = Color(red: 0.55, green: 0.53, blue: 0.50)
 

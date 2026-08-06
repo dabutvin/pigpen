@@ -29,14 +29,20 @@ struct TutorialView: View {
 
     var body: some View {
         ZStack {
-            GamePalette.beyond
-                .opacity(0.35)
+            MeadowBackdrop()
                 .ignoresSafeArea()
 
             VStack(spacing: 12) {
                 coachCard
                     .padding(.horizontal, 16)
                     .padding(.top, 8)
+
+                FenceRack(
+                    used: game.fences.count,
+                    budget: level.fenceBudget,
+                    shake: budgetShake
+                )
+                .padding(.horizontal, 16)
 
                 Spacer(minLength: 0)
 
@@ -52,7 +58,7 @@ struct TutorialView: View {
                     onStroke: { build($0) },
                     onStrokeEnd: { lesson.endStroke() }
                 )
-                .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
+                .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 .padding(.horizontal, 6)
 
                 Spacer(minLength: 0)
@@ -64,9 +70,7 @@ struct TutorialView: View {
         }
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) { fenceTally }
-        }
+        .fieldNavigationBar()
         .task(id: game.phase) { await reactToPhase() }
         .animation(.easeInOut(duration: 0.25), value: lesson.step)
     }
@@ -115,21 +119,6 @@ struct TutorialView: View {
 
     // MARK: - Controls
 
-    private var fenceTally: some View {
-        HStack(spacing: 4) {
-            Text("Fences")
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text("\(game.fences.count)/\(level.fenceBudget)")
-                .font(.caption.weight(.bold).monospacedDigit())
-                .foregroundStyle(game.fencesRemaining == 0 ? .orange : .primary)
-        }
-        .modifier(Shake(amount: budgetShake))
-        .padding(.horizontal, 6)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(game.fences.count) of \(level.fenceBudget) fence pieces used")
-    }
-
     @ViewBuilder
     private var controls: some View {
         if lesson.step == .release || lesson.step == .finished {
@@ -137,16 +126,18 @@ struct TutorialView: View {
                 lesson.releasePig()
             } label: {
                 Text(lesson.step == .finished ? "Penned in" : "Release the pig")
-                    .font(.headline)
+                    .font(.headline.weight(.heavy))
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
+            .tint(GamePalette.rail)
+            .controlSize(.large)
             .disabled(!lesson.allowsRelease)
             .opacity(lesson.step == .finished ? 0 : 1)
         } else {
             // Keeps the board's vertical place steady while the coach is talking, without
             // offering undo or clear — the walkthrough only ever asks for posts to go down.
-            Color.clear.frame(height: 44)
+            Color.clear.frame(height: 50)
         }
     }
 
