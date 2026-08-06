@@ -7,9 +7,17 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.gitignore'
+  # A hand crank, for when the run a pull request should have started never
+  # arrives — a runner shortage, a cancelled queue, an Actions hiccup. Give it
+  # the pull request number and it posts the shots to that one as usual.
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to post the screenshots to
+        required: true
 
 concurrency:
-  group: screenshots-${{ github.head_ref }}
+  group: screenshots-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 permissions:
@@ -144,7 +152,7 @@ jobs:
       - name: Upload screenshots artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-screenshots-pr-${{ github.event.pull_request.number }}
+          name: app-screenshots-pr-${{ github.event.pull_request.number || inputs.pr }}
           path: screenshots/
           retention-days: 30
 
@@ -155,7 +163,8 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = context.payload.pull_request?.number
+              ?? Number(context.payload.inputs.pr);
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const branch = 'ci-screenshots';
@@ -225,11 +234,16 @@ jobs:
               images.push({ name: file, url });
             }
 
-            const commitSha = context.payload.pull_request.head.sha.substring(0, 7);
+            // A pull request event knows all of this; a hand-cranked run has to be told
+            // the number and look the rest up.
+            const pr = context.payload.pull_request
+              ?? (await github.rest.pulls.get({ owner, repo, pull_number: prNumber })).data;
+
+            const commitSha = pr.head.sha.substring(0, 7);
             const cacheBust = Date.now();
 
             let body = `## 📱 App Screenshots\n\n`;
-            body += `> Automatically captured from commit \`${commitSha}\` on **${context.payload.pull_request.head.ref}**\n\n`;
+            body += `> Automatically captured from commit \`${commitSha}\` on **${pr.head.ref}**\n\n`;
 
             // Screenshots are named <order>_<screen>_<appearance>.png, so each screen
             // gets its own light/dark row.
@@ -259,7 +273,7 @@ jobs:
               body += `<img src="${img.url}?v=${cacheBust}" width="350" />\n\n`;
             }
 
-            body += `\n<sub>📦 Full-resolution screenshots available in the <a href="${context.payload.pull_request.html_url}/checks">workflow artifacts</a>.</sub>\n`;
+            body += `\n<sub>📦 Full-resolution screenshots available in the <a href="${pr.html_url}/checks">workflow artifacts</a>.</sub>\n`;
             body += `\n<!-- pr-screenshots-bot -->`;
 
             // Find existing bot comment to update, or create a new one
