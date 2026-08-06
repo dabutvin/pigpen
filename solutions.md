@@ -2,7 +2,7 @@
 
 **Spoilers.** This is the best pen for every puzzle in Mudlark Meadow — the pen each
 level goes rainbow for, worth exactly the `maximumScore` it claims. Reading it gives away
-the whole game.
+the entire game.
 
 These are not the *only* pens worth three stars; the third star is set a little under the
 maximum, so most levels have several arrangements that earn it. Each one below is the pen
