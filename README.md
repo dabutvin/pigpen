@@ -8,8 +8,9 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 - **The pig** starts on a fixed tile and walks up, down, left or right, never diagonally.
 - **Fences** fill in whole tiles. Tap a tile to wall it off; the pig cannot walk through it.
   Press and drag to lay a whole run at once — starting the drag on a fence tears out
-  everything you drag over instead. You have a fixed budget of pieces per puzzle. Corners
-  cost nothing, since a pig cannot cut across one.
+  everything you drag over instead. You have a fixed budget of pieces per puzzle, standing on
+  a rack over the board: one picket for every piece the level allows, and an empty socket for
+  every one already in the ground. Corners cost nothing, since a pig cannot cut across one.
 - **Undo and redo** walk back and forth through the field a press at a time, so a drag laid
   in the wrong place comes out in one go rather than tile by tile. Clearing the field is a
   press like any other and one undo brings the whole thing back. Laying a new piece gives up
@@ -127,6 +128,15 @@ and walks through tapping a post, dragging a run, building against water, shutti
 until the ground washes gold, and releasing the pig. A gear in the corner opens settings,
 which holds the version number and one red button: clearing all game data throws away every
 star and shuts the trail back to its first level, so it asks before it does anything.
+
+A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
+wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
+banked with silt, instead of a run of blue squares. The rack of fence pieces is over the
+board with the count of what is left the size of a scoreboard — barn red once the last piece
+is in the ground, and shaken by any press the field will not take — and everything else on
+the screen is a painted board: the buttons that work the fencing, the tally of your best pen,
+and the verdict when the gate is opened. All of it takes the meadow from daylight to dusk with
+the system appearance, and none of it is on a clock: the board is the only thing that moves.
 
 ## Tech Stack
 
@@ -322,9 +332,11 @@ Pigpen/
 │   ├── LevelSignpost.swift      # One stop on the map: stars, number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
+│   ├── MeadowBackdrop.swift     # The meadow behind a board, and the timber bar over it
+│   ├── FenceRack.swift          # The budget as a rack of pieces, spent ones taken off it
 │   ├── Celebration.swift        # Trots the animals round their lap and hops them home
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
-│   ├── ChunkyButtonStyle.swift  # The wooden button the title screen is built on
+│   ├── ChunkyButtonStyle.swift  # The wooden buttons: the title screen's, and the board's
 │   ├── GamePalette.swift        # Colours, including the pasture's day and dusk sets
 │   ├── Scatter.swift            # The seeded generator every drawn scene scatters things with
 │   └── PigpenGlyphView.swift    # Renders glyphs and words
