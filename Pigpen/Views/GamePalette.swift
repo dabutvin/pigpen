@@ -81,6 +81,27 @@ extension GamePalette.Pasture {
         isNight: false
     )
 
+    /// The meadow at sunrise, which is the only light the opening film is shot in.
+    ///
+    /// Every other backdrop in the game follows the system appearance, since it is the
+    /// player's own screen. The film is not: it is lit by whoever pointed the camera, and
+    /// the first thing it says is that the sun is coming up — so it says that at midnight
+    /// too, on a phone set to dark, rather than opening on a meadow nobody can see.
+    static let daybreak = Self(
+        skyTop: Color(red: 0.20, green: 0.28, blue: 0.52),
+        skyHorizon: Color(red: 0.98, green: 0.76, blue: 0.55),
+        disc: Color(red: 1.00, green: 0.93, blue: 0.68),
+        discHalo: Color(red: 1.00, green: 0.82, blue: 0.52),
+        cloud: Color(red: 1.00, green: 0.85, blue: 0.72),
+        farHill: Color(red: 0.42, green: 0.55, blue: 0.46),
+        ground: Color(red: 0.40, green: 0.60, blue: 0.34),
+        foreground: Color(red: 0.28, green: 0.45, blue: 0.26),
+        blade: Color(red: 0.22, green: 0.38, blue: 0.22),
+        canopy: Color(red: 0.30, green: 0.50, blue: 0.28),
+        canopyShade: Color(red: 0.20, green: 0.36, blue: 0.22),
+        isNight: false
+    )
+
     static let dusk = Self(
         skyTop: Color(red: 0.05, green: 0.07, blue: 0.16),
         skyHorizon: Color(red: 0.36, green: 0.24, blue: 0.36),
