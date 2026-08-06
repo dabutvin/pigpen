@@ -740,37 +740,51 @@ private struct Film {
             )
         }
 
-        // The gate itself, swung out of the gap and standing open in front of the fence.
+        // The gate itself, hung on the post to the left of the gap and swung up and out of
+        // it. Tilting it is how a gate reads as open in a picture drawn side on, where
+        // there is no room to swing it towards anybody.
         guard let gap else { return }
-        let hinge = CGPoint(x: start + pitch * CGFloat(gap), y: foot)
+        let hinge = CGPoint(x: start + pitch * CGFloat(max(gap - 1, 0)), y: foot)
         var gate = context
         gate.translateBy(x: hinge.x, y: hinge.y)
         gate.rotate(by: .degrees(-24))
 
-        // Timber thick enough to read as a gate at this size. Any finer and the panel is a
-        // wire outline that could be anything leaning on the fence.
+        // Wide enough to have bars in it: a leaf the width of one post is a card with a
+        // hole in it however the timber is cut. It is still short of the gap it came out
+        // of, so the way through stays a way through.
+        let leaf = CGSize(width: pitch * 1.35, height: tall * 0.8)
+        let timber = leaf.height * 0.13
+
         var panel = Path()
-        let leaf = CGSize(width: pitch * 0.86, height: tall * 0.82)
-        let timber = leaf.height * 0.22
-        for rail in [0.0, 0.52] {
+        for bar in [0.0, 0.87] {
             panel.addRoundedRect(
                 in: CGRect(
-                    x: 0, y: -leaf.height + leaf.height * CGFloat(rail),
+                    x: 0, y: -leaf.height + leaf.height * CGFloat(bar),
                     width: leaf.width, height: timber
                 ),
-                cornerSize: CGSize(width: timber * 0.3, height: timber * 0.3)
+                cornerSize: CGSize(width: timber * 0.4, height: timber * 0.4)
             )
         }
-        for stile in [0.0, 0.78] {
+        for stile in [0.0, 0.94] {
             panel.addRoundedRect(
                 in: CGRect(
                     x: leaf.width * CGFloat(stile), y: -leaf.height,
-                    width: leaf.width * 0.22, height: leaf.height
+                    width: leaf.width * 0.06, height: leaf.height
                 ),
-                cornerSize: CGSize(width: timber * 0.3, height: timber * 0.3)
+                cornerSize: CGSize(width: timber * 0.4, height: timber * 0.4)
             )
         }
         gate.fill(panel, with: .color(GamePalette.rail))
+
+        // The diagonal, which is the thing that makes a farm gate a farm gate.
+        var brace = Path()
+        brace.move(to: CGPoint(x: timber, y: -timber * 1.4))
+        brace.addLine(to: CGPoint(x: leaf.width - timber, y: -leaf.height + timber * 1.4))
+        gate.stroke(
+            brace,
+            with: .color(GamePalette.rail),
+            style: StrokeStyle(lineWidth: timber, lineCap: .round)
+        )
     }
 
     /// The pig, drawn the way every other screen in the game draws it. A character a player
