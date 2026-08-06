@@ -136,12 +136,12 @@ struct CutSceneView: View {
         if Self.cards.contains(frame.shot.picture) {
             // The line a film hands the game over on is set in the middle of the frame as
             // a card rather than tucked along the bottom like a subtitle.
-            words.font(.system(size: 30, weight: .black, design: .rounded))
+            words.font(.system(size: max(26, bar * 0.52), weight: .black, design: .rounded))
         } else {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                words.font(.system(size: 18, weight: .heavy, design: .rounded))
+                words.font(.system(size: max(16, bar * 0.30), weight: .heavy, design: .rounded))
             }
             // Clear of the bottom bar rather than on it.
             .padding(.bottom, bar + 26)
