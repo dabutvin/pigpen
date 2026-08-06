@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-/// The meadow the trail runs through: fields, trees, ponds, and a barn at the bottom
+/// The meadow the trail runs through: fields, trees, hay and a barn at the bottom
 /// where the pig set out from.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
@@ -34,11 +34,7 @@ private struct Meadow {
         drawSky(in: &context)
         drawHills(in: &context)
 
-        let dressing = scenery()
-        for pond in dressing.ponds {
-            drawPond(in: &context, at: pond)
-        }
-        for place in dressing.places {
+        for place in scenery() {
             draw(place, in: &context)
         }
         drawBarn(in: &context)
@@ -184,19 +180,15 @@ private struct Meadow {
         let at: CGPoint
         let growth: Growth
         let size: CGFloat
-        /// How far the spot is from the nearest bit of trail, which is what decides
-        /// whether there is room for a pond here.
-        let room: CGFloat
     }
 
     /// Spots for everything the meadow is dressed with, on a jittered grid with the trail
-    /// and the signposts cut out of it. Ponds want more room than a tree, so they take
-    /// the two clearest spots the grid found and shoulder their neighbours out of the way.
-    private func scenery() -> (places: [Place], ponds: [CGPoint]) {
+    /// and the signposts cut out of it.
+    private func scenery() -> [Place] {
         let waymarks = trail.waymarks()
         let stops = (0..<trail.map.count).map { trail.point(of: $0) }
         var scatter = Scatter(seed: 4_071)
-        var candidates: [Place] = []
+        var places: [Place] = []
 
         var down = horizon + 34
         while down < size.height - 40 {
@@ -210,33 +202,16 @@ private struct Meadow {
                 let scale = CGFloat(scatter.next(in: 0.8...1.25))
                 across += 68
 
-                let room = nearest(to: spot, among: waymarks)
-                guard room > 54,
+                guard nearest(to: spot, among: waymarks) > 54,
                       nearest(to: spot, among: stops) > 92,
                       distance(from: spot, to: barnStand) > 96
                 else { continue }
-                candidates.append(Place(at: spot, growth: kind, size: scale, room: room))
+                places.append(Place(at: spot, growth: kind, size: scale))
             }
             down += 66
         }
 
-        // A pond needs a whole clear field of its own: well down from the hills at the top
-        // of the world, in from both sides, and not on top of the other pond.
-        var ponds: [CGPoint] = []
-        for candidate in candidates.sorted(by: { $0.room > $1.room }) {
-            guard ponds.count < 2, candidate.room > 104 else { break }
-            guard candidate.at.y > horizon + 110,
-                  candidate.at.x > 54,
-                  candidate.at.x < size.width - 54,
-                  ponds.allSatisfy({ abs($0.y - candidate.at.y) > 260 })
-            else { continue }
-            ponds.append(candidate.at)
-        }
-
-        let places = candidates.filter { place in
-            ponds.allSatisfy { distance(from: place.at, to: $0) > 96 }
-        }
-        return (places, ponds)
+        return places
     }
 
     private func growth(_ roll: Double) -> Growth {
@@ -382,33 +357,6 @@ private struct Meadow {
             with: .color(GamePalette.rail.opacity(0.45)),
             style: StrokeStyle(lineWidth: max(1, spread * 0.06), lineCap: .round)
         )
-    }
-
-    private func drawPond(in context: inout GraphicsContext, at centre: CGPoint) {
-        // Pulled back in from the sides, so a pond is never a half-pond cut off by the
-        // edge of the screen.
-        let across = min(max(centre.x, 50), size.width - 50)
-        let bounds = CGRect(x: across - 46, y: centre.y - 26, width: 92, height: 52)
-        context.fill(
-            Path(ellipseIn: bounds.insetBy(dx: -4, dy: -4)),
-            with: .color(colors.canopyShade.opacity(0.45))
-        )
-        context.fill(Path(ellipseIn: bounds), with: .color(colors.lake))
-
-        for level in [0.36, 0.62] {
-            var ripple = Path()
-            let y = bounds.minY + bounds.height * CGFloat(level)
-            ripple.move(to: CGPoint(x: bounds.minX + bounds.width * 0.24, y: y))
-            ripple.addQuadCurve(
-                to: CGPoint(x: bounds.maxX - bounds.width * 0.24, y: y),
-                control: CGPoint(x: bounds.midX, y: y - bounds.height * 0.16)
-            )
-            context.stroke(
-                ripple,
-                with: .color(GamePalette.waterRipple.opacity(colors.isNight ? 0.3 : 0.6)),
-                style: StrokeStyle(lineWidth: 2.5, lineCap: .round)
-            )
-        }
     }
 
     /// Where the barn the pig came out of stands: down in the grass below the first

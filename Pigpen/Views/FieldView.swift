@@ -24,9 +24,6 @@ struct AnimalMark: Equatable, Identifiable {
     let kind: Animal
     var tile: GridPoint
     var opacity: Double
-    /// How far off the ground it is, 0 standing on its tile and 1 at the top of a hop.
-    /// What a pen that holds gets celebrated with.
-    var hop: Double = 0
 
     var id: Animal { kind }
 }
@@ -53,6 +50,9 @@ struct FieldView: View {
     let isAsGoodAsItGets: Bool
     /// Everything standing on the field, wherever it is standing this instant.
     let animals: [AnimalMark]
+    /// The lap of honour under way, if a pen has just held. While one is on, it says where
+    /// the animals are rather than the marks doing so, and it throws the confetti.
+    var celebration: Celebration?
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -98,21 +98,8 @@ struct FieldView: View {
 
                 highlights(board: board)
 
-                ForEach(animals) { animal in
-                    Text(animal.kind.glyph)
-                        .font(.system(size: board.cell * 0.78))
-                        // Standing on the ground rather than floating over it, and further
-                        // off it the higher a lap of honour throws it.
-                        .shadow(
-                            color: .black.opacity(0.3),
-                            radius: board.cell * (0.04 + 0.05 * animal.hop),
-                            y: board.cell * (0.03 + 0.09 * animal.hop)
-                        )
-                        .opacity(animal.opacity)
-                        .position(board.center(of: animal.tile))
-                        .offset(y: -board.cell * 0.3 * animal.hop)
-                        .allowsHitTesting(false)
-                }
+                confetti(board: board)
+                herd(board: board)
             }
             .contentShape(Rectangle())
             .gesture(
@@ -156,6 +143,138 @@ struct FieldView: View {
             }
             .allowsHitTesting(false)
         }
+    }
+
+    /// The animals, wherever they are this instant. A lap of honour is drawn off its own
+    /// clock — thirty frames a second is enough for a pulse but not for a gallop — while
+    /// everything else about an animal, its walk off the map included, comes out of the
+    /// marks the field was handed.
+    @ViewBuilder
+    private func herd(board: BoardGeometry) -> some View {
+        if let celebration, !reduceMotion {
+            TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { timeline in
+                let elapsed = timeline.date.timeIntervalSince(celebration.start)
+
+                ForEach(animals) { animal in
+                    mark(animal, board: board, pose: celebration.pose(of: animal.kind, secondsIn: elapsed))
+                }
+            }
+        } else {
+            ForEach(animals) { animal in
+                mark(animal, board: board, pose: nil)
+            }
+        }
+    }
+
+    /// One animal, standing on its own tile or held in the pose a celebration puts it in.
+    private func mark(_ animal: AnimalMark, board: BoardGeometry, pose: AnimalPose?) -> some View {
+        let pose = pose ?? AnimalPose(
+            row: Double(animal.tile.row),
+            column: Double(animal.tile.column)
+        )
+
+        return Text(animal.kind.glyph)
+            .font(.system(size: board.cell * 0.78))
+            .scaleEffect(x: CGFloat(pose.stretch), y: CGFloat(pose.squash), anchor: .bottom)
+            .rotationEffect(.degrees(pose.lean))
+            // Standing on the ground rather than floating over it, and further off it the
+            // higher the celebration lifts it.
+            .shadow(
+                color: .black.opacity(0.3),
+                radius: board.cell * (0.04 + 0.15 * pose.lift),
+                y: board.cell * (0.03 + 0.26 * pose.lift)
+            )
+            .opacity(animal.opacity)
+            .position(board.center(atRow: pose.row, column: pose.column, lift: pose.lift))
+            .allowsHitTesting(false)
+    }
+
+    /// The confetti thrown over a pen that holds.
+    @ViewBuilder
+    private func confetti(board: BoardGeometry) -> some View {
+        if let celebration, !reduceMotion {
+            TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { timeline in
+                Canvas { context, _ in
+                    drawConfetti(
+                        in: &context,
+                        board: board,
+                        celebration: celebration,
+                        elapsed: timeline.date.timeIntervalSince(celebration.start)
+                    )
+                }
+            }
+            .allowsHitTesting(false)
+        }
+    }
+
+    /// A handful of scraps out of the ground each animal is standing on, thrown up as the
+    /// gate opens and tumbling back down over the pen. Every scrap's flight is drawn from a
+    /// seeded scatter and the time on the clock, so a win throws the same confetti twice
+    /// and none of it has to be kept anywhere.
+    private func drawConfetti(
+        in context: inout GraphicsContext,
+        board: BoardGeometry,
+        celebration: Celebration,
+        elapsed: Double
+    ) {
+        // Tiles a second, and tiles a second a second: a scrap goes up fast and comes down
+        // the way anything else on the field would.
+        let gravity = 5.4
+
+        for lap in celebration.laps {
+            let source = board.center(of: lap.animal.tile)
+            var scatter = Scatter(
+                seed: UInt64(truncatingIfNeeded: lap.animal.tile.row * 31 + lap.animal.tile.column + 1)
+            )
+
+            for _ in 0..<22 {
+                let delay = scatter.next(in: 0...0.22)
+                let life = scatter.next(in: 1.0...1.6)
+                // Anywhere from up and out to the left to up and out to the right, but
+                // never downwards: it is thrown, not dropped.
+                let heading = scatter.next(in: -0.82 ... -0.18) * .pi
+                let speed = scatter.next(in: 1.9...3.5)
+                let size = board.cell * CGFloat(scatter.next(in: 0.10...0.17))
+                let spin = scatter.next(in: 0...6.3)
+                let tumble = scatter.next(in: 5...13)
+                let color = scrapColor(&scatter)
+
+                let age = elapsed - delay
+                guard age > 0, age < life else { continue }
+
+                let center = CGPoint(
+                    x: source.x + board.cell * CGFloat(cos(heading) * speed * age),
+                    y: source.y + board.cell * CGFloat(sin(heading) * speed * age + gravity * age * age / 2)
+                )
+                // Turning end over end: a scrap edge-on is a sliver, face-on the full width.
+                let width = size * CGFloat(0.2 + 0.8 * abs(cos(spin + tumble * age)))
+                let fade = min(1, age * 8) * min(1, (life - age) / 0.35)
+
+                context.fill(
+                    Path(
+                        roundedRect: CGRect(
+                            x: center.x - width / 2,
+                            y: center.y - size * 0.34,
+                            width: width,
+                            height: size * 0.68
+                        ),
+                        cornerRadius: size * 0.16
+                    ),
+                    with: .color(color.opacity(0.92 * fade))
+                )
+            }
+        }
+    }
+
+    /// What one scrap is cut from: the colours of the field for an ordinary pen, and the
+    /// whole spectrum for one there is nothing above.
+    private func scrapColor(_ scatter: inout Scatter) -> Color {
+        guard !isAsGoodAsItGets else {
+            return Color(hue: scatter.next(), saturation: 0.78, brightness: 0.96)
+        }
+
+        let colors = [GamePalette.pen, GamePalette.cream, GamePalette.barn, GamePalette.beyond]
+        return colors[min(Int(scatter.next() * Double(colors.count)), colors.count - 1)]
     }
 
     /// Follows the finger, handing over each new tile it reaches once.
@@ -646,6 +765,33 @@ struct FieldView: View {
         penGlow: 0.8,
         isAsGoodAsItGets: true,
         animals: .standing(on: level),
+        onStroke: { _ in },
+        onStrokeEnd: {}
+    )
+    .padding()
+}
+
+/// A pen that holds, mid-celebration: the pig part way round the little circle it runs when
+/// the gate opens and there is nowhere to go, under the confetti thrown for it. The clock
+/// starts as the preview opens, so it plays the lap once and then stands still.
+#Preview("A lap of honour") {
+    let game = PuzzleGame(level: .riverBend)
+    for row in 3...9 {
+        game.buildFence(on: GridPoint(row: row, column: 0))
+    }
+    for column in 1...5 {
+        game.buildFence(on: GridPoint(row: 10, column: column))
+    }
+    game.openTheGate()
+
+    return FieldView(
+        level: game.level,
+        fences: game.fences,
+        penTiles: game.penTiles,
+        penGlow: 1,
+        isAsGoodAsItGets: game.isPenAsGoodAsItGets,
+        animals: .standing(on: game.level),
+        celebration: Celebration(laps: game.victoryLaps, start: .now),
         onStroke: { _ in },
         onStrokeEnd: {}
     )

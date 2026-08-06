@@ -47,6 +47,16 @@ struct BoardGeometry {
         CGPoint(x: rect(for: tile).midX, y: rect(for: tile).midY)
     }
 
+    /// The middle of a tile given in fractions — whole numbers are tile centres and the
+    /// fractions between them the ground in between — raised `lift` tiles off it. Which is
+    /// where an animal part way through a stride, or off its feet altogether, is standing.
+    func center(atRow row: Double, column: Double, lift: Double = 0) -> CGPoint {
+        CGPoint(
+            x: origin.x + CGFloat(column + 0.5) * cell,
+            y: origin.y + CGFloat(row + 0.5 - lift) * cell
+        )
+    }
+
     /// The tile under a touch. A touch that strays just off the board is pulled back to
     /// the nearest tile, so the rim of the map — where the fencing usually has to go — is
     /// as easy to hit as the middle.

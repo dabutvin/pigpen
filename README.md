@@ -25,10 +25,13 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   how a skull gets buried for the price of one piece — and how an apple gets wasted.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
-- **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs a little
-  circle round the ground you shut it into and hops on the spot at the end of it, and only
-  then does the score come up. A pen too tight to run in — four pieces round the pig — gets
-  the hopping on its own. Ask for reduced motion and the field keeps still.
+- **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits
+  of the ground you shut it into — leaning into the corners, bobbing on every tile it
+  covers — and finishes on a hop where it started, under confetti thrown up out of its own
+  tile. Only then does the score come up, through the last of the falling paper. A pen too
+  narrow for a circle is run out and back instead, one too tight for that is bounced on the
+  spot, and the best pen the map has in it gets its confetti in every colour there is. Ask
+  for reduced motion and the field keeps still.
 - **The boss keeps two.** The last puzzle in the meadow stands a deer on the field as well
   as the pig, and one budget has to hold both of them. One pen round the pair or a pen
   apiece is up to you — a pen holds whatever ground it shuts in, whether that ground is in
@@ -118,16 +121,16 @@ that actually holds, so no level can promise a rainbow that is not there.
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
 
-The wordmark on the title screen is written in the
-[pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
-a lot like fence posts. It plants itself one glyph at a time over a pasture — drifting
-clouds by day, fireflies at dusk — with a pig trotting up and down a run of fence. The
-whole backdrop is drawn in code from one clock and stops dead when the system asks for
-reduced motion. Below Play sits **Tutorial**, which opens a practice pen off the world map
-and walks through tapping a post, dragging a run, building against water, shutting the pen
-until the ground washes gold, and releasing the pig. A gear in the corner opens settings,
-which holds the version number and one red button: clearing all game data throws away every
-star and shuts the trail back to its first level, so it asks before it does anything.
+The name on the title screen plants itself a letter at a time, each one dropping in and
+settling like a fence post going into the ground, over a pasture — drifting clouds by day,
+fireflies at dusk — with a pig trotting up and down a run of fence. The whole backdrop is
+drawn in code from one clock and stops dead when the system asks for reduced motion. The
+stars taken so far sit in a badge in the top corner, well away from Play. Below Play sits
+**Tutorial**, which opens a practice pen off the world map and walks through tapping a post,
+dragging a run, building against water, shutting the pen until the ground washes gold, and
+releasing the pig. A gear in the corner opens settings, which holds the version number and
+one red button: clearing all game data throws away every star and shuts the trail back to
+its first level, so it asks before it does anything.
 
 A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
 wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
@@ -320,8 +323,7 @@ Pigpen/
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
-│   ├── WorldProgress.swift      # Best stars per level, what that unlocks, and where it is kept
-│   └── PigpenGlyph.swift        # Cipher letter → drawable geometry, for the wordmark
+│   └── WorldProgress.swift      # Best stars per level, what that unlocks, and where it is kept
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -334,12 +336,11 @@ Pigpen/
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── MeadowBackdrop.swift     # The meadow behind a board, and the timber bar over it
 │   ├── FenceRack.swift          # The budget as a rack of pieces, spent ones taken off it
-│   ├── Celebration.swift        # Trots the animals round their lap and hops them home
+│   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden buttons: the title screen's, and the board's
 │   ├── GamePalette.swift        # Colours, including the pasture's day and dusk sets
-│   ├── Scatter.swift            # The seeded generator every drawn scene scatters things with
-│   └── PigpenGlyphView.swift    # Renders glyphs and words
+│   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
     └── Pigpen.entitlements

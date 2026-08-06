@@ -19,6 +19,9 @@ struct PuzzleView: View {
     /// Where each animal is standing this instant, which is its own tile until the gate
     /// is opened on a pen with a gap in it.
     @State private var marks: [AnimalMark]
+    /// The lap of honour on a pen that held, from the moment the gate opens until the last
+    /// of the confetti is down. Nothing while the field is being built.
+    @State private var celebration: Celebration?
     /// Held back until the walking is over, so the verdict lands after the action.
     @State private var showsVerdict = false
     @State private var budgetShake: CGFloat = 0
@@ -79,6 +82,7 @@ struct PuzzleView: View {
                     penGlow: penGlow,
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
                     animals: marks,
+                    celebration: celebration,
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
@@ -448,6 +452,7 @@ struct PuzzleView: View {
         case .building:
             // The tiles snap back rather than animating, so nothing is seen trotting home
             // from the edge of the map; only the fading back in is played.
+            celebration = nil
             sendHome()
             withAnimation(.easeOut(duration: 0.25)) {
                 showsVerdict = false
@@ -463,33 +468,33 @@ struct PuzzleView: View {
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
             onPenned?(game.starRating ?? 1)
-            // The wash is already on the field — it deepens itself as the phase changes.
-            // The animals take their turn on it, and the verdict waits for them.
             await celebrate()
-            reveal()
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }
 
-    /// The animals' turn on a pen that holds: a little circle round the ground they are
-    /// shut into and a hop or two at the end of it, before the verdict card comes up over
-    /// the field. A player who would rather the board kept still gets the same beat of
-    /// nothing the wash used to have to itself.
+    /// The animals' turn on a pen that holds: a lap round the ground they are shut into,
+    /// a hop to finish on, and confetti over the lot of it. The verdict card waits for the
+    /// hopping to stop and then comes up through the last of the confetti.
+    ///
+    /// A player who would rather the board kept still gets the beat of nothing the pen's
+    /// wash used to have to itself, and no confetti.
     private func celebrate() async {
         guard !reduceMotion else {
             try? await Task.sleep(for: .milliseconds(350))
+            reveal()
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             return
         }
 
-        await Celebration(
-            laps: game.victoryLaps,
-            move: { kind, tile in move(kind, to: tile) },
-            lift: { height in
-                for index in marks.indices {
-                    marks[index].hop = height
-                }
-            }
-        ).run()
+        let cheer = Celebration(laps: game.victoryLaps, start: .now)
+        celebration = cheer
+
+        guard await cheer.waitOut() else { return }
+        reveal()
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+
+        await cheer.waitForTheConfetti()
+        celebration = nil
     }
 
     /// Walks everything that got out along its own route and off the edge of the map. Two
@@ -521,14 +526,10 @@ struct PuzzleView: View {
         marks[index].tile = tile
     }
 
-    /// Puts every animal back on the tile the map starts it on, feet on the ground: a
-    /// celebration cut short by a field being cleared leaves nothing hanging in the air.
+    /// Puts every animal back on the tile the map starts it on.
     private func sendHome() {
         for animal in level.animals {
             move(animal.kind, to: animal.tile)
-        }
-        for index in marks.indices {
-            marks[index].hop = 0
         }
     }
 

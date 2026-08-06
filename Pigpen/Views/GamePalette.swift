@@ -57,7 +57,6 @@ enum GamePalette {
         let ground: Color
         let foreground: Color
         let blade: Color
-        let lake: Color
         /// The trees along the world map's trail, lit and shaded.
         let canopy: Color
         let canopyShade: Color
@@ -77,7 +76,6 @@ extension GamePalette.Pasture {
         ground: GamePalette.beyond,
         foreground: Color(red: 0.38, green: 0.59, blue: 0.30),
         blade: Color(red: 0.30, green: 0.50, blue: 0.24),
-        lake: Color(red: 0.44, green: 0.70, blue: 0.84),
         canopy: Color(red: 0.36, green: 0.61, blue: 0.31),
         canopyShade: Color(red: 0.25, green: 0.46, blue: 0.24),
         isNight: false
@@ -93,7 +91,6 @@ extension GamePalette.Pasture {
         ground: Color(red: 0.11, green: 0.19, blue: 0.17),
         foreground: Color(red: 0.08, green: 0.14, blue: 0.13),
         blade: Color(red: 0.05, green: 0.10, blue: 0.09),
-        lake: Color(red: 0.16, green: 0.30, blue: 0.45),
         canopy: Color(red: 0.12, green: 0.21, blue: 0.20),
         canopyShade: Color(red: 0.07, green: 0.13, blue: 0.13),
         isNight: true
