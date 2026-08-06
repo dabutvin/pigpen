@@ -59,11 +59,17 @@ struct PuzzleView: View {
 
     var body: some View {
         ZStack {
-            GamePalette.beyond
-                .opacity(0.35)
+            MeadowBackdrop()
                 .ignoresSafeArea()
 
             VStack(spacing: 12) {
+                FenceRack(
+                    used: game.fences.count,
+                    budget: level.fenceBudget,
+                    shake: budgetShake
+                )
+                .padding(.horizontal, 16)
+
                 Spacer(minLength: 0)
 
                 FieldView(
@@ -76,7 +82,8 @@ struct PuzzleView: View {
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
-                .shadow(color: .black.opacity(0.18), radius: 8, y: 4)
+                // Standing on the meadow rather than pasted onto it.
+                .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 // The board is the screen, so it is given all the width there is to give.
                 .padding(.horizontal, 6)
 
@@ -93,35 +100,16 @@ struct PuzzleView: View {
                 }
                 .padding(.horizontal, 16)
             }
+            .padding(.top, 4)
             .padding(.bottom, 12)
         }
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) { fenceTally }
-        }
+        .fieldNavigationBar()
         .task(id: game.phase) { await reactToPhase() }
     }
 
     // MARK: - Pieces
-
-    /// How much of the budget has gone into the ground, counting up as fencing is laid.
-    /// Small and in the title bar, so the board can have the rest of the screen.
-    private var fenceTally: some View {
-        HStack(spacing: 4) {
-            Text("Fences")
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
-            Text("\(game.fences.count)/\(level.fenceBudget)")
-                .font(.caption.weight(.bold).monospacedDigit())
-                .foregroundStyle(game.fencesRemaining == 0 ? .orange : .primary)
-        }
-        .modifier(Shake(amount: budgetShake))
-        // Room either side for the shake to move into rather than be clipped by the bar.
-        .padding(.horizontal, 6)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(game.fences.count) of \(level.fenceBudget) fence pieces used")
-    }
 
     /// Undo, redo and clear sit to the left of the button that ends the turn, small and
     /// always in the same place so the board keeps the room and the thumb learns where
@@ -151,10 +139,16 @@ struct PuzzleView: View {
                     game.openTheGate()
                 } label: {
                     Text("Release \(quarry)")
-                        .font(.headline)
+                        .font(.headline.weight(.heavy))
+                        // Two animals make for a longer button than one; it shrinks its
+                        // lettering rather than growing a second line and moving the board.
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                         .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(GamePalette.rail)
                 .disabled(game.fences.isEmpty)
             }
         }
@@ -172,8 +166,10 @@ struct PuzzleView: View {
         if game.bestScore > 0 {
             HStack(spacing: 10) {
                 Text(tallySummary)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.footnote.weight(.heavy))
+                    // Written straight onto the grass, so it is painted rather than printed.
+                    .foregroundStyle(GamePalette.cream)
+                    .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
                     .contentTransition(.numericText())
                     // Sits on one line beside the button rather than pushing it off the
                     // screen when the type is large.
@@ -183,10 +179,9 @@ struct PuzzleView: View {
                 if game.canRestoreBestPen {
                     Button { restoreBestPen() } label: {
                         Label("Put it back", systemImage: "trophy")
-                            .font(.footnote.weight(.semibold))
+                            .font(.footnote.weight(.heavy))
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
+                    .buttonStyle(PlaqueButtonStyle(padding: 6))
                     .accessibilityLabel(
                         "Put the fencing back to your best pen, \(scored(game.bestScore))"
                     )
@@ -208,7 +203,8 @@ struct PuzzleView: View {
             : "Holding \(holding), best \(game.bestScore)"
     }
 
-    /// One of the small square buttons that work the fencing already down.
+    /// One of the small painted boards that work the fencing already down. A button with
+    /// nothing to do fades rather than vanishing, so the three of them never move about.
     private func fieldButton(
         _ title: String,
         systemImage: String,
@@ -221,11 +217,12 @@ struct PuzzleView: View {
         } label: {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
-                .font(.body.weight(.semibold))
+                .font(.body.weight(.heavy))
                 // One box for all three, so a wider glyph does not make a wider button.
                 .frame(width: 24, height: 24)
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(PlaqueButtonStyle())
+        .opacity(enabled ? 1 : 0.45)
         .disabled(!enabled)
         .accessibilityLabel(title)
     }
@@ -237,7 +234,7 @@ struct PuzzleView: View {
             verdictCard(
                 headline: escapedHeadline(escapes),
                 detail: escapedDetail(escapes),
-                tint: .orange
+                tint: GamePalette.barn
             ) {
                 Button { game.resumeBuilding() } label: {
                     Label("Keep building", systemImage: "hammer")
@@ -248,7 +245,7 @@ struct PuzzleView: View {
             verdictCard(
                 headline: game.isPenAsGoodAsItGets ? "The best pen there is" : "Penned in",
                 detail: pennedDetail(tally: level.tally(for: pen)),
-                tint: .green
+                tint: GamePalette.clover
             ) {
                 pennedActions
             }
@@ -354,6 +351,9 @@ struct PuzzleView: View {
         "\(number) \(noun)\(number == 1 ? "" : "s")"
     }
 
+    /// The verdict, on a painted board nailed up over the field: the same cream the rack and
+    /// the signposts are painted on, so the last word on a pen looks like it was written by
+    /// the same hand that made the level.
     private func verdictCard<Actions: View>(
         headline: String,
         detail: String,
@@ -365,27 +365,37 @@ struct PuzzleView: View {
                 HStack(spacing: 4) {
                     ForEach(1...3, id: \.self) { star in
                         Image(systemName: star <= stars ? "star.fill" : "star")
-                            .foregroundStyle(star <= stars ? .yellow : .secondary)
+                            .foregroundStyle(
+                                star <= stars ? GamePalette.pen : GamePalette.post.opacity(0.3)
+                            )
                     }
                 }
                 .font(.title3)
+                .shadow(color: .black.opacity(0.15), radius: 1, y: 1)
             }
 
             Text(headline)
-                .font(.title3.weight(.bold))
+                .font(.title3.weight(.black))
                 .foregroundStyle(tint)
 
             Text(detail)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(GamePalette.post.opacity(0.78))
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
 
             actions()
+                .tint(GamePalette.rail)
                 .padding(.top, 2)
         }
         .padding(14)
         .frame(maxWidth: .infinity)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .background(GamePalette.cream.opacity(0.96), in: RoundedRectangle(cornerRadius: 16))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.22), radius: 7, y: 4)
     }
 
     // MARK: - Actions
@@ -527,20 +537,6 @@ struct PuzzleView: View {
 
     private func reveal() {
         withAnimation(.spring(duration: 0.35)) { showsVerdict = true }
-    }
-}
-
-/// Nudges a view sideways when a tap is refused — used when the fence budget is spent.
-struct Shake: GeometryEffect {
-    var amount: CGFloat
-
-    var animatableData: CGFloat {
-        get { amount }
-        set { amount = newValue }
-    }
-
-    func effectValue(size: CGSize) -> ProjectionTransform {
-        ProjectionTransform(CGAffineTransform(translationX: sin(amount * .pi * 4) * 6, y: 0))
     }
 }
 

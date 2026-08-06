@@ -51,6 +51,33 @@ struct ChunkyButtonStyle: ButtonStyle {
     }
 }
 
+/// A small painted board with a press in it: what the buttons round the edge of a puzzle
+/// are made of, so they belong to the same farm as the signposts and the fence rack rather
+/// than to the system's grey.
+struct PlaqueButtonStyle: ButtonStyle {
+    /// The room round the label. Icon buttons want it even; a button with words in it wants
+    /// a little more either side.
+    var padding: CGFloat = 9
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(GamePalette.post)
+            .padding(.vertical, padding)
+            .padding(.horizontal, padding + 3)
+            .background {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(GamePalette.cream.opacity(0.95))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
+                    }
+                    .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+            }
+            .scaleEffect(configuration.isPressed ? 0.94 : 1)
+            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: configuration.isPressed)
+    }
+}
+
 #Preview {
     VStack(spacing: 24) {
         Button("Play") {}
@@ -62,6 +89,22 @@ struct ChunkyButtonStyle: ButtonStyle {
             .font(.headline.weight(.heavy))
             .foregroundStyle(GamePalette.cream)
             .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail))
+
+        HStack(spacing: 10) {
+            Button {} label: {
+                Label("Undo", systemImage: "arrow.uturn.backward")
+                    .labelStyle(.iconOnly)
+                    .font(.body.weight(.semibold))
+                    .frame(width: 24, height: 24)
+            }
+            .buttonStyle(PlaqueButtonStyle())
+
+            Button {} label: {
+                Label("Put it back", systemImage: "trophy")
+                    .font(.footnote.weight(.heavy))
+            }
+            .buttonStyle(PlaqueButtonStyle(padding: 7))
+        }
     }
     .padding(40)
     .background(GamePalette.beyond)
