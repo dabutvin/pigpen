@@ -27,15 +27,19 @@ private struct Paddock {
     let size: CGSize
     let colors: GamePalette.Pasture
 
-    /// The board takes the middle of the screen and the controls the foot of it, so
-    /// everything the meadow is dressed with keeps to these two bands, where there is
-    /// grass to see it on.
-    private let clearings: [ClosedRange<Double>] = [0.02...0.20, 0.74...0.99]
+    /// The board takes the middle of the screen, the rack the top of it and the controls the
+    /// foot, so everything the meadow is dressed with keeps to the two bands either side of
+    /// the board, where there is grass to see it on.
+    private let clearings: [ClosedRange<Double>] = [0.19...0.28, 0.82...0.99]
 
     func draw(in context: inout GraphicsContext) {
         drawGrass(in: &context)
         drawMowing(in: &context)
         drawDressing(in: &context)
+        drawVerge(in: &context)
+        if colors.isNight {
+            drawFireflies(in: &context)
+        }
         drawVignette(in: &context)
     }
 
@@ -63,7 +67,13 @@ private struct Paddock {
             if shaded {
                 context.fill(
                     band(from: top, to: top + depth, wobble: scatter.next()),
-                    with: .color(colors.foreground.opacity(0.2))
+                    // After dark the grass and the shadow on it are already all but the
+                    // same colour, so the mowing is picked out with light instead.
+                    with: .color(
+                        colors.isNight
+                            ? Color.white.opacity(0.025)
+                            : colors.foreground.opacity(0.2)
+                    )
                 )
             }
             shaded.toggle()
@@ -105,6 +115,45 @@ private struct Paddock {
                 case ..<0.86: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
                 default: drawStone(in: &context, at: spot, scale: scale)
                 }
+            }
+        }
+    }
+
+    /// Long grass along the foot of the screen. Wherever the board ends up on whatever phone
+    /// it is being played on, this much of the meadow is always in view.
+    private func drawVerge(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 977)
+        let tufts = 26
+        for index in 0..<tufts {
+            drawTuft(
+                in: &context,
+                at: CGPoint(
+                    x: x((Double(index) + scatter.next()) / Double(tufts)),
+                    y: size.height + y(0.005)
+                ),
+                scale: CGFloat(scatter.next(in: 1.0...1.9)),
+                scatter: &scatter
+            )
+        }
+    }
+
+    /// A few specks of light over the grass after dark, the same fireflies the title screen
+    /// keeps. They do not drift — nothing in this backdrop is on a clock — but a still one is
+    /// a light in the field all the same.
+    private func drawFireflies(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_493)
+        for clearing in clearings {
+            for _ in 0..<5 {
+                let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next(in: clearing)))
+                let radius = x(0.005) * CGFloat(scatter.next(in: 0.7...1.5))
+                context.fill(
+                    circle(at: centre, radius: radius * 3.4),
+                    with: .color(GamePalette.pen.opacity(0.16))
+                )
+                context.fill(
+                    circle(at: centre, radius: radius),
+                    with: .color(GamePalette.pen.opacity(0.75))
+                )
             }
         }
     }
@@ -216,6 +265,13 @@ private struct Paddock {
 
     private func x(_ fraction: Double) -> CGFloat { size.width * CGFloat(fraction) }
     private func y(_ fraction: Double) -> CGFloat { size.height * CGFloat(fraction) }
+
+    private func circle(at centre: CGPoint, radius: CGFloat) -> Path {
+        Path(ellipseIn: CGRect(
+            x: centre.x - radius, y: centre.y - radius,
+            width: radius * 2, height: radius * 2
+        ))
+    }
 }
 
 extension View {

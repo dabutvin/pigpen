@@ -220,9 +220,11 @@ struct PuzzleView: View {
                 .font(.body.weight(.heavy))
                 // One box for all three, so a wider glyph does not make a wider button.
                 .frame(width: 24, height: 24)
+                // The glyph fades, not the board it is painted on: a see-through plaque
+                // would only pick up the colour of the grass behind it.
+                .opacity(enabled ? 1 : 0.3)
         }
         .buttonStyle(PlaqueButtonStyle())
-        .opacity(enabled ? 1 : 0.45)
         .disabled(!enabled)
         .accessibilityLabel(title)
     }

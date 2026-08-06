@@ -264,11 +264,12 @@ struct FieldView: View {
     }
 
     /// A touch of light or shade on one tile of ground, worked out from the tile's own
-    /// coordinates so the field is mottled the same way every time it is drawn.
+    /// coordinates so the field is mottled the same way every time it is drawn. Two tiles in
+    /// five get one, faintly: any more and any stronger and the field is a chessboard.
     private func patch(on tile: GridPoint) -> Color? {
-        switch (tile.row * 5 + tile.column * 3) % 4 {
-        case 0: Color.white.opacity(0.04)
-        case 2: Color.black.opacity(0.04)
+        switch (tile.row * 7 + tile.column * 11) % 5 {
+        case 0: Color.white.opacity(0.03)
+        case 3: Color.black.opacity(0.03)
         default: nil
         }
     }
@@ -305,9 +306,7 @@ struct FieldView: View {
             with: .color(GamePalette.waterRipple.opacity(0.4)),
             lineWidth: board.cell * 0.16
         )
-        for tile in waterTiles {
-            drawRipples(in: &surface, rect: board.rect(for: tile), tile: tile)
-        }
+        drawRipples(in: &surface, board: board)
     }
 
     /// Every tile the map has water on. They are drawn as one lake, so the shape of the
@@ -342,22 +341,37 @@ struct FieldView: View {
         }
     }
 
-    private func drawRipples(in context: inout GraphicsContext, rect: CGRect, tile: GridPoint) {
-        let offset = (tile.row + tile.column).isMultiple(of: 2) ? 0.18 : -0.12
-        for band in [0.34, 0.66] {
-            var ripple = Path()
-            let y = rect.minY + rect.height * (band + offset * 0.2)
-            ripple.move(to: CGPoint(x: rect.minX + rect.width * 0.14, y: y))
-            ripple.addQuadCurve(
-                to: CGPoint(x: rect.maxX - rect.width * 0.14, y: y),
-                control: CGPoint(x: rect.midX, y: y - rect.height * 0.16)
-            )
-            context.stroke(
-                ripple,
-                with: .color(GamePalette.waterRipple.opacity(0.5)),
-                style: StrokeStyle(lineWidth: max(1, rect.width * 0.05), lineCap: .round)
-            )
+    /// The light breaking on the surface. Scattered from the tiles' own coordinates rather
+    /// than drawn one to a tile: a lake is a single body of water, and a ripple squared up in
+    /// the middle of every tile of it reads as tiles.
+    private func drawRipples(in context: inout GraphicsContext, board: BoardGeometry) {
+        var ripples = Path()
+        for tile in waterTiles {
+            let rect = board.rect(for: tile)
+            var noise = UInt64(truncatingIfNeeded: tile.row * 131 + tile.column * 57 + 3)
+            for _ in 0..<2 {
+                noise = noise &* 6364136223846793005 &+ 1442695040888963407
+                guard (noise >> 12) % 100 < 38 else { continue }
+
+                let span = board.cell * (0.32 + 0.3 * CGFloat((noise >> 20) % 100) / 100)
+                let across = CGFloat((noise >> 32) % 100) / 100
+                let down = CGFloat((noise >> 44) % 100) / 100
+                let start = CGPoint(
+                    x: rect.minX + board.cell * 0.08 + across * (board.cell * 0.84 - span),
+                    y: rect.minY + board.cell * (0.14 + down * 0.72)
+                )
+                ripples.move(to: start)
+                ripples.addQuadCurve(
+                    to: CGPoint(x: start.x + span, y: start.y),
+                    control: CGPoint(x: start.x + span / 2, y: start.y - board.cell * 0.13)
+                )
+            }
         }
+        context.stroke(
+            ripples,
+            with: .color(GamePalette.waterRipple.opacity(0.42)),
+            style: StrokeStyle(lineWidth: max(1, board.cell * 0.05), lineCap: .round)
+        )
     }
 
     /// The lines between the tiles, ruled over the ground and stopped at the water. A lake
@@ -378,11 +392,12 @@ struct FieldView: View {
         var ground = context
         ground.clip(to: lake, options: .inverse)
         // Scratched into the mud rather than drawn on top of it: a light line under a dark
-        // one, which is what makes a furrow of a line at this size.
+        // one, which is what makes a furrow of a line at this size. They have to be clear
+        // enough to count tiles along, since counting tiles is the game.
         ground.translateBy(x: 0, y: 1)
-        ground.stroke(lines, with: .color(GamePalette.mudLit.opacity(0.35)), lineWidth: 1)
+        ground.stroke(lines, with: .color(GamePalette.mudLit.opacity(0.5)), lineWidth: 1)
         ground.translateBy(x: 0, y: -1)
-        ground.stroke(lines, with: .color(GamePalette.mudShade.opacity(0.5)), lineWidth: 1)
+        ground.stroke(lines, with: .color(GamePalette.mudShade.opacity(0.65)), lineWidth: 1)
     }
 
     /// The rim of the map: a lip of turned earth all the way round, with the light catching

@@ -43,7 +43,7 @@ struct FenceRack: View {
                 .foregroundStyle(isSpent ? GamePalette.barn : GamePalette.post)
 
             VStack(alignment: .leading, spacing: -1) {
-                Text(isSpent ? "SPENT" : "LEFT")
+                Text("LEFT")
                     .font(.system(size: 11, weight: .black, design: .rounded))
                     .foregroundStyle(isSpent ? GamePalette.barn : GamePalette.post.opacity(0.85))
                 Text("of \(budget)")
@@ -57,14 +57,18 @@ struct FenceRack: View {
     }
 
     /// One picket for every piece the level allows: pale timber for the ones still in hand,
-    /// and the dark socket it came out of for every one already in the ground. Drawn to fit
-    /// whatever width is left over, so a twenty-piece budget takes no more room than a six.
+    /// and the dark socket it came out of for every one already in the ground.
+    ///
+    /// The pieces stand shoulder to shoulder from the left rather than spreading out to fill
+    /// the rack, so six of them read as six pieces of fencing and not as a wide gappy comb —
+    /// and a twenty-piece budget, which is the biggest in the game, still takes no more room
+    /// than the rack has to give it.
     private var rack: some View {
         Canvas { context, size in
             guard budget > 0 else { return }
 
-            let pitch = size.width / CGFloat(budget)
-            let width = min(pitch * 0.62, 11)
+            let pitch = min(size.width / CGFloat(budget), 15)
+            let width = min(pitch * 0.66, 11)
             let height = min(size.height, 26)
             let top = (size.height - height) / 2
 
@@ -79,7 +83,7 @@ struct FenceRack: View {
                 let timber = picket(in: stall)
                 context.fill(
                     timber,
-                    with: .color(inHand ? GamePalette.picket : GamePalette.post.opacity(0.14))
+                    with: .color(inHand ? GamePalette.picket : GamePalette.post.opacity(0.17))
                 )
                 guard inHand else { continue }
                 // The lit side of the timber, the side the sun is on everywhere else.
