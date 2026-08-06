@@ -133,24 +133,37 @@ struct TitleScreenView: View {
         .accessibilityLabel("Pigpen. Fence in the pig.")
     }
 
-    /// A board nailed up under the name, with a nail head holding down each end of it.
+    /// A board nailed up under the name, lit from above like the buttons are, with a nail
+    /// head holding down each end of it.
     private var tagline: some View {
         Text("Fence in the pig")
             .font(.subheadline.weight(.heavy))
             .foregroundStyle(GamePalette.post)
             .padding(.vertical, 9)
             .padding(.horizontal, 26)
-            .background(
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(GamePalette.picket)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .strokeBorder(GamePalette.post.opacity(0.28), lineWidth: 1.5)
-            )
+            .background(plank)
             .overlay(nailHeads)
             .shadow(color: .black.opacity(0.3), radius: 5, y: 4)
             .rotationEffect(.degrees(-2))
+    }
+
+    private var plank: some View {
+        RoundedRectangle(cornerRadius: 8, style: .continuous)
+            .fill(GamePalette.picket)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [.white.opacity(0.42), .clear],
+                            startPoint: .top,
+                            endPoint: .center
+                        )
+                    )
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .strokeBorder(GamePalette.post.opacity(0.28), lineWidth: 1.5)
+            }
     }
 
     private var nailHeads: some View {
@@ -164,8 +177,8 @@ struct TitleScreenView: View {
 
     private var nailHead: some View {
         Circle()
-            .fill(GamePalette.post.opacity(0.4))
-            .frame(width: 5, height: 5)
+            .fill(GamePalette.post.opacity(0.45))
+            .frame(width: 6, height: 6)
     }
 
     // MARK: - Play

@@ -221,15 +221,17 @@ private struct TitleScene {
     }
 
     /// A line of trees rooted in the hillside, small enough to read as distance. They stand
-    /// on the near field's edge, so the grass along it comes up over their feet.
+    /// on the near field's edge, so the grass along it comes up over their feet — and after
+    /// dark they go to silhouette, since a tree the colour of the hill behind it is no tree.
     private func drawGrove(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 53)
         let edge = groundEdge
-        let count = 8
+        let leaf = colors.isNight ? colors.canopyShade : colors.canopy
+        let count = 6
 
         for index in 0..<count {
             let across = x((Double(index) + 0.15 + scatter.next() * 0.7) / Double(count))
-            let spread = x(0.05) * CGFloat(0.7 + scatter.next() * 0.5)
+            let spread = x(0.062) * CGFloat(0.7 + scatter.next() * 0.5)
             let foot = CGPoint(x: across, y: edge(across) + spread * 0.2)
 
             context.fill(
@@ -249,7 +251,7 @@ private struct TitleScene {
                     height: spread * CGFloat(lobe.2)
                 ))
             }
-            context.fill(canopy, with: .color(colors.canopy))
+            context.fill(canopy, with: .color(leaf))
             context.fill(
                 circle(
                     at: CGPoint(x: foot.x - spread * 0.22, y: foot.y - spread * 0.86),
