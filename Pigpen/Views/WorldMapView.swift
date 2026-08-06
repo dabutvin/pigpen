@@ -29,6 +29,13 @@ struct WorldMapView: View {
     /// The stop the map has been asked to bring into view, and how long it has to do it in.
     @State private var scrollOrder: ScrollOrder?
     @State private var ordersGiven = 0
+    /// The level standing behind its briefing film, while that film is on screen.
+    @State private var briefing: Briefing?
+    /// The level to open once the briefing has come down, so the two never fight over the
+    /// screen — the same way the title screen hands the opening on to the map.
+    @State private var briefedStop: Int?
+    /// Whether the film that closes the world out is up.
+    @State private var farewell = false
 
     init(progress: WorldProgress = WorldProgress()) {
         _progress = State(initialValue: progress)
@@ -59,7 +66,14 @@ struct WorldMapView: View {
                 .task { await arrive() }
                 .onChange(of: playing) { _, level in
                     guard level == nil else { return }
-                    Task { await follow() }
+                    // Two steps rather than one: the walk is skipped when the pig is
+                    // already standing where the world has got to, which is exactly what
+                    // beating the last level looks like — and that is the one time the
+                    // send-off is owed.
+                    Task {
+                        await follow()
+                        await sendOff()
+                    }
                 }
             }
         }
@@ -70,6 +84,12 @@ struct WorldMapView: View {
             PuzzleView(level: world[index].level) { stars in
                 progress.record(stars: stars, for: world[index].id)
             }
+        }
+        .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
+            CutSceneView(.named(waiting.film)) { endBriefing(waiting) }
+        }
+        .fullScreenCover(isPresented: $farewell) {
+            CutSceneView(.theMeadowHeld()) { endTheFarewell() }
         }
     }
 
@@ -245,8 +265,43 @@ struct WorldMapView: View {
         Task {
             await walk(to: Double(index), secondsPerStop: 0.3)
             frontierWhenOpened = progress.frontier
-            playing = index
+
+            // A map with something to say about itself says it before the board comes up,
+            // not over the top of one.
+            if let film = progress.briefingDue(forLevelAt: index) {
+                briefing = Briefing(stop: index, film: film)
+            } else {
+                playing = index
+            }
         }
+    }
+
+    /// The briefing is over, watched or skipped. It has had its one showing either way.
+    private func endBriefing(_ waiting: Briefing) {
+        progress.markPlayed(waiting.film)
+        briefedStop = waiting.stop
+        briefing = nil
+    }
+
+    /// Called as the briefing comes down, which is when the board it was about opens.
+    private func openTheBriefedLevel() {
+        guard let stop = briefedStop else { return }
+        briefedStop = nil
+        playing = stop
+    }
+
+    /// The film that sees a player off a world they have finished. It waits for the puzzle
+    /// screen to slide away and for the pig to settle, so it lands on a map at rest rather
+    /// than cutting over the top of one still moving.
+    private func sendOff() async {
+        guard progress.isTheFarewellDue else { return }
+        try? await Task.sleep(for: .milliseconds(650))
+        farewell = true
+    }
+
+    private func endTheFarewell() {
+        progress.markPlayed(.theMeadowHeld)
+        farewell = false
     }
 
     /// Walks the pig on to wherever the world has got to, once a puzzle has been played
@@ -329,6 +384,14 @@ struct WorldMapView: View {
             scroller.scrollTo(order.stop, anchor: .center)
         }
     }
+}
+
+/// A level waiting behind the film that sets it up.
+private struct Briefing: Identifiable {
+    let stop: Int
+    let film: CutScene.Name
+
+    var id: Int { stop }
 }
 
 /// A stop to bring into view, and how long the map has to get there.

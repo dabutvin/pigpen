@@ -9,11 +9,11 @@ import Observation
 protocol ProgressStore {
     func loadStars() -> [String: Int]
     func save(_ stars: [String: Int])
-    /// Whether the opening film has been played already. It is worth keeping even though
-    /// the stars nearly say it on their own: a player who watches it, backs out of the
-    /// meadow without penning anything and comes back has still seen it.
-    func loadHasSeenTheOpening() -> Bool
-    func markTheOpeningSeen()
+    /// Which films have been played already, by name. Worth keeping even where the stars
+    /// nearly say it on their own: a player who watches one, backs out without penning
+    /// anything and comes back has still seen it.
+    func loadPlayedScenes() -> Set<String>
+    func markScenePlayed(_ scene: String)
     /// Throws the lot away, for the player who wants the game back as they found it —
     /// the opening included, since that is part of finding it.
     func erase()
@@ -22,7 +22,10 @@ protocol ProgressStore {
 /// The real thing: stars survive the app being closed.
 struct StoredProgress: ProgressStore {
     private static let key = "pigpen.best-stars"
-    private static let openingKey = "pigpen.opening-seen"
+    private static let scenesKey = "pigpen.scenes-played"
+    /// What the opening was kept under before there was more than one film. Read so that
+    /// somebody already playing is not sat back down in front of it.
+    private static let oldOpeningKey = "pigpen.opening-seen"
     private let defaults: UserDefaults
 
     init(defaults: UserDefaults = .standard) {
@@ -37,41 +40,48 @@ struct StoredProgress: ProgressStore {
         defaults.set(stars, forKey: Self.key)
     }
 
-    func loadHasSeenTheOpening() -> Bool {
-        defaults.bool(forKey: Self.openingKey)
+    func loadPlayedScenes() -> Set<String> {
+        var played = Set(defaults.stringArray(forKey: Self.scenesKey) ?? [])
+        if defaults.bool(forKey: Self.oldOpeningKey) {
+            played.insert(CutScene.Name.opening.rawValue)
+        }
+        return played
     }
 
-    func markTheOpeningSeen() {
-        defaults.set(true, forKey: Self.openingKey)
+    func markScenePlayed(_ scene: String) {
+        var played = loadPlayedScenes()
+        played.insert(scene)
+        defaults.set(Array(played), forKey: Self.scenesKey)
     }
 
     func erase() {
         defaults.removeObject(forKey: Self.key)
-        defaults.removeObject(forKey: Self.openingKey)
+        defaults.removeObject(forKey: Self.scenesKey)
+        defaults.removeObject(forKey: Self.oldOpeningKey)
     }
 }
 
 /// A world that forgets everything the moment it is put down.
 final class RememberedProgress: ProgressStore {
     private var stars: [String: Int]
-    private var openingSeen: Bool
+    private var scenes: Set<String>
 
-    init(stars: [String: Int] = [:], openingSeen: Bool = false) {
+    init(stars: [String: Int] = [:], scenesPlayed: Set<String> = []) {
         self.stars = stars
-        self.openingSeen = openingSeen
+        self.scenes = scenesPlayed
     }
 
     func loadStars() -> [String: Int] { stars }
 
     func save(_ stars: [String: Int]) { self.stars = stars }
 
-    func loadHasSeenTheOpening() -> Bool { openingSeen }
+    func loadPlayedScenes() -> Set<String> { scenes }
 
-    func markTheOpeningSeen() { openingSeen = true }
+    func markScenePlayed(_ scene: String) { scenes.insert(scene) }
 
     func erase() {
         stars = [:]
-        openingSeen = false
+        scenes = []
     }
 }
 
@@ -92,15 +102,15 @@ final class RememberedProgress: ProgressStore {
 final class WorldProgress {
     let world: WorldMap
     private(set) var bestStars: [String: Int]
-    /// Whether the opening film has been played.
-    private(set) var hasSeenTheOpening: Bool
+    /// Which films have been played already.
+    private(set) var playedScenes: Set<String>
     @ObservationIgnored private let store: any ProgressStore
 
     init(world: WorldMap = .mudlarkMeadow, store: any ProgressStore = StoredProgress()) {
         self.world = world
         self.store = store
         self.bestStars = store.loadStars()
-        self.hasSeenTheOpening = store.loadHasSeenTheOpening()
+        self.playedScenes = store.loadPlayedScenes()
     }
 
     /// The best rating earned on a level, or 0 for one nobody has held a pig in yet.
@@ -173,41 +183,66 @@ final class WorldProgress {
         return frontier > before
     }
 
-    /// Whether the opening film is still owed: it plays once, on the first Play of a world
+    func hasPlayed(_ scene: CutScene.Name) -> Bool {
+        playedScenes.contains(scene.rawValue)
+    }
+
+    /// Remembers that a film has been played, watched or skipped. Either way it has had
+    /// its one chance.
+    func markPlayed(_ scene: CutScene.Name) {
+        guard !hasPlayed(scene) else { return }
+        playedScenes.insert(scene.rawValue)
+        store.markScenePlayed(scene.rawValue)
+    }
+
+    /// Whether the opening is still owed: it plays once, on the first Play of a world
     /// nobody has taken a star out of yet.
     ///
     /// The two conditions do different jobs. The flag is what stops it playing twice; the
-    /// stars are what stop it playing at all for somebody who has been up the meadow
-    /// before the film was ever added to the game — a player two worlds deep does not want
+    /// stars are what stop it playing at all for somebody who was already up the meadow
+    /// before the film was ever added to the game — a player two levels in does not want
     /// to be introduced to the pig.
     var isTheOpeningDue: Bool {
-        !hasSeenTheOpening && totalStars == 0
+        !hasPlayed(.opening) && totalStars == 0
     }
 
-    /// Remembers that the film has been played, watched or skipped. Either way it has had
-    /// its one chance.
-    func markTheOpeningSeen() {
-        guard !hasSeenTheOpening else { return }
-        hasSeenTheOpening = true
-        store.markTheOpeningSeen()
+    /// The film owed before a level opens, if there is one still to play. Only the boss
+    /// has one, since it is the only map that changes the rules rather than the ground.
+    ///
+    /// Returns the film rather than a yes or no so that asking whether to stop and asking
+    /// what to play are one question. Two would be two things to keep in agreement.
+    func briefingDue(forLevelAt index: Int) -> CutScene.Name? {
+        guard world.nodes.indices.contains(index) else { return nil }
+        guard let briefing = CutScene.Name(briefingFor: world[index].id) else { return nil }
+        return hasPlayed(briefing) ? nil : briefing
+    }
+
+    /// Every pen in the world held, which is the only thing that earns the last film.
+    var isTheWorldHeld: Bool {
+        clearedCount == world.count
+    }
+
+    /// Whether the film that closes the world out is owed.
+    var isTheFarewellDue: Bool {
+        !hasPlayed(.theMeadowHeld) && isTheWorldHeld
     }
 
     /// Reads the store again, for a screen that has been sitting behind another one while
     /// the stars were being won. The title screen does this every time it comes back.
     func reload() {
         bestStars = store.loadStars()
-        hasSeenTheOpening = store.loadHasSeenTheOpening()
+        playedScenes = store.loadPlayedScenes()
     }
 
     /// Forgets every star ever earned, on the device as well as on the screen, which shuts
     /// the world back to its first level. There is no undoing it, so nothing calls this
     /// without asking first.
     ///
-    /// The opening goes with them: a player asking for the game back as they found it gets
-    /// the film that came with it.
+    /// The films go with them: a player asking for the game back as they found it gets the
+    /// ones that came with it.
     func eraseEverything() {
         bestStars = [:]
-        hasSeenTheOpening = false
+        playedScenes = []
         store.erase()
     }
 }
@@ -224,7 +259,7 @@ extension WorldProgress {
         // already say so.
         return WorldProgress(
             world: world,
-            store: RememberedProgress(stars: seeded, openingSeen: true)
+            store: RememberedProgress(stars: seeded, scenesPlayed: [CutScene.Name.opening.rawValue])
         )
     }
 }
