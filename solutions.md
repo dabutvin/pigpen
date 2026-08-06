@@ -1,6 +1,6 @@
 # Solutions
 
-**Spoilers.** This is the best pen every puzzle in Mudlark Meadow has in it — the pen each
+**Spoilers.** This is the best pen for every puzzle in Mudlark Meadow — the pen each
 level goes rainbow for, worth exactly the `maximumScore` it claims. Reading it gives away
 the whole game.
 
