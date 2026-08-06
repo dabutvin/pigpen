@@ -10,6 +10,7 @@ struct TutorialView: View {
 
     @State private var lesson = TutorialLesson()
     @State private var pig = AnimalMark(kind: .pig, tile: PuzzleLevel.practicePen.pigStart, opacity: 1)
+    @State private var celebration: Celebration?
     @State private var budgetShake: CGFloat = 0
     @State private var refusedThisPress = false
 
@@ -46,6 +47,7 @@ struct TutorialView: View {
                     penGlow: penGlow,
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
                     animals: [pig],
+                    celebration: celebration,
                     highlightedTiles: lesson.highlightedTiles,
                     onStroke: { build($0) },
                     onStrokeEnd: { lesson.endStroke() }
@@ -177,8 +179,8 @@ struct TutorialView: View {
     private func reactToPhase() async {
         switch game.phase {
         case .building:
+            celebration = nil
             pig.tile = level.pigStart
-            pig.hop = 0
             withAnimation(.easeOut(duration: 0.25)) { pig.opacity = 1 }
         case .escaped(let escapes):
             // The scripted pen holds, so this path is only a safety net if the field is
@@ -188,23 +190,26 @@ struct TutorialView: View {
         case .penned:
             lesson.reconsider()
             await celebrate()
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
     }
 
-    /// The pig's lap of honour round the practice pen, which is the first thing a new
-    /// player sees a pen that holds do.
+    /// The pig's lap of honour round the practice pen, which is the first one a new player
+    /// sees a pen that holds take.
     private func celebrate() async {
         guard !reduceMotion else {
             try? await Task.sleep(for: .milliseconds(350))
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             return
         }
 
-        await Celebration(
-            laps: game.victoryLaps,
-            move: { _, tile in pig.tile = tile },
-            lift: { pig.hop = $0 }
-        ).run()
+        let cheer = Celebration(laps: game.victoryLaps, start: .now)
+        celebration = cheer
+
+        guard await cheer.waitOut() else { return }
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+
+        await cheer.waitForTheConfetti()
+        celebration = nil
     }
 
     private func walk(_ route: [GridPoint]) async {

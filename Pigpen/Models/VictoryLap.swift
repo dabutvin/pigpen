@@ -8,6 +8,10 @@ struct VictoryLap: Equatable, Sendable {
 
     /// Whether the pen leaves any room to run at all.
     var hasRoomToRun: Bool { route.count > 1 }
+
+    /// Tiles of ground one time round covers: four for a circle, two out and back along a
+    /// pen too narrow for one, and none for an animal penned onto its own tile.
+    var strides: Int { route.count - 1 }
 }
 
 extension PuzzleLevel {

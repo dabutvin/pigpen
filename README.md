@@ -24,10 +24,13 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   how a skull gets buried for the price of one piece — and how an apple gets wasted.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
-- **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs a little
-  circle round the ground you shut it into and hops on the spot at the end of it, and only
-  then does the score come up. A pen too tight to run in — four pieces round the pig — gets
-  the hopping on its own. Ask for reduced motion and the field keeps still.
+- **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits
+  of the ground you shut it into — leaning into the corners, bobbing on every tile it
+  covers — and finishes on a hop where it started, under confetti thrown up out of its own
+  tile. Only then does the score come up, through the last of the falling paper. A pen too
+  narrow for a circle is run out and back instead, one too tight for that is bounced on the
+  spot, and the best pen the map has in it gets its confetti in every colour there is. Ask
+  for reduced motion and the field keeps still.
 - **The boss keeps two.** The last puzzle in the meadow stands a deer on the field as well
   as the pig, and one budget has to hold both of them. One pen round the pair or a pen
   apiece is up to you — a pen holds whatever ground it shuts in, whether that ground is in
@@ -322,7 +325,7 @@ Pigpen/
 │   ├── LevelSignpost.swift      # One stop on the map: stars, number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
-│   ├── Celebration.swift        # Trots the animals round their lap and hops them home
+│   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden button the title screen is built on
 │   ├── GamePalette.swift        # Colours, including the pasture's day and dusk sets
