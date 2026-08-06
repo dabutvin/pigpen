@@ -85,13 +85,14 @@ struct SettingsView: View {
         .padding(.bottom, 16)
     }
 
-    /// The name in cipher, as it is on the title screen, and the version underneath it —
-    /// which is the number a player reads out when something has gone wrong.
+    /// The name, set as it is on the title screen, and the version underneath it — which
+    /// is the number a player reads out when something has gone wrong.
     private var about: some View {
         card {
-            PigpenWordView(word: "PIGPEN", glyphSize: 18, lineWidth: 2.5)
+            Text("PIGPEN")
+                .font(.system(size: 24, weight: .black, design: .rounded))
+                .tracking(3)
                 .foregroundStyle(GamePalette.post)
-                .accessibilityElement(children: .ignore)
                 .accessibilityLabel("Pigpen")
 
             Text(version)
