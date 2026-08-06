@@ -248,15 +248,17 @@ private struct Film {
         drawLand(in: &shot, ridge: 0.58, rise: 0.06, waves: 1.8, phase: 1.9, color: colors.farHill)
         drawLand(in: &shot, ridge: 0.72, rise: 0.03, waves: 1.3, phase: 0.5, color: colors.ground)
 
-        drawBarn(in: &shot, at: 0.20, base: 0.72, width: 0.30)
-        drawFenceRun(in: &shot, base: 0.80, height: 0.075, from: 0.30, to: 1.06, posts: 7, gap: 3)
+        // Far enough in that the push and the drift cannot walk the barn off the side of
+        // the frame, and the fence starting clear of its far wall rather than across it.
+        drawBarn(in: &shot, at: 0.26, base: 0.72, width: 0.30)
+        drawFenceRun(in: &shot, base: 0.80, height: 0.075, from: 0.44, to: 1.06, posts: 7, gap: 3)
 
         // Through the gap and going: it clears the gateway over the shot rather than
         // standing in it, so the picture is a pig leaving rather than a pig posing.
         drawPig(
             in: &shot,
-            feet: CGPoint(x: x(0.63 + 0.14 * progress), y: y(0.845)),
-            width: x(0.115),
+            feet: CGPoint(x: x(0.66 + 0.18 * progress), y: y(0.825)),
+            width: x(0.125),
             lean: 6,
             squash: 1 - 0.05 * hop(cycles: 2.5)
         )
@@ -297,31 +299,36 @@ private struct Film {
         )
     }
 
-    /// Gone. The pig is already at the far side of the frame, the meadow is streaking past
-    /// behind it, and the dust it kicked up is still hanging where it left.
+    /// Gone. The pig is across the middle of the frame at a gallop with the field streaking
+    /// off the back of it and the dust it pushed off still hanging where it was.
+    ///
+    /// It is drawn big and up in the picture rather than small and away, because the pig is
+    /// a face rather than a body: it cannot be seen to run, so the running has to be
+    /// everything round it — the streaks, the dust, the lean and the bob.
     private func drawAway(in context: inout GraphicsContext) {
         var shot = pushed(context, zoom: 1.06, drift: 0.025 * progress)
 
-        drawSky(in: &shot, horizon: y(0.56))
-        drawSun(in: &shot, at: CGPoint(x: x(0.86), y: y(0.44)), radius: x(0.075), rays: false)
-        drawLand(in: &shot, ridge: 0.56, rise: 0.055, waves: 2.0, phase: 2.8, color: colors.farHill)
-        drawLand(in: &shot, ridge: 0.74, rise: 0.025, waves: 1.4, phase: 1.6, color: colors.ground)
+        drawSky(in: &shot, horizon: y(0.52))
+        drawSun(in: &shot, at: CGPoint(x: x(0.84), y: y(0.30)), radius: x(0.075), rays: false)
+        drawLand(in: &shot, ridge: 0.52, rise: 0.055, waves: 2.0, phase: 2.8, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.66, rise: 0.03, waves: 1.4, phase: 1.6, color: colors.ground)
 
-        drawStreaks(in: &shot, band: 0.36...0.70, count: 16, seed: 67)
+        let across = x(0.20 + 0.56 * progress)
+        let bob = hop(cycles: 4)
 
-        let across = x(0.24 + 0.52 * progress)
-        drawDust(in: &shot, behind: across, at: 0.845)
+        drawStreaks(in: &shot, behind: across, at: 0.56...0.69, count: 11, seed: 67)
+        drawDust(in: &shot, behind: across, at: 0.72)
         drawPig(
             in: &shot,
-            feet: CGPoint(x: across, y: y(0.845) - y(0.014 * hop(cycles: 4))),
-            width: x(0.135),
-            lean: 12,
-            squash: 1 - 0.07 * hop(cycles: 4),
-            shadow: 0.6
+            feet: CGPoint(x: across, y: y(0.72) - y(0.022 * bob)),
+            width: x(0.20),
+            lean: 10,
+            squash: 1 - 0.08 * bob,
+            shadow: 0.7
         )
-        drawStreaks(in: &shot, band: 0.76...0.93, count: 9, seed: 71)
+        drawStreaks(in: &shot, behind: across, at: 0.74...0.88, count: 9, seed: 71)
 
-        drawLand(in: &shot, ridge: 0.95, rise: 0.014, waves: 1.0, phase: 0.3, color: colors.foreground)
+        drawLand(in: &shot, ridge: 0.93, rise: 0.014, waves: 1.0, phase: 0.3, color: colors.foreground)
     }
 
     /// The meadow again, calm, with a run of fencing stood along the front of it and the
@@ -584,18 +591,21 @@ private struct Film {
     private func drawMist(in context: inout GraphicsContext, at height: Double, seed: UInt64) {
         var scatter = Scatter(seed: seed)
 
-        for _ in 0..<5 {
-            let width = x(0.32 + scatter.next() * 0.46)
+        // Several flat, faint banks rather than a few fat bright ones: overlapping them is
+        // what makes a band of haze, where any one of them on its own is a pale blob with
+        // an edge you can see.
+        for _ in 0..<9 {
+            let width = x(0.34 + scatter.next() * 0.5)
             let centre = CGPoint(
-                x: x(scatter.next() * 1.2 - 0.1),
-                y: y(height + (scatter.next() - 0.5) * 0.05)
+                x: x(scatter.next() * 1.3 - 0.15),
+                y: y(height + (scatter.next() - 0.5) * 0.055)
             )
             context.fill(
                 Path(ellipseIn: CGRect(
-                    x: centre.x - width / 2, y: centre.y - y(0.013),
-                    width: width, height: y(0.026)
+                    x: centre.x - width / 2, y: centre.y - y(0.008),
+                    width: width, height: y(0.016)
                 )),
-                with: .color(GamePalette.cream.opacity(0.22))
+                with: .color(GamePalette.cream.opacity(0.13))
             )
         }
     }
@@ -607,22 +617,24 @@ private struct Film {
         let head = y(top)
         let depth = foot - head
 
+        // Wide at the foot of the frame: the near bank is drawn over the bottom of it, so a
+        // trail any narrower than this is a thread by the time any of it can be seen.
         var path = Path()
-        path.move(to: CGPoint(x: x(0.32), y: foot))
+        path.move(to: CGPoint(x: x(0.22), y: foot))
         path.addCurve(
-            to: CGPoint(x: x(0.505), y: head),
-            control1: CGPoint(x: x(0.38), y: foot - depth * 0.45),
+            to: CGPoint(x: x(0.495), y: head),
+            control1: CGPoint(x: x(0.32), y: foot - depth * 0.45),
             control2: CGPoint(x: x(0.60), y: head + depth * 0.40)
         )
-        path.addLine(to: CGPoint(x: x(0.545), y: head))
+        path.addLine(to: CGPoint(x: x(0.55), y: head))
         path.addCurve(
-            to: CGPoint(x: x(0.60), y: foot),
-            control1: CGPoint(x: x(0.65), y: head + depth * 0.40),
-            control2: CGPoint(x: x(0.54), y: foot - depth * 0.45)
+            to: CGPoint(x: x(0.70), y: foot),
+            control1: CGPoint(x: x(0.70), y: head + depth * 0.40),
+            control2: CGPoint(x: x(0.60), y: foot - depth * 0.45)
         )
         path.closeSubpath()
 
-        context.fill(path, with: .color(GamePalette.mud.opacity(0.5)))
+        context.fill(path, with: .color(GamePalette.mud.opacity(0.55)))
     }
 
     // MARK: - What is standing in the meadow
@@ -735,24 +747,29 @@ private struct Film {
         gate.translateBy(x: hinge.x, y: hinge.y)
         gate.rotate(by: .degrees(-24))
 
+        // Timber thick enough to read as a gate at this size. Any finer and the panel is a
+        // wire outline that could be anything leaning on the fence.
         var panel = Path()
         let leaf = CGSize(width: pitch * 0.86, height: tall * 0.82)
-        panel.addRoundedRect(
-            in: CGRect(x: 0, y: -leaf.height, width: leaf.width, height: leaf.height * 0.16),
-            cornerSize: CGSize(width: leaf.height * 0.06, height: leaf.height * 0.06)
-        )
-        panel.addRoundedRect(
-            in: CGRect(x: 0, y: -leaf.height * 0.46, width: leaf.width, height: leaf.height * 0.16),
-            cornerSize: CGSize(width: leaf.height * 0.06, height: leaf.height * 0.06)
-        )
-        panel.addRoundedRect(
-            in: CGRect(x: 0, y: -leaf.height, width: leaf.width * 0.16, height: leaf.height),
-            cornerSize: CGSize(width: leaf.height * 0.05, height: leaf.height * 0.05)
-        )
-        panel.addRoundedRect(
-            in: CGRect(x: leaf.width * 0.84, y: -leaf.height, width: leaf.width * 0.16, height: leaf.height),
-            cornerSize: CGSize(width: leaf.height * 0.05, height: leaf.height * 0.05)
-        )
+        let timber = leaf.height * 0.22
+        for rail in [0.0, 0.52] {
+            panel.addRoundedRect(
+                in: CGRect(
+                    x: 0, y: -leaf.height + leaf.height * CGFloat(rail),
+                    width: leaf.width, height: timber
+                ),
+                cornerSize: CGSize(width: timber * 0.3, height: timber * 0.3)
+            )
+        }
+        for stile in [0.0, 0.78] {
+            panel.addRoundedRect(
+                in: CGRect(
+                    x: leaf.width * CGFloat(stile), y: -leaf.height,
+                    width: leaf.width * 0.22, height: leaf.height
+                ),
+                cornerSize: CGSize(width: timber * 0.3, height: timber * 0.3)
+            )
+        }
         gate.fill(panel, with: .color(GamePalette.rail))
     }
 
@@ -801,11 +818,15 @@ private struct Film {
 
     // MARK: - Motion
 
-    /// The streaks a shot gets when the thing in it is going faster than the camera. Drawn
-    /// rather than blurred: a line is what anime uses, and it costs nothing.
+    /// The field going past, as lines trailing off the back of whatever is outrunning the
+    /// camera. Drawn rather than blurred: a line is what anime uses, and it costs nothing.
+    ///
+    /// They are kept to the band the runner is actually in and to the ground behind it. A
+    /// streak across the empty sky is not speed, it is a scratch on the film.
     private func drawStreaks(
         in context: inout GraphicsContext,
-        band: ClosedRange<Double>,
+        behind across: CGFloat,
+        at band: ClosedRange<Double>,
         count: Int,
         seed: UInt64
     ) {
@@ -816,19 +837,17 @@ private struct Film {
 
         for _ in 0..<count {
             let level = y(scatter.next(in: band))
-            let span = x(0.14 + scatter.next() * 0.3)
-            // Every streak runs the width of the frame twice over the shot, so the picture
-            // never settles into a fixed set of lines.
-            let travel = (scatter.next() + progress * 2).truncatingRemainder(dividingBy: 1.4) - 0.2
-            let head = x(travel)
-            lines.move(to: CGPoint(x: head, y: level))
-            lines.addLine(to: CGPoint(x: head + span, y: level))
+            let span = x(0.18 + scatter.next() * 0.34)
+            // Off the back of it, and further back the longer the shot has been running.
+            let tail = across - x(0.03 + scatter.next() * 0.46) - x(0.26) * CGFloat(progress)
+            lines.move(to: CGPoint(x: tail - span, y: level))
+            lines.addLine(to: CGPoint(x: tail, y: level))
         }
 
         context.stroke(
             lines,
-            with: .color(GamePalette.cream.opacity(0.3)),
-            style: StrokeStyle(lineWidth: max(1, y(0.0035)), lineCap: .round)
+            with: .color(GamePalette.cream.opacity(0.42)),
+            style: StrokeStyle(lineWidth: max(1.5, y(0.005)), lineCap: .round)
         )
     }
 
