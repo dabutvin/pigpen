@@ -120,16 +120,16 @@ that actually holds, so no level can promise a rainbow that is not there.
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
 
-The wordmark on the title screen is written in the
-[pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher), whose glyphs happen to look
-a lot like fence posts. It plants itself one glyph at a time over a pasture — drifting
-clouds by day, fireflies at dusk — with a pig trotting up and down a run of fence. The
-whole backdrop is drawn in code from one clock and stops dead when the system asks for
-reduced motion. Below Play sits **Tutorial**, which opens a practice pen off the world map
-and walks through tapping a post, dragging a run, building against water, shutting the pen
-until the ground washes gold, and releasing the pig. A gear in the corner opens settings,
-which holds the version number and one red button: clearing all game data throws away every
-star and shuts the trail back to its first level, so it asks before it does anything.
+The name on the title screen plants itself a letter at a time, each one dropping in and
+settling like a fence post going into the ground, over a pasture — drifting clouds by day,
+fireflies at dusk — with a pig trotting up and down a run of fence. The whole backdrop is
+drawn in code from one clock and stops dead when the system asks for reduced motion. The
+stars taken so far sit in a badge in the top corner, well away from Play. Below Play sits
+**Tutorial**, which opens a practice pen off the world map and walks through tapping a post,
+dragging a run, building against water, shutting the pen until the ground washes gold, and
+releasing the pig. A gear in the corner opens settings, which holds the version number and
+one red button: clearing all game data throws away every star and shuts the trail back to
+its first level, so it asks before it does anything.
 
 ## Tech Stack
 
@@ -313,8 +313,7 @@ Pigpen/
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
-│   ├── WorldProgress.swift      # Best stars per level, what that unlocks, and where it is kept
-│   └── PigpenGlyph.swift        # Cipher letter → drawable geometry, for the wordmark
+│   └── WorldProgress.swift      # Best stars per level, what that unlocks, and where it is kept
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -329,8 +328,7 @@ Pigpen/
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden button the title screen is built on
 │   ├── GamePalette.swift        # Colours, including the pasture's day and dusk sets
-│   ├── Scatter.swift            # The seeded generator every drawn scene scatters things with
-│   └── PigpenGlyphView.swift    # Renders glyphs and words
+│   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
     └── Pigpen.entitlements

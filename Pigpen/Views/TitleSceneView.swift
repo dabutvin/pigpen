@@ -57,7 +57,7 @@ private struct TitleScene {
         drawDisc(in: &context)
         drawClouds(in: &context)
         drawFarHills(in: &context)
-        drawLake(in: &context)
+        drawGrove(in: &context)
         drawGround(in: &context)
         drawPath(in: &context)
         drawFlowers(in: &context)
@@ -220,31 +220,56 @@ private struct TitleScene {
         context.fill(path, with: .color(colors.farHill))
     }
 
-    /// A lake in the valley between the hills, because water is half of the game.
-    private func drawLake(in context: inout GraphicsContext) {
-        let bounds = CGRect(x: x(0.34), y: y(0.567), width: x(0.24), height: y(0.024))
-        context.fill(Path(ellipseIn: bounds), with: .color(colors.lake))
+    /// A line of trees rooted in the hillside, small enough to read as distance. They stand
+    /// on the near field's edge, so the grass along it comes up over their feet — and after
+    /// dark they go to silhouette, since a tree the colour of the hill behind it is no tree.
+    private func drawGrove(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 53)
+        let edge = groundEdge
+        let leaf = colors.isNight ? colors.canopyShade : colors.canopy
+        let count = 6
 
-        for band in [0.4, 0.68] {
-            var ripple = Path()
-            let level = bounds.minY + bounds.height * CGFloat(band)
-            ripple.move(to: CGPoint(x: bounds.minX + bounds.width * 0.24, y: level))
-            ripple.addQuadCurve(
-                to: CGPoint(x: bounds.maxX - bounds.width * 0.24, y: level),
-                control: CGPoint(x: bounds.midX, y: level - bounds.height * 0.3)
+        for index in 0..<count {
+            let across = x((Double(index) + 0.15 + scatter.next() * 0.7) / Double(count))
+            let spread = x(0.062) * CGFloat(0.7 + scatter.next() * 0.5)
+            let foot = CGPoint(x: across, y: edge(across) + spread * 0.2)
+
+            context.fill(
+                Path(roundedRect: CGRect(
+                    x: foot.x - spread * 0.10, y: foot.y - spread * 0.62,
+                    width: spread * 0.20, height: spread * 0.62
+                ), cornerRadius: spread * 0.06),
+                with: .color(GamePalette.rail.opacity(colors.isNight ? 0.5 : 0.9))
             )
-            context.stroke(
-                ripple,
-                with: .color(GamePalette.waterRipple.opacity(colors.isNight ? 0.25 : 0.5)),
-                style: StrokeStyle(lineWidth: max(1, bounds.height * 0.1), lineCap: .round)
+
+            var canopy = Path()
+            for lobe in [(-0.34, 0.86, 0.66), (0.0, 1.12, 0.84), (0.34, 0.84, 0.62)] {
+                canopy.addEllipse(in: CGRect(
+                    x: foot.x + spread * CGFloat(lobe.0) - spread * CGFloat(lobe.2) / 2,
+                    y: foot.y - spread * CGFloat(lobe.1),
+                    width: spread * CGFloat(lobe.2),
+                    height: spread * CGFloat(lobe.2)
+                ))
+            }
+            context.fill(canopy, with: .color(leaf))
+            context.fill(
+                circle(
+                    at: CGPoint(x: foot.x - spread * 0.22, y: foot.y - spread * 0.86),
+                    radius: spread * 0.18
+                ),
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.06 : 0.20))
             )
         }
     }
 
     private func drawGround(in context: inout GraphicsContext) {
-        let line = groundLine(around: ridge, waves: 2.2, phase: 0.7)
-        context.fill(band(below: line), with: .color(colors.ground))
-        drawTufts(in: &context, along: line, count: 22, height: y(0.016), seed: 17)
+        context.fill(band(below: groundEdge), with: .color(colors.ground))
+        drawTufts(in: &context, along: groundEdge, count: 22, height: y(0.016), seed: 17)
+    }
+
+    /// The top of the near field, which is also the line the grove is rooted along.
+    private var groundEdge: (CGFloat) -> CGFloat {
+        groundLine(around: ridge, waves: 2.2, phase: 0.7)
     }
 
     /// The near bank, dark enough to sit the button and the small print on.
