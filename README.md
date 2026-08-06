@@ -141,7 +141,11 @@ the screen is a painted board: the buttons that work the fencing, the tally of y
 and the verdict when the gate is opened. All of it takes the meadow from daylight to dusk with
 the system appearance, and none of it is on a clock: the board is the only thing that moves.
 
-### The opening
+### The cut scenes
+
+Three films so far, each played once and each with a **Skip** in the corner from a beat in. Skipping counts as having seen one.
+
+#### The opening
 
 The very first press of Play — on a world with no stars on it — plays a short film before
 the meadow. Five shots and a little over thirteen seconds, between black bars, with a line
@@ -150,19 +154,47 @@ pig itself head on with the light coming apart behind it, the pig already leavin
 run of fencing you are given to answer it with. There is a **Skip** in the corner from a
 beat in, and skipping counts as having seen it.
 
-It plays once. `WorldProgress` keeps a flag beside the stars for it, so a player who watches
-it, backs out of the meadow without penning anything and comes back does not get it twice —
-and the stars are checked as well, so nobody already up the trail is introduced to the pig
-they have been chasing for an hour. Clearing all game data hands the film back with
-everything else.
+It plays once. `WorldProgress` keeps the names of the films already played beside the stars,
+so a player who watches one, backs out without penning anything and comes back does not get
+it twice — and for the opening the stars are checked as well, so nobody already up the trail
+is introduced to the pig they have been chasing for an hour. Clearing all game data hands
+every film back with everything else.
 
-Like the pasture behind the title and the lap of honour on a pen that holds, it is a clock
-rather than a queue of steps: [`Opening`](Pigpen/Models/Opening.swift) says which shot is up
-at a given second and how far through it, and `OpeningView` paints that. So any moment of it
-can be stopped and photographed — which is how CI shows all five shots — and a player who
-asks for reduced motion gets every shot and every caption with the camera held still. It is
-the one screen in the game lit whatever the phone is set to: the first thing it says is that
-the sun is coming up, so it says that at midnight too.
+#### Stag Mere
+
+Tapping the meadow's last signpost stops for eight seconds first. A player who has fenced
+eight fields does not need teaching how to fence a ninth — they need telling the one thing
+this map does differently, which is that there are two animals on it and one budget for the
+pair. Three shots: the water down the middle, the stag on the far shore, and both of them
+with the pen each would take marked out round it in dashes, so the shape of the answer —
+two enclosures, not one — is on screen before a piece is laid. It is lit flat and bright
+where the films either side of it are lit at sunrise, because a briefing wants reading
+rather than admiring.
+
+#### The meadow held
+
+When the last pen in the meadow holds, the world gets seen out. Both animals shut in on
+ground washed gold, the stag left standing on its own shore while the trail runs away out
+of the picture, the whole meadow at once with a stop marked at every puzzle on it — and
+then the meadow from far enough out to be a world, with the stag stood on top of it for a
+mark. A world somebody has finished is a world with something of its own still living on
+it, which is why the stag is left there rather than brought along. Out past it another
+world comes up out of the dark with a road drawn on towards it, still under cloud and
+without a name, because what is on it is nobody's business yet.
+
+#### How they are built
+
+Like the pasture behind the title and the lap of honour on a pen that holds, a film is a
+clock rather than a queue of steps: [`CutScene`](Pigpen/Models/CutScene.swift) says which
+shot is up at a given second and how far through it, and `CutSceneView` paints that. All
+three are the same machine — a list of shots, each held for a moment and captioned — so a
+fourth is a list and a few pictures rather than another screen.
+
+So any moment of any of them can be stopped and photographed, which is how CI shows all
+thirteen shots, and a player who asks for reduced motion gets every shot and every caption
+with the camera held still. They are the only screens in the game lit by something other
+than the phone: the opening and the send-off are at sunrise, so the world opens and closes
+on one light whatever the system appearance says.
 
 ## Tech Stack
 
@@ -242,7 +274,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the map, four boards, the settings sheet and the five shots of the opening film in light + dark, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the map, four boards, the settings sheet and all thirteen shots of the three cut scenes in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -251,7 +283,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. The five `-opening…` arguments each stop the opening film on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the film is lit at sunrise whatever the phone is set to, so its two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. The thirteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -344,14 +376,14 @@ Pigpen/
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
-│   ├── Opening.swift            # The opening film, as a clock: which shot is up when
+│   ├── CutScene.swift           # The films, as clocks: which shot is up when, and for how long
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
-│   └── WorldProgress.swift      # Best stars, what that unlocks, whether the opening is owed
+│   └── WorldProgress.swift      # Best stars, what that unlocks, which films are owed
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
-│   ├── OpeningView.swift        # Paints the opening film, shot by shot
+│   ├── CutSceneView.swift       # Paints any of the films, shot by shot
 │   ├── SettingsView.swift       # Behind the gear: the version, and clearing all game data
 │   ├── WorldMapView.swift       # The world map: signposts, the walking pig, the trail
 │   ├── WorldMapScene.swift      # The meadow the trail runs through

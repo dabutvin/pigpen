@@ -2,13 +2,13 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// The film that plays before a player's first walk up the meadow.
+/// Any of the game's films, played between black bars with a line of type over each shot
+/// and a way out of the whole thing in the corner.
 ///
-/// Five shots between black bars, with a line of type over each and a way out of the whole
-/// thing in the corner. `Opening` says what is on screen at any moment; this paints it and
-/// hands the player on to the map when the last frame has gone.
+/// `CutScene` says what is on screen at any moment; this paints it and hands the player on
+/// when the last frame has gone.
 @MainActor
-struct OpeningView: View {
+struct CutSceneView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Called when the film is over, however it ended: watched to the last frame, or skipped.
@@ -18,18 +18,22 @@ struct OpeningView: View {
     /// frame comes out every time — and a still hands nobody on to anywhere.
     private let still: TimeInterval?
 
-    @State private var opening = Opening()
-    /// The way out, kept off the first frame or two so the film opens on the meadow rather
+    /// Held rather than taken fresh each time the screen is drawn, so the clock starts when
+    /// the film goes up and not again on every frame of it.
+    @State private var scene: CutScene
+    /// The way out, kept off the first frame or two so a film opens on its picture rather
     /// than on a button.
     @State private var offersSkip = false
 
-    init(onFinish: @escaping () -> Void) {
+    init(_ scene: CutScene, onFinish: @escaping () -> Void) {
+        _scene = State(initialValue: scene)
         self.onFinish = onFinish
         self.still = nil
     }
 
-    /// A still of the film `seconds` in.
-    init(still seconds: TimeInterval) {
+    /// A still of a film `seconds` in.
+    init(_ scene: CutScene, still seconds: TimeInterval) {
+        _scene = State(initialValue: scene)
         self.onFinish = {}
         self.still = seconds
     }
@@ -47,23 +51,23 @@ struct OpeningView: View {
                 Color.black
 
                 TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: still != nil)) { timeline in
-                    let elapsed = still ?? timeline.date.timeIntervalSince(opening.start)
+                    let elapsed = still ?? timeline.date.timeIntervalSince(scene.start)
 
                     ZStack {
-                        if let frame = opening.frame(secondsIn: elapsed) {
+                        if let frame = scene.frame(secondsIn: elapsed) {
                             Canvas { context, size in
                                 Film(size: size, frame: frame, moves: !reduceMotion).draw(in: &context)
                             }
                             .accessibilityHidden(true)
 
-                            bars(landed: opening.letterbox(secondsIn: elapsed), depth: bar)
+                            bars(landed: scene.letterbox(secondsIn: elapsed), depth: bar)
                             caption(frame, clear: bar)
                         }
 
                         // Over the picture and the type alike: the film comes up out of
                         // black and goes back into it, bars and all.
                         Color.black
-                            .opacity(opening.curtain(secondsIn: elapsed))
+                            .opacity(scene.curtain(secondsIn: elapsed))
                             .allowsHitTesting(false)
                     }
                 }
@@ -76,7 +80,7 @@ struct OpeningView: View {
         .task {
             // A still is a still: nothing counts down and nobody is handed on.
             guard still == nil else { return }
-            if await opening.waitOut() {
+            if await scene.waitOut() {
                 onFinish()
             }
         }
@@ -91,6 +95,10 @@ struct OpeningView: View {
 
     /// Whether the way out is on screen, and so whether it can be pressed.
     private var offersTheWayOut: Bool { still != nil || offersSkip }
+
+    /// The shots whose line is the point of the whole film rather than a note under the
+    /// picture, and so is set big and in the middle.
+    private static let cards: Set<CutScene.Picture> = [.fenceItIn, .somewhereElse]
 
     // MARK: - Over the picture
 
@@ -117,7 +125,7 @@ struct OpeningView: View {
     /// canvas, so a player listening to the screen instead of watching it still gets the
     /// story read out to them.
     @ViewBuilder
-    private func caption(_ frame: Opening.Frame, clear bar: CGFloat) -> some View {
+    private func caption(_ frame: CutScene.Frame, clear bar: CGFloat) -> some View {
         let words = Text(frame.shot.caption)
             .multilineTextAlignment(.center)
             .foregroundStyle(GamePalette.cream)
@@ -125,10 +133,10 @@ struct OpeningView: View {
             .padding(.horizontal, 32)
             .opacity(frame.captionOpacity)
 
-        if frame.shot.picture == .fenceItIn {
-            // The last line is the one the game is being handed over on, so it is set in
-            // the middle of the frame as a card rather than tucked along the bottom.
-            words.font(.system(size: 34, weight: .black, design: .rounded))
+        if Self.cards.contains(frame.shot.picture) {
+            // The line a film hands the game over on is set in the middle of the frame as
+            // a card rather than tucked along the bottom like a subtitle.
+            words.font(.system(size: 30, weight: .black, design: .rounded))
         } else {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
@@ -163,7 +171,7 @@ struct OpeningView: View {
                     .background(Capsule().fill(GamePalette.cream.opacity(0.94)))
                     .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.18), lineWidth: 1))
                 }
-                .accessibilityLabel("Skip the opening")
+                .accessibilityLabel("Skip")
             }
 
             Spacer(minLength: 0)
@@ -176,21 +184,32 @@ struct OpeningView: View {
     }
 }
 
-/// One frame of the film, ready to draw.
+/// One frame of a film, ready to draw.
 ///
 /// Everything is placed as a fraction of the space the screen was handed, so the same shot
 /// composes itself on any phone — and every shot is built out of the same handful of pieces
-/// (a sky, a ridge, a band of grass, tufts along its edge) so that five different views of
-/// the meadow still look like the same meadow.
+/// (a sky, a ridge, a band of grass, tufts along its edge) so that a dozen different views
+/// of the meadow still look like the same meadow.
 private struct Film {
     let size: CGSize
-    let frame: Opening.Frame
+    let frame: CutScene.Frame
     /// Whether the camera moves and the lines streak. A player who has asked for less
-    /// motion still gets all five shots and every caption; the shots are simply held still.
+    /// motion still gets every shot and every caption; the shots are simply held still.
     let moves: Bool
 
-    /// The film is shot at sunrise whatever the phone is set to — see `Pasture.daybreak`.
-    private let colors = GamePalette.Pasture.daybreak
+    /// What light a shot is in, which is the shot's own business rather than the phone's.
+    ///
+    /// The opening is at sunrise and the meadow's last film ends in the same gold, so the
+    /// world opens and closes on one light. Stag Mere is lit flat and bright in between,
+    /// because a briefing wants reading rather than admiring, and the two shots out past
+    /// the meadow are lit by nothing but stars.
+    private var colors: GamePalette.Pasture {
+        switch frame.shot.picture {
+        case .theMere, .theStag, .bothOrNeither: .day
+        case .theMeadowFromOut, .somewhereElse: .dusk
+        default: .daybreak
+        }
+    }
 
     /// How far through the shot the camera is. Held at the middle of its move when the
     /// player has asked for less motion, so a still shot is still a composed one.
@@ -203,6 +222,14 @@ private struct Film {
         case .thePig: drawThePig(in: &context)
         case .away: drawAway(in: &context)
         case .fenceItIn: drawFenceItIn(in: &context)
+        case .theMere: drawTheMere(in: &context)
+        case .theStag: drawTheStag(in: &context)
+        case .bothOrNeither: drawBothOrNeither(in: &context)
+        case .bothPenned: drawBothPenned(in: &context)
+        case .theStagStays: drawTheStagStays(in: &context)
+        case .theWholeMeadow: drawTheWholeMeadow(in: &context)
+        case .theMeadowFromOut: drawTheMeadowFromOut(in: &context)
+        case .somewhereElse: drawSomewhereElse(in: &context)
         }
         drawCutFlash(in: &context)
     }
@@ -255,8 +282,9 @@ private struct Film {
 
         // Through the gap and going: it clears the gateway over the shot rather than
         // standing in it, so the picture is a pig leaving rather than a pig posing.
-        drawPig(
+        drawAnimal(
             in: &shot,
+            .pig,
             feet: CGPoint(x: x(0.66 + 0.18 * progress), y: y(0.825)),
             width: x(0.125),
             lean: 6,
@@ -291,8 +319,9 @@ private struct Film {
 
         // Breathing rather than hopping: it is standing still and being looked at.
         let breath = sin(progress * 2 * .pi * 1.5)
-        drawPig(
+        drawAnimal(
             in: &shot,
+            .pig,
             feet: CGPoint(x: middle.x, y: y(0.815) - y(0.006 * breath)),
             width: x(0.44),
             squash: 1 + 0.02 * breath
@@ -318,8 +347,9 @@ private struct Film {
 
         drawStreaks(in: &shot, behind: across, at: 0.56...0.69, count: 11, seed: 67)
         drawDust(in: &shot, behind: across, at: 0.72)
-        drawPig(
+        drawAnimal(
             in: &shot,
+            .pig,
             feet: CGPoint(x: across, y: y(0.72) - y(0.022 * bob)),
             width: x(0.20),
             lean: 10,
@@ -349,11 +379,231 @@ private struct Film {
 
         // Away up the hill, and no bigger than a signpost on the map: the thing all that
         // fencing along the front of the frame is for.
-        drawPig(in: &shot, feet: CGPoint(x: x(0.30), y: y(0.735)), width: x(0.055), shadow: 0.5)
+        drawAnimal(in: &shot, .pig, feet: CGPoint(x: x(0.30), y: y(0.735)), width: x(0.055), shadow: 0.5)
 
         // Stood clear of the bottom bar, so the fencing the player is being handed is all
         // of it in the picture rather than half of it behind the letterbox.
         drawFenceRun(in: &shot, base: 0.90, height: 0.13, from: -0.06, to: 1.06, posts: 9, gap: nil)
+    }
+
+    // MARK: - Stag Mere
+
+    /// The mere, with an animal on either bank of it. The one thing a player needs to know
+    /// about this map before they start is that there are two of them and water in between,
+    /// so that is the whole of the picture: near bank, water, far bank, one on each.
+    private func drawTheMere(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.02 + 0.05 * progress)
+
+        drawSky(in: &shot, horizon: y(0.44))
+        drawClouds(in: &shot, at: 0.20, drift: 0.015 * progress)
+        drawLand(in: &shot, ridge: 0.44, rise: 0.05, waves: 2.0, phase: 1.4, color: colors.farHill)
+
+        // The far bank, with the stag on it, and then the water in front of that.
+        drawLand(in: &shot, ridge: 0.56, rise: 0.022, waves: 1.5, phase: 2.2, color: colors.ground)
+        drawAnimal(in: &shot, .deer, feet: CGPoint(x: x(0.68), y: y(0.60)), width: x(0.12), shadow: 0.7)
+        drawTufts(in: &shot, along: 0.56, rise: 0.022, waves: 1.5, phase: 2.2, count: 16, height: 0.016, seed: 91)
+
+        drawMere(in: &shot, from: 0.63, to: 0.80, seed: 97)
+
+        drawLand(in: &shot, ridge: 0.80, rise: 0.02, waves: 1.3, phase: 0.6, color: colors.ground)
+        drawTufts(in: &shot, along: 0.80, rise: 0.02, waves: 1.3, phase: 0.6, count: 18, height: 0.022, seed: 101)
+        drawAnimal(in: &shot, .pig, feet: CGPoint(x: x(0.30), y: y(0.90)), width: x(0.15))
+    }
+
+    /// The stag, head on. The pig got spokes of light behind it because the pig is the whole
+    /// game; the stag gets the water it stands over and nothing else, because it is one
+    /// puzzle's worth of trouble rather than the reason for any of this.
+    private func drawTheStag(in context: inout GraphicsContext) {
+        let landed = easeOut(min(progress / 0.3, 1))
+        var shot = pushed(context, zoom: 1.14 - 0.11 * landed)
+
+        drawSky(in: &shot, horizon: y(0.50))
+        drawClouds(in: &shot, at: 0.22, drift: 0.01 * progress)
+        drawLand(in: &shot, ridge: 0.50, rise: 0.05, waves: 1.9, phase: 2.6, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.62, rise: 0.02, waves: 1.4, phase: 0.9, color: colors.ground)
+
+        drawMere(in: &shot, from: 0.68, to: 0.84, seed: 103)
+
+        drawLand(in: &shot, ridge: 0.84, rise: 0.016, waves: 1.2, phase: 1.8, color: colors.ground)
+        drawTufts(in: &shot, along: 0.84, rise: 0.016, waves: 1.2, phase: 1.8, count: 16, height: 0.022, seed: 107)
+
+        // Standing on the far bank and looking straight back at whoever is coming.
+        let breath = sin(progress * 2 * .pi * 1.2)
+        drawAnimal(
+            in: &shot,
+            .deer,
+            feet: CGPoint(x: x(0.5), y: y(0.66) - y(0.005 * breath)),
+            width: x(0.40),
+            squash: 1 + 0.015 * breath
+        )
+    }
+
+    /// The rule, drawn rather than written: both animals with the pen each of them is going
+    /// to need marked out round it in dashes, so the shape of the answer — two enclosures,
+    /// not one — is on screen before the player ever lays a piece.
+    private func drawBothOrNeither(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.06 - 0.03 * progress)
+
+        drawSky(in: &shot, horizon: y(0.40))
+        drawLand(in: &shot, ridge: 0.40, rise: 0.045, waves: 2.0, phase: 1.1, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.52, rise: 0.02, waves: 1.5, phase: 2.4, color: colors.ground)
+
+        let stag = CGPoint(x: x(0.66), y: y(0.585))
+        drawAnimal(in: &shot, .deer, feet: stag, width: x(0.115), shadow: 0.7)
+        drawGhostPen(in: &shot, round: stag, width: 0.42, height: 0.135, drop: 0.012)
+
+        drawMere(in: &shot, from: 0.62, to: 0.76, seed: 109)
+
+        drawLand(in: &shot, ridge: 0.76, rise: 0.018, waves: 1.3, phase: 0.4, color: colors.ground)
+        let pig = CGPoint(x: x(0.34), y: y(0.90))
+        drawAnimal(in: &shot, .pig, feet: pig, width: x(0.135))
+        drawGhostPen(in: &shot, round: pig, width: 0.46, height: 0.155, drop: 0.014)
+    }
+
+    // MARK: - The meadow held
+
+    /// Both of them shut in, on ground washed gold: the shape the last puzzle ends in, and
+    /// the only picture in the game where the two pens are seen holding at once.
+    private func drawBothPenned(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.04 + 0.04 * progress)
+
+        drawSky(in: &shot, horizon: y(0.40))
+        drawSun(in: &shot, at: CGPoint(x: x(0.22), y: y(0.30)), radius: x(0.08), rays: false)
+        drawLand(in: &shot, ridge: 0.40, rise: 0.045, waves: 2.0, phase: 1.1, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.52, rise: 0.02, waves: 1.5, phase: 2.4, color: colors.ground)
+
+        let stag = CGPoint(x: x(0.66), y: y(0.585))
+        drawPenWash(in: &shot, round: stag, width: 0.42, height: 0.135, drop: 0.012)
+        drawAnimal(in: &shot, .deer, feet: stag, width: x(0.115), shadow: 0.7)
+        drawPenFence(in: &shot, round: stag, width: 0.42, height: 0.135, drop: 0.012)
+
+        drawMere(in: &shot, from: 0.62, to: 0.76, seed: 109)
+
+        drawLand(in: &shot, ridge: 0.76, rise: 0.018, waves: 1.3, phase: 0.4, color: colors.ground)
+        let pig = CGPoint(x: x(0.34), y: y(0.90))
+        drawPenWash(in: &shot, round: pig, width: 0.46, height: 0.155, drop: 0.014)
+        drawAnimal(in: &shot, .pig, feet: pig, width: x(0.135))
+        drawPenFence(in: &shot, round: pig, width: 0.46, height: 0.155, drop: 0.014)
+    }
+
+    /// The stag on its own shore with the trail running away out of the picture. Whoever is
+    /// leaving is leaving; the stag was here before any of this and is staying.
+    private func drawTheStagStays(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.10 - 0.07 * progress)
+
+        drawSky(in: &shot, horizon: y(0.54))
+        drawSun(in: &shot, at: CGPoint(x: x(0.30), y: y(0.50)), radius: x(0.09), rays: false)
+        drawClouds(in: &shot, at: 0.26, drift: 0.012 * progress)
+        drawLand(in: &shot, ridge: 0.54, rise: 0.06, waves: 2.1, phase: 1.7, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.66, rise: 0.04, waves: 1.5, phase: 2.8, color: colors.canopy)
+        drawLand(in: &shot, ridge: 0.76, rise: 0.024, waves: 1.3, phase: 0.9, color: colors.ground)
+        drawTrail(in: &shot, from: 1.02, to: 0.77)
+        drawTufts(in: &shot, along: 0.76, rise: 0.024, waves: 1.3, phase: 0.9, count: 20, height: 0.018, seed: 113)
+
+        // Stood off the trail rather than on it, watching it go.
+        drawAnimal(in: &shot, .deer, feet: CGPoint(x: x(0.70), y: y(0.83)), width: x(0.185))
+
+        drawLand(in: &shot, ridge: 0.94, rise: 0.014, waves: 1.0, phase: 2.2, color: colors.foreground)
+        drawTufts(in: &shot, along: 0.94, rise: 0.014, waves: 1.0, phase: 2.2, count: 13, height: 0.03, seed: 127)
+    }
+
+    /// The whole meadow at once, from higher up than the map ever gets: the trail winding
+    /// from the barn at the bottom to the mere at the top, with a stop marked at every
+    /// puzzle along it. Nine fields, and the player has fenced all of them.
+    private func drawTheWholeMeadow(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.14 - 0.12 * progress)
+
+        drawSky(in: &shot, horizon: y(0.30))
+        drawLand(in: &shot, ridge: 0.30, rise: 0.04, waves: 2.2, phase: 1.5, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.40, rise: 0.03, waves: 1.7, phase: 2.7, color: colors.ground)
+
+        // The mere at the head of the trail, which is where the film before this one was.
+        drawMere(in: &shot, from: 0.36, to: 0.44, seed: 131)
+
+        let trail = meadowTrail()
+        shot.stroke(
+            trail,
+            with: .color(GamePalette.mudSpeckle.opacity(0.4)),
+            style: StrokeStyle(lineWidth: max(3, x(0.032)), lineCap: .round)
+        )
+        shot.stroke(
+            trail,
+            with: .color(GamePalette.mud),
+            style: StrokeStyle(lineWidth: max(2, x(0.024)), lineCap: .round)
+        )
+
+        // A stop for every puzzle, all of them held.
+        for stop in 0..<9 {
+            let along = Double(stop) / 8
+            let spot = meadowStop(along)
+            shot.fill(
+                circle(at: CGPoint(x: spot.x, y: spot.y + y(0.006)), radius: x(0.018)),
+                with: .color(.black.opacity(0.2))
+            )
+            shot.fill(circle(at: spot, radius: x(0.017)), with: .color(GamePalette.cream))
+            shot.fill(circle(at: spot, radius: x(0.010)), with: .color(GamePalette.pen))
+        }
+
+        drawBarn(in: &shot, at: 0.74, base: 0.93, width: 0.16)
+        drawTufts(in: &shot, along: 0.40, rise: 0.03, waves: 1.7, phase: 2.7, count: 18, height: 0.014, seed: 137)
+    }
+
+    /// The meadow from further out than that: a world, with a stag standing on it for a
+    /// mark. A world a player has finished is a world with something of its own left living
+    /// on it, which is why the stag was left there rather than brought along.
+    private func drawTheMeadowFromOut(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.16 - 0.14 * progress)
+
+        drawSpace(in: &shot)
+        drawWorld(
+            in: &shot,
+            at: CGPoint(x: x(0.5), y: y(0.60)),
+            radius: x(0.30),
+            lit: 1,
+            keeper: .deer
+        )
+    }
+
+    /// And another one out past it, coming alight. What is on it is nobody's business yet —
+    /// including this film's, which is why it is drawn as country under cloud and left
+    /// without a name.
+    private func drawSomewhereElse(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.02 + 0.05 * progress)
+
+        drawSpace(in: &shot)
+
+        // The meadow, done with and dropping back.
+        drawWorld(
+            in: &shot,
+            at: CGPoint(x: x(0.24), y: y(0.78)),
+            radius: x(0.15),
+            lit: 1,
+            keeper: .deer
+        )
+
+        // The next one, coming up out of the dark over the shot rather than simply being
+        // there: the light arriving is the whole point of the frame.
+        let waking = easeOut(min(progress / 0.75, 1))
+        drawWorld(
+            in: &shot,
+            at: CGPoint(x: x(0.68), y: y(0.38)),
+            radius: x(0.20),
+            lit: waking,
+            keeper: nil
+        )
+
+        // The road between them, drawn on as the far one lights.
+        var road = Path()
+        road.move(to: CGPoint(x: x(0.33), y: y(0.71)))
+        road.addQuadCurve(
+            to: CGPoint(x: x(0.58), y: y(0.46)),
+            control: CGPoint(x: x(0.52), y: y(0.68))
+        )
+        shot.stroke(
+            road,
+            with: .color(GamePalette.cream.opacity(0.32 * waking)),
+            style: StrokeStyle(lineWidth: max(1.5, x(0.006)), lineCap: .round, dash: [x(0.02), x(0.026)])
+        )
     }
 
     // MARK: - Sky
@@ -787,10 +1037,12 @@ private struct Film {
         )
     }
 
-    /// The pig, drawn the way every other screen in the game draws it. A character a player
-    /// is about to spend nine puzzles chasing has to be the same character here as there.
-    private func drawPig(
+    /// An animal, drawn the way every other screen in the game draws it. A character a
+    /// player is about to spend nine puzzles chasing has to be the same character here as
+    /// it is on the board.
+    private func drawAnimal(
         in context: inout GraphicsContext,
+        _ animal: Animal,
         feet: CGPoint,
         width pig: CGFloat,
         lean: Double = 0,
@@ -809,7 +1061,271 @@ private struct Film {
         pigContext.translateBy(x: feet.x, y: feet.y - pig * 0.5)
         pigContext.rotate(by: .degrees(lean))
         pigContext.scaleBy(x: 1 / CGFloat(squash), y: CGFloat(squash))
-        pigContext.draw(Text(verbatim: "🐷").font(.system(size: pig)), at: .zero, anchor: .center)
+        pigContext.draw(
+            Text(verbatim: animal.glyph).font(.system(size: pig)),
+            at: .zero,
+            anchor: .center
+        )
+    }
+
+    /// A band of water lying across the frame, silted along both banks and with the light
+    /// broken up on it. The same water a board is walled with, seen from the bank instead
+    /// of from above.
+    private func drawMere(
+        in context: inout GraphicsContext,
+        from top: Double,
+        to bottom: Double,
+        seed: UInt64
+    ) {
+        let near = ridgeLine(at: top, rise: 0.006, waves: 2.6, phase: 1.3)
+        let far = ridgeLine(at: bottom, rise: 0.005, waves: 2.0, phase: 2.9)
+        let start = -size.width
+        let end = size.width * 2
+
+        var water = Path()
+        water.move(to: CGPoint(x: start, y: near(start)))
+        var across = start
+        while across < end {
+            water.addLine(to: CGPoint(x: across, y: near(across)))
+            across += 8
+        }
+        water.addLine(to: CGPoint(x: end, y: near(end)))
+        water.addLine(to: CGPoint(x: end, y: far(end)))
+        while across > start {
+            water.addLine(to: CGPoint(x: across, y: far(across)))
+            across -= 8
+        }
+        water.addLine(to: CGPoint(x: start, y: far(start)))
+        water.closeSubpath()
+
+        // Silt laid down first and covered over by the water, so it shows only on the banks.
+        context.stroke(
+            water,
+            with: .color(GamePalette.shore.opacity(0.55)),
+            lineWidth: max(2, y(0.012))
+        )
+        context.fill(
+            water,
+            with: .linearGradient(
+                Gradient(colors: [GamePalette.waterDeep, GamePalette.water]),
+                startPoint: CGPoint(x: 0, y: y(top)),
+                endPoint: CGPoint(x: 0, y: y(bottom))
+            )
+        )
+
+        var scatter = Scatter(seed: seed)
+        var ripples = Path()
+        for _ in 0..<10 {
+            let level = y(scatter.next(in: (top + 0.012)...(bottom - 0.012)))
+            let span = x(0.08 + scatter.next() * 0.16)
+            let from = x(scatter.next() * 1.1 - 0.05)
+            ripples.move(to: CGPoint(x: from, y: level))
+            ripples.addQuadCurve(
+                to: CGPoint(x: from + span, y: level),
+                control: CGPoint(x: from + span / 2, y: level - y(0.006))
+            )
+        }
+        context.stroke(
+            ripples,
+            with: .color(GamePalette.waterRipple.opacity(0.5)),
+            style: StrokeStyle(lineWidth: max(1, y(0.003)), lineCap: .round)
+        )
+    }
+
+    /// The ground a pen would take in round an animal standing at `feet`.
+    private func penRect(round feet: CGPoint, width: Double, height: Double, drop: Double) -> Path {
+        Path(
+            roundedRect: CGRect(
+                x: feet.x - x(width) / 2,
+                y: feet.y + y(drop) - y(height),
+                width: x(width),
+                height: y(height)
+            ),
+            cornerRadius: x(0.025),
+            style: .continuous
+        )
+    }
+
+    /// The pen an animal is going to need, marked out round it in dashes: a plan rather
+    /// than a fence, which is the whole point of the shot it appears in.
+    private func drawGhostPen(
+        in context: inout GraphicsContext,
+        round feet: CGPoint,
+        width: Double,
+        height: Double,
+        drop: Double
+    ) {
+        context.stroke(
+            penRect(round: feet, width: width, height: height, drop: drop),
+            with: .color(GamePalette.cream.opacity(0.9)),
+            style: StrokeStyle(
+                lineWidth: max(2, x(0.009)),
+                lineCap: .round,
+                dash: [x(0.028), x(0.022)]
+            )
+        )
+    }
+
+    /// The ground inside a pen that holds, washed the same gold the board washes it.
+    private func drawPenWash(
+        in context: inout GraphicsContext,
+        round feet: CGPoint,
+        width: Double,
+        height: Double,
+        drop: Double
+    ) {
+        context.fill(
+            penRect(round: feet, width: width, height: height, drop: drop),
+            with: .color(GamePalette.pen.opacity(0.45))
+        )
+    }
+
+    /// The fencing round a pen that holds: dark timber with the light down the middle of it.
+    private func drawPenFence(
+        in context: inout GraphicsContext,
+        round feet: CGPoint,
+        width: Double,
+        height: Double,
+        drop: Double
+    ) {
+        let pen = penRect(round: feet, width: width, height: height, drop: drop)
+        context.stroke(pen, with: .color(GamePalette.post), lineWidth: max(3, x(0.017)))
+        context.stroke(pen, with: .color(GamePalette.picket), lineWidth: max(1.5, x(0.007)))
+    }
+
+    // MARK: - The meadow, and what is past it
+
+    /// The meadow's trail as one winding line, `along` running 0 at the barn to 1 at the
+    /// mere. The stops are taken off the same line, so a signpost cannot end up beside the
+    /// path it is supposed to stand on.
+    private func meadowStop(_ along: Double) -> CGPoint {
+        CGPoint(
+            x: x(0.5 + 0.26 * sin(along * .pi * 2.4 + 0.6)),
+            y: y(0.90 - 0.47 * along)
+        )
+    }
+
+    private func meadowTrail() -> Path {
+        var path = Path()
+        path.move(to: meadowStop(0))
+        var along = 0.0
+        while along < 1 {
+            along = min(along + 0.02, 1)
+            path.addLine(to: meadowStop(along))
+        }
+        return path
+    }
+
+    /// Out past the meadow: nothing but the dark, and the stars in it.
+    private func drawSpace(in context: inout GraphicsContext) {
+        context.fill(
+            Path(CGRect(
+                x: -size.width, y: -size.height,
+                width: size.width * 3, height: size.height * 3
+            )),
+            with: .radialGradient(
+                Gradient(colors: [colors.skyHorizon.opacity(0.45), colors.skyTop]),
+                center: CGPoint(x: x(0.5), y: y(0.55)),
+                startRadius: 0,
+                endRadius: max(size.width, size.height)
+            )
+        )
+
+        var scatter = Scatter(seed: 311)
+        for _ in 0..<90 {
+            let spot = CGPoint(
+                x: x(scatter.next() * 1.2 - 0.1),
+                y: y(scatter.next() * 1.2 - 0.1)
+            )
+            let radius = x(0.0025) * CGFloat(0.6 + scatter.next() * 1.5)
+            context.fill(
+                circle(at: spot, radius: radius),
+                with: .color(.white.opacity(0.25 + scatter.next() * 0.55))
+            )
+        }
+    }
+
+    /// A world seen from outside it: a round patch of country with fields and water on it,
+    /// and whatever was left living there standing on top of it for a mark.
+    ///
+    /// `lit` is how much of it has come out of the dark. A world nobody has been to yet is
+    /// left under cloud at 0, which is all this film has to say about the next one.
+    private func drawWorld(
+        in context: inout GraphicsContext,
+        at centre: CGPoint,
+        radius: CGFloat,
+        lit: Double,
+        keeper: Animal?
+    ) {
+        context.fill(
+            circle(at: centre, radius: radius * 1.9),
+            with: .radialGradient(
+                Gradient(colors: [
+                    GamePalette.pen.opacity(0.22 * lit),
+                    GamePalette.pen.opacity(0)
+                ]),
+                center: centre,
+                startRadius: radius * 0.9,
+                endRadius: radius * 1.9
+            )
+        )
+
+        let ball = circle(at: centre, radius: radius)
+        context.fill(ball, with: .color(GamePalette.beyond.opacity(0.3 + 0.6 * lit)))
+
+        var ground = context
+        ground.clip(to: ball)
+
+        // Fields on it, and a river through them: enough to read as country rather than
+        // as a green marble.
+        var scatter = Scatter(seed: 419)
+        for _ in 0..<7 {
+            let patch = CGRect(
+                x: centre.x - radius + radius * 2 * CGFloat(scatter.next()),
+                y: centre.y - radius + radius * 2 * CGFloat(scatter.next()),
+                width: radius * CGFloat(0.3 + scatter.next() * 0.5),
+                height: radius * CGFloat(0.2 + scatter.next() * 0.35)
+            )
+            ground.fill(
+                Path(roundedRect: patch, cornerRadius: radius * 0.1),
+                with: .color(.black.opacity(0.12 * lit))
+            )
+        }
+
+        var river = Path()
+        river.move(to: CGPoint(x: centre.x - radius, y: centre.y + radius * 0.2))
+        river.addQuadCurve(
+            to: CGPoint(x: centre.x + radius, y: centre.y - radius * 0.1),
+            control: CGPoint(x: centre.x, y: centre.y + radius * 0.7)
+        )
+        ground.stroke(
+            river,
+            with: .color(GamePalette.water.opacity(0.7 * lit)),
+            style: StrokeStyle(lineWidth: radius * 0.13, lineCap: .round)
+        )
+
+        // Lit down one side, like everything else the game draws.
+        ground.fill(
+            ball,
+            with: .radialGradient(
+                Gradient(colors: [.white.opacity(0.16 * lit), .black.opacity(0.5)]),
+                center: CGPoint(x: centre.x - radius * 0.35, y: centre.y - radius * 0.4),
+                startRadius: radius * 0.2,
+                endRadius: radius * 1.5
+            )
+        )
+
+        // Whatever has not come out of the dark yet stays under cloud.
+        context.fill(ball, with: .color(colors.skyTop.opacity(0.66 * (1 - lit))))
+
+        guard let keeper else { return }
+        drawAnimal(
+            in: &context,
+            keeper,
+            feet: CGPoint(x: centre.x, y: centre.y - radius * 0.8),
+            width: radius * 0.6,
+            shadow: 0.35
+        )
     }
 
     /// Puffs of dust hanging where the pig last pushed off.
@@ -913,26 +1429,30 @@ private struct Film {
     }
 }
 
-#Preview("First light") {
-    OpeningView(still: 1.4)
-}
+#Preview("Opening · first light") { CutSceneView(.opening(), still: 1.4) }
 
-#Preview("The open gate") {
-    OpeningView(still: 4.0)
-}
+#Preview("Opening · the gate") { CutSceneView(.opening(), still: 4.0) }
 
-#Preview("The pig") {
-    OpeningView(still: 7.0)
-}
+#Preview("Opening · the pig") { CutSceneView(.opening(), still: 7.0) }
 
-#Preview("Away") {
-    OpeningView(still: 9.6)
-}
+#Preview("Opening · away") { CutSceneView(.opening(), still: 9.6) }
 
-#Preview("Fence it in") {
-    OpeningView(still: 12.0)
-}
+#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 12.0) }
 
-#Preview("Played through") {
-    OpeningView {}
-}
+#Preview("Stag Mere · the mere") { CutSceneView(.stagMere(), still: 1.3) }
+
+#Preview("Stag Mere · the stag") { CutSceneView(.stagMere(), still: 3.9) }
+
+#Preview("Stag Mere · both or neither") { CutSceneView(.stagMere(), still: 6.6) }
+
+#Preview("Meadow held · both penned") { CutSceneView(.theMeadowHeld(), still: 1.3) }
+
+#Preview("Meadow held · the stag stays") { CutSceneView(.theMeadowHeld(), still: 3.8) }
+
+#Preview("Meadow held · the whole meadow") { CutSceneView(.theMeadowHeld(), still: 6.6) }
+
+#Preview("Meadow held · from out") { CutSceneView(.theMeadowHeld(), still: 9.4) }
+
+#Preview("Meadow held · somewhere else") { CutSceneView(.theMeadowHeld(), still: 12.6) }
+
+#Preview("Played through") { CutSceneView(.opening()) {} }

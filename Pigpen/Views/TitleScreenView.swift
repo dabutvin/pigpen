@@ -68,7 +68,7 @@ struct TitleScreenView: View {
         // The map is pushed as the film comes down rather than from inside it, so the two
         // never fight over the screen.
         .fullScreenCover(isPresented: $showsOpening, onDismiss: { openTheMeadow() }) {
-            OpeningView { endTheOpening() }
+            CutSceneView(.opening()) { endTheOpening() }
         }
         .onAppear {
             // The map keeps its own copy of the stars while it is up; read them back so a
@@ -263,7 +263,7 @@ struct TitleScreenView: View {
     /// The film is over, watched or skipped. It has had its one showing either way, and the
     /// meadow is what it was always leading to.
     private func endTheOpening() {
-        progress.markTheOpeningSeen()
+        progress.markPlayed(.opening)
         openingLedToTheMap = true
         showsOpening = false
     }

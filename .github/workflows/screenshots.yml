@@ -118,15 +118,23 @@ jobs:
           capture 11 sour -sour
           capture 13 boss -boss
           capture 15 settings -settings
-          # The opening film, a shot at a time. Each argument stops the clock on one shot,
-          # so these come out the same on every run rather than wherever the film happened
-          # to have got to. It is lit at sunrise whatever the phone is set to, so the two
+          # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
+          # so these come out the same on every run rather than wherever a film happened to
+          # have got to. They are lit by the shot rather than by the phone, so the two
           # appearances of each are meant to match.
           capture 17 opening_first_light -opening
           capture 19 opening_gate -opening-gate
           capture 21 opening_pig -opening-pig
           capture 23 opening_away -opening-away
           capture 25 opening_fence -opening-fence
+          capture 27 mere_water -mere
+          capture 29 mere_stag -mere-stag
+          capture 31 mere_both -mere-both
+          capture 33 held_penned -held-penned
+          capture 35 held_stag -held-stag
+          capture 37 held_meadow -held-meadow
+          capture 39 held_world -held-world
+          capture 41 held_beyond -held-beyond
 
           xcrun simctl status_bar "$UDID" clear
 
