@@ -268,8 +268,7 @@ struct WorldMapView: View {
 
             // A map with something to say about itself says it before the board comes up,
             // not over the top of one.
-            if let film = CutScene.Name(briefingFor: world[index].id),
-               progress.isBriefingDue(forLevelAt: index) {
+            if let film = progress.briefingDue(forLevelAt: index) {
                 briefing = Briefing(stop: index, film: film)
             } else {
                 playing = index

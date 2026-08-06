@@ -206,12 +206,15 @@ final class WorldProgress {
         !hasPlayed(.opening) && totalStars == 0
     }
 
-    /// Whether the film that sets up a level is owed before it opens. Only the boss has
-    /// one, since it is the only map that changes the rules rather than the ground.
-    func isBriefingDue(forLevelAt index: Int) -> Bool {
-        guard world.nodes.indices.contains(index) else { return false }
-        guard let briefing = CutScene.Name(briefingFor: world[index].id) else { return false }
-        return !hasPlayed(briefing)
+    /// The film owed before a level opens, if there is one still to play. Only the boss
+    /// has one, since it is the only map that changes the rules rather than the ground.
+    ///
+    /// Returns the film rather than a yes or no so that asking whether to stop and asking
+    /// what to play are one question. Two would be two things to keep in agreement.
+    func briefingDue(forLevelAt index: Int) -> CutScene.Name? {
+        guard world.nodes.indices.contains(index) else { return nil }
+        guard let briefing = CutScene.Name(briefingFor: world[index].id) else { return nil }
+        return hasPlayed(briefing) ? nil : briefing
     }
 
     /// Every pen in the world held, which is the only thing that earns the last film.
