@@ -8,6 +8,8 @@ import UIKit
 /// meadow scrolls along behind — which is the only way the map ever moves on its own.
 /// Everything already beaten stays open, so a level can be gone back to and played again
 /// for a better rating; the stars on a signpost are the best that level has ever given up.
+/// Coming back from one of those replays leaves the pig standing at it rather than marching
+/// it back up the trail, since nothing new was opened to march it to.
 @MainActor
 struct WorldMapView: View {
     @Environment(\.dismiss) private var dismiss
@@ -304,20 +306,25 @@ struct WorldMapView: View {
         farewell = false
     }
 
-    /// Walks the pig on to wherever the world has got to, once a puzzle has been played
-    /// and put away. This is what a player sees for beating a level: the pig sets off up
-    /// a trail that was not there a moment ago, and the mist pulls back off the next stop.
+    /// Walks the pig on once a puzzle has been played and put away — but only if playing it
+    /// opened new ground. This is what a player sees for beating a level: the pig sets off
+    /// up a trail that was not there a moment ago, and the mist pulls back off the next stop.
+    ///
+    /// A replay of a level already beaten opens nothing, so the pig stays at the signpost
+    /// the player walked it down to. Being dragged back up the trail every time you go back
+    /// for a better rating would undo the walk you just asked for.
     private func follow() async {
-        let stop = progress.frontier
-        let opened = stop > frontierWhenOpened
-        guard abs(Double(stop) - pigStop) > 0.01 else { return }
+        let onwards = WalkAfterALevel(
+            standingAt: pigStop,
+            frontierBefore: frontierWhenOpened,
+            frontierNow: progress.frontier
+        )
+        guard let stop = onwards.destination else { return }
 
         // Let the puzzle screen finish sliding away first, so the walk is not missed.
         try? await Task.sleep(for: .milliseconds(520))
-        await walk(to: Double(stop), secondsPerStop: 0.9)
-        if opened {
-            celebrate(stop)
-        }
+        await walk(to: stop, secondsPerStop: 0.9)
+        celebrate(Int(stop))
     }
 
     private func walk(to stop: Double, secondsPerStop: Double) async {
@@ -383,6 +390,36 @@ struct WorldMapView: View {
         withAnimation(.easeInOut(duration: order.seconds)) {
             scroller.scrollTo(order.stop, anchor: .center)
         }
+    }
+}
+
+/// Where the pig goes when a level has been played and put away.
+///
+/// The map only ever moves the pig on its own for new ground. Beating the level the trail
+/// had got to opens the next stop, and the pig walks up to it; so does a star won anywhere
+/// on the trail that finally pays a boss its toll, since that opens a stop too.
+///
+/// Everything else leaves the pig where the player put it. Going back down the trail for a
+/// better rating on a level already beaten opens nothing, and neither does a run at a level
+/// that got away — in both cases the player chose that signpost, walked the pig to it, and
+/// is left standing at it, free to have another go or to pick where to go next themselves.
+struct WalkAfterALevel {
+    private let standingTolerance = 0.01
+
+    /// Where the pig is standing, which is the level just played.
+    let standingAt: Double
+    /// How far the world had been opened when that level was started.
+    let frontierBefore: Int
+    /// How far it is open now.
+    let frontierNow: Int
+
+    /// Whether playing the level opened new ground.
+    var openedNewGround: Bool { frontierNow > frontierBefore }
+
+    /// The stop to walk to, or nothing at all if the pig is staying where it is.
+    var destination: Double? {
+        guard openedNewGround, abs(Double(frontierNow) - standingAt) > standingTolerance else { return nil }
+        return Double(frontierNow)
     }
 }
 
