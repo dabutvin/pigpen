@@ -97,7 +97,8 @@ the last is the boss.
 - **Stars stay on the signpost.** Each one shows the best you have ever done there, so a
   level replayed badly costs you nothing and a level replayed well is worth going back for.
 - **You can go back down the trail** to any level already open, and the pig trots down to
-  it before the puzzle opens.
+  it before the puzzle opens — and stays there when you come back out. Only something newly
+  opened moves the pig on its own, so a replay leaves you standing where you chose to be.
 
 | # | Level | Pieces | On the ground | Best pen |
 |---|---|---|---|---|
