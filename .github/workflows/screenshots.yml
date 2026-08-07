@@ -67,31 +67,87 @@ jobs:
           if grep -q "BUILD FAILED" build.log; then exit 1; fi
 
       # After the build rather than beside it: booting takes every core a runner
-      # has, and sharing them made the build four times slower for no gain. Two
-      # devices rather than one, though: the shooting below is a queue of
-      # independent launches, and the second device costs a boot rather than a
-      # cold start because the runtime's shared cache is built once and shared.
-      - name: Wake up the simulators
+      # has, and sharing them made the build four times slower for no gain.
+      - name: Wake up the simulator
         id: simulator
         uses: ./.github/actions/simulator
-        with:
-          count: '2'
 
       - name: Capture screenshots
+        env:
+          UDID: ${{ steps.simulator.outputs.udid }}
         run: |
           set -euo pipefail
+          mkdir -p screenshots
+
+          BUNDLE_ID="com.pigpen.app"
 
           APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
           if [ -z "$APP_PATH" ]; then
             echo "ERROR: Could not find built .app bundle"
             exit 1
           fi
+          echo "Installing: $APP_PATH"
+          xcrun simctl install "$UDID" "$APP_PATH"
 
-          bash .github/scripts/capture-screenshots.sh \
-            screenshots \
-            com.pigpen.app \
-            "$APP_PATH" \
-            ${{ steps.simulator.outputs.udids }}
+          # Each screen is shot in both appearances off a single launch: the views
+          # read the colour scheme out of the environment, so flipping the
+          # simulator under a running app re-draws it, and the two shots then show
+          # the same board rather than two rolls of the dice. `-map`, `-puzzle`,
+          # `-orchard`, `-sour`, `-boss`, `-tutorial` and `-settings` are launch arguments
+          # the app understands, so the world map, the boards, the practice pen and the
+          # settings sheet can be captured without tapping through the title screen.
+          capture() {
+            local order="$1"
+            local screen="$2"
+            shift 2
+
+            local light dark
+            light=$(printf 'screenshots/%02d_%s_light.png' "$order" "$screen")
+            dark=$(printf 'screenshots/%02d_%s_dark.png' "$((order + 1))" "$screen")
+
+            xcrun simctl ui "$UDID" appearance light
+            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
+            sleep 3
+            xcrun simctl io "$UDID" screenshot "$light"
+
+            xcrun simctl ui "$UDID" appearance dark
+            sleep 2
+            xcrun simctl io "$UDID" screenshot "$dark"
+
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            echo "Captured: $light, $dark"
+          }
+
+          capture 1 title
+          capture 3 tutorial -tutorial
+          capture 5 map -map
+          capture 7 puzzle -puzzle
+          capture 9 orchard -orchard
+          capture 11 sour -sour
+          capture 13 boss -boss
+          capture 15 settings -settings
+          # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
+          # so these come out the same on every run rather than wherever a film happened to
+          # have got to. They are lit by the shot rather than by the phone, so the two
+          # appearances of each are meant to match.
+          capture 17 opening_first_light -opening
+          capture 19 opening_gate -opening-gate
+          capture 21 opening_pig -opening-pig
+          capture 23 opening_away -opening-away
+          capture 25 opening_fence -opening-fence
+          capture 27 mere_water -mere
+          capture 29 mere_stag -mere-stag
+          capture 31 mere_both -mere-both
+          capture 33 held_penned -held-penned
+          capture 35 held_stag -held-stag
+          capture 37 held_meadow -held-meadow
+          capture 39 held_world -held-world
+          capture 41 held_beyond -held-beyond
+
+          xcrun simctl status_bar "$UDID" clear
+
+          echo "All screenshots captured:"
+          ls -la screenshots/
 
       - name: Upload screenshots artifact
         uses: actions/upload-artifact@v4
@@ -158,8 +214,8 @@ jobs:
 
             // A blob apiece, several at a time, and then one commit holding all of
             // them. Writing the files one at a time through the contents API meant
-            // forty-odd round trips and forty-odd commits, and it was the best part
-            // of a minute and a half of the job.
+            // forty-two round trips and forty-two commits, and it was a minute and
+            // a half of the job; this is five seconds of it.
             const blobs = await inParallel(files, 8, async (file) => {
               const content = fs.readFileSync(path.join(screenshotsDir, file));
               const { data } = await github.rest.git.createBlob({

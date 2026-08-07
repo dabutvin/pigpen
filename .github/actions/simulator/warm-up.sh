@@ -20,9 +20,7 @@ START=$SECONDS
 
 mkdir -p "$WORK"
 
-# Several devices can be warming at once, so every line says which one it is
-# about; without that the timings of two boots read as one very odd boot.
-log() { printf '[%4ds %s] %s\n' "$((SECONDS - START))" "${UDID: -4}" "$*"; }
+log() { printf '[%4ds] %s\n' "$((SECONDS - START))" "$*"; }
 
 # simctl occasionally sits on a cold simulator for as long as you will let it.
 # Anything here is worth waiting a while for and nothing here is worth waiting
