@@ -126,23 +126,51 @@ jobs:
           capture 11 sour -sour
           capture 13 boss -boss
           capture 15 settings -settings
+
+          # A cut scene is lit by the shot rather than by the phone, so both
+          # appearances of one were the same picture twice and only one of them is
+          # taken now — about forty-five seconds off this step. The phone is put into
+          # light once here rather than inside `scene`, so that what comes out is the
+          # shot that used to be filed as the light one and not whatever appearance
+          # the screen above happened to leave behind.
+          xcrun simctl ui "$UDID" appearance light
+
+          # The file is marked `_scene` rather than `_light` so that nothing reads it
+          # as half of a pair, and the numbering is left as it was — odd numbers, with
+          # the even one beside each still free — so that these keep their order and a
+          # second shot can go back if one is ever wanted.
+          scene() {
+            local order="$1"
+            local screen="$2"
+            shift 2
+
+            local shot
+            shot=$(printf 'screenshots/%02d_%s_scene.png' "$order" "$screen")
+
+            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
+            sleep 3
+            xcrun simctl io "$UDID" screenshot "$shot"
+
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            echo "Captured: $shot"
+          }
+
           # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
           # so these come out the same on every run rather than wherever a film happened to
-          # have got to. They are lit by the shot rather than by the phone, so the two
-          # appearances of each are meant to match.
-          capture 17 opening_first_light -opening
-          capture 19 opening_gate -opening-gate
-          capture 21 opening_pig -opening-pig
-          capture 23 opening_away -opening-away
-          capture 25 opening_fence -opening-fence
-          capture 27 mere_water -mere
-          capture 29 mere_stag -mere-stag
-          capture 31 mere_both -mere-both
-          capture 33 held_penned -held-penned
-          capture 35 held_stag -held-stag
-          capture 37 held_meadow -held-meadow
-          capture 39 held_world -held-world
-          capture 41 held_beyond -held-beyond
+          # have got to.
+          scene 17 opening_first_light -opening
+          scene 19 opening_gate -opening-gate
+          scene 21 opening_pig -opening-pig
+          scene 23 opening_away -opening-away
+          scene 25 opening_fence -opening-fence
+          scene 27 mere_water -mere
+          scene 29 mere_stag -mere-stag
+          scene 31 mere_both -mere-both
+          scene 33 held_penned -held-penned
+          scene 35 held_stag -held-stag
+          scene 37 held_meadow -held-meadow
+          scene 39 held_world -held-world
+          scene 41 held_beyond -held-beyond
 
           xcrun simctl status_bar "$UDID" clear
 
@@ -287,24 +315,39 @@ jobs:
             let body = `## 📱 App Screenshots\n\n`;
             body += `> Automatically captured from commit \`${commitSha}\` on **${pr.head.ref}**\n\n`;
 
-            // Screenshots are named <order>_<screen>_<appearance>.png, so each screen
-            // gets its own light/dark row.
+            // A screen the phone lights is named <order>_<screen>_<appearance>.png and
+            // gets its own light/dark row. A cut scene is lit by the shot rather than by
+            // the phone, so it is photographed once and named <order>_<screen>_scene.png,
+            // and gets a single picture.
             const screens = [];
             const loose = [];
-            for (const img of images) {
-              const match = img.name.match(/^\d+_(.+)_(light|dark)\.png$/);
-              if (!match) { loose.push(img); continue; }
-              const [, name, appearance] = match;
+            const screenNamed = (name) => {
               let screen = screens.find(s => s.name === name);
               if (!screen) { screen = { name }; screens.push(screen); }
-              screen[appearance] = img.url;
+              return screen;
+            };
+            for (const img of images) {
+              const pair = img.name.match(/^\d+_(.+)_(light|dark)\.png$/);
+              if (pair) { screenNamed(pair[1])[pair[2]] = img.url; continue; }
+              const scene = img.name.match(/^\d+_(.+)_scene\.png$/);
+              if (scene) { screenNamed(scene[1]).scene = img.url; continue; }
+              loose.push(img);
             }
 
-            const cell = (url) => url ? `<img src="${url}?v=${cacheBust}" width="300" />` : '—';
+            const shot = (url) => `<img src="${url}?v=${cacheBust}" width="300" />`;
+            const cell = (url) => url ? shot(url) : '—';
+
+            if (screens.some(s => s.scene)) {
+              body += `> The cut scenes are lit by the shot rather than by the phone, so each is shown once.\n\n`;
+            }
 
             for (const screen of screens) {
               const label = screen.name.replace(/_/g, ' ');
               body += `### ${label.charAt(0).toUpperCase()}${label.slice(1)}\n\n`;
+              if (screen.scene) {
+                body += `${shot(screen.scene)}\n\n`;
+                continue;
+              }
               body += `| Light Mode | Dark Mode |\n`;
               body += `|:---:|:---:|\n`;
               body += `| ${cell(screen.light)} | ${cell(screen.dark)} |\n\n`;
