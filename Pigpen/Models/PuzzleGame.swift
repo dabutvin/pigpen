@@ -85,12 +85,17 @@ final class PuzzleGame {
         return level.victoryLaps(inside: pen)
     }
 
+    /// What the map makes of the pen the animals have actually been let loose in: its
+    /// stars, and whether it is the best pen there is. Nothing is scored until the gate
+    /// has been opened.
+    var verdict: PenVerdict? {
+        guard case .penned(let pen) = phase else { return nil }
+        return level.verdict(forScore: level.tally(for: pen).score)
+    }
+
     /// The stars for the pen the animals have actually been let loose in. Nothing is
     /// scored until the gate has been opened.
-    var starRating: Int? {
-        guard case .penned(let pen) = phase else { return nil }
-        return level.starRating(forScore: level.tally(for: pen).score)
-    }
+    var starRating: Int? { verdict?.stars }
 
     /// Whether there is a change to the field to take back. Nothing can be undone while
     /// the animals are out; fetch them back first.

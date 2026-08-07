@@ -81,8 +81,8 @@ struct WorldMapView: View {
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { index in
-            PuzzleView(level: world[index].level) { stars in
-                progress.record(stars: stars, for: world[index].id)
+            PuzzleView(level: world[index].level) { verdict in
+                progress.record(verdict, for: world[index].id)
             }
         }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
@@ -165,6 +165,7 @@ struct WorldMapView: View {
                         name: world[index].level.name,
                         stars: progress.stars(at: index),
                         standing: standing(at: index),
+                        hasTheBestPen: progress.hasTheBestPen(at: index),
                         celebrating: unveiled == index
                     )
                 }
