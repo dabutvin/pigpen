@@ -16,11 +16,25 @@ inputs:
       and the display grab. Jobs that only run tests can leave this off.
     required: false
     default: 'true'
+  count:
+    description: >
+      How many simulators to ready. Anything past the first is a clone of it, so
+      every device is the same model and shots off any of them are the same size.
+      Work that is a queue of independent launches — photographing one screen
+      after another — can be dealt round several devices and finish in a
+      fraction of the time, and the second device is cheap because the runtime's
+      shared cache is built once and shared. Extras are best effort: whatever
+      does not come up is simply left out of `udids`.
+    required: false
+    default: '1'
 
 outputs:
   udid:
-    description: Identifier of the chosen simulator, for `-destination "id=..."`
+    description: Identifier of the first simulator, for `-destination "id=..."`
     value: ${{ steps.pick.outputs.udid }}
+  udids:
+    description: Identifiers of every simulator that came up, space separated
+    value: ${{ steps.warm.outputs.udids }}
   device:
     description: Name of the chosen simulator, for the logs
     value: ${{ steps.pick.outputs.device }}
@@ -51,13 +65,59 @@ runs:
         DEVICE=$(sed -E 's/^ *(.*) \(([0-9A-Fa-f-]{36})\).*/\1/' <<< "$LINE")
         UDID=$(sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/' <<< "$LINE")
         echo "Chose simulator: $DEVICE ($UDID)"
+
+        # Cloning is only allowed while the source is shut down, which on a fresh
+        # runner it is, so the extras have to be made before anything is booted.
+        UDIDS="$UDID"
+        for ((i = 2; i <= ${{ inputs.count }}; i++)); do
+          CLONE=$(xcrun simctl clone "$UDID" "$DEVICE $i" 2>/dev/null || true)
+          if [[ "$CLONE" =~ ^[0-9A-Fa-f-]{36}$ ]]; then
+            echo "Cloned a second $DEVICE ($CLONE)"
+            UDIDS="$UDIDS $CLONE"
+          else
+            echo "Could not clone $DEVICE; carrying on with what there is"
+          fi
+        done
+
         echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
         echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+        echo "picked=$UDIDS" >> "$GITHUB_OUTPUT"
 
-    - shell: bash
+    - id: warm
+      shell: bash
       run: |
-        bash "${{ github.action_path }}/warm-up.sh" \
-          "${{ steps.pick.outputs.udid }}" \
-          "${{ github.action_path }}/stub" \
-          "$RUNNER_TEMP/simulator" \
-          "${{ inputs.display }}"
+        set -uo pipefail
+
+        # Every device warms at once. The expensive part of the first one — the
+        # runtime's shared cache — is built once and shared, so the others cost
+        # little more than their own boot.
+        PIDS=()
+        IDS=()
+        for UDID in ${{ steps.pick.outputs.picked }}; do
+          bash "${{ github.action_path }}/warm-up.sh" \
+            "$UDID" \
+            "${{ github.action_path }}/stub" \
+            "$RUNNER_TEMP/simulator/$UDID" \
+            "${{ inputs.display }}" &
+          PIDS+=("$!")
+          IDS+=("$UDID")
+        done
+
+        READY=()
+        for i in "${!PIDS[@]}"; do
+          if wait "${PIDS[$i]}"; then
+            READY+=("${IDS[$i]}")
+          else
+            echo "${IDS[$i]} did not come up; leaving it out"
+          fi
+        done
+
+        # The first device is the one every caller falls back on, so it is the
+        # only one worth failing the job over.
+        if [[ " ${READY[*]} " != *" ${{ steps.pick.outputs.udid }} "* ]]; then
+          echo "ERROR: the simulator never came up"
+          exit 1
+        fi
+
+        echo "Ready: ${READY[*]}"
+        echo "udids=${READY[*]}" >> "$GITHUB_OUTPUT"

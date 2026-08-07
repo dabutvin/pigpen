@@ -67,87 +67,31 @@ jobs:
           if grep -q "BUILD FAILED" build.log; then exit 1; fi
 
       # After the build rather than beside it: booting takes every core a runner
-      # has, and sharing them made the build four times slower for no gain.
-      - name: Wake up the simulator
+      # has, and sharing them made the build four times slower for no gain. Two
+      # devices rather than one, though: the shooting below is a queue of
+      # independent launches, and the second device costs a boot rather than a
+      # cold start because the runtime's shared cache is built once and shared.
+      - name: Wake up the simulators
         id: simulator
         uses: ./.github/actions/simulator
+        with:
+          count: '2'
 
       - name: Capture screenshots
-        env:
-          UDID: ${{ steps.simulator.outputs.udid }}
         run: |
           set -euo pipefail
-          mkdir -p screenshots
-
-          BUNDLE_ID="com.pigpen.app"
 
           APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
           if [ -z "$APP_PATH" ]; then
             echo "ERROR: Could not find built .app bundle"
             exit 1
           fi
-          echo "Installing: $APP_PATH"
-          xcrun simctl install "$UDID" "$APP_PATH"
 
-          # Each screen is shot in both appearances off a single launch: the views
-          # read the colour scheme out of the environment, so flipping the
-          # simulator under a running app re-draws it, and the two shots then show
-          # the same board rather than two rolls of the dice. `-map`, `-puzzle`,
-          # `-orchard`, `-sour`, `-boss`, `-tutorial` and `-settings` are launch arguments
-          # the app understands, so the world map, the boards, the practice pen and the
-          # settings sheet can be captured without tapping through the title screen.
-          capture() {
-            local order="$1"
-            local screen="$2"
-            shift 2
-
-            local light dark
-            light=$(printf 'screenshots/%02d_%s_light.png' "$order" "$screen")
-            dark=$(printf 'screenshots/%02d_%s_dark.png' "$((order + 1))" "$screen")
-
-            xcrun simctl ui "$UDID" appearance light
-            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
-            sleep 3
-            xcrun simctl io "$UDID" screenshot "$light"
-
-            xcrun simctl ui "$UDID" appearance dark
-            sleep 2
-            xcrun simctl io "$UDID" screenshot "$dark"
-
-            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
-            echo "Captured: $light, $dark"
-          }
-
-          capture 1 title
-          capture 3 tutorial -tutorial
-          capture 5 map -map
-          capture 7 puzzle -puzzle
-          capture 9 orchard -orchard
-          capture 11 sour -sour
-          capture 13 boss -boss
-          capture 15 settings -settings
-          # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
-          # so these come out the same on every run rather than wherever a film happened to
-          # have got to. They are lit by the shot rather than by the phone, so the two
-          # appearances of each are meant to match.
-          capture 17 opening_first_light -opening
-          capture 19 opening_gate -opening-gate
-          capture 21 opening_pig -opening-pig
-          capture 23 opening_away -opening-away
-          capture 25 opening_fence -opening-fence
-          capture 27 mere_water -mere
-          capture 29 mere_stag -mere-stag
-          capture 31 mere_both -mere-both
-          capture 33 held_penned -held-penned
-          capture 35 held_stag -held-stag
-          capture 37 held_meadow -held-meadow
-          capture 39 held_world -held-world
-          capture 41 held_beyond -held-beyond
-
-          xcrun simctl status_bar "$UDID" clear
-
-          echo "All screenshots captured:"
-          ls -la screenshots/
+          bash .github/scripts/capture-screenshots.sh \
+            screenshots \
+            com.pigpen.app \
+            "$APP_PATH" \
+            ${{ steps.simulator.outputs.udids }}
 
       - name: Upload screenshots artifact
         uses: actions/upload-artifact@v4
@@ -191,32 +135,19 @@ jobs:
               }
             }
 
-            async function uploadFile(filePath, targetPath) {
-              const content = fs.readFileSync(filePath);
-              const base64 = content.toString('base64');
-
-              let sha;
-              try {
-                const existing = await github.rest.repos.getContent({
-                  owner, repo, path: targetPath, ref: branch
-                });
-                sha = existing.data.sha;
-              } catch (e) {
-                if (e.status !== 404) throw e;
-              }
-
-              const params = {
-                owner, repo,
-                path: targetPath,
-                message: `Update screenshot for PR #${prNumber}`,
-                content: base64,
-                branch
-              };
-              if (sha) params.sha = sha;
-
-              await github.rest.repos.createOrUpdateFileContents(params);
-              const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${targetPath}`;
-              return rawUrl;
+            // Run `worker` over `items`, `limit` of them in flight at a time.
+            async function inParallel(items, limit, worker) {
+              const results = new Array(items.length);
+              let next = 0;
+              await Promise.all(
+                Array.from({ length: Math.min(limit, items.length) }, async () => {
+                  while (next < items.length) {
+                    const i = next++;
+                    results[i] = await worker(items[i], i);
+                  }
+                })
+              );
+              return results;
             }
 
             await ensureBranch();
@@ -225,14 +156,69 @@ jobs:
               .filter(f => f.endsWith('.png'))
               .sort();
 
-            const images = [];
-            for (const file of files) {
-              const filePath = path.join(screenshotsDir, file);
-              const targetPath = `pr-${prNumber}/${file}`;
-              core.info(`Uploading ${file}...`);
-              const url = await uploadFile(filePath, targetPath);
-              images.push({ name: file, url });
+            // A blob apiece, several at a time, and then one commit holding all of
+            // them. Writing the files one at a time through the contents API meant
+            // forty-odd round trips and forty-odd commits, and it was the best part
+            // of a minute and a half of the job.
+            const blobs = await inParallel(files, 8, async (file) => {
+              const content = fs.readFileSync(path.join(screenshotsDir, file));
+              const { data } = await github.rest.git.createBlob({
+                owner, repo,
+                content: content.toString('base64'),
+                encoding: 'base64'
+              });
+              core.info(`Uploaded ${file}`);
+              return {
+                path: `pr-${prNumber}/${file}`,
+                mode: '100644',
+                type: 'blob',
+                sha: data.sha
+              };
+            });
+
+            // Every pull request writes to this one branch, so the commit is built
+            // on whatever the tip is at the moment it lands. If somebody else's run
+            // got there first, build it again on top of theirs rather than over it.
+            async function commitShots() {
+              const ref = await github.rest.git.getRef({
+                owner, repo, ref: `heads/${branch}`
+              });
+              const parent = ref.data.object.sha;
+              const parentCommit = await github.rest.git.getCommit({
+                owner, repo, commit_sha: parent
+              });
+              const tree = await github.rest.git.createTree({
+                owner, repo,
+                base_tree: parentCommit.data.tree.sha,
+                tree: blobs
+              });
+              const commit = await github.rest.git.createCommit({
+                owner, repo,
+                message: `Update screenshots for PR #${prNumber}`,
+                tree: tree.data.sha,
+                parents: [parent]
+              });
+              await github.rest.git.updateRef({
+                owner, repo,
+                ref: `heads/${branch}`,
+                sha: commit.data.sha
+              });
             }
+
+            for (let attempt = 1; ; attempt++) {
+              try {
+                await commitShots();
+                break;
+              } catch (e) {
+                if (e.status !== 422 || attempt === 5) throw e;
+                core.info(`${branch} moved under us; trying again (${attempt})`);
+              }
+            }
+
+            const images = files.map(file => ({
+              name: file,
+              url: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/pr-${prNumber}/${file}`
+            }));
 
             // A pull request event knows all of this; a hand-cranked run has to be told
             // the number and look the rest up.
