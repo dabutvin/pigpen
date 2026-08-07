@@ -96,6 +96,12 @@ the last is the boss.
   mist pulls back off the signpost it arrives at.
 - **Stars stay on the signpost.** Each one shows the best you have ever done there, so a
   level replayed badly costs you nothing and a level replayed well is worth going back for.
+- **The best pen there is turns a signpost's stars rainbow.** Three stars is set a little
+  under the maximum, so it does not on its own say a map has nothing left in it. Match the
+  best pen a level has and its stars drift through the spectrum from then on — the same
+  rainbow the field washes with the moment such a pen closes — so one look up the trail
+  says which maps are finished with and which are still worth going back down for. Like the
+  stars, it stays: a worse pen afterwards does not take it off.
 - **You can go back down the trail** to any level already open, and the pig trots down to
   it before the puzzle opens — and stays there when you come back out. Only something newly
   opened moves the pig on its own, so a replay leaves you standing where you chose to be.
@@ -117,7 +123,8 @@ the last is the boss.
 rainbow for. On the first six maps it is a count of mud, since mud is all there is to hold;
 after that it is mud and fruit against skulls. Either way it is a search rather than a
 sum — `Tools/level_search.py` does the searching, and a test pins every one of them to a pen
-that actually holds, so no level can promise a rainbow that is not there.
+that actually holds, so no level can promise a rainbow that is not there. Find one and the
+world map remembers it, beside the stars for the level.
 
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
@@ -380,7 +387,7 @@ Pigpen/
 │   ├── CutScene.swift           # The films, as clocks: which shot is up when, and for how long
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
-│   └── WorldProgress.swift      # Best stars, what that unlocks, which films are owed
+│   └── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -389,7 +396,7 @@ Pigpen/
 │   ├── WorldMapView.swift       # The world map: signposts, the walking pig, the trail
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── WorldTrail.swift         # Stops ↔ points on screen, and the curve between them
-│   ├── LevelSignpost.swift      # One stop on the map: stars, number, name
+│   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── MeadowBackdrop.swift     # The meadow behind a board, and the timber bar over it

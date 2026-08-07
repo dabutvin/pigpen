@@ -50,6 +50,19 @@ struct PenTally: Equatable, Sendable {
     }
 }
 
+/// What a level makes of a pen that held: the stars it earns, and whether it is the best
+/// pen the map has in it.
+///
+/// The two travel together because everything downstream of a pen wants both — the field
+/// washes rainbow rather than gold for the best there is, and the signpost on the world
+/// map keeps that rainbow on its stars long after the board has gone.
+struct PenVerdict: Equatable, Sendable {
+    /// One star for any pen at all, three for one worth the level's `threeStarScore`.
+    let stars: Int
+    /// True for a pen worth the level's `maximumScore` — nothing on this map beats it.
+    let isAsGoodAsItGets: Bool
+}
+
 /// One puzzle: a map, the animals on it, and a fence budget.
 struct PuzzleLevel: Identifiable, Sendable {
     let id: String
@@ -134,6 +147,12 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// Whether a pen worth `score` is the best this map has in it.
     func isMaximumScore(_ score: Int) -> Bool {
         score >= maximumScore
+    }
+
+    /// Everything the map has to say about a pen worth `score`, in one piece so that the
+    /// stars and the rainbow are never carried about apart from one another.
+    func verdict(forScore score: Int) -> PenVerdict {
+        PenVerdict(stars: starRating(forScore: score), isAsGoodAsItGets: isMaximumScore(score))
     }
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an

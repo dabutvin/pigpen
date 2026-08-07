@@ -9,6 +9,11 @@ import Observation
 protocol ProgressStore {
     func loadStars() -> [String: Int]
     func save(_ stars: [String: Int])
+    /// Which levels have given up the best pen they have in them, by level id. Kept beside
+    /// the stars rather than inside them because three stars is set a little under the
+    /// maximum: a level can be worth three and still have something left to beat.
+    func loadBestPens() -> Set<String>
+    func save(bestPens: Set<String>)
     /// Which films have been played already, by name. Worth keeping even where the stars
     /// nearly say it on their own: a player who watches one, backs out without penning
     /// anything and comes back has still seen it.
@@ -22,6 +27,7 @@ protocol ProgressStore {
 /// The real thing: stars survive the app being closed.
 struct StoredProgress: ProgressStore {
     private static let key = "pigpen.best-stars"
+    private static let bestPensKey = "pigpen.best-pens"
     private static let scenesKey = "pigpen.scenes-played"
     /// What the opening was kept under before there was more than one film. Read so that
     /// somebody already playing is not sat back down in front of it.
@@ -40,6 +46,14 @@ struct StoredProgress: ProgressStore {
         defaults.set(stars, forKey: Self.key)
     }
 
+    func loadBestPens() -> Set<String> {
+        Set(defaults.stringArray(forKey: Self.bestPensKey) ?? [])
+    }
+
+    func save(bestPens: Set<String>) {
+        defaults.set(Array(bestPens), forKey: Self.bestPensKey)
+    }
+
     func loadPlayedScenes() -> Set<String> {
         var played = Set(defaults.stringArray(forKey: Self.scenesKey) ?? [])
         if defaults.bool(forKey: Self.oldOpeningKey) {
@@ -56,6 +70,7 @@ struct StoredProgress: ProgressStore {
 
     func erase() {
         defaults.removeObject(forKey: Self.key)
+        defaults.removeObject(forKey: Self.bestPensKey)
         defaults.removeObject(forKey: Self.scenesKey)
         defaults.removeObject(forKey: Self.oldOpeningKey)
     }
@@ -64,10 +79,12 @@ struct StoredProgress: ProgressStore {
 /// A world that forgets everything the moment it is put down.
 final class RememberedProgress: ProgressStore {
     private var stars: [String: Int]
+    private var bestPens: Set<String>
     private var scenes: Set<String>
 
-    init(stars: [String: Int] = [:], scenesPlayed: Set<String> = []) {
+    init(stars: [String: Int] = [:], bestPens: Set<String> = [], scenesPlayed: Set<String> = []) {
         self.stars = stars
+        self.bestPens = bestPens
         self.scenes = scenesPlayed
     }
 
@@ -75,12 +92,17 @@ final class RememberedProgress: ProgressStore {
 
     func save(_ stars: [String: Int]) { self.stars = stars }
 
+    func loadBestPens() -> Set<String> { bestPens }
+
+    func save(bestPens: Set<String>) { self.bestPens = bestPens }
+
     func loadPlayedScenes() -> Set<String> { scenes }
 
     func markScenePlayed(_ scene: String) { scenes.insert(scene) }
 
     func erase() {
         stars = [:]
+        bestPens = []
         scenes = []
     }
 }
@@ -102,6 +124,10 @@ final class RememberedProgress: ProgressStore {
 final class WorldProgress {
     let world: WorldMap
     private(set) var bestStars: [String: Int]
+    /// The levels whose best pen has been found, by id. A level is in here for good once
+    /// it has given its maximum up: a worse pen afterwards no more takes the rainbow off
+    /// a signpost than it takes the stars off one.
+    private(set) var bestPens: Set<String>
     /// Which films have been played already.
     private(set) var playedScenes: Set<String>
     @ObservationIgnored private let store: any ProgressStore
@@ -110,6 +136,7 @@ final class WorldProgress {
         self.world = world
         self.store = store
         self.bestStars = store.loadStars()
+        self.bestPens = store.loadBestPens()
         self.playedScenes = store.loadPlayedScenes()
     }
 
@@ -120,6 +147,16 @@ final class WorldProgress {
 
     func stars(at index: Int) -> Int {
         world.nodes.indices.contains(index) ? stars(for: world[index].id) : 0
+    }
+
+    /// Whether the best pen a level has in it has been found there — the one thing three
+    /// stars does not say on its own, and what turns a signpost's stars rainbow.
+    func hasTheBestPen(for levelID: String) -> Bool {
+        bestPens.contains(levelID)
+    }
+
+    func hasTheBestPen(at index: Int) -> Bool {
+        world.nodes.indices.contains(index) && hasTheBestPen(for: world[index].id)
     }
 
     func isCleared(_ index: Int) -> Bool { stars(at: index) > 0 }
@@ -166,6 +203,20 @@ final class WorldProgress {
 
     var totalStars: Int {
         world.nodes.reduce(0) { $0 + stars(for: $1.id) }
+    }
+
+    /// Records how a level went: its stars, and the rainbow if the pen was the best that
+    /// map has in it. Both are kept at the best they have ever been.
+    ///
+    /// Returns whether this opened the next level up — the pig's cue to walk on.
+    @discardableResult
+    func record(_ verdict: PenVerdict, for levelID: String) -> Bool {
+        if verdict.isAsGoodAsItGets, verdict.stars > 0, world.index(of: levelID) != nil,
+           !bestPens.contains(levelID) {
+            bestPens.insert(levelID)
+            store.save(bestPens: bestPens)
+        }
+        return record(stars: verdict.stars, for: levelID)
     }
 
     /// Records how a level went, keeping the best rating it has ever been given.
@@ -231,6 +282,7 @@ final class WorldProgress {
     /// the stars were being won. The title screen does this every time it comes back.
     func reload() {
         bestStars = store.loadStars()
+        bestPens = store.loadBestPens()
         playedScenes = store.loadPlayedScenes()
     }
 
@@ -242,6 +294,7 @@ final class WorldProgress {
     /// ones that came with it.
     func eraseEverything() {
         bestStars = [:]
+        bestPens = []
         playedScenes = []
         store.erase()
     }
@@ -250,6 +303,9 @@ final class WorldProgress {
 extension WorldProgress {
     /// A world a couple of levels in, so previews and the screenshots CI takes show a
     /// trail with stars on it, a level waiting to be played, and some still shut.
+    ///
+    /// The first stop has found its best pen as well as taking its three stars, so the
+    /// rainbow a signpost keeps for one is on the map to be looked at.
     static func partWayThrough(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
         var seeded: [String: Int] = [:]
         for (index, rating) in [3, 2].enumerated() where index < world.count {
@@ -259,7 +315,11 @@ extension WorldProgress {
         // already say so.
         return WorldProgress(
             world: world,
-            store: RememberedProgress(stars: seeded, scenesPlayed: [CutScene.Name.opening.rawValue])
+            store: RememberedProgress(
+                stars: seeded,
+                bestPens: world.count > 0 ? [world[0].id] : [],
+                scenesPlayed: [CutScene.Name.opening.rawValue]
+            )
         )
     }
 }

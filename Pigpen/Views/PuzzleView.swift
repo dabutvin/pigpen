@@ -8,12 +8,13 @@ struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    /// Told how many stars a pen was worth, every time one holds.
+    /// Told what a pen was worth — its stars, and whether it was the best pen the map has
+    /// in it — every time one holds.
     ///
     /// Nothing is listening when a level is played on its own — the previews and the
     /// screenshot runs open one straight — and that is also how the screen knows whether
     /// there is a world map behind it to offer a way back to.
-    private let onPenned: ((Int) -> Void)?
+    private let onPenned: ((PenVerdict) -> Void)?
 
     @State private var game: PuzzleGame
     /// Where each animal is standing this instant, which is its own tile until the gate
@@ -28,13 +29,13 @@ struct PuzzleView: View {
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
 
-    init(level: PuzzleLevel, onPenned: ((Int) -> Void)? = nil) {
+    init(level: PuzzleLevel, onPenned: ((PenVerdict) -> Void)? = nil) {
         self.init(game: PuzzleGame(level: level), onPenned: onPenned)
     }
 
     /// Opens the screen on a puzzle already in progress, which is how the previews and the
     /// screenshot runs show a field with fencing on it.
-    init(game: PuzzleGame, onPenned: ((Int) -> Void)? = nil) {
+    init(game: PuzzleGame, onPenned: ((PenVerdict) -> Void)? = nil) {
         self.onPenned = onPenned
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
@@ -467,7 +468,7 @@ struct PuzzleView: View {
         case .penned:
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
-            onPenned?(game.starRating ?? 1)
+            onPenned?(game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false))
             await celebrate()
         }
     }
