@@ -404,6 +404,8 @@ struct WorldMapView: View {
 /// that got away — in both cases the player chose that signpost, walked the pig to it, and
 /// is left standing at it, free to have another go or to pick where to go next themselves.
 struct WalkAfterALevel {
+    private let standingTolerance = 0.01
+
     /// Where the pig is standing, which is the level just played.
     let standingAt: Double
     /// How far the world had been opened when that level was started.
@@ -416,7 +418,7 @@ struct WalkAfterALevel {
 
     /// The stop to walk to, or nothing at all if the pig is staying where it is.
     var destination: Double? {
-        guard openedNewGround, abs(Double(frontierNow) - standingAt) > 0.01 else { return nil }
+        guard openedNewGround, abs(Double(frontierNow) - standingAt) > standingTolerance else { return nil }
         return Double(frontierNow)
     }
 }
