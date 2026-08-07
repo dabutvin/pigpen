@@ -8,7 +8,8 @@ These are not the *only* pens worth three stars; the third star is set a little 
 maximum, so most levels have several arrangements that earn it. Each one below is the pen
 the level was authored around, found by `Tools/level_search.py` and pinned in
 `PigpenTests/PuzzleLevelTests.swift`, which replays it and fails if the level stops giving
-up what it promises.
+up what it promises. `PigpenTests/DifficultyTests.swift` pins the other end of each level —
+the best pen you get without any of this — and fails if the trail stops getting harder.
 
 ## How to read a diagram
 
@@ -25,19 +26,24 @@ been fenced over: an apple wasted, or a skull buried.
 A pen scores a point per tile of ground it holds, five more for every apple inside it and
 five fewer for every skull.
 
-| # | Level | Pieces | Ground held | In the pen | Score |
-|---|---|---|---|---|---|
-| 1 | River Bend | 12 | 35 | — | 35 |
-| 2 | Puddle Corner | 8 | 26 | — | 26 |
-| 3 | Horseshoe Lake | 6 | 24 | — | 24 |
-| 4 | The Narrows | 10 | 22 | — | 22 |
-| 5 | Otter Ford | 12 | 24 | — | 24 |
-| 6 | The Big Meadow | 16 | 33 | — | 33 |
-| 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 |
-| 8 | Sour Ground | 14 | 22 | 2 apples, 2 skulls buried | 32 |
-| 9 | Stag Mere | 20 | 31 | 3 apples, 2 skulls buried | 46 |
+| # | Level | Pieces | Ground held | In the pen | Score | Squared off |
+|---|---|---|---|---|---|---|
+| 1 | River Bend | 12 | 35 | — | 35 | 35 |
+| 2 | Horseshoe Lake | 6 | 24 | — | 24 | 24 |
+| 3 | The Narrows | 10 | 22 | — | 22 | 19 |
+| 4 | The Big Meadow | 16 | 33 | — | 33 | 26 |
+| 5 | Otter Ford | 12 | 24 | — | 24 | 16 |
+| 6 | Puddle Corner | 8 | 26 | — | 26 | 16 |
+| 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 | 26 |
+| 8 | Sour Ground | 14 | 22 | 2 apples, 2 skulls buried | 32 | 25 |
+| 9 | Stag Mere | 20 | 31 | 3 apples, 2 skulls buried | 46 | 34 |
 
 Every one of these spends its whole budget.
+
+The last column is what the same budget gets you from a plain block of ground — no
+staircase, no detour for an apple — and the gap between it and the score is what the level
+is really asking. It is nothing on the first two, which is why they are the first two, and
+it widens the whole way to Puddle Corner. `Tools/level_search.py --demand` prints both.
 
 ## What the solutions have in common
 
@@ -81,25 +87,7 @@ build. Seven pieces straight down the west edge and five along the south close i
 pen takes every tile the water leaves reachable — 35 of the map's 83. The same twelve
 pieces spent on a free-standing box out in the meadow hold 9.
 
-## 2. Puddle Corner — 8 pieces, 26
-
-```
-~~~~~~~~
-~oooooo#
-~oooooo#
-~ooPoo#.
-~oooo#..
-~ooo#...
-~oo#....
-.##.....
-```
-
-Two whole sides are water, so the eight pieces only have to cut the corner off — and cut
-it diagonally. The staircase runs from the top right down to the bottom left, holding 26
-tiles. Squared off into the largest rectangle eight pieces can wall, the same corner holds
-16.
-
-## 3. Horseshoe Lake — 6 pieces, 24
+## 2. Horseshoe Lake — 6 pieces, 24
 
 ```
 ..........
@@ -120,7 +108,7 @@ solution with two pieces left over. Dropping the plug one row lower instead, dow
 rim, and paying two more pieces to close the ends where the lake's arms stop short, buys
 the extra row: 24 tiles for all six.
 
-## 4. The Narrows — 10 pieces, 22
+## 3. The Narrows — 10 pieces, 22
 
 ```
 ..........
@@ -140,6 +128,28 @@ leans on both at once, taking the south shore of the top lake and the north shor
 bottom one as free walls. Four pieces down the west rim close that side; the other six run
 a diagonal down the east, wide enough to take in the ground past the arms of both lakes.
 22 tiles.
+
+## 4. The Big Meadow — 16 pieces, 33
+
+```
+..........
+.~~~~~....
+.~~~~~~...
+..~~~~~~..
+.#o~~~~~..
+#ooo~~~o#.
+#oPoooooo#
+#oooooooo#
+.#ooooooo#
+..#ooooo#.
+...#####..
+```
+
+The widest board in the meadow, with a lake down one side and no corner to hide in.
+Sixteen pieces make an octagon, and the only trick is cutting the top of it to the shape of
+the shore rather than walling straight underneath the lake: the pen tucks up the west side
+of the water and round the foot of it, taking ground that a tidy octagon would leave out.
+33 tiles.
 
 ## 5. Otter Ford — 12 pieces, 24
 
@@ -161,27 +171,23 @@ pen and the entire far bank of the river becomes a free wall. The remaining elev
 have only three sides left to close, which they do as an octagon pressed up against the
 south side of the river. 24 tiles.
 
-## 6. The Big Meadow — 16 pieces, 33
+## 6. Puddle Corner — 8 pieces, 26
 
 ```
-..........
-.~~~~~....
-.~~~~~~...
-..~~~~~~..
-.#o~~~~~..
-#ooo~~~o#.
-#oPoooooo#
-#oooooooo#
-.#ooooooo#
-..#ooooo#.
-...#####..
+~~~~~~~~
+~oooooo#
+~oooooo#
+~ooPoo#.
+~oooo#..
+~ooo#...
+~oo#....
+.##.....
 ```
 
-The widest board in the meadow, with a lake down one side and no corner to hide in.
-Sixteen pieces make an octagon, and the only trick is cutting the top of it to the shape of
-the shore rather than walling straight underneath the lake: the pen tucks up the west side
-of the water and round the foot of it, taking ground that a tidy octagon would leave out.
-33 tiles.
+Two whole sides are water, so the eight pieces only have to cut the corner off — and cut
+it diagonally. The staircase runs from the top right down to the bottom left, holding 26
+tiles. Squared off into the largest rectangle eight pieces can wall, the same corner holds
+16.
 
 ## 7. Windfall Orchard — 12 pieces, 37
 
@@ -272,7 +278,7 @@ puzzle.
 ## Working one out yourself
 
 ```bash
-Tools/level_search.py --budget 12 --plan <<'MAP'
+Tools/level_search.py --budget 12 --plan --demand <<'MAP'
 .........
 ~~~~~~~..
 ...a..~..
@@ -282,4 +288,6 @@ MAP
 ```
 
 It prints the best pen it found drawn on the map, the plan on its own, and the score and
-star thresholds that go with it. That is where every number above came from.
+star thresholds that go with it. That is where every number above came from. `--demand`
+adds the squared-off pen underneath — the best plain block the same budget buys — and the
+gap between the two, which is what decides where on the trail a level belongs.

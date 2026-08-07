@@ -31,9 +31,15 @@ and five fewer for a skull, and never less than a point however sour the ground.
 search grows a pen outwards a tile at a time, keeping the cheapest few thousand pens
 of each size along with the ones holding the most for what they cost, which finds the
 best pen on maps this size while an exhaustive walk of every pen would not finish at all.
+
+It also squares the map off — the best pen a player gets from a plain block of ground per
+animal, no diagonal staircase and no detour for an apple — and prints the two side by
+side. The gap between them is what the level is actually asking of the player, and it is
+the number to sort a world by: see `--demand`.
 """
 
 import argparse
+import itertools
 import sys
 
 NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
@@ -88,13 +94,15 @@ def fences_around(pen, mud):
     return edge
 
 
+def on_rim(tile, rows, columns):
+    """Whether a tile is on the edge of the world, where no pen can hold an animal."""
+    return tile[0] in (0, rows - 1) or tile[1] in (0, columns - 1)
+
+
 def search(mud, treats, starts, rows, columns, budget, beam):
     """The best pen within budget, as (score, tiles)."""
 
-    def on_rim(tile):
-        return tile[0] in (0, rows - 1) or tile[1] in (0, columns - 1)
-
-    pennable = {tile for tile in mud if not on_rim(tile)}
+    pennable = {tile for tile in mud if not on_rim(tile, rows, columns)}
     for animal, start in starts.items():
         if start not in pennable:
             raise SystemExit(f"{animal!r} starts on the rim of the map, where no pen can hold it")
@@ -137,6 +145,73 @@ def search(mud, treats, starts, rows, columns, budget, beam):
     return best
 
 
+def run_of_ground(tiles, start):
+    """The tiles of `tiles` an animal standing on `start` can walk to."""
+    if start not in tiles:
+        return set()
+    reached, queue = {start}, [start]
+    while queue:
+        row, column = queue.pop()
+        for down, across in NEIGHBOURS:
+            neighbour = (row + down, column + across)
+            if neighbour in tiles and neighbour not in reached:
+                reached.add(neighbour)
+                queue.append(neighbour)
+    return reached
+
+
+def blocks_around(pennable, start, rows, columns):
+    """Every block of ground that holds `start`.
+
+    A block is a rectangle of the map with the water and the rim taken out of it, so a
+    block laid over a lake is the shore it leaves behind — which is what a player does
+    without being taught anything: pick two corners and build round what is left. Ground
+    the rectangle cuts off from the animal goes with it, since a pen is one run of ground.
+    """
+    found = set()
+    for top in range(1, start[0] + 1):
+        for bottom in range(start[0], rows - 1):
+            for left in range(1, start[1] + 1):
+                for right in range(start[1], columns - 1):
+                    inside = {
+                        (row, column)
+                        for row in range(top, bottom + 1)
+                        for column in range(left, right + 1)
+                        if (row, column) in pennable
+                    }
+                    found.add(frozenset(run_of_ground(inside, start)))
+    return found - {frozenset()}
+
+
+def squared_off(mud, treats, starts, rows, columns, budget):
+    """The best pen a player gets by squaring the map off, as (score, tiles).
+
+    One block of ground per animal, leaning on whatever water happens to be there, and
+    the budget split between them however suits. It is the answer somebody reaches for
+    before they know any of the game's ideas — that a staircase wall holds nearly twice
+    what a right-angled one does, that a piece laid just short of a gap is worth more
+    than one laid in it, that an apple is worth going out of the way for.
+
+    So the gap between this and `search` is what the level is really asking. A level the
+    two agree on is one whose best pen is the obvious pen, which is what an early stop on
+    a world wants; a wide gap is a level that only gives itself up to a player who has
+    learnt something, and those belong further along.
+    """
+    pennable = {tile for tile in mud if not on_rim(tile, rows, columns)}
+    each = [blocks_around(pennable, start, rows, columns) for start in starts.values()]
+
+    best = (0, frozenset())
+    for choice in itertools.product(*each):
+        # Two animals may not be held by the same ground twice over, and a wall between
+        # two blocks is paid for once, so the cost is of the pair together.
+        if any(one & other for one, other in itertools.combinations(choice, 2)):
+            continue
+        pen = frozenset().union(*choice)
+        if len(fences_around(pen, mud)) <= budget:
+            best = max(best, (score(pen, treats), pen))
+    return best
+
+
 def draw(mud, treats, starts, rows, columns, pen, plan_only=False):
     edge = fences_around(pen, mud)
     standing = {tile: animal for animal, tile in starts.items()}
@@ -173,6 +248,11 @@ def main():
         action="store_true",
         help="Also print the pen as the bare plan PigpenTests pins the level to",
     )
+    parser.add_argument(
+        "--demand",
+        action="store_true",
+        help="Also square the map off, and print how much better the best pen is than that",
+    )
     parser.add_argument("map", nargs="?", type=argparse.FileType(), default=sys.stdin)
     options = parser.parse_args()
 
@@ -185,6 +265,15 @@ def main():
     if options.plan:
         print()
         print(draw(mud, treats, starts, rows, columns, pen, plan_only=True))
+
+    if options.demand:
+        plain, block = squared_off(mud, treats, starts, rows, columns, options.budget)
+        print()
+        print(draw(mud, treats, starts, rows, columns, block))
+        if options.plan:
+            print()
+            print(draw(mud, treats, starts, rows, columns, block, plan_only=True))
+
     print()
     print(f"mud tiles      {len(mud)}")
     print(f"fence budget   {options.budget}")
@@ -195,6 +284,9 @@ def main():
     print(f"maximumScore   {points}")
     print(f"threeStarScore {round(points * 0.94)}")
     print(f"twoStarScore   {round(points * 0.57)}")
+    if options.demand:
+        print(f"squaredOff     {plain}")
+        print(f"demand         {(points - plain) * 100 // points}")
 
 
 if __name__ == "__main__":
