@@ -609,7 +609,8 @@ struct FieldView: View {
     /// What is lying about on the mud: an apple worth five tiles of ground to shut in with
     /// the pig, a skull worth five fewer. Each sits on a pale scuff of ground so it reads
     /// against the mud, and a tile with fencing on it is covered over, treat and all —
-    /// which is how a skull gets buried and how an apple gets wasted.
+    /// which is how an apple gets wasted. A skull is never covered over: it takes no
+    /// fencing, so it is on the board for as long as the board is.
     private func drawTreats(in context: inout GraphicsContext, board: BoardGeometry) {
         for (tile, treat) in level.treats where !fences.contains(tile) {
             let rect = board.rect(for: tile)

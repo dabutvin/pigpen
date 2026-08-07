@@ -20,9 +20,11 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   spending fences.
 - **Apples and skulls** lie on the mud rather than being mud of their own. An apple shut
   into the pen is worth five ordinary tiles, so a pen that goes out of its way for one is
-  usually worth the ground it gives up getting there. A skull costs five, so it is ground
-  you would rather leave outside. Either can be fenced over like any other tile, which is
-  how a skull gets buried for the price of one piece — and how an apple gets wasted.
+  usually worth the ground it gives up getting there. An apple takes a fence like any other
+  tile, which is how one gets wasted. A skull costs five, and it is staked into the ground:
+  no piece can be laid on it, so a wall that wants a skull's tile has to be built round it —
+  and a wall built round one still has to shut it out, since ground you leave open is ground
+  the pig walks onto. Sour ground is planned around, not paved over.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
 - **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits
@@ -68,15 +70,19 @@ The next two puzzles put apples and skulls on the ground, so the best pen there 
 the widest one. **Windfall Orchard** hands out 12 pieces for a map with four apples on it:
 the pen that scores highest holds 27 tiles and narrows as it goes south to bring two of the
 apples inside, which is worth more than the ground it gives up doing so. **Sour Ground** adds
-two skulls, and the best pen there buries both of them under a piece of fencing rather than
-paying five tiles apiece to shut them in.
+two skulls, and neither can be built on: the best pen there bends its wall in beside the
+skull by the lake to leave it outside, and pays the five tiles to shut the other one in
+rather than give up the ground a detour round it would cost. 24 tiles, two apples and one
+skull: 29.
 
 **Stag Mere** is the boss, and it is everything at once: a mere across the middle of the map
 with the pig grazing north of it and a stag south, apples on both shores and a skull on
 each. The 20 pieces — the biggest budget in the game — go out as two enclosures rather than
 one, because the water is a wall both of them can lean on and a single pen round the pair
 would spend its whole budget getting there. Every piece given to the pig is a piece the stag
-does not get, which is the puzzle. The best split holds 31 tiles and three apples: 46.
+does not get, which is the puzzle. Both skulls stand where a wall would want to go and
+neither will take one, so each pen swallows its own and pays for it. The best split holds 33
+tiles, three apples and the two skulls: 38.
 
 ## The World
 
@@ -115,8 +121,8 @@ scatter apples and skulls as well, and the last is the boss.
 | 5 | Otter Ford | 12 | — | 16 | 24 | 33% |
 | 6 | Puddle Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Windfall Orchard | 12 | 4 apples | 26 | 37 | 29% |
-| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 25 | 32 | 21% |
-| 9 | Stag Mere | 20 | a deer, 3 apples, 2 skulls | 34 | 46 | 26% |
+| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 15 | 29 | 48% |
+| 9 | Stag Mere | 20 | a deer, 3 apples, 2 skulls | 34 | 38 | 10% |
 
 "Best pen" is the most that budget can be made to score on that map: the level's
 `maximumScore`, the number the third star is set just under, and the pen each level goes
@@ -136,11 +142,14 @@ by rather than by board size or budget.
 The meadow opens on two maps whose best pen *is* the obvious pen, so the first three stars
 are free and the game gets to explain itself. From there the gap widens the whole way to
 Puddle Corner — eight pieces, a small board, and nothing to lean on but the shape of the
-wall, which is the widest gap in the game and why the smallest-looking level closes the
-stretch instead of opening it. The last three change what is on the ground rather than what
-the wall has to do, so they run apples, then skulls to bury as well, then a second animal
-and one budget to split: sorting *those* by the gap would put the ideas in the wrong order.
-`DifficultyTests` pins the lot, so the climb cannot quietly flatten out again.
+wall, which is the widest gap on that stretch and why the smallest-looking level closes it
+instead of opening it. The last three change what is on the ground rather than what the wall
+has to do, so they run apples, then skulls to build around as well, then a second animal and
+one budget to split: sorting *those* by the gap would put the ideas in the wrong order. Sour
+Ground has the widest gap in the game and still belongs eighth — a skull refuses fencing, so
+every squared-off block worth having on that map is one the player cannot build, and the
+number says more about the block than about the level. `DifficultyTests` pins the lot, so the
+climb cannot quietly flatten out again.
 
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
@@ -272,7 +281,9 @@ Tools/level_search.py --budget 12 --plan <<'MAP'
 MAP
 ```
 
-It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: a skull takes no fencing, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+
+The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with skulls on it — walling round one can cost a plain block far more than it costs a shaped pen, and the second star has to stay under what the block is worth.
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
