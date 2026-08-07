@@ -242,9 +242,13 @@ extension PuzzleLevel {
             """
     )
 
-    /// The same lesson on a smaller board: two whole sides are water, so the pen only
-    /// ever needs two walls of its own. Eight pieces cut the corner off at its widest
-    /// and hold 26 tiles; the same eight spent anywhere out in the open hold 9.
+    /// The last of the water levels and the one that asks the most: two whole sides are
+    /// water, so the pen only ever needs two walls of its own, and the whole puzzle is the
+    /// shape of them. Eight pieces cut the corner off diagonally and hold 26 tiles, where
+    /// the best right-angled block those eight can wall holds 16 and the same eight spent
+    /// out in the open hold 9. Nothing else in the meadow rewards the staircase this
+    /// heavily, which is why it stands at the top of the fencing-and-water stretch rather
+    /// than near the bottom where its small board would suggest.
     static let puddleCorner = authored(
         id: "puddle-corner",
         name: "Puddle Corner",
@@ -267,11 +271,16 @@ extension PuzzleLevel {
     /// A lake bent right round the pig, leaving a mouth four tiles wide at the bottom.
     /// Plugging the mouth costs four pieces and holds 20 tiles, which is the whole point
     /// — but the two pieces left over buy four more tiles out past the arms of the lake.
+    ///
+    /// The second stop, and the second and last one whose best pen is a plain block of
+    /// ground: everything here is reachable by squaring the map off, so the three stars
+    /// are there for a player still learning what a fence is for. Every stop past this
+    /// one asks for something the shape of the wall has to earn.
     static let horseshoeLake = authored(
         id: "horseshoe-lake",
         name: "Horseshoe Lake",
         fenceBudget: 6,
-        twoStarScore: 16,
+        twoStarScore: 14,
         threeStarScore: 23,
         maximumScore: 24,
         map: """

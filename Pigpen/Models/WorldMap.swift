@@ -52,15 +52,28 @@ extension WorldMap {
     /// water alone, the next two put apples and skulls on the ground as well, and the
     /// last one stands a stag on it beside the pig and asks for 21 of the 24 stars below
     /// it before it will open at all.
+    ///
+    /// The first six are ordered by how much they ask of the player rather than by how big
+    /// the board is or how long the budget. What a level asks is the gap between the pen it
+    /// has in it and the pen a player gets by squaring the map off — a plain block of
+    /// ground, no staircase and no detour — which `Tools/level_search.py --demand` measures
+    /// and `DifficultyTests` pins. The trail opens on two maps whose best pen *is* the
+    /// obvious pen, so the first three stars are free and the game gets to explain itself,
+    /// and the gap then widens the whole way to Puddle Corner, which is eight pieces and
+    /// nothing to lean on but the shape of the wall.
+    ///
+    /// The last three are ordered by what they put on the ground instead, since that is the
+    /// harder thing about them: apples, then skulls to bury as well, then a second animal
+    /// and one budget to split between the two.
     static let mudlarkMeadow = WorldMap(
         name: "Mudlark Meadow",
         nodes: [
             WorldNode(level: .riverBend, across: 0.20, up: 0.00),
-            WorldNode(level: .puddleCorner, across: 0.76, up: 1.00),
-            WorldNode(level: .horseshoeLake, across: 0.26, up: 2.06),
-            WorldNode(level: .theNarrows, across: 0.78, up: 3.02),
+            WorldNode(level: .horseshoeLake, across: 0.76, up: 1.00),
+            WorldNode(level: .theNarrows, across: 0.26, up: 2.06),
+            WorldNode(level: .bigMeadow, across: 0.78, up: 3.02),
             WorldNode(level: .otterFord, across: 0.22, up: 4.08),
-            WorldNode(level: .bigMeadow, across: 0.62, up: 5.02),
+            WorldNode(level: .puddleCorner, across: 0.62, up: 5.02),
             WorldNode(level: .windfallOrchard, across: 0.24, up: 6.06),
             WorldNode(level: .sourGround, across: 0.74, up: 7.00),
             WorldNode(level: .stagMere, across: 0.28, up: 8.06, starToll: 21)

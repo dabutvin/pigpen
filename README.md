@@ -82,8 +82,8 @@ does not get, which is the puzzle. The best split holds 31 tiles and three apple
 
 Play opens **Mudlark Meadow**: nine puzzles as nine signposts up one winding trail, with
 the pig standing at the furthest one it has reached and mist over everything past that. The
-first six are fencing and water alone, the next two scatter apples and skulls as well, and
-the last is the boss.
+first six are fencing and water alone and climb in what they ask of you, the next two
+scatter apples and skulls as well, and the last is the boss.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
@@ -99,17 +99,17 @@ the last is the boss.
 - **You can go back down the trail** to any level already open, and the pig trots down to
   it before the puzzle opens.
 
-| # | Level | Pieces | On the ground | Best pen |
-|---|---|---|---|---|
-| 1 | River Bend | 12 | — | 35 |
-| 2 | Puddle Corner | 8 | — | 26 |
-| 3 | Horseshoe Lake | 6 | — | 24 |
-| 4 | The Narrows | 10 | — | 22 |
-| 5 | Otter Ford | 12 | — | 24 |
-| 6 | The Big Meadow | 16 | — | 33 |
-| 7 | Windfall Orchard | 12 | 4 apples | 37 |
-| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 32 |
-| 9 | Stag Mere | 20 | a deer, 3 apples, 2 skulls | 46 |
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | River Bend | 12 | — | 35 | 35 | — |
+| 2 | Horseshoe Lake | 6 | — | 24 | 24 | — |
+| 3 | The Narrows | 10 | — | 19 | 22 | 13% |
+| 4 | The Big Meadow | 16 | — | 26 | 33 | 21% |
+| 5 | Otter Ford | 12 | — | 16 | 24 | 33% |
+| 6 | Puddle Corner | 8 | — | 16 | 26 | 38% |
+| 7 | Windfall Orchard | 12 | 4 apples | 26 | 37 | 29% |
+| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 25 | 32 | 21% |
+| 9 | Stag Mere | 20 | a deer, 3 apples, 2 skulls | 34 | 46 | 26% |
 
 "Best pen" is the most that budget can be made to score on that map: the level's
 `maximumScore`, the number the third star is set just under, and the pen each level goes
@@ -117,6 +117,22 @@ rainbow for. On the first six maps it is a count of mud, since mud is all there 
 after that it is mud and fruit against skulls. Either way it is a search rather than a
 sum — `Tools/level_search.py` does the searching, and a test pins every one of them to a pen
 that actually holds, so no level can promise a rainbow that is not there.
+
+"Squared off" is the other end of it: the best pen you get from a plain block of ground per
+animal, leaning on whatever water is already there, with no diagonal staircase and no detour
+for an apple. It is what a player reaches for before they know any of the game's ideas, and
+it is always worth at least two stars — nobody is ever stuck on one for want of a trick.
+What a level **asks** is the gap between the two, and that is what the first six are ordered
+by rather than by board size or budget.
+
+The meadow opens on two maps whose best pen *is* the obvious pen, so the first three stars
+are free and the game gets to explain itself. From there the gap widens the whole way to
+Puddle Corner — eight pieces, a small board, and nothing to lean on but the shape of the
+wall, which is the widest gap in the game and why the smallest-looking level closes the
+stretch instead of opening it. The last three change what is on the ground rather than what
+the wall has to do, so they run apples, then skulls to bury as well, then a second animal
+and one budget to split: sorting *those* by the gap would put the ideas in the wrong order.
+`DifficultyTests` pins the lot, so the climb cannot quietly flatten out again.
 
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
@@ -249,6 +265,8 @@ MAP
 ```
 
 It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+
+Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
 A map with a `D` on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -404,7 +422,7 @@ Pigpen/
 PigpenTests/                     # Unit tests
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
-├── level_search.py              # Finds the best pen a map and budget allow
+├── level_search.py              # Finds the best pen a map and budget allow, and what it asks
 ├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API
 └── prepare_signing_secrets.sh   # Checks and encodes a certificate exported from a Mac
 ```
