@@ -54,7 +54,8 @@ scatter rather than by this column.
 
 ## What the solutions have in common
 
-Five ideas cover all nine maps, and every level is one of them dressed differently.
+Six ideas cover all nine maps, and every level is one of them dressed differently. Five of
+them turn up again and again:
 
 - **Water is a wall you already own.** Build against it, never near it. Half of what looks
   like a hard budget is a map where the shore does most of the walling for free.
@@ -68,11 +69,11 @@ Five ideas cover all nine maps, and every level is one of them dressed different
   that reaches its limit is one whose wall runs along the edge of the world.
 - **Fence just short of a gap, not in it.** Plugging a one-tile gap from the near side
   costs the same one piece and hands you the gap tile as ground. Otter Ford turns on this.
-- **A skull is a hole in the ground you can build on.** No piece will stand on one, so a
-  skull on the line your wall wants is a choice: shut it in and pay five, or move the wall
-  in beside it and give up the tile as well. Out at the edge of a pen the second is nearly
-  free; in the middle of one it is not a choice at all, since a wall built round a tile in
-  the middle of your ground is a wall across your pen.
+- **A skull is a tile you cannot build on.** So a skull on the line your wall wants is a
+  choice: shut it in and pay five, or move the wall in beside it and give up its tile along
+  with the skull. Out at the edge of a pen the second is nearly free; in the middle of one
+  it is no choice at all, since a wall built round a tile in the middle of your ground is a
+  wall across your pen.
 
 The boss adds a sixth: **two pens can share a wall.** Water between two animals is one
 boundary doing two jobs, so holding them apart costs less than dragging a single pen round
