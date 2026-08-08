@@ -20,8 +20,9 @@ D  the deer                 ~  water
 a  an apple                 x  a skull
 ```
 
-A treat inside the pen shows as its own letter on `o` ground. A treat with a `#` on it has
-been fenced over: an apple wasted, or a skull buried.
+A treat inside the pen shows as its own letter on `o` ground. An apple with a `#` on it has
+been fenced over and wasted. A skull never has one on it: nothing can be built on a skull,
+so a wall that wants its tile is built round it instead.
 
 A pen scores a point per tile of ground it holds, five more for every apple inside it and
 five fewer for every skull.
@@ -35,8 +36,8 @@ five fewer for every skull.
 | 5 | Otter Ford | 12 | 24 | — | 24 | 16 |
 | 6 | Puddle Corner | 8 | 26 | — | 26 | 16 |
 | 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 | 26 |
-| 8 | Sour Ground | 14 | 22 | 2 apples, 2 skulls buried | 32 | 25 |
-| 9 | Stag Mere | 20 | 31 | 3 apples, 2 skulls buried | 46 | 34 |
+| 8 | Sour Ground | 14 | 24 | 2 apples, 1 skull | 29 | 15 |
+| 9 | Stag Mere | 20 | 33 | 3 apples, 2 skulls | 38 | 34 |
 
 Every one of these spends its whole budget.
 
@@ -45,9 +46,16 @@ staircase, no detour for an apple — and the gap between it and the score is wh
 is really asking. It is nothing on the first two, which is why they are the first two, and
 it widens the whole way to Puddle Corner. `Tools/level_search.py --demand` prints both.
 
+Sour Ground's block is worth less than the gap suggests, and for a reason of its own: a
+plain block on that map wants a wall over one skull or the other, and a skull takes no
+fencing, so every block worth having is one you cannot build. That is a fact about blocks
+rather than about the level, which is why the last three stops are ordered by what they
+scatter rather than by this column.
+
 ## What the solutions have in common
 
-Four ideas cover all nine maps, and every level is one of them dressed differently.
+Six ideas cover all nine maps, and every level is one of them dressed differently. Five of
+them turn up again and again:
 
 - **Water is a wall you already own.** Build against it, never near it. Half of what looks
   like a hard budget is a map where the shore does most of the walling for free.
@@ -61,8 +69,13 @@ Four ideas cover all nine maps, and every level is one of them dressed different
   that reaches its limit is one whose wall runs along the edge of the world.
 - **Fence just short of a gap, not in it.** Plugging a one-tile gap from the near side
   costs the same one piece and hands you the gap tile as ground. Otter Ford turns on this.
+- **A skull is a tile you cannot build on.** So a skull on the line your wall wants is a
+  choice: shut it in and pay five, or move the wall in beside it and give up its tile along
+  with the skull. Out at the edge of a pen the second is nearly free; in the middle of one
+  it is no choice at all, since a wall built round a tile in the middle of your ground is a
+  wall across your pen.
 
-The boss adds a fifth: **two pens can share a wall.** Water between two animals is one
+The boss adds a sixth: **two pens can share a wall.** Water between two animals is one
 boundary doing two jobs, so holding them apart costs less than dragging a single pen round
 both — and then the only question left is how to split the budget between the two.
 
@@ -214,41 +227,47 @@ the near pair of apples. Two apples inside and 27 tiles of ground make 37. The f
 left out, and the two pieces that close the bottom happen to land on top of them, which
 costs nothing: an apple outside the pen is worth nothing whether it is buried or not.
 
-## 8. Sour Ground — 14 pieces, 32
+## 8. Sour Ground — 14 pieces, 29
 
 ```
-....###...
-...#aoo#..
-..#ooooo#.
-...#ooaoo#
-..#ooooo#.
-...~Poo#..
-..~~~o#...
-.~~~~#....
+...###....
+..#oao#...
+.#ooooo#..
+#ooxooao#.
+#oooooo#..
+.#o~Po#...
+..~~~#x...
+.~~~~.....
 ....a.....
 ..........
 ```
 
 Three apples worth five apiece, two skulls costing five apiece, and a small lake at the
-pig's shoulder. Shutting a skull in with the pig throws away five tiles of ground; walling
-around one leaves a hole in the pen. Laying a piece straight over it does both jobs at
-once, since a skull is mud like any other and takes a fence.
+pig's shoulder. Nothing can be built on a skull, so there are only two things to do with
+one: shut it in and pay the five, or shut it out with a wall built on the tiles around it.
+This map is worth doing one of each.
 
-So the pen is shaped to make its own wall pass over both skulls. The wall would have needed
-a piece somewhere near each of them anyway; putting it exactly there buries them for free.
-The pen then reaches north for one apple and east for another, leaves the third out in the
-south, and holds 22 tiles with two apples and no skulls: 32.
+The skull by the lake is easy. The pen's south-east wall has to come past there anyway, so
+it comes past one tile early — the piece goes on the tile between the pen and the skull, and
+the skull is left outside for nothing.
 
-## 9. Stag Mere — 20 pieces, 46
+The skull north-west of the pig is not. It sits in the middle of the ground the pen wants,
+and a wall built round a tile in the middle of a pen is not a wall round the tile: it is a
+wall across the pen, and everything beyond it is lost with it. Four pieces to keep out five
+points, and a bite out of the pen besides. So it goes inside and is paid for, which buys the
+room to run the pen north for one apple and east for another. 24 tiles, two apples and one
+skull: 29.
+
+## 9. Stag Mere — 20 pieces, 38
 
 ```
 ...###....
 ..#ooa#...
 .#Poooo#..
-#oo#ooo#..
+#ooxooo#..
 .~~~~~~...
-.~~~~~~...
-#oooooo#..
+.~~~~~~#..
+#oooooox#.
 .#aooooD#.
 ..#oooo#..
 ...#ao#...
@@ -264,16 +283,17 @@ budget in the game long enough to do that and hold anything worth having. Two pe
 each shore, use the same water as a wall twice over and pay for it once — which is the
 answer, and then the puzzle is only where to split twenty pieces.
 
-Ten pieces go to each, and each side is the octagon the earlier levels teach, tucked up
-against the water and cut to reach the apple on its own shore. The skull below the pig sits
-where that pen's wall wants to be anyway, so a piece lands on it and buries it; the skull by
-the stag goes the same way. The pig holds 13 tiles and an apple, the stag 18 tiles and two:
-31 tiles, three apples, 46.
+Nine pieces go to the pig and eleven to the stag, and each side is the octagon the earlier
+levels teach, tucked up against the water and cut to reach the apple on its own shore. There
+is a skull on each shore, both of them in the middle of the ground its pen wants, and
+neither will take a piece of fencing. Walling round either one would cut its pen in half for
+the sake of five points, so each pen takes its skull in and pays. The pig holds 14 tiles, an
+apple and a skull; the stag 19 tiles, two apples and a skull: 33 tiles, three apples, two
+skulls, 38.
 
 Boxing the pig into its own tile for four pieces and pouring the other sixteen into the
-stag's shore is the tempting shortcut. It is worth 40 — the north shore gives up far more
-than four pieces' worth of ground when it is abandoned, which is what makes the split the
-puzzle.
+stag's shore is the tempting shortcut. The north shore gives up far more than four pieces'
+worth of ground when it is abandoned, which is what makes the split the puzzle.
 
 ## Working one out yourself
 

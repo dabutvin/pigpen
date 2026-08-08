@@ -17,9 +17,9 @@ best pen, an example of it, and star thresholds in the proportions the shipped l
 
 A pen is any run of mud holding every animal on the map and no tile on the rim — an
 animal walks straight off the rim — and it costs one fence piece for every mud tile
-around its edge. Water costs nothing, which is the whole game. A tile the pen grows
-around rather than over is a mud tile on that edge like any other, so burying a skull
-under a piece of fencing is a pen with a hole in it, and the search finds those too.
+around its edge. Water costs nothing, which is the whole game. A skull is staked into
+the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
+skull has to be shut in and paid for, or the wall has to go round it.
 
 A map with a deer on it as well as the pig is held by ground in two pieces just as
 happily as by one, since what has to hold is each animal rather than the pen: the search
@@ -45,6 +45,8 @@ import sys
 NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
 # What shutting a tile into the pen is worth, over and above the ground itself.
 WORTH = {"a": 5, "x": -5}
+# A skull is staked into the mud, and nothing can be built on top of it.
+SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on.
 ANIMALS = ("P", "D")
 
@@ -84,7 +86,7 @@ def score(pen, treats):
 
 def fences_around(pen, mud):
     """The mud tiles that have to be fenced to hold a pen — including any tile the pen
-    was grown around rather than over, which is how a skull gets buried."""
+    was grown around rather than over, which is a hole to be plugged like any other."""
     edge = set()
     for row, column in pen:
         for down, across in NEIGHBOURS:
@@ -92,6 +94,16 @@ def fences_around(pen, mud):
             if neighbour in mud and neighbour not in pen:
                 edge.add(neighbour)
     return edge
+
+
+def can_be_walled(edge, treats):
+    """Whether the wall a pen needs is one that could actually be built.
+
+    A skull takes no fence, so a pen with one on its edge cannot be closed there. Such a
+    pen is not thrown away while the search runs — growing out over the skull turns it
+    back into a pen that holds — but it is never an answer.
+    """
+    return all(treats.get(tile) != SKULL for tile in edge)
 
 
 def on_rim(tile, rows, columns):
@@ -107,11 +119,12 @@ def search(mud, treats, starts, rows, columns, budget, beam):
         if start not in pennable:
             raise SystemExit(f"{animal!r} starts on the rim of the map, where no pen can hold it")
 
-    def cost(pen):
-        return len(fences_around(pen, mud))
+    def holds(edge):
+        """Whether a wall of these tiles is within budget and can be built at all."""
+        return len(edge) <= budget and can_be_walled(edge, treats)
 
     alone = frozenset(starts.values())
-    best = (score(alone, treats), alone) if cost(alone) <= budget else (0, frozenset())
+    best = (score(alone, treats), alone) if holds(fences_around(alone, mud)) else (0, frozenset())
     live = {alone}
 
     while live:
@@ -125,21 +138,23 @@ def search(mud, treats, starts, rows, columns, budget, beam):
                     wider = pen | {neighbour}
                     if wider in grown:
                         continue
-                    grown[wider] = cost(wider)
+                    grown[wider] = fences_around(wider, mud)
 
         if not grown:
             break
 
-        within = [(score(pen, treats), pen) for pen, spent in grown.items() if spent <= budget]
+        within = [(score(pen, treats), pen) for pen, edge in grown.items() if holds(edge)]
         if within:
             best = max(best, max(within))
 
         # Cheap pens are the ones worth widening: a pen over budget is not thrown away,
-        # since filling in a notch can hand a piece back, but it queues behind the rest.
-        # Kept alongside them are the pens holding the most for what they cost, so a pen
-        # that went out of its way for an apple is not dropped for a tidier one.
-        cheapest = sorted(grown, key=lambda pen: grown[pen])[:beam]
-        thriftiest = sorted(grown, key=lambda pen: grown[pen] - score(pen, treats))[: beam // 2]
+        # since filling in a notch can hand a piece back, and nor is one walled over a
+        # skull, since growing out over the skull is what makes it buildable. Kept
+        # alongside them are the pens holding the most for what they cost, so a pen that
+        # went out of its way for an apple is not dropped for a tidier one.
+        cost = {pen: len(edge) for pen, edge in grown.items()}
+        cheapest = sorted(grown, key=lambda pen: cost[pen])[:beam]
+        thriftiest = sorted(grown, key=lambda pen: cost[pen] - score(pen, treats))[: beam // 2]
         live = set(cheapest) | set(thriftiest)
 
     return best
@@ -207,7 +222,8 @@ def squared_off(mud, treats, starts, rows, columns, budget):
         if any(one & other for one, other in itertools.combinations(choice, 2)):
             continue
         pen = frozenset().union(*choice)
-        if len(fences_around(pen, mud)) <= budget:
+        edge = fences_around(pen, mud)
+        if len(edge) <= budget and can_be_walled(edge, treats):
             best = max(best, (score(pen, treats), pen))
     return best
 

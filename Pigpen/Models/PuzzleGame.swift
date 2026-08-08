@@ -292,61 +292,60 @@ extension PuzzleGame {
         return game
     }
 
-    /// Sour Ground with the three columns beside the pig boxed off from row 3 to row 6 and
-    /// the water walling the rest, which is the board that has an apple and a skull on it at
-    /// once. One of each is inside the pen, where they cancel out and leave it worth exactly
-    /// the eleven tiles it holds; the other skull is buried under the fencing that got there.
+    /// Sour Ground with the ground east of the little lake boxed off, which is the board
+    /// that has an apple and a skull on it at once. One of each is inside the pen, where
+    /// they cancel out and leave it worth exactly the ten tiles it holds. The other skull
+    /// is left outside, and the wall takes the step in beside it that it has to: nothing
+    /// can be built on a skull, so a wall that wants its tile goes round.
     static func applesAndSkulls() -> PuzzleGame {
         let game = PuzzleGame(level: .sourGround)
-        let rows = 3...6
-        let columns = 4...6
-
-        var ring: [GridPoint] = []
-        for column in columns {
-            ring.append(GridPoint(row: rows.lowerBound - 1, column: column))
-            ring.append(GridPoint(row: rows.upperBound + 1, column: column))
-        }
-        for row in rows {
-            ring.append(GridPoint(row: row, column: columns.lowerBound - 1))
-            ring.append(GridPoint(row: row, column: columns.upperBound + 1))
-        }
-
-        // The water takes three of these tiles, which is three pieces the pen never spends.
-        for tile in ring {
-            game.beginStroke()
-            game.buildFence(on: tile)
-            game.endStroke()
-        }
+        game.build("""
+            ..........
+            ..........
+            .....##...
+            ....#..#..
+            ...#...#..
+            .......#..
+            .......#..
+            .....##...
+            ..........
+            ..........
+            """)
         return game
     }
 
     /// Stag Mere with the best pen the meadow has in it standing, which is the board to
     /// look at when the question is what a second animal does: two enclosures leaning on
     /// the same water, one round the pig and one round the stag, three apples shut in
-    /// between them and a skull buried under each wall.
+    /// between them and a skull shut in on either shore, since neither wall can be laid
+    /// over the one in its way and going round it costs more ground than it is worth.
     static func theStagMeresBestPen() -> PuzzleGame {
         let game = PuzzleGame(level: .stagMere)
-        let plan = """
+        game.build("""
             ...###....
             ..#...#...
             .#.....#..
-            #..#...#..
-            ..........
-            ..........
             #......#..
+            ..........
+            .......#..
+            #.......#.
             .#......#.
             ..#....#..
             ...#..#...
             ....##....
-            """
+            """)
+        return game
+    }
 
+    /// Lays a plan of fencing out on the board, `#` by `#`. Each piece goes down as a press
+    /// of its own, the way a player lays them one tap at a time.
+    private func build(_ plan: String) {
         for (row, line) in plan.split(whereSeparator: \.isNewline).enumerated() {
             for (column, character) in line.enumerated() where character == "#" {
-                game.beginStroke()
-                game.buildFence(on: GridPoint(row: row, column: column))
-                game.endStroke()
+                beginStroke()
+                buildFence(on: GridPoint(row: row, column: column))
+                endStroke()
             }
         }
-        return game
     }
 }

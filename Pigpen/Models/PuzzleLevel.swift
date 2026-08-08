@@ -8,14 +8,26 @@ enum Terrain: Character, CaseIterable, Sendable {
 
 /// Something lying on a tile of mud, worth having inside the pen or worth keeping out of it.
 ///
-/// A treat does not change what the ground underneath it is: the pig walks over it, and a
-/// fence can be laid on top of it like on any other tile — which is how a skull gets
-/// buried, and how an apple gets wasted.
+/// A treat does not change what the ground underneath it is: either one can be walked over,
+/// and either one can be shut into a pen. What they do not share is whether they take a
+/// fence. An apple is windfall, and a piece laid on top of one wastes it. A skull is staked
+/// into the ground and refuses the piece altogether, so a wall that wants that tile has to
+/// go round it — which is what makes sour ground something to plan a pen around rather than
+/// something to pave over.
 enum Treat: Character, CaseIterable, Sendable {
     /// A windfall apple. Ground with an apple on it is worth five ordinary tiles.
     case apple = "a"
-    /// A skull staked in the mud. Sour ground, and it costs five tiles to shut a pig in with.
+    /// A skull staked in the mud. Sour ground: it costs five tiles to shut a pig in with,
+    /// and it takes no fencing, so it can be neither built on nor buried.
     case skull = "x"
+
+    /// Whether a piece of fencing can be laid on the tile this is lying on.
+    var takesFencing: Bool {
+        switch self {
+        case .apple: true
+        case .skull: false
+        }
+    }
 
     /// What shutting the tile into the pen is worth, over and above the ground itself,
     /// counted in mud tiles.
@@ -118,11 +130,14 @@ struct PuzzleLevel: Identifiable, Sendable {
     }
 
     /// A fence takes up a whole tile, so it can only be built on open mud: never in the
-    /// water, which is already a boundary and free, and never on a tile an animal is
-    /// standing on. Tiles along the outer edge of the map are fair game, and usually where
-    /// the fencing has to go, since that is the ground the animals run off from.
+    /// water, which is already a boundary and free, never on a tile an animal is standing
+    /// on, and never on a skull, which is staked into the ground and leaves no room for a
+    /// post. Tiles along the outer edge of the map are fair game, and usually where the
+    /// fencing has to go, since that is the ground the animals run off from.
     func canBuildFence(on tile: GridPoint) -> Bool {
-        terrain(at: tile) == .mud && !animals.contains { $0.tile == tile }
+        terrain(at: tile) == .mud
+            && !animals.contains { $0.tile == tile }
+            && (treats[tile]?.takesFencing ?? true)
     }
 
     var mudTileCount: Int {
@@ -415,16 +430,25 @@ extension PuzzleLevel {
     )
 
     /// Sour ground: two skulls staked in the mud, each costing five tiles to shut a pig
-    /// in with, and three apples worth five apiece. A skull is mud like any other, so a
-    /// piece of fencing laid over it buries it — and the best pen here does exactly that
-    /// with both of them, holding 22 tiles and two apples for 32.
+    /// in with, and three apples worth five apiece. A skull takes no fencing, so a wall
+    /// that wants its tile has to step around it — and stepping around one is not the same
+    /// as shutting it out, since any ground the wall leaves open is ground the pig walks
+    /// onto. The best pen here does one of each: it bends its south wall in beside the
+    /// skull by the lake to leave it outside, and takes the skull north of the pig in and
+    /// pays the five, which costs less than the ground a detour round it would give up.
+    /// 24 tiles and two apples, less the one skull, come to 29.
+    ///
+    /// The second star is set by what squaring the map off is worth rather than by the
+    /// proportion of the maximum the rest of the meadow uses: with both skulls off limits
+    /// to fencing, the best plain block here is only worth 15, and no level withholds its
+    /// second star from the obvious pen.
     static let sourGround = authored(
         id: "sour-ground",
         name: "Sour Ground",
         fenceBudget: 14,
-        twoStarScore: 18,
-        threeStarScore: 30,
-        maximumScore: 32,
+        twoStarScore: 15,
+        threeStarScore: 27,
+        maximumScore: 29,
         map: """
             ..........
             ....a.....
@@ -444,16 +468,18 @@ extension PuzzleLevel {
     /// them both. Neither shore is worth walling alone, and the water is the one wall both
     /// pens can lean on, so the twenty pieces go out as two enclosures rather than one —
     /// which is the whole puzzle, since every piece spent on the pig is a piece the stag
-    /// does not get. Apples on both shores are worth going out of the way for and a skull
-    /// on each is worth burying, the way Sour Ground taught. 31 tiles and three apples
-    /// come to 46.
+    /// does not get. Apples on both shores are worth going out of the way for, and there is
+    /// a skull on each: neither wall can pass over one, the way Sour Ground taught, and on
+    /// this board walling round either of them costs more ground than the skull does, so
+    /// each pen takes its own in and pays for it. 33 tiles and three apples, less the two
+    /// skulls, come to 38.
     static let stagMere = authored(
         id: "stag-mere",
         name: "Stag Mere",
         fenceBudget: 20,
-        twoStarScore: 26,
-        threeStarScore: 43,
-        maximumScore: 46,
+        twoStarScore: 22,
+        threeStarScore: 36,
+        maximumScore: 38,
         map: """
             ..........
             .....a....

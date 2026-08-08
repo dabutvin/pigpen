@@ -63,8 +63,8 @@ extension WorldMap {
     /// nothing to lean on but the shape of the wall.
     ///
     /// The last three are ordered by what they put on the ground instead, since that is the
-    /// harder thing about them: apples, then skulls to bury as well, then a second animal
-    /// and one budget to split between the two.
+    /// harder thing about them: apples, then skulls to build around as well, then a second
+    /// animal and one budget to split between the two.
     static let mudlarkMeadow = WorldMap(
         name: "Mudlark Meadow",
         nodes: [
