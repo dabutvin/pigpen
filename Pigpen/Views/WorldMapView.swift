@@ -38,6 +38,10 @@ struct WorldMapView: View {
     @State private var briefedStop: Int?
     /// Whether the film that closes the world out is up.
     @State private var farewell = false
+    /// Whether the map has already made its opening run up the trail. Putting a puzzle away
+    /// brings the map back on screen, which is not an arrival — it is a return to a map the
+    /// player left mid-trail.
+    @State private var arrived = false
 
     init(progress: WorldProgress = WorldProgress()) {
         _progress = State(initialValue: progress)
@@ -361,9 +365,15 @@ struct WorldMapView: View {
 
     /// Brings the pig into view when the map opens. A world already part-way through runs
     /// up the trail from the barn, which says where the player is and how far there is to go.
+    ///
+    /// Only ever once: coming back from a puzzle puts the map on screen again, and the map
+    /// there is already the one the player left — scrolled to wherever they walked the pig.
+    /// Running up the trail a second time would haul the view off to the furthest stop while
+    /// the pig stood at the old level the player went back for.
     private func arrive() async {
-        let stop = progress.frontier
-        guard stop > 0 else { return }
+        let arrival = MapArrival(pigStop: pigStop, alreadyArrived: arrived)
+        arrived = true
+        guard let stop = arrival.stop else { return }
 
         guard !reduceMotion else {
             scroll(to: stop, over: 0)
@@ -421,6 +431,32 @@ struct WalkAfterALevel {
     var destination: Double? {
         guard openedNewGround, abs(Double(frontierNow) - standingAt) > standingTolerance else { return nil }
         return Double(frontierNow)
+    }
+}
+
+/// What the map looks at when it comes on screen.
+///
+/// The first time, it runs up the trail to the pig, wherever the pig is standing — which on
+/// a world picked up part-way through is the furthest stop reached, and on a fresh one is the
+/// barn the map already opens on.
+///
+/// Every time after that the map is coming back from a puzzle rather than opening, and it
+/// keeps the view the player left. The walk after a level does any scrolling that is owed,
+/// and a replay of an old level owes none: the pig stays at the signpost the player walked it
+/// down to, so the map has to stay there with it.
+struct MapArrival {
+    /// Where the pig is standing as the map comes on screen.
+    let pigStop: Double
+    /// Whether the map has been on screen before.
+    let alreadyArrived: Bool
+
+    /// The stop to bring into view, or nothing at all if the map stays as it is.
+    var stop: Int? {
+        guard !alreadyArrived else { return nil }
+        let stop = Int(pigStop.rounded())
+        // The map opens at the bottom of the trail, so the barn is already in view.
+        guard stop > 0 else { return nil }
+        return stop
     }
 }
 
