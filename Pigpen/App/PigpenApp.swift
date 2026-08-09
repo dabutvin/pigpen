@@ -25,21 +25,25 @@ struct PigpenApp: App {
     private let launch = ProcessInfo.processInfo.arguments
 
     /// Where each shot of each film is stopped for its photograph: far enough into the
-    /// shot that the camera has moved and the caption is fully up.
-    private static let stills: [(argument: String, scene: CutScene.Name, seconds: TimeInterval)] = [
-        ("-opening", .opening, 1.4),
-        ("-opening-gate", .opening, 4.0),
-        ("-opening-pig", .opening, 7.0),
-        ("-opening-away", .opening, 9.6),
-        ("-opening-fence", .opening, 12.0),
-        ("-mere", .stagMere, 1.3),
-        ("-mere-stag", .stagMere, 3.9),
-        ("-mere-both", .stagMere, 6.6),
-        ("-held-penned", .theMeadowHeld, 1.3),
-        ("-held-stag", .theMeadowHeld, 3.8),
-        ("-held-meadow", .theMeadowHeld, 6.6),
-        ("-held-world", .theMeadowHeld, 9.4),
-        ("-held-beyond", .theMeadowHeld, 12.6)
+    /// shot that the camera has moved and the caption is fully up, and far enough from
+    /// either end of it that a line rewritten a word longer does not photograph a shot
+    /// with half its type still fading. `CutSceneTests` pins every one of them to the
+    /// middle of the shot it belongs to, so a script edit that walks a still off its shot
+    /// fails there rather than in a screenshot nobody looks at twice.
+    static let stills: [(argument: String, scene: CutScene.Name, seconds: TimeInterval)] = [
+        ("-opening", .opening, 1.5),
+        ("-opening-gate", .opening, 4.3),
+        ("-opening-pig", .opening, 7.1),
+        ("-opening-away", .opening, 9.9),
+        ("-opening-fence", .opening, 12.5),
+        ("-mere", .stagMere, 1.4),
+        ("-mere-stag", .stagMere, 4.1),
+        ("-mere-both", .stagMere, 7.2),
+        ("-held-penned", .theMeadowHeld, 1.4),
+        ("-held-stag", .theMeadowHeld, 4.0),
+        ("-held-meadow", .theMeadowHeld, 7.2),
+        ("-held-world", .theMeadowHeld, 10.4),
+        ("-held-beyond", .theMeadowHeld, 13.4)
     ]
 
     var body: some Scene {

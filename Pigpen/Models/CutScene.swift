@@ -17,12 +17,21 @@ struct CutScene: Equatable, Sendable {
     ///
     /// Named rather than left anonymous because the game has to remember which ones a
     /// player has already sat through — none of them is worth showing twice.
+    ///
+    /// Between them they are the whole of the meadow's story: a gate left open on unfenced
+    /// country, the one field of that country which already belongs to something, and the
+    /// meadow made to hold — with another gate standing open somewhere else by the last
+    /// frame, which is what there is to go on for.
     enum Name: String, Sendable, CaseIterable {
-        /// Before the first walk up the meadow: a pig, and the ground it is loose in.
+        /// Before the first walk up the meadow: a pig, the open gate it came through, and
+        /// nine fields of country with nothing in them to stop it.
         case opening
-        /// Before the meadow's last puzzle, which is the only one with two animals on it.
+        /// Before the meadow's last puzzle, which is the only one with two animals on it —
+        /// because the last field of the meadow is the stag's, and fencing it has to leave
+        /// the stag its water rather than wall it off.
         case stagMere
-        /// After it, once every pen in the meadow is held.
+        /// After it, once every pen in the meadow is held: what all that fencing was for,
+        /// and the open gate somewhere else that is the reason to go on.
         case theMeadowHeld
     }
 
@@ -59,7 +68,8 @@ struct CutScene: Equatable, Sendable {
         case theOpenGate
         /// The pig, head on and filling the frame — the one the whole game is about.
         case thePig
-        /// Gone, at a gallop, with the field streaking past it.
+        /// Gone, at a gallop, with the field streaking past it: what chasing it looks like,
+        /// and why the game is a fence rather than a chase.
         case away
         /// The meadow again, with a run of fencing laid out along the front of it.
         case fenceItIn
@@ -68,7 +78,8 @@ struct CutScene: Equatable, Sendable {
 
         /// The mere, with an animal on either side of it.
         case theMere
-        /// The stag, head on: the second thing the game ever asks anybody to hold.
+        /// The stag, head on: the second thing the game ever asks anybody to hold, and the
+        /// one animal in the meadow that was there before the farm was.
         case theStag
         /// Both of them, with the pen each would take drawn round them in dashes.
         case bothOrNeither
@@ -77,13 +88,14 @@ struct CutScene: Equatable, Sendable {
 
         /// Both animals shut in, on ground washed gold.
         case bothPenned
-        /// The stag alone in the meadow, and the trail out of it.
+        /// The stag alone in the meadow, and the trail out of it: it was let go, and it is
+        /// staying on the water it always had.
         case theStagStays
         /// The whole meadow at once: the trail, its stops, the barn and the mere.
         case theWholeMeadow
         /// The meadow from further out than that — a world, with a stag stood on it.
         case theMeadowFromOut
-        /// And another one out past it, coming alight.
+        /// And another one out past it, coming alight: the next gate standing open.
         case somewhereElse
     }
 
@@ -169,17 +181,23 @@ struct CutScene: Equatable, Sendable {
 extension CutScene {
     /// Before the first walk up the meadow.
     ///
-    /// Five shots: the meadow at first light, the barn with the gate nobody shut, the pig
-    /// itself, the pig leaving, and the fencing the player is given to answer it with. It
-    /// introduces the two things every puzzle is made of and then gets out of the way.
+    /// Five shots, and between them the reason the game is nine puzzles rather than one:
+    /// the meadow with no fence anywhere in it, the gate somebody left open, the pig, the
+    /// pig at a gallop with the line that says chasing it is not going to work, and the
+    /// fencing that is the answer instead. A player who watches it knows what they are
+    /// holding, what got out, and why the job is the meadow rather than the animal.
     static func opening(start: Date = .now) -> Self {
         Self(
             name: .opening,
             shots: [
-                Shot(picture: .firstLight, caption: "Mudlark Meadow, first light.", seconds: 2.8),
+                Shot(
+                    picture: .firstLight,
+                    caption: "Mudlark Meadow, first light. Not a fence in it.",
+                    seconds: 3.0
+                ),
                 Shot(picture: .theOpenGate, caption: "Somebody left the gate open.", seconds: 2.6),
                 Shot(picture: .thePig, caption: "One pig, and nine fields to lose it in.", seconds: 3.0),
-                Shot(picture: .away, caption: "It is already going.", seconds: 2.4),
+                Shot(picture: .away, caption: "You will not catch it in the open.", seconds: 2.6),
                 Shot(picture: .fenceItIn, caption: "Fence it in.", seconds: 2.6)
             ],
             start: start
@@ -191,17 +209,26 @@ extension CutScene {
     /// Short on purpose. A player who has fenced eight fields does not need teaching how to
     /// fence a ninth — they need telling the one thing about this map that is different,
     /// which is that there are two animals on it and one budget for the pair. Three shots
-    /// and eight seconds: the water, the stag, and the rule.
+    /// and under nine seconds: the water, whose water it is, and the rule that follows.
+    ///
+    /// The middle shot is the story half of the briefing. The rule reads as arithmetic on
+    /// its own — two animals, one budget — and as something worth doing once the far shore
+    /// belongs to somebody: the last field of the meadow is not empty ground, so fencing it
+    /// means making room for what already lives there rather than walling it out.
     static func stagMere(start: Date = .now) -> Self {
         Self(
             name: .stagMere,
             shots: [
-                Shot(picture: .theMere, caption: "Stag Mere. Water straight down the middle.", seconds: 2.6),
-                Shot(picture: .theStag, caption: "There is a stag on the far shore.", seconds: 2.6),
+                Shot(picture: .theMere, caption: "Stag Mere. Water straight down the middle.", seconds: 2.7),
+                Shot(
+                    picture: .theStag,
+                    caption: "The stag had that shore before the barn did.",
+                    seconds: 2.9
+                ),
                 Shot(
                     picture: .bothOrNeither,
                     caption: "Twenty pieces. Both of them held, or neither counts.",
-                    seconds: 2.9
+                    seconds: 3.3
                 )
             ],
             start: start
@@ -210,18 +237,38 @@ extension CutScene {
 
     /// After the last pen in the meadow holds.
     ///
-    /// The one that closes the world out: both animals held, the stag left where it lives,
-    /// the whole meadow seen at once, and then the meadow seen from far enough out to be a
-    /// world with more country past it.
+    /// The one that closes the world out, and the one that has to pay off the opening: both
+    /// animals held a shore apiece, the stag left on the water that was always its own, the
+    /// nine fields fenced and the pig free to be loose in all of them, a meadow nothing gets
+    /// out of any more — and then, out past it, another gate standing open somewhere else.
+    ///
+    /// That last line is the opening's second shot said again from further away, which is
+    /// what makes the next world a reason to go on rather than simply more country.
     static func theMeadowHeld(start: Date = .now) -> Self {
         Self(
             name: .theMeadowHeld,
             shots: [
-                Shot(picture: .bothPenned, caption: "Both of them held.", seconds: 2.5),
-                Shot(picture: .theStagStays, caption: "The stag keeps the meadow.", seconds: 2.8),
-                Shot(picture: .theWholeMeadow, caption: "Nine fields, every one of them fenced.", seconds: 2.8),
-                Shot(picture: .theMeadowFromOut, caption: "Mudlark Meadow is yours.", seconds: 3.0),
-                Shot(picture: .somewhereElse, caption: "And there is more country than this.", seconds: 3.0)
+                Shot(picture: .bothPenned, caption: "Both of them held, a shore apiece.", seconds: 2.5),
+                Shot(
+                    picture: .theStagStays,
+                    caption: "The stag stays. It had this meadow before you did.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    picture: .theWholeMeadow,
+                    caption: "Nine fields fenced, and the pig loose in all of them.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    picture: .theMeadowFromOut,
+                    caption: "Nothing gets out of Mudlark Meadow now.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    picture: .somewhereElse,
+                    caption: "Somewhere else, a gate is standing open.",
+                    seconds: 3.0
+                )
             ],
             start: start
         )
