@@ -7,6 +7,10 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.gitignore'
+  # Every push to main goes out on its own, but sometimes a build needs to be sent
+  # again — an upload that failed on App Store Connect's side, or a branch you want
+  # testers on before it merges. Run it from the Actions tab and pick the branch.
+  workflow_dispatch:
 
 # Shared with release.yml and signing-setup.yml: only one run at a time may be
 # creating or revoking certificates on the account.
