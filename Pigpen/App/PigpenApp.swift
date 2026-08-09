@@ -4,9 +4,14 @@ import SwiftUI
 @main
 struct PigpenApp: App {
     /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-map`,
-    /// `-tutorial`, `-settings` or one of the film arguments so the pull request
-    /// screenshots can show the boards, the world map, the practice pen, the settings sheet
-    /// and every shot of every cut scene rather than only the title screen.
+    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-settings` or one of the film
+    /// arguments so the pull request screenshots can show the boards, the world map, the
+    /// practice pen, the daily puzzle and its archive, the settings sheet and every shot of
+    /// every cut scene rather than only the title screen.
+    ///
+    /// The daily screens are opened on a fixed square of the calendar rather than on
+    /// whatever day the runner is having, so the archive shows the same month of finished
+    /// and shut days every time, and the clock over the board is handed over already stopped.
     /// The world and the plain board are shown part-way through, since an untouched world
     /// has nothing on it yet and an untouched field has no fencing and not a control on it
     /// lit. The next two boards are the ones with something lying on the ground: the
@@ -23,6 +28,11 @@ struct PigpenApp: App {
     /// it. Each film argument stops one of them on one of its shots, so the same frame
     /// comes out of every run.
     private let launch = ProcessInfo.processInfo.arguments
+
+    /// The square of the calendar the daily screens are photographed on. A day well into a
+    /// month, so the archive has held days behind it and shut ones ahead of it in the same
+    /// picture, and a Wednesday, so the board is one of the middling ones.
+    private static let photographed = DailyDate(year: 2026, month: 4, day: 22)
 
     /// Where each shot of each film is stopped for its photograph: far enough into the
     /// shot that the camera has moved and the caption is fully up, and far enough from
@@ -63,8 +73,46 @@ struct PigpenApp: App {
                     WorldMapView(progress: .partWayThrough())
                 } else if launch.contains("-tutorial") {
                     TutorialView()
+                } else if launch.contains("-daily") {
+                    // Part way through, like the meadow's plain board: an untouched field
+                    // has no fencing on it and not a control lit. The clock is handed over
+                    // already stopped, since a running one photographs as whenever the
+                    // runner got round to it, the same way a film does.
+                    if let day = DailyAlmanac.level(on: Self.photographed) {
+                        PuzzleView(game: .aDayPartWayThrough(day), clock: .showing(227))
+                    } else {
+                        DailyPuzzleView(
+                            date: Self.photographed,
+                            progress: DailyProgress(store: RememberedDailyRecords())
+                        )
+                    }
+                } else if launch.contains("-archive") {
+                    DailyArchiveView(
+                        today: Self.photographed,
+                        progress: .partWayThroughTheMonth(today: Self.photographed)
+                    )
                 } else if launch.contains("-settings") {
-                    TitleScreenView(progress: .partWayThrough(), showsSettings: true)
+                    // With a fortnight of days complete as well, so the card behind the gear
+                    // has the dailies to say something about and the clear button has all
+                    // of it to clear.
+                    TitleScreenView(
+                        progress: .partWayThrough(),
+                        daily: .partWayThroughTheMonth(today: Self.photographed),
+                        today: Self.photographed,
+                        showsSettings: true
+                    )
+                } else if launch.contains("-title") {
+                    // Today complete as well as the fortnight behind it, since what there is to
+                    // see on the card is the stars, the clock and the run of days that a
+                    // day already penned leaves on it.
+                    TitleScreenView(
+                        progress: .partWayThrough(),
+                        daily: .partWayThroughTheMonth(
+                            today: Self.photographed,
+                            includingToday: true
+                        ),
+                        today: Self.photographed
+                    )
                 } else {
                     TitleScreenView()
                 }

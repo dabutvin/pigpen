@@ -12,6 +12,9 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
 
     let progress: WorldProgress
+    /// The book of days goes with the meadow's stars: a player asking for the game back as
+    /// they found it means all of it, dailies included.
+    let daily: DailyProgress
 
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
@@ -20,7 +23,7 @@ struct SettingsView: View {
     @State private var hasCleared = false
 
     private var world: WorldMap { progress.world }
-    private var hasSomethingToClear: Bool { progress.clearedCount > 0 }
+    private var hasSomethingToClear: Bool { progress.clearedCount > 0 || daily.completedCount > 0 }
 
     var body: some View {
         ZStack {
@@ -51,8 +54,9 @@ struct SettingsView: View {
         } message: {
             Text(
                 """
-                Every star you have earned and every level you have opened will be forgotten, \
-                and \(world.name) goes back to its first puzzle. There is no getting them back.
+                Every star you have earned, every level you have opened and every daily \
+                puzzle you have held will be forgotten, and \(world.name) goes back to its \
+                first puzzle. There is no getting them back.
                 """
             )
         }
@@ -132,6 +136,7 @@ struct SettingsView: View {
                 .foregroundStyle(GamePalette.post.opacity(0.55))
         }
         .animation(.easeInOut(duration: 0.25), value: progress.totalStars)
+        .animation(.easeInOut(duration: 0.25), value: daily.completedCount)
     }
 
     private func card<Content: View>(@ViewBuilder content: () -> Content) -> some View {
@@ -169,16 +174,23 @@ struct SettingsView: View {
         guard hasSomethingToClear else {
             return "Nothing saved yet — \(world.name) is as it comes."
         }
-        return """
+        let meadow = """
             \(progress.totalStars) of \(world.starTotal) stars, \
-            \(progress.clearedCount) of \(world.count) pens held.
+            \(progress.clearedCount) of \(world.count) puzzles complete.
             """
+        guard daily.completedCount > 0 else { return meadow }
+        return meadow + " \(counted(daily.completedCount, "daily puzzle")) as well."
+    }
+
+    private func counted(_ number: Int, _ noun: String) -> String {
+        "\(number) \(noun)\(number == 1 ? "" : "s")"
     }
 
     // MARK: - Actions
 
     private func clearEverything() {
         progress.eraseEverything()
+        daily.eraseEverything()
         hasCleared = true
         UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
@@ -187,11 +199,17 @@ struct SettingsView: View {
 #Preview("Part way through") {
     Color.clear
         .sheet(isPresented: .constant(true)) {
-            SettingsView(progress: .partWayThrough())
-                .presentationDetents([.medium, .large])
+            SettingsView(
+                progress: .partWayThrough(),
+                daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22))
+            )
+            .presentationDetents([.medium, .large])
         }
 }
 
 #Preview("Nothing saved") {
-    SettingsView(progress: WorldProgress(store: RememberedProgress()))
+    SettingsView(
+        progress: WorldProgress(store: RememberedProgress()),
+        daily: DailyProgress(store: RememberedDailyRecords())
+    )
 }

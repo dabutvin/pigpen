@@ -8,15 +8,23 @@ struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    /// Told what a pen was worth — its stars, and whether it was the best pen the map has
-    /// in it — every time one holds.
+    /// Told what a pen was worth — its stars, whether it was the best pen the map has in
+    /// it, and how long it took — every time one holds.
     ///
     /// Nothing is listening when a level is played on its own — the previews and the
     /// screenshot runs open one straight — and that is also how the screen knows whether
-    /// there is a world map behind it to offer a way back to.
-    private let onPenned: ((PenVerdict) -> Void)?
+    /// there is somewhere behind it to offer a way back to.
+    private let onPenned: ((PenVerdict, TimeInterval) -> Void)?
 
     @State private var game: PuzzleGame
+    /// The clock over the board, counting up from the moment it opened, and `nil` for a
+    /// puzzle nobody is timing. The meadow is not timed — a level there is worth going back
+    /// to and taking apart — but a daily is a day's go at one board, and how long it took
+    /// is part of what it was.
+    @State private var clock: Stopwatch?
+    /// What the clock said when the pen held, so the verdict says the same thing however
+    /// long the card is left up.
+    @State private var heldIn: TimeInterval?
     /// Where each animal is standing this instant, which is its own tile until the gate
     /// is opened on a pen with a gap in it.
     @State private var marks: [AnimalMark]
@@ -29,16 +37,29 @@ struct PuzzleView: View {
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
 
-    init(level: PuzzleLevel, onPenned: ((PenVerdict) -> Void)? = nil) {
-        self.init(game: PuzzleGame(level: level), onPenned: onPenned)
+    /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
+    ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
+    ///   is how the screenshot runs photograph a time rather than photographing whenever
+    ///   the runner got round to it.
+    init(
+        level: PuzzleLevel,
+        clock: Stopwatch? = nil,
+        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
+    ) {
+        self.init(game: PuzzleGame(level: level), clock: clock, onPenned: onPenned)
     }
 
     /// Opens the screen on a puzzle already in progress, which is how the previews and the
     /// screenshot runs show a field with fencing on it.
-    init(game: PuzzleGame, onPenned: ((PenVerdict) -> Void)? = nil) {
+    init(
+        game: PuzzleGame,
+        clock: Stopwatch? = nil,
+        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
+    ) {
         self.onPenned = onPenned
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
+        _clock = State(initialValue: clock)
     }
 
     private var level: PuzzleLevel { game.level }
@@ -111,7 +132,21 @@ struct PuzzleView: View {
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
         .fieldNavigationBar()
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) { clockFace }
+        }
+        .onAppear { clock?.start() }
         .task(id: game.phase) { await reactToPhase() }
+    }
+
+    /// The clock, up in the bar with the day's name rather than down on the board: it is
+    /// something to glance at afterwards, not something to play against. It stops the
+    /// moment the pen holds.
+    @ViewBuilder
+    private var clockFace: some View {
+        if let clock {
+            StopwatchFace(clock: clock)
+        }
     }
 
     // MARK: - Pieces
@@ -330,6 +365,10 @@ struct PuzzleView: View {
             detail += "."
         }
 
+        if let heldIn {
+            detail += " \(Stopwatch.face(heldIn)) on the clock."
+        }
+
         if game.isPenAsGoodAsItGets {
             return detail + (level.holdsTreats
                 ? " There is no better pen on this map."
@@ -466,9 +505,14 @@ struct PuzzleView: View {
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         case .penned:
+            // The clock stops on the pen holding rather than on the card coming up, so the
+            // lap of honour is not charged to the player.
+            clock?.stop()
+            let took = clock?.elapsed() ?? 0
+            if clock != nil { heldIn = took }
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
-            onPenned?(game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false))
+            onPenned?(game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false), took)
             await celebrate()
         }
     }
@@ -544,6 +588,39 @@ struct PuzzleView: View {
     }
 }
 
+/// The clock a timed board wears in its bar: a stopwatch and a count that only exists
+/// while it is running.
+///
+/// A clock is the one thing in this game that has to be redrawn on its own account, so it
+/// is the one thing given a timeline of its own — and only while it is going. Once the pen
+/// holds, the time is a fixed number and the view goes back to being a piece of text.
+private struct StopwatchFace: View {
+    let clock: Stopwatch
+
+    var body: some View {
+        if clock.isRunning {
+            TimelineView(.periodic(from: clock.started ?? Date(), by: 1)) { timeline in
+                face(clock.elapsed(at: timeline.date))
+            }
+        } else {
+            face(clock.elapsed())
+        }
+    }
+
+    private func face(_ seconds: TimeInterval) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "stopwatch")
+                .font(.system(size: 12, weight: .black))
+            Text(Stopwatch.face(seconds))
+                .font(.system(size: 15, weight: .heavy, design: .rounded))
+                .monospacedDigit()
+        }
+        .foregroundStyle(GamePalette.cream)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Time on the clock, \(Stopwatch.spoken(seconds))")
+    }
+}
+
 #Preview("A fresh field") {
     NavigationStack {
         PuzzleView(level: .riverBend)
@@ -565,5 +642,11 @@ struct PuzzleView: View {
 #Preview("The boss") {
     NavigationStack {
         PuzzleView(level: .stagMere)
+    }
+}
+
+#Preview("On the clock") {
+    NavigationStack {
+        PuzzleView(game: .partWayThrough(), clock: Stopwatch())
     }
 }

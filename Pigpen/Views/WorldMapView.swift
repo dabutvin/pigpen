@@ -87,7 +87,9 @@ struct WorldMapView: View {
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { index in
-            PuzzleView(level: world[index].level) { verdict in
+            // No clock on the meadow: a level there is worth going back to and taking
+            // apart, and a clock over that would only ask the player to hurry.
+            PuzzleView(level: world[index].level) { verdict, _ in
                 progress.record(verdict, for: world[index].id)
             }
         }
@@ -223,7 +225,7 @@ struct WorldMapView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(world.name)
                     .font(.system(size: 17, weight: .black, design: .rounded))
-                Text("\(progress.clearedCount) of \(world.count) pens held")
+                Text("\(progress.clearedCount) of \(world.count) complete")
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }
