@@ -2,8 +2,12 @@ import SwiftUI
 import UIKit
 
 /// The start screen: a pasture with a pig loose in it, a name that plants itself a letter at
-/// a time like a run of fence, a Play button that is impossible to miss, and a Tutorial
-/// beside it for anyone who wants the walkthrough before the meadow.
+/// a time like a run of fence, and a Play button that is impossible to miss.
+///
+/// Under Play is the day's own board on a card of its own — what day it is, what that day
+/// asks, and once it has been held, the stars it gave up, the time it took and the run of
+/// days it is part of. Under that, the archive of every daily there has been this year, and
+/// the tutorial for anybody who wants the walkthrough before the meadow.
 @MainActor
 struct TitleScreenView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -35,21 +39,27 @@ struct TitleScreenView: View {
     /// read again every time the screen comes back, which is what carries a player over
     /// midnight onto tomorrow's puzzle.
     @State private var today: DailyDate
+    /// Whether the day was handed in rather than asked of the phone. A screenshot run opens
+    /// on a fixed square of the calendar, and must not have the screen quietly put it back
+    /// to whatever day the runner is having.
+    private let dayWasGiven: Bool
 
     /// - Parameters:
-    ///   - today: The day the game is being played on. Handed in so the previews and the
-    ///     screenshot runs open on a known square of the calendar.
+    ///   - today: The day the game is being played on, or nothing at all to ask the phone.
+    ///     Handed in so the previews and the screenshot runs open on a known square of the
+    ///     calendar.
     ///   - showsSettings: Opens with the settings sheet already up, which is how CI
     ///     photographs it without tapping through the title screen.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
-        today: DailyDate = .today(),
+        today: DailyDate? = nil,
         showsSettings: Bool = false
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
-        _today = State(initialValue: today)
+        _today = State(initialValue: today ?? .today())
+        dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
     }
 
@@ -104,7 +114,7 @@ struct TitleScreenView: View {
             daily.reload()
             // A game left open overnight comes back to a new day's puzzle rather than to
             // yesterday's, already held.
-            today = .today()
+            if !dayWasGiven { today = .today() }
             raiseTheCurtain()
         }
     }

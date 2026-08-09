@@ -11,6 +11,11 @@ the level was authored around, found by `Tools/level_search.py` and pinned in
 up what it promises. `PigpenTests/DifficultyTests.swift` pins the other end of each level —
 the best pen you get without any of this — and fails if the trail stops getting harder.
 
+The daily puzzles are not in here. Their best pens are pinned the same way — every one of
+them, in `PigpenTests/DailyAlmanacFixtures.swift` — but there are seven hundred of them and
+nobody wants tomorrow's answer printed a year early. A daily still tells you when you have
+found the best pen it has in it, which is the only place the answer belongs.
+
 ## How to read a diagram
 
 ```
