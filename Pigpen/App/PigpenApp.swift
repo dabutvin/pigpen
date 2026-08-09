@@ -70,26 +70,43 @@ struct PigpenApp: App {
                 } else if launch.contains("-tutorial") {
                     TutorialView()
                 } else if launch.contains("-daily") {
-                    // The clock is handed over already stopped: a running one photographs
-                    // as whenever the runner got round to it, the same way a film does.
-                    DailyPuzzleView(
-                        date: Self.photographed,
-                        progress: DailyProgress(store: RememberedDailyRecords()),
-                        clock: .showing(227)
-                    )
+                    // Part way through, like the meadow's plain board: an untouched field
+                    // has no fencing on it and not a control lit. The clock is handed over
+                    // already stopped, since a running one photographs as whenever the
+                    // runner got round to it, the same way a film does.
+                    if let day = DailyAlmanac.level(on: Self.photographed) {
+                        PuzzleView(game: .aDayPartWayThrough(day), clock: .showing(227))
+                    } else {
+                        DailyPuzzleView(
+                            date: Self.photographed,
+                            progress: DailyProgress(store: RememberedDailyRecords())
+                        )
+                    }
                 } else if launch.contains("-archive") {
                     DailyArchiveView(
                         today: Self.photographed,
                         progress: .partWayThroughTheMonth(today: Self.photographed)
                     )
                 } else if launch.contains("-settings") {
-                    TitleScreenView(progress: .partWayThrough(), showsSettings: true)
-                } else if launch.contains("-title") {
-                    // The title screen with a fortnight of dailies behind it, so the card
-                    // under Play has its stars, its clock and its run of days on it.
+                    // With a fortnight of days held as well, so the card behind the gear
+                    // has the dailies to say something about and the clear button has all
+                    // of it to clear.
                     TitleScreenView(
                         progress: .partWayThrough(),
                         daily: .partWayThroughTheMonth(today: Self.photographed),
+                        today: Self.photographed,
+                        showsSettings: true
+                    )
+                } else if launch.contains("-title") {
+                    // Today held as well as the fortnight behind it, since what there is to
+                    // see on the card is the stars, the clock and the run of days that a
+                    // day already penned leaves on it.
+                    TitleScreenView(
+                        progress: .partWayThrough(),
+                        daily: .partWayThroughTheMonth(
+                            today: Self.photographed,
+                            holdingToday: true
+                        ),
                         today: Self.photographed
                     )
                 } else {

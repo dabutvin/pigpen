@@ -337,6 +337,29 @@ extension PuzzleGame {
         return game
     }
 
+    /// A daily puzzle with the south-west of its wall laid and the pen still open.
+    ///
+    /// The screenshots are taken on one fixed day of the almanac, and an untouched field
+    /// has no fencing on it and not a control lit — the same reason the meadow's plain
+    /// board is photographed part way through. These six pieces are the bottom half of the
+    /// best pen that day has in it, which is a wall a player could plausibly be half way
+    /// through building.
+    static func aDayPartWayThrough(_ level: PuzzleLevel) -> PuzzleGame {
+        let game = PuzzleGame(level: level)
+        game.build("""
+            .........
+            .........
+            .........
+            .........
+            #........
+            #........
+            #........
+            .#.......
+            ..##.....
+            """)
+        return game
+    }
+
     /// Lays a plan of fencing out on the board, `#` by `#`. Each piece goes down as a press
     /// of its own, the way a player lays them one tap at a time.
     private func build(_ plan: String) {

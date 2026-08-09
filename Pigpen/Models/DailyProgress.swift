@@ -187,21 +187,34 @@ extension DailyProgress {
     /// A fortnight's worth of days behind the player, so previews and the screenshots CI
     /// takes open on an archive with something on it: a run of held days up to yesterday,
     /// one of them with the best pen the day had in it, and today still to be played.
-    static func partWayThroughTheMonth(today: DailyDate) -> DailyProgress {
+    ///
+    /// - Parameter holdingToday: Hands the player today as well, with the best pen it had
+    ///   in it. The archive wants today still open, so that the square everybody is going
+    ///   to press is shown waiting; the card on the title screen wants the opposite, since
+    ///   what there is to see there is the stars and the clock a held day leaves behind.
+    static func partWayThroughTheMonth(
+        today: DailyDate,
+        holdingToday: Bool = false
+    ) -> DailyProgress {
         var stars: [String: Int] = [:]
         var times: [String: Int] = [:]
+        var bestPens: Set<String> = [today.dayBefore.id]
+
         var day = today.dayBefore
         for step in 0..<12 {
             stars[day.id] = [3, 2, 3, 1, 2, 3][step % 6]
             times[day.id] = 96 + step * 37
             day = day.dayBefore
         }
+
+        if holdingToday {
+            stars[today.id] = 3
+            times[today.id] = 187
+            bestPens.insert(today.id)
+        }
+
         return DailyProgress(
-            store: RememberedDailyRecords(
-                stars: stars,
-                times: times,
-                bestPens: [today.dayBefore.id]
-            )
+            store: RememberedDailyRecords(stars: stars, times: times, bestPens: bestPens)
         )
     }
 }
