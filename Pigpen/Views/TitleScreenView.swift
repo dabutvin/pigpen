@@ -14,6 +14,8 @@ struct TitleScreenView: View {
     @State private var arrived = false
     @State private var isPlaying = false
     @State private var isTutorial = false
+    @State private var isDailyOpen = false
+    @State private var isArchiveOpen = false
     @State private var showsSettings = false
     /// The opening film, over the title screen. It plays over this rather than pushing the
     /// map behind it, so that the stack stays a title screen with a map on top of it and
@@ -25,15 +27,34 @@ struct TitleScreenView: View {
     /// The same progress the map is handed, so the stars on the tally above are the ones
     /// just won — and go the moment they are cleared from the settings sheet.
     @State private var progress: WorldProgress
+    /// The same book of days the archive and today's board are handed, so the card below
+    /// shows the stars that were just won without having to be told about them.
+    @State private var daily: DailyProgress
+    /// Which square of the calendar the game is standing on. Read once when the screen
+    /// arrives rather than on every redraw, so the card cannot change under a finger — and
+    /// read again every time the screen comes back, which is what carries a player over
+    /// midnight onto tomorrow's puzzle.
+    @State private var today: DailyDate
 
-    /// - Parameter showsSettings: Opens with the settings sheet already up, which is how
-    ///   CI photographs it without tapping through the title screen.
-    init(progress: WorldProgress = WorldProgress(), showsSettings: Bool = false) {
+    /// - Parameters:
+    ///   - today: The day the game is being played on. Handed in so the previews and the
+    ///     screenshot runs open on a known square of the calendar.
+    ///   - showsSettings: Opens with the settings sheet already up, which is how CI
+    ///     photographs it without tapping through the title screen.
+    init(
+        progress: WorldProgress = WorldProgress(),
+        daily: DailyProgress = DailyProgress(),
+        today: DailyDate = .today(),
+        showsSettings: Bool = false
+    ) {
         _progress = State(initialValue: progress)
+        _daily = State(initialValue: daily)
+        _today = State(initialValue: today)
         _showsSettings = State(initialValue: showsSettings)
     }
 
     private var world: WorldMap { progress.world }
+    private var hasADailyPuzzle: Bool { DailyAlmanac.holdsAPuzzle(on: today) }
 
     var body: some View {
         ZStack {
@@ -60,8 +81,14 @@ struct TitleScreenView: View {
         .navigationDestination(isPresented: $isTutorial) {
             TutorialView()
         }
+        .navigationDestination(isPresented: $isDailyOpen) {
+            DailyPuzzleView(date: today, progress: daily)
+        }
+        .navigationDestination(isPresented: $isArchiveOpen) {
+            DailyArchiveView(today: today, progress: daily)
+        }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress)
+            SettingsView(progress: progress, daily: daily)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
@@ -74,6 +101,10 @@ struct TitleScreenView: View {
             // The map keeps its own copy of the stars while it is up; read them back so a
             // player coming off the trail sees the ones they have just taken.
             progress.reload()
+            daily.reload()
+            // A game left open overnight comes back to a new day's puzzle rather than to
+            // yesterday's, already held.
+            today = .today()
             raiseTheCurtain()
         }
     }
@@ -212,25 +243,64 @@ struct TitleScreenView: View {
             .buttonStyle(ChunkyButtonStyle())
             .modifier(Breathing(active: !reduceMotion))
 
-            Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                isTutorial = true
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "hand.tap.fill")
-                    Text("Tutorial")
-                }
-                .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .foregroundStyle(GamePalette.cream)
-                .frame(maxWidth: 180)
-            }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
-            .accessibilityHint("Walk through how to fence in the pig")
-
             signpost
+
+            dailyButton
+
+            HStack(spacing: 10) {
+                sideButton("Archive", systemImage: "calendar") {
+                    isArchiveOpen = true
+                }
+                .accessibilityHint("Every daily puzzle of the year, a month at a time")
+
+                sideButton("Tutorial", systemImage: "hand.tap.fill") {
+                    isTutorial = true
+                }
+                .accessibilityHint("Walk through how to fence in the pig")
+            }
         }
         .opacity(arrived ? 1 : 0)
         .offset(y: arrived ? 0 : 26)
+    }
+
+    /// Today's board, as a card rather than a button: what day it is, what the day asks,
+    /// and once it has been held, the stars and the time it gave up. A day with nothing in
+    /// the almanac still gets its card, saying so — better than a button that does nothing.
+    private var dailyButton: some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            isDailyOpen = true
+        } label: {
+            DailyCard(
+                date: today,
+                stars: daily.stars(on: today),
+                hasTheBestPen: daily.hasTheBestPen(on: today),
+                bestTime: daily.bestTime(on: today),
+                streak: daily.streak(upTo: today),
+                hasAPuzzle: hasADailyPuzzle
+            )
+        }
+        .buttonStyle(SignpostButtonStyle())
+        .disabled(!hasADailyPuzzle)
+        .padding(.top, 2)
+    }
+
+    /// The two smaller ways off this screen, painted on the same boards the puzzle's own
+    /// buttons are.
+    private func sideButton(
+        _ title: String,
+        systemImage: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            action()
+        } label: {
+            Label(title, systemImage: systemImage)
+                .font(.system(size: 14, weight: .heavy, design: .rounded))
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(PlaqueButtonStyle(padding: 8))
     }
 
     /// Where Play leads, and what it is played for.
@@ -375,5 +445,15 @@ private struct Breathing: ViewModifier {
 #Preview("Settings up") {
     NavigationStack {
         TitleScreenView(progress: .partWayThrough(), showsSettings: true)
+    }
+}
+
+#Preview("A week of dailies in") {
+    NavigationStack {
+        TitleScreenView(
+            progress: .partWayThrough(),
+            daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+            today: DailyDate(year: 2026, month: 4, day: 22)
+        )
     }
 }
