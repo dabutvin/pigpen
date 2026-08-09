@@ -6,7 +6,8 @@ produces the same year twice over and the app can be shipped knowing what next O
 going to ask of anybody who is still playing it.
 
 A week is a climb. Monday's map is mostly water — free walls everywhere, and the best pen
-is the pen anybody would build — and by Sunday there is almost nothing to lean on and a
+is the pen anybody would build — and by Sunday there is almost nothing to lean on: five
+tiles of water on a board of a hundred, never more than three of them lying together, and a
 couple of skulls standing where a wall would want to go. What makes that a climb rather
 than a claim is that it is measured: for every candidate map this searches out the best pen
 the budget has in it and also squares the map off, the way `level_search.py --demand` does
@@ -47,26 +48,36 @@ from level_search import (  # noqa: E402
 
 NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
 
-# What each day of the week is made of. `water` is the share of the board under water,
-# which is the knob that does nearly all of the work: water is a wall you are given, so a
-# map with a lot of it has an obvious best pen and one with little of it has to be worked
-# out. `band` is the gap this day's map has to leave between the pen it has in it and the
-# pen a player gets by squaring the map off — what the level asks — as a percentage. The
-# bands are laid end to end, so the week can only climb.
+# What each day of the week is made of. `water` is the share of the board under water and
+# `pool` is the most of it that may lie in one piece, and between them they are the knob
+# that does nearly all of the work: water is a wall you are given, so a map with a lot of it
+# has an obvious best pen and one with little of it has to be worked out.
+#
+# Both halves of that knob matter, and the second one is the one it is easy to leave out.
+# Water only walls a pen if there is enough of it *in one stretch* to be leant on: a river
+# from one side of a board to the other hands over a wall ten pieces long for nothing, and
+# what is left to work out is a single staircase. Ten tiles of water in three puddles hands
+# over no wall at all — it only eats ground the pen would have wanted. So `water` says how
+# wet a day is and `pool` says whether that water is a gift or a nuisance, and both dry up
+# across the week.
+#
+# `band` is the gap this day's map has to leave between the pen it has in it and the pen a
+# player gets by squaring the map off — what the level asks — as a percentage. The bands are
+# laid end to end, so the week can only climb.
 PROFILES = {
-    1: dict(name="Monday", rows=9, cols=8, water=0.38, rivers=0.15, hug=True,
+    1: dict(name="Monday", rows=9, cols=8, water=0.38, pool=28, rivers=0.15, hug=True,
             apples=0, skulls=0, budget=(10, 14), band=(0, 5), least=16),
-    2: dict(name="Tuesday", rows=9, cols=9, water=0.28, rivers=0.25, hug=True,
+    2: dict(name="Tuesday", rows=9, cols=9, water=0.28, pool=20, rivers=0.25, hug=True,
             apples=0, skulls=0, budget=(9, 13), band=(6, 14), least=16),
-    3: dict(name="Wednesday", rows=9, cols=9, water=0.22, rivers=0.35, hug=True,
+    3: dict(name="Wednesday", rows=9, cols=9, water=0.22, pool=15, rivers=0.35, hug=True,
             apples=2, skulls=0, budget=(9, 13), band=(15, 23), least=16),
-    4: dict(name="Thursday", rows=9, cols=9, water=0.15, rivers=0.45, hug=False,
+    4: dict(name="Thursday", rows=9, cols=9, water=0.15, pool=11, rivers=0.45, hug=False,
             apples=2, skulls=0, budget=(9, 13), band=(24, 32), least=18),
-    5: dict(name="Friday", rows=10, cols=9, water=0.12, rivers=0.5, hug=False,
+    5: dict(name="Friday", rows=10, cols=9, water=0.12, pool=8, rivers=0.5, hug=False,
             apples=3, skulls=1, budget=(9, 12), band=(33, 41), least=18),
-    6: dict(name="Saturday", rows=10, cols=10, water=0.08, rivers=0.55, hug=False,
+    6: dict(name="Saturday", rows=10, cols=10, water=0.08, pool=5, rivers=0.55, hug=False,
             apples=3, skulls=1, budget=(8, 12), band=(42, 52), least=18),
-    7: dict(name="Sunday", rows=10, cols=10, water=0.05, rivers=0.6, hug=False,
+    7: dict(name="Sunday", rows=10, cols=10, water=0.05, pool=3, rivers=0.6, hug=False,
             apples=4, skulls=2, budget=(8, 12), band=(53, 66), least=18),
 }
 
@@ -93,11 +104,13 @@ def seeded(day):
 # --- Shaping a map ---------------------------------------------------------------------
 
 
-def lake(rng, grid, rows, columns, hug):
-    """A pool of water. On the gentler days it is pushed up against an edge of the map,
-    where it walls a pen for free rather than merely getting in the way."""
-    height = rng.randint(2, max(2, rows // 2))
-    width = rng.randint(2, max(2, columns // 2))
+def lake(rng, grid, rows, columns, hug, most):
+    """A pool of water of no more than `most` tiles. On the gentler days it is pushed up
+    against an edge of the map, where it walls a pen for free rather than merely getting in
+    the way; on the dry ones there is not enough of it left to wall anything."""
+    least = 2 if most >= 4 else 1
+    height = rng.randint(least, max(least, min(rows // 2, most // least)))
+    width = rng.randint(least, max(least, min(columns // 2, most // height)))
     if hug and rng.random() < 0.8:
         side = rng.choice("NSEW")
         top = 0 if side == "N" else rows - height if side == "S" else rng.randrange(rows - height + 1)
@@ -110,28 +123,69 @@ def lake(rng, grid, rows, columns, hug):
             grid[row][column] = "~"
 
 
-def river(rng, grid, rows, columns):
-    """A run of water across the map, wandering a tile at a time."""
+def river(rng, grid, rows, columns, most):
+    """A run of water across the map, wandering a tile at a time, and laid down until it
+    has spent `most` tiles — so on a wet day a river runs from one side of the board to the
+    other and on a dry one it is a brook that peters out well short of anywhere useful."""
+    spent = 0
+
+    def lay(row, column):
+        nonlocal spent
+        if grid[row][column] != "~":
+            grid[row][column] = "~"
+            spent += 1
+
     if rng.random() < 0.5:
         row, column = rng.randrange(1, rows - 1), 0
-        while column < columns:
-            grid[row][column] = "~"
+        while column < columns and spent < most:
+            lay(row, column)
             if rng.random() < 0.3:
                 row = max(0, min(rows - 1, row + rng.choice((-1, 1))))
-                grid[row][column] = "~"
+                lay(row, column)
             column += 1
     else:
         row, column = 0, rng.randrange(1, columns - 1)
-        while row < rows:
-            grid[row][column] = "~"
+        while row < rows and spent < most:
+            lay(row, column)
             if rng.random() < 0.3:
                 column = max(0, min(columns - 1, column + rng.choice((-1, 1))))
-                grid[row][column] = "~"
+                lay(row, column)
             row += 1
 
 
+def under_water(grid):
+    return sum(row.count("~") for row in grid)
+
+
 def wetness(grid):
-    return sum(row.count("~") for row in grid) / (len(grid) * len(grid[0]))
+    return under_water(grid) / (len(grid) * len(grid[0]))
+
+
+def biggest_pool(grid):
+    """The most water lying in one piece — the longest wall the map hands over for free."""
+    rows, columns = len(grid), len(grid[0])
+    seen, biggest = set(), 0
+    for row in range(rows):
+        for column in range(columns):
+            if grid[row][column] != "~" or (row, column) in seen:
+                continue
+            seen.add((row, column))
+            queue, held = [(row, column)], 0
+            while queue:
+                tile = queue.pop()
+                held += 1
+                for down, across in NEIGHBOURS:
+                    step = (tile[0] + down, tile[1] + across)
+                    if (
+                        0 <= step[0] < rows
+                        and 0 <= step[1] < columns
+                        and grid[step[0]][step[1]] == "~"
+                        and step not in seen
+                    ):
+                        seen.add(step)
+                        queue.append(step)
+            biggest = max(biggest, held)
+    return biggest
 
 
 def run_of_ground(grid, start):
@@ -158,13 +212,25 @@ def shape(rng, profile):
     rows, columns = profile["rows"], profile["cols"]
     grid = [["." for _ in range(columns)] for _ in range(rows)]
 
+    # Water is a budget rather than a floor. Laying it down until the board was wet enough
+    # and then stopping meant a day whose share was smaller than one river got one river
+    # anyway and overshot — which is how Saturday and Sunday, asked for 8% and 5%, both
+    # ended up at 13% of the board under a single stretch of water running its whole width.
+    # Each body is drawn into a copy first and kept only if it fits both what is left of the
+    # day's water and what the day allows to lie in one piece.
+    allowed = round(rows * columns * profile["water"])
     guard = 0
-    while wetness(grid) < profile["water"] and guard < 40:
+    while under_water(grid) < allowed and guard < 60:
         guard += 1
+        drawn = [row[:] for row in grid]
+        most = min(profile["pool"], allowed - under_water(grid))
         if rng.random() < profile["rivers"]:
-            river(rng, grid, rows, columns)
+            river(rng, drawn, rows, columns, most)
         else:
-            lake(rng, grid, rows, columns, profile["hug"])
+            lake(rng, drawn, rows, columns, profile["hug"], most)
+        # A new body running into an old one can make a pool bigger than either of them.
+        if under_water(drawn) <= allowed and biggest_pool(drawn) <= profile["pool"]:
+            grid = drawn
 
     room = int(rows * columns * 0.30)
     inland = [
