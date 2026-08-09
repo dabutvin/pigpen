@@ -413,8 +413,9 @@ private struct Film {
     }
 
     /// The stag, head on. The pig got spokes of light behind it because the pig is the whole
-    /// game; the stag gets the water it stands over and nothing else, because it is one
-    /// puzzle's worth of trouble rather than the reason for any of this.
+    /// game; the stag gets the water it stands over and nothing else, because the water is
+    /// the point of it — this shot is the film saying whose shore the last field is, so that
+    /// the rule after it is a piece of manners rather than a second animal to deal with.
     private func drawTheStag(in context: inout GraphicsContext) {
         let landed = easeOut(min(progress / 0.3, 1))
         var shot = pushed(context, zoom: 1.14 - 0.11 * landed)
@@ -1479,30 +1480,30 @@ private struct Film {
     }
 }
 
-#Preview("Opening · first light") { CutSceneView(.opening(), still: 1.4) }
+#Preview("Opening · first light") { CutSceneView(.opening(), still: 1.5) }
 
-#Preview("Opening · the gate") { CutSceneView(.opening(), still: 4.0) }
+#Preview("Opening · the gate") { CutSceneView(.opening(), still: 4.3) }
 
-#Preview("Opening · the pig") { CutSceneView(.opening(), still: 7.0) }
+#Preview("Opening · the pig") { CutSceneView(.opening(), still: 7.1) }
 
-#Preview("Opening · away") { CutSceneView(.opening(), still: 9.6) }
+#Preview("Opening · away") { CutSceneView(.opening(), still: 9.9) }
 
-#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 12.0) }
+#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 12.5) }
 
-#Preview("Stag Mere · the mere") { CutSceneView(.stagMere(), still: 1.3) }
+#Preview("Stag Mere · the mere") { CutSceneView(.stagMere(), still: 1.4) }
 
-#Preview("Stag Mere · the stag") { CutSceneView(.stagMere(), still: 3.9) }
+#Preview("Stag Mere · the stag") { CutSceneView(.stagMere(), still: 4.1) }
 
-#Preview("Stag Mere · both or neither") { CutSceneView(.stagMere(), still: 6.6) }
+#Preview("Stag Mere · both or neither") { CutSceneView(.stagMere(), still: 7.2) }
 
-#Preview("Meadow held · both penned") { CutSceneView(.theMeadowHeld(), still: 1.3) }
+#Preview("Meadow held · both penned") { CutSceneView(.theMeadowHeld(), still: 1.4) }
 
-#Preview("Meadow held · the stag stays") { CutSceneView(.theMeadowHeld(), still: 3.8) }
+#Preview("Meadow held · the stag stays") { CutSceneView(.theMeadowHeld(), still: 4.0) }
 
-#Preview("Meadow held · the whole meadow") { CutSceneView(.theMeadowHeld(), still: 6.6) }
+#Preview("Meadow held · the whole meadow") { CutSceneView(.theMeadowHeld(), still: 7.2) }
 
-#Preview("Meadow held · from out") { CutSceneView(.theMeadowHeld(), still: 9.4) }
+#Preview("Meadow held · from out") { CutSceneView(.theMeadowHeld(), still: 10.4) }
 
-#Preview("Meadow held · somewhere else") { CutSceneView(.theMeadowHeld(), still: 12.6) }
+#Preview("Meadow held · somewhere else") { CutSceneView(.theMeadowHeld(), still: 13.4) }
 
 #Preview("Played through") { CutSceneView(.opening()) {} }

@@ -174,6 +174,26 @@ the screen is a painted board: the buttons that work the fencing, the tally of y
 and the verdict when the gate is opened. All of it takes the meadow from daylight to dusk with
 the system appearance, and none of it is on a clock: the board is the only thing that moves.
 
+### The story
+
+Thirteen lines of type, and they have to add up to something. Mudlark Meadow is nine fields
+of open country with a barn at the bottom of it and not a fence anywhere in it, and one
+morning somebody leaves the gate open. You do not catch the pig — nobody catches a pig in
+the open, which is the whole reason the game is a fence rather than a chase. You fence the
+field it has got into, and the next one, and the one after that, up the trail towards the
+hills.
+
+At the top of the meadow the ground stops belonging to the farm. Stag Mere is the ninth
+field and the stag had that shore before the barn did, so the last fence has to hold both
+animals — making room for the one that lives there rather than walling it out is what
+"both of them held, or neither counts" means, and it is why one budget goes out as two
+enclosures.
+
+Then the meadow is fenced from the barn to the mere: the stag stays on its own water, the
+pig has the run of all nine fields, and nothing gets out of Mudlark Meadow any more. The
+last shot is the second shot of the opening said again from further away — somewhere else,
+another gate is standing open — which is the next world, and a reason to go to it.
+
 ### The cut scenes
 
 Three films so far, each played once and each with a **Skip** in the corner from a beat in. Skipping counts as having seen one.
@@ -181,11 +201,12 @@ Three films so far, each played once and each with a **Skip** in the corner from
 #### The opening
 
 The very first press of Play — on a world with no stars on it — plays a short film before
-the meadow. Five shots and a little over thirteen seconds, between black bars, with a line
-of type over each: the meadow at first light, the barn with the one gate nobody shut, the
-pig itself head on with the light coming apart behind it, the pig already leaving, and the
-run of fencing you are given to answer it with. There is a **Skip** in the corner from a
-beat in, and skipping counts as having seen it.
+the meadow. Five shots and a little under fourteen seconds, between black bars, with a line
+of type over each: the meadow at first light with nothing fenced in it, the barn with the
+one gate nobody shut, the pig itself head on with the light coming apart behind it, the pig
+outrunning the camera under the line that rules out chasing it, and the run of fencing you
+are given to answer it with instead. There is a **Skip** in the corner from a beat in, and
+skipping counts as having seen it.
 
 It plays once. `WorldProgress` keeps the names of the films already played beside the stars,
 so a player who watches one, backs out without penning anything and comes back does not get
@@ -195,25 +216,29 @@ every film back with everything else.
 
 #### Stag Mere
 
-Tapping the meadow's last signpost stops for eight seconds first. A player who has fenced
+Tapping the meadow's last signpost stops for nine seconds first. A player who has fenced
 eight fields does not need teaching how to fence a ninth — they need telling the one thing
 this map does differently, which is that there are two animals on it and one budget for the
-pair. Three shots: the water down the middle, the stag on the far shore, and both of them
-with the pen each would take marked out round it in dashes, so the shape of the answer —
-two enclosures, not one — is on screen before a piece is laid. It is lit flat and bright
-where the films either side of it are lit at sunrise, because a briefing wants reading
-rather than admiring.
+pair. Three shots: the water down the middle, the stag head on under the line that says the
+far shore was its before the barn was there, and then both of them with the pen each would
+take marked out round it in dashes, so the shape of the answer — two enclosures, not one —
+is on screen before a piece is laid. The middle shot is the half of the briefing that makes
+the rule worth keeping rather than merely worth reading: the last field of the meadow is
+not empty ground. It is lit flat and bright where the films either side of it are lit at
+sunrise, because a briefing wants reading rather than admiring.
 
 #### The meadow held
 
 When the last pen in the meadow holds, the world gets seen out. Both animals shut in on
-ground washed gold, the stag left standing on its own shore while the trail runs away out
-of the picture, the whole meadow at once with a stop marked at every puzzle on it — and
-then the meadow from far enough out to be a world, with the stag stood on top of it for a
-mark. A world somebody has finished is a world with something of its own still living on
-it, which is why the stag is left there rather than brought along. Out past it another
-world comes up out of the dark with a road drawn on towards it, still under cloud and
-without a name, because what is on it is nobody's business yet.
+ground washed gold, a shore apiece; the stag left standing on the water it had before the
+barn did while the trail runs away out of the picture; the nine fields fenced at last, with
+the pig loose in all of them and a stop marked at every puzzle on the trail — and then the
+meadow from far enough out to be a world nothing gets out of any more, with the stag stood
+on top of it for a mark. A world somebody has finished is a world with something of its own
+still living on it, which is why the stag is left there rather than brought along. Out past
+it another world comes up out of the dark with a road drawn on towards it, still under cloud
+and without a name, because what is on it is nobody's business yet — except that somewhere
+on it a gate is standing open, which is where the opening started.
 
 #### How they are built
 
