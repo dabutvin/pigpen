@@ -142,20 +142,6 @@ enum Weekday: Int, CaseIterable, Sendable {
 
     /// The letter over its column in the archive.
     var initial: String { String(name.prefix(1)) }
-
-    /// What the day asks of you, in a line. A week is one climb: Monday's best pen is the
-    /// pen anybody would build, and by Sunday it is one that has to be worked out.
-    var billing: String {
-        switch self {
-        case .monday: "A gentle start to the week"
-        case .tuesday: "Room to think"
-        case .wednesday: "The shape of the wall starts to matter"
-        case .thursday: "The obvious pen is no longer the best one"
-        case .friday: "Little to lean on"
-        case .saturday: "Every piece has to earn its place"
-        case .sunday: "The worst the week has in it"
-        }
-    }
 }
 
 /// A month of the archive: the year and the month, and the days in it.

@@ -198,9 +198,8 @@ fireflies at dusk — with a pig trotting up and down a run of fence. The whole 
 drawn in code from one clock and stops dead when the system asks for reduced motion. The
 stars taken so far sit in a badge in the top corner, well away from Play.
 
-Under Play is a board with **today's puzzle** on it — what day it is, what that day asks,
-and once it is complete, the stars it gave up, the time it took and how many days in a
-row you are on. Under that, **Archive** opens the calendar of every daily there has been
+Under Play is a board with **today's puzzle** on it — what day it is, and once it is
+complete, the stars it gave up, the time it took and how many days in a row you are on. Under that, **Archive** opens the calendar of every daily there has been
 this year, and **Tutorial** opens a practice pen off the world map and walks through
 tapping a post, dragging a run, building against water, shutting the pen until the ground
 washes gold, and releasing the pig. A gear in the corner opens settings, which holds the

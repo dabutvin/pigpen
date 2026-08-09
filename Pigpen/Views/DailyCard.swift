@@ -1,11 +1,12 @@
 import SwiftUI
 
-/// Today's puzzle, as it stands on the title screen: which day it is, what that day asks,
-/// and — once the pen has held — the stars it gave up and the time it took.
+/// Today's puzzle, as it stands on the title screen: which day it is, and once it is
+/// complete, the stars it gave up and the time it took.
 ///
-/// A board nailed to the front of the game rather than a button, because there is more to
-/// say about today than a word. Before it is played it says what the day is for; afterwards
-/// it says what you made of it, which is what brings a player back tomorrow.
+/// A board nailed to the front of the game rather than a button, because once a day has
+/// been played there is more to say about it than a word: what you made of it, and the run
+/// of days it belongs to, which is what brings a player back tomorrow. What the day asks of
+/// you is left for the board itself to show.
 struct DailyCard: View {
     let date: DailyDate
     /// The stars the day has given up, and 0 for a day not finished yet.
@@ -24,7 +25,7 @@ struct DailyCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
             heading
-            billing
+            day
             if hasAPuzzle { tally }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -64,7 +65,9 @@ struct DailyCard: View {
         }
     }
 
-    private var billing: some View {
+    /// The date, and — only when there is no puzzle behind it — a line saying so. What a
+    /// day asks of you is for the board to show rather than for the card to promise.
+    private var day: some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(hasAPuzzle ? date.title : "Nothing in the book")
                 .font(.system(size: 19, weight: .black, design: .rounded))
@@ -72,11 +75,13 @@ struct DailyCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
-            Text(hasAPuzzle ? date.weekday.billing : "The almanac stops before today")
-                .font(.system(size: 12, weight: .heavy))
-                .foregroundStyle(GamePalette.post.opacity(0.62))
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
+            if !hasAPuzzle {
+                Text("The almanac stops before today")
+                    .font(.system(size: 12, weight: .heavy))
+                    .foregroundStyle(GamePalette.post.opacity(0.62))
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
@@ -168,7 +173,7 @@ struct DailyCard: View {
     private var spokenLabel: String {
         guard hasAPuzzle else { return "Today's puzzle. There is none — the almanac stops before today." }
         let spelled = ["no", "one", "two", "three"]
-        var said = "Today's puzzle. \(date.fullTitle). \(date.weekday.billing)."
+        var said = "Today's puzzle. \(date.fullTitle)."
         if isComplete {
             said += " Complete, \(spelled[min(max(stars, 0), 3)]) star\(stars == 1 ? "" : "s")."
             if hasTheBestPen { said += " The best pen there is." }
