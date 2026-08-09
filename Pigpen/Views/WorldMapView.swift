@@ -317,37 +317,19 @@ struct WorldMapView: View {
     ///
     /// A replay of a level already beaten opens nothing, so the pig stays at the signpost
     /// the player walked it down to. Being dragged back up the trail every time you go back
-    /// for a better rating would undo the walk you just asked for. The map settles back onto
-    /// the pig either way: wherever the view has got to while the puzzle was up, a level put
-    /// away hands the player back a map with the pig on it.
+    /// for a better rating would undo the walk you just asked for.
     private func follow() async {
         let onwards = WalkAfterALevel(
             standingAt: pigStop,
             frontierBefore: frontierWhenOpened,
             frontierNow: progress.frontier
         )
+        guard let stop = onwards.destination else { return }
 
-        // Let the puzzle screen finish sliding away first, so the walk is not missed — and
-        // so that settling the view back happens after the map has finished coming on
-        // screen, rather than being undone by it.
+        // Let the puzzle screen finish sliding away first, so the walk is not missed.
         try? await Task.sleep(for: .milliseconds(520))
-
-        guard let stop = onwards.destination else {
-            settleOnThePig()
-            return
-        }
         await walk(to: stop, secondsPerStop: 0.9)
         celebrate(Int(stop))
-    }
-
-    /// Puts the view back on the pig, for the pig that is going nowhere.
-    ///
-    /// Nothing should have moved the map off it — but the map is only ever this far from
-    /// the pig by something having done so, and a player who walked the pig down the trail
-    /// to an old level has asked, plainly enough, to be left looking at it.
-    private func settleOnThePig() {
-        guard let stop = MapArrival.stop(forPigAt: pigStop) else { return }
-        scroll(to: stop, over: reduceMotion ? 0 : 0.3)
     }
 
     private func walk(to stop: Double, secondsPerStop: Double) async {
@@ -458,30 +440,23 @@ struct WalkAfterALevel {
 /// a world picked up part-way through is the furthest stop reached, and on a fresh one is the
 /// barn the map already opens on.
 ///
-/// Every time after that the map is coming back from a puzzle rather than opening, and the
-/// opening run must not be made again: it would haul the view up to the furthest stop while
-/// the pig stood at the old level the player went back for. What happens when a level is put
-/// away is the walk's business — a walk on to new ground, or a settling back onto a pig that
-/// is staying where the player put it.
+/// Every time after that the map is coming back from a puzzle rather than opening, and it
+/// keeps the view the player left. The walk after a level does any scrolling that is owed,
+/// and a replay of an old level owes none: the pig stays at the signpost the player walked it
+/// down to, so the map has to stay there with it.
 struct MapArrival {
     /// Where the pig is standing as the map comes on screen.
     let pigStop: Double
     /// Whether the map has been on screen before.
     let alreadyArrived: Bool
 
-    /// The stop to run up the trail to as the map opens, or nothing at all if the map
-    /// stays as it is.
+    /// The stop to bring into view, or nothing at all if the map stays as it is.
     var stop: Int? {
         guard !alreadyArrived else { return nil }
-        return Self.stop(forPigAt: pigStop)
-    }
-
-    /// The stop the scroller has to be sent to for the pig to be on screen, wherever the
-    /// map is being sent from. The barn needs no sending to: the map sits at the bottom of
-    /// the trail, which is where the barn stands.
-    static func stop(forPigAt pigStop: Double) -> Int? {
         let stop = Int(pigStop.rounded())
-        return stop > 0 ? stop : nil
+        // The map opens at the bottom of the trail, so the barn is already in view.
+        guard stop > 0 else { return nil }
+        return stop
     }
 }
 
