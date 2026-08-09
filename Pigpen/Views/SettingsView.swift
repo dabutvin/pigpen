@@ -23,7 +23,7 @@ struct SettingsView: View {
     @State private var hasCleared = false
 
     private var world: WorldMap { progress.world }
-    private var hasSomethingToClear: Bool { progress.clearedCount > 0 || daily.heldCount > 0 }
+    private var hasSomethingToClear: Bool { progress.clearedCount > 0 || daily.completedCount > 0 }
 
     var body: some View {
         ZStack {
@@ -136,7 +136,7 @@ struct SettingsView: View {
                 .foregroundStyle(GamePalette.post.opacity(0.55))
         }
         .animation(.easeInOut(duration: 0.25), value: progress.totalStars)
-        .animation(.easeInOut(duration: 0.25), value: daily.heldCount)
+        .animation(.easeInOut(duration: 0.25), value: daily.completedCount)
     }
 
     private func card<Content: View>(@ViewBuilder content: () -> Content) -> some View {
@@ -176,10 +176,10 @@ struct SettingsView: View {
         }
         let meadow = """
             \(progress.totalStars) of \(world.starTotal) stars, \
-            \(progress.clearedCount) of \(world.count) pens held.
+            \(progress.clearedCount) of \(world.count) puzzles complete.
             """
-        guard daily.heldCount > 0 else { return meadow }
-        return meadow + " \(counted(daily.heldCount, "daily puzzle")) held as well."
+        guard daily.completedCount > 0 else { return meadow }
+        return meadow + " \(counted(daily.completedCount, "daily puzzle")) complete as well."
     }
 
     private func counted(_ number: Int, _ noun: String) -> String {

@@ -225,7 +225,7 @@ struct WorldMapView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(world.name)
                     .font(.system(size: 17, weight: .black, design: .rounded))
-                Text("\(progress.clearedCount) of \(world.count) pens held")
+                Text("\(progress.clearedCount) of \(world.count) complete")
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }

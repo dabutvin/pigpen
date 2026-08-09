@@ -168,12 +168,12 @@ A puzzle a day, on its own board, with a clock running on it.
   always asks more than a Monday.
 - **The clock counts up.** It starts when the board opens and stops the moment the pen
   holds, so the lap of honour is not charged to you. Going back out afterwards to widen a
-  pen that already held is not on the clock — the time a day is remembered by is the time
-  it took to shut the pig in, and the rest is playing. The meadow has no clock on it at
+  pen that has already closed is not on the clock — the time a day is remembered by is the
+  time it took to shut the pig in, and the rest is playing. The meadow has no clock on it at
   all: a level up the trail is worth taking apart, and a clock over that would only ask you
   to hurry.
 - **The archive is a calendar.** Every day of the year is a little field with the day's
-  number under it: bare mud for a day nobody has held, washed gold for one that was held,
+  number under it: bare mud for a day nobody has finished, washed gold for a day complete,
   drifting through the spectrum for one that gave up the best pen it had in it — which is
   what the real board does when such a pen closes — and grey ground under a padlock for a
   day still to come. The stars a day gave up sit under its square. It opens on the month
@@ -185,7 +185,7 @@ A puzzle a day, on its own board, with a clock running on it.
   already on the phone the day the game is installed, and what keeps it out of reach is a
   rule rather than a gap. A player who puts the clock forward can walk into next week, and
   is welcome to.
-- **Best is kept, like everywhere else.** Stars, the quickest hold and the rainbow are each
+- **Best is kept, like everywhere else.** Stars, the quickest run and the rainbow are each
   kept at their best, so a worse or slower second attempt at an old day costs nothing.
 
 The almanac is generated rather than authored — `Tools/generate_dailies.py` writes it, and
@@ -199,13 +199,14 @@ drawn in code from one clock and stops dead when the system asks for reduced mot
 stars taken so far sit in a badge in the top corner, well away from Play.
 
 Under Play is a board with **today's puzzle** on it — what day it is, what that day asks,
-and once it has been held, the stars it gave up, the time it took and how many days in a
+and once it is complete, the stars it gave up, the time it took and how many days in a
 row you are on. Under that, **Archive** opens the calendar of every daily there has been
 this year, and **Tutorial** opens a practice pen off the world map and walks through
 tapping a post, dragging a run, building against water, shutting the pen until the ground
 washes gold, and releasing the pig. A gear in the corner opens settings, which holds the
 version number and one red button: clearing all game data throws away every star and every
-day held, and shuts the trail back to its first level, so it asks before it does anything.
+day completed, and shuts the trail back to its first level, so it asks before it does
+anything.
 
 A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
 wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
@@ -395,7 +396,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of held and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The thirteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The thirteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -496,13 +497,13 @@ Pigpen/
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days held: stars, quickest time, best pens, runs of days
+│   └── DailyProgress.swift      # Days done: stars, quickest time, best pens, runs of days
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
 │   ├── DailyCard.swift          # Today's puzzle on the title screen: the day, its stars, its clock
 │   ├── DailyArchiveView.swift   # The calendar of every daily there has been this year
-│   ├── DailySquare.swift        # One day in the archive: a little field, washed for a day held
+│   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board, with the clock on it and the day's record kept
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the films, shot by shot

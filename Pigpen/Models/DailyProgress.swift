@@ -2,7 +2,7 @@ import Foundation
 import Observation
 
 /// Where what a player did with each daily puzzle is kept: the stars, the quickest they
-/// have ever held it, and whether they found the best pen the day had in it.
+/// have ever finished it, and whether they found the best pen the day had in it.
 ///
 /// A protocol rather than `UserDefaults` outright, for the same reason the world's progress
 /// is one: the archive in a preview or a screenshot run wants a month with something in it,
@@ -11,7 +11,7 @@ protocol DailyRecordStore {
     /// Best stars by day, keyed the way `DailyDate.id` writes a day down.
     func loadStars() -> [String: Int]
     func save(stars: [String: Int])
-    /// The quickest hold on each day, in whole seconds. A slower run later does not replace
+    /// The quickest run on each day, in whole seconds. A slower one later does not replace
     /// it, the same way a worse pen does not take a star back off a signpost.
     func loadTimes() -> [String: Int]
     func save(times: [String: Int])
@@ -89,12 +89,12 @@ final class RememberedDailyRecords: DailyRecordStore {
     }
 }
 
-/// What the player has made of the daily puzzles: which days are held, how well, how
+/// What the player has made of the daily puzzles: which days are complete, how well, how
 /// quickly, and how many days in a row.
 ///
 /// Nothing here unlocks anything. A daily is opened by the calendar rather than by the day
 /// before it, so a week missed is a week missed rather than a wall — the only thing a run
-/// of held days buys is the run itself.
+/// of completed days buys is the run itself.
 @MainActor
 @Observable
 final class DailyProgress {
@@ -110,32 +110,32 @@ final class DailyProgress {
         self.bestPens = store.loadBestPens()
     }
 
-    /// The best stars a day has ever given up, and 0 for one nobody has held.
+    /// The best stars a day has ever given up, and 0 for one nobody has finished.
     func stars(on date: DailyDate) -> Int { starsByDay[date.id] ?? 0 }
 
-    func isHeld(_ date: DailyDate) -> Bool { stars(on: date) > 0 }
+    func isComplete(_ date: DailyDate) -> Bool { stars(on: date) > 0 }
 
-    /// The quickest that day has ever been held, in seconds.
+    /// The quickest that day has ever been finished, in seconds.
     func bestTime(on date: DailyDate) -> Int? { timesByDay[date.id] }
 
     /// Whether the best pen that day had in it has been found, which is what turns its
     /// stars rainbow in the archive — the same thing it means on a signpost.
     func hasTheBestPen(on date: DailyDate) -> Bool { bestPens.contains(date.id) }
 
-    var heldCount: Int { starsByDay.values.filter { $0 > 0 }.count }
+    var completedCount: Int { starsByDay.values.filter { $0 > 0 }.count }
 
-    func heldCount(in month: DailyMonth) -> Int {
-        month.days.filter { isHeld($0) }.count
+    func completedCount(in month: DailyMonth) -> Int {
+        month.days.filter { isComplete($0) }.count
     }
 
-    /// How many days in a row have been held, counting back from today. A day still to be
+    /// How many days in a row are complete, counting back from today. A day still to be
     /// played does not break the run — the run simply has not been added to yet — so a
     /// player who has not had their go this morning still sees yesterday's streak.
     func streak(upTo today: DailyDate) -> Int {
-        var day = isHeld(today) ? today : today.dayBefore
+        var day = isComplete(today) ? today : today.dayBefore
         var run = 0
         // A run cannot be longer than the book it is counted out of.
-        while isHeld(day), run <= starsByDay.count {
+        while isComplete(day), run <= starsByDay.count {
             run += 1
             day = day.dayBefore
         }
@@ -153,9 +153,9 @@ final class DailyProgress {
             store.save(stars: starsByDay)
         }
 
-        let held = max(0, Int(seconds.rounded()))
-        if held < (timesByDay[date.id] ?? Int.max) {
-            timesByDay[date.id] = held
+        let taken = max(0, Int(seconds.rounded()))
+        if taken < (timesByDay[date.id] ?? Int.max) {
+            timesByDay[date.id] = taken
             store.save(times: timesByDay)
         }
 
@@ -173,7 +173,7 @@ final class DailyProgress {
         bestPens = store.loadBestPens()
     }
 
-    /// Forgets every day ever held. Goes with the meadow's stars rather than on its own:
+    /// Forgets every day ever finished. Goes with the meadow's stars rather than on its own:
     /// a player asking for the game back as they found it means all of it.
     func eraseEverything() {
         starsByDay = [:]
@@ -185,16 +185,16 @@ final class DailyProgress {
 
 extension DailyProgress {
     /// A fortnight's worth of days behind the player, so previews and the screenshots CI
-    /// takes open on an archive with something on it: a run of held days up to yesterday,
+    /// takes open on an archive with something on it: a run of finished days up to yesterday,
     /// one of them with the best pen the day had in it, and today still to be played.
     ///
-    /// - Parameter holdingToday: Hands the player today as well, with the best pen it had
+    /// - Parameter includingToday: Hands the player today as well, with the best pen it had
     ///   in it. The archive wants today still open, so that the square everybody is going
     ///   to press is shown waiting; the card on the title screen wants the opposite, since
-    ///   what there is to see there is the stars and the clock a held day leaves behind.
+    ///   what there is to see there is the stars and the clock a finished day leaves behind.
     static func partWayThroughTheMonth(
         today: DailyDate,
-        holdingToday: Bool = false
+        includingToday: Bool = false
     ) -> DailyProgress {
         var stars: [String: Int] = [:]
         var times: [String: Int] = [:]
@@ -207,7 +207,7 @@ extension DailyProgress {
             day = day.dayBefore
         }
 
-        if holdingToday {
+        if includingToday {
             stars[today.id] = 3
             times[today.id] = 187
             bestPens.insert(today.id)

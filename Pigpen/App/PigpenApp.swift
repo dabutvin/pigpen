@@ -10,8 +10,8 @@ struct PigpenApp: App {
     /// every cut scene rather than only the title screen.
     ///
     /// The daily screens are opened on a fixed square of the calendar rather than on
-    /// whatever day the runner is having, so the archive shows the same month of held and
-    /// shut days every time, and the clock over the board is handed over already stopped.
+    /// whatever day the runner is having, so the archive shows the same month of finished
+    /// and shut days every time, and the clock over the board is handed over already stopped.
     /// The world and the plain board are shown part-way through, since an untouched world
     /// has nothing on it yet and an untouched field has no fencing and not a control on it
     /// lit. The next two boards are the ones with something lying on the ground: the
@@ -88,7 +88,7 @@ struct PigpenApp: App {
                         progress: .partWayThroughTheMonth(today: Self.photographed)
                     )
                 } else if launch.contains("-settings") {
-                    // With a fortnight of days held as well, so the card behind the gear
+                    // With a fortnight of days complete as well, so the card behind the gear
                     // has the dailies to say something about and the clear button has all
                     // of it to clear.
                     TitleScreenView(
@@ -98,14 +98,14 @@ struct PigpenApp: App {
                         showsSettings: true
                     )
                 } else if launch.contains("-title") {
-                    // Today held as well as the fortnight behind it, since what there is to
+                    // Today complete as well as the fortnight behind it, since what there is to
                     // see on the card is the stars, the clock and the run of days that a
                     // day already penned leaves on it.
                     TitleScreenView(
                         progress: .partWayThrough(),
                         daily: .partWayThroughTheMonth(
                             today: Self.photographed,
-                            holdingToday: true
+                            includingToday: true
                         ),
                         today: Self.photographed
                     )

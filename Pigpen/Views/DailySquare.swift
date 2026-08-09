@@ -4,15 +4,15 @@ import SwiftUI
 /// gave up under that.
 ///
 /// The square says what happened to the day in the game's own terms rather than with a
-/// tick. A day nobody has held is bare mud; a day that was held is washed gold, which is
+/// tick. A day nobody has finished is bare mud; a day completed is washed gold, which is
 /// what the real board does the moment a pen closes; a day that gave up the best pen it had
 /// in it drifts through the spectrum, which is what the real board does for one of those.
 /// A day still to come is grey ground under a padlock — the almanac has it, but not yet.
 struct DailySquare: View {
     /// What the archive has to say about a day.
     enum Standing: Equatable {
-        /// Held, and worth the stars shown under it.
-        case held(stars: Int, hasTheBestPen: Bool)
+        /// Complete, and worth the stars shown under it.
+        case complete(stars: Int, hasTheBestPen: Bool)
         /// Open, and waiting to be played.
         case open
         /// Still to come. The puzzle shipped with the game, but the day has not arrived.
@@ -27,11 +27,11 @@ struct DailySquare: View {
     var isToday = false
 
     private var stars: Int {
-        if case .held(let stars, _) = standing { stars } else { 0 }
+        if case .complete(let stars, _) = standing { stars } else { 0 }
     }
 
     private var hasTheBestPen: Bool {
-        if case .held(_, let best) = standing { best } else { false }
+        if case .complete(_, let best) = standing { best } else { false }
     }
 
     var body: some View {
@@ -55,7 +55,7 @@ struct DailySquare: View {
 
     private var isPlayable: Bool {
         switch standing {
-        case .held, .open: true
+        case .complete, .open: true
         case .locked, .missing: false
         }
     }
@@ -117,7 +117,7 @@ struct DailySquare: View {
 
     private var colours: (lit: Color, shade: Color) {
         switch standing {
-        case .held:
+        case .complete:
             (lit: GamePalette.pen, shade: GamePalette.pen.opacity(0.72))
         case .open:
             (lit: GamePalette.mudLit, shade: GamePalette.mud)
@@ -136,10 +136,10 @@ struct DailySquare: View {
         case .locked:
             return "\(date.fullTitle), not open yet"
         case .open:
-            return "\(date.fullTitle), not yet held"
-        case .held(let stars, let best):
+            return "\(date.fullTitle), not yet complete"
+        case .complete(let stars, let best):
             let count = spelled[min(max(stars, 0), 3)]
-            let said = "\(date.fullTitle), held, \(count) star\(stars == 1 ? "" : "s")"
+            let said = "\(date.fullTitle), complete, \(count) star\(stars == 1 ? "" : "s")"
             return best ? said + ", the best pen there is" : said
         }
     }
@@ -147,8 +147,8 @@ struct DailySquare: View {
 
 #Preview {
     HStack(spacing: 10) {
-        DailySquare(date: DailyDate(year: 2026, month: 4, day: 6), standing: .held(stars: 3, hasTheBestPen: true))
-        DailySquare(date: DailyDate(year: 2026, month: 4, day: 7), standing: .held(stars: 2, hasTheBestPen: false))
+        DailySquare(date: DailyDate(year: 2026, month: 4, day: 6), standing: .complete(stars: 3, hasTheBestPen: true))
+        DailySquare(date: DailyDate(year: 2026, month: 4, day: 7), standing: .complete(stars: 2, hasTheBestPen: false))
         DailySquare(date: DailyDate(year: 2026, month: 4, day: 8), standing: .open, isToday: true)
         DailySquare(date: DailyDate(year: 2026, month: 4, day: 9), standing: .locked)
         DailySquare(date: DailyDate(year: 2026, month: 4, day: 10), standing: .missing)

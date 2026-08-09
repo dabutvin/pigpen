@@ -8,18 +8,18 @@ import SwiftUI
 /// it says what you made of it, which is what brings a player back tomorrow.
 struct DailyCard: View {
     let date: DailyDate
-    /// The stars the day has given up, and 0 for a day still to be held.
+    /// The stars the day has given up, and 0 for a day not finished yet.
     let stars: Int
     /// True for a day that gave up the best pen it had in it.
     var hasTheBestPen = false
-    /// The quickest the day has been held, in seconds.
+    /// The quickest the day has been finished, in seconds.
     var bestTime: Int?
-    /// How many days in a row have been held, counting back from today.
+    /// How many days in a row have been completed, counting back from today.
     var streak: Int = 0
     /// False when the almanac has run out and there is no puzzle for today at all.
     var hasAPuzzle = true
 
-    private var isHeld: Bool { stars > 0 }
+    private var isComplete: Bool { stars > 0 }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
@@ -41,9 +41,9 @@ struct DailyCard: View {
 
     private var heading: some View {
         HStack(spacing: 7) {
-            Image(systemName: isHeld ? "checkmark.seal.fill" : "sun.max.fill")
+            Image(systemName: isComplete ? "checkmark.seal.fill" : "sun.max.fill")
                 .font(.system(size: 13, weight: .black))
-                .foregroundStyle(isHeld ? GamePalette.clover : GamePalette.rail)
+                .foregroundStyle(isComplete ? GamePalette.clover : GamePalette.rail)
 
             Text("TODAY'S PUZZLE")
                 .font(.system(size: 12, weight: .black, design: .rounded))
@@ -84,7 +84,7 @@ struct DailyCard: View {
     /// — what the button is going to do.
     private var tally: some View {
         HStack(spacing: 10) {
-            if isHeld {
+            if isComplete {
                 StarRow(stars: stars, size: 13, hasTheBestPen: hasTheBestPen)
 
                 if let bestTime {
@@ -104,7 +104,7 @@ struct DailyCard: View {
                     .font(.system(size: 12, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.rail)
             } else {
-                Text("Not held yet")
+                Text("Not complete yet")
                     .font(.system(size: 12, weight: .heavy))
                     .foregroundStyle(GamePalette.post.opacity(0.5))
 
@@ -169,12 +169,12 @@ struct DailyCard: View {
         guard hasAPuzzle else { return "Today's puzzle. There is none — the almanac stops before today." }
         let spelled = ["no", "one", "two", "three"]
         var said = "Today's puzzle. \(date.fullTitle). \(date.weekday.billing)."
-        if isHeld {
-            said += " Held, \(spelled[min(max(stars, 0), 3)]) star\(stars == 1 ? "" : "s")."
+        if isComplete {
+            said += " Complete, \(spelled[min(max(stars, 0), 3)]) star\(stars == 1 ? "" : "s")."
             if hasTheBestPen { said += " The best pen there is." }
             if let bestTime { said += " Best time \(Stopwatch.spoken(TimeInterval(bestTime)))." }
         } else {
-            said += " Not held yet."
+            said += " Not complete yet."
         }
         if streak > 1 { said += " \(streak) days in a row." }
         return said

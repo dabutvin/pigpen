@@ -131,7 +131,7 @@ struct DailyArchiveView: View {
                 Text(month.name)
                     .font(.system(size: 18, weight: .black, design: .rounded))
                     .contentTransition(.identity)
-                Text("\(progress.heldCount(in: month)) of \(playableCount) held")
+                Text("\(progress.completedCount(in: month)) of \(playableCount) complete")
                     .font(.system(size: 11, weight: .heavy, design: .rounded))
                     .opacity(0.75)
             }
@@ -217,8 +217,8 @@ struct DailyArchiveView: View {
     private func standing(on date: DailyDate) -> DailySquare.Standing {
         guard DailyAlmanac.holdsAPuzzle(on: date) else { return .missing }
         guard date <= today else { return .locked }
-        guard progress.isHeld(date) else { return .open }
-        return .held(
+        guard progress.isComplete(date) else { return .open }
+        return .complete(
             stars: progress.stars(on: date),
             hasTheBestPen: progress.hasTheBestPen(on: date)
         )
