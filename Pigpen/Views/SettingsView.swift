@@ -179,7 +179,7 @@ struct SettingsView: View {
             \(progress.clearedCount) of \(world.count) puzzles complete.
             """
         guard daily.completedCount > 0 else { return meadow }
-        return meadow + " \(counted(daily.completedCount, "daily puzzle")) complete as well."
+        return meadow + " \(counted(daily.completedCount, "daily puzzle")) as well."
     }
 
     private func counted(_ number: Int, _ noun: String) -> String {
