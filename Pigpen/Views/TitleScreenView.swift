@@ -110,6 +110,11 @@ struct TitleScreenView: View {
                 isDailyOpen = true
             }
             Button("Play again") {
+                // Clear the field means clear the field: the board filed away when the day
+                // was left is the submitted wall itself, so it has to go or *Play again*
+                // opens on the very wall *Put it back* offers. The wall stays on the books
+                // — the trophy still has it once the new field is somewhere else.
+                daily.clearDraft(on: today)
                 restoreSubmittedDaily = false
                 isDailyOpen = true
             }
