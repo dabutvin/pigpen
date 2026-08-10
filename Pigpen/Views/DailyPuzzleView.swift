@@ -16,7 +16,14 @@ struct DailyPuzzleView: View {
 
     var body: some View {
         if let level = DailyAlmanac.level(on: date) {
-            PuzzleView(level: level, clock: clock) { verdict, seconds in
+            // Done, not Continue: a day is finished when the pen holds, and there is no
+            // trail behind it waiting for the next signpost — only the title screen.
+            PuzzleView(
+                level: level,
+                clock: clock,
+                wayOutTitle: "Done",
+                wayOutImage: "checkmark.seal.fill"
+            ) { verdict, seconds in
                 progress.record(verdict, seconds: seconds, on: date)
             }
         } else {

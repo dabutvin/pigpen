@@ -15,6 +15,11 @@ struct PuzzleView: View {
     /// screenshot runs open one straight — and that is also how the screen knows whether
     /// there is somewhere behind it to offer a way back to.
     private let onPenned: ((PenVerdict, TimeInterval) -> Void)?
+    /// What that way back is called, and the glyph it wears. The meadow's is Continue with
+    /// a signpost, because the trail is waiting; a day's is Done with a seal, because the
+    /// day is finished and the title is what sits behind it.
+    private let wayOutTitle: String
+    private let wayOutImage: String
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -41,12 +46,22 @@ struct PuzzleView: View {
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
     ///   is how the screenshot runs photograph a time rather than photographing whenever
     ///   the runner got round to it.
+    /// - Parameter wayOutTitle: What the button that leaves after a held pen says. The
+    ///   meadow keeps the default; a day passes "Done".
     init(
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
+        wayOutTitle: String = "Continue",
+        wayOutImage: String = "signpost.right.fill",
         onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
     ) {
-        self.init(game: PuzzleGame(level: level), clock: clock, onPenned: onPenned)
+        self.init(
+            game: PuzzleGame(level: level),
+            clock: clock,
+            wayOutTitle: wayOutTitle,
+            wayOutImage: wayOutImage,
+            onPenned: onPenned
+        )
     }
 
     /// Opens the screen on a puzzle already in progress, which is how the previews and the
@@ -54,9 +69,13 @@ struct PuzzleView: View {
     init(
         game: PuzzleGame,
         clock: Stopwatch? = nil,
+        wayOutTitle: String = "Continue",
+        wayOutImage: String = "signpost.right.fill",
         onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
     ) {
         self.onPenned = onPenned
+        self.wayOutTitle = wayOutTitle
+        self.wayOutImage = wayOutImage
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
         _clock = State(initialValue: clock)
@@ -297,9 +316,10 @@ struct PuzzleView: View {
     }
 
     /// A pen that can still be widened sends the player back out to try; one that cannot
-    /// leaves nothing to do but take the field again from scratch. A level opened from
-    /// the world map has one more way out of both: the map itself, where the stars just
-    /// earned are waiting on the signpost.
+    /// leaves nothing to do but take the field again from scratch. A board opened from
+    /// somewhere — the meadow, or today's puzzle — has one more way out of both: back to
+    /// wherever opened it. What that button says is the caller's: Continue for the trail,
+    /// Done for a day.
     @ViewBuilder
     private var pennedActions: some View {
         if onPenned == nil {
@@ -321,7 +341,7 @@ struct PuzzleView: View {
                 }
 
                 Button { dismiss() } label: {
-                    Label("Continue", systemImage: "signpost.right.fill")
+                    Label(wayOutTitle, systemImage: wayOutImage)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
