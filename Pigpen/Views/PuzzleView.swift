@@ -9,12 +9,13 @@ struct PuzzleView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Told what a pen was worth — its stars, whether it was the best pen the map has in
-    /// it, and how long it took — every time one holds.
+    /// it, how long it took, and the fencing that held it — every time one holds.
     ///
     /// Nothing is listening when a level is played on its own — the previews and the
     /// screenshot runs open one straight — and that is also how the screen knows whether
-    /// there is somewhere behind it to offer a way back to.
-    private let onPenned: ((PenVerdict, TimeInterval) -> Void)?
+    /// there is somewhere behind it to offer a way back to. A daily keeps the fencing so
+    /// a day opened again can offer *Put it back*.
+    private let onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)?
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -48,7 +49,7 @@ struct PuzzleView: View {
     init(
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
-        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
+        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil
     ) {
         self.init(game: PuzzleGame(level: level), clock: clock, onPenned: onPenned)
     }
@@ -58,7 +59,7 @@ struct PuzzleView: View {
     init(
         game: PuzzleGame,
         clock: Stopwatch? = nil,
-        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
+        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil
     ) {
         self.onPenned = onPenned
         _game = State(initialValue: game)
@@ -552,7 +553,11 @@ struct PuzzleView: View {
             if clock != nil { heldIn = took }
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
-            onPenned?(game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false), took)
+            onPenned?(
+                game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false),
+                took,
+                game.fences
+            )
             await celebrate()
         }
     }
