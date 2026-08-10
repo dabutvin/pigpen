@@ -19,6 +19,11 @@ struct DailyArchiveView: View {
     @State private var month: DailyMonth
     /// The day whose board is on screen. Emptying it pops back to the calendar.
     @State private var playing: DailyDate?
+    /// Whether the board about to open should put the submitted wall back down.
+    @State private var restoreSubmitted = false
+    /// A completed day the player has tapped, waiting on whether to put the submitted
+    /// wall back or clear the field and go again.
+    @State private var offering: DailyDate?
 
     init(today: DailyDate = .today(), progress: DailyProgress = DailyProgress()) {
         self.today = today
@@ -60,7 +65,37 @@ struct DailyArchiveView: View {
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { date in
-            DailyPuzzleView(date: date, progress: progress)
+            DailyPuzzleView(
+                date: date,
+                progress: progress,
+                restoreSubmitted: restoreSubmitted
+            )
+        }
+        .confirmationDialog(
+            offering.map(\.fullTitle) ?? "",
+            isPresented: Binding(
+                get: { offering != nil },
+                set: { if !$0 { offering = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button("Put it back") {
+                guard let offering else { return }
+                restoreSubmitted = true
+                playing = offering
+                self.offering = nil
+            }
+            Button("Play again") {
+                guard let offering else { return }
+                restoreSubmitted = false
+                playing = offering
+                self.offering = nil
+            }
+            Button("Cancel", role: .cancel) {
+                offering = nil
+            }
+        } message: {
+            Text("Put the fencing back the way you submitted it, or clear the field and try again.")
         }
         .onAppear { progress.reload() }
     }
@@ -238,7 +273,14 @@ struct DailyArchiveView: View {
     private func open(_ date: DailyDate) {
         guard DailyAlmanac.isOpen(date, today: today) else { return }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        playing = date
+        // A day already submitted offers its wall back rather than opening straight onto
+        // an empty field — the same *Put it back* the board itself offers mid-session.
+        if progress.submittedFences(on: date) != nil {
+            offering = date
+        } else {
+            restoreSubmitted = false
+            playing = date
+        }
     }
 }
 
