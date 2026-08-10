@@ -60,8 +60,11 @@ final class PuzzleGame {
             .filter { level.canBuildFence(on: $0) }
             .sorted { ($0.row, $0.column) < ($1.row, $1.column) }
             .prefix(level.fenceBudget)
-        self.fences = Set(allowed)
-        self.outcome = level.release(fences: self.fences)
+        // Held in a local rather than read back off `self`: nothing on the instance can be
+        // looked at until every stored property has a value, and `outcome` is the last one.
+        let kept = Set(allowed)
+        self.fences = kept
+        self.outcome = level.release(fences: kept)
         if let bestPen {
             let kept = Set(bestPen.fences.filter { level.canBuildFence(on: $0) })
             if case .penned(let pen) = level.release(fences: kept) {
@@ -148,6 +151,25 @@ final class PuzzleGame {
         fences = bestPen.fences
         reconsider()
         return true
+    }
+
+    /// Remembers a pen that was held on an earlier visit — a daily's submitted wall —
+    /// without laying it down, so *Put it back* has something to offer the moment the
+    /// board opens empty. A wall that does not hold, or one worse than what the session
+    /// has already kept, is ignored.
+    func rememberSubmittedPen(_ fences: Set<GridPoint>) {
+        guard case .penned(let pen) = level.release(fences: fences) else { return }
+        let tally = level.tally(for: pen)
+        guard isWorthRemembering(tally) else { return }
+        bestPen = Pen(fences: fences, tally: tally)
+    }
+
+    /// Lays a submitted wall back down on an empty board in one step, the way *Put it
+    /// back* does mid-session — used when a completed day is opened with the offer taken.
+    @discardableResult
+    func putSubmittedPenBack(_ fences: Set<GridPoint>) -> Bool {
+        rememberSubmittedPen(fences)
+        return restoreBestPen()
     }
 
     /// Fills a tile in with fencing, or clears it again. Returns whether anything changed,

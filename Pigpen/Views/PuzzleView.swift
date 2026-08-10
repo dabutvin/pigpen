@@ -9,12 +9,13 @@ struct PuzzleView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// Told what a pen was worth — its stars, whether it was the best pen the map has in
-    /// it, and how long it took — every time one holds.
+    /// it, how long it took, and the fencing that held it — every time one holds.
     ///
     /// Nothing is listening when a level is played on its own — the previews and the
     /// screenshot runs open one straight — and that is also how the screen knows whether
-    /// there is somewhere behind it to offer a way back to.
-    private let onPenned: ((PenVerdict, TimeInterval) -> Void)?
+    /// there is somewhere behind it to offer a way back to. A daily keeps the fencing so
+    /// a day opened again can offer *Put it back*.
+    private let onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)?
     /// Told the board as it stands when the screen goes away, so a daily can keep the
     /// fencing even if the animals were never released. Meadow levels leave this unset —
     /// a trail stop starts from bare mud every time.
@@ -24,7 +25,8 @@ struct PuzzleView: View {
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
     /// puzzle nobody is timing. The meadow is not timed — a level there is worth going back
     /// to and taking apart — but a daily is a day's go at one board, and how long it took
-    /// is part of what it was.
+    /// is part of what it was. It stops when the pen holds, resumes on going bigger, resets
+    /// on starting over, and returns to the submitted time when the best pen is put back.
     @State private var clock: Stopwatch?
     /// What the clock said when the pen held, so the verdict says the same thing however
     /// long the card is left up.
@@ -40,6 +42,9 @@ struct PuzzleView: View {
     @State private var budgetShake: CGFloat = 0
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
+    /// What a tap on a treat just said — five more for an apple, five fewer for a skull —
+    /// rising off that tile so the cost is found out without reading anything.
+    @State private var worthCallout: WorthCallout?
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -48,7 +53,7 @@ struct PuzzleView: View {
     init(
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
-        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil,
+        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
         self.init(game: PuzzleGame(level: level), clock: clock, onPenned: onPenned, onLeave: onLeave)
@@ -59,7 +64,7 @@ struct PuzzleView: View {
     init(
         game: PuzzleGame,
         clock: Stopwatch? = nil,
-        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil,
+        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
         self.onPenned = onPenned
@@ -112,6 +117,10 @@ struct PuzzleView: View {
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
                     animals: marks,
                     celebration: celebration,
+                    worthCallout: worthCallout,
+                    onWorthCalloutFinished: { id in
+                        if worthCallout?.id == id { worthCallout = nil }
+                    },
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
@@ -139,6 +148,7 @@ struct PuzzleView: View {
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
         .fieldNavigationBar()
+        .keepsSwipeFromPopping()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
         }
@@ -148,8 +158,8 @@ struct PuzzleView: View {
     }
 
     /// The clock, up in the bar with the day's name rather than down on the board: it is
-    /// something to glance at afterwards, not something to play against. It stops the
-    /// moment the pen holds.
+    /// something to glance at afterwards, not something to play against. It stops while
+    /// the pen holds and the card is up, and picks up again if the player goes back out.
     @ViewBuilder
     private var clockFace: some View {
         if let clock {
@@ -225,7 +235,7 @@ struct PuzzleView: View {
                     .minimumScaleFactor(0.75)
 
                 if game.canRestoreBestPen {
-                    Button { restoreBestPen() } label: {
+                    Button { putBestPenBack() } label: {
                         Label("Put it back", systemImage: "trophy")
                             .font(.footnote.weight(.heavy))
                     }
@@ -338,13 +348,23 @@ struct PuzzleView: View {
     }
 
     private var startOver: some View {
-        Button { game.startOver() } label: {
+        Button {
+            // A fresh field is a fresh clock: the time of the pen just left behind is kept
+            // in the day's record, not on the face.
+            clock?.reset()
+            heldIn = nil
+            game.startOver()
+        } label: {
             Label("Start over", systemImage: "arrow.counterclockwise")
         }
     }
 
     private var goBigger: some View {
-        Button { game.resumeBuilding() } label: {
+        Button {
+            // The lap of honour was not on the clock; going back out to widen the pen is.
+            clock?.resume()
+            game.resumeBuilding()
+        } label: {
             Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
         }
     }
@@ -467,7 +487,13 @@ struct PuzzleView: View {
             // Dragging back over your own fencing is not a refusal, it is just nothing to do.
             guard !game.fences.contains(stroke.tile) else { return }
             guard game.buildFence(on: stroke.tile) else {
-                refuse()
+                // A skull takes no fencing, so a tap that would have planted a post says
+                // what the tile costs instead of shaking the rack like a spent budget.
+                if let treat = level.treat(at: stroke.tile), !treat.takesFencing {
+                    sayWorth(of: treat, at: stroke.tile)
+                } else {
+                    refuse()
+                }
                 return
             }
             UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
@@ -477,10 +503,15 @@ struct PuzzleView: View {
         }
     }
 
-    /// Puts the fencing back the way it stood on the best pen of the session, with the
-    /// same soft knock the other buttons that work the fencing already down give.
-    private func restoreBestPen() {
+    /// Puts the fencing back the way it stood on the best pen of the session, and — when
+    /// a time was submitted for a pen that held — puts the clock back to that time too,
+    /// so a rearrangement that was given up does not stay charged. The soft knock is the
+    /// same one the other buttons that work the fencing already down give.
+    private func putBestPenBack() {
         guard game.restoreBestPen() else { return }
+        if let heldIn {
+            clock?.setElapsed(heldIn)
+        }
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
     }
 
@@ -491,6 +522,16 @@ struct PuzzleView: View {
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
+    }
+
+    /// Floats what a treat is worth off the tile a finger just found it on, once per
+    /// press: a drag that crosses two skulls should not stack the same five points twice.
+    private func sayWorth(of treat: Treat, at tile: GridPoint) {
+        guard !refusedThisPress else { return }
+        refusedThisPress = true
+        worthCallout = WorthCallout(tile: tile, treat: treat)
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        UIAccessibility.post(notification: .announcement, argument: treat.pointsSaid)
     }
 
     /// Plays out whatever the game just decided: the walk to freedom, or the lap of honour
@@ -520,7 +561,11 @@ struct PuzzleView: View {
             if clock != nil { heldIn = took }
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
-            onPenned?(game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false), took)
+            onPenned?(
+                game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false),
+                took,
+                game.fences
+            )
             await celebrate()
         }
     }

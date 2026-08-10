@@ -18,6 +18,21 @@ struct FenceStroke {
     let isFirst: Bool
 }
 
+/// What a tap on a treat just said, rising off that tile: five more for an apple, five
+/// fewer for a skull. A skull takes no fencing, so this is how a finger finds out the cost
+/// without planting a post.
+struct WorthCallout: Equatable, Identifiable {
+    let id: UUID
+    let tile: GridPoint
+    let treat: Treat
+
+    init(tile: GridPoint, treat: Treat) {
+        self.id = UUID()
+        self.tile = tile
+        self.treat = treat
+    }
+}
+
 /// An animal as the field draws it: what it is, the tile it is standing on this instant,
 /// and how solid it is — one that has walked off the map fades out where it left.
 struct AnimalMark: Equatable, Identifiable {
@@ -53,6 +68,10 @@ struct FieldView: View {
     /// The lap of honour under way, if a pen has just held. While one is on, it says where
     /// the animals are rather than the marks doing so, and it throws the confetti.
     var celebration: Celebration?
+    /// What a tap on a treat just said, if anything — drawn rising off that tile.
+    var worthCallout: WorthCallout? = nil
+    /// Told when a callout has finished rising, so the field can put it away.
+    var onWorthCalloutFinished: ((WorthCallout.ID) -> Void)? = nil
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -69,6 +88,8 @@ struct FieldView: View {
     /// When the board came up, so the rainbow drifts from a fixed point rather than from
     /// whenever it happened to be switched on.
     @State private var opened = Date()
+    /// How far the callout has risen and faded, 0 on the tile and 1 up and gone.
+    @State private var calloutFlight: CGFloat = 0
 
     private struct Press {
         var mode: FenceStroke.Mode
@@ -100,6 +121,7 @@ struct FieldView: View {
 
                 confetti(board: board)
                 herd(board: board)
+                worthSaid(board: board)
             }
             .contentShape(Rectangle())
             .gesture(
@@ -112,6 +134,21 @@ struct FieldView: View {
                         onStrokeEnd()
                     }
             )
+            .onChange(of: worthCallout?.id) { _, id in
+                guard id != nil else {
+                    calloutFlight = 0
+                    return
+                }
+                calloutFlight = 0
+                let duration = reduceMotion ? 0.01 : 0.95
+                withAnimation(.easeOut(duration: duration)) { calloutFlight = 1 }
+            }
+            .task(id: worthCallout?.id) {
+                guard let callout = worthCallout else { return }
+                let hold = reduceMotion ? 700 : 1_100
+                try? await Task.sleep(for: .milliseconds(hold))
+                onWorthCalloutFinished?(callout.id)
+            }
         }
         .aspectRatio(CGFloat(level.columnCount) / CGFloat(level.rowCount), contentMode: .fit)
     }
@@ -187,6 +224,27 @@ struct FieldView: View {
             .opacity(animal.opacity)
             .position(board.center(atRow: pose.row, column: pose.column, lift: pose.lift))
             .allowsHitTesting(false)
+    }
+
+    /// What a tap on a treat just said, rising off that tile and fading out. Written onto
+    /// the grass the way the best-pen tally is — cream with a shadow — so it is painted
+    /// rather than printed on a plaque of its own.
+    @ViewBuilder
+    private func worthSaid(board: BoardGeometry) -> some View {
+        if let callout = worthCallout {
+            let center = board.center(of: callout.tile)
+            Text(callout.treat.pointsSaid)
+                .font(.system(size: max(14, board.cell * 0.36), weight: .heavy))
+                .foregroundStyle(GamePalette.cream)
+                .shadow(color: .black.opacity(0.55), radius: 3, y: 1)
+                .position(
+                    x: center.x,
+                    y: center.y - board.cell * (0.15 + 0.7 * calloutFlight)
+                )
+                .opacity(Double(1 - calloutFlight))
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
     }
 
     /// The confetti thrown over a pen that holds.
@@ -610,7 +668,8 @@ struct FieldView: View {
     /// the pig, a skull worth five fewer. Each sits on a pale scuff of ground so it reads
     /// against the mud, and a tile with fencing on it is covered over, treat and all —
     /// which is how an apple gets wasted. A skull is never covered over: it takes no
-    /// fencing, so it is on the board for as long as the board is.
+    /// fencing, so it is on the board for as long as the board is, and a tap on one says
+    /// what it costs rather than planting a post.
     private func drawTreats(in context: inout GraphicsContext, board: BoardGeometry) {
         for (tile, treat) in level.treats where !fences.contains(tile) {
             let rect = board.rect(for: tile)

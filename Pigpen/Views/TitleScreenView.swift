@@ -19,6 +19,8 @@ struct TitleScreenView: View {
     @State private var isPlaying = false
     @State private var isTutorial = false
     @State private var isDailyOpen = false
+    @State private var restoreSubmittedDaily = false
+    @State private var isOfferingSubmittedDaily = false
     @State private var isArchiveOpen = false
     @State private var showsSettings = false
     /// The opening film, over the title screen. It plays over this rather than pushing the
@@ -92,7 +94,28 @@ struct TitleScreenView: View {
             TutorialView()
         }
         .navigationDestination(isPresented: $isDailyOpen) {
-            DailyPuzzleView(date: today, progress: daily)
+            DailyPuzzleView(
+                date: today,
+                progress: daily,
+                restoreSubmitted: restoreSubmittedDaily
+            )
+        }
+        .confirmationDialog(
+            today.fullTitle,
+            isPresented: $isOfferingSubmittedDaily,
+            titleVisibility: .visible
+        ) {
+            Button("Put it back") {
+                restoreSubmittedDaily = true
+                isDailyOpen = true
+            }
+            Button("Play again") {
+                restoreSubmittedDaily = false
+                isDailyOpen = true
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Put the fencing back the way you submitted it, or clear the field and try again.")
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
             DailyArchiveView(today: today, progress: daily)
@@ -279,7 +302,7 @@ struct TitleScreenView: View {
     private var dailyButton: some View {
         Button {
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            isDailyOpen = true
+            openToday()
         } label: {
             DailyCard(
                 date: today,
@@ -293,6 +316,17 @@ struct TitleScreenView: View {
         .buttonStyle(SignpostButtonStyle())
         .disabled(!hasADailyPuzzle)
         .padding(.top, 2)
+    }
+
+    /// Opens today's board, or — once a wall has been submitted — offers to put that wall
+    /// back before the field comes up empty.
+    private func openToday() {
+        if daily.submittedFences(on: today) != nil {
+            isOfferingSubmittedDaily = true
+        } else {
+            restoreSubmittedDaily = false
+            isDailyOpen = true
+        }
     }
 
     /// The two smaller ways off this screen, painted on the same boards the puzzle's own

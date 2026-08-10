@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 
 /// The meadow a board is cut out of: the same mown fields the world map's trail runs
 /// through, laid behind the puzzle so a level looks like a patch of ground somebody has
@@ -347,6 +348,53 @@ extension View {
                 for: .navigationBar
             )
             .toolbarColorScheme(.dark, for: .navigationBar)
+    }
+
+    /// Stops the navigation stack from reading a drag across the left of the board as a
+    /// swipe back to the screen behind. On a field that drag is fencing, and the edge is
+    /// exactly where a wall often has to go — so the way out stays the bar's back button,
+    /// not a gesture the fence was already using.
+    func keepsSwipeFromPopping() -> some View {
+        background(KeepsSwipeFromPopping())
+    }
+}
+
+/// Turns off the interactive pop gesture for as long as the field that hosts it is up,
+/// and turns it back on the moment that field is put away, so the screens behind it can
+/// still be swiped closed the usual way.
+private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> Controller {
+        Controller()
+    }
+
+    func updateUIViewController(_ uiViewController: Controller, context: Context) {}
+
+    final class Controller: UIViewController {
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            setPopGesture(enabled: false)
+        }
+
+        override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            setPopGesture(enabled: true)
+        }
+
+        /// Walks up from this hosted controller to the navigation stack SwiftUI is
+        /// actually driving. A representable dropped in as a background does not always
+        /// sit where `navigationController` alone can see it.
+        private func setPopGesture(enabled: Bool) {
+            var current: UIViewController? = self
+            while let controller = current {
+                if let navigation = controller as? UINavigationController
+                    ?? controller.navigationController
+                {
+                    navigation.interactivePopGestureRecognizer?.isEnabled = enabled
+                    return
+                }
+                current = controller.parent
+            }
+        }
     }
 }
 

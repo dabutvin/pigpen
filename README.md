@@ -24,7 +24,8 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   tile, which is how one gets wasted. A skull costs five, and it is staked into the ground:
   no piece can be laid on it, so a wall that wants a skull's tile has to be built round it —
   and a wall built round one still has to shut it out, since ground you leave open is ground
-  the pig walks onto. Sour ground is planned around, not paved over.
+  the pig walks onto. Sour ground is planned around, not paved over. Tapping a skull says
+  what it costs — `-5 points` — rather than shaking the fence rack like a spent budget.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
 - **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits
@@ -168,11 +169,11 @@ A puzzle a day, on its own board, with a clock running on it.
   to fall in the band its weekday was given. The bands are laid end to end, so a Tuesday
   always asks more than a Monday.
 - **The clock counts up.** It starts when the board opens and stops the moment the pen
-  holds, so the lap of honour is not charged to you. Going back out afterwards to widen a
-  pen that has already closed is not on the clock — the time a day is remembered by is the
-  time it took to shut the pig in, and the rest is playing. The meadow has no clock on it at
-  all: a level up the trail is worth taking apart, and a clock over that would only ask you
-  to hurry.
+  holds, so the lap of honour is not charged to you. *Go bigger* picks the clock back up
+  where it stood; *Start over* puts it back to nothing; *Put it back* puts the submitted
+  time back with the fencing. The time a day is remembered by is still the quickest shut
+  that held. The meadow has no clock on it at all: a level up the trail is worth taking
+  apart, and a clock over that would only ask you to hurry.
 - **The archive is a calendar.** Every day of the year is a little field with the day's
   number under it: bare mud for a day nobody has finished, washed gold for a day complete,
   drifting through the spectrum for one that gave up the best pen it had in it — which is
@@ -188,6 +189,10 @@ A puzzle a day, on its own board, with a clock running on it.
   is welcome to.
 - **Best is kept, like everywhere else.** Stars, the quickest run and the rainbow are each
   kept at their best, so a worse or slower second attempt at an old day costs nothing.
+  The wall of fencing that was standing when the best pen was submitted is kept too: tapping
+  a day already held offers *Put it back* — the same words the trophy uses mid-session —
+  which lays that wall down again, or *Play again* for an empty field with the wall still
+  waiting behind the trophy.
 - **Hitting back keeps the fencing.** Leave a day without releasing the animals and the
   board is still there when you open it again — pieces, the best pen of the go, and the
   clock where you left it. Clearing the game's data forgets those drafts with everything
@@ -552,14 +557,14 @@ Pigpen/
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # The films, as clocks: which shot is up when, and for how long
-│   ├── Stopwatch.swift          # The count-up clock over a timed board, as two instants
+│   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days done: stars, times, best pens, mid-puzzle drafts, streaks
+│   └── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
