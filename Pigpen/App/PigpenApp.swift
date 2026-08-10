@@ -41,11 +41,12 @@ struct PigpenApp: App {
     /// middle of the shot it belongs to, so a script edit that walks a still off its shot
     /// fails there rather than in a screenshot nobody looks at twice.
     static let stills: [(argument: String, scene: CutScene.Name, seconds: TimeInterval)] = [
-        ("-opening", .opening, 1.5),
-        ("-opening-gate", .opening, 4.3),
-        ("-opening-pig", .opening, 7.1),
-        ("-opening-away", .opening, 9.9),
-        ("-opening-fence", .opening, 12.5),
+        ("-opening", .opening, 1.6),
+        ("-opening-gate", .opening, 4.4),
+        ("-opening-pig", .opening, 6.9),
+        ("-opening-away", .opening, 9.7),
+        ("-opening-pen", .opening, 12.7),
+        ("-opening-fence", .opening, 15.4),
         ("-mere", .stagMere, 1.4),
         ("-mere-stag", .stagMere, 4.1),
         ("-mere-both", .stagMere, 7.2),

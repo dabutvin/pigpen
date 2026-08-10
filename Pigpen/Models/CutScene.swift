@@ -22,9 +22,15 @@ struct CutScene: Equatable, Sendable {
     /// country, the one field of that country which already belongs to something, and the
     /// meadow made to hold — with another gate standing open somewhere else by the last
     /// frame, which is what there is to go on for.
+    ///
+    /// The first of them carries the rules as well as the story, since a player who has
+    /// watched it should know what a good pen is before they are handed a rack of fencing:
+    /// the pig is out, it would rather stay out, out is no place for a pig, and the answer
+    /// is the biggest pen the fencing will reach round — shut, or it is no pen at all.
     enum Name: String, Sendable, CaseIterable {
-        /// Before the first walk up the meadow: a pig, the open gate it came through, and
-        /// nine fields of country with nothing in them to stop it.
+        /// Before the first walk up the meadow: a pig, the open gate it came through, nine
+        /// fields of country with nothing in them to stop it, and the rule the whole game is
+        /// scored on — the biggest pen you can lay, so long as it is shut.
         case opening
         /// Before the meadow's last puzzle, which is the only one with two animals on it —
         /// because the last field of the meadow is the stag's, and fencing it has to leave
@@ -71,7 +77,12 @@ struct CutScene: Equatable, Sendable {
         /// Gone, at a gallop, with the field streaking past it: what chasing it looks like,
         /// and why the game is a fence rather than a chase.
         case away
-        /// The meadow again, with a run of fencing laid out along the front of it.
+        /// The pen a player is being asked for, marked out round the pig in dashes and
+        /// pushing out as far as the meadow will give it: the scoring rule, drawn rather
+        /// than written, since every tile a pen holds is a point.
+        case theBiggestPen
+        /// The meadow again, with a run of fencing laid out along the front of it — shut,
+        /// which is the other half of the rule.
         case fenceItIn
 
         // MARK: Stag Mere
@@ -181,11 +192,18 @@ struct CutScene: Equatable, Sendable {
 extension CutScene {
     /// Before the first walk up the meadow.
     ///
-    /// Five shots, and between them the reason the game is nine puzzles rather than one:
-    /// the meadow with no fence anywhere in it, the gate somebody left open, the pig, the
-    /// pig at a gallop with the line that says chasing it is not going to work, and the
-    /// fencing that is the answer instead. A player who watches it knows what they are
-    /// holding, what got out, and why the job is the meadow rather than the animal.
+    /// Six shots, and between them the reason the game is nine puzzles rather than one and
+    /// the rule every one of them is scored on: the meadow with no fence anywhere in it,
+    /// the gate somebody left open, the pig and what it wants, the pig at a gallop with the
+    /// line that says chasing it is not going to work, the pen a player is being asked for
+    /// pushing out as far as it will go, and the fencing that shuts it.
+    ///
+    /// The last two shots are the briefing the game never otherwise gives. A player who
+    /// watches the film knows what got out, why the job is the meadow rather than the
+    /// animal, and — before a single piece is in the ground — that a pen is worth what it
+    /// holds and worth nothing at all with a gap left in it. The pig wanting to be free and
+    /// the meadow not being safe for it are what make that a kindness rather than a chore:
+    /// the biggest pen there is, which is as close to loose as a pig can safely get.
     static func opening(start: Date = .now) -> Self {
         Self(
             name: .opening,
@@ -195,10 +213,19 @@ extension CutScene {
                     caption: "Mudlark Meadow, first light. Not a fence in it.",
                     seconds: 3.0
                 ),
-                Shot(picture: .theOpenGate, caption: "Somebody left the gate open.", seconds: 2.6),
-                Shot(picture: .thePig, caption: "One pig, and nine fields to lose it in.", seconds: 3.0),
-                Shot(picture: .away, caption: "You will not catch it in the open.", seconds: 2.6),
-                Shot(picture: .fenceItIn, caption: "Fence it in.", seconds: 2.6)
+                Shot(picture: .theOpenGate, caption: "Somebody left the gate open.", seconds: 2.4),
+                Shot(picture: .thePig, caption: "One pig, out, and it wants to be free.", seconds: 2.6),
+                Shot(
+                    picture: .away,
+                    caption: "Out here is not safe, and you will not catch it.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    picture: .theBiggestPen,
+                    caption: "Give it the biggest pen you can.",
+                    seconds: 2.6
+                ),
+                Shot(picture: .fenceItIn, caption: "Fence it in. One gap, and it is gone.", seconds: 2.7)
             ],
             start: start
         )

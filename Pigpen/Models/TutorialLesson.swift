@@ -112,7 +112,7 @@ final class TutorialLesson {
     var detail: String {
         switch step {
         case .welcome:
-            "Fence in the pig. You get a fixed number of pieces — tap Continue and we will walk through how to spend them."
+            "Fence in the pig. The bigger the pen you shut it in the better, and a pen with a gap left in it holds nothing at all. You get a fixed number of pieces — tap Continue and we will walk through how to spend them."
         case .tap:
             "Tap the glowing mud tile to lay a fence piece. The pig cannot walk through fencing."
         case .drag:
