@@ -92,12 +92,13 @@ jobs:
           # Each screen is shot in both appearances off a single launch: the views
           # read the colour scheme out of the environment, so flipping the
           # simulator under a running app re-draws it, and the two shots then show
-          # the same board rather than two rolls of the dice. `-map`, `-puzzle`,
-          # `-orchard`, `-sour`, `-boss`, `-tutorial`, `-daily`, `-archive`, `-title` and
-          # `-settings` are launch arguments the app understands, so the world map, the
-          # boards, the practice pen, the daily puzzle and its archive and the settings
-          # sheet can be captured without tapping through the title screen. The daily
-          # screens open on a fixed square of the calendar with a stopped clock, since a
+          # the same board rather than two rolls of the dice. `-universe`, `-map`,
+          # `-woods-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial`,
+          # `-daily`, `-archive`, `-title` and `-settings` are launch arguments the
+          # app understands, so the universe map, each world's trail, the boards, the
+          # practice pen, the daily puzzle and its archive and the settings sheet can
+          # be captured without tapping through the title screen. The daily screens
+          # open on a fixed square of the calendar with a stopped clock, since a
           # running one photographs as whenever the runner got round to it.
           capture() {
             local order="$1"
@@ -123,15 +124,17 @@ jobs:
 
           capture 1 title
           capture 3 tutorial -tutorial
-          capture 5 map -map
-          capture 7 puzzle -puzzle
-          capture 9 orchard -orchard
-          capture 11 sour -sour
-          capture 13 boss -boss
-          capture 15 settings -settings
-          capture 17 daily -daily
-          capture 19 archive -archive
-          capture 21 title_held -title
+          capture 5 universe -universe
+          capture 7 map -map
+          capture 9 woods_map -woods-map
+          capture 11 puzzle -puzzle
+          capture 13 orchard -orchard
+          capture 15 sour -sour
+          capture 17 boss -boss
+          capture 19 settings -settings
+          capture 21 daily -daily
+          capture 23 archive -archive
+          capture 25 title_held -title
 
           # A cut scene is lit by the shot rather than by the phone, so both
           # appearances of one were the same picture twice and only one of them is
@@ -164,20 +167,20 @@ jobs:
           # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
           # so these come out the same on every run rather than wherever a film happened to
           # have got to.
-          scene 23 opening_first_light -opening
-          scene 25 opening_gate -opening-gate
-          scene 27 opening_pig -opening-pig
-          scene 29 opening_away -opening-away
-          scene 31 opening_pen -opening-pen
-          scene 33 opening_fence -opening-fence
-          scene 35 mere_water -mere
-          scene 37 mere_stag -mere-stag
-          scene 39 mere_both -mere-both
-          scene 41 held_penned -held-penned
-          scene 43 held_stag -held-stag
-          scene 45 held_meadow -held-meadow
-          scene 47 held_world -held-world
-          scene 49 held_beyond -held-beyond
+          scene 27 opening_first_light -opening
+          scene 29 opening_gate -opening-gate
+          scene 31 opening_pig -opening-pig
+          scene 33 opening_away -opening-away
+          scene 35 opening_pen -opening-pen
+          scene 37 opening_fence -opening-fence
+          scene 39 mere_water -mere
+          scene 41 mere_stag -mere-stag
+          scene 43 mere_both -mere-both
+          scene 45 held_penned -held-penned
+          scene 47 held_stag -held-stag
+          scene 49 held_meadow -held-meadow
+          scene 51 held_world -held-world
+          scene 53 held_beyond -held-beyond
 
           xcrun simctl status_bar "$UDID" clear
 

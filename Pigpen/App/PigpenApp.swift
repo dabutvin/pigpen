@@ -4,10 +4,11 @@ import SwiftUI
 @main
 struct PigpenApp: App {
     /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-map`,
-    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-settings` or one of the film
-    /// arguments so the pull request screenshots can show the boards, the world map, the
-    /// practice pen, the daily puzzle and its archive, the settings sheet and every shot of
-    /// every cut scene rather than only the title screen.
+    /// `-universe`, `-woods-map`, `-tutorial`, `-daily`, `-archive`, `-title`,
+    /// `-settings` or one of the film arguments so the pull request screenshots can show
+    /// the boards, the universe map, each world's trail, the practice pen, the daily
+    /// puzzle and its archive, the settings sheet and every shot of every cut scene
+    /// rather than only the title screen.
     ///
     /// The daily screens are opened on a fixed square of the calendar rather than on
     /// whatever day the runner is having, so the archive shows the same month of finished
