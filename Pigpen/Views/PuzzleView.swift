@@ -132,6 +132,7 @@ struct PuzzleView: View {
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
         .fieldNavigationBar()
+        .keepsSwipeFromPopping()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
         }
