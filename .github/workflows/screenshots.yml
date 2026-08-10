@@ -168,15 +168,16 @@ jobs:
           scene 25 opening_gate -opening-gate
           scene 27 opening_pig -opening-pig
           scene 29 opening_away -opening-away
-          scene 31 opening_fence -opening-fence
-          scene 33 mere_water -mere
-          scene 35 mere_stag -mere-stag
-          scene 37 mere_both -mere-both
-          scene 39 held_penned -held-penned
-          scene 41 held_stag -held-stag
-          scene 43 held_meadow -held-meadow
-          scene 45 held_world -held-world
-          scene 47 held_beyond -held-beyond
+          scene 31 opening_pen -opening-pen
+          scene 33 opening_fence -opening-fence
+          scene 35 mere_water -mere
+          scene 37 mere_stag -mere-stag
+          scene 39 mere_both -mere-both
+          scene 41 held_penned -held-penned
+          scene 43 held_stag -held-stag
+          scene 45 held_meadow -held-meadow
+          scene 47 held_world -held-world
+          scene 49 held_beyond -held-beyond
 
           xcrun simctl status_bar "$UDID" clear
 

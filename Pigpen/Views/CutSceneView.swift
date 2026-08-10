@@ -221,6 +221,7 @@ private struct Film {
         case .theOpenGate: drawTheOpenGate(in: &context)
         case .thePig: drawThePig(in: &context)
         case .away: drawAway(in: &context)
+        case .theBiggestPen: drawTheBiggestPen(in: &context)
         case .fenceItIn: drawFenceItIn(in: &context)
         case .theMere: drawTheMere(in: &context)
         case .theStag: drawTheStag(in: &context)
@@ -359,6 +360,59 @@ private struct Film {
         drawStreaks(in: &shot, behind: across, at: 0.74...0.88, count: 9, seed: 71)
 
         drawLand(in: &shot, ridge: 0.93, rise: 0.014, waves: 1.0, phase: 0.3, color: colors.foreground)
+    }
+
+    /// The scoring rule, drawn rather than written: the pig stood in open grass with the
+    /// tightest pen that would hold it marked round it in dashes, and a second pen pushing
+    /// out from that one across the meadow as the shot runs. The small one fades as
+    /// the big one goes past it, so the shot is an answer being rejected for a better one
+    /// rather than two plans sitting side by side.
+    ///
+    /// The camera pulls back while the pen grows, which is what stops the dashes simply
+    /// walking off the sides: the meadow keeps giving it more room to take.
+    private func drawTheBiggestPen(in context: inout GraphicsContext) {
+        var shot = pushed(context, zoom: 1.12 - 0.10 * progress)
+
+        drawSky(in: &shot, horizon: y(0.32))
+        drawSun(in: &shot, at: CGPoint(x: x(0.22), y: y(0.19)), radius: x(0.07), rays: false)
+        drawClouds(in: &shot, at: 0.13, drift: 0.012 * progress)
+
+        drawLand(in: &shot, ridge: 0.32, rise: 0.05, waves: 2.0, phase: 1.3, color: colors.farHill)
+        drawLand(in: &shot, ridge: 0.44, rise: 0.024, waves: 1.5, phase: 2.5, color: colors.ground)
+        drawTufts(in: &shot, along: 0.44, rise: 0.024, waves: 1.5, phase: 2.5, count: 18, height: 0.016, seed: 137)
+
+        // Low in the frame and a little off centre, so the pen that grows round the pig has
+        // the meadow to grow into and the line of type has the bottom of the frame to
+        // itself. Not so far off that the widest pen runs out past the side of the shot: a
+        // rectangle with an edge missing is a pen that does not hold, which is the opposite
+        // of what this one is for.
+        let pig = CGPoint(x: x(0.46), y: y(0.80))
+        drawAnimal(in: &shot, .pig, feet: pig, width: x(0.15))
+
+        // What would do, going: a pen the size of the animal in it scores the animal in it.
+        drawGhostPen(
+            in: &shot,
+            round: pig,
+            width: 0.26,
+            height: 0.12,
+            drop: 0.012,
+            // Faded out evenly rather than snatched away, so the frame the screenshots and
+            // the reduced-motion players are handed — the middle of the shot — still has
+            // both pens in it, which is the whole comparison.
+            opacity: 0.75 * max(0, 1 - progress / 0.8)
+        )
+
+        // And what is being asked for, opening out past it. It stops short of the frame
+        // rather than reaching the edges: a pen is what the fencing in the rack will go
+        // round, and a shot that says "all of it" would be teaching the wrong rule.
+        let grown = easeOut(progress)
+        drawGhostPen(
+            in: &shot,
+            round: pig,
+            width: 0.28 + 0.52 * grown,
+            height: 0.13 + 0.22 * grown,
+            drop: 0.012
+        )
     }
 
     /// The meadow again, calm, with a run of fencing stood along the front of it and the
@@ -1162,16 +1216,23 @@ private struct Film {
 
     /// The pen an animal is going to need, marked out round it in dashes: a plan rather
     /// than a fence, which is the whole point of the shot it appears in.
+    ///
+    /// `opacity` is for a plan being dropped in favour of a better one. Left alone it is the
+    /// 0.9 every ghost pen in the game is drawn at — dashes that read as chalk on the grass
+    /// rather than as a line somebody has already built.
     private func drawGhostPen(
         in context: inout GraphicsContext,
         round feet: CGPoint,
         width: Double,
         height: Double,
-        drop: Double
+        drop: Double,
+        opacity: Double = 0.9
     ) {
+        guard opacity > 0 else { return }
+
         context.stroke(
             penRect(round: feet, width: width, height: height, drop: drop),
-            with: .color(GamePalette.cream.opacity(0.9)),
+            with: .color(GamePalette.cream.opacity(opacity)),
             style: StrokeStyle(
                 lineWidth: max(2, x(0.009)),
                 lineCap: .round,
@@ -1480,15 +1541,17 @@ private struct Film {
     }
 }
 
-#Preview("Opening · first light") { CutSceneView(.opening(), still: 1.5) }
+#Preview("Opening · first light") { CutSceneView(.opening(), still: 1.6) }
 
-#Preview("Opening · the gate") { CutSceneView(.opening(), still: 4.3) }
+#Preview("Opening · the gate") { CutSceneView(.opening(), still: 4.4) }
 
-#Preview("Opening · the pig") { CutSceneView(.opening(), still: 7.1) }
+#Preview("Opening · the pig") { CutSceneView(.opening(), still: 6.8) }
 
-#Preview("Opening · away") { CutSceneView(.opening(), still: 9.9) }
+#Preview("Opening · away") { CutSceneView(.opening(), still: 9.7) }
 
-#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 12.5) }
+#Preview("Opening · the biggest pen") { CutSceneView(.opening(), still: 12.8) }
+
+#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 15.6) }
 
 #Preview("Stag Mere · the mere") { CutSceneView(.stagMere(), still: 1.4) }
 
