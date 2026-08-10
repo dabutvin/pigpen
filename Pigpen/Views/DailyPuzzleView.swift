@@ -6,19 +6,30 @@ import SwiftUI
 /// The only screen that knows a daily puzzle is a puzzle at all — everything below it is
 /// the same board the meadow is played on, which is the point. A daily is not a different
 /// game, it is the same game with a date on it.
+///
+/// Hitting back without releasing the animals still keeps the fencing: the board is filed
+/// away as a draft on the way out, and laid back down the next time the day is opened.
 @MainActor
 struct DailyPuzzleView: View {
     let date: DailyDate
     let progress: DailyProgress
-    /// The clock the board opens with. A running one for a player; one already stopped for
-    /// a screenshot, which cannot photograph something that is still moving.
+    /// The clock the board opens with when nothing has been timed on this day yet. A
+    /// draft with a clock already under way takes its own; a screenshot hands one in
+    /// already stopped, which cannot photograph something that is still moving.
     var clock = Stopwatch()
 
     var body: some View {
         if let level = DailyAlmanac.level(on: date) {
-            PuzzleView(level: level, clock: clock) { verdict, seconds in
-                progress.record(verdict, seconds: seconds, on: date)
-            }
+            PuzzleView(
+                game: progress.game(for: level, on: date),
+                clock: progress.hasDraft(on: date) ? progress.clock(on: date) : clock,
+                onPenned: { verdict, seconds in
+                    progress.record(verdict, seconds: seconds, on: date)
+                },
+                onLeave: { game, clock in
+                    progress.saveDraft(from: game, clock: clock, on: date)
+                }
+            )
         } else {
             NoPuzzleView(date: date)
         }

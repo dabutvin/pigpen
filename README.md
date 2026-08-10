@@ -188,6 +188,10 @@ A puzzle a day, on its own board, with a clock running on it.
   is welcome to.
 - **Best is kept, like everywhere else.** Stars, the quickest run and the rainbow are each
   kept at their best, so a worse or slower second attempt at an old day costs nothing.
+- **Hitting back keeps the fencing.** Leave a day without releasing the animals and the
+  board is still there when you open it again — pieces, the best pen of the go, and the
+  clock where you left it. Clearing the game's data forgets those drafts with everything
+  else.
 
 The almanac is generated rather than authored — `Tools/generate_dailies.py` writes it, and
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
@@ -555,14 +559,14 @@ Pigpen/
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days done: stars, quickest time, best pens, runs of days
+│   └── DailyProgress.swift      # Days done: stars, times, best pens, mid-puzzle drafts, streaks
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
 │   ├── DailyCard.swift          # Today's puzzle on the title screen: the day, its stars, its clock
 │   ├── DailyArchiveView.swift   # The calendar of every daily there has been this year
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
-│   ├── DailyPuzzleView.swift    # One day's board, with the clock on it and the day's record kept
+│   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the films, shot by shot
 │   ├── SettingsView.swift       # Behind the gear: the version, and clearing all game data

@@ -47,6 +47,30 @@ final class PuzzleGame {
         self.outcome = level.release(fences: [])
     }
 
+    /// Opens a board already under way: the fencing left on it, and — when there was one —
+    /// the best pen closed before the board was put away. Used to pick a daily back up
+    /// after the player hit back without releasing the animals.
+    ///
+    /// Pieces the map will not take are dropped, and anything past the budget is left off
+    /// rather than forcing a field the level cannot hold. The best pen is only kept when
+    /// its own fencing still closes on this map.
+    init(level: PuzzleLevel, fences: Set<GridPoint>, bestPen: Pen? = nil) {
+        self.level = level
+        let allowed = fences
+            .filter { level.canBuildFence(on: $0) }
+            .sorted { ($0.row, $0.column) < ($1.row, $1.column) }
+            .prefix(level.fenceBudget)
+        self.fences = Set(allowed)
+        self.outcome = level.release(fences: self.fences)
+        if let bestPen {
+            let kept = Set(bestPen.fences.filter { level.canBuildFence(on: $0) })
+            if case .penned(let pen) = level.release(fences: kept) {
+                self.bestPen = Pen(fences: kept, tally: level.tally(for: pen))
+            }
+        }
+        reconsider()
+    }
+
     var isBuilding: Bool { phase == .building }
     var fencesRemaining: Int { level.fenceBudget - fences.count }
     /// The most any pen has been worth this session, and 0 before one has closed.

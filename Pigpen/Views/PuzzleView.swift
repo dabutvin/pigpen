@@ -15,6 +15,10 @@ struct PuzzleView: View {
     /// screenshot runs open one straight — and that is also how the screen knows whether
     /// there is somewhere behind it to offer a way back to.
     private let onPenned: ((PenVerdict, TimeInterval) -> Void)?
+    /// Told the board as it stands when the screen goes away, so a daily can keep the
+    /// fencing even if the animals were never released. Meadow levels leave this unset —
+    /// a trail stop starts from bare mud every time.
+    private let onLeave: ((PuzzleGame, Stopwatch?) -> Void)?
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -44,9 +48,10 @@ struct PuzzleView: View {
     init(
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
-        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
+        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil,
+        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
-        self.init(game: PuzzleGame(level: level), clock: clock, onPenned: onPenned)
+        self.init(game: PuzzleGame(level: level), clock: clock, onPenned: onPenned, onLeave: onLeave)
     }
 
     /// Opens the screen on a puzzle already in progress, which is how the previews and the
@@ -54,9 +59,11 @@ struct PuzzleView: View {
     init(
         game: PuzzleGame,
         clock: Stopwatch? = nil,
-        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil
+        onPenned: ((PenVerdict, TimeInterval) -> Void)? = nil,
+        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
         self.onPenned = onPenned
+        self.onLeave = onLeave
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
         _clock = State(initialValue: clock)
@@ -136,6 +143,7 @@ struct PuzzleView: View {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
         }
         .onAppear { clock?.start() }
+        .onDisappear { onLeave?(game, clock) }
         .task(id: game.phase) { await reactToPhase() }
     }
 
