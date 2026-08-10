@@ -61,7 +61,8 @@ final class UniverseProgress {
 
 extension UniverseProgress {
     /// A universe with the first world held, so previews and screenshots show the map with the
-    /// meadow cleared, the thicket open to play, and the next world lit as coming soon.
+    /// meadow cleared and its rainbow, the thicket open and beckoning, and the worlds past it
+    /// still dark silhouettes waiting their turn.
     static func partWayThrough(universe: Universe = .all) -> UniverseProgress {
         var stars: [String: Int] = [:]
         for node in universe.game(at: 0)?.map.nodes ?? [] {

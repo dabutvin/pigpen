@@ -73,8 +73,8 @@ struct PigpenApp: App {
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
                 } else if launch.contains("-universe") {
-                    // The meadow held, the thicket open to play, and the next world lit as
-                    // coming soon — so the map shows all four of its standings at once.
+                    // The meadow held, the thicket open and beckoning, and the worlds past it
+                    // still silhouettes — the map with something to show at every standing.
                     UniverseMapView(progress: .partWayThrough())
                 } else if launch.contains("-woods-map") {
                     WorldMapView(
