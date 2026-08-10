@@ -3,11 +3,12 @@ import SwiftUI
 
 @main
 struct PigpenApp: App {
-    /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-map`,
-    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-settings` or one of the film
-    /// arguments so the pull request screenshots can show the boards, the world map, the
-    /// practice pen, the daily puzzle and its archive, the settings sheet and every shot of
-    /// every cut scene rather than only the title screen.
+    /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`,
+    /// `-map`, `-universe`, `-woods-map`, `-tutorial`, `-daily`, `-archive`, `-title`,
+    /// `-settings` or one of the film arguments so the pull request screenshots can show
+    /// the boards, the universe map, each world's trail, the practice pen, the daily
+    /// puzzle and its archive, the settings sheet and every shot of every cut scene
+    /// rather than only the title screen.
     ///
     /// The daily screens are opened on a fixed square of the calendar rather than on
     /// whatever day the runner is having, so the archive shows the same month of finished
@@ -70,8 +71,27 @@ struct PigpenApp: App {
                     PuzzleView(game: .applesAndSkulls())
                 } else if launch.contains("-boss") {
                     PuzzleView(game: .theStagMeresBestPen())
+                } else if launch.contains("-truffles") {
+                    // A thicket board: the truffle and the bramble stand where the apple and
+                    // the skull would, the same +5 and -5 dressed for the woods, on thicket
+                    // ground rather than meadow grass.
+                    PuzzleView(
+                        level: .nettleBank,
+                        treatSkin: WorldTheme.thornwood.treats,
+                        day: .forestDay,
+                        dusk: .forestDusk
+                    )
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
+                } else if launch.contains("-universe") {
+                    // The meadow held, the thicket open and beckoning, and the worlds past it
+                    // still silhouettes — the map with something to show at every standing.
+                    UniverseMapView(progress: .partWayThrough())
+                } else if launch.contains("-woods-map") {
+                    WorldMapView(
+                        world: .thornwoodThicket,
+                        progress: .partWayThrough(world: .thornwoodThicket)
+                    )
                 } else if launch.contains("-tutorial") {
                     TutorialView()
                 } else if launch.contains("-daily") {

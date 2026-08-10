@@ -75,6 +75,10 @@ struct FieldView: View {
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
+    /// How this world dresses the windfall and the hazard: an apple and a skull in the meadow,
+    /// a truffle and a bramble in the woods. Only the glyph changes — a truffle is scored, tapped
+    /// and fenced exactly as an apple is, because it is one under the picture.
+    var treatSkin: TreatSkin = WorldTheme.meadow.treats
     let onStroke: (FenceStroke) -> Void
     /// Told when the finger comes up, so everything one press laid or tore out can be
     /// taken back together.
@@ -691,13 +695,11 @@ struct FieldView: View {
         }
     }
 
-    /// A treat as it is drawn on a tile `cell` across. Emoji fill the box they are given
-    /// differently, so the skull is set larger than the apple to carry the same weight.
+    /// A treat as it is drawn on a tile `cell` across, in whatever the world dresses it as.
+    /// Emoji fill the box they are given differently, so each glyph carries its own scale.
     private func mark(for treat: Treat, cell: CGFloat) -> Text {
-        switch treat {
-        case .apple: Text("🍎").font(.system(size: cell * 0.58))
-        case .skull: Text("☠️").font(.system(size: cell * 0.68))
-        }
+        Text(treatSkin.glyph(for: treat))
+            .font(.system(size: cell * treatSkin.scale(for: treat)))
     }
 
     /// A fenced tile is a whole square given over to fencing: three pointed pickets with

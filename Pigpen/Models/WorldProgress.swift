@@ -234,16 +234,38 @@ final class WorldProgress {
         return frontier > before
     }
 
-    func hasPlayed(_ scene: CutScene.Name) -> Bool {
-        playedScenes.contains(scene.rawValue)
+    /// Whether a film has been played, by the key it is remembered under. The keyed pair is
+    /// what lets a world other than the meadow — whose films are `StorybookScene`s rather than
+    /// `CutScene`s — track its own opening and send-off through the same store.
+    func hasPlayed(sceneKey key: String) -> Bool {
+        playedScenes.contains(key)
     }
+
+    /// Remembers that a film has been played, watched or skipped, by its key. Either way it
+    /// has had its one chance.
+    func markPlayed(sceneKey key: String) {
+        guard !hasPlayed(sceneKey: key) else { return }
+        playedScenes.insert(key)
+        store.markScenePlayed(key)
+    }
+
+    func hasPlayed(_ scene: CutScene.Name) -> Bool { hasPlayed(sceneKey: scene.rawValue) }
 
     /// Remembers that a film has been played, watched or skipped. Either way it has had
     /// its one chance.
-    func markPlayed(_ scene: CutScene.Name) {
-        guard !hasPlayed(scene) else { return }
-        playedScenes.insert(scene.rawValue)
-        store.markScenePlayed(scene.rawValue)
+    func markPlayed(_ scene: CutScene.Name) { markPlayed(sceneKey: scene.rawValue) }
+
+    /// Whether a world's opening is owed, by its film's key: it plays once, on the first Play
+    /// of a world nobody has taken a star out of yet. The meadow's `isTheOpeningDue` is this
+    /// with the opening's own key.
+    func isOpeningDue(key: String) -> Bool {
+        !hasPlayed(sceneKey: key) && totalStars == 0
+    }
+
+    /// Whether a world's send-off is owed, by its film's key: once every pen in it is held and
+    /// the film has not played.
+    func isFarewellDue(key: String) -> Bool {
+        !hasPlayed(sceneKey: key) && isTheWorldHeld
     }
 
     /// Whether the opening is still owed: it plays once, on the first Play of a world

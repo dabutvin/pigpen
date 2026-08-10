@@ -87,10 +87,11 @@ tiles, three apples and the two skulls: 38.
 
 ## The World
 
-Play opens **Mudlark Meadow**: nine puzzles as nine signposts up one winding trail, with
-the pig standing at the furthest one it has reached and mist over everything past that. The
-first six are fencing and water alone and climb in what they ask of you, the next two
-scatter apples and skulls as well, and the last is the boss.
+Play leads out to the **universe map** (below), and its first world is **Mudlark Meadow**:
+nine puzzles as nine signposts up one winding trail, with the pig standing at the furthest
+one it has reached and mist over everything past that. The first six are fencing and water
+alone and climb in what they ask of you, the next two scatter apples and skulls as well, and
+the last is the boss. Every world in the game is a trail like this one.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
@@ -154,6 +155,62 @@ climb cannot quietly flatten out again.
 
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
+
+## The Universe
+
+Hold every pen in Mudlark Meadow and its send-off pulls back to the **universe map**: the
+meadow behind you, the next world lit up ahead, and ten more strung out past them through
+space, each drawn as a little planet with its boss shown on it. A world opens once the one
+before it is held, so the map is a chain — finish a world to reach the next — and the pig
+carries the same game into every one of them.
+
+- **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
+  pieces will reach round, shut or it is no pen at all. What a theme changes is only the
+  dressing: the light the trail is drawn in, what the windfall and the hazard look like on
+  the ground, and the shape that waits at the end. The board underneath never knows the
+  difference, which is why one solver authors every level in the game.
+- **Each world plays its own films.** An opening the first time you walk into it, and a
+  send-off once every pen is held — the send-off pointing on past the world, the way the
+  meadow's points past the hills to a gate standing open somewhere else.
+- **The bosses are silhouettes until you reach them.** A world you have not opened yet shows
+  its boss as a dark shape on its planet; reach it and the shape comes up in full colour. The
+  whole journey is on the map from the first time you see it, so there is always somewhere to
+  be going.
+
+Twelve worlds are drawn: **Mudlark Meadow** and **Thornwood Thicket** to play, then Emberpeak,
+Cogsworth City, Starfall Reaches, Gloamdeep Caverns, Lantern Carnival, Sunbaked Dunes,
+Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as silhouettes.
+Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
+films are already there.
+
+### Thornwood Thicket
+
+The second world, and the first past the meadow. The pig has taken the tree line, so the
+trail runs through deep woods in forest light, the windfall is a **truffle** rather than an
+apple and the hazard a **bramble** rather than a skull — each worth exactly what its meadow
+twin was, a truffle five tiles to shut in and a bramble five to shut in with and no fencing
+at all. The one thing the thicket does that the meadow did not is **scatter** its treats. The
+meadow held them all back for its last three fields; the thicket has walked its pig everywhere
+at once, so a truffle turns up in the third field and a bramble in the sixth, with plain
+fields in between. It reads as woods a pig has been rooting through rather than a lesson laid
+out in order.
+
+| # | Level | Pieces | On the ground | Best pen |
+|---|---|---|---|---|
+| 1 | Bramble Brook | 10 | — | 20 |
+| 2 | Foxglove Dell | 6 | — | 20 |
+| 3 | Hazel Copse | 12 | 1 truffle | 30 |
+| 4 | Gnarl Ford | 12 | — | 24 |
+| 5 | Fern Gully | 12 | 2 truffles | 34 |
+| 6 | Willow Corner | 8 | — | 26 |
+| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 26 |
+| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 41 |
+| 9 | Boar Hollow | 18 | 6 truffles, 2 brambles | 54 |
+
+Its boss, Boar Hollow, is the thicket's deepest and treat-thickest field rather than a second
+animal — held by one pig and the biggest budget in the woods, and asking for 21 of the 24
+stars below it before it opens, the same toll Stag Mere charges. Every pen is drawn out in
+[`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -456,7 +513,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the map, four boards, the settings sheet, a daily board and its archive and all fourteen shots of the three cut scenes in light + dark, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, both world trails, five boards (including a thicket board of truffles and brambles), the settings sheet, a daily board and its archive and all fourteen shots of the three cut scenes in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -465,7 +522,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the world map, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; the map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -558,11 +615,17 @@ Pigpen/
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
-│   ├── CutScene.swift           # The films, as clocks: which shot is up when, and for how long
+│   ├── CutScene.swift           # The meadow's films, as clocks: which shot is up when, and for how long
+│   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens on
 │   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
+│   ├── WorldTheme.swift         # A world's look: its light, its truffle/bramble skin, its boss silhouette
+│   ├── GameWorld.swift          # A world bundled: its map, its theme, and the films that wrap it
+│   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
+│   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
+│   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
@@ -575,10 +638,12 @@ Pigpen/
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
-│   ├── CutSceneView.swift       # Paints any of the films, shot by shot
+│   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
+│   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
 │   ├── SettingsView.swift       # Behind the gear: the version, and clearing all game data
-│   ├── WorldMapView.swift       # The world map: signposts, the walking pig, the trail
+│   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
+│   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
 │   ├── WorldTrail.swift         # Stops ↔ points on screen, and the curve between them
 │   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
@@ -588,7 +653,7 @@ Pigpen/
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden buttons: the title screen's, and the board's
-│   ├── GamePalette.swift        # Colours, including the pasture's day, dusk and sunrise sets
+│   ├── GamePalette.swift        # Colours, including the pasture's day, dusk, sunrise and forest sets
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color

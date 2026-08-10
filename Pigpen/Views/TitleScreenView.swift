@@ -23,13 +23,6 @@ struct TitleScreenView: View {
     @State private var isOfferingSubmittedDaily = false
     @State private var isArchiveOpen = false
     @State private var showsSettings = false
-    /// The opening film, over the title screen. It plays over this rather than pushing the
-    /// map behind it, so that the stack stays a title screen with a map on top of it and
-    /// the way back off the map is the way it always was.
-    @State private var showsOpening = false
-    /// Whether the film that has just come down was the real thing rather than a player
-    /// changing their mind, and so whether the map is what happens next.
-    @State private var openingLedToTheMap = false
     /// The same progress the map is handed, so the stars on the tally above are the ones
     /// just won — and go the moment they are cleared from the settings sheet.
     @State private var progress: WorldProgress
@@ -88,7 +81,7 @@ struct TitleScreenView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $isPlaying) {
-            WorldMapView(progress: progress)
+            UniverseMapView()
         }
         .navigationDestination(isPresented: $isTutorial) {
             TutorialView()
@@ -129,11 +122,6 @@ struct TitleScreenView: View {
             SettingsView(progress: progress, daily: daily)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
-        }
-        // The map is pushed as the film comes down rather than from inside it, so the two
-        // never fight over the screen.
-        .fullScreenCover(isPresented: $showsOpening, onDismiss: { openTheMeadow() }) {
-            CutSceneView(.opening()) { endTheOpening() }
         }
         .onAppear {
             // The map keeps its own copy of the stars while it is up; read them back so a
@@ -355,7 +343,7 @@ struct TitleScreenView: View {
     /// Where Play leads, and what it is played for.
     private var signpost: some View {
         VStack(spacing: 3) {
-            Text("\(world.name) · \(world.count) puzzles")
+            Text("A universe of worlds to fence")
                 .font(.footnote.weight(.heavy))
             Text("Pen in as much mud as you can")
                 .font(.caption2.weight(.semibold))
@@ -369,29 +357,10 @@ struct TitleScreenView: View {
 
     // MARK: - Play
 
-    /// Where Play goes: up the trail, or — the first time anybody presses it on a world
-    /// with nothing won on it — through the film first.
+    /// Where Play goes: out to the universe map, where the meadow is the first of many worlds.
+    /// Each world plays its own opening the first time it is entered, so the film that once
+    /// stood between the title and the meadow now stands between the map and each world.
     private func play() {
-        if progress.isTheOpeningDue {
-            showsOpening = true
-        } else {
-            isPlaying = true
-        }
-    }
-
-    /// The film is over, watched or skipped. It has had its one showing either way, and the
-    /// meadow is what it was always leading to.
-    private func endTheOpening() {
-        progress.markPlayed(.opening)
-        openingLedToTheMap = true
-        showsOpening = false
-    }
-
-    /// Called as the film comes down. A player who somehow leaves it by another road than
-    /// the one above is simply put back on the title screen.
-    private func openTheMeadow() {
-        guard openingLedToTheMap else { return }
-        openingLedToTheMap = false
         isPlaying = true
     }
 
