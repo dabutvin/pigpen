@@ -1545,13 +1545,13 @@ private struct Film {
 
 #Preview("Opening · the gate") { CutSceneView(.opening(), still: 4.4) }
 
-#Preview("Opening · the pig") { CutSceneView(.opening(), still: 6.9) }
+#Preview("Opening · the pig") { CutSceneView(.opening(), still: 6.8) }
 
 #Preview("Opening · away") { CutSceneView(.opening(), still: 9.7) }
 
 #Preview("Opening · the biggest pen") { CutSceneView(.opening(), still: 12.8) }
 
-#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 15.5) }
+#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 15.6) }
 
 #Preview("Stag Mere · the mere") { CutSceneView(.stagMere(), still: 1.4) }
 

@@ -228,10 +228,12 @@ hills.
 The pig is on the loose and was never meant to be. It wants to be free, and open country is
 no place for a pig — the danger is not the meadow, it is that nothing out there holds it.
 So the job is not the smallest pen that will hold an animal: it is the biggest one you can
-get the fencing round. A pen scores what it takes in, so the game is asking for as much
-loose meadow as the rack will reach; and it has to be shut, because one gap is one way out
-and the pig will find it. Big as you can, and closed — that is the whole of the rule, and
-the opening says it out loud before a piece is laid.
+get the fencing round. **Room to run** is why. A pig that cannot be let go should at least
+have somewhere to stretch its legs, and the score is only how the game keeps count of that
+— a point a tile is the tally of a pig's morning, not a reason of its own. It has to be
+shut as well, because one gap is one way out and the pig will find it. Big as you can, and
+closed — that is the whole of the rule, and the opening says it out loud, reason included,
+before a piece is laid.
 
 At the top of the meadow the ground stops belonging to the farm. Stag Mere is the ninth
 field and the stag had that shore before the barn did, so the last fence has to hold both
@@ -269,6 +271,13 @@ draws it rather than writing it down: the tight pen round the pig fading out as 
 bigger one opens past it is the scoring rule with no numbers in it, and *Fence it in. One
 gap, and it is gone.* is the other half of the rule, on the card the film hands the game
 over on.
+
+*Room to run* is the two words that keep the first of those from being a scoring rule and
+nothing else. A player told only to make the pen big is being handed a number to optimise;
+a player told the pen is big so the pig has somewhere to run is being handed the reason the
+game exists, and it is the same reason the send-off ends on nine fields with the pig loose
+in all of them. It costs the film a third of a second, paid for out of the two lines that
+had the most air in them.
 
 It plays once. `WorldProgress` keeps the names of the films already played beside the stars,
 so a player who watches one, backs out without penning anything and comes back does not get
