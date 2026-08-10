@@ -1217,8 +1217,9 @@ private struct Film {
     /// The pen an animal is going to need, marked out round it in dashes: a plan rather
     /// than a fence, which is the whole point of the shot it appears in.
     ///
-    /// `opacity` is for a plan being dropped in favour of a better one; a pen nobody is
-    /// arguing with is drawn at full strength.
+    /// `opacity` is for a plan being dropped in favour of a better one. Left alone it is the
+    /// 0.9 every ghost pen in the game is drawn at — dashes that read as chalk on the grass
+    /// rather than as a line somebody has already built.
     private func drawGhostPen(
         in context: inout GraphicsContext,
         round feet: CGPoint,
