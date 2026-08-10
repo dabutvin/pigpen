@@ -62,6 +62,10 @@ enum GamePalette {
         let canopyShade: Color
         /// Dusk gets stars and fireflies where daylight gets birds and pollen.
         let isNight: Bool
+        /// Whether the ground is wooded rather than open pasture. The same trail and the
+        /// same board run through both; what changes is the dressing around them — denser
+        /// trees and leaf litter in a thicket, mown bands and hay in a meadow.
+        let isWooded: Bool
     }
 }
 
@@ -78,7 +82,8 @@ extension GamePalette.Pasture {
         blade: Color(red: 0.30, green: 0.50, blue: 0.24),
         canopy: Color(red: 0.36, green: 0.61, blue: 0.31),
         canopyShade: Color(red: 0.25, green: 0.46, blue: 0.24),
-        isNight: false
+        isNight: false,
+        isWooded: false
     )
 
     /// The meadow at sunrise, which is the only light the opening film is shot in.
@@ -99,7 +104,8 @@ extension GamePalette.Pasture {
         blade: Color(red: 0.22, green: 0.38, blue: 0.22),
         canopy: Color(red: 0.30, green: 0.50, blue: 0.28),
         canopyShade: Color(red: 0.20, green: 0.36, blue: 0.22),
-        isNight: false
+        isNight: false,
+        isWooded: false
     )
 
     static let dusk = Self(
@@ -114,41 +120,45 @@ extension GamePalette.Pasture {
         blade: Color(red: 0.05, green: 0.10, blue: 0.09),
         canopy: Color(red: 0.12, green: 0.21, blue: 0.20),
         canopyShade: Color(red: 0.07, green: 0.13, blue: 0.13),
-        isNight: true
+        isNight: true,
+        isWooded: false
     )
 
-    /// The second world's daylight: a wooded thicket, greener and closer than the open
+    /// The second world's daylight: a wooded thicket, darker and closer than the open
     /// meadow. The same trail runs through it, so the same scene draws it — only the light
-    /// it is drawn in changes, deep and mossy where the meadow is bright and wide.
+    /// and the dressing change, deep moss and leaf litter where the meadow is bright and
+    /// mown.
     static let forestDay = Self(
-        skyTop: Color(red: 0.42, green: 0.62, blue: 0.55),
-        skyHorizon: Color(red: 0.85, green: 0.88, blue: 0.73),
+        skyTop: Color(red: 0.28, green: 0.42, blue: 0.38),
+        skyHorizon: Color(red: 0.62, green: 0.72, blue: 0.52),
         disc: Color(red: 1.00, green: 0.93, blue: 0.60),
         discHalo: Color(red: 1.00, green: 0.95, blue: 0.70),
-        cloud: Color(red: 0.94, green: 0.96, blue: 0.90),
-        farHill: Color(red: 0.32, green: 0.49, blue: 0.35),
-        ground: Color(red: 0.29, green: 0.45, blue: 0.27),
-        foreground: Color(red: 0.21, green: 0.35, blue: 0.19),
-        blade: Color(red: 0.15, green: 0.29, blue: 0.15),
-        canopy: Color(red: 0.23, green: 0.43, blue: 0.24),
-        canopyShade: Color(red: 0.15, green: 0.31, blue: 0.19),
-        isNight: false
+        cloud: Color(red: 0.82, green: 0.88, blue: 0.78),
+        farHill: Color(red: 0.18, green: 0.32, blue: 0.22),
+        ground: Color(red: 0.20, green: 0.34, blue: 0.20),
+        foreground: Color(red: 0.14, green: 0.26, blue: 0.15),
+        blade: Color(red: 0.11, green: 0.22, blue: 0.12),
+        canopy: Color(red: 0.16, green: 0.34, blue: 0.18),
+        canopyShade: Color(red: 0.10, green: 0.22, blue: 0.14),
+        isNight: false,
+        isWooded: true
     )
 
     /// The thicket after dark: the canopy closes the sky right down, and what light there is
     /// pools green rather than blue.
     static let forestDusk = Self(
-        skyTop: Color(red: 0.04, green: 0.09, blue: 0.10),
-        skyHorizon: Color(red: 0.16, green: 0.24, blue: 0.20),
+        skyTop: Color(red: 0.03, green: 0.07, blue: 0.08),
+        skyHorizon: Color(red: 0.10, green: 0.18, blue: 0.14),
         disc: Color(red: 0.90, green: 0.94, blue: 0.90),
-        discHalo: Color(red: 0.62, green: 0.74, blue: 0.64),
-        cloud: Color(red: 0.16, green: 0.22, blue: 0.19),
-        farHill: Color(red: 0.09, green: 0.17, blue: 0.14),
-        ground: Color(red: 0.08, green: 0.15, blue: 0.12),
-        foreground: Color(red: 0.05, green: 0.10, blue: 0.09),
-        blade: Color(red: 0.04, green: 0.08, blue: 0.07),
-        canopy: Color(red: 0.10, green: 0.19, blue: 0.16),
-        canopyShade: Color(red: 0.06, green: 0.12, blue: 0.12),
-        isNight: true
+        discHalo: Color(red: 0.52, green: 0.66, blue: 0.56),
+        cloud: Color(red: 0.12, green: 0.18, blue: 0.15),
+        farHill: Color(red: 0.06, green: 0.12, blue: 0.10),
+        ground: Color(red: 0.05, green: 0.11, blue: 0.09),
+        foreground: Color(red: 0.03, green: 0.08, blue: 0.07),
+        blade: Color(red: 0.03, green: 0.06, blue: 0.05),
+        canopy: Color(red: 0.07, green: 0.15, blue: 0.12),
+        canopyShade: Color(red: 0.04, green: 0.09, blue: 0.08),
+        isNight: true,
+        isWooded: true
     )
 }

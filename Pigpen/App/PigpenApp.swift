@@ -73,8 +73,14 @@ struct PigpenApp: App {
                     PuzzleView(game: .theStagMeresBestPen())
                 } else if launch.contains("-truffles") {
                     // A thicket board: the truffle and the bramble stand where the apple and
-                    // the skull would, the same +5 and -5 dressed for the woods.
-                    PuzzleView(level: .nettleBank, treatSkin: WorldTheme.thornwood.treats)
+                    // the skull would, the same +5 and -5 dressed for the woods, on thicket
+                    // ground rather than meadow grass.
+                    PuzzleView(
+                        level: .nettleBank,
+                        treatSkin: WorldTheme.thornwood.treats,
+                        day: .forestDay,
+                        dusk: .forestDusk
+                    )
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
                 } else if launch.contains("-universe") {

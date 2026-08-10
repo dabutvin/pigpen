@@ -28,6 +28,10 @@ struct PuzzleView: View {
     /// How this world dresses its windfall and hazard, handed on to the field. Meadow levels,
     /// dailies and the tutorial keep the apple and the skull; a themed world passes its own.
     private let treatSkin: TreatSkin
+    /// Daylight and dusk for the ground the board is cut out of. Defaults to the meadow;
+    /// a themed world passes its own so the thicket sits in leaf litter rather than mowing.
+    private let day: GamePalette.Pasture
+    private let dusk: GamePalette.Pasture
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -64,6 +68,8 @@ struct PuzzleView: View {
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
+        day: GamePalette.Pasture = .day,
+        dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
@@ -73,6 +79,8 @@ struct PuzzleView: View {
             game: PuzzleGame(level: level),
             clock: clock,
             treatSkin: treatSkin,
+            day: day,
+            dusk: dusk,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
             onPenned: onPenned,
@@ -86,6 +94,8 @@ struct PuzzleView: View {
         game: PuzzleGame,
         clock: Stopwatch? = nil,
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
+        day: GamePalette.Pasture = .day,
+        dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
@@ -94,6 +104,8 @@ struct PuzzleView: View {
         self.onPenned = onPenned
         self.onLeave = onLeave
         self.treatSkin = treatSkin
+        self.day = day
+        self.dusk = dusk
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
         _game = State(initialValue: game)
@@ -123,7 +135,7 @@ struct PuzzleView: View {
 
     var body: some View {
         ZStack {
-            MeadowBackdrop()
+            MeadowBackdrop(day: day, dusk: dusk)
                 .ignoresSafeArea()
 
             VStack(spacing: 12) {

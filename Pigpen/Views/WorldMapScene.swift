@@ -2,7 +2,9 @@ import Foundation
 import SwiftUI
 
 /// The meadow the trail runs through: fields, trees, hay and a barn at the bottom
-/// where the pig set out from.
+/// where the pig set out from. A wooded world keeps the same trail and draws it the same
+/// way — denser trees, leaf litter, ferns and a hollow stump where the meadow had mown
+/// bands, wildflowers, hay and a barn.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
 /// path or on a signpost however wide the screen is. It is drawn once rather than on a
@@ -20,7 +22,7 @@ struct WorldMapScene: View {
     }
 }
 
-/// One painting of the meadow, top to bottom.
+/// One painting of the ground the trail runs through, top to bottom.
 private struct Meadow {
     let trail: WorldTrail
     let size: CGSize
@@ -37,7 +39,11 @@ private struct Meadow {
         for place in scenery() {
             draw(place, in: &context)
         }
-        drawBarn(in: &context)
+        if colors.isWooded {
+            drawHollow(in: &context)
+        } else {
+            drawBarn(in: &context)
+        }
     }
 
     // MARK: - The lie of the land
@@ -45,8 +51,16 @@ private struct Meadow {
     private func drawFields(in context: inout GraphicsContext) {
         context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(colors.ground))
 
-        // Bands of mown grass, each with a wandering edge, so the meadow reads as farmed
-        // ground rather than a flat green wall.
+        if colors.isWooded {
+            drawLeafLitter(in: &context)
+        } else {
+            drawMowing(in: &context)
+        }
+    }
+
+    /// Bands of mown grass, each with a wandering edge, so the meadow reads as farmed
+    /// ground rather than a flat green wall.
+    private func drawMowing(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 907)
         var top = horizon
         var shaded = true
@@ -60,6 +74,32 @@ private struct Meadow {
             }
             shaded.toggle()
             top += depth
+        }
+    }
+
+    /// Soft blotches of leaf mould under the canopy, so a thicket reads as woodland floor
+    /// rather than a mown paddock painted a darker green.
+    private func drawLeafLitter(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_109)
+        for _ in 0..<28 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 40...110))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.6,
+                    y: centre.y - spread * 0.28,
+                    width: spread * 1.2,
+                    height: spread * 0.55
+                )),
+                with: .color(
+                    colors.isNight
+                        ? Color(red: 0.18, green: 0.14, blue: 0.08).opacity(0.22)
+                        : Color(red: 0.42, green: 0.32, blue: 0.18).opacity(0.28)
+                )
+            )
         }
     }
 
@@ -105,15 +145,18 @@ private struct Meadow {
         )
         context.fill(circle(at: disc, radius: radius), with: .color(colors.disc))
 
+        // A wooded sky keeps less open air: fewer, softer clouds under a canopy that
+        // reaches up into the hills.
         var scatter = Scatter(seed: 311)
-        for _ in 0..<3 {
+        let clouds = colors.isWooded ? 1 : 3
+        for _ in 0..<clouds {
             let centre = CGPoint(
                 x: CGFloat(scatter.next(in: 0.08...0.72)) * size.width,
                 y: CGFloat(scatter.next(in: 0.18...0.72)) * horizon
             )
             context.fill(
                 cloud(at: centre, width: size.width * CGFloat(scatter.next(in: 0.20...0.32))),
-                with: .color(colors.cloud.opacity(colors.isNight ? 0.55 : 0.9))
+                with: .color(colors.cloud.opacity(colors.isNight ? 0.55 : (colors.isWooded ? 0.55 : 0.9)))
             )
         }
     }
@@ -136,34 +179,58 @@ private struct Meadow {
         return path
     }
 
-    /// The hills the world runs out into, and the hedge along the foot of them.
+    /// The hills the world runs out into, and the hedge along the foot of them. A thicket
+    /// gets a taller dark tree line instead of a low hedge, so the sky closes sooner.
     private func drawHills(in context: inout GraphicsContext) {
         var hills = Path()
         hills.move(to: CGPoint(x: 0, y: horizon))
         hills.addQuadCurve(
             to: CGPoint(x: size.width * 0.46, y: horizon),
-            control: CGPoint(x: size.width * 0.22, y: horizon - 54)
+            control: CGPoint(x: size.width * 0.22, y: horizon - (colors.isWooded ? 72 : 54))
         )
         hills.addQuadCurve(
             to: CGPoint(x: size.width, y: horizon),
-            control: CGPoint(x: size.width * 0.74, y: horizon - 78)
+            control: CGPoint(x: size.width * 0.74, y: horizon - (colors.isWooded ? 96 : 78))
         )
         hills.addLine(to: CGPoint(x: size.width, y: horizon + 26))
         hills.addLine(to: CGPoint(x: 0, y: horizon + 26))
         hills.closeSubpath()
         context.fill(hills, with: .color(colors.farHill))
 
-        var hedge = Path()
-        hedge.move(to: CGPoint(x: 0, y: horizon + 24))
-        hedge.addQuadCurve(
-            to: CGPoint(x: size.width, y: horizon + 20),
-            control: CGPoint(x: size.width / 2, y: horizon + 32)
-        )
-        context.stroke(
-            hedge,
-            with: .color(colors.canopyShade),
-            style: StrokeStyle(lineWidth: 12, lineCap: .round)
-        )
+        if colors.isWooded {
+            drawCanopyLine(in: &context)
+        } else {
+            var hedge = Path()
+            hedge.move(to: CGPoint(x: 0, y: horizon + 24))
+            hedge.addQuadCurve(
+                to: CGPoint(x: size.width, y: horizon + 20),
+                control: CGPoint(x: size.width / 2, y: horizon + 32)
+            )
+            context.stroke(
+                hedge,
+                with: .color(colors.canopyShade),
+                style: StrokeStyle(lineWidth: 12, lineCap: .round)
+            )
+        }
+    }
+
+    /// A run of dark crowns along the horizon, so the thicket feels closed in rather than
+    /// opening onto open country.
+    private func drawCanopyLine(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 677)
+        var across: CGFloat = -10
+        while across < size.width + 20 {
+            let spread = CGFloat(scatter.next(in: 28...46))
+            let foot = CGPoint(
+                x: across + CGFloat(scatter.next(in: -6...6)),
+                y: horizon + 18
+            )
+            context.fill(
+                circle(at: CGPoint(x: foot.x, y: foot.y - spread * 0.55), radius: spread * 0.55),
+                with: .color(colors.canopyShade)
+            )
+            across += spread * 0.85
+        }
     }
 
     // MARK: - What stands in the fields
@@ -172,8 +239,10 @@ private struct Meadow {
         case tree
         case bush
         case flowers
+        case fern
         case rock
         case hayBale
+        case stump
     }
 
     private struct Place {
@@ -182,14 +251,17 @@ private struct Meadow {
         let size: CGFloat
     }
 
-    /// Spots for everything the meadow is dressed with, on a jittered grid with the trail
-    /// and the signposts cut out of it.
+    /// Spots for everything the ground is dressed with, on a jittered grid with the trail
+    /// and the signposts cut out of it. A thicket packs the grid tighter and grows more
+    /// trees, so the same trail reads as woods rather than open pasture.
     private func scenery() -> [Place] {
         let waymarks = trail.waymarks()
         let stops = (0..<trail.map.count).map { trail.point(of: $0) }
         var scatter = Scatter(seed: 4_071)
         var places: [Place] = []
 
+        let stepAcross: CGFloat = colors.isWooded ? 46 : 68
+        let stepDown: CGFloat = colors.isWooded ? 48 : 66
         var down = horizon + 34
         while down < size.height - 40 {
             var across: CGFloat = 22
@@ -200,27 +272,38 @@ private struct Meadow {
                 )
                 let kind = growth(scatter.next())
                 let scale = CGFloat(scatter.next(in: 0.8...1.25))
-                across += 68
+                    * (colors.isWooded && kind == .tree ? 1.2 : 1)
+                across += stepAcross
 
-                guard nearest(to: spot, among: waymarks) > 54,
-                      nearest(to: spot, among: stops) > 92,
-                      distance(from: spot, to: barnStand) > 96
+                guard nearest(to: spot, among: waymarks) > (colors.isWooded ? 44 : 54),
+                      nearest(to: spot, among: stops) > (colors.isWooded ? 78 : 92),
+                      distance(from: spot, to: landmarkStand) > 96
                 else { continue }
                 places.append(Place(at: spot, growth: kind, size: scale))
             }
-            down += 66
+            down += stepDown
         }
 
         return places
     }
 
     private func growth(_ roll: Double) -> Growth {
-        switch roll {
-        case ..<0.34: .tree
-        case ..<0.52: .bush
-        case ..<0.76: .flowers
-        case ..<0.88: .rock
-        default: .hayBale
+        if colors.isWooded {
+            switch roll {
+            case ..<0.48: .tree
+            case ..<0.70: .bush
+            case ..<0.84: .fern
+            case ..<0.93: .rock
+            default: .stump
+            }
+        } else {
+            switch roll {
+            case ..<0.34: .tree
+            case ..<0.52: .bush
+            case ..<0.76: .flowers
+            case ..<0.88: .rock
+            default: .hayBale
+            }
         }
     }
 
@@ -229,8 +312,10 @@ private struct Meadow {
         case .tree: drawTree(in: &context, at: place.at, scale: place.size)
         case .bush: drawBush(in: &context, at: place.at, scale: place.size)
         case .flowers: drawFlowers(in: &context, at: place.at, scale: place.size)
+        case .fern: drawFern(in: &context, at: place.at, scale: place.size)
         case .rock: drawRock(in: &context, at: place.at, scale: place.size)
         case .hayBale: drawHayBale(in: &context, at: place.at, scale: place.size)
+        case .stump: drawStump(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -248,19 +333,43 @@ private struct Meadow {
         )
 
         var canopy = Path()
-        canopy.addEllipse(in: CGRect(
-            x: foot.x - spread * 0.52, y: foot.y - spread * 1.22,
-            width: spread * 0.72, height: spread * 0.72
-        ))
-        canopy.addEllipse(in: CGRect(
-            x: foot.x - spread * 0.16, y: foot.y - spread * 1.42,
-            width: spread * 0.80, height: spread * 0.80
-        ))
-        canopy.addEllipse(in: CGRect(
-            x: foot.x - spread * 0.42, y: foot.y - spread * 0.98,
-            width: spread * 0.90, height: spread * 0.66
-        ))
+        if colors.isWooded {
+            // A taller, more irregular crown so a thicket tree is not the meadow's lollipop
+            // painted a darker green.
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.58, y: foot.y - spread * 1.45,
+                width: spread * 0.78, height: spread * 0.78
+            ))
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.18, y: foot.y - spread * 1.62,
+                width: spread * 0.86, height: spread * 0.86
+            ))
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.48, y: foot.y - spread * 1.08,
+                width: spread * 0.98, height: spread * 0.72
+            ))
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.08, y: foot.y - spread * 1.18,
+                width: spread * 0.62, height: spread * 0.58
+            ))
+        } else {
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.52, y: foot.y - spread * 1.22,
+                width: spread * 0.72, height: spread * 0.72
+            ))
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.16, y: foot.y - spread * 1.42,
+                width: spread * 0.80, height: spread * 0.80
+            ))
+            canopy.addEllipse(in: CGRect(
+                x: foot.x - spread * 0.42, y: foot.y - spread * 0.98,
+                width: spread * 0.90, height: spread * 0.66
+            ))
+        }
         context.fill(canopy, with: .color(colors.canopy))
+        if colors.isWooded {
+            context.fill(canopy, with: .color(colors.canopyShade.opacity(0.35)))
+        }
 
         // One lit leaf cluster up on the left, where the light in this game always is.
         context.fill(
@@ -268,7 +377,7 @@ private struct Meadow {
                 at: CGPoint(x: foot.x - spread * 0.24, y: foot.y - spread * 1.02),
                 radius: spread * 0.22
             ),
-            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : 0.22))
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : (colors.isWooded ? 0.12 : 0.22)))
         )
     }
 
@@ -315,6 +424,46 @@ private struct Meadow {
         }
     }
 
+    /// A few fronds for the thicket floor, in place of the meadow's wildflowers.
+    private func drawFern(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let height = 16 * scale
+        shadow(in: &context, at: foot, width: height * 0.7)
+        var fronds = Path()
+        for lean in [-0.85, -0.35, 0.2, 0.7] {
+            let tip = CGPoint(
+                x: foot.x + height * CGFloat(lean) * 0.55,
+                y: foot.y - height * CGFloat(0.7 + abs(lean) * 0.2)
+            )
+            fronds.move(to: foot)
+            fronds.addQuadCurve(
+                to: tip,
+                control: CGPoint(x: foot.x + height * CGFloat(lean) * 0.2, y: foot.y - height * 0.45)
+            )
+        }
+        context.stroke(
+            fronds,
+            with: .color(colors.blade.opacity(colors.isNight ? 0.7 : 0.95)),
+            style: StrokeStyle(lineWidth: max(1.5, height * 0.12), lineCap: .round)
+        )
+        // Small leaflets off the middle fronds, just enough to read as fern rather than grass.
+        var leaflets = Path()
+        for lean in [-0.35, 0.2] {
+            let mid = CGPoint(
+                x: foot.x + height * CGFloat(lean) * 0.28,
+                y: foot.y - height * 0.4
+            )
+            leaflets.move(to: mid)
+            leaflets.addLine(to: CGPoint(x: mid.x - height * 0.18, y: mid.y - height * 0.08))
+            leaflets.move(to: mid)
+            leaflets.addLine(to: CGPoint(x: mid.x + height * 0.18, y: mid.y - height * 0.08))
+        }
+        context.stroke(
+            leaflets,
+            with: .color(colors.canopy.opacity(0.85)),
+            style: StrokeStyle(lineWidth: max(1, height * 0.08), lineCap: .round)
+        )
+    }
+
     private func drawRock(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
         let spread = 13 * scale
         shadow(in: &context, at: foot, width: spread)
@@ -359,9 +508,40 @@ private struct Meadow {
         )
     }
 
-    /// Where the barn the pig came out of stands: down in the grass below the first
-    /// signpost, on whichever side of the world the trail does not start on.
-    private var barnStand: CGPoint {
+    /// A cut stump for the thicket floor, where the meadow would have left a hay bale.
+    private func drawStump(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let spread = 14 * scale
+        shadow(in: &context, at: foot, width: spread)
+
+        let bole = CGRect(
+            x: foot.x - spread * 0.38, y: foot.y - spread * 0.55,
+            width: spread * 0.76, height: spread * 0.55
+        )
+        context.fill(
+            Path(roundedRect: bole, cornerRadius: spread * 0.12),
+            with: .color(GamePalette.rail.opacity(colors.isNight ? 0.7 : 0.95))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - spread * 0.4, y: foot.y - spread * 0.62,
+                width: spread * 0.8, height: spread * 0.28
+            )),
+            with: .color(GamePalette.picket.opacity(colors.isNight ? 0.45 : 0.85))
+        )
+        context.stroke(
+            Path(ellipseIn: CGRect(
+                x: foot.x - spread * 0.22, y: foot.y - spread * 0.55,
+                width: spread * 0.44, height: spread * 0.14
+            )),
+            with: .color(GamePalette.post.opacity(0.35)),
+            lineWidth: max(1, spread * 0.05)
+        )
+    }
+
+    /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
+    /// stump in the thicket — down in the grass below the first signpost, on whichever side
+    /// of the world the trail does not start on.
+    private var landmarkStand: CGPoint {
         CGPoint(
             x: trail.point(of: 0).x < size.width / 2 ? size.width - 74 : 74,
             y: size.height - WorldTrail.apron * 0.42
@@ -369,7 +549,7 @@ private struct Meadow {
     }
 
     private func drawBarn(in context: inout GraphicsContext) {
-        let centre = barnStand
+        let centre = landmarkStand
         let wide: CGFloat = 78
         let tall: CGFloat = 50
 
@@ -400,6 +580,57 @@ private struct Meadow {
         trim.move(to: CGPoint(x: door.maxX + 4, y: walls.minY + walls.height * 0.34))
         trim.addLine(to: CGPoint(x: walls.maxX - 6, y: walls.minY + walls.height * 0.34))
         context.stroke(trim, with: .color(GamePalette.cream.opacity(0.8)), lineWidth: 3)
+    }
+
+    /// A hollow stump at the foot of the thicket trail — the woods' answer to the barn the
+    /// pig came out of in the meadow.
+    private func drawHollow(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 64
+        let tall: CGFloat = 58
+
+        shadow(in: &context, at: CGPoint(x: centre.x, y: centre.y + tall * 0.35), width: wide)
+
+        let bole = CGRect(
+            x: centre.x - wide * 0.38, y: centre.y - tall * 0.15,
+            width: wide * 0.76, height: tall * 0.7
+        )
+        context.fill(
+            Path(roundedRect: bole, cornerRadius: wide * 0.12),
+            with: .color(GamePalette.rail)
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.42, y: centre.y - tall * 0.28,
+                width: wide * 0.84, height: tall * 0.28
+            )),
+            with: .color(GamePalette.picket.opacity(colors.isNight ? 0.5 : 0.9))
+        )
+
+        // The hollow itself, dark and mossy.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.18, y: centre.y + tall * 0.02,
+                width: wide * 0.36, height: tall * 0.42
+            )),
+            with: .color(GamePalette.post.opacity(0.9))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.12, y: centre.y + tall * 0.08,
+                width: wide * 0.24, height: tall * 0.28
+            )),
+            with: .color(colors.canopyShade.opacity(0.85))
+        )
+
+        // A cushion of moss on the rim.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.28, y: centre.y - tall * 0.22,
+                width: wide * 0.34, height: tall * 0.14
+            )),
+            with: .color(colors.canopy.opacity(0.9))
+        )
     }
 
     // MARK: - Small helpers

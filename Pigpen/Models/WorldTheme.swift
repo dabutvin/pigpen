@@ -5,10 +5,11 @@ import SwiftUI
 ///
 /// A world is the meadow's game played on new ground — fence in the pig, the biggest pen you
 /// can, so long as it is shut. What a theme changes is only ever the dressing: the light the
-/// trail is drawn in, what the +5 windfall and the −5 hazard look like lying on the mud, and
-/// the shape that waits at the end of it. An apple in the meadow is a truffle in the woods and
-/// worth the same five tiles; a skull is a bramble and costs the same five. The board does not
-/// know the difference, which is why one board and one solver serve every world there is.
+/// trail and the board are drawn in, what grows around them, what the +5 windfall and the −5
+/// hazard look like lying on the mud, and the shape that waits at the end of it. An apple in
+/// the meadow is a truffle in the woods and worth the same five tiles; a skull is a bramble
+/// and costs the same five. The board does not know the difference, which is why one board
+/// and one solver serve every world there is.
 struct WorldTheme: Sendable {
     let id: String
     /// What the world is called, on the universe map and across the top of its own trail.

@@ -2,22 +2,29 @@ import Foundation
 import SwiftUI
 import UIKit
 
-/// The meadow a board is cut out of: the same mown fields the world map's trail runs
-/// through, laid behind the puzzle so a level looks like a patch of ground somebody has
-/// staked out rather than a grid on a slab of colour.
+/// The ground a board is cut out of: the same fields the world map's trail runs through,
+/// laid behind the puzzle so a level looks like a patch of ground somebody has staked out
+/// rather than a grid on a slab of colour. A wooded world hands its own light in, and the
+/// dressing follows — leaf litter and ferns where the meadow had mowing and wildflowers.
 ///
 /// The ground it is all standing on is painted once. Only the things that would move in a
 /// breeze — the grass, the flowers, the fireflies over them after dark — are on a clock,
 /// and they are on a slow one, so a level has some air moving through it without the whole
 /// meadow being repainted behind a board nobody is looking past. It follows the system
-/// appearance the way the rest of the world does — daylight, or the meadow after dark.
+/// appearance the way the rest of the world does — daylight, or the ground after dark.
 struct MeadowBackdrop: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var opened = Date()
 
+    /// Daylight and dusk for this patch of ground. Defaults to the meadow, which is what
+    /// every board that is not a themed world — dailies, the tutorial, a level opened on
+    /// its own — is cut out of.
+    var day: GamePalette.Pasture = .day
+    var dusk: GamePalette.Pasture = .dusk
+
     var body: some View {
-        let colors: GamePalette.Pasture = colorScheme == .dark ? .dusk : .day
+        let colors: GamePalette.Pasture = colorScheme == .dark ? dusk : day
 
         ZStack {
             Canvas { context, size in
@@ -42,7 +49,7 @@ struct MeadowBackdrop: View {
     }
 }
 
-/// One painting of the meadow behind a board, top to bottom, in the three layers the screen
+/// One painting of the ground behind a board, top to bottom, in the three layers the screen
 /// asks for it: the ground, what grows on it, and the light over the lot.
 private struct Paddock {
     let size: CGSize
@@ -53,14 +60,19 @@ private struct Paddock {
     let colors: GamePalette.Pasture
 
     /// The board takes the middle of the screen, the rack the top of it and the controls the
-    /// foot, so everything the meadow is dressed with keeps to the two bands either side of
+    /// foot, so everything the ground is dressed with keeps to the two bands either side of
     /// the board, where there is grass to see it on.
     private let clearings: [ClosedRange<Double>] = [0.19...0.28, 0.82...0.99]
 
-    /// The field itself: grass and the bands it was mown in. Nothing here moves.
+    /// The field itself: grass and the bands it was mown in, or the leaf litter under a
+    /// canopy. Nothing here moves.
     func drawGround(in context: inout GraphicsContext) {
         drawGrass(in: &context)
-        drawMowing(in: &context)
+        if colors.isWooded {
+            drawLeafLitter(in: &context)
+        } else {
+            drawMowing(in: &context)
+        }
     }
 
     /// Everything growing on the field, which is everything the breeze has any hold over.
@@ -124,6 +136,29 @@ private struct Paddock {
         }
     }
 
+    /// Soft blotches of leaf mould, so a thicket board sits in woodland floor rather than
+    /// in a mown paddock tinted green.
+    private func drawLeafLitter(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 821)
+        for _ in 0..<18 {
+            let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.08...0.22))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.6,
+                    y: centre.y - spread * 0.28,
+                    width: spread * 1.2,
+                    height: spread * 0.55
+                )),
+                with: .color(
+                    colors.isNight
+                        ? Color(red: 0.18, green: 0.14, blue: 0.08).opacity(0.2)
+                        : Color(red: 0.42, green: 0.32, blue: 0.18).opacity(0.26)
+                )
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -142,41 +177,62 @@ private struct Paddock {
         return path
     }
 
-    /// Grass, wildflowers and the odd stone, scattered on a fixed seed so the meadow behind
-    /// a level is the same meadow every time the level is opened.
+    /// Grass, wildflowers and the odd stone on a meadow; ferns, mushrooms and a denser
+    /// verge in a thicket. Scattered on a fixed seed so the ground behind a level is the
+    /// same ground every time the level is opened.
     private func drawDressing(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 2_311)
+        let count = colors.isWooded ? 18 : 15
         for clearing in clearings {
-            for _ in 0..<15 {
+            for _ in 0..<count {
                 let spot = CGPoint(
                     x: x(scatter.next(in: -0.02...1.02)),
                     y: y(scatter.next(in: clearing))
                 )
                 let scale = CGFloat(scatter.next(in: 0.75...1.3))
-                switch scatter.next() {
-                case ..<0.52: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
-                case ..<0.86: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
-                default: drawStone(in: &context, at: spot, scale: scale)
+                if colors.isWooded {
+                    switch scatter.next() {
+                    case ..<0.40: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.68: drawFern(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.86: drawMushroom(in: &context, at: spot, scale: scale)
+                    default: drawStone(in: &context, at: spot, scale: scale)
+                    }
+                } else {
+                    switch scatter.next() {
+                    case ..<0.52: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.86: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    default: drawStone(in: &context, at: spot, scale: scale)
+                    }
                 }
             }
         }
     }
 
     /// Long grass along the foot of the screen. Wherever the board ends up on whatever phone
-    /// it is being played on, this much of the meadow is always in view.
+    /// it is being played on, this much of the ground is always in view.
     private func drawVerge(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 977)
-        let tufts = 26
+        let tufts = colors.isWooded ? 32 : 26
         for index in 0..<tufts {
-            drawTuft(
-                in: &context,
-                at: CGPoint(
-                    x: x((Double(index) + scatter.next()) / Double(tufts)),
-                    y: size.height + y(0.005)
-                ),
-                scale: CGFloat(scatter.next(in: 1.0...1.9)),
-                scatter: &scatter
+            let foot = CGPoint(
+                x: x((Double(index) + scatter.next()) / Double(tufts)),
+                y: size.height + y(0.005)
             )
+            if colors.isWooded && scatter.next() < 0.35 {
+                drawFern(
+                    in: &context,
+                    at: foot,
+                    scale: CGFloat(scatter.next(in: 1.1...1.8)),
+                    scatter: &scatter
+                )
+            } else {
+                drawTuft(
+                    in: &context,
+                    at: foot,
+                    scale: CGFloat(scatter.next(in: 1.0...1.9)),
+                    scatter: &scatter
+                )
+            }
         }
     }
 
@@ -278,6 +334,61 @@ private struct Paddock {
         }
     }
 
+    /// A few fronds for the thicket, nodding the same way the meadow's grass does.
+    private func drawFern(
+        in context: inout GraphicsContext,
+        at foot: CGPoint,
+        scale: CGFloat,
+        scatter: inout Scatter
+    ) {
+        let height = x(0.034) * scale
+        let breeze = gust(at: foot)
+        var fronds = Path()
+        for lean in [-0.8, -0.25, 0.3, 0.75] {
+            let tall = height * CGFloat(scatter.next(in: 0.7...1.1))
+            let bend = tall * 0.18 * breeze
+            let tip = CGPoint(x: foot.x + tall * CGFloat(lean) * 0.5 + bend, y: foot.y - tall)
+            fronds.move(to: foot)
+            fronds.addQuadCurve(
+                to: tip,
+                control: CGPoint(x: foot.x + bend * 0.3, y: foot.y - tall * 0.55)
+            )
+        }
+        context.stroke(
+            fronds,
+            with: .color(colors.blade.opacity(0.9)),
+            style: StrokeStyle(lineWidth: max(1.2, height * 0.13), lineCap: .round)
+        )
+    }
+
+    /// A small toadstool on the thicket floor — the backdrop's echo of the truffles that
+    /// lie on the board itself.
+    private func drawMushroom(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let stem = x(0.01) * scale
+        let cap = x(0.018) * scale
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: foot.x - stem * 0.35, y: foot.y - stem * 1.6,
+                width: stem * 0.7, height: stem * 1.6
+            ), cornerRadius: stem * 0.2),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.35 : 0.8))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - cap * 0.55, y: foot.y - stem * 1.6 - cap * 0.55,
+                width: cap * 1.1, height: cap * 0.85
+            )),
+            with: .color(
+                Color(red: 0.62, green: 0.28, blue: 0.22)
+                    .opacity(colors.isNight ? 0.55 : 0.9)
+            )
+        )
+        context.fill(
+            circle(at: CGPoint(x: foot.x - cap * 0.15, y: foot.y - stem * 1.6 - cap * 0.15), radius: cap * 0.12),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.25 : 0.7))
+        )
+    }
+
     private func drawStone(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
         let spread = x(0.022) * scale
         context.fill(
@@ -304,19 +415,25 @@ private struct Paddock {
     }
 
     /// The corners taken down a little, which is all it takes to make the board the lit
-    /// thing on the screen.
+    /// thing on the screen. A thicket closes in harder, so the canopy feels overhead.
     func drawVignette(in context: inout GraphicsContext) {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
+        let edge: Double = {
+            if colors.isWooded {
+                return colors.isNight ? 0.42 : 0.32
+            }
+            return colors.isNight ? 0.3 : 0.2
+        }()
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
             with: .radialGradient(
                 Gradient(colors: [
                     .black.opacity(0),
-                    .black.opacity(colors.isNight ? 0.3 : 0.2)
+                    .black.opacity(edge)
                 ]),
                 center: centre,
-                startRadius: reach * 0.4,
+                startRadius: reach * (colors.isWooded ? 0.32 : 0.4),
                 endRadius: reach
             )
         )
@@ -398,7 +515,12 @@ private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
     }
 }
 
-#Preview {
+#Preview("Meadow") {
     MeadowBackdrop()
+        .ignoresSafeArea()
+}
+
+#Preview("Thicket") {
+    MeadowBackdrop(day: .forestDay, dusk: .forestDusk)
         .ignoresSafeArea()
 }
