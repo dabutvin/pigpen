@@ -16,9 +16,37 @@ struct VictoryLap: Equatable, Sendable {
 
 extension PuzzleLevel {
     /// The lap every animal runs when the fencing holds, inside the ground `pen` shuts
-    /// them into. One lap each, whether the pen holds them together or apart.
+    /// them into. One lap each, whether the pen holds them together or apart — and each
+    /// animal only runs the ground it can itself reach, so a stag on the far shore of a
+    /// mere never trots a circle that belongs to the pig.
     func victoryLaps(inside pen: Set<GridPoint>) -> [VictoryLap] {
-        animals.map { VictoryLap(animal: $0, route: lap(from: $0.tile, inside: pen)) }
+        animals.map { animal in
+            let own = enclosure(containing: animal.tile, inside: pen)
+            return VictoryLap(animal: animal, route: lap(from: animal.tile, inside: own))
+        }
+    }
+
+    /// The piece of `pen` an animal standing on `home` is shut into: every tile it can
+    /// walk to without crossing fencing or water. Empty when `home` is not in the pen at
+    /// all, which a held field never asks for.
+    private func enclosure(containing home: GridPoint, inside pen: Set<GridPoint>) -> Set<GridPoint> {
+        guard pen.contains(home) else { return [] }
+
+        var reached: Set<GridPoint> = [home]
+        var queue: [GridPoint] = [home]
+        var next = 0
+
+        while next < queue.count {
+            let tile = queue[next]
+            next += 1
+            for direction in Direction.allCases {
+                let step = tile.stepped(direction)
+                guard pen.contains(step), !reached.contains(step) else { continue }
+                reached.insert(step)
+                queue.append(step)
+            }
+        }
+        return reached
     }
 
     /// The ring an animal standing on `home` can run. Every tile of it has to be ground

@@ -204,13 +204,25 @@ struct TutorialView: View {
         celebration = nil
     }
 
-    private func walk(_ route: [GridPoint]) async {
+    /// Returns whether the walk ran to the end. A cancelled task must not keep stepping
+    /// after the pig has been sent home.
+    @discardableResult
+    private func walk(_ route: [GridPoint]) async -> Bool {
         for tile in route.dropFirst() {
             withAnimation(.easeInOut(duration: 0.2)) { pig.tile = tile }
-            try? await Task.sleep(for: .milliseconds(220))
+            guard await Self.pause(.milliseconds(220)) else { return false }
         }
         withAnimation(.easeIn(duration: 0.35)) { pig.opacity = 0 }
-        try? await Task.sleep(for: .milliseconds(350))
+        return await Self.pause(.milliseconds(350))
+    }
+
+    private static func pause(_ duration: Duration) async -> Bool {
+        do {
+            try await Task.sleep(for: duration)
+            return true
+        } catch {
+            return false
+        }
     }
 }
 

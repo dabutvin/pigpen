@@ -131,6 +131,12 @@ final class PuzzleGame {
     /// Whether a change that was taken back can be laid down again.
     var canRedo: Bool { isBuilding && !future.isEmpty }
 
+    /// Whether the field can be torn clear. Same rule as undo: not while the animals are
+    /// mid-walk or mid-lap — clearing then cancels the animation underneath a board that
+    /// still thinks a deer is off the map, and the next closed pen shows it celebrating
+    /// on the grass outside the pen.
+    var canClearField: Bool { isBuilding && !fences.isEmpty }
+
     /// Whether the field stands somewhere other than on its best pen, so putting it back
     /// is worth offering. False while the animals are out, and until a pen has closed at all.
     var canRestoreBestPen: Bool {
