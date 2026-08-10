@@ -16,11 +16,13 @@ struct Stopwatch: Equatable, Sendable {
 
     init() {}
 
-    /// A clock picked up where it was left — running or already stopped — so putting a
-    /// daily away and coming back does not hand the player a free restart.
-    init(started: Date?, stopped: Date? = nil) {
-        self.started = started
-        self.stopped = stopped
+    /// A clock picked back up on time already spent, running from this instant — how a
+    /// board put away comes back to the player. What a board has cost is the time spent
+    /// on it, so the hours the phone spent in a pocket in between are not part of it.
+    static func resuming(_ seconds: TimeInterval, at now: Date = Date()) -> Stopwatch {
+        var clock = Stopwatch()
+        clock.setElapsed(seconds, at: now)
+        return clock
     }
 
     var isRunning: Bool { started != nil && stopped == nil }

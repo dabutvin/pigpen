@@ -195,8 +195,10 @@ A puzzle a day, on its own board, with a clock running on it.
   waiting behind the trophy.
 - **Hitting back keeps the fencing.** Leave a day without releasing the animals and the
   board is still there when you open it again — pieces, the best pen of the go, and the
-  clock where you left it. Clearing the game's data forgets those drafts with everything
-  else.
+  clock where you left it. The clock keeps the time the board has cost rather than the
+  hour you started it, so a day left in the morning and picked up at night comes back on
+  two minutes rather than on fourteen hours. Clearing the game's data forgets those drafts
+  with everything else.
 
 The almanac is generated rather than authored — `Tools/generate_dailies.py` writes it, and
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
