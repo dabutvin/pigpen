@@ -2,7 +2,9 @@ import Foundation
 import Observation
 
 /// Where what a player did with each daily puzzle is kept: the stars, the quickest they
-/// have ever finished it, and whether they found the best pen the day had in it.
+/// have ever finished it, whether they found the best pen the day had in it, and the wall
+/// of fencing that was standing when they submitted — so a day brought back up from the
+/// archive can offer that wall back.
 ///
 /// A protocol rather than `UserDefaults` outright, for the same reason the world's progress
 /// is one: the archive in a preview or a screenshot run wants a month with something in it,
@@ -18,6 +20,11 @@ protocol DailyRecordStore {
     /// The days that have given up the best pen they had in them.
     func loadBestPens() -> Set<String>
     func save(bestPens: Set<String>)
+    /// The fencing that was down when the best pen of each day was submitted, keyed the
+    /// same way, each wall written as `"row,column"` tiles. Kept so *Put it back* has
+    /// something to offer on a day opened again after the board was put away.
+    func loadSubmittedPens() -> [String: [String]]
+    func save(submittedPens: [String: [String]])
     func erase()
 }
 
@@ -26,6 +33,7 @@ struct StoredDailyRecords: DailyRecordStore {
     private static let starsKey = "pigpen.daily-stars"
     private static let timesKey = "pigpen.daily-times"
     private static let bestPensKey = "pigpen.daily-best-pens"
+    private static let submittedPensKey = "pigpen.daily-submitted-pens"
     private let defaults: UserDefaults
 
     init(defaults: UserDefaults = .standard) {
@@ -56,10 +64,19 @@ struct StoredDailyRecords: DailyRecordStore {
         defaults.set(Array(bestPens), forKey: Self.bestPensKey)
     }
 
+    func loadSubmittedPens() -> [String: [String]] {
+        defaults.dictionary(forKey: Self.submittedPensKey) as? [String: [String]] ?? [:]
+    }
+
+    func save(submittedPens: [String: [String]]) {
+        defaults.set(submittedPens, forKey: Self.submittedPensKey)
+    }
+
     func erase() {
         defaults.removeObject(forKey: Self.starsKey)
         defaults.removeObject(forKey: Self.timesKey)
         defaults.removeObject(forKey: Self.bestPensKey)
+        defaults.removeObject(forKey: Self.submittedPensKey)
     }
 }
 
@@ -68,11 +85,18 @@ final class RememberedDailyRecords: DailyRecordStore {
     private var stars: [String: Int]
     private var times: [String: Int]
     private var bestPens: Set<String>
+    private var submittedPens: [String: [String]]
 
-    init(stars: [String: Int] = [:], times: [String: Int] = [:], bestPens: Set<String> = []) {
+    init(
+        stars: [String: Int] = [:],
+        times: [String: Int] = [:],
+        bestPens: Set<String> = [],
+        submittedPens: [String: [String]] = [:]
+    ) {
         self.stars = stars
         self.times = times
         self.bestPens = bestPens
+        self.submittedPens = submittedPens
     }
 
     func loadStars() -> [String: Int] { stars }
@@ -81,11 +105,14 @@ final class RememberedDailyRecords: DailyRecordStore {
     func save(times: [String: Int]) { self.times = times }
     func loadBestPens() -> Set<String> { bestPens }
     func save(bestPens: Set<String>) { self.bestPens = bestPens }
+    func loadSubmittedPens() -> [String: [String]] { submittedPens }
+    func save(submittedPens: [String: [String]]) { self.submittedPens = submittedPens }
 
     func erase() {
         stars = [:]
         times = [:]
         bestPens = []
+        submittedPens = [:]
     }
 }
 
@@ -101,6 +128,9 @@ final class DailyProgress {
     private(set) var starsByDay: [String: Int]
     private(set) var timesByDay: [String: Int]
     private(set) var bestPens: Set<String>
+    /// The fencing submitted with the best pen of each day, keyed the way `DailyDate.id`
+    /// writes a day down.
+    private(set) var submittedPensByDay: [String: [String]]
     @ObservationIgnored private let store: any DailyRecordStore
 
     init(store: any DailyRecordStore = StoredDailyRecords()) {
@@ -108,6 +138,7 @@ final class DailyProgress {
         self.starsByDay = store.loadStars()
         self.timesByDay = store.loadTimes()
         self.bestPens = store.loadBestPens()
+        self.submittedPensByDay = store.loadSubmittedPens()
     }
 
     /// The best stars a day has ever given up, and 0 for one nobody has finished.
@@ -121,6 +152,15 @@ final class DailyProgress {
     /// Whether the best pen that day had in it has been found, which is what turns its
     /// stars rainbow in the archive — the same thing it means on a signpost.
     func hasTheBestPen(on date: DailyDate) -> Bool { bestPens.contains(date.id) }
+
+    /// The fencing that was down when the best pen of a day was submitted, and nothing
+    /// for a day that has never been held. A day brought back up from the archive offers
+    /// this wall through *Put it back*, the same way a rearrangement mid-session does.
+    func submittedFences(on date: DailyDate) -> Set<GridPoint>? {
+        guard let tiles = submittedPensByDay[date.id], !tiles.isEmpty else { return nil }
+        let fences = Set(tiles.compactMap(GridPoint.init(stored:)))
+        return fences.isEmpty ? nil : fences
+    }
 
     var completedCount: Int { starsByDay.values.filter { $0 > 0 }.count }
 
@@ -144,8 +184,14 @@ final class DailyProgress {
 
     /// Files what a day gave up. Stars, time and the rainbow are each kept at their best,
     /// so a slower or worse second attempt costs nothing — the same bargain the meadow's
-    /// signposts offer.
-    func record(_ verdict: PenVerdict, seconds: TimeInterval, on date: DailyDate) {
+    /// signposts offer. The fencing of the best pen is kept with them, so the wall can be
+    /// put back when the day is opened again.
+    func record(
+        _ verdict: PenVerdict,
+        seconds: TimeInterval,
+        fences: Set<GridPoint>,
+        on date: DailyDate
+    ) {
         guard verdict.stars > 0 else { return }
 
         if verdict.stars > stars(on: date) {
@@ -163,6 +209,33 @@ final class DailyProgress {
             bestPens.insert(date.id)
             store.save(bestPens: bestPens)
         }
+
+        if isWorthKeeping(fences, on: date) {
+            submittedPensByDay[date.id] = fences.map(\.stored).sorted()
+            store.save(submittedPens: submittedPensByDay)
+        }
+    }
+
+    /// Whether a newly submitted wall beats the one on file: a better score, or the same
+    /// score held with pieces to spare — matching what `PuzzleGame` keeps as its best.
+    /// An empty wall is never kept; the first wall that arrives is kept outright.
+    private func isWorthKeeping(_ fences: Set<GridPoint>, on date: DailyDate) -> Bool {
+        guard !fences.isEmpty else { return false }
+        guard let kept = submittedFences(on: date) else { return true }
+        guard let level = DailyAlmanac.level(on: date),
+              case .penned(let pen) = level.release(fences: fences),
+              case .penned(let held) = level.release(fences: kept)
+        else {
+            // A wall that will not parse against today's map still replaces one that uses
+            // more pieces, so a second attempt is never refused for want of a map.
+            return fences.count < kept.count
+        }
+
+        let tally = level.tally(for: pen)
+        let previous = level.tally(for: held)
+        return tally.score == previous.score
+            ? fences.count < kept.count
+            : tally.score > previous.score
     }
 
     /// Reads the book again, for a screen that has been sitting behind a board while a day
@@ -171,6 +244,7 @@ final class DailyProgress {
         starsByDay = store.loadStars()
         timesByDay = store.loadTimes()
         bestPens = store.loadBestPens()
+        submittedPensByDay = store.loadSubmittedPens()
     }
 
     /// Forgets every day ever finished. Goes with the meadow's stars rather than on its own:
@@ -179,6 +253,7 @@ final class DailyProgress {
         starsByDay = [:]
         timesByDay = [:]
         bestPens = []
+        submittedPensByDay = [:]
         store.erase()
     }
 }

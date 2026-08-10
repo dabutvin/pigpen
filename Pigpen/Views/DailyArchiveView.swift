@@ -19,6 +19,11 @@ struct DailyArchiveView: View {
     @State private var month: DailyMonth
     /// The day whose board is on screen. Emptying it pops back to the calendar.
     @State private var playing: DailyDate?
+    /// Whether the board about to open should put the submitted wall back down.
+    @State private var restoreSubmitted = false
+    /// A completed day the player has tapped, waiting on whether to put the submitted
+    /// wall back or clear the field and go again.
+    @State private var offering: DailyDate?
 
     init(today: DailyDate = .today(), progress: DailyProgress = DailyProgress()) {
         self.today = today
@@ -45,24 +50,68 @@ struct DailyArchiveView: View {
             VStack(spacing: 0) {
                 monthBar
 
-                ScrollView {
-                    VStack(spacing: 10) {
-                        weekdayHeadings
-                        grid
-                        footnote
+                // One page per month the archive offers. A swipe left turns to the month
+                // after, a swipe right to the one before — the same doors the chevrons open,
+                // only drawn with a finger. The dots stay hidden: the month bar already
+                // says which page you are on.
+                TabView(selection: $month) {
+                    ForEach(months) { page in
+                        ScrollView {
+                            VStack(spacing: 10) {
+                                weekdayHeadings
+                                grid(for: page)
+                                footnote
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.bottom, 26)
+                            .frame(maxWidth: .infinity)
+                        }
+                        .scrollBounceBehavior(.basedOnSize)
+                        .tag(page)
                     }
-                    .padding(.horizontal, 14)
-                    .padding(.bottom, 26)
                 }
-                .scrollBounceBehavior(.basedOnSize)
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
         }
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { date in
-            DailyPuzzleView(date: date, progress: progress)
+            DailyPuzzleView(
+                date: date,
+                progress: progress,
+                restoreSubmitted: restoreSubmitted
+            )
+        }
+        .confirmationDialog(
+            offering.map(\.fullTitle) ?? "",
+            isPresented: Binding(
+                get: { offering != nil },
+                set: { if !$0 { offering = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button("Put it back") {
+                guard let offering else { return }
+                restoreSubmitted = true
+                playing = offering
+                self.offering = nil
+            }
+            Button("Play again") {
+                guard let offering else { return }
+                restoreSubmitted = false
+                playing = offering
+                self.offering = nil
+            }
+            Button("Cancel", role: .cancel) {
+                offering = nil
+            }
+        } message: {
+            Text("Put the fencing back the way you submitted it, or clear the field and try again.")
         }
         .onAppear { progress.reload() }
+        .onChange(of: month) { _, _ in
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        }
     }
 
     // MARK: - The bar across the top
@@ -123,6 +172,8 @@ struct DailyArchiveView: View {
     /// Which month is on the page, and the way to the ones either side of it. The archive
     /// runs from the start of the year up to the month you are standing in — there is
     /// nothing worth turning to past that, since every day on the page would be shut.
+    /// The page itself also turns under a swipe; these arrows are the same turn, written
+    /// down for anybody who would rather tap.
     private var monthBar: some View {
         HStack(spacing: 10) {
             turn(to: month.previous, systemImage: "chevron.left", label: "The month before")
@@ -140,6 +191,7 @@ struct DailyArchiveView: View {
             .padding(.vertical, 7)
             .background(Capsule().fill(GamePalette.cream.opacity(0.95)))
             .accessibilityElement(children: .combine)
+            .accessibilityHint("Swipe left or right on the calendar to change month")
 
             turn(to: month.next, systemImage: "chevron.right", label: "The month after")
         }
@@ -150,8 +202,9 @@ struct DailyArchiveView: View {
     private func turn(to other: DailyMonth, systemImage: String, label: String) -> some View {
         let open = months.contains(other)
         return Button {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            month = other
+            // The haptic fires from onChange once the page settles on its new month,
+            // whether the turn came from this button or from a swipe across the calendar.
+            withAnimation { month = other }
         } label: {
             Image(systemName: systemImage)
                 .font(.system(size: 15, weight: .black))
@@ -187,15 +240,15 @@ struct DailyArchiveView: View {
         .padding(.top, 2)
     }
 
-    private var grid: some View {
+    private func grid(for page: DailyMonth) -> some View {
         LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(0..<month.openingBlanks, id: \.self) { _ in
+            ForEach(0..<page.openingBlanks, id: \.self) { _ in
                 Color.clear
                     .frame(height: 1)
                     .accessibilityHidden(true)
             }
 
-            ForEach(month.days) { date in
+            ForEach(page.days) { date in
                 Button {
                     open(date)
                 } label: {
@@ -238,7 +291,14 @@ struct DailyArchiveView: View {
     private func open(_ date: DailyDate) {
         guard DailyAlmanac.isOpen(date, today: today) else { return }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        playing = date
+        // A day already submitted offers its wall back rather than opening straight onto
+        // an empty field — the same *Put it back* the board itself offers mid-session.
+        if progress.submittedFences(on: date) != nil {
+            offering = date
+        } else {
+            restoreSubmitted = false
+            playing = date
+        }
     }
 }
 

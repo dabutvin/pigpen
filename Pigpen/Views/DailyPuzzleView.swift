@@ -13,22 +13,40 @@ struct DailyPuzzleView: View {
     /// The clock the board opens with. A running one for a player; one already stopped for
     /// a screenshot, which cannot photograph something that is still moving.
     var clock = Stopwatch()
+    /// Whether the board should open with the submitted wall already down — the player
+    /// took *Put it back* on a day they had held before. Otherwise the wall is only
+    /// remembered, so the trophy can offer it once the field is somewhere else.
+    var restoreSubmitted = false
 
     var body: some View {
         if let level = DailyAlmanac.level(on: date) {
             // Done, not Continue: a day is finished when the pen holds, and there is no
             // trail behind it waiting for the next signpost — only the title screen.
             PuzzleView(
-                level: level,
+                game: game(for: level),
                 clock: clock,
                 wayOutTitle: "Done",
                 wayOutImage: "checkmark.seal.fill"
-            ) { verdict, seconds in
-                progress.record(verdict, seconds: seconds, on: date)
+            ) { verdict, seconds, fences in
+                progress.record(verdict, seconds: seconds, fences: fences, on: date)
             }
         } else {
             NoPuzzleView(date: date)
         }
+    }
+
+    /// A fresh board for the day, with the wall that was submitted last time waiting
+    /// behind it — laid down already when the player asked for it back, or only kept so
+    /// *Put it back* can offer it after they rearrange.
+    private func game(for level: PuzzleLevel) -> PuzzleGame {
+        let game = PuzzleGame(level: level)
+        guard let fences = progress.submittedFences(on: date) else { return game }
+        if restoreSubmitted {
+            game.putSubmittedPenBack(fences)
+        } else {
+            game.rememberSubmittedPen(fences)
+        }
+        return game
     }
 }
 

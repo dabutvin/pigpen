@@ -37,6 +37,17 @@ enum Treat: Character, CaseIterable, Sendable {
         case .skull: -5
         }
     }
+
+    /// What tapping this treat says: five more for an apple, five fewer for a skull. A
+    /// skull takes no fencing, so a tap that would have planted a post lands on the
+    /// cost instead — which is how a player finds out what sour ground is worth without
+    /// reading the README.
+    var pointsSaid: String {
+        switch self {
+        case .apple: "+\(worth) points"
+        case .skull: "\(worth) points"
+        }
+    }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score

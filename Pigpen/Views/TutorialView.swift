@@ -71,6 +71,7 @@ struct TutorialView: View {
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
         .fieldNavigationBar()
+        .keepsSwipeFromPopping()
         .task(id: game.phase) { await reactToPhase() }
         .animation(.easeInOut(duration: 0.25), value: lesson.step)
     }
