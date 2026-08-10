@@ -25,6 +25,9 @@ struct PuzzleView: View {
     /// day is finished and the title is what sits behind it.
     private let wayOutTitle: String
     private let wayOutImage: String
+    /// How this world dresses its windfall and hazard, handed on to the field. Meadow levels,
+    /// dailies and the tutorial keep the apple and the skull; a themed world passes its own.
+    private let treatSkin: TreatSkin
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -60,6 +63,7 @@ struct PuzzleView: View {
     init(
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
+        treatSkin: TreatSkin = WorldTheme.meadow.treats,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
@@ -68,6 +72,7 @@ struct PuzzleView: View {
         self.init(
             game: PuzzleGame(level: level),
             clock: clock,
+            treatSkin: treatSkin,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
             onPenned: onPenned,
@@ -80,6 +85,7 @@ struct PuzzleView: View {
     init(
         game: PuzzleGame,
         clock: Stopwatch? = nil,
+        treatSkin: TreatSkin = WorldTheme.meadow.treats,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
@@ -87,6 +93,7 @@ struct PuzzleView: View {
     ) {
         self.onPenned = onPenned
         self.onLeave = onLeave
+        self.treatSkin = treatSkin
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
         _game = State(initialValue: game)
@@ -141,6 +148,7 @@ struct PuzzleView: View {
                     onWorthCalloutFinished: { id in
                         if worthCallout?.id == id { worthCallout = nil }
                     },
+                    treatSkin: treatSkin,
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
@@ -427,11 +435,12 @@ struct PuzzleView: View {
         return detail + " Your best so far is \(game.bestScore)."
     }
 
-    /// What a pen caught besides ground: apples worth having in it, skulls worth keeping out.
+    /// What a pen caught besides ground: windfall worth having in it, hazards worth keeping out —
+    /// named the way this world names them, an apple and a skull or a truffle and a bramble.
     private func spoils(in tally: PenTally) -> String? {
         var caught: [String] = []
-        if tally.apples > 0 { caught.append(counted(tally.apples, "apple")) }
-        if tally.skulls > 0 { caught.append(counted(tally.skulls, "skull")) }
+        if tally.apples > 0 { caught.append(counted(tally.apples, treatSkin.name(for: .apple))) }
+        if tally.skulls > 0 { caught.append(counted(tally.skulls, treatSkin.name(for: .skull))) }
         return caught.isEmpty ? nil : caught.joined(separator: " and ")
     }
 

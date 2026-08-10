@@ -96,7 +96,7 @@ struct WorldMapView: View {
         .navigationDestination(item: $playing) { index in
             // No clock on the meadow: a level there is worth going back to and taking
             // apart, and a clock over that would only ask the player to hurry.
-            PuzzleView(level: world[index].level) { verdict, _, _ in
+            PuzzleView(level: world[index].level, treatSkin: theme.treats) { verdict, _, _ in
                 progress.record(verdict, for: world[index].id)
             }
         }
