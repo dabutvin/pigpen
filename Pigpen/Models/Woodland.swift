@@ -113,7 +113,7 @@ extension PuzzleLevel {
     /// A gully with a pool along its head and truffles down its length, strung out south of
     /// the pig where the walling is dear. A truffle is worth more than the ground a pen gives
     /// up to bend down and reach it, so the best pen is a long tongue rather than a tidy box:
-    /// twenty-four tiles and two of the three truffles, which comes to thirty-four.
+    /// twenty-four tiles and both of its truffles, which comes to thirty-four.
     static let fernGully = woodland(
         id: "fern-gully",
         name: "Fern Gully",

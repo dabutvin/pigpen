@@ -300,6 +300,172 @@ Boxing the pig into its own tile for four pieces and pouring the other sixteen i
 stag's shore is the tempting shortcut. The north shore gives up far more than four pieces'
 worth of ground when it is abandoned, which is what makes the split the puzzle.
 
+---
+
+# Thornwood Thicket
+
+The second world, solved the same way and drawn the same way. A truffle takes the meadow's
+apple and a bramble its skull, so an `a` below is a truffle worth five tiles to shut in, and
+an `x` a bramble worth five fewer that no piece will build on — exactly as before. The thicket
+scatters them rather than saving them for the end.
+
+## 1. Bramble Brook — 10 pieces, 20
+
+```
+.........
+.........
+~~~~~~~..
+#ooooo~..
+#ooPoo~..
+#ooooo~..
+#ooooo#..
+.#####...
+```
+
+Two free sides from the brook and two walls of your own: the obvious block already holds all
+twenty tiles, so the first world of the woods introduces itself the way the meadow did.
+
+## 2. Foxglove Dell — 6 pieces, 20
+
+```
+..........
+..~~~~~~..
+.~~~~~~~~.
+.~~oooo~~.
+.~~oooo~~.
+.~~oPoo~~.
+.~~oooo~~.
+...#oooo#.
+....####..
+```
+
+Water on every side but the two open corners; six pieces close them and hold the pool.
+
+## 3. Hazel Copse — 12 pieces, 30
+
+```
+..........
+..........
+~~~~~~~~..
+#ooooooo#.
+#ooaPoooo#
+.#oooooo#.
+..#oooo#..
+...####...
+```
+
+A brook bars the north, so the ground under it is cheap to wall, and the pen closes round the
+truffle it was going to hold anyway — the first windfall that costs nothing to take.
+
+## 4. Gnarl Ford — 12 pieces, 24
+
+```
+..........
+..........
+.....#....
+~~~~~o~~~~
+#oooooooo#
+.#ooPoooo#
+..#ooooo#.
+...#ooo#..
+....###...
+```
+
+One dry stone is the only way across the stream; a single piece shuts it and hands you the
+whole far bank as a free wall. Nothing lies on this one — the woods do not fill every clearing.
+
+## 5. Fern Gully — 12 pieces, 34
+
+```
+..........
+.~~~~~~~~.
+.~~~~~~~~.
+#ooooooo#.
+#ooPooo#..
+#oaooo#...
+#oooo#....
+.#ao#.....
+..##......
+..........
+```
+
+The pen bends south into a long tongue to gather both truffles, which are worth more than the
+ground it gives up narrowing to reach them.
+
+## 6. Willow Corner — 8 pieces, 26
+
+```
+~~~~~~~~
+~oooooo#
+~oooooo#
+~ooPoo#.
+~oooo#..
+~ooo#...
+~oo#....
+.##.....
+```
+
+Eight pieces cut the far corner off on the diagonal — the woods' staircase, which holds far
+more than any right-angled box the same eight could wall.
+
+## 7. Nettle Bank — 13 pieces, 26
+
+```
+....#.....
+...#a#....
+..#ooo#...
+.#oxooo#..
+.#ooPooo#.
+..~~~oooo#
+.~~~~~oa#.
+..~~~.##..
+..........
+..........
+```
+
+Both truffles shut in, and the bramble taken in and paid for rather than walled around —
+going round it would cost more ground than the five it does.
+
+## 8. Elderwood — 15 pieces, 41
+
+```
+..........
+.~~~~~....
+.~~~~~~...
+..~~~~~~..
+.#o~~~~~#.
+#ooo~~~oa#
+.#Poooooo#
+..#oaoooo#
+..x#oooo#.
+...#aoo#..
+....###...
+```
+
+Cut to the shape of the mere, the pen gathers its three truffles on the way round and leaves
+the bramble on the outside.
+
+## 9. Boar Hollow — 18 pieces, 54
+
+```
+...#####..
+..#aoooa#.
+.#ooooooo#
+#oooxoooo#
+#aooPooao#
+#oooooooo#
+.#o~~~oo#.
+..~~~~~#x.
+...~~~....
+..a...a...
+..........
+```
+
+The boss: the biggest budget in the woods, gathering four of the six truffles and taking one
+bramble in that it cannot wall around. It asks for 21 of the 24 stars below it before it opens.
+
+---
+
 ## Working one out yourself
 
 ```bash

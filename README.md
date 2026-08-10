@@ -87,10 +87,11 @@ tiles, three apples and the two skulls: 38.
 
 ## The World
 
-Play opens **Mudlark Meadow**: nine puzzles as nine signposts up one winding trail, with
-the pig standing at the furthest one it has reached and mist over everything past that. The
-first six are fencing and water alone and climb in what they ask of you, the next two
-scatter apples and skulls as well, and the last is the boss.
+Play leads out to the **universe map** (below), and its first world is **Mudlark Meadow**:
+nine puzzles as nine signposts up one winding trail, with the pig standing at the furthest
+one it has reached and mist over everything past that. The first six are fencing and water
+alone and climb in what they ask of you, the next two scatter apples and skulls as well, and
+the last is the boss. Every world in the game is a trail like this one.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
@@ -154,6 +155,62 @@ climb cannot quietly flatten out again.
 
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
+
+## The Universe
+
+Hold every pen in Mudlark Meadow and its send-off pulls back to the **universe map**: the
+meadow behind you, the next world lit up ahead, and ten more strung out past them through
+space, each drawn as a little planet with its boss shown on it. A world opens once the one
+before it is held, so the map is a chain — finish a world to reach the next — and the pig
+carries the same game into every one of them.
+
+- **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
+  pieces will reach round, shut or it is no pen at all. What a theme changes is only the
+  dressing: the light the trail is drawn in, what the windfall and the hazard look like on
+  the ground, and the shape that waits at the end. The board underneath never knows the
+  difference, which is why one solver authors every level in the game.
+- **Each world plays its own films.** An opening the first time you walk into it, and a
+  send-off once every pen is held — the send-off pointing on past the world, the way the
+  meadow's points past the hills to a gate standing open somewhere else.
+- **The bosses are silhouettes until you reach them.** A world you have not opened yet shows
+  its boss as a dark shape on its planet; reach it and the shape comes up in full colour. The
+  whole journey is on the map from the first time you see it, so there is always somewhere to
+  be going.
+
+Twelve worlds are drawn: **Mudlark Meadow** and **Thornwood Thicket** to play, then Emberpeak,
+Cogsworth City, Starfall Reaches, Gloamdeep Caverns, Lantern Carnival, Sunbaked Dunes,
+Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as silhouettes.
+Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
+films are already there.
+
+### Thornwood Thicket
+
+The second world, and the first past the meadow. The pig has taken the tree line, so the
+trail runs through deep woods in forest light, the windfall is a **truffle** rather than an
+apple and the hazard a **bramble** rather than a skull — each worth exactly what its meadow
+twin was, a truffle five tiles to shut in and a bramble five to shut in with and no fencing
+at all. The one thing the thicket does that the meadow did not is **scatter** its treats. The
+meadow held them all back for its last three fields; the thicket has walked its pig everywhere
+at once, so a truffle turns up in the third field and a bramble in the sixth, with plain
+fields in between. It reads as woods a pig has been rooting through rather than a lesson laid
+out in order.
+
+| # | Level | Pieces | On the ground | Best pen |
+|---|---|---|---|---|
+| 1 | Bramble Brook | 10 | — | 20 |
+| 2 | Foxglove Dell | 6 | — | 20 |
+| 3 | Hazel Copse | 12 | 1 truffle | 30 |
+| 4 | Gnarl Ford | 12 | — | 24 |
+| 5 | Fern Gully | 12 | 2 truffles | 34 |
+| 6 | Willow Corner | 8 | — | 26 |
+| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 26 |
+| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 41 |
+| 9 | Boar Hollow | 18 | 6 truffles, 2 brambles | 54 |
+
+Its boss, Boar Hollow, is the thicket's deepest and treat-thickest field rather than a second
+animal — held by one pig and the biggest budget in the woods, and asking for 21 of the 24
+stars below it before it opens, the same toll Stag Mere charges. Every pen is drawn out in
+[`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -556,11 +613,17 @@ Pigpen/
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
-│   ├── CutScene.swift           # The films, as clocks: which shot is up when, and for how long
+│   ├── CutScene.swift           # The meadow's films, as clocks: which shot is up when, and for how long
+│   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens on
 │   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
+│   ├── WorldTheme.swift         # A world's look: its light, its truffle/bramble skin, its boss silhouette
+│   ├── GameWorld.swift          # A world bundled: its map, its theme, and the films that wrap it
+│   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
+│   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
+│   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
@@ -573,10 +636,12 @@ Pigpen/
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
-│   ├── CutSceneView.swift       # Paints any of the films, shot by shot
+│   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
+│   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
 │   ├── SettingsView.swift       # Behind the gear: the version, and clearing all game data
-│   ├── WorldMapView.swift       # The world map: signposts, the walking pig, the trail
+│   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
+│   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
 │   ├── WorldTrail.swift         # Stops ↔ points on screen, and the curve between them
 │   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
@@ -586,7 +651,7 @@ Pigpen/
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden buttons: the title screen's, and the board's
-│   ├── GamePalette.swift        # Colours, including the pasture's day, dusk and sunrise sets
+│   ├── GamePalette.swift        # Colours, including the pasture's day, dusk, sunrise and forest sets
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
