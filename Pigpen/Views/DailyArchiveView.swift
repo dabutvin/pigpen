@@ -98,6 +98,11 @@ struct DailyArchiveView: View {
             }
             Button("Play again") {
                 guard let offering else { return }
+                // Clear the field means clear the field: the board filed away when the day
+                // was left is the submitted wall itself, so it has to go or *Play again*
+                // opens on the very wall *Put it back* offers. The wall stays on the books
+                // — the trophy still has it once the new field is somewhere else.
+                progress.clearDraft(on: offering)
                 restoreSubmitted = false
                 playing = offering
                 self.offering = nil

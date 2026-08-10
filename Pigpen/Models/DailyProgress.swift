@@ -44,9 +44,13 @@ struct DailyDraft: Equatable, Codable, Sendable {
     var fences: [GridPoint]
     /// The fencing of the best pen closed this go, when there was one.
     var bestPen: [GridPoint]?
-    /// When the clock first started on this go, and when it stopped if the pen has held.
-    var clockStarted: Date?
-    var clockStopped: Date?
+    /// How long the board had cost when it was put away, and nothing for a day that has
+    /// never been timed.
+    ///
+    /// A span rather than the instant the clock started: a board is charged for the time
+    /// spent on it, and a day left on Wednesday morning and opened again on Wednesday
+    /// night has not been played for fourteen hours.
+    var clockElapsed: TimeInterval?
 
     var fenceTiles: Set<GridPoint> { Set(fences) }
     var bestPenTiles: Set<GridPoint>? { bestPen.map(Set.init) }
@@ -307,8 +311,10 @@ final class DailyProgress {
             bestPen: game.bestPen.map {
                 $0.fences.sorted { ($0.row, $0.column) < ($1.row, $1.column) }
             },
-            clockStarted: clock?.started,
-            clockStopped: clock?.stopped
+            // Banked as a span on the way out. A running clock left as the instant it
+            // started would go on counting in the player's pocket, and a stopped one would
+            // come back with no way of ever starting again.
+            clockElapsed: clock?.hasStarted == true ? clock?.elapsed() : nil
         )
 
         guard draft.hasAnythingOnIt else {
@@ -338,13 +344,15 @@ final class DailyProgress {
         return PuzzleGame(level: level, fences: draft.fenceTiles, bestPen: best)
     }
 
-    /// The clock a day should open with: the one left running or stopped on the draft, or
-    /// a fresh clock when the day has never been timed.
+    /// The clock a day should open with: one carrying the time the board had already cost
+    /// when it was put away and running on from there, or a fresh clock when the day has
+    /// never been timed. Picking a board back up is the same bargain *Go bigger* offers —
+    /// the time already spent stands, and what happens next is charged.
     func clock(on date: DailyDate) -> Stopwatch {
-        guard let draft = draftsByDay[date.id], let started = draft.clockStarted else {
+        guard let draft = draftsByDay[date.id], let spent = draft.clockElapsed else {
             return Stopwatch()
         }
-        return Stopwatch(started: started, stopped: draft.clockStopped)
+        return .resuming(spent)
     }
 
     /// Forgets a day's unfinished board, leaving the stars and times alone.
