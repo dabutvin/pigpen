@@ -6,12 +6,16 @@ import SwiftUI
 /// The only screen that knows a daily puzzle is a puzzle at all — everything below it is
 /// the same board the meadow is played on, which is the point. A daily is not a different
 /// game, it is the same game with a date on it.
+///
+/// Hitting back without releasing the animals still keeps the fencing: the board is filed
+/// away as a draft on the way out, and laid back down the next time the day is opened.
 @MainActor
 struct DailyPuzzleView: View {
     let date: DailyDate
     let progress: DailyProgress
-    /// The clock the board opens with. A running one for a player; one already stopped for
-    /// a screenshot, which cannot photograph something that is still moving.
+    /// The clock the board opens with when nothing has been timed on this day yet. A
+    /// draft with a clock already under way takes its own; a screenshot hands one in
+    /// already stopped, which cannot photograph something that is still moving.
     var clock = Stopwatch()
     /// Whether the board should open with the submitted wall already down — the player
     /// took *Put it back* on a day they had held before. Otherwise the wall is only
@@ -24,22 +28,27 @@ struct DailyPuzzleView: View {
             // trail behind it waiting for the next signpost — only the title screen.
             PuzzleView(
                 game: game(for: level),
-                clock: clock,
+                clock: progress.hasDraft(on: date) ? progress.clock(on: date) : clock,
                 wayOutTitle: "Done",
-                wayOutImage: "checkmark.seal.fill"
-            ) { verdict, seconds, fences in
-                progress.record(verdict, seconds: seconds, fences: fences, on: date)
-            }
+                wayOutImage: "checkmark.seal.fill",
+                onPenned: { verdict, seconds, fences in
+                    progress.record(verdict, seconds: seconds, fences: fences, on: date)
+                },
+                onLeave: { game, clock in
+                    progress.saveDraft(from: game, clock: clock, on: date)
+                }
+            )
         } else {
             NoPuzzleView(date: date)
         }
     }
 
-    /// A fresh board for the day, with the wall that was submitted last time waiting
-    /// behind it — laid down already when the player asked for it back, or only kept so
-    /// *Put it back* can offer it after they rearrange.
+    /// The board the day opens on: whatever fencing was left standing when it was last
+    /// put away, and behind that the wall submitted for the day's best pen — laid down
+    /// already when the player asked for it back, or only kept so *Put it back* can offer
+    /// it after they rearrange.
     private func game(for level: PuzzleLevel) -> PuzzleGame {
-        let game = PuzzleGame(level: level)
+        let game = progress.game(for: level, on: date)
         guard let fences = progress.submittedFences(on: date) else { return game }
         if restoreSubmitted {
             game.putSubmittedPenBack(fences)

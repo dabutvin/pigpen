@@ -16,6 +16,13 @@ struct Stopwatch: Equatable, Sendable {
 
     init() {}
 
+    /// A clock picked up where it was left — running or already stopped — so putting a
+    /// daily away and coming back does not hand the player a free restart.
+    init(started: Date?, stopped: Date? = nil) {
+        self.started = started
+        self.stopped = stopped
+    }
+
     var isRunning: Bool { started != nil && stopped == nil }
     var hasStarted: Bool { started != nil }
 

@@ -16,6 +16,10 @@ struct PuzzleView: View {
     /// there is somewhere behind it to offer a way back to. A daily keeps the fencing so
     /// a day opened again can offer *Put it back*.
     private let onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)?
+    /// Told the board as it stands when the screen goes away, so a daily can keep the
+    /// fencing even if the animals were never released. Meadow levels leave this unset —
+    /// a trail stop starts from bare mud every time.
+    private let onLeave: ((PuzzleGame, Stopwatch?) -> Void)?
     /// What that way back is called, and the glyph it wears. The meadow's is Continue with
     /// a signpost, because the trail is waiting; a day's is Done with a seal, because the
     /// day is finished and the title is what sits behind it.
@@ -58,14 +62,16 @@ struct PuzzleView: View {
         clock: Stopwatch? = nil,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
-        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil
+        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
+        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
         self.init(
             game: PuzzleGame(level: level),
             clock: clock,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
-            onPenned: onPenned
+            onPenned: onPenned,
+            onLeave: onLeave
         )
     }
 
@@ -76,9 +82,11 @@ struct PuzzleView: View {
         clock: Stopwatch? = nil,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
-        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil
+        onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
+        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
         self.onPenned = onPenned
+        self.onLeave = onLeave
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
         _game = State(initialValue: game)
@@ -165,6 +173,7 @@ struct PuzzleView: View {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
         }
         .onAppear { clock?.start() }
+        .onDisappear { onLeave?(game, clock) }
         .task(id: game.phase) { await reactToPhase() }
     }
 

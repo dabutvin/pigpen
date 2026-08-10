@@ -23,7 +23,9 @@ struct SettingsView: View {
     @State private var hasCleared = false
 
     private var world: WorldMap { progress.world }
-    private var hasSomethingToClear: Bool { progress.clearedCount > 0 || daily.completedCount > 0 }
+    private var hasSomethingToClear: Bool {
+        progress.clearedCount > 0 || daily.completedCount > 0 || daily.hasDrafts
+    }
 
     var body: some View {
         ZStack {

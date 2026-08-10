@@ -1,5 +1,5 @@
 /// A tile coordinate on a puzzle grid. Row 0 is the top row, column 0 the left one.
-struct GridPoint: Hashable, Sendable {
+struct GridPoint: Hashable, Codable, Sendable {
     var row: Int
     var column: Int
 
