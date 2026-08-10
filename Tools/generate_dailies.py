@@ -124,9 +124,10 @@ def lake(rng, grid, rows, columns, hug, most):
 
 
 def river(rng, grid, rows, columns, most):
-    """A run of water across the map, wandering a tile at a time, and laid down until it
-    has spent `most` tiles — so on a wet day a river runs from one side of the board to the
-    other and on a dry one it is a brook that peters out well short of anywhere useful."""
+    """A run of water across the map, wandering a tile at a time, until it reaches the far
+    side or has laid `most` tiles of water it did not already have, whichever comes first —
+    so on a wet day a river runs from one side of the board to the other and on a dry one it
+    is a brook that peters out well short of anywhere useful."""
     spent = 0
 
     def lay(row, column):
@@ -219,18 +220,20 @@ def shape(rng, profile):
     # Each body is drawn into a copy first and kept only if it fits both what is left of the
     # day's water and what the day allows to lie in one piece.
     allowed = round(rows * columns * profile["water"])
-    guard = 0
-    while under_water(grid) < allowed and guard < 60:
+    wet, guard = 0, 0
+    while wet < allowed and guard < 60:
         guard += 1
         drawn = [row[:] for row in grid]
-        most = min(profile["pool"], allowed - under_water(grid))
+        most = min(profile["pool"], allowed - wet)
         if rng.random() < profile["rivers"]:
             river(rng, drawn, rows, columns, most)
         else:
             lake(rng, drawn, rows, columns, profile["hug"], most)
-        # A new body running into an old one can make a pool bigger than either of them.
-        if under_water(drawn) <= allowed and biggest_pool(drawn) <= profile["pool"]:
-            grid = drawn
+        # A body laid entirely over water already there has added nothing to keep, and a new
+        # one running into an old one can make a pool bigger than either of them.
+        laid = under_water(drawn)
+        if wet < laid <= allowed and biggest_pool(drawn) <= profile["pool"]:
+            grid, wet = drawn, laid
 
     room = int(rows * columns * 0.30)
     inland = [
