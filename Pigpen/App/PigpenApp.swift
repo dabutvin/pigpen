@@ -72,6 +72,15 @@ struct PigpenApp: App {
                     PuzzleView(game: .theStagMeresBestPen())
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
+                } else if launch.contains("-universe") {
+                    // The meadow held, the thicket open to play, and the next world lit as
+                    // coming soon — so the map shows all four of its standings at once.
+                    UniverseMapView(progress: .partWayThrough())
+                } else if launch.contains("-woods-map") {
+                    WorldMapView(
+                        world: .thornwoodThicket,
+                        progress: .partWayThrough(world: .thornwoodThicket)
+                    )
                 } else if launch.contains("-tutorial") {
                     TutorialView()
                 } else if launch.contains("-daily") {

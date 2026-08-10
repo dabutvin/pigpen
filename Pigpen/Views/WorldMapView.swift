@@ -36,20 +36,27 @@ struct WorldMapView: View {
     /// The level to open once the briefing has come down, so the two never fight over the
     /// screen — the same way the title screen hands the opening on to the map.
     @State private var briefedStop: Int?
-    /// Whether the film that closes the world out is up.
-    @State private var farewell = false
+    /// The film that closes the world out, while it is on screen.
+    @State private var farewellFilm: WorldFilm?
     /// Whether the map has already made its opening run up the trail. Putting a puzzle away
     /// brings the map back on screen, which is not an arrival — it is a return to a map the
     /// player left mid-trail.
     @State private var arrived = false
 
-    init(progress: WorldProgress = WorldProgress()) {
+    /// The look and the send-off come from the whole world; the trail itself is the map the
+    /// progress already carries. Held apart from `world` below, which is that map.
+    private let theme: WorldTheme
+    private let farewellSpec: WorldFilmSpec?
+
+    init(world game: GameWorld = .mudlarkMeadow, progress: WorldProgress = WorldProgress()) {
+        self.theme = game.theme
+        self.farewellSpec = game.farewell
         _progress = State(initialValue: progress)
         _pigStop = State(initialValue: Double(progress.frontier))
     }
 
     private var world: WorldMap { progress.world }
-    private var colors: GamePalette.Pasture { colorScheme == .dark ? .dusk : .day }
+    private var colors: GamePalette.Pasture { theme.pasture(dark: colorScheme == .dark) }
     /// How much of the trail is the player's, which is as far as the pig has ever stood
     /// — walking back down to an old level does not shut the meadow behind you.
     private var opened: Double { max(pigStop, Double(progress.frontier)) }
@@ -96,8 +103,8 @@ struct WorldMapView: View {
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
             CutSceneView(.named(waiting.film)) { endBriefing(waiting) }
         }
-        .fullScreenCover(isPresented: $farewell) {
-            CutSceneView(.theMeadowHeld()) { endTheFarewell() }
+        .fullScreenCover(item: $farewellFilm, onDismiss: { leaveForTheUniverse() }) { film in
+            WorldFilmView(film: film) { endFarewell(film) }
         }
     }
 
@@ -303,14 +310,20 @@ struct WorldMapView: View {
     /// screen to slide away and for the pig to settle, so it lands on a map at rest rather
     /// than cutting over the top of one still moving.
     private func sendOff() async {
-        guard progress.isTheFarewellDue else { return }
+        guard let spec = farewellSpec, progress.isFarewellDue(key: spec.key) else { return }
         try? await Task.sleep(for: .milliseconds(650))
-        farewell = true
+        farewellFilm = spec.raise()
     }
 
-    private func endTheFarewell() {
-        progress.markPlayed(.theMeadowHeld)
-        farewell = false
+    private func endFarewell(_ film: WorldFilm) {
+        progress.markPlayed(sceneKey: film.key)
+        farewellFilm = nil
+    }
+
+    /// Once the send-off has come down, the world hands back to the universe map — where the
+    /// world just held now reads as held, and the next one has lit up.
+    private func leaveForTheUniverse() {
+        dismiss()
     }
 
     /// Walks the pig on once a puzzle has been played and put away — but only if playing it

@@ -3,9 +3,12 @@ import Foundation
 /// A film a world plays, whichever kind it is: the meadow's hand-painted `CutScene`, or a
 /// themed world's lighter `StorybookScene`. One type so a single screen can present either and
 /// a world can be wrapped in whichever it has.
-enum WorldFilm: Sendable {
+enum WorldFilm: Sendable, Identifiable {
     case painted(CutScene)
     case storybook(StorybookScene)
+
+    /// A film on screen is told apart by its key, so presenting a new one swaps the screen.
+    var id: String { key }
 
     /// What the world remembers the film by, so it plays once and is never shown twice.
     var key: String {
