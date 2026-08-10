@@ -367,19 +367,23 @@ The daily puzzles are not authored one at a time — there are seven hundred of 
 Tools/generate_dailies.py --years 2026 2027 --jobs 4
 ```
 
-| Day | Board | Water | Most of it in one piece | On the ground | Asks |
-|---|---|---|---|---|---|
-| Monday | 9×8 | 38% | 28 tiles | — | 0–5% |
-| Tuesday | 9×9 | 28% | 20 tiles | — | 6–14% |
-| Wednesday | 9×9 | 22% | 15 tiles | 2 apples | 15–23% |
-| Thursday | 9×9 | 15% | 11 tiles | 2 apples | 24–32% |
-| Friday | 10×9 | 12% | 8 tiles | 3 apples, a skull | 33–41% |
-| Saturday | 10×10 | 8% | 5 tiles | 3 apples, a skull | 42–52% |
-| Sunday | 10×10 | 5% | 3 tiles | 4 apples, 2 skulls | 53–66% |
+| Day | Board | Water | Most of it in one piece | Wall the board may build | On the ground | Asks |
+|---|---|---|---|---|---|---|
+| Monday | 9×8 | 38% | 28 tiles | 60% | — | 0–5% |
+| Tuesday | 9×9 | 28% | 20 tiles | 50% | — | 6–14% |
+| Wednesday | 9×9 | 22% | 15 tiles | 40% | 2 apples | 15–23% |
+| Thursday | 9×9 | 15% | 11 tiles | 32% | 2 apples | 24–32% |
+| Friday | 10×9 | 12% | 8 tiles | 28% | 3 apples, a skull | 33–41% |
+| Saturday | 10×10 | 8% | 5 tiles | 24% | 3 apples, a skull | 42–52% |
+| Sunday | 10×10 | 5% | 3 tiles | 20% | 4 apples, 2 skulls | 53–66% |
 
 Water is the knob that does nearly all of the work, and it has two halves. Water is a wall you are given, so a map with a lot of it has an obvious best pen and one with little of it has to be worked out — but only water lying in one long stretch walls anything. A river from one side of the board to the other is a ten-piece wall handed over for nothing, and what is left to work out is a single staircase against it. The same ten tiles in three puddles wall nothing at all: they only eat ground the pen wanted. So a day is given a share of the board to put under water *and* a limit on how much of it may lie in one piece, and both dry up across the week.
 
-Both halves are budgets rather than floors, which is the part that used to go wrong quietly. The generator laid water down until the board was wet enough and then stopped, so a day whose whole share came to less than one river got a river anyway and overshot: Saturday and Sunday, asked for 8% and 5% of the board, both landed at 13% of it under a single run of water crossing the map. Sunday was Saturday with more apples on it, and its hardest-of-the-week band was being met by maps that hand the player most of the wall. Now each body of water is drawn only if it fits what is left of the day's share and what the day allows in one piece, so by Sunday there really is nothing to lean on. `DailyAlmanacTests` measures the stretch on every board that ships and holds it to the table above, so this cannot go quiet again.
+Both halves are budgets rather than floors, which is the part that used to go wrong quietly. The generator laid water down until the board was wet enough and then stopped, so a day whose whole share came to less than one river got a river anyway and overshot: Saturday and Sunday, asked for 8% and 5% of the board, both landed at 13% of it under a single run of water crossing the map. Sunday was Saturday with more apples on it, and its hardest-of-the-week band was being met by maps that hand the player most of the wall. Now each body of water is drawn only if it fits what is left of the day's share and what the day allows in one piece.
+
+Both of those, though, are guesses at a number nobody was measuring. **How much of the wall the board builds** is that number: the water the best pen leans on, over that water and the fence pieces paid for. A day can keep every rule about how much water there is and where it lies and still hand most of the wall over — take a river away and the same water gathers in a corner, which is what a Thursday did. It kept its 11-tile cap, was crossed by nothing once that was forbidden, and went on building 40% of its own pen's wall; forbidding the crossing moved the measured figure not at all. So the figure itself is capped, on the pen the day promises rather than on the shape of the map, and rivers, corners and hugging lakes are all caught by the one rule.
+
+`DailyAlmanacTests` measures all three on every board that ships — the water, the longest stretch, and the share of the promised pen's own wall — and holds them to the table above, so none of this can go quiet again.
 
 The bands are laid end to end and never overlap, which is what makes a week a climb rather than a claim. Skulls are kept off the four tiles around the pig, so the four pieces boxed round it that hold on every other board in this game hold on a daily too.
 

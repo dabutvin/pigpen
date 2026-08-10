@@ -61,24 +61,33 @@ NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
 # wet a day is and `pool` says whether that water is a gift or a nuisance, and both dry up
 # across the week.
 #
+# `lean` is the last word on that, and the one that is actually measured on the answer
+# rather than on the map. It is how much of the best pen's wall the board builds: the water
+# the pen leans on, over that water plus the fence pieces paid for. Capping the tiles and
+# capping the stretch are both guesses at this number, and both can be satisfied while it
+# stays high — take the river away and the same water gathers in a corner and hands over
+# just as much. So the number itself is capped, and rivers, corners and hugging lakes are
+# all caught by the one rule because it weighs what the player is given rather than how the
+# board arranged it.
+#
 # `band` is the gap this day's map has to leave between the pen it has in it and the pen a
 # player gets by squaring the map off — what the level asks — as a percentage. The bands are
 # laid end to end, so the week can only climb.
 PROFILES = {
-    1: dict(name="Monday", rows=9, cols=8, water=0.38, pool=28, rivers=0.15, hug=True,
-            apples=0, skulls=0, budget=(10, 14), band=(0, 5), least=16),
-    2: dict(name="Tuesday", rows=9, cols=9, water=0.28, pool=20, rivers=0.25, hug=True,
-            apples=0, skulls=0, budget=(9, 13), band=(6, 14), least=16),
-    3: dict(name="Wednesday", rows=9, cols=9, water=0.22, pool=15, rivers=0.35, hug=True,
-            apples=2, skulls=0, budget=(9, 13), band=(15, 23), least=16),
-    4: dict(name="Thursday", rows=9, cols=9, water=0.15, pool=11, rivers=0.45, hug=False,
-            apples=2, skulls=0, budget=(9, 13), band=(24, 32), least=18),
-    5: dict(name="Friday", rows=10, cols=9, water=0.12, pool=8, rivers=0.5, hug=False,
-            apples=3, skulls=1, budget=(9, 12), band=(33, 41), least=18),
-    6: dict(name="Saturday", rows=10, cols=10, water=0.08, pool=5, rivers=0.55, hug=False,
-            apples=3, skulls=1, budget=(8, 12), band=(42, 52), least=18),
-    7: dict(name="Sunday", rows=10, cols=10, water=0.05, pool=3, rivers=0.6, hug=False,
-            apples=4, skulls=2, budget=(8, 12), band=(53, 66), least=18),
+    1: dict(name="Monday", rows=9, cols=8, water=0.38, pool=28, lean=60, rivers=0.15,
+            hug=True, apples=0, skulls=0, budget=(10, 14), band=(0, 5), least=16),
+    2: dict(name="Tuesday", rows=9, cols=9, water=0.28, pool=20, lean=50, rivers=0.25,
+            hug=True, apples=0, skulls=0, budget=(9, 13), band=(6, 14), least=16),
+    3: dict(name="Wednesday", rows=9, cols=9, water=0.22, pool=15, lean=40, rivers=0.35,
+            hug=True, apples=2, skulls=0, budget=(9, 13), band=(15, 23), least=16),
+    4: dict(name="Thursday", rows=9, cols=9, water=0.15, pool=11, lean=32, rivers=0.45,
+            hug=False, apples=2, skulls=0, budget=(9, 13), band=(24, 32), least=18),
+    5: dict(name="Friday", rows=10, cols=9, water=0.12, pool=8, lean=28, rivers=0.5,
+            hug=False, apples=3, skulls=1, budget=(9, 12), band=(33, 41), least=18),
+    6: dict(name="Saturday", rows=10, cols=10, water=0.08, pool=5, lean=24, rivers=0.55,
+            hug=False, apples=3, skulls=1, budget=(8, 12), band=(42, 52), least=18),
+    7: dict(name="Sunday", rows=10, cols=10, water=0.05, pool=3, lean=20, rivers=0.6,
+            hug=False, apples=4, skulls=2, budget=(8, 12), band=(53, 66), least=18),
 }
 
 # How wide a net the search casts. The screening pass is deliberately cheap, since most
@@ -86,8 +95,11 @@ PROFILES = {
 # search is the one whose answer is shipped as `maximumScore`.
 SCREENING_BEAM = 1000
 SETTLED_BEAM = 5000
-# How many maps a day is allowed to shape before its band is given up on.
-ATTEMPTS = 400
+# How many maps a day is allowed to shape before its band is given up on. Two measures have
+# to land at once now, so a day needs more tries than it did when only the band had to: at
+# 400 a Sunday failed about once in every two hundred, which over a year of them is a coin
+# toss on whether the whole run survives.
+ATTEMPTS = 900
 
 
 def rung(day):
@@ -278,6 +290,27 @@ def shape(rng, profile):
 # --- Weighing one up -------------------------------------------------------------------
 
 
+def leant_on(pen, mud, rows, columns):
+    """How much of a pen's wall the board built, out of a hundred.
+
+    A pen's wall is paid for a tile at a time, except where it runs along water, which costs
+    nothing. So this is the water the pen leans on, over that water and the fencing together
+    — the share of the job the board did before the player laid a piece. It is measured on
+    the best pen rather than on the map, which is the point of it: how the water is arranged
+    matters only insofar as the answer ends up leaning on it.
+    """
+    free = set()
+    for row, column in pen:
+        for down, across in NEIGHBOURS:
+            tile = (row + down, column + across)
+            if 0 <= tile[0] < rows and 0 <= tile[1] < columns and tile not in mud:
+                free.add(tile)
+    paid = len(fences_around(pen, mud))
+    if not free and not paid:
+        return 0
+    return len(free) * 100 // (len(free) + paid)
+
+
 def weigh(drawn, budget, beam):
     """What a map and a budget are worth: the best pen, the obvious pen, and the gap."""
     mud, treats, starts, rows, columns = parse(drawn)
@@ -295,6 +328,7 @@ def weigh(drawn, budget, beam):
         plain=plain,
         block=block,
         demand=(best - plain) * 100 // best,
+        lean=leant_on(pen, mud, rows, columns),
         mud=mud,
         treats=treats,
         rows=rows,
@@ -336,14 +370,20 @@ def puzzle(day):
         if screened is None or screened["best"] < profile["least"]:
             continue
         # Screening is a cheap look, so give anything close to the band the proper search
-        # rather than only what already lands in it.
+        # rather than only what already lands in it — and the same for how much of the wall
+        # the board is building, since a wider search finds a better pen and a better pen
+        # tends to lean harder.
         if not low - 6 <= screened["demand"] <= high + 6:
+            continue
+        if screened["lean"] > profile["lean"] + 20:
             continue
 
         settled = weigh(drawn, budget, SETTLED_BEAM)
         if settled is None or settled["best"] < profile["least"]:
             continue
         if not low <= settled["demand"] <= high:
+            continue
+        if settled["lean"] > profile["lean"]:
             continue
 
         two, three = stars(settled)
@@ -363,11 +403,13 @@ def puzzle(day):
             map=settled["map"].split("\n"),
             plan=plan_of(settled, settled["pen"]),
             demand=settled["demand"],
+            lean=settled["lean"],
         )
 
     raise SystemExit(
-        f"{day} ({profile['name']}) would not give up a map asking {low}–{high}% "
-        f"in {ATTEMPTS} tries — loosen its band or its water"
+        f"{day} ({profile['name']}) would not give up a map asking {low}–{high}% and "
+        f"leaning on no more than {profile['lean']}% in {ATTEMPTS} tries — loosen its band, "
+        f"its lean or its water"
     )
 
 
