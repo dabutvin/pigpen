@@ -36,6 +36,9 @@ struct PuzzleView: View {
     @State private var budgetShake: CGFloat = 0
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
+    /// What a tap on a treat just said — five more for an apple, five fewer for a skull —
+    /// rising off that tile so the cost is found out without reading anything.
+    @State private var worthCallout: WorthCallout?
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -105,6 +108,10 @@ struct PuzzleView: View {
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
                     animals: marks,
                     celebration: celebration,
+                    worthCallout: worthCallout,
+                    onWorthCalloutFinished: { id in
+                        if worthCallout?.id == id { worthCallout = nil }
+                    },
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
@@ -459,7 +466,13 @@ struct PuzzleView: View {
             // Dragging back over your own fencing is not a refusal, it is just nothing to do.
             guard !game.fences.contains(stroke.tile) else { return }
             guard game.buildFence(on: stroke.tile) else {
-                refuse()
+                // A skull takes no fencing, so a tap that would have planted a post says
+                // what the tile costs instead of shaking the rack like a spent budget.
+                if let treat = level.treat(at: stroke.tile), !treat.takesFencing {
+                    sayWorth(of: treat, at: stroke.tile)
+                } else {
+                    refuse()
+                }
                 return
             }
             UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
@@ -483,6 +496,16 @@ struct PuzzleView: View {
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
         UINotificationFeedbackGenerator().notificationOccurred(.warning)
+    }
+
+    /// Floats what a treat is worth off the tile a finger just found it on, once per
+    /// press: a drag that crosses two skulls should not stack the same five points twice.
+    private func sayWorth(of treat: Treat, at tile: GridPoint) {
+        guard !refusedThisPress else { return }
+        refusedThisPress = true
+        worthCallout = WorthCallout(tile: tile, treat: treat)
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        UIAccessibility.post(notification: .announcement, argument: treat.pointsSaid)
     }
 
     /// Plays out whatever the game just decided: the walk to freedom, or the lap of honour

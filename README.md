@@ -24,7 +24,8 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   tile, which is how one gets wasted. A skull costs five, and it is staked into the ground:
   no piece can be laid on it, so a wall that wants a skull's tile has to be built round it —
   and a wall built round one still has to shut it out, since ground you leave open is ground
-  the pig walks onto. Sour ground is planned around, not paved over.
+  the pig walks onto. Sour ground is planned around, not paved over. Tapping a skull says
+  what it costs — `-5 points` — rather than shaking the fence rack like a spent budget.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
 - **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits
