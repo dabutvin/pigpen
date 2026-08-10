@@ -46,7 +46,7 @@ enum GamePalette {
 
     /// The pasture on the title screen. The board itself keeps one set of colours whatever
     /// the system appearance; only this backdrop moves from daylight to dusk.
-    struct Pasture {
+    struct Pasture: Sendable {
         let skyTop: Color
         let skyHorizon: Color
         /// The sun by day, the moon at night.
@@ -114,6 +114,41 @@ extension GamePalette.Pasture {
         blade: Color(red: 0.05, green: 0.10, blue: 0.09),
         canopy: Color(red: 0.12, green: 0.21, blue: 0.20),
         canopyShade: Color(red: 0.07, green: 0.13, blue: 0.13),
+        isNight: true
+    )
+
+    /// The second world's daylight: a wooded thicket, greener and closer than the open
+    /// meadow. The same trail runs through it, so the same scene draws it — only the light
+    /// it is drawn in changes, deep and mossy where the meadow is bright and wide.
+    static let forestDay = Self(
+        skyTop: Color(red: 0.42, green: 0.62, blue: 0.55),
+        skyHorizon: Color(red: 0.85, green: 0.88, blue: 0.73),
+        disc: Color(red: 1.00, green: 0.93, blue: 0.60),
+        discHalo: Color(red: 1.00, green: 0.95, blue: 0.70),
+        cloud: Color(red: 0.94, green: 0.96, blue: 0.90),
+        farHill: Color(red: 0.32, green: 0.49, blue: 0.35),
+        ground: Color(red: 0.29, green: 0.45, blue: 0.27),
+        foreground: Color(red: 0.21, green: 0.35, blue: 0.19),
+        blade: Color(red: 0.15, green: 0.29, blue: 0.15),
+        canopy: Color(red: 0.23, green: 0.43, blue: 0.24),
+        canopyShade: Color(red: 0.15, green: 0.31, blue: 0.19),
+        isNight: false
+    )
+
+    /// The thicket after dark: the canopy closes the sky right down, and what light there is
+    /// pools green rather than blue.
+    static let forestDusk = Self(
+        skyTop: Color(red: 0.04, green: 0.09, blue: 0.10),
+        skyHorizon: Color(red: 0.16, green: 0.24, blue: 0.20),
+        disc: Color(red: 0.90, green: 0.94, blue: 0.90),
+        discHalo: Color(red: 0.62, green: 0.74, blue: 0.64),
+        cloud: Color(red: 0.16, green: 0.22, blue: 0.19),
+        farHill: Color(red: 0.09, green: 0.17, blue: 0.14),
+        ground: Color(red: 0.08, green: 0.15, blue: 0.12),
+        foreground: Color(red: 0.05, green: 0.10, blue: 0.09),
+        blade: Color(red: 0.04, green: 0.08, blue: 0.07),
+        canopy: Color(red: 0.10, green: 0.19, blue: 0.16),
+        canopyShade: Color(red: 0.06, green: 0.12, blue: 0.12),
         isNight: true
     )
 }
