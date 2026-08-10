@@ -21,8 +21,9 @@ found the best pen it has in it, which is the only place the answer belongs.
 ```
 #  a fence piece            o  ground inside the pen
 P  the pig                  .  mud outside the pen
-D  the deer                 ~  water
-a  an apple                 x  a skull
+D  the deer                 B  the boar
+a  an apple                 ~  water
+x  a skull
 ```
 
 A treat inside the pen shows as its own letter on `o` ground. An apple with a `#` on it has
@@ -279,7 +280,7 @@ skull: 29.
 ....##....
 ```
 
-The boss, and the only map with two animals on it: the pig north of the mere, the stag
+The boss, and the first map with two animals on it: the pig north of the mere, the stag
 south, and one budget for both. Both have to be held, but *how* they are held is open —
 a pen holds whatever ground it shuts in, in one piece or two.
 
@@ -445,24 +446,44 @@ going round it would cost more ground than the five it does.
 Cut to the shape of the mere, the pen gathers its three truffles on the way round and leaves
 the bramble on the outside.
 
-## 9. Boar Hollow — 18 pieces, 54
+## 9. Boar Hollow — 20 pieces, 34
 
 ```
-...#####..
-..#aoooa#.
-.#ooooooo#
-#oooxoooo#
-#aooPooao#
-#oooooooo#
-.#o~~~oo#.
-..~~~~~#x.
-...~~~....
-..a...a...
-..........
+...###....
+..#ooa#...
+.#Poooo#..
+..#xooo#..
+...~~~~...
+..~~~~~~..
+...~~~~o#.
+..#ooooxo#
+.#aooooB#.
+..#oaoo#..
+...####...
 ```
 
-The boss: the biggest budget in the woods, gathering four of the six truffles and taking one
-bramble in that it cannot wall around. It asks for 21 of the 24 stars below it before it opens.
+The boss, and the thicket's answer to Stag Mere: the pig north of the hollow, the boar
+south, and one budget for both. Both have to be held, but *how* they are held is open —
+a pen holds whatever ground it shuts in, in one piece or two.
+
+One pen round the pair of them has to go the whole way round the pool, and there is no
+budget in the woods long enough to do that and hold anything worth having. Two pens, one
+on each shore, use the same water as a wall twice over and pay for it once — which is the
+answer, and then the puzzle is only where to split twenty pieces.
+
+Nine pieces go to the pig and eleven to the boar, and each side is the octagon the earlier
+levels teach, tucked up against the water and cut to reach the truffle on its own shore.
+There is a bramble on each shore, both of them in the middle of the ground its pen wants,
+and neither will take a piece of fencing. Walling round either one would cut its pen in
+half for the sake of five points, so each pen takes its bramble in and pays. The pig holds
+12 tiles, a truffle and a bramble; the boar 17 tiles, two truffles and a bramble: 29 tiles,
+three truffles, two brambles, 34.
+
+Boxing the pig into its own tile for four pieces and pouring the other sixteen into the
+boar's shore is the tempting shortcut. The north shore gives up far more than four pieces'
+worth of ground when it is abandoned, which is what makes the split the puzzle.
+
+It asks for 21 of the 24 stars below it before it opens.
 
 ---
 
