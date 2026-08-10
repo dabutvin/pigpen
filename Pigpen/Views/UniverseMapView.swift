@@ -4,10 +4,10 @@ import UIKit
 /// The universe map: every world there is, strung up a winding path through space, each drawn as
 /// a little planet with its boss shown on it.
 ///
-/// It is where Play leads and where a world hands back once its send-off has run — the meadow
-/// finished, the thicket lit up next, and ten more worlds standing out past them as silhouettes
-/// to go on for. A world opens once the one before it is held; tapping an open one drops into its
-/// trail, playing the world's own opening film first if it is owed.
+/// It opens from Play only once the meadow is held, and it is where a world's send-off lands —
+/// the meadow finished, the thicket lit up next, and ten more worlds standing out past them as
+/// silhouettes to go on for. A world opens once the one before it is held; tapping an open one
+/// drops into its trail, playing the world's own opening film first if it is owed.
 @MainActor
 struct UniverseMapView: View {
     @Environment(\.dismiss) private var dismiss

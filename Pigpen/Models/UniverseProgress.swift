@@ -55,6 +55,10 @@ final class UniverseProgress {
         store.loadPlayedScenes().contains(key)
     }
 
+    /// Whether Play on the title should open this map. The universe stays hidden until every
+    /// pen in the meadow is held — until then Play walks straight into Mudlark Meadow.
+    var isRevealed: Bool { isCleared(0) }
+
     /// Reads the store again, for the map coming back from a world with new stars won in it.
     func reload() { stars = store.loadStars() }
 }

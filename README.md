@@ -87,11 +87,12 @@ tiles, three apples and the two skulls: 38.
 
 ## The World
 
-Play leads out to the **universe map** (below), and its first world is **Mudlark Meadow**:
-nine puzzles as nine signposts up one winding trail, with the pig standing at the furthest
-one it has reached and mist over everything past that. The first six are fencing and water
-alone and climb in what they ask of you, the next two scatter apples and skulls as well, and
-the last is the boss. Every world in the game is a trail like this one.
+Play leads into **Mudlark Meadow** until that world is held, and only then opens the
+**universe map** (below). The meadow is nine puzzles as nine signposts up one winding trail,
+with the pig standing at the furthest one it has reached and mist over everything past that.
+The first six are fencing and water alone and climb in what they ask of you, the next two
+scatter apples and skulls as well, and the last is the boss. Every world in the game is a
+trail like this one.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
