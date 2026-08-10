@@ -20,7 +20,8 @@ struct PuzzleView: View {
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
     /// puzzle nobody is timing. The meadow is not timed — a level there is worth going back
     /// to and taking apart — but a daily is a day's go at one board, and how long it took
-    /// is part of what it was.
+    /// is part of what it was. It stops when the pen holds, resumes on going bigger, resets
+    /// on starting over, and returns to the submitted time when the best pen is put back.
     @State private var clock: Stopwatch?
     /// What the clock said when the pen held, so the verdict says the same thing however
     /// long the card is left up.
@@ -148,8 +149,8 @@ struct PuzzleView: View {
     }
 
     /// The clock, up in the bar with the day's name rather than down on the board: it is
-    /// something to glance at afterwards, not something to play against. It stops the
-    /// moment the pen holds.
+    /// something to glance at afterwards, not something to play against. It stops while
+    /// the pen holds and the card is up, and picks up again if the player goes back out.
     @ViewBuilder
     private var clockFace: some View {
         if let clock {
@@ -225,7 +226,7 @@ struct PuzzleView: View {
                     .minimumScaleFactor(0.75)
 
                 if game.canRestoreBestPen {
-                    Button { restoreBestPen() } label: {
+                    Button { putBestPenBack() } label: {
                         Label("Put it back", systemImage: "trophy")
                             .font(.footnote.weight(.heavy))
                     }
@@ -338,13 +339,23 @@ struct PuzzleView: View {
     }
 
     private var startOver: some View {
-        Button { game.startOver() } label: {
+        Button {
+            // A fresh field is a fresh clock: the time of the pen just left behind is kept
+            // in the day's record, not on the face.
+            clock?.reset()
+            heldIn = nil
+            game.startOver()
+        } label: {
             Label("Start over", systemImage: "arrow.counterclockwise")
         }
     }
 
     private var goBigger: some View {
-        Button { game.resumeBuilding() } label: {
+        Button {
+            // The lap of honour was not on the clock; going back out to widen the pen is.
+            clock?.resume()
+            game.resumeBuilding()
+        } label: {
             Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
         }
     }
@@ -483,10 +494,15 @@ struct PuzzleView: View {
         }
     }
 
-    /// Puts the fencing back the way it stood on the best pen of the session, with the
-    /// same soft knock the other buttons that work the fencing already down give.
-    private func restoreBestPen() {
+    /// Puts the fencing back the way it stood on the best pen of the session, and — when
+    /// a time was submitted for a pen that held — puts the clock back to that time too,
+    /// so a rearrangement that was given up does not stay charged. The soft knock is the
+    /// same one the other buttons that work the fencing already down give.
+    private func putBestPenBack() {
         guard game.restoreBestPen() else { return }
+        if let heldIn {
+            clock?.setElapsed(heldIn)
+        }
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
     }
 

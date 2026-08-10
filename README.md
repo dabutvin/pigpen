@@ -169,11 +169,11 @@ A puzzle a day, on its own board, with a clock running on it.
   to fall in the band its weekday was given. The bands are laid end to end, so a Tuesday
   always asks more than a Monday.
 - **The clock counts up.** It starts when the board opens and stops the moment the pen
-  holds, so the lap of honour is not charged to you. Going back out afterwards to widen a
-  pen that has already closed is not on the clock — the time a day is remembered by is the
-  time it took to shut the pig in, and the rest is playing. The meadow has no clock on it at
-  all: a level up the trail is worth taking apart, and a clock over that would only ask you
-  to hurry.
+  holds, so the lap of honour is not charged to you. *Go bigger* picks the clock back up
+  where it stood; *Start over* puts it back to nothing; *Put it back* puts the submitted
+  time back with the fencing. The time a day is remembered by is still the quickest shut
+  that held. The meadow has no clock on it at all: a level up the trail is worth taking
+  apart, and a clock over that would only ask you to hurry.
 - **The archive is a calendar.** Every day of the year is a little field with the day's
   number under it: bare mud for a day nobody has finished, washed gold for a day complete,
   drifting through the spectrum for one that gave up the best pen it had in it — which is
@@ -549,7 +549,7 @@ Pigpen/
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # The films, as clocks: which shot is up when, and for how long
-│   ├── Stopwatch.swift          # The count-up clock over a timed board, as two instants
+│   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed

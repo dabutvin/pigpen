@@ -7,9 +7,9 @@ import Foundation
 /// of steps, so the view draws whatever `elapsed(at:)` says at the moment it happens to be
 /// drawing and nothing has to be kept in step with anything.
 ///
-/// It starts when the board appears and stops the moment the pen holds. Going back out
-/// afterwards to widen a pen that already held is not on the clock: the time a day is
-/// remembered by is the time it took to shut the animal in, and the rest is playing.
+/// It starts when the board appears and stops the moment the pen holds, so the lap of
+/// honour is not charged. Going bigger picks it back up where it stood; starting over puts
+/// it back to nothing; putting the best pen back puts the submitted time back with it.
 struct Stopwatch: Equatable, Sendable {
     private(set) var started: Date?
     private(set) var stopped: Date?
@@ -30,6 +30,31 @@ struct Stopwatch: Equatable, Sendable {
     mutating func stop(at now: Date = Date()) {
         guard isRunning else { return }
         stopped = now
+    }
+
+    /// Picks the clock back up where it stood when it was stopped, without counting the
+    /// time it spent still — so going bigger after a pen holds keeps charging from the
+    /// submitted time rather than from when the player tapped through the verdict.
+    mutating func resume(at now: Date = Date()) {
+        guard let started, let stopped else { return }
+        let held = max(0, stopped.timeIntervalSince(started))
+        self.started = now.addingTimeInterval(-held)
+        self.stopped = nil
+    }
+
+    /// Puts the clock back to nothing and starts it counting again — what starting the
+    /// field over does to the time as well as the fencing.
+    mutating func reset(at now: Date = Date()) {
+        started = now
+        stopped = nil
+    }
+
+    /// Sets a running clock to a time already taken. Putting the fencing back on the best
+    /// pen puts the submitted time back with it, so a rearrangement that was given up does
+    /// not stay on the clock.
+    mutating func setElapsed(_ seconds: TimeInterval, at now: Date = Date()) {
+        started = now.addingTimeInterval(-max(0, seconds))
+        stopped = nil
     }
 
     /// How long the clock has been running, which is fixed once it has been stopped.
