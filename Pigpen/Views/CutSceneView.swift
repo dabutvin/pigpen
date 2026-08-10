@@ -1548,9 +1548,9 @@ private struct Film {
 
 #Preview("Opening · away") { CutSceneView(.opening(), still: 9.7) }
 
-#Preview("Opening · the biggest pen") { CutSceneView(.opening(), still: 12.7) }
+#Preview("Opening · the biggest pen") { CutSceneView(.opening(), still: 12.8) }
 
-#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 15.4) }
+#Preview("Opening · fence it in") { CutSceneView(.opening(), still: 15.5) }
 
 #Preview("Stag Mere · the mere") { CutSceneView(.stagMere(), still: 1.4) }
 

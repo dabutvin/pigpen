@@ -25,8 +25,8 @@ struct CutScene: Equatable, Sendable {
     ///
     /// The first of them carries the rules as well as the story, since a player who has
     /// watched it should know what a good pen is before they are handed a rack of fencing:
-    /// the pig is out, it would rather stay out, out is no place for a pig, and the answer
-    /// is the biggest pen the fencing will reach round — shut, or it is no pen at all.
+    /// the pig is out, it would rather stay out, open country is no place for a pig, and the
+    /// answer is the biggest pen the fencing will reach round — shut, or it is no pen at all.
     enum Name: String, Sendable, CaseIterable {
         /// Before the first walk up the meadow: a pig, the open gate it came through, nine
         /// fields of country with nothing in them to stop it, and the rule the whole game is
@@ -202,8 +202,9 @@ extension CutScene {
     /// watches the film knows what got out, why the job is the meadow rather than the
     /// animal, and — before a single piece is in the ground — that a pen is worth what it
     /// holds and worth nothing at all with a gap left in it. The pig wanting to be free and
-    /// the meadow not being safe for it are what make that a kindness rather than a chore:
-    /// the biggest pen there is, which is as close to loose as a pig can safely get.
+    /// open country not being safe for it are what make that a kindness rather than a chore:
+    /// the biggest pen there is, which is as close to loose as a pig can safely get — and
+    /// what the meadow's last film hands back, nine fields wide and shut.
     static func opening(start: Date = .now) -> Self {
         Self(
             name: .opening,
@@ -217,8 +218,8 @@ extension CutScene {
                 Shot(picture: .thePig, caption: "One pig, out, and it wants to be free.", seconds: 2.6),
                 Shot(
                     picture: .away,
-                    caption: "Out here is not safe, and you will not catch it.",
-                    seconds: 3.2
+                    caption: "Open country is not safe, and you will not catch it.",
+                    seconds: 3.3
                 ),
                 Shot(
                     picture: .theBiggestPen,

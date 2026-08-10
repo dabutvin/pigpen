@@ -225,12 +225,13 @@ the open, which is the whole reason the game is a fence rather than a chase. You
 field it has got into, and the next one, and the one after that, up the trail towards the
 hills.
 
-The pig is on the loose and was never meant to be. It wants to be free, and out here is no
-place for a pig — which is why the job is the biggest pen you can get the fencing round
-rather than the smallest one that will hold an animal. A pen scores what it takes in, so
-the game is asking for as much loose meadow as the rack will reach round; and it has to be
-shut, because one gap is one way out and the pig will find it. Big as you can, and closed:
-that is the whole of the rule, and the opening says it out loud before a piece is laid.
+The pig is on the loose and was never meant to be. It wants to be free, and open country is
+no place for a pig — the danger is not the meadow, it is that nothing out there holds it.
+So the job is not the smallest pen that will hold an animal: it is the biggest one you can
+get the fencing round. A pen scores what it takes in, so the game is asking for as much
+loose meadow as the rack will reach; and it has to be shut, because one gap is one way out
+and the pig will find it. Big as you can, and closed — that is the whole of the rule, and
+the opening says it out loud before a piece is laid.
 
 At the top of the meadow the ground stops belonging to the farm. Stag Mere is the ninth
 field and the stag had that shore before the barn did, so the last fence has to hold both
@@ -239,9 +240,12 @@ animals — making room for the one that lives there rather than walling it out 
 enclosures.
 
 Then the meadow is fenced from the barn to the mere: the stag stays on its own water, the
-pig has the run of all nine fields, and nothing gets out of Mudlark Meadow any more. The
-last shot is the second shot of the opening said again from further away — somewhere else,
-another gate is standing open — which is the next world, and a reason to go to it.
+pig has the run of all nine fields, and nothing gets out of Mudlark Meadow any more. That
+is the rule paid off rather than a view — nine fields, shut, is the biggest pen in the
+game, and the pig is loose inside it, which is what it wanted and as much freedom as is
+safe to give a pig. The last shot is the second shot of the opening said again from further
+away — somewhere else, another gate is standing open — which is the next world, and a
+reason to go to it.
 
 ### The cut scenes
 
@@ -254,7 +258,7 @@ the meadow. Six shots and a little over sixteen seconds, between black bars, wit
 of type over each: the meadow at first light with nothing fenced in it, the barn with the
 one gate nobody shut, the pig itself head on with the light coming apart behind it and the
 line that says what it wants, the pig outrunning the camera under the line that rules out
-chasing it and says the meadow is not safe for it either, the pen a player is being asked
+chasing it and says open country is not safe for it either, the pen a player is being asked
 for pushing out from a tight one round the pig to as much meadow as it will take, and the
 run of fencing that shuts it. There is a **Skip** in the corner from a beat in, and
 skipping counts as having seen it.
