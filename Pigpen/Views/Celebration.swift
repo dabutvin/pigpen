@@ -172,7 +172,7 @@ extension Celebration {
         var elapsed: TimeInterval = 0
 
         for (index, landing) in landings.enumerated() {
-            guard await Self.pause(landing - elapsed) else { return false }
+            guard await Task.pausing(for: .seconds(max(landing - elapsed, 0))) else { return false }
             elapsed = landing
 
             if index < landings.count - 1 {
@@ -186,16 +186,6 @@ extension Celebration {
     /// nothing left of the celebration to draw.
     @MainActor
     func waitForTheConfetti() async {
-        _ = await Self.pause(Self.tail)
-    }
-
-    /// Waits, and says whether the celebration is still wanted.
-    private static func pause(_ seconds: TimeInterval) async -> Bool {
-        do {
-            try await Task.sleep(for: .seconds(max(seconds, 0)))
-            return true
-        } catch {
-            return false
-        }
+        _ = await Task.pausing(for: .seconds(Self.tail))
     }
 }
