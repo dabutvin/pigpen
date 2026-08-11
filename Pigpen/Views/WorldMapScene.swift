@@ -630,27 +630,43 @@ private struct Meadow {
         let spread = 14 * scale
         shadow(in: &context, at: foot, width: spread)
 
+        // A stump in the woods is sawn timber; a stump on the mountain is what the fire left,
+        // so the bole goes to charcoal and the cut face keeps a little heat rather than
+        // showing pale, fresh rings.
+        let burnt = colors.cover == .scree
         let bole = CGRect(
             x: foot.x - spread * 0.38, y: foot.y - spread * 0.55,
             width: spread * 0.76, height: spread * 0.55
         )
         context.fill(
             Path(roundedRect: bole, cornerRadius: spread * 0.12),
-            with: .color(GamePalette.rail.opacity(colors.isNight ? 0.7 : 0.95))
+            with: .color(
+                burnt
+                    ? Color(red: 0.16, green: 0.12, blue: 0.11).opacity(colors.isNight ? 0.85 : 0.95)
+                    : GamePalette.rail.opacity(colors.isNight ? 0.7 : 0.95)
+            )
         )
         context.fill(
             Path(ellipseIn: CGRect(
                 x: foot.x - spread * 0.4, y: foot.y - spread * 0.62,
                 width: spread * 0.8, height: spread * 0.28
             )),
-            with: .color(GamePalette.picket.opacity(colors.isNight ? 0.45 : 0.85))
+            with: .color(
+                burnt
+                    ? Color(red: 0.34, green: 0.20, blue: 0.15).opacity(colors.isNight ? 0.7 : 0.9)
+                    : GamePalette.picket.opacity(colors.isNight ? 0.45 : 0.85)
+            )
         )
         context.stroke(
             Path(ellipseIn: CGRect(
                 x: foot.x - spread * 0.22, y: foot.y - spread * 0.55,
                 width: spread * 0.44, height: spread * 0.14
             )),
-            with: .color(GamePalette.post.opacity(0.35)),
+            with: .color(
+                burnt
+                    ? Color(red: 0.95, green: 0.42, blue: 0.16).opacity(colors.isNight ? 0.6 : 0.3)
+                    : GamePalette.post.opacity(0.35)
+            ),
             lineWidth: max(1, spread * 0.05)
         )
     }
