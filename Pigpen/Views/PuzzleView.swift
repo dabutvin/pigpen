@@ -587,9 +587,7 @@ struct PuzzleView: View {
             sendHome()
             withAnimation(.easeOut(duration: 0.25)) {
                 showsVerdict = false
-                for index in marks.indices {
-                    marks[index].opacity = 1
-                }
+                showEveryone()
             }
         case .escaped(let escapes):
             // Bail if the phase changed under us (clearing the field, fetching them back):
@@ -612,9 +610,13 @@ struct PuzzleView: View {
                 took,
                 game.fences
             )
-            // A mark left past the rim by a cancelled escape walk would otherwise stand
-            // outside the pen for the beat before the celebration takes over drawing.
+            // Whatever a cancelled escape walk left behind, the board about to be
+            // celebrated on has every animal home and in plain view: a mark left past the
+            // rim would otherwise stand outside the pen, and one left faded out would run
+            // its lap invisibly, since a celebration poses a mark but still draws it at
+            // the mark's own opacity.
             sendHome()
+            showEveryone()
             await celebrate()
         }
     }
@@ -627,7 +629,7 @@ struct PuzzleView: View {
     /// wash used to have to itself, and no confetti.
     private func celebrate() async {
         guard !reduceMotion else {
-            try? await Task.sleep(for: .milliseconds(350))
+            guard await Task.pausing(for: .milliseconds(350)) else { return }
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.success)
             return
@@ -651,7 +653,6 @@ struct PuzzleView: View {
     /// Returns whether the walk ran to the end. A cancelled task — the field cleared or
     /// the animals fetched back mid-stride — must not keep stepping, or a mark is left
     /// standing one tile past the rim after sendHome has already brought it home.
-    @discardableResult
     private func walk(_ escapes: [Escape]) async -> Bool {
         let longest = escapes.map(\.route.count).max() ?? 0
         guard longest > 1 else { return true }
@@ -662,7 +663,7 @@ struct PuzzleView: View {
                     move(escape.animal.kind, to: escape.route[step])
                 }
             }
-            guard await Self.pause(.milliseconds(220)) else { return false }
+            guard await Task.pausing(for: .milliseconds(220)) else { return false }
 
             withAnimation(.easeIn(duration: 0.35)) {
                 for escape in escapes where step == escape.route.count - 1 {
@@ -670,17 +671,7 @@ struct PuzzleView: View {
                 }
             }
         }
-        return await Self.pause(.milliseconds(350))
-    }
-
-    /// Waits, and says whether the walk is still wanted.
-    private static func pause(_ duration: Duration) async -> Bool {
-        do {
-            try await Task.sleep(for: duration)
-            return true
-        } catch {
-            return false
-        }
+        return await Task.pausing(for: .milliseconds(350))
     }
 
     private func move(_ kind: Animal, to tile: GridPoint) {
@@ -698,6 +689,14 @@ struct PuzzleView: View {
     private func vanish(_ kind: Animal) {
         guard let index = marks.firstIndex(where: { $0.kind == kind }) else { return }
         marks[index].opacity = 0
+    }
+
+    /// Brings every animal back into view. Walking off the map is the only thing that ever
+    /// fades one out, so this is what undoes it.
+    private func showEveryone() {
+        for index in marks.indices {
+            marks[index].opacity = 1
+        }
     }
 
     private func reveal() {
