@@ -308,25 +308,32 @@ worth of ground when it is abandoned, which is what makes the split the puzzle.
 The second world, solved the same way and drawn the same way. A truffle takes the meadow's
 apple and a bramble its skull, so an `a` below is a truffle worth five tiles to shut in, and
 an `x` a bramble worth five fewer that no piece will build on — exactly as before. The thicket
-scatters them rather than saving them for the end.
+scatters them rather than saving them for the end, and it starts higher up than the meadow
+did: there is no field here whose third star the obvious block will win.
 
-## 1. Bramble Brook — 10 pieces, 20
+## 1. Bramble Brook — 9 pieces, 27
 
 ```
-.........
-.........
-~~~~~~~..
-#ooooo~..
-#ooPoo~..
-#ooooo~..
-#ooooo#..
-.#####...
+..........
+..........
+~~~~~~~~..
+#oooooo~..
+#ooPooo~..
+#oooooo~..
+.#ooooo~..
+..#oooo~..
+...####...
 ```
 
-Two free sides from the brook and two walls of your own: the obvious block already holds all
-twenty tiles, so the first world of the woods introduces itself the way the meadow did.
+The brook walls the north and the east, and the two sides left over are yours. Squared off
+against them the nine pieces hold a block of 20, which is the answer the meadow trained you
+to give and is worth two stars here.
 
-## 2. Foxglove Dell — 6 pieces, 20
+The third comes from spending the same nine on a staircase instead. Each step down the
+south-west trades a tile of wall for a tile of ground the block was paying to keep out, and
+the diagonal ends up holding 27 — every tile the brook can be made to keep.
+
+## 2. Foxglove Dell — 7 pieces, 29
 
 ```
 ..........
@@ -336,11 +343,18 @@ twenty tiles, so the first world of the woods introduces itself the way the mead
 .~~oooo~~.
 .~~oPoo~~.
 .~~oooo~~.
-...#oooo#.
-....####..
+.a.#ooooa#
+....#ooo#.
+.....###..
 ```
 
-Water on every side but the two open corners; six pieces close them and hold the pool.
+Water on every side but the mouth at the bottom, and a truffle lying out beyond each corner
+of it. Four pieces plug the mouth and hold the pool's 16 tiles; squaring off below it with
+all seven holds 21 and still reaches neither truffle.
+
+Seven pieces lean the wall out to the east instead: 24 tiles and the truffle on that side,
+which is 29. The truffle to the west is the trap — the pen cannot have both, and a wall that
+goes after the second gives up more ground on the way down than five points can pay for.
 
 ## 3. Hazel Copse — 12 pieces, 30
 

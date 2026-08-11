@@ -13,45 +13,65 @@ import Foundation
 /// The one thing the thicket does that the meadow did not is scatter its treats. The meadow
 /// held them all back for its last three fields, teaching water and fencing clean first and
 /// only then handing the player an orchard and a patch of sour ground. The thicket has walked
-/// its pig everywhere at once, so a truffle turns up in the third field and a bramble in the
-/// sixth, and there are fields between them with nothing lying about at all. It reads as woods
+/// its pig everywhere at once, so a truffle turns up in the second field and a bramble in the
+/// seventh, and there are fields between them with nothing lying about at all. It reads as woods
 /// a pig has been rooting through rather than a syllabus — which is the whole difference the
 /// theme is there to make.
+///
+/// The other thing the thicket does is start higher up. The meadow opened on two fields whose
+/// best pen *was* the plain block, because the game had itself to explain; the woods are walked
+/// by somebody who has already held every pen in the meadow, so not one field here gives its
+/// third star to a squared-off pen. `DifficultyTests` measures that as the world's floor and
+/// holds it above the meadow's.
 extension PuzzleLevel {
-    /// A truffle in the leaf mould where the first world put a river bend: two free sides
-    /// from the brook, two walls of the player's own, and one windfall it costs nothing to
-    /// take in. The obvious block already holds all of it, so the three stars are free while
-    /// the thicket introduces itself.
+    /// Where the meadow put a river bend, the woods put a brook that gives less away. It bars
+    /// the north and turns south down the east, and the ground it leaves opens to the west and
+    /// the south with nothing on those two sides but the rim. Nine pieces squared off round the
+    /// pig hold 20 tiles; the same nine cut as a staircase down the south-west corner hold 27,
+    /// which is every tile the brook can be made to keep.
+    ///
+    /// It opens the thicket the way River Bend opened the meadow — familiar water, a gentle
+    /// budget, nothing lying on the ground to weigh — with the one difference the world is
+    /// built on: the meadow's opener handed its third star to the obvious block and this one
+    /// keeps it back. A player who has walked a whole world already knows what a corner is
+    /// worth.
     static let brambleBrook = woodland(
         id: "bramble-brook",
         name: "Bramble Brook",
-        fenceBudget: 10,
-        twoStarScore: 11,
-        threeStarScore: 19,
-        maximumScore: 20,
+        fenceBudget: 9,
+        twoStarScore: 15,
+        threeStarScore: 25,
+        maximumScore: 27,
         map: """
-            .........
-            .........
-            ~~~~~~~..
-            ......~..
-            ...P..~..
-            ......~..
-            .........
-            .........
+            ..........
+            ..........
+            ~~~~~~~~..
+            .......~..
+            ...P...~..
+            .......~..
+            .......~..
+            .......~..
+            ..........
             """
     )
 
-    /// A pool the pig sits in the middle of, walled on all four sides by water bar the corners.
-    /// Six pieces close the two open corners and hold twenty tiles — the second field whose
-    /// best pen is the plain one, so a player still finding their feet in the trees keeps their
-    /// footing.
+    /// A pool the pig sits in the middle of, walled on every side by water bar the mouth at the
+    /// bottom, with a truffle lying out beyond either corner of that mouth. Four pieces plug the
+    /// mouth and hold the pool's 16 tiles; squaring off below it with all seven holds 21 and
+    /// reaches neither truffle, where seven spent leaning the wall out to the east gather the
+    /// truffle on that side and come to 29.
+    ///
+    /// The choice is which truffle rather than whether — the two lie too far apart for one
+    /// budget to reach both, and a wall that goes after the second gives up more ground on the
+    /// way than the truffle is worth. It is the thicket's first treat, and it is out here in
+    /// the second field where the meadow kept its first apple back until the seventh.
     static let foxgloveDell = woodland(
         id: "foxglove-dell",
         name: "Foxglove Dell",
-        fenceBudget: 6,
-        twoStarScore: 11,
-        threeStarScore: 19,
-        maximumScore: 20,
+        fenceBudget: 7,
+        twoStarScore: 17,
+        threeStarScore: 27,
+        maximumScore: 29,
         map: """
             ..........
             ..~~~~~~..
@@ -60,14 +80,17 @@ extension PuzzleLevel {
             .~~....~~.
             .~~.P..~~.
             .~~....~~.
+            .a......a.
             ..........
             ..........
             """
     )
 
-    /// The first truffle worth going a little out of the way for: a brook bars the north, so
-    /// the ground under it is cheap to wall, and a truffle sits on the pig's own tile-line
-    /// where the pen was going to close anyway. Twelve pieces cut a lozenge that holds it.
+    /// A truffle that costs nothing to take, after a dell where taking one was the whole
+    /// question: a brook bars the north, so the ground under it is cheap to wall, and the
+    /// truffle sits on the pig's own tile-line where the pen was going to close anyway. What
+    /// this one asks for is the shape — twelve pieces cut a lozenge, and the corners a plain
+    /// block pays for are the seven tiles between 23 and 30.
     static let hazelCopse = woodland(
         id: "hazel-copse",
         name: "Hazel Copse",
@@ -267,11 +290,16 @@ private func woodland(
 }
 
 extension WorldMap {
-    /// Thornwood Thicket: nine fields up a winding trail through the trees, the same shape as
-    /// the meadow — water and fencing first, treats coming and going after — climbing to a boss
+    /// Thornwood Thicket: nine fields up a winding trail through the trees, climbing to a boss
     /// that stands a second animal and asks for most of the stars below it. The truffles and
     /// brambles are scattered rather than saved for the end, so the woods read as country a
     /// pig has been through rather than a lesson laid out in order.
+    ///
+    /// It is also the same trail walked from higher up. The meadow could open on two fields
+    /// that gave their third star to the plain block, since it had a game to teach; the woods
+    /// have nowhere that generous on them, and the least any field here asks is well above the
+    /// meadow's floor. `DifficultyTests` measures every stop in both worlds and fails if a
+    /// world ever opens softer, or floors lower, than the one below it.
     static let thornwoodThicket = WorldMap(
         name: "Thornwood Thicket",
         nodes: [

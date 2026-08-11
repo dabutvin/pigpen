@@ -154,6 +154,17 @@ every squared-off block worth having on that map is one the player cannot build,
 number says more about the block than about the level. `DifficultyTests` pins the lot, so the
 climb cannot quietly flatten out again.
 
+The same number keeps the *worlds* in order. Free three stars are something the first world
+gets because it has the game to teach, and nothing after it is owed them: each world declares
+a **floor** — the least any of its fields may ask — and a world's floor has to stand above the
+floor of the world below it, while its opening field has to ask more than the last world's
+opening field did. The meadow floors at nothing and opens on a map with no trick in it; the
+thicket floors at 23% and opens at 25%, so the second world starts around where the first
+world's middle sat. Bosses are held to each other rather than to the floor: a boss is one
+budget split between two animals, so the gap it leaves against a squared-off pen understates
+it, and what is asked there is only that no world's boss splits its budget for less than the
+last one did.
+
 Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
 the first line.
 
@@ -192,21 +203,28 @@ apple and the hazard a **bramble** rather than a skull — each worth exactly wh
 twin was, a truffle five tiles to shut in and a bramble five to shut in with and no fencing
 at all. The one thing the thicket does that the meadow did not is **scatter** its treats. The
 meadow held them all back for its last three fields; the thicket has walked its pig everywhere
-at once, so a truffle turns up in the third field and a bramble in the sixth, with plain
+at once, so a truffle turns up in the second field and a bramble in the seventh, with plain
 fields in between. It reads as woods a pig has been rooting through rather than a lesson laid
 out in order.
 
-| # | Level | Pieces | On the ground | Best pen |
-|---|---|---|---|---|
-| 1 | Bramble Brook | 10 | — | 20 |
-| 2 | Foxglove Dell | 6 | — | 20 |
-| 3 | Hazel Copse | 12 | 1 truffle | 30 |
-| 4 | Gnarl Ford | 12 | — | 24 |
-| 5 | Fern Gully | 12 | 2 truffles | 34 |
-| 6 | Willow Corner | 8 | — | 26 |
-| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 26 |
-| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 41 |
-| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 34 |
+The other thing it does is **start higher**. The woods are walked by somebody who has already
+held every pen in the meadow, so there is nothing here as generous as the two fields the
+meadow opens on: not one field in the thicket gives its third star to a squared-off pen, and
+the least any of them asks — 23%, at Hazel Copse — is more than the meadow asked anywhere
+before Otter Ford, its fifth. Bramble Brook opens the world at 25%, where River Bend opened
+the meadow at nothing.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Bramble Brook | 9 | — | 20 | 27 | 25% |
+| 2 | Foxglove Dell | 7 | 2 truffles | 21 | 29 | 27% |
+| 3 | Hazel Copse | 12 | 1 truffle | 23 | 30 | 23% |
+| 4 | Gnarl Ford | 12 | — | 16 | 24 | 33% |
+| 5 | Fern Gully | 12 | 2 truffles | 23 | 34 | 32% |
+| 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
+| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 17 | 26 | 34% |
+| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 28 | 41 | 31% |
+| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 30 | 34 | 11% |
 
 Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
@@ -452,6 +470,8 @@ It prints the best pen it found, marked out on the map, along with `maximumScore
 The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with skulls on it — walling round one can cost a plain block far more than it costs a shaped pen, and the second star has to stay under what the block is worth.
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
+
+A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
 A map with a `D` on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
