@@ -9,7 +9,7 @@ struct Escape: Equatable, Sendable {
 /// What happens when the animals are let loose on a field fenced a particular way.
 enum PenOutcome: Equatable, Sendable {
     /// Something found a way out — one escape for each animal that did. A field holding
-    /// the pig but not the deer is a field that has not been won.
+    /// the pig but not the deer — or the boar — is a field that has not been won.
     case escaped(escapes: [Escape])
     /// Everything on the map is stuck. `pen` is every mud tile the animals can still
     /// reach between them: one enclosure when they are held together, two when apart.

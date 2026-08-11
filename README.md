@@ -35,11 +35,11 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   narrow for a circle is run out and back instead, one too tight for that is bounced on the
   spot, and the best pen the map has in it gets its confetti in every colour there is. Ask
   for reduced motion and the field keeps still.
-- **The boss keeps two.** The last puzzle in the meadow stands a deer on the field as well
-  as the pig, and one budget has to hold both of them. One pen round the pair or a pen
-  apiece is up to you — a pen holds whatever ground it shuts in, whether that ground is in
-  one piece or two — but an animal left loose loses the field however well the other one
-  is held.
+- **The boss keeps two.** A world's last puzzle stands a second animal on the field as well
+  as the pig — a deer in the meadow, a boar in the thicket — and one budget has to hold both
+  of them. One pen round the pair or a pen apiece is up to you — a pen holds whatever ground
+  it shuts in, whether that ground is in one piece or two — but an animal left loose loses
+  the field however well the other one is held.
 - **A pen that closes colours itself in.** The moment the last gap is filled, the ground the
   fencing holds washes gold, so you can see the pen you have made before you commit to it.
   Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
@@ -206,12 +206,12 @@ out in order.
 | 6 | Willow Corner | 8 | — | 26 |
 | 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 26 |
 | 8 | Elderwood | 15 | 3 truffles, 1 bramble | 41 |
-| 9 | Boar Hollow | 18 | 6 truffles, 2 brambles | 54 |
+| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 34 |
 
-Its boss, Boar Hollow, is the thicket's deepest and treat-thickest field rather than a second
-animal — held by one pig and the biggest budget in the woods, and asking for 21 of the 24
-stars below it before it opens, the same toll Stag Mere charges. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
+of the wood with the pig north of it and a boar south, and one budget for both. It asks for
+21 of the 24 stars below it before it opens, the same toll Stag Mere charges. Every pen is
+drawn out in [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -435,7 +435,7 @@ Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the scrip
 
 ### Adding a level
 
-A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
+A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
 
 ```bash
 Tools/level_search.py --budget 12 --plan <<'MAP'

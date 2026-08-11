@@ -208,29 +208,33 @@ extension PuzzleLevel {
             """
     )
 
-    /// The thicket's boss: the deepest hollow in the wood, thick with truffles and staked with
-    /// bramble, with a pool in the middle of it. Eighteen pieces — the biggest budget in the
-    /// woods — gather four truffles and take one bramble in, for fifty-four. It asks for most of
-    /// the stars the fields below it hold before it will open, so it is played by somebody who
-    /// has gone back and bettered their pens rather than one who has merely reached it.
+    /// The thicket's boss: a hollow pool across the middle of the wood, the pig grazing
+    /// north of it and a boar south, with the same rule the meadow's last field taught —
+    /// one budget has to hold both of them. The pool walls one side of each enclosure the
+    /// way Stag Mere's water does, so the twenty pieces go out as two pens rather than one.
+    /// Truffles on both shores are worth going out of the way for, and there is a bramble
+    /// on each: neither wall can pass over one, and on this board walling round either of
+    /// them costs more ground than the bramble does, so each pen takes its own in and pays
+    /// for it. 29 tiles and three truffles, less the two brambles, come to 34. It asks for
+    /// most of the stars the fields below it hold before it will open.
     static let boarHollow = woodland(
         id: "boar-hollow",
         name: "Boar Hollow",
-        fenceBudget: 18,
-        twoStarScore: 31,
-        threeStarScore: 51,
-        maximumScore: 54,
+        fenceBudget: 20,
+        twoStarScore: 19,
+        threeStarScore: 32,
+        maximumScore: 34,
         map: """
             ..........
-            ...a...a..
-            ..........
-            ....x.....
-            .a..P..a..
-            ..........
-            ...~~~....
-            ..~~~~~.x.
-            ...~~~....
-            ..a...a...
+            .....a....
+            ..P.......
+            ...x......
+            ...~~~~...
+            ..~~~~~~..
+            ...~~~~...
+            .......x..
+            ..a....B..
+            ....a.....
             ..........
             """
     )
@@ -265,9 +269,9 @@ private func woodland(
 extension WorldMap {
     /// Thornwood Thicket: nine fields up a winding trail through the trees, the same shape as
     /// the meadow — water and fencing first, treats coming and going after — climbing to a boss
-    /// that asks for most of the stars below it. The truffles and brambles are scattered rather
-    /// than saved for the end, so the woods read as country a pig has been through rather than
-    /// a lesson laid out in order.
+    /// that stands a second animal and asks for most of the stars below it. The truffles and
+    /// brambles are scattered rather than saved for the end, so the woods read as country a
+    /// pig has been through rather than a lesson laid out in order.
     static let thornwoodThicket = WorldMap(
         name: "Thornwood Thicket",
         nodes: [
