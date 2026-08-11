@@ -34,7 +34,7 @@ struct CutScene: Equatable, Sendable {
         /// fields of country with nothing in them to stop it, and the rule the whole game is
         /// scored on — the biggest pen you can lay, so long as it is shut.
         case opening
-        /// Before the meadow's last puzzle, which is the only one with two animals on it —
+        /// Before the meadow's last puzzle, which is the first with two animals on it —
         /// because the last field of the meadow is the stag's, and fencing it has to leave
         /// the stag its water rather than wall it off.
         case stagMere

@@ -410,7 +410,7 @@ struct PuzzleView: View {
         }
     }
 
-    /// Who got out, which on the meadow's last map may be one of the two rather than both.
+    /// Who got out, which on a boss map may be one of the two rather than both.
     private func escapedHeadline(_ escapes: [Escape]) -> String {
         guard escapes.count == 1 else { return "They both got out" }
         return "The \(escapes[0].animal.kind.name) got out"

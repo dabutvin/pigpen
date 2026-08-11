@@ -4,10 +4,11 @@ import UIKit
 /// The start screen: a pasture with a pig loose in it, a name that plants itself a letter at
 /// a time like a run of fence, and a Play button that is impossible to miss.
 ///
-/// Under Play is the day's own board on a card of its own — what day it is, what that day
-/// asks, and once it has been held, the stars it gave up, the time it took and the run of
-/// days it is part of. Under that, the archive of every daily there has been this year, and
-/// the tutorial for anybody who wants the walkthrough before the meadow.
+/// Play walks into Mudlark Meadow until that world is held; only once the meadow boss is beaten
+/// does it open the universe map. Under Play is the day's own board on a card of its own — what
+/// day it is, what that day asks, and once it has been held, the stars it gave up, the time it
+/// took and the run of days it is part of. Under that, the archive of every daily there has been
+/// this year, and the tutorial for anybody who wants the walkthrough before the meadow.
 @MainActor
 struct TitleScreenView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -16,13 +17,22 @@ struct TitleScreenView: View {
     /// The board under the name, the tally and the buttons all arrive a beat behind the
     /// lettering.
     @State private var arrived = false
-    @State private var isPlaying = false
+    /// Where Play has sent the player: the meadow trail until that world is held, and the
+    /// universe map only once the meadow boss is beaten.
+    @State private var playDestination: PlayDestination?
     @State private var isTutorial = false
     @State private var isDailyOpen = false
     @State private var restoreSubmittedDaily = false
     @State private var isOfferingSubmittedDaily = false
     @State private var isArchiveOpen = false
     @State private var showsSettings = false
+    /// The meadow's opening film, over the title screen. It plays here rather than pushing
+    /// the map behind it, so that the stack stays a title screen with a map on top of it —
+    /// the same hand-off the game used before the universe map existed.
+    @State private var showsOpening = false
+    /// Whether the film that has just come down was the real thing rather than a player
+    /// changing their mind, and so whether the meadow is what happens next.
+    @State private var openingLedToTheMap = false
     /// The same progress the map is handed, so the stars on the tally above are the ones
     /// just won — and go the moment they are cleared from the settings sheet.
     @State private var progress: WorldProgress
@@ -80,8 +90,17 @@ struct TitleScreenView: View {
             .padding(.bottom, 18)
         }
         .toolbar(.hidden, for: .navigationBar)
-        .navigationDestination(isPresented: $isPlaying) {
-            UniverseMapView()
+        .navigationDestination(item: $playDestination) { destination in
+            switch destination {
+            case .meadow:
+                // Finishing the meadow's send-off reveals the universe: swap the trail for
+                // the cosmic map in place, so the boss's farewell leads straight into it.
+                WorldMapView(progress: progress) {
+                    playDestination = .universe
+                }
+            case .universe:
+                UniverseMapView()
+            }
         }
         .navigationDestination(isPresented: $isTutorial) {
             TutorialView()
@@ -122,6 +141,11 @@ struct TitleScreenView: View {
             SettingsView(progress: progress, daily: daily)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+        }
+        // The meadow is pushed as the film comes down rather than from inside it, so the
+        // two never fight over the screen.
+        .fullScreenCover(isPresented: $showsOpening, onDismiss: { openTheMeadow() }) {
+            CutSceneView(.opening()) { endTheOpening() }
         }
         .onAppear {
             // The map keeps its own copy of the stars while it is up; read them back so a
@@ -340,10 +364,13 @@ struct TitleScreenView: View {
         .buttonStyle(PlaqueButtonStyle(padding: 8))
     }
 
-    /// Where Play leads, and what it is played for.
+    /// Where Play leads, and what it is played for. The universe stays off the signpost until
+    /// the meadow has been held — until then Play is still a walk up Mudlark Meadow.
     private var signpost: some View {
         VStack(spacing: 3) {
-            Text("A universe of worlds to fence")
+            Text(progress.isTheWorldHeld
+                 ? "A universe of worlds to fence"
+                 : "\(world.name) · \(world.count) puzzles")
                 .font(.footnote.weight(.heavy))
             Text("Pen in as much mud as you can")
                 .font(.caption2.weight(.semibold))
@@ -357,11 +384,34 @@ struct TitleScreenView: View {
 
     // MARK: - Play
 
-    /// Where Play goes: out to the universe map, where the meadow is the first of many worlds.
-    /// Each world plays its own opening the first time it is entered, so the film that once
-    /// stood between the title and the meadow now stands between the map and each world.
+    /// Where Play goes. The universe map stays hidden until every pen in the meadow is held;
+    /// until then Play walks straight into Mudlark Meadow (through its opening film the first
+    /// time). Once the meadow boss is beaten, Play opens the universe map instead — and each
+    /// world past the meadow plays its own opening the first time it is entered.
     private func play() {
-        isPlaying = true
+        if progress.isTheWorldHeld {
+            playDestination = .universe
+        } else if progress.isTheOpeningDue {
+            showsOpening = true
+        } else {
+            playDestination = .meadow
+        }
+    }
+
+    /// The film is over, watched or skipped. It has had its one showing either way, and the
+    /// meadow is what it was always leading to.
+    private func endTheOpening() {
+        progress.markPlayed(.opening)
+        openingLedToTheMap = true
+        showsOpening = false
+    }
+
+    /// Called as the film comes down. A player who somehow leaves it by another road than
+    /// the one above is simply put back on the title screen.
+    private func openTheMeadow() {
+        guard openingLedToTheMap else { return }
+        openingLedToTheMap = false
+        playDestination = .meadow
     }
 
     // MARK: - Timing
@@ -452,6 +502,12 @@ private struct Breathing: ViewModifier {
             content
         }
     }
+}
+
+/// Where Play on the title screen leads. The meadow comes first; the universe only after it.
+private enum PlayDestination: Hashable {
+    case meadow
+    case universe
 }
 
 #Preview {

@@ -47,10 +47,19 @@ struct WorldMapView: View {
     /// progress already carries. Held apart from `world` below, which is that map.
     private let theme: WorldTheme
     private let farewellSpec: WorldFilmSpec?
+    /// Called when this world's send-off finishes, if the map was opened from the title rather
+    /// than from the universe. The title uses it to reveal the universe map; when the map was
+    /// itself opened from the universe, this is empty and `dismiss` is enough to go back.
+    private let onWorldHeld: (() -> Void)?
 
-    init(world game: GameWorld = .mudlarkMeadow, progress: WorldProgress = WorldProgress()) {
+    init(
+        world game: GameWorld = .mudlarkMeadow,
+        progress: WorldProgress = WorldProgress(),
+        onWorldHeld: (() -> Void)? = nil
+    ) {
         self.theme = game.theme
         self.farewellSpec = game.farewell
+        self.onWorldHeld = onWorldHeld
         _progress = State(initialValue: progress)
         _pigStop = State(initialValue: Double(progress.frontier))
     }
@@ -325,10 +334,16 @@ struct WorldMapView: View {
         farewellFilm = nil
     }
 
-    /// Once the send-off has come down, the world hands back to the universe map — where the
-    /// world just held now reads as held, and the next one has lit up.
+    /// Once the send-off has come down, the world hands on to the universe map — where the
+    /// world just held now reads as held, and the next one has lit up. Opened from the title
+    /// (the meadow, before the universe has been revealed), that hand-off is a callback that
+    /// swaps the trail for the cosmic map; opened from the universe itself, dismiss is enough.
     private func leaveForTheUniverse() {
-        dismiss()
+        if let onWorldHeld {
+            onWorldHeld()
+        } else {
+            dismiss()
+        }
     }
 
     /// Walks the pig on once a puzzle has been played and put away — but only if playing it

@@ -4,8 +4,9 @@
 `PuzzleLevel` carries a `maximumScore` that the game uses to tell a player there is
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
-an apple, `x` a skull, `P` the pig's tile, `D` a deer's) and a budget and it prints the
-best pen, an example of it, and star thresholds in the proportions the shipped levels use.
+an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's) and a budget and
+it prints the best pen, an example of it, and star thresholds in the proportions the
+shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -21,10 +22,11 @@ around its edge. Water costs nothing, which is the whole game. A skull is staked
 the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
 skull has to be shut in and paid for, or the wall has to go round it.
 
-A map with a deer on it as well as the pig is held by ground in two pieces just as
-happily as by one, since what has to hold is each animal rather than the pen: the search
-grows out from both animals at once and the ground it ends up with is connected to one
-or the other, so a wall shared between two enclosures is paid for once, like any other.
+A map with a second animal on it as well as the pig — a deer or a boar — is held by
+ground in two pieces just as happily as by one, since what has to hold is each animal
+rather than the pen: the search grows out from both animals at once and the ground it
+ends up with is connected to one or the other, so a wall shared between two enclosures
+is paid for once, like any other.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -48,7 +50,7 @@ WORTH = {"a": 5, "x": -5}
 # A skull is staked into the mud, and nothing can be built on top of it.
 SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on.
-ANIMALS = ("P", "D")
+ANIMALS = ("P", "D", "B")
 
 
 def parse(map_text):
