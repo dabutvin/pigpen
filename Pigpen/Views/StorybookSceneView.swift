@@ -229,6 +229,10 @@ struct WorldFilmView: View {
     StorybookSceneView(.thornwoodOpening()) {}
 }
 
+#Preview("Boss briefing") {
+    StorybookSceneView(.boarHollow()) {}
+}
+
 #Preview("Send-off") {
     StorybookSceneView(.thornwoodHeld()) {}
 }

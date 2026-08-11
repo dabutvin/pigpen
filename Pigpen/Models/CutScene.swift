@@ -322,18 +322,6 @@ extension CutScene {
     }
 }
 
-extension CutScene.Name {
-    /// The film that sets a level up before it opens, if it has one.
-    ///
-    /// Only the boss does. Every other map in the meadow is the same game on new ground —
-    /// there is nothing to say about it that the ground does not say itself — where Stag
-    /// Mere is the one that changes the rules, and a rule is worth eight seconds.
-    init?(briefingFor levelID: String) {
-        guard levelID == PuzzleLevel.stagMere.id else { return nil }
-        self = .stagMere
-    }
-}
-
 extension CutScene {
     /// Waits out the film.
     ///

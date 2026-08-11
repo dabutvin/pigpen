@@ -279,15 +279,27 @@ final class WorldProgress {
         !hasPlayed(.opening) && totalStars == 0
     }
 
-    /// The film owed before a level opens, if there is one still to play. Only the boss
-    /// has one, since it is the only map that changes the rules rather than the ground.
+    /// The film owed before a level opens, if the world keeps one for it and it has not been
+    /// played. Only a boss has one, since it is the only map in a world that changes the rules
+    /// rather than the ground.
     ///
-    /// Returns the film rather than a yes or no so that asking whether to stop and asking
-    /// what to play are one question. Two would be two things to keep in agreement.
-    func briefingDue(forLevelAt index: Int) -> CutScene.Name? {
-        guard world.nodes.indices.contains(index) else { return nil }
-        guard let briefing = CutScene.Name(briefingFor: world[index].id) else { return nil }
-        return hasPlayed(briefing) ? nil : briefing
+    /// Which films a world has is the world's business and which have been watched is this
+    /// one's, so the world is handed in rather than held: the meadow's briefing is a painted
+    /// `CutScene` and the thicket's a `StorybookScene`, and neither this nor the map it stops
+    /// need know which.
+    ///
+    /// Returns the film rather than a yes or no so that asking whether to stop and asking what
+    /// to play are one question. Two would be two things to keep in agreement.
+    ///
+    /// A level already held is never briefed, for the same reason the opening checks the stars
+    /// as well as its own flag: somebody who has stood both animals in two pens of their own
+    /// does not need telling there are two. That is what keeps a briefing added to a world
+    /// already out in the world from stopping the player who finished it before the film was
+    /// written.
+    func briefingDue(forLevelAt index: Int, in game: GameWorld) -> WorldFilmSpec? {
+        guard world.nodes.indices.contains(index), !isCleared(index) else { return nil }
+        guard let briefing = game.briefing(before: world[index].id) else { return nil }
+        return hasPlayed(sceneKey: briefing.key) ? nil : briefing
     }
 
     /// Every pen in the world held, which is the only thing that earns the last film.

@@ -42,7 +42,8 @@ struct WorldFilmSpec: Sendable {
 ///
 /// The map and the theme are the two halves the rest of the game reads — one for what a pen is
 /// worth, the other for what it looks like — and every world is the same game underneath. The
-/// films are what wrap it: an opening before the first field, a send-off once every pen is held.
+/// films are what wrap it: an opening before the first field, a send-off once every pen is held,
+/// and a briefing before any field that changes the rules rather than only the ground.
 struct GameWorld: Sendable {
     let theme: WorldTheme
     let map: WorldMap
@@ -51,29 +52,66 @@ struct GameWorld: Sendable {
     let opening: WorldFilmSpec?
     /// The film that sees the world out once every pen in it is held.
     let farewell: WorldFilmSpec?
+    /// The films that set a particular level up before it opens, by level id.
+    ///
+    /// Only a boss has one, in either world built so far. Every other field is the same game on
+    /// new ground — there is nothing to say about it that the ground does not say itself — where
+    /// a boss stands a second animal on the board and puts one budget on the pair, and a rule is
+    /// worth stopping nine seconds for.
+    let briefings: [String: WorldFilmSpec]
+
+    init(
+        theme: WorldTheme,
+        map: WorldMap,
+        opening: WorldFilmSpec? = nil,
+        farewell: WorldFilmSpec? = nil,
+        briefings: [String: WorldFilmSpec] = [:]
+    ) {
+        self.theme = theme
+        self.map = map
+        self.opening = opening
+        self.farewell = farewell
+        self.briefings = briefings
+    }
 
     var name: String { theme.name }
+
+    /// The film this world plays before a level opens, if it keeps one for it.
+    func briefing(before levelID: String) -> WorldFilmSpec? { briefings[levelID] }
 }
 
 extension GameWorld {
     /// Mudlark Meadow: the world the game has always shipped, now the first stop of many. Its
-    /// films stay the meadow's own painted ones, and keyed exactly as before so a player who
-    /// has already seen the opening is not sat back down in front of it.
+    /// films stay the meadow's own painted ones, and keyed exactly as before — the boss briefing
+    /// included — so a player who has already seen one is not sat back down in front of it.
     static let mudlarkMeadow = GameWorld(
         theme: .meadow,
         map: .mudlarkMeadow,
         opening: WorldFilmSpec(key: CutScene.Name.opening.rawValue) { .painted(.opening(start: $0)) },
         farewell: WorldFilmSpec(key: CutScene.Name.theMeadowHeld.rawValue) {
             .painted(.theMeadowHeld(start: $0))
-        }
+        },
+        briefings: [
+            PuzzleLevel.stagMere.id: WorldFilmSpec(key: CutScene.Name.stagMere.rawValue) {
+                .painted(.stagMere(start: $0))
+            }
+        ]
     )
 
     /// Thornwood Thicket: the second world, wrapped in storybook films until it earns painted
-    /// ones. The send-off points on past the trees, the way the meadow's points past the hills.
+    /// ones. The send-off points on past the trees, the way the meadow's points past the hills,
+    /// and Boar Hollow stops for a briefing the way Stag Mere does — it is the same board with
+    /// the same twist on it, and the woods should no more spring a second animal on a player
+    /// than the meadow did.
     static let thornwoodThicket = GameWorld(
         theme: .thornwood,
         map: .thornwoodThicket,
         opening: WorldFilmSpec(key: "thornwood-opening") { .storybook(.thornwoodOpening(start: $0)) },
-        farewell: WorldFilmSpec(key: "thornwood-held") { .storybook(.thornwoodHeld(start: $0)) }
+        farewell: WorldFilmSpec(key: "thornwood-held") { .storybook(.thornwoodHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.boarHollow.id: WorldFilmSpec(key: "boar-hollow-briefing") {
+                .storybook(.boarHollow(start: $0))
+            }
+        ]
     )
 }
