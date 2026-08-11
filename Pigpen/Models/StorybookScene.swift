@@ -223,6 +223,48 @@ extension StorybookScene {
         )
     }
 
+    /// Before the thicket's last clearing, the way `CutScene.stagMere` goes before the meadow's.
+    ///
+    /// Short on purpose, and for the same reason: a player standing at this signpost has fenced
+    /// eight fields of woods and does not need teaching how to fence a ninth. What they are owed
+    /// is the one thing this board does that no other board in the thicket does — there is a
+    /// second animal on it and a single budget for the pair — and that is three stills and under
+    /// nine seconds. The middle one is the story half, the same as the mere's: the far bank is
+    /// not empty ground, so the pen there is making room for what already lives in the hollow
+    /// rather than walling it out.
+    ///
+    /// It is lit for daylight where the thicket's send-off is lit after dark, because a briefing
+    /// wants reading rather than admiring.
+    static func boarHollow(start: Date = .now) -> Self {
+        Self(
+            key: "boar-hollow-briefing",
+            title: "Boar Hollow",
+            light: .forestDay,
+            shots: [
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🌲", "🍂", "🌿"],
+                    caption: "Boar Hollow. A pool across the wood.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐗",
+                    strewn: ["🌲", "🍄"],
+                    caption: "The boar had this hollow before you did.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌲", "🌲", "🍄"],
+                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    isCard: true,
+                    seconds: 3.3
+                )
+            ],
+            start: start
+        )
+    }
+
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
-    static var all: [StorybookScene] { [.thornwoodOpening(), .thornwoodHeld()] }
+    static var all: [StorybookScene] { [.thornwoodOpening(), .boarHollow(), .thornwoodHeld()] }
 }

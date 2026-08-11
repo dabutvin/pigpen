@@ -43,10 +43,10 @@ struct WorldMapView: View {
     /// player left mid-trail.
     @State private var arrived = false
 
-    /// The look and the send-off come from the whole world; the trail itself is the map the
-    /// progress already carries. Held apart from `world` below, which is that map.
-    private let theme: WorldTheme
-    private let farewellSpec: WorldFilmSpec?
+    /// The world this trail belongs to: the look that dresses it, the film that sees it out, and
+    /// the briefings it stops for. Held apart from `world` below, which is the trail itself —
+    /// that map is the one the progress already carries.
+    private let game: GameWorld
     /// Called when this world's send-off finishes, if the map was opened from the title rather
     /// than from the universe. The title uses it to reveal the universe map; when the map was
     /// itself opened from the universe, this is empty and `dismiss` is enough to go back.
@@ -57,14 +57,14 @@ struct WorldMapView: View {
         progress: WorldProgress = WorldProgress(),
         onWorldHeld: (() -> Void)? = nil
     ) {
-        self.theme = game.theme
-        self.farewellSpec = game.farewell
+        self.game = game
         self.onWorldHeld = onWorldHeld
         _progress = State(initialValue: progress)
         _pigStop = State(initialValue: Double(progress.frontier))
     }
 
     private var world: WorldMap { progress.world }
+    private var theme: WorldTheme { game.theme }
     private var colors: GamePalette.Pasture { theme.pasture(dark: colorScheme == .dark) }
     /// How much of the trail is the player's, which is as far as the pig has ever stood
     /// — walking back down to an old level does not shut the meadow behind you.
@@ -115,7 +115,7 @@ struct WorldMapView: View {
             }
         }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
-            CutSceneView(.named(waiting.film)) { endBriefing(waiting) }
+            WorldFilmView(film: waiting.film) { endBriefing(waiting) }
         }
         .fullScreenCover(item: $farewellFilm, onDismiss: { leaveForTheUniverse() }) { film in
             WorldFilmView(film: film) { endFarewell(film) }
@@ -298,8 +298,8 @@ struct WorldMapView: View {
 
             // A map with something to say about itself says it before the board comes up,
             // not over the top of one.
-            if let film = progress.briefingDue(forLevelAt: index) {
-                briefing = Briefing(stop: index, film: film)
+            if let spec = progress.briefingDue(forLevelAt: index, in: game) {
+                briefing = Briefing(stop: index, film: spec.raise())
             } else {
                 playing = index
             }
@@ -308,7 +308,7 @@ struct WorldMapView: View {
 
     /// The briefing is over, watched or skipped. It has had its one showing either way.
     private func endBriefing(_ waiting: Briefing) {
-        progress.markPlayed(waiting.film)
+        progress.markPlayed(sceneKey: waiting.film.key)
         briefedStop = waiting.stop
         briefing = nil
     }
@@ -324,7 +324,7 @@ struct WorldMapView: View {
     /// screen to slide away and for the pig to settle, so it lands on a map at rest rather
     /// than cutting over the top of one still moving.
     private func sendOff() async {
-        guard let spec = farewellSpec, progress.isFarewellDue(key: spec.key) else { return }
+        guard let spec = game.farewell, progress.isFarewellDue(key: spec.key) else { return }
         try? await Task.sleep(for: .milliseconds(650))
         farewellFilm = spec.raise()
     }
@@ -495,10 +495,10 @@ struct MapArrival {
     }
 }
 
-/// A level waiting behind the film that sets it up.
+/// A level waiting behind the film that sets it up — whichever kind of film its world keeps.
 private struct Briefing: Identifiable {
     let stop: Int
-    let film: CutScene.Name
+    let film: WorldFilm
 
     var id: Int { stop }
 }

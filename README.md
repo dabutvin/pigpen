@@ -228,8 +228,9 @@ the meadow at nothing.
 
 Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
-21 of the 24 stars below it before it opens, the same toll Stag Mere charges. Every pen is
-drawn out in [`solutions.md`](solutions.md).
+21 of the 24 stars below it before it opens, the same toll Stag Mere charges, and — like the
+mere — it stops for a briefing on the way in rather than springing its second animal on you.
+Every pen is drawn out in [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -339,7 +340,10 @@ reason to go to it.
 
 ### The cut scenes
 
-Three films so far, each played once and each with a **Skip** in the corner from a beat in. Skipping counts as having seen one.
+Six films so far — the meadow's three, painted shot by shot, and the thicket's three in
+storybook stills — each played once and each with a **Skip** in the corner from a beat in.
+Skipping counts as having seen one. Every world plays the same three: an opening before its
+first field, a briefing before its boss, and a send-off once every pen in it is held.
 
 #### The opening
 
@@ -399,6 +403,24 @@ it another world comes up out of the dark with a road drawn on towards it, still
 and without a name, because what is on it is nobody's business yet — except that somewhere
 on it a gate is standing open, which is where the opening started.
 
+#### Boar Hollow
+
+The thicket's boss gets the same nine seconds, in the storybook hand rather than painted:
+the pool that runs across the wood, the boar that had the hollow before you did, and
+the rule on a card — *twenty pieces, both of them held, or neither counts*. It is the mere's
+briefing done in the woods, because it is the mere's board done in the woods, and a world
+should no more spring a second animal on a player than the meadow did. Lit for daylight
+where the thicket's send-off is lit after dark, for the reason the mere's is lit flat.
+
+A briefing plays before a level that changes the rules, and no world so far has more than
+one — a boss is the only board that stands a second animal on the ground. Which level stops
+for which film is the world's own business: [`GameWorld`](Pigpen/Models/GameWorld.swift)
+carries its briefings by level id, so the thicket briefs Boar Hollow in its own storybook
+stills without the meadow or the map screen knowing which kind of film came up. A boss you
+have already held is never briefed — the same reason the opening checks the stars as well
+as its own flag, and what keeps a film written after a world has shipped from stopping the
+player who finished it first.
+
 #### How they are built
 
 Like the pasture behind the title and the lap of honour on a pen that holds, a film is a
@@ -406,6 +428,13 @@ clock rather than a queue of steps: [`CutScene`](Pigpen/Models/CutScene.swift) s
 shot is up at a given second and how far through it, and `CutSceneView` paints that. All
 three are the same machine — a list of shots, each held for a moment and captioned — so a
 fourth is a list and a few pictures rather than another screen.
+
+A themed world's films are the same clock with a lighter hand:
+[`StorybookScene`](Pigpen/Models/StorybookScene.swift) is a themed backdrop, a motif held
+over it and a line of type, timed to the frame the way a painted film is, so a new world
+can open, brief its boss and close on a film long before it has art of its own. `WorldFilm`
+wraps either kind and `WorldFilmView` plays it, which is why the map screen can stop for a
+briefing without knowing whether what comes up was painted or strewn.
 
 So any moment of any of them can be stopped and photographed, which is how CI shows all
 fourteen shots, and a player who asks for reduced motion gets every shot and every caption
@@ -637,13 +666,13 @@ Pigpen/
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # The meadow's films, as clocks: which shot is up when, and for how long
-│   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens on
+│   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens, briefs and closes on
 │   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
 │   ├── WorldTheme.swift         # A world's look: its light, its truffle/bramble skin, its boss silhouette
-│   ├── GameWorld.swift          # A world bundled: its map, its theme, and the films that wrap it
+│   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
