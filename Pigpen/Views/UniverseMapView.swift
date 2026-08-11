@@ -5,9 +5,9 @@ import UIKit
 /// a little planet with its boss shown on it.
 ///
 /// It opens from Play only once the meadow is held, and it is where a world's send-off lands —
-/// the meadow finished, the thicket lit up next, and ten more worlds standing out past them as
-/// silhouettes to go on for. A world opens once the one before it is held; tapping an open one
-/// drops into its trail, playing the world's own opening film first if it is owed.
+/// the world just finished behind you, the next one lit up ahead, and the rest standing out past
+/// them as silhouettes to go on for. A world opens once the one before it is held; tapping an
+/// open one drops into its trail, playing the world's own opening film first if it is owed.
 @MainActor
 struct UniverseMapView: View {
     @Environment(\.dismiss) private var dismiss

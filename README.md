@@ -36,7 +36,8 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   spot, and the best pen the map has in it gets its confetti in every colour there is. Ask
   for reduced motion and the field keeps still.
 - **The boss keeps two.** A world's last puzzle stands a second animal on the field as well
-  as the pig — a deer in the meadow, a boar in the thicket — and one budget has to hold both
+  as the pig — a deer in the meadow, a boar in the thicket, a wyrm on the mountain — and one
+  budget has to hold both
   of them. One pen round the pair or a pen apiece is up to you — a pen holds whatever ground
   it shuts in, whether that ground is in one piece or two — but an animal left loose loses
   the field however well the other one is held.
@@ -160,7 +161,8 @@ a **floor** — the least any of its fields may ask — and a world's floor has 
 floor of the world below it, while its opening field has to ask more than the last world's
 opening field did. The meadow floors at nothing and opens on a map with no trick in it; the
 thicket floors at 23% and opens at 25%, so the second world starts around where the first
-world's middle sat. Bosses are held to each other rather than to the floor: a boss is one
+world's middle sat; and Emberpeak floors at 28% and opens there too, which is above anything
+the thicket asked before its fourth field. Bosses are held to each other rather than to the floor: a boss is one
 budget split between two animals, so the gap it leaves against a squared-off pen understates
 it, and what is asked there is only that no world's boss splits its budget for less than the
 last one did.
@@ -171,16 +173,17 @@ the first line.
 ## The Universe
 
 Hold every pen in Mudlark Meadow and its send-off pulls back to the **universe map**: the
-meadow behind you, the next world lit up ahead, and ten more strung out past them through
+world behind you, the next one lit up ahead, and the rest strung out past them through
 space, each drawn as a little planet with its boss shown on it. A world opens once the one
 before it is held, so the map is a chain — finish a world to reach the next — and the pig
 carries the same game into every one of them.
 
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
-  dressing: the light the trail is drawn in, what the windfall and the hazard look like on
-  the ground, and the shape that waits at the end. The board underneath never knows the
-  difference, which is why one solver authors every level in the game.
+  dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
+  floor or bare scree — what the windfall and the hazard look like on that ground, and the
+  shape that waits at the end. The board underneath never knows the difference, which is why
+  one solver authors every level in the game.
 - **Each world plays its own films.** An opening the first time you walk into it, and a
   send-off once every pen is held — the send-off pointing on past the world, the way the
   meadow's points past the hills to a gate standing open somewhere else.
@@ -189,8 +192,8 @@ carries the same game into every one of them.
   whole journey is on the map from the first time you see it, so there is always somewhere to
   be going.
 
-Twelve worlds are drawn: **Mudlark Meadow** and **Thornwood Thicket** to play, then Emberpeak,
-Cogsworth City, Starfall Reaches, Gloamdeep Caverns, Lantern Carnival, Sunbaked Dunes,
+Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket** and **Emberpeak** to play,
+then Cogsworth City, Starfall Reaches, Gloamdeep Caverns, Lantern Carnival, Sunbaked Dunes,
 Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as silhouettes.
 Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
 films are already there.
@@ -231,6 +234,53 @@ of the wood with the pig north of it and a boar south, and one budget for both. 
 21 of the 24 stars below it before it opens, the same toll Stag Mere charges, and — like the
 mere — it stops for a briefing on the way in rather than springing its second animal on you.
 Every pen is drawn out in [`solutions.md`](solutions.md).
+
+### Emberpeak
+
+The third world, and the first that takes something away rather than adding to it. Past the
+tree line the pig has climbed a mountain that has never stopped smoking, so the trail runs
+over ash and cinder in hazed light, the windfall is a **chestnut** roasting where it fell and
+the hazard an **ember** burning in the ground — each worth exactly what its meadow twin was, a
+chestnut five tiles to shut in, an ember five to shut in with and no fencing at all.
+
+The mountain's own idea is that there is **no clean ground on it**. The meadow saved its
+treats for its last three fields and the thicket scattered them, but both of them handed out
+fields with nothing lying about at all; every one of Emberpeak's nine has at least one ember
+staked in it, so there is nowhere up here a wall runs straight without something in the way of
+it. Sometimes the answer is to swallow the ember and pay the five, sometimes to step the wall
+in beside it and give up a tile — which of the two is the whole of what most of these fields
+are asking.
+
+The other thing it does is **run dry**. Every field in both worlds below leans on water
+somewhere; **Basalt Flats** is the first field in the game with none on it at all — seventeen
+pieces, a bare shelf, two embers and nothing to build against but the shape of your own wall.
+There are fewer than a hundred tiles of water in the whole world, where the thicket has 140
+and the meadow 159.
+
+And it **climbs the whole way**. Where the meadow climbs for six fields and then orders the
+last three by what they scatter, the mountain has something on the ground everywhere, so it is
+sorted by what it asks from Cinder Slope's 28% up to Obsidian Corner's 38% — with the widest
+board in the game and then the boss after them, since neither is measured by that yardstick.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Cinder Slope | 9 | 1 ember | 18 | 25 | 28% |
+| 2 | Basalt Flats | 17 | 2 embers | 16 | 23 | 30% |
+| 3 | Ashfall Terrace | 13 | 1 chestnut, 1 ember | 21 | 31 | 32% |
+| 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 21 | 32 | 34% |
+| 5 | Sulphur Rill | 13 | 2 embers | 15 | 24 | 37% |
+| 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 17 | 27 | 37% |
+| 7 | Obsidian Corner | 10 | 1 ember | 21 | 34 | 38% |
+| 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 29 | 42 | 30% |
+| 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 32 | 39 | 17% |
+
+Smoulder Ridge holds the biggest pen on any world trail — 42, off sixteen pieces, three
+chestnuts and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself: the pig up on the north
+rim, the wyrm down on the crater floor, and one budget for the pair. It charges the same 21 of
+the 24 stars below it that Stag Mere and Boar Hollow charge and stops for the same briefing on
+the way in; what it adds is how unevenly it wants the budget split, since the rim is narrow
+ground and the crater floor is the widest in the world. Every pen is drawn out in
+[`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -340,8 +390,9 @@ reason to go to it.
 
 ### The cut scenes
 
-Six films so far — the meadow's three, painted shot by shot, and the thicket's three in
-storybook stills — each played once and each with a **Skip** in the corner from a beat in.
+Nine films so far — the meadow's three, painted shot by shot, and three apiece for the thicket
+and the mountain in storybook stills — each played once and each with a **Skip** in the corner
+from a beat in.
 Skipping counts as having seen one. Every world plays the same three: an opening before its
 first field, a briefing before its boss, and a send-off once every pen in it is held.
 
@@ -412,12 +463,20 @@ briefing done in the woods, because it is the mere's board done in the woods, an
 should no more spring a second animal on a player than the meadow did. Lit for daylight
 where the thicket's send-off is lit after dark, for the reason the mere's is lit flat.
 
+#### Wyrm Caldera
+
+The mountain's boss gets the same nine seconds again, and says the same three things: the
+lake in the summit, the wyrm that had the crater long before you did, and the rule on a card
+— *twenty pieces, both of them held, or neither counts*. Three worlds in, this is the shape a
+boss is announced in, and a player who has seen the mere and the hollow knows what the stop
+means before the first still is up.
+
 A briefing plays before a level that changes the rules, and no world so far has more than
 one — a boss is the only board that stands a second animal on the ground. Which level stops
 for which film is the world's own business: [`GameWorld`](Pigpen/Models/GameWorld.swift)
-carries its briefings by level id, so the thicket briefs Boar Hollow in its own storybook
-stills without the meadow or the map screen knowing which kind of film came up. A boss you
-have already held is never briefed — the same reason the opening checks the stars as well
+carries its briefings by level id, so the thicket briefs Boar Hollow and the mountain briefs
+Wyrm Caldera in their own storybook stills without the meadow or the map screen knowing which
+kind of film came up. A boss you have already held is never briefed — the same reason the opening checks the stars as well
 as its own flag, and what keeps a film written after a world has shipped from stopping the
 player who finished it first.
 
@@ -482,7 +541,7 @@ Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the scrip
 
 ### Adding a level
 
-A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
+A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar, `W` a wyrm — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
 
 ```bash
 Tools/level_search.py --budget 12 --plan <<'MAP'
@@ -494,15 +553,15 @@ Tools/level_search.py --budget 12 --plan <<'MAP'
 MAP
 ```
 
-It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: a skull takes no fencing, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel`, hang it on the trail in `WorldMap.mudlarkMeadow`, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in `PuzzleLevelTests`, which replays the pen and fails if the level stops giving up what it claims.
+It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: a skull takes no fencing, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in that world's tests, which replays the pen and fails if the level stops giving up what it claims.
 
 The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with skulls on it — walling round one can cost a plain block far more than it costs a shaped pen, and the second star has to stay under what the block is worth.
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
-A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
+A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A map with a `D` on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
+A map with a second animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
 The search carries its pens as bitmasks — one bit per tile of the board — rather than as sets of coordinates, which is the same search written so that it finishes in a second rather than half a minute. Nothing about which pens it keeps changed when it was rewritten, and the nine shipped levels come out at exactly the numbers they always did, which is what `PuzzleLevelTests` and `DifficultyTests` are there to say. That speed is what makes a year of daily puzzles possible at all.
 
@@ -563,7 +622,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, both world trails, five boards (including a thicket board of truffles and brambles), the settings sheet, a daily board and its archive and all fourteen shots of the three cut scenes in light + dark, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of truffles and brambles and a mountain board of chestnuts and embers), the settings sheet, a daily board and its archive and all fourteen shots of the three cut scenes in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -572,7 +631,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -671,9 +730,10 @@ Pigpen/
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
-│   ├── WorldTheme.swift         # A world's look: its light, its truffle/bramble skin, its boss silhouette
+│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its boss silhouette
 │   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
+│   ├── Emberpeak.swift          # Emberpeak: its nine levels and the trail up them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name

@@ -114,4 +114,23 @@ extension WorldTheme {
         accent: Color(red: 0.40, green: 0.62, blue: 0.36),
         accentDeep: Color(red: 0.20, green: 0.38, blue: 0.22)
     )
+
+    /// Emberpeak, the third world: the trees give out and the pig climbs a mountain that has
+    /// never stopped smoking. The windfall is a chestnut roasting where it fell and the
+    /// hazard an ember burning in the ash — each worth exactly what its meadow twin was, so
+    /// the board underneath is the board it always was.
+    static let emberpeak = WorldTheme(
+        id: "emberpeak",
+        name: "Emberpeak",
+        blurb: "A mountain that never stops smoking. Chestnuts in the ash, embers under it.",
+        day: .emberDay,
+        dusk: .emberDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🌰", bonusScale: 0.56, bonusName: "chestnut",
+            hazardGlyph: "🔥", hazardScale: 0.62, hazardName: "ember"
+        ),
+        boss: BossMark(glyph: "🐉", name: "the wyrm"),
+        accent: Color(red: 0.92, green: 0.47, blue: 0.26),
+        accentDeep: Color(red: 0.55, green: 0.18, blue: 0.12)
+    )
 }

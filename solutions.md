@@ -22,7 +22,8 @@ found the best pen it has in it, which is the only place the answer belongs.
 #  a fence piece            o  ground inside the pen
 P  the pig                  .  mud outside the pen
 D  the deer                 B  the boar
-a  an apple                 ~  water
+W  the wyrm                 ~  water
+a  an apple
 x  a skull
 ```
 
@@ -496,6 +497,254 @@ three truffles, two brambles, 34.
 Boxing the pig into its own tile for four pieces and pouring the other sixteen into the
 boar's shore is the tempting shortcut. The north shore gives up far more than four pieces'
 worth of ground when it is abandoned, which is what makes the split the puzzle.
+
+It asks for 21 of the 24 stars below it before it opens.
+
+---
+
+# Emberpeak
+
+The third world, solved the same way and drawn the same way. A chestnut takes the meadow's
+apple and an ember its skull, so an `a` below is a chestnut worth five tiles to shut in, and
+an `x` an ember worth five fewer that no piece will build on — exactly as before, and a `W`
+is the wyrm, held like the deer and the boar before it.
+
+What the mountain does differently is refuse to hand out clean ground: every field up here
+has at least one ember staked in it, so there is nowhere a wall runs straight without
+something in the way. It is also the dry world — Basalt Flats has no water on it at all,
+which no field in either world below can say — and it climbs the whole way from Cinder Slope
+to Obsidian Corner rather than for six stops and then sorting by what it scatters.
+
+| # | Level | Pieces | Ground held | In the pen | Score | Squared off |
+|---|---|---|---|---|---|---|
+| 1 | Cinder Slope | 9 | 25 | — | 25 | 18 |
+| 2 | Basalt Flats | 17 | 23 | — | 23 | 16 |
+| 3 | Ashfall Terrace | 13 | 31 | 1 chestnut, 1 ember | 31 | 21 |
+| 4 | Chestnut Scree | 12 | 27 | 2 chestnuts, 1 ember | 32 | 21 |
+| 5 | Sulphur Rill | 13 | 24 | — | 24 | 15 |
+| 6 | Fumarole Field | 14 | 17 | 2 chestnuts | 27 | 17 |
+| 7 | Obsidian Corner | 10 | 39 | 1 ember | 34 | 21 |
+| 8 | Smoulder Ridge | 16 | 32 | 3 chestnuts, 1 ember | 42 | 29 |
+| 9 | Wyrm Caldera | 20 | 29 | 3 chestnuts, 1 ember | 39 | 32 |
+
+## 1. Cinder Slope — 9 pieces, 25
+
+```
+..........
+..........
+..~~~~~~~~
+..~oooooo#
+..~oPoooo#
+..~oooooo#
+..~oooo##.
+..~ooo#x..
+...###....
+```
+
+The melt channel walls the west and the top, and the two sides left over are yours. Nine
+pieces squared off under it hold a block of 18, which is worth two stars.
+
+The third comes from stepping the wall down the south-east instead — and from what the wall
+does when it reaches the ember. It cannot be laid on one, so it steps in beside it and
+leaves it out in the corner, which costs a tile of ground and saves the five points the
+ember would have charged to be shut in. 25 tiles, and every one of them the channel can be
+made to keep.
+
+## 2. Basalt Flats — 17 pieces, 23
+
+```
+..........
+..........
+..#.......
+.#o#x.....
+#ooo#.....
+#oooP#....
+#ooooo#...
+#oooo#x...
+#oooo#....
+.#oo#.....
+..##......
+```
+
+No water anywhere. Every pen in the two worlds below leant on a lake or a brook somewhere;
+this one leans on nothing, and the whole of it is paid for out of the seventeen pieces.
+
+Which makes it the plainest statement of what a shaped wall is worth. The best block those
+seventeen can square off holds 16 tiles. The same seventeen run out as a ring — an octagon
+pulled in beside each of the two embers — hold 23. Neither ember is inside: on a board with
+nothing free on it, five points is a lot to pay for a tile.
+
+## 3. Ashfall Terrace — 13 pieces, 31
+
+```
+..........
+.~~~~~~~..
+#ooooooo#.
+#oPooooao#
+#ooooooo#.
+.#ooxoo#..
+..#ooo#...
+...#o#....
+....#.....
+```
+
+The tarn along the top is the only free wall on the terrace, and the chestnut is out east
+where no tidy pen would ever go. The pen that wins is neither tidy nor cheap: it runs out
+far enough east to take the chestnut in, then tapers away south in a long wedge.
+
+The ember it swallows on the way is the point of the field. Walling round it would cut the
+pen in two — it is in the middle of the ground, not out at the edge of it — so the pen takes
+it in and pays the five. 31 tiles and a chestnut, less the ember, is 31, against a block
+worth 21.
+
+## 4. Chestnut Scree — 12 pieces, 32
+
+```
+..........
+~~~~~~~~~~
+#oooooooo#
+#ooPooao#.
+#oooooo#..
+.#ooxo#...
+..#ao#....
+...##.....
+..........
+```
+
+Fern Gully's lesson on ground with something staked in it. The tarn bars the whole top, so
+the ground under it is cheap to wall, and the chestnuts are strung out south where the
+walling is dear.
+
+A block under the tarn holds one chestnut and 16 tiles of ground for 21. The tongue that
+reaches down for the second gives up the corners to do it and swallows the ember on the way
+— 27 tiles, two chestnuts, one ember, 32. Five points for a chestnut is worth four tiles of
+detour, and it is worth the ember as well.
+
+## 5. Sulphur Rill — 13 pieces, 24
+
+```
+.....####~
+....#oooo~
+...#Poooo~
+..#oooooo~
+..x#ooooo~
+....#o#oo~
+.....#x#o~
+........#~
+.........~
+```
+
+The rill down the east edge is the free wall, and the two embers are the field. There is no
+block worth having here: every rectangle big enough to be worth the budget wants a wall over
+one ember or the other, and an ember takes no fencing at all. Squaring off clear of both is
+worth 15.
+
+The pen that wins keeps out of the way of both instead. Its west wall runs down the diagonal
+tight past the upper ember, and it pinches right in round the lower one — that notch two
+rows from the bottom is a wall built round a tile rather than over it — so it holds 24
+without paying either of them a thing.
+
+## 6. Fumarole Field — 14 pieces, 27
+
+```
+..........
+.....#....
+..~~~o#...
+...x#oo#..
+...#Pooo#.
+..#ooooa#.
+..x#ooo#..
+...#ao#...
+....##....
+..........
+```
+
+Two vents either side of the pig, a chestnut beyond each of them, and a tarn at the head of
+the field. The embers stand where a pen would want its west wall twice over, so the ground
+this field gives up is a lozenge threaded between them rather than anything square.
+
+It is the smallest pen on the mountain and one of the best paid: 17 tiles, but both
+chestnuts are inside it, which is 27 against a block worth 17. The vents themselves cost
+nothing — the wall is laid one tile clear of each.
+
+## 7. Obsidian Corner — 10 pieces, 34
+
+```
+~~~~~~~~~
+~ooooooo#
+~ooooooo#
+~ooPoooo#
+~oooooo#.
+~oooxo#..
+~oooo#...
+~ooo#....
+.###.....
+```
+
+The mountain's staircase, and the widest gap on the trail. Water takes the whole north and
+west, so the pen needs two walls of its own and the puzzle is entirely their shape: ten
+pieces on the diagonal from shore to shore hold 39 tiles, where the best right-angled block
+those ten can wall holds 21.
+
+The ember in the middle of it is the one this world lets you swallow. Every wall that steps
+round it gives up a good deal more than five tiles of that corner to do it, so it goes
+inside and is paid for: 39 tiles less five is 34.
+
+## 8. Smoulder Ridge — 16 pieces, 42
+
+```
+..........
+.~~~~.....
+.~~~~~....
+..~~~~#...
+.#ooooo#..
+#oPooooa#.
+#oooxoooo#
+.#aoooooo#
+..#o#ooa#.
+...#x#o#..
+......#...
+```
+
+The widest board on the mountain, and the biggest pen on any world trail. Cut to the shape of the
+tarn, the pen gathers all three chestnuts on the way round: 32 tiles, three chestnuts, one
+ember, 42.
+
+Both embers are treated exactly as the ground around them asks. The upper one sits in the
+middle of the pen and is bought for five; the lower one is out on the southern edge, where
+stepping the wall in beside it costs a single tile — so it is left outside, and the notch it
+makes is the difference between a good pen here and the best one.
+
+## 9. Wyrm Caldera — 20 pieces, 39
+
+```
+...#......
+..#a#.....
+.#Poo#....
+#ooo#x....
+.~~~~~~~..
+.~~~~~~~~.
+#o~~~~~~o#
+#oooxoooo#
+#aooooWo#.
+.#ooooa#..
+..#####...
+```
+
+The boss. The pig is up on the north rim, the wyrm is down on the crater floor, the lake is
+between them, and one budget has to hold the pair. As at the mere and the hollow, two pens
+sharing the water beat one pen dragged the whole way round it.
+
+What the caldera adds is how unevenly the budget wants splitting. The rim is narrow ground:
+seven pieces buy the pig 7 tiles and the chestnut lying on them, and an eighth would buy
+almost nothing, because there is nothing up there to buy. The other thirteen go to the
+crater floor, which is the widest ground in the world — 22 tiles, two chestnuts and the
+ember in the middle of it, bought for five rather than walled round. 29 tiles, three
+chestnuts, one ember, 39.
+
+The ember above the pig is left outside for the same reason the one below is taken in: it
+is at the edge of that pen rather than in the middle of it, so the wall steps in beside it
+and gives up one tile instead of five points.
 
 It asks for 21 of the 24 stars below it before it opens.
 

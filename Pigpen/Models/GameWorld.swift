@@ -114,4 +114,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Emberpeak: the third world, wrapped in storybook films the way the thicket is. The
+    /// send-off points on down the far side of the mountain to the city, the way the
+    /// thicket's points past the trees to the mountain, and Wyrm Caldera stops for a briefing
+    /// because it stands a second animal on the board — the same courtesy Stag Mere and Boar
+    /// Hollow pay.
+    static let emberpeak = GameWorld(
+        theme: .emberpeak,
+        map: .emberpeak,
+        opening: WorldFilmSpec(key: "emberpeak-opening") { .storybook(.emberpeakOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "emberpeak-held") { .storybook(.emberpeakHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.wyrmCaldera.id: WorldFilmSpec(key: "wyrm-caldera-briefing") {
+                .storybook(.wyrmCaldera(start: $0))
+            }
+        ]
+    )
 }
