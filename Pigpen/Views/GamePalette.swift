@@ -62,10 +62,20 @@ enum GamePalette {
         let canopyShade: Color
         /// Dusk gets stars and fireflies where daylight gets birds and pollen.
         let isNight: Bool
-        /// Whether the ground is wooded rather than open pasture. The same trail and the
-        /// same board run through both; what changes is the dressing around them — denser
-        /// trees and leaf litter in a thicket, mown bands and hay in a meadow.
-        let isWooded: Bool
+        /// What the ground is made of. The same trail and the same board run through every
+        /// world; what changes is the dressing around them — mown bands, wildflowers and a
+        /// barn on pasture, leaf litter and ferns under a canopy, ash drifts and cinder
+        /// where the mountain has burnt everything off.
+        let cover: Cover
+    }
+
+    /// The three kinds of ground the game draws. A world picks one and the backdrop and the
+    /// world map both follow it, which is the whole of what makes a thicket read as woods
+    /// and a mountain as bare rock rather than as a meadow tinted a different colour.
+    enum Cover: Sendable {
+        case pasture
+        case woodland
+        case scree
     }
 }
 
@@ -83,7 +93,7 @@ extension GamePalette.Pasture {
         canopy: Color(red: 0.36, green: 0.61, blue: 0.31),
         canopyShade: Color(red: 0.25, green: 0.46, blue: 0.24),
         isNight: false,
-        isWooded: false
+        cover: .pasture
     )
 
     /// The meadow at sunrise, which is the only light the opening film is shot in.
@@ -105,7 +115,7 @@ extension GamePalette.Pasture {
         canopy: Color(red: 0.30, green: 0.50, blue: 0.28),
         canopyShade: Color(red: 0.20, green: 0.36, blue: 0.22),
         isNight: false,
-        isWooded: false
+        cover: .pasture
     )
 
     static let dusk = Self(
@@ -121,7 +131,7 @@ extension GamePalette.Pasture {
         canopy: Color(red: 0.12, green: 0.21, blue: 0.20),
         canopyShade: Color(red: 0.07, green: 0.13, blue: 0.13),
         isNight: true,
-        isWooded: false
+        cover: .pasture
     )
 
     /// The second world's daylight: a wooded thicket, darker and closer than the open
@@ -141,7 +151,7 @@ extension GamePalette.Pasture {
         canopy: Color(red: 0.16, green: 0.34, blue: 0.18),
         canopyShade: Color(red: 0.10, green: 0.22, blue: 0.14),
         isNight: false,
-        isWooded: true
+        cover: .woodland
     )
 
     /// The thicket after dark: the canopy closes the sky right down, and what light there is
@@ -159,6 +169,45 @@ extension GamePalette.Pasture {
         canopy: Color(red: 0.07, green: 0.15, blue: 0.12),
         canopyShade: Color(red: 0.04, green: 0.09, blue: 0.08),
         isNight: true,
-        isWooded: true
+        cover: .woodland
+    )
+
+    /// The third world by day: a mountain that has burnt everything off itself. The sky is
+    /// hazed with what the peak is giving off rather than blue, and the ground under it is
+    /// ash, cinder and the odd scorched pine — the same trail and the same board as
+    /// everywhere else, on ground with nothing growing on it.
+    static let emberDay = Self(
+        skyTop: Color(red: 0.52, green: 0.44, blue: 0.48),
+        skyHorizon: Color(red: 0.96, green: 0.72, blue: 0.47),
+        disc: Color(red: 1.00, green: 0.83, blue: 0.48),
+        discHalo: Color(red: 1.00, green: 0.68, blue: 0.40),
+        cloud: Color(red: 0.72, green: 0.64, blue: 0.62),
+        farHill: Color(red: 0.34, green: 0.24, blue: 0.24),
+        ground: Color(red: 0.42, green: 0.34, blue: 0.32),
+        foreground: Color(red: 0.31, green: 0.24, blue: 0.23),
+        blade: Color(red: 0.24, green: 0.18, blue: 0.17),
+        canopy: Color(red: 0.38, green: 0.29, blue: 0.27),
+        canopyShade: Color(red: 0.26, green: 0.19, blue: 0.18),
+        isNight: false,
+        cover: .scree
+    )
+
+    /// The mountain after dark, which is when it shows what it is doing: the sky goes out
+    /// but the ground keeps a red in it, because the light down here is coming up through
+    /// the cinder rather than down out of the sky.
+    static let emberDusk = Self(
+        skyTop: Color(red: 0.06, green: 0.05, blue: 0.09),
+        skyHorizon: Color(red: 0.32, green: 0.14, blue: 0.11),
+        disc: Color(red: 0.98, green: 0.90, blue: 0.86),
+        discHalo: Color(red: 0.86, green: 0.46, blue: 0.30),
+        cloud: Color(red: 0.24, green: 0.16, blue: 0.16),
+        farHill: Color(red: 0.16, green: 0.10, blue: 0.10),
+        ground: Color(red: 0.14, green: 0.10, blue: 0.10),
+        foreground: Color(red: 0.10, green: 0.07, blue: 0.07),
+        blade: Color(red: 0.07, green: 0.05, blue: 0.05),
+        canopy: Color(red: 0.18, green: 0.11, blue: 0.10),
+        canopyShade: Color(red: 0.11, green: 0.07, blue: 0.07),
+        isNight: true,
+        cover: .scree
     )
 }

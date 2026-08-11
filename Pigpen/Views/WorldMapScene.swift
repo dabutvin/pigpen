@@ -2,9 +2,9 @@ import Foundation
 import SwiftUI
 
 /// The meadow the trail runs through: fields, trees, hay and a barn at the bottom
-/// where the pig set out from. A wooded world keeps the same trail and draws it the same
-/// way — denser trees, leaf litter, ferns and a hollow stump where the meadow had mown
-/// bands, wildflowers, hay and a barn.
+/// where the pig set out from. Every other world keeps the same trail and draws it the same
+/// way, on its own ground — denser trees, leaf litter, ferns and a hollow stump in a
+/// thicket; ash, loose rock, scorched pines and a cairn on a mountain.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
 /// path or on a signpost however wide the screen is. It is drawn once rather than on a
@@ -39,10 +39,10 @@ private struct Meadow {
         for place in scenery() {
             draw(place, in: &context)
         }
-        if colors.isWooded {
-            drawHollow(in: &context)
-        } else {
-            drawBarn(in: &context)
+        switch colors.cover {
+        case .pasture: drawBarn(in: &context)
+        case .woodland: drawHollow(in: &context)
+        case .scree: drawCairn(in: &context)
         }
     }
 
@@ -51,10 +51,10 @@ private struct Meadow {
     private func drawFields(in context: inout GraphicsContext) {
         context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(colors.ground))
 
-        if colors.isWooded {
-            drawLeafLitter(in: &context)
-        } else {
-            drawMowing(in: &context)
+        switch colors.cover {
+        case .pasture: drawMowing(in: &context)
+        case .woodland: drawLeafLitter(in: &context)
+        case .scree: drawAshDrifts(in: &context)
         }
     }
 
@@ -103,6 +103,34 @@ private struct Meadow {
         }
     }
 
+    /// Drifts of ash with the cinder showing through, so the mountain's trail runs over
+    /// burnt ground rather than through a paddock painted grey.
+    private func drawAshDrifts(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_493)
+        for index in 0..<30 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 44...120))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.6,
+                    y: centre.y - spread * 0.24,
+                    width: spread * 1.2,
+                    height: spread * 0.48
+                )),
+                with: .color(
+                    index % 3 == 0
+                        ? Color(red: 0.42, green: 0.14, blue: 0.08)
+                            .opacity(colors.isNight ? 0.34 : 0.20)
+                        : Color(red: 0.72, green: 0.68, blue: 0.66)
+                            .opacity(colors.isNight ? 0.08 : 0.22)
+                )
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         var path = Path()
@@ -146,9 +174,14 @@ private struct Meadow {
         context.fill(circle(at: disc, radius: radius), with: .color(colors.disc))
 
         // A wooded sky keeps less open air: fewer, softer clouds under a canopy that
-        // reaches up into the hills.
+        // reaches up into the hills. A mountain sky is hazed rather than clouded, so what
+        // is up there is thin and hangs low.
         var scatter = Scatter(seed: 311)
-        let clouds = colors.isWooded ? 1 : 3
+        let clouds: Int = switch colors.cover {
+        case .pasture: 3
+        case .woodland: 1
+        case .scree: 2
+        }
         for _ in 0..<clouds {
             let centre = CGPoint(
                 x: CGFloat(scatter.next(in: 0.08...0.72)) * size.width,
@@ -156,7 +189,7 @@ private struct Meadow {
             )
             context.fill(
                 cloud(at: centre, width: size.width * CGFloat(scatter.next(in: 0.20...0.32))),
-                with: .color(colors.cloud.opacity(colors.isNight ? 0.55 : (colors.isWooded ? 0.55 : 0.9)))
+                with: .color(colors.cloud.opacity(cloudOpacity))
             )
         }
     }
@@ -180,24 +213,29 @@ private struct Meadow {
     }
 
     /// The hills the world runs out into, and the hedge along the foot of them. A thicket
-    /// gets a taller dark tree line instead of a low hedge, so the sky closes sooner.
+    /// gets a taller dark tree line instead of a low hedge, so the sky closes sooner; a
+    /// mountain gets the peak itself, standing over the trail with smoke coming off it.
     private func drawHills(in context: inout GraphicsContext) {
         var hills = Path()
         hills.move(to: CGPoint(x: 0, y: horizon))
         hills.addQuadCurve(
             to: CGPoint(x: size.width * 0.46, y: horizon),
-            control: CGPoint(x: size.width * 0.22, y: horizon - (colors.isWooded ? 72 : 54))
+            control: CGPoint(x: size.width * 0.22, y: horizon - (colors.cover == .woodland ? 72 : 54))
         )
         hills.addQuadCurve(
             to: CGPoint(x: size.width, y: horizon),
-            control: CGPoint(x: size.width * 0.74, y: horizon - (colors.isWooded ? 96 : 78))
+            control: CGPoint(x: size.width * 0.74, y: horizon - (colors.cover == .woodland ? 96 : 78))
         )
         hills.addLine(to: CGPoint(x: size.width, y: horizon + 26))
         hills.addLine(to: CGPoint(x: 0, y: horizon + 26))
         hills.closeSubpath()
         context.fill(hills, with: .color(colors.farHill))
 
-        if colors.isWooded {
+        if colors.cover == .scree {
+            drawPeak(in: &context)
+        }
+
+        if colors.cover == .woodland {
             drawCanopyLine(in: &context)
         } else {
             var hedge = Path()
@@ -212,6 +250,56 @@ private struct Meadow {
                 style: StrokeStyle(lineWidth: 12, lineCap: .round)
             )
         }
+    }
+
+    /// How solid what is up in the sky reads: a full white cloud over the meadow, something
+    /// thinner over a canopy or a peak, and everything faint after dark.
+    private var cloudOpacity: Double {
+        if colors.isNight { return 0.55 }
+        return colors.cover == .pasture ? 0.9 : 0.55
+    }
+
+    /// The peak itself, standing up out of the hills with smoke coming off the top of it.
+    /// It is the one thing on this screen that says where the trail is going, so it is drawn
+    /// behind the tree line and the signposts and never over them.
+    private func drawPeak(in context: inout GraphicsContext) {
+        let foot = horizon + 26
+        let apex = CGPoint(x: size.width * 0.62, y: horizon - 104)
+        let spread = size.width * 0.34
+
+        var cone = Path()
+        cone.move(to: CGPoint(x: apex.x - spread, y: foot))
+        cone.addLine(to: CGPoint(x: apex.x - spread * 0.16, y: apex.y))
+        // The crater: the summit is a notch rather than a point.
+        cone.addLine(to: CGPoint(x: apex.x, y: apex.y + 12))
+        cone.addLine(to: CGPoint(x: apex.x + spread * 0.18, y: apex.y - 4))
+        cone.addLine(to: CGPoint(x: apex.x + spread, y: foot))
+        cone.closeSubpath()
+        context.fill(cone, with: .color(colors.canopyShade))
+
+        // The lit western flank, the way the light falls on everything else in the game.
+        var flank = Path()
+        flank.move(to: CGPoint(x: apex.x - spread, y: foot))
+        flank.addLine(to: CGPoint(x: apex.x - spread * 0.16, y: apex.y))
+        flank.addLine(to: CGPoint(x: apex.x - spread * 0.06, y: foot))
+        flank.closeSubpath()
+        context.fill(flank, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.05 : 0.12)))
+
+        // What the mountain is always doing, in three rising puffs.
+        for step in 0..<3 {
+            let lift = CGFloat(step)
+            context.fill(
+                circle(
+                    at: CGPoint(x: apex.x + lift * 9, y: apex.y - 14 - lift * 26),
+                    radius: 12 + lift * 7
+                ),
+                with: .color(colors.cloud.opacity(colors.isNight ? 0.22 : 0.34))
+            )
+        }
+        context.fill(
+            circle(at: CGPoint(x: apex.x, y: apex.y + 6), radius: 7),
+            with: .color(Color(red: 0.95, green: 0.42, blue: 0.16).opacity(colors.isNight ? 0.85 : 0.5))
+        )
     }
 
     /// A run of dark crowns along the horizon, so the thicket feels closed in rather than
@@ -260,8 +348,8 @@ private struct Meadow {
         var scatter = Scatter(seed: 4_071)
         var places: [Place] = []
 
-        let stepAcross: CGFloat = colors.isWooded ? 46 : 68
-        let stepDown: CGFloat = colors.isWooded ? 48 : 66
+        let stepAcross: CGFloat = colors.cover == .woodland ? 46 : 68
+        let stepDown: CGFloat = colors.cover == .woodland ? 48 : 66
         var down = horizon + 34
         while down < size.height - 40 {
             var across: CGFloat = 22
@@ -272,11 +360,11 @@ private struct Meadow {
                 )
                 let kind = growth(scatter.next())
                 let scale = CGFloat(scatter.next(in: 0.8...1.25))
-                    * (colors.isWooded && kind == .tree ? 1.2 : 1)
+                    * (colors.cover == .woodland && kind == .tree ? 1.2 : 1)
                 across += stepAcross
 
-                guard nearest(to: spot, among: waymarks) > (colors.isWooded ? 44 : 54),
-                      nearest(to: spot, among: stops) > (colors.isWooded ? 78 : 92),
+                guard nearest(to: spot, among: waymarks) > (colors.cover == .woodland ? 44 : 54),
+                      nearest(to: spot, among: stops) > (colors.cover == .woodland ? 78 : 92),
                       distance(from: spot, to: landmarkStand) > 96
                 else { continue }
                 places.append(Place(at: spot, growth: kind, size: scale))
@@ -288,7 +376,8 @@ private struct Meadow {
     }
 
     private func growth(_ roll: Double) -> Growth {
-        if colors.isWooded {
+        switch colors.cover {
+        case .woodland:
             switch roll {
             case ..<0.48: .tree
             case ..<0.70: .bush
@@ -296,7 +385,16 @@ private struct Meadow {
             case ..<0.93: .rock
             default: .stump
             }
-        } else {
+        case .scree:
+            // Burnt ground: mostly loose rock, with the odd dead stump and a pine that
+            // came through it.
+            switch roll {
+            case ..<0.56: .rock
+            case ..<0.78: .stump
+            case ..<0.90: .bush
+            default: .tree
+            }
+        case .pasture:
             switch roll {
             case ..<0.34: .tree
             case ..<0.52: .bush
@@ -332,8 +430,24 @@ private struct Meadow {
             with: .color(GamePalette.rail)
         )
 
+        // A pine that came through the burn: bare, dark and pointed, rather than the round
+        // crown either of the green worlds grows.
+        if colors.cover == .scree {
+            var pine = Path()
+            for tier in 0..<3 {
+                let lift = spread * (1.34 - CGFloat(tier) * 0.34)
+                let width = spread * (0.42 + CGFloat(tier) * 0.20)
+                pine.move(to: CGPoint(x: foot.x - width, y: foot.y - lift + spread * 0.22))
+                pine.addLine(to: CGPoint(x: foot.x, y: foot.y - lift - spread * 0.22))
+                pine.addLine(to: CGPoint(x: foot.x + width, y: foot.y - lift + spread * 0.22))
+                pine.closeSubpath()
+            }
+            context.fill(pine, with: .color(colors.canopyShade))
+            return
+        }
+
         var canopy = Path()
-        if colors.isWooded {
+        if colors.cover == .woodland {
             // A taller, more irregular crown so a thicket tree is not the meadow's lollipop
             // painted a darker green.
             canopy.addEllipse(in: CGRect(
@@ -367,7 +481,7 @@ private struct Meadow {
             ))
         }
         context.fill(canopy, with: .color(colors.canopy))
-        if colors.isWooded {
+        if colors.cover == .woodland {
             context.fill(canopy, with: .color(colors.canopyShade.opacity(0.35)))
         }
 
@@ -377,7 +491,10 @@ private struct Meadow {
                 at: CGPoint(x: foot.x - spread * 0.24, y: foot.y - spread * 1.02),
                 radius: spread * 0.22
             ),
-            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : (colors.isWooded ? 0.12 : 0.22)))
+            with: .color(
+                GamePalette.cream
+                    .opacity(colors.isNight ? 0.08 : (colors.cover == .woodland ? 0.12 : 0.22))
+            )
         )
     }
 
@@ -630,6 +747,63 @@ private struct Meadow {
                 width: wide * 0.34, height: tall * 0.14
             )),
             with: .color(colors.canopy.opacity(0.9))
+        )
+    }
+
+    /// A cairn at the foot of the mountain trail, with a lantern burning in it — the peak's
+    /// answer to the barn the pig came out of and the stump it went past in the woods.
+    /// Somebody has been up here before, and this is what they left.
+    private func drawCairn(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 58
+        let tall: CGFloat = 56
+
+        shadow(in: &context, at: CGPoint(x: centre.x, y: centre.y + tall * 0.34), width: wide)
+
+        // Stones stacked smallest at the top, each one a little off the one below it.
+        let courses: [(lift: Double, width: Double, drift: Double)] = [
+            (0.30, 0.86, 0.00),
+            (0.06, 0.70, 0.06),
+            (-0.16, 0.54, -0.05),
+            (-0.34, 0.36, 0.03)
+        ]
+        for course in courses {
+            let stone = CGRect(
+                x: centre.x + wide * CGFloat(course.drift) - wide * CGFloat(course.width) / 2,
+                y: centre.y + tall * CGFloat(course.lift) - tall * 0.2,
+                width: wide * CGFloat(course.width),
+                height: tall * 0.22
+            )
+            context.fill(
+                Path(roundedRect: stone, cornerRadius: tall * 0.09),
+                with: .color(GamePalette.stone.opacity(colors.isNight ? 0.55 : 0.9))
+            )
+            context.fill(
+                Path(roundedRect: CGRect(
+                    x: stone.minX + stone.width * 0.1, y: stone.minY + stone.height * 0.14,
+                    width: stone.width * 0.44, height: stone.height * 0.3
+                ), cornerRadius: tall * 0.05),
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : 0.24))
+            )
+        }
+
+        // The lantern somebody wedged into the top of it, and the light it throws.
+        let lamp = CGPoint(x: centre.x + wide * 0.03, y: centre.y - tall * 0.44)
+        context.fill(
+            circle(at: lamp, radius: tall * 0.26),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 1.00, green: 0.66, blue: 0.30).opacity(colors.isNight ? 0.5 : 0.28),
+                    Color(red: 1.00, green: 0.66, blue: 0.30).opacity(0)
+                ]),
+                center: lamp,
+                startRadius: 0,
+                endRadius: tall * 0.26
+            )
+        )
+        context.fill(
+            circle(at: lamp, radius: tall * 0.08),
+            with: .color(Color(red: 0.98, green: 0.78, blue: 0.36))
         )
     }
 

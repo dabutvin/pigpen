@@ -4,8 +4,9 @@ import UIKit
 
 /// The ground a board is cut out of: the same fields the world map's trail runs through,
 /// laid behind the puzzle so a level looks like a patch of ground somebody has staked out
-/// rather than a grid on a slab of colour. A wooded world hands its own light in, and the
-/// dressing follows — leaf litter and ferns where the meadow had mowing and wildflowers.
+/// rather than a grid on a slab of colour. A themed world hands its own light in, and the
+/// dressing follows — leaf litter and ferns in a thicket, ash and cinder on a mountain,
+/// where the meadow had mowing and wildflowers.
 ///
 /// The ground it is all standing on is painted once. Only the things that would move in a
 /// breeze — the grass, the flowers, the fireflies over them after dark — are on a clock,
@@ -64,14 +65,14 @@ private struct Paddock {
     /// the board, where there is grass to see it on.
     private let clearings: [ClosedRange<Double>] = [0.19...0.28, 0.82...0.99]
 
-    /// The field itself: grass and the bands it was mown in, or the leaf litter under a
-    /// canopy. Nothing here moves.
+    /// The field itself: grass and the bands it was mown in, the leaf litter under a
+    /// canopy, or the drifts of ash on a mountain. Nothing here moves.
     func drawGround(in context: inout GraphicsContext) {
         drawGrass(in: &context)
-        if colors.isWooded {
-            drawLeafLitter(in: &context)
-        } else {
-            drawMowing(in: &context)
+        switch colors.cover {
+        case .pasture: drawMowing(in: &context)
+        case .woodland: drawLeafLitter(in: &context)
+        case .scree: drawAshDrifts(in: &context)
         }
     }
 
@@ -159,6 +160,34 @@ private struct Paddock {
         }
     }
 
+    /// Drifts of ash with cinder showing through them, so a mountain board sits on burnt
+    /// ground rather than in a paddock painted grey. Pale where the ash has settled, dark
+    /// where it has blown off the rock — and after dark the cinder is the lit one of the
+    /// two, since what light there is down here is coming up rather than down.
+    private func drawAshDrifts(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 733)
+        for index in 0..<22 {
+            let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.06...0.20))
+            let cinder = index % 3 == 0
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.6,
+                    y: centre.y - spread * 0.24,
+                    width: spread * 1.2,
+                    height: spread * 0.48
+                )),
+                with: .color(
+                    cinder
+                        ? Color(red: 0.42, green: 0.14, blue: 0.08)
+                            .opacity(colors.isNight ? 0.34 : 0.20)
+                        : Color(red: 0.72, green: 0.68, blue: 0.66)
+                            .opacity(colors.isNight ? 0.08 : 0.22)
+                )
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -178,11 +207,16 @@ private struct Paddock {
     }
 
     /// Grass, wildflowers and the odd stone on a meadow; ferns, mushrooms and a denser
-    /// verge in a thicket. Scattered on a fixed seed so the ground behind a level is the
-    /// same ground every time the level is opened.
+    /// verge in a thicket; stones, cinders and hardly anything alive on a mountain.
+    /// Scattered on a fixed seed so the ground behind a level is the same ground every time
+    /// the level is opened.
     private func drawDressing(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 2_311)
-        let count = colors.isWooded ? 18 : 15
+        let count: Int = switch colors.cover {
+        case .pasture: 15
+        case .woodland: 18
+        case .scree: 13
+        }
         for clearing in clearings {
             for _ in 0..<count {
                 let spot = CGPoint(
@@ -190,18 +224,26 @@ private struct Paddock {
                     y: y(scatter.next(in: clearing))
                 )
                 let scale = CGFloat(scatter.next(in: 0.75...1.3))
-                if colors.isWooded {
-                    switch scatter.next() {
+                let roll = scatter.next()
+                switch colors.cover {
+                case .pasture:
+                    switch roll {
+                    case ..<0.52: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.86: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    default: drawStone(in: &context, at: spot, scale: scale)
+                    }
+                case .woodland:
+                    switch roll {
                     case ..<0.40: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     case ..<0.68: drawFern(in: &context, at: spot, scale: scale, scatter: &scatter)
                     case ..<0.86: drawMushroom(in: &context, at: spot, scale: scale)
                     default: drawStone(in: &context, at: spot, scale: scale)
                     }
-                } else {
-                    switch scatter.next() {
-                    case ..<0.52: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
-                    case ..<0.86: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
-                    default: drawStone(in: &context, at: spot, scale: scale)
+                case .scree:
+                    switch roll {
+                    case ..<0.58: drawStone(in: &context, at: spot, scale: scale)
+                    case ..<0.84: drawCinder(in: &context, at: spot, scale: scale)
+                    default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     }
                 }
             }
@@ -212,20 +254,30 @@ private struct Paddock {
     /// it is being played on, this much of the ground is always in view.
     private func drawVerge(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 977)
-        let tufts = colors.isWooded ? 32 : 26
+        let tufts: Int = switch colors.cover {
+        case .pasture: 26
+        case .woodland: 32
+        case .scree: 22
+        }
         for index in 0..<tufts {
             let foot = CGPoint(
                 x: x((Double(index) + scatter.next()) / Double(tufts)),
                 y: size.height + y(0.005)
             )
-            if colors.isWooded && scatter.next() < 0.35 {
+            let roll = scatter.next()
+            switch colors.cover {
+            case .woodland where roll < 0.35:
                 drawFern(
                     in: &context,
                     at: foot,
                     scale: CGFloat(scatter.next(in: 1.1...1.8)),
                     scatter: &scatter
                 )
-            } else {
+            case .scree where roll < 0.7:
+                // A verge of loose rock rather than long grass: nothing takes root this
+                // close to the peak.
+                drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)))
+            default:
                 drawTuft(
                     in: &context,
                     at: foot,
@@ -414,17 +466,41 @@ private struct Paddock {
         )
     }
 
+    /// A cinder lying on the ash with a little heat still in it — the backdrop's echo of
+    /// the embers staked out on the board itself, and what a mountain has instead of
+    /// wildflowers.
+    private func drawCinder(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let spread = x(0.016) * scale
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - spread * 0.5, y: foot.y - spread * 0.42,
+                width: spread, height: spread * 0.5
+            )),
+            with: .color(Color(red: 0.16, green: 0.12, blue: 0.12).opacity(colors.isNight ? 0.8 : 0.7))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - spread * 0.24, y: foot.y - spread * 0.34,
+                width: spread * 0.48, height: spread * 0.26
+            )),
+            with: .color(
+                Color(red: 0.95, green: 0.42, blue: 0.16)
+                    .opacity(colors.isNight ? 0.85 : 0.55)
+            )
+        )
+    }
+
     /// The corners taken down a little, which is all it takes to make the board the lit
-    /// thing on the screen. A thicket closes in harder, so the canopy feels overhead.
+    /// thing on the screen. A thicket closes in harder, so the canopy feels overhead, and a
+    /// mountain sits somewhere between the two: open sky, but a hazed one.
     func drawVignette(in context: inout GraphicsContext) {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
-        let edge: Double = {
-            if colors.isWooded {
-                return colors.isNight ? 0.42 : 0.32
-            }
-            return colors.isNight ? 0.3 : 0.2
-        }()
+        let edge: Double = switch colors.cover {
+        case .pasture: colors.isNight ? 0.3 : 0.2
+        case .woodland: colors.isNight ? 0.42 : 0.32
+        case .scree: colors.isNight ? 0.38 : 0.26
+        }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
             with: .radialGradient(
@@ -433,7 +509,7 @@ private struct Paddock {
                     .black.opacity(edge)
                 ]),
                 center: centre,
-                startRadius: reach * (colors.isWooded ? 0.32 : 0.4),
+                startRadius: reach * (colors.cover == .woodland ? 0.32 : 0.4),
                 endRadius: reach
             )
         )
@@ -522,5 +598,10 @@ private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
 
 #Preview("Thicket") {
     MeadowBackdrop(day: .forestDay, dusk: .forestDusk)
+        .ignoresSafeArea()
+}
+
+#Preview("Emberpeak") {
+    MeadowBackdrop(day: .emberDay, dusk: .emberDusk)
         .ignoresSafeArea()
 }

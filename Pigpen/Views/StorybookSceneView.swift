@@ -236,3 +236,15 @@ struct WorldFilmView: View {
 #Preview("Send-off") {
     StorybookSceneView(.thornwoodHeld()) {}
 }
+
+#Preview("Mountain opening") {
+    StorybookSceneView(.emberpeakOpening()) {}
+}
+
+#Preview("Mountain boss briefing") {
+    StorybookSceneView(.wyrmCaldera()) {}
+}
+
+#Preview("Mountain send-off") {
+    StorybookSceneView(.emberpeakHeld()) {}
+}

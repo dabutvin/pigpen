@@ -4,8 +4,9 @@ import SwiftUI
 @main
 struct PigpenApp: App {
     /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`,
-    /// `-map`, `-universe`, `-woods-map`, `-tutorial`, `-daily`, `-archive`, `-title`,
-    /// `-settings` or one of the film arguments so the pull request screenshots can show
+    /// `-embers`, `-map`, `-universe`, `-woods-map`, `-peak-map`, `-tutorial`, `-daily`,
+    /// `-archive`, `-title`, `-settings` or one of the film arguments so the pull request
+    /// screenshots can show
     /// the boards, the universe map, each world's trail, the practice pen, the daily
     /// puzzle and its archive, the settings sheet and every shot of every cut scene
     /// rather than only the title screen.
@@ -81,6 +82,16 @@ struct PigpenApp: App {
                         day: .forestDay,
                         dusk: .forestDusk
                     )
+                } else if launch.contains("-embers") {
+                    // A mountain board: the chestnut and the ember stand where the apple and
+                    // the skull would, the same +5 and -5 dressed for the peak, on ash and
+                    // cinder rather than meadow grass.
+                    PuzzleView(
+                        level: .smoulderRidge,
+                        treatSkin: WorldTheme.emberpeak.treats,
+                        day: .emberDay,
+                        dusk: .emberDusk
+                    )
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
                 } else if launch.contains("-universe") {
@@ -91,6 +102,11 @@ struct PigpenApp: App {
                     WorldMapView(
                         world: .thornwoodThicket,
                         progress: .partWayThrough(world: .thornwoodThicket)
+                    )
+                } else if launch.contains("-peak-map") {
+                    WorldMapView(
+                        world: .emberpeak,
+                        progress: .partWayThrough(world: .emberpeak)
                     )
                 } else if launch.contains("-tutorial") {
                     TutorialView()

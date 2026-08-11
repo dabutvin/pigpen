@@ -264,7 +264,142 @@ extension StorybookScene {
             start: start
         )
     }
+}
+
+// MARK: - The mountain's films
+
+extension StorybookScene {
+    /// Before the first walk up Emberpeak. It carries the two things the mountain changes —
+    /// a chestnut to shut in, an ember to keep out — says out loud that the ember takes no
+    /// fencing, since every field up here has one on it, and then hands the game back on the
+    /// rule it has always been.
+    static func emberpeakOpening(start: Date = .now) -> Self {
+        Self(
+            key: "emberpeak-opening",
+            title: "Emberpeak",
+            light: .emberDay,
+            shots: [
+                Shot(
+                    motif: "🌋",
+                    strewn: ["🪨", "🌫️", "🪨"],
+                    caption: "Emberpeak. It has been smoking since the barn was built.",
+                    seconds: 3.6
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🪨", "🌫️"],
+                    caption: "Your pig went up past the last of the trees.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌰",
+                    strewn: ["🪨", "🌫️", "🪨"],
+                    caption: "Chestnuts roasting where they fell. Five apiece, shut in.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🔥",
+                    strewn: ["🪨", "🌫️"],
+                    caption: "Embers take no fence. Build around them, or pay the five.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌋", "🪨"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen on the mountain holds. It says what became of the wyrm, that the
+    /// whole peak is fenced, and — like the meadow's send-off and the thicket's — points on
+    /// past this world to the next one waiting.
+    static func emberpeakHeld(start: Date = .now) -> Self {
+        Self(
+            key: "emberpeak-held",
+            title: "Emberpeak held",
+            light: .emberDusk,
+            shots: [
+                Shot(
+                    motif: "🐉",
+                    strewn: ["🌋", "🌰"],
+                    caption: "The wyrm kept to its crater. You kept the pig to its pens.",
+                    seconds: 3.5
+                ),
+                Shot(
+                    motif: "🌋",
+                    strewn: ["🔥", "✨", "🔥"],
+                    caption: "Every shelf on Emberpeak, fenced and held.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🌍",
+                    strewn: ["✨", "⭐️"],
+                    caption: "Nothing gets off this mountain now.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🏙️",
+                    strewn: ["✨", "⭐️", "✨"],
+                    caption: "Below the ash, a city is lighting its lamps.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the mountain's last field, the way `boarHollow` goes before the thicket's and
+    /// `CutScene.stagMere` before the meadow's.
+    ///
+    /// Short, and for the same reason: a player standing at this signpost has fenced eight
+    /// fields of scree and is owed the one thing this board does that no other board up here
+    /// does — a second animal on it and a single budget for the pair. The middle still is the
+    /// story half: the crater floor is not spare ground, it is somewhere something already
+    /// lives, and the pen down there is making room for it rather than shutting it out.
+    ///
+    /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
+    /// reading rather than admiring.
+    static func wyrmCaldera(start: Date = .now) -> Self {
+        Self(
+            key: "wyrm-caldera-briefing",
+            title: "Wyrm Caldera",
+            light: .emberDay,
+            shots: [
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🌋", "🪨", "🌫️"],
+                    caption: "Wyrm Caldera. A lake in the summit.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐉",
+                    strewn: ["🌋", "🔥"],
+                    caption: "The wyrm had this crater long before you did.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌋", "🪨", "🌰"],
+                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    isCard: true,
+                    seconds: 3.3
+                )
+            ],
+            start: start
+        )
+    }
 
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
-    static var all: [StorybookScene] { [.thornwoodOpening(), .boarHollow(), .thornwoodHeld()] }
+    static var all: [StorybookScene] {
+        [
+            .thornwoodOpening(), .boarHollow(), .thornwoodHeld(),
+            .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld()
+        ]
+    }
 }
