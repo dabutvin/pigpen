@@ -190,19 +190,31 @@ struct FieldView: View {
     /// clock — thirty frames a second is enough for a pulse but not for a gallop — while
     /// everything else about an animal, its walk off the map included, comes out of the
     /// marks the field was handed.
-    @ViewBuilder
     private func herd(board: BoardGeometry) -> some View {
-        if let celebration, !reduceMotion {
-            TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { timeline in
-                let elapsed = timeline.date.timeIntervalSince(celebration.start)
+        // Every mark puts itself where it belongs by hand, so each one has to be handed
+        // the whole board to put itself on. Stacked one on top of another for that reason,
+        // rather than left as a list: two animals listed inside a timeline are laid out one
+        // under the other, half a board each, and the second of them runs its lap that far
+        // below the pen it is meant to be shut into — off the field and onto the grass.
+        ZStack(alignment: .topLeading) {
+            if let celebration, !reduceMotion {
+                TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { timeline in
+                    let elapsed = timeline.date.timeIntervalSince(celebration.start)
 
-                ForEach(animals) { animal in
-                    mark(animal, board: board, pose: celebration.pose(of: animal.kind, secondsIn: elapsed))
+                    ZStack(alignment: .topLeading) {
+                        ForEach(animals) { animal in
+                            mark(
+                                animal,
+                                board: board,
+                                pose: celebration.pose(of: animal.kind, secondsIn: elapsed)
+                            )
+                        }
+                    }
                 }
-            }
-        } else {
-            ForEach(animals) { animal in
-                mark(animal, board: board, pose: nil)
+            } else {
+                ForEach(animals) { animal in
+                    mark(animal, board: board, pose: nil)
+                }
             }
         }
     }
@@ -873,6 +885,27 @@ struct FieldView: View {
         penGlow: 0.8,
         isAsGoodAsItGets: game.isPenAsGoodAsItGets,
         animals: .standing(on: game.level),
+        onStroke: { _ in },
+        onStrokeEnd: {}
+    )
+    .padding()
+}
+
+/// Both of Stag Mere's animals celebrating at once: the pig round its own circle on the
+/// north shore and the stag round its own on the south, each inside the pen holding it and
+/// neither of them anywhere near the grass off the board.
+#Preview("Two laps at once") {
+    let game = PuzzleGame.theStagMeresBestPen()
+    game.openTheGate()
+
+    return FieldView(
+        level: game.level,
+        fences: game.fences,
+        penTiles: game.penTiles,
+        penGlow: 1,
+        isAsGoodAsItGets: game.isPenAsGoodAsItGets,
+        animals: .standing(on: game.level),
+        celebration: Celebration(laps: game.victoryLaps, start: .now),
         onStroke: { _ in },
         onStrokeEnd: {}
     )
