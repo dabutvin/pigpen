@@ -42,6 +42,7 @@ extension PuzzleLevel {
         twoStarScore: 15,
         threeStarScore: 25,
         maximumScore: 27,
+        question: .shore,
         map: """
             ..........
             ..........
@@ -72,6 +73,7 @@ extension PuzzleLevel {
         twoStarScore: 17,
         threeStarScore: 27,
         maximumScore: 29,
+        question: .basin,
         map: """
             ..........
             ..~~~~~~..
@@ -98,6 +100,7 @@ extension PuzzleLevel {
         twoStarScore: 17,
         threeStarScore: 28,
         maximumScore: 30,
+        question: .shore,
         map: """
             ..........
             ..........
@@ -110,26 +113,33 @@ extension PuzzleLevel {
             """
     )
 
-    /// A stream across the whole thicket, broken by one dry stone. That stone is the only way
-    /// across and costs a single piece to shut, which buys the entire far bank as a free wall.
-    /// Nothing lies on this one — the woods do not put a truffle in every clearing.
-    static let gnarlFord = woodland(
-        id: "gnarl-ford",
-        name: "Gnarl Ford",
-        fenceBudget: 12,
-        twoStarScore: 14,
-        threeStarScore: 23,
-        maximumScore: 24,
+    /// A ring of pools set round a clearing at wider intervals than the meadow's dew ponds,
+    /// and the field where the woods stop handing shapes over. Six pools, no two of them
+    /// touching, laid on the wall of a pen that is not drawn anywhere: the player has to see
+    /// the ring in them and build the four fifths of it that are missing.
+    ///
+    /// A block cannot use a single one of them and holds 16. The ring holds 24 tiles and the
+    /// truffle sitting inside it, which is 29. The meadow's ponds were a tile apart; these are
+    /// two, and the shape is that much less obvious for it.
+    static let fairyRing = woodland(
+        id: "fairy-ring",
+        name: "Fairy Ring",
+        fenceBudget: 13,
+        twoStarScore: 15,
+        threeStarScore: 27,
+        maximumScore: 29,
+        question: .constellation,
         map: """
-            ..........
-            ..........
-            ..........
-            ~~~~~.~~~~
-            ..........
+            ..~..~....
+            .......~..
+            .......a..
+            ~.........
+            .........~
             ....P.....
+            ~.........
+            .........~
             ..........
-            ..........
-            ..........
+            .~..~..~..
             """
     )
 
@@ -144,6 +154,7 @@ extension PuzzleLevel {
         twoStarScore: 19,
         threeStarScore: 32,
         maximumScore: 34,
+        question: .detour,
         map: """
             ..........
             .~~~~~~~~.
@@ -169,6 +180,7 @@ extension PuzzleLevel {
         twoStarScore: 15,
         threeStarScore: 24,
         maximumScore: 26,
+        question: .obstruction,
         map: """
             ..........
             ....a.....
@@ -194,6 +206,7 @@ extension PuzzleLevel {
         twoStarScore: 15,
         threeStarScore: 24,
         maximumScore: 26,
+        question: .corner,
         map: """
             ~~~~~~~~
             ~.......
@@ -216,6 +229,7 @@ extension PuzzleLevel {
         twoStarScore: 23,
         threeStarScore: 39,
         maximumScore: 41,
+        question: .detour,
         map: """
             ..........
             .~~~~~....
@@ -247,6 +261,7 @@ extension PuzzleLevel {
         twoStarScore: 19,
         threeStarScore: 32,
         maximumScore: 34,
+        question: .herd,
         map: """
             ..........
             .....a....
@@ -273,6 +288,7 @@ private func woodland(
     twoStarScore: Int,
     threeStarScore: Int,
     maximumScore: Int,
+    question: Question? = nil,
     map: String
 ) -> PuzzleLevel {
     guard let level = PuzzleLevel(
@@ -282,6 +298,7 @@ private func woodland(
         twoStarScore: twoStarScore,
         threeStarScore: threeStarScore,
         maximumScore: maximumScore,
+        question: question,
         map: map
     ) else {
         preconditionFailure("The built-in \(name) map is malformed")
@@ -306,7 +323,7 @@ extension WorldMap {
             WorldNode(level: .brambleBrook, across: 0.22, up: 0.00),
             WorldNode(level: .foxgloveDell, across: 0.74, up: 1.00),
             WorldNode(level: .hazelCopse, across: 0.24, up: 2.06),
-            WorldNode(level: .gnarlFord, across: 0.78, up: 3.02),
+            WorldNode(level: .fairyRing, across: 0.78, up: 3.02),
             WorldNode(level: .fernGully, across: 0.22, up: 4.08),
             WorldNode(level: .willowCorner, across: 0.64, up: 5.02),
             WorldNode(level: .nettleBank, across: 0.26, up: 6.06),

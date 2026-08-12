@@ -71,7 +71,7 @@ extension WorldMap {
             WorldNode(level: .riverBend, across: 0.20, up: 0.00),
             WorldNode(level: .horseshoeLake, across: 0.76, up: 1.00),
             WorldNode(level: .theNarrows, across: 0.26, up: 2.06),
-            WorldNode(level: .bigMeadow, across: 0.78, up: 3.02),
+            WorldNode(level: .dewPonds, across: 0.78, up: 3.02),
             WorldNode(level: .otterFord, across: 0.22, up: 4.08),
             WorldNode(level: .puddleCorner, across: 0.62, up: 5.02),
             WorldNode(level: .windfallOrchard, across: 0.24, up: 6.06),
