@@ -4,7 +4,8 @@ import SwiftUI
 /// The meadow the trail runs through: fields, trees, hay and a barn at the bottom
 /// where the pig set out from. Every other world keeps the same trail and draws it the same
 /// way, on its own ground — denser trees, leaf litter, ferns and a hollow stump in a
-/// thicket; ash, loose rock, scorched pines and a cairn on a mountain.
+/// thicket; ash, loose rock, scorched pines and a cairn on a mountain; paving, lamp posts,
+/// crates and a clocktower in a city.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
 /// path or on a signpost however wide the screen is. It is drawn once rather than on a
@@ -43,6 +44,7 @@ private struct Meadow {
         case .pasture: drawBarn(in: &context)
         case .woodland: drawHollow(in: &context)
         case .scree: drawCairn(in: &context)
+        case .cobbles: drawClocktower(in: &context)
         }
     }
 
@@ -55,6 +57,7 @@ private struct Meadow {
         case .pasture: drawMowing(in: &context)
         case .woodland: drawLeafLitter(in: &context)
         case .scree: drawAshDrifts(in: &context)
+        case .cobbles: drawPaving(in: &context)
         }
     }
 
@@ -131,6 +134,36 @@ private struct Meadow {
         }
     }
 
+    /// Courses of setts running the width of the world, every other course offset by half a
+    /// stone, so the city's trail runs over paving rather than through a grey field.
+    private func drawPaving(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_831)
+        let course: CGFloat = 26
+        let sett: CGFloat = 62
+        var top = horizon
+        var offset = false
+        while top < size.height {
+            var across: CGFloat = offset ? -sett / 2 : 0
+            while across < size.width {
+                let stone = CGRect(
+                    x: across + 2, y: top + 2,
+                    width: sett - 4, height: course - 4
+                )
+                context.fill(
+                    Path(roundedRect: stone, cornerRadius: 5),
+                    with: .color(
+                        scatter.next() < 0.5
+                            ? Color.white.opacity(colors.isNight ? 0.015 : 0.05)
+                            : Color.black.opacity(colors.isNight ? 0.10 : 0.05)
+                    )
+                )
+                across += sett
+            }
+            offset.toggle()
+            top += course
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         var path = Path()
@@ -175,12 +208,14 @@ private struct Meadow {
 
         // A wooded sky keeps less open air: fewer, softer clouds under a canopy that
         // reaches up into the hills. A mountain sky is hazed rather than clouded, so what
-        // is up there is thin and hangs low.
+        // is up there is thin and hangs low, and a city sky is whatever its chimneys have
+        // put into it.
         var scatter = Scatter(seed: 311)
         let clouds: Int = switch colors.cover {
         case .pasture: 3
         case .woodland: 1
         case .scree: 2
+        case .cobbles: 3
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -237,6 +272,8 @@ private struct Meadow {
 
         if colors.cover == .woodland {
             drawCanopyLine(in: &context)
+        } else if colors.cover == .cobbles {
+            drawSkyline(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -302,6 +339,42 @@ private struct Meadow {
         )
     }
 
+    /// A run of rooftops along the horizon, so the city closes the sky the way the thicket's
+    /// canopy does — with chimneys on some of them, since the smoke over this world has to
+    /// be coming from somewhere.
+    private func drawSkyline(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_223)
+        let base = horizon + 24
+        var across: CGFloat = -12
+        while across < size.width + 12 {
+            let wide = CGFloat(scatter.next(in: 30...58))
+            let tall = CGFloat(scatter.next(in: 26...64))
+            let roof = CGRect(x: across, y: base - tall, width: wide, height: tall + 6)
+            context.fill(Path(roof), with: .color(colors.canopyShade))
+
+            // A chimney on about half of them, and a lit window on about half of those.
+            if scatter.next() < 0.5 {
+                let stack = CGRect(
+                    x: roof.minX + wide * CGFloat(scatter.next(in: 0.2...0.7)),
+                    y: roof.minY - 12,
+                    width: 7,
+                    height: 13
+                )
+                context.fill(Path(stack), with: .color(colors.canopyShade))
+            }
+            if colors.isNight, scatter.next() < 0.55 {
+                context.fill(
+                    Path(CGRect(
+                        x: roof.minX + wide * 0.3, y: roof.minY + tall * 0.3,
+                        width: 6, height: 7
+                    )),
+                    with: .color(Color(red: 1.00, green: 0.78, blue: 0.40).opacity(0.5))
+                )
+            }
+            across += wide + CGFloat(scatter.next(in: 0...5))
+        }
+    }
+
     /// A run of dark crowns along the horizon, so the thicket feels closed in rather than
     /// opening onto open country.
     private func drawCanopyLine(in context: inout GraphicsContext) {
@@ -331,6 +404,8 @@ private struct Meadow {
         case rock
         case hayBale
         case stump
+        case lamp
+        case crate
     }
 
     private struct Place {
@@ -394,6 +469,15 @@ private struct Meadow {
             case ..<0.90: .bush
             default: .tree
             }
+        case .cobbles:
+            // Paved ground: lamp posts and crates left out on it, loose setts, and the odd
+            // street tree somebody planted and nobody has looked at since.
+            switch roll {
+            case ..<0.36: .lamp
+            case ..<0.62: .crate
+            case ..<0.86: .rock
+            default: .tree
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -414,6 +498,8 @@ private struct Meadow {
         case .rock: drawRock(in: &context, at: place.at, scale: place.size)
         case .hayBale: drawHayBale(in: &context, at: place.at, scale: place.size)
         case .stump: drawStump(in: &context, at: place.at, scale: place.size)
+        case .lamp: drawLamp(in: &context, at: place.at, scale: place.size)
+        case .crate: drawCrate(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -671,9 +757,102 @@ private struct Meadow {
         )
     }
 
+    /// A gas lamp on the pavement, lit after dark. It is the city's answer to the meadow's
+    /// wildflowers: the thing there is most of, and the only thing along this trail that
+    /// gives off any light of its own.
+    private func drawLamp(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let height = 34 * scale
+        shadow(in: &context, at: foot, width: height * 0.34)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - height * 0.12, y: foot.y - height * 0.1,
+                width: height * 0.24, height: height * 0.12
+            )),
+            with: .color(GamePalette.post.opacity(colors.isNight ? 0.8 : 0.95))
+        )
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: foot.x - height * 0.035, y: foot.y - height * 0.86,
+                width: height * 0.07, height: height * 0.8
+            ), cornerRadius: height * 0.03),
+            with: .color(GamePalette.post.opacity(colors.isNight ? 0.8 : 0.95))
+        )
+
+        // The lantern on top: a housing, the flame in it, and a wash of light after dark.
+        let lamp = CGPoint(x: foot.x, y: foot.y - height * 0.92)
+        if colors.isNight {
+            context.fill(
+                circle(at: lamp, radius: height * 0.42),
+                with: .radialGradient(
+                    Gradient(colors: [
+                        Color(red: 1.00, green: 0.72, blue: 0.34).opacity(0.34),
+                        Color(red: 1.00, green: 0.72, blue: 0.34).opacity(0)
+                    ]),
+                    center: lamp,
+                    startRadius: 0,
+                    endRadius: height * 0.42
+                )
+            )
+        }
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: lamp.x - height * 0.1, y: lamp.y - height * 0.11,
+                width: height * 0.2, height: height * 0.22
+            ), cornerRadius: height * 0.04),
+            with: .color(
+                colors.isNight
+                    ? Color(red: 1.00, green: 0.82, blue: 0.44)
+                    : GamePalette.pen.opacity(0.55)
+            )
+        )
+        context.fill(
+            Path(CGRect(
+                x: lamp.x - height * 0.12, y: lamp.y - height * 0.16,
+                width: height * 0.24, height: height * 0.05
+            )),
+            with: .color(GamePalette.post.opacity(colors.isNight ? 0.8 : 0.95))
+        )
+    }
+
+    /// A crate left out on the pavement, where the meadow would have left a hay bale and the
+    /// thicket a cut stump.
+    private func drawCrate(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let spread = 17 * scale
+        shadow(in: &context, at: foot, width: spread)
+
+        let box = CGRect(
+            x: foot.x - spread * 0.5, y: foot.y - spread * 0.72,
+            width: spread, height: spread * 0.72
+        )
+        context.fill(
+            Path(roundedRect: box, cornerRadius: spread * 0.08),
+            with: .color(GamePalette.rail.opacity(colors.isNight ? 0.65 : 0.95))
+        )
+        var boards = Path()
+        for line in [0.34, 0.68] {
+            let down = box.minY + box.height * CGFloat(line)
+            boards.move(to: CGPoint(x: box.minX + spread * 0.08, y: down))
+            boards.addLine(to: CGPoint(x: box.maxX - spread * 0.08, y: down))
+        }
+        boards.move(to: CGPoint(x: box.minX, y: box.minY))
+        boards.addLine(to: CGPoint(x: box.maxX, y: box.maxY))
+        context.stroke(
+            boards,
+            with: .color(GamePalette.post.opacity(colors.isNight ? 0.5 : 0.4)),
+            style: StrokeStyle(lineWidth: max(1, spread * 0.06), lineCap: .round)
+        )
+        context.fill(
+            Path(CGRect(
+                x: box.minX, y: box.minY, width: box.width, height: spread * 0.08
+            )),
+            with: .color(GamePalette.picket.opacity(colors.isNight ? 0.4 : 0.85))
+        )
+    }
+
     /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
-    /// stump in the thicket — down in the grass below the first signpost, on whichever side
-    /// of the world the trail does not start on.
+    /// stump in the thicket, a cairn on the mountain, a clocktower in the city — down below
+    /// the first signpost, on whichever side of the world the trail does not start on.
     private var landmarkStand: CGPoint {
         CGPoint(
             x: trail.point(of: 0).x < size.width / 2 ? size.width - 74 : 74,
@@ -820,6 +999,64 @@ private struct Meadow {
         context.fill(
             circle(at: lamp, radius: tall * 0.08),
             with: .color(Color(red: 0.98, green: 0.78, blue: 0.36))
+        )
+    }
+
+    /// The clocktower at the foot of the city trail, with the hands stopped at whatever hour
+    /// nobody has been up to wind it — the city's answer to the barn the pig came out of, the
+    /// stump it went past in the woods and the cairn somebody left on the mountain. It is
+    /// what the world is named for, and the first thing the pig walked in under.
+    private func drawClocktower(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 46
+        let tall: CGFloat = 78
+
+        shadow(in: &context, at: CGPoint(x: centre.x, y: centre.y + tall * 0.34), width: wide)
+
+        let tower = CGRect(
+            x: centre.x - wide * 0.38, y: centre.y - tall * 0.5,
+            width: wide * 0.76, height: tall * 0.84
+        )
+        context.fill(Path(tower), with: .color(GamePalette.barn.opacity(colors.isNight ? 0.6 : 0.85)))
+        // The lit western face, the way the light falls on everything else in the game.
+        context.fill(
+            Path(CGRect(x: tower.minX, y: tower.minY, width: tower.width * 0.3, height: tower.height)),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.05 : 0.14))
+        )
+
+        // The roof, and a weathervane over the whole city.
+        var roof = Path()
+        roof.move(to: CGPoint(x: tower.minX - 6, y: tower.minY))
+        roof.addLine(to: CGPoint(x: centre.x, y: tower.minY - tall * 0.26))
+        roof.addLine(to: CGPoint(x: tower.maxX + 6, y: tower.minY))
+        roof.closeSubpath()
+        context.fill(roof, with: .color(GamePalette.post))
+
+        // The face itself, which is the only round thing in this world.
+        let face = CGPoint(x: centre.x, y: tower.minY + tower.height * 0.26)
+        context.fill(
+            circle(at: face, radius: wide * 0.24),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.7 : 0.95))
+        )
+        var hands = Path()
+        hands.move(to: face)
+        hands.addLine(to: CGPoint(x: face.x, y: face.y - wide * 0.17))
+        hands.move(to: face)
+        hands.addLine(to: CGPoint(x: face.x + wide * 0.12, y: face.y + wide * 0.06))
+        context.stroke(
+            hands,
+            with: .color(GamePalette.post),
+            style: StrokeStyle(lineWidth: 2, lineCap: .round)
+        )
+
+        // The archway the pig came in under.
+        let arch = CGRect(
+            x: centre.x - wide * 0.14, y: tower.maxY - tower.height * 0.3,
+            width: wide * 0.28, height: tower.height * 0.3
+        )
+        context.fill(
+            Path(roundedRect: arch, cornerRadius: wide * 0.14),
+            with: .color(GamePalette.post.opacity(0.9))
         )
     }
 

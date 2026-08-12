@@ -248,3 +248,15 @@ struct WorldFilmView: View {
 #Preview("Mountain send-off") {
     StorybookSceneView(.emberpeakHeld()) {}
 }
+
+#Preview("City opening") {
+    StorybookSceneView(.cogsworthOpening()) {}
+}
+
+#Preview("City boss briefing") {
+    StorybookSceneView(.ratKingWharf()) {}
+}
+
+#Preview("City send-off") {
+    StorybookSceneView(.cogsworthHeld()) {}
+}

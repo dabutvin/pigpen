@@ -4,9 +4,9 @@
 `PuzzleLevel` carries a `maximumScore` that the game uses to tell a player there is
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
-an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's) and a budget and
-it prints the best pen, an example of it, and star thresholds in the proportions the
-shipped levels use.
+an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
+rat's) and a budget and it prints the best pen, an example of it, and star thresholds in
+the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -22,7 +22,7 @@ around its edge. Water costs nothing, which is the whole game. A skull is staked
 the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
 skull has to be shut in and paid for, or the wall has to go round it.
 
-A map with a second animal on it as well as the pig — a deer, a boar or a wyrm — is held by
+A map with a second animal on it as well as the pig — a deer, a boar, a wyrm or a rat — is held by
 ground in two pieces just as happily as by one, since what has to hold is each animal
 rather than the pen: the search grows out from both animals at once and the ground it
 ends up with is connected to one or the other, so a wall shared between two enclosures
@@ -50,7 +50,7 @@ WORTH = {"a": 5, "x": -5}
 # A skull is staked into the mud, and nothing can be built on top of it.
 SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on.
-ANIMALS = ("P", "D", "B", "W")
+ANIMALS = ("P", "D", "B", "W", "R")
 
 
 def parse(map_text):

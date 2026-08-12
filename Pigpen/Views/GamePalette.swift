@@ -65,17 +65,19 @@ enum GamePalette {
         /// What the ground is made of. The same trail and the same board run through every
         /// world; what changes is the dressing around them — mown bands, wildflowers and a
         /// barn on pasture, leaf litter and ferns under a canopy, ash drifts and cinder
-        /// where the mountain has burnt everything off.
+        /// where the mountain has burnt everything off, paving and lamp posts in a city.
         let cover: Cover
     }
 
-    /// The three kinds of ground the game draws. A world picks one and the backdrop and the
-    /// world map both follow it, which is the whole of what makes a thicket read as woods
-    /// and a mountain as bare rock rather than as a meadow tinted a different colour.
+    /// The four kinds of ground the game draws. A world picks one and the backdrop and the
+    /// world map both follow it, which is the whole of what makes a thicket read as woods,
+    /// a mountain as bare rock and a city as somewhere paved rather than as a meadow tinted
+    /// a different colour.
     enum Cover: Sendable {
         case pasture
         case woodland
         case scree
+        case cobbles
     }
 }
 
@@ -209,5 +211,44 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.11, green: 0.07, blue: 0.07),
         isNight: true,
         cover: .scree
+    )
+
+    /// The fourth world by day: a city under its own smoke. Nothing here is a colour that
+    /// grew — the sky is hazed the colour of what the chimneys are putting into it, the
+    /// ground is paving and soot, and the green is down to whatever comes up between the
+    /// stones. The same trail and the same board as everywhere else, on ground somebody laid.
+    static let cityDay = Self(
+        skyTop: Color(red: 0.55, green: 0.60, blue: 0.68),
+        skyHorizon: Color(red: 0.87, green: 0.83, blue: 0.73),
+        disc: Color(red: 0.99, green: 0.94, blue: 0.76),
+        discHalo: Color(red: 0.95, green: 0.88, blue: 0.70),
+        cloud: Color(red: 0.78, green: 0.77, blue: 0.75),
+        farHill: Color(red: 0.38, green: 0.39, blue: 0.45),
+        ground: Color(red: 0.50, green: 0.49, blue: 0.51),
+        foreground: Color(red: 0.40, green: 0.39, blue: 0.42),
+        blade: Color(red: 0.31, green: 0.34, blue: 0.28),
+        canopy: Color(red: 0.47, green: 0.45, blue: 0.49),
+        canopyShade: Color(red: 0.33, green: 0.32, blue: 0.37),
+        isNight: false,
+        cover: .cobbles
+    )
+
+    /// The city after dark, which is when it is worth looking at: the sky goes out entirely
+    /// and everything under it takes its colour from the lamps, so the ground reads warm
+    /// where the mountain's reads red and the meadow's reads blue.
+    static let cityDusk = Self(
+        skyTop: Color(red: 0.05, green: 0.06, blue: 0.11),
+        skyHorizon: Color(red: 0.24, green: 0.18, blue: 0.15),
+        disc: Color(red: 0.96, green: 0.95, blue: 0.98),
+        discHalo: Color(red: 0.82, green: 0.72, blue: 0.50),
+        cloud: Color(red: 0.19, green: 0.18, blue: 0.20),
+        farHill: Color(red: 0.13, green: 0.13, blue: 0.17),
+        ground: Color(red: 0.15, green: 0.14, blue: 0.17),
+        foreground: Color(red: 0.11, green: 0.10, blue: 0.13),
+        blade: Color(red: 0.08, green: 0.09, blue: 0.08),
+        canopy: Color(red: 0.17, green: 0.16, blue: 0.20),
+        canopyShade: Color(red: 0.11, green: 0.10, blue: 0.14),
+        isNight: true,
+        cover: .cobbles
     )
 }
