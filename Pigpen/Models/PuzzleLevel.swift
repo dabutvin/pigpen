@@ -50,6 +50,38 @@ enum Treat: Character, CaseIterable, Sendable {
     }
 }
 
+/// What a field asks of the player — the one question it is built around.
+///
+/// A world is not nine maps, it is nine questions in an order: the trail is sorted by how much
+/// each field asks, and every time a question comes round again in a later world it has to ask
+/// more than it did last time. Which is the whole of what keeps a fourth world from being the
+/// meadow in a new coat. See "Building a world" in the README.
+///
+/// Only a field on a world trail carries one. A daily is generated rather than authored and the
+/// practice pen is a lesson rather than a field, so both leave it empty.
+enum Question: String, Sendable, CaseIterable {
+    /// Which stretch of bank is worth walling? One long straight wall, handed over.
+    case shore
+    /// The water has nearly done it — where is the mouth, and what is left over?
+    case basin
+    /// Two banks each useless alone, and one wall thrown between them.
+    case span
+    /// Where exactly does one piece go? A whole bank, bought for a single piece.
+    case gap
+    /// How much does a diagonal buy over a right angle? Two sides meeting at a corner.
+    case corner
+    /// The free walls are scattered — what shape do they imply?
+    case constellation
+    /// Is the windfall worth the ground the pen gives up reaching it?
+    case detour
+    /// Swallow the hazard and pay its five, or step the wall in beside it and lose a tile?
+    case obstruction
+    /// Nothing is free. What shape holds the most ground per piece?
+    case bare
+    /// One budget, two animals. A boss, and nothing else.
+    case herd
+}
+
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
 /// the two come to together.
 struct PenTally: Equatable, Sendable {
@@ -110,6 +142,9 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// sum, so it is authored alongside the star thresholds: a player who matches it has
     /// nothing left to beat, and the game stops asking them to go bigger.
     let maximumScore: Int
+    /// The question this field is built around, for a level on a world trail. Nothing for a
+    /// daily, which is generated, or the practice pen, which is a lesson.
+    let question: Question?
 
     var rowCount: Int { terrain.count }
     var columnCount: Int { terrain.first?.count ?? 0 }
@@ -195,6 +230,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         twoStarScore: Int,
         threeStarScore: Int,
         maximumScore: Int,
+        question: Question? = nil,
         map: String
     ) {
         let lines = map.split(whereSeparator: \.isNewline)
@@ -235,6 +271,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         self.twoStarScore = twoStarScore
         self.threeStarScore = threeStarScore
         self.maximumScore = maximumScore
+        self.question = question
     }
 }
 
@@ -273,6 +310,7 @@ extension PuzzleLevel {
         twoStarScore: 20,
         threeStarScore: 33,
         maximumScore: 35,
+        question: .shore,
         map: """
             .........
             .........
@@ -302,6 +340,7 @@ extension PuzzleLevel {
         twoStarScore: 15,
         threeStarScore: 24,
         maximumScore: 26,
+        question: .corner,
         map: """
             ~~~~~~~~
             ~.......
@@ -329,6 +368,7 @@ extension PuzzleLevel {
         twoStarScore: 14,
         threeStarScore: 23,
         maximumScore: 24,
+        question: .basin,
         map: """
             ..........
             ..~~~~~~..
@@ -353,6 +393,7 @@ extension PuzzleLevel {
         twoStarScore: 13,
         threeStarScore: 21,
         maximumScore: 22,
+        question: .span,
         map: """
             ..........
             ..~~~.....
@@ -377,6 +418,7 @@ extension PuzzleLevel {
         twoStarScore: 14,
         threeStarScore: 23,
         maximumScore: 24,
+        question: .gap,
         map: """
             ..........
             ..........
@@ -390,28 +432,34 @@ extension PuzzleLevel {
             """
     )
 
-    /// The widest board in the meadow, with a lake down one side and open ground
-    /// everywhere else. Sixteen pieces and no corner to hide in: the pen has to be cut
-    /// to the shape of the shore, and only then does it reach 33 tiles.
-    static let bigMeadow = authored(
-        id: "big-meadow",
-        name: "The Big Meadow",
-        fenceBudget: 16,
-        twoStarScore: 19,
-        threeStarScore: 31,
-        maximumScore: 33,
+    /// A scatter of dew ponds, and the first field that makes the player *see* a shape rather
+    /// than lean on one. The ponds run down the east of the meadow one tile apart, tracing the
+    /// far side of a pen nobody has drawn: each is a tile of wall that costs nothing, and
+    /// between them are the gaps the twelve pieces have to fill.
+    ///
+    /// A rectangle cannot use them — a pond on a diagonal is a pond a right-angled wall walks
+    /// straight past — so squaring off holds 32 while the pen the ponds imply holds 44, the
+    /// biggest pen in the meadow. It is the gentle version of the idea: the ponds are close
+    /// enough together that the shape is nearly drawn for you. Later worlds space them out.
+    static let dewPonds = authored(
+        id: "dew-ponds",
+        name: "The Dew Ponds",
+        fenceBudget: 12,
+        twoStarScore: 25,
+        threeStarScore: 41,
+        maximumScore: 44,
+        question: .constellation,
         map: """
-            ..........
-            .~~~~~....
-            .~~~~~~...
-            ..~~~~~~..
-            ...~~~~~..
-            ....~~~...
-            ..P.......
-            ..........
-            ..........
-            ..........
-            ..........
+            ....~.....
+            .....~....
+            ......~...
+            .......~..
+            ........~.
+            ....P....~
+            ........~.
+            .......~..
+            ......~...
+            ....~.....
             """
     )
 
@@ -427,6 +475,7 @@ extension PuzzleLevel {
         twoStarScore: 21,
         threeStarScore: 35,
         maximumScore: 37,
+        question: .detour,
         map: """
             ..........
             .~~~~~~~~.
@@ -461,6 +510,7 @@ extension PuzzleLevel {
         twoStarScore: 15,
         threeStarScore: 27,
         maximumScore: 29,
+        question: .obstruction,
         map: """
             ..........
             ....a.....
@@ -492,6 +542,7 @@ extension PuzzleLevel {
         twoStarScore: 22,
         threeStarScore: 36,
         maximumScore: 38,
+        question: .herd,
         map: """
             ..........
             .....a....
@@ -520,6 +571,7 @@ extension PuzzleLevel {
         twoStarScore: Int,
         threeStarScore: Int,
         maximumScore: Int,
+        question: Question? = nil,
         map: String
     ) -> PuzzleLevel {
         guard let level = PuzzleLevel(
@@ -529,6 +581,7 @@ extension PuzzleLevel {
             twoStarScore: twoStarScore,
             threeStarScore: threeStarScore,
             maximumScore: maximumScore,
+            question: question,
             map: map
         ) else {
             preconditionFailure("The built-in \(name) map is malformed")
