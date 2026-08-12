@@ -182,6 +182,10 @@ struct TutorialView: View {
         case .penned:
             lesson.reconsider()
             await celebrate()
+        case .refused:
+            // The practice pen has one animal and no rule to break, so this cannot happen
+            // here; the switch is whole so that a new rule cannot pass through unnoticed.
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
         }
     }
 

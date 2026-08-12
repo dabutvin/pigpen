@@ -78,8 +78,22 @@ enum Question: String, Sendable, CaseIterable {
     case obstruction
     /// Nothing is free. What shape holds the most ground per piece?
     case bare
-    /// One budget, two animals. A boss, and nothing else.
+    /// One budget, two animals, and they may be held together or apart — whichever scores.
+    /// A boss, and nothing else.
     case herd
+    /// One budget, two animals that will not share ground: both held, but never in one pen.
+    /// A boss, and nothing else.
+    case apart
+    /// Hold the pig and leave the other animal outside, where its tile is a hole the wall has
+    /// to go round and cannot pay for. Only the pig's ground counts. A boss, and nothing else.
+    case exclude
+    /// One budget, two animals that will not be parted: both held, and in the same pen.
+    /// A boss, and nothing else.
+    case together
+
+    /// The questions only a boss asks. A world's last field adds a rule its other eight do
+    /// not use, and no two worlds add the same one.
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score

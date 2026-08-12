@@ -6,6 +6,17 @@ struct Escape: Equatable, Sendable {
     let route: [GridPoint]
 }
 
+/// Why a field that holds everything is still not won: the ground is shut, but the board
+/// asked for something the fencing did not give it.
+enum Refusal: Equatable, Sendable {
+    /// Two animals that will not share are standing in the same pen.
+    case together(Animal)
+    /// Two animals that will not be parted are standing in pens of their own.
+    case apart(Animal)
+    /// The animal that had to be left outside has been fenced in.
+    case shutIn(Animal)
+}
+
 /// What happens when the animals are let loose on a field fenced a particular way.
 enum PenOutcome: Equatable, Sendable {
     /// Something found a way out — one escape for each animal that did. A field holding
@@ -14,6 +25,9 @@ enum PenOutcome: Equatable, Sendable {
     /// Everything on the map is stuck. `pen` is every mud tile the animals can still
     /// reach between them: one enclosure when they are held together, two when apart.
     case penned(pen: Set<GridPoint>)
+    /// Everything is stuck and nothing got out, but the field's own rule is broken — so the
+    /// ground is shown the way a pen is, and the field is not won. Only a boss can refuse.
+    case refused(pen: Set<GridPoint>, refusal: Refusal)
 }
 
 extension PuzzleLevel {
@@ -23,20 +37,61 @@ extension PuzzleLevel {
     /// A single missing piece is enough to lose: each animal tries every route, so the
     /// ring around it has to be unbroken — and one animal loose in the open loses the
     /// field however well the other one is held.
+    /// A field where the pig is what has to be held, and the other animal what has to be
+    /// left outside it. The other one is never walked: it may wander off the map for all the
+    /// board cares, so long as the wall keeps it out of the pig's ground.
+    private func releaseExcluding(fences: Set<GridPoint>) -> PenOutcome {
+        guard let pig = animals.first(where: { $0.kind == .pig }) else {
+            return .penned(pen: [])
+        }
+        switch walk(from: pig.tile, fences: fences) {
+        case .out(let route):
+            return .escaped(escapes: [Escape(animal: pig, route: route)])
+        case .stuck(let ground):
+            if let shut = animals.first(where: { $0.kind != .pig && ground.contains($0.tile) }) {
+                return .refused(pen: ground, refusal: .shutIn(shut.kind))
+            }
+            return .penned(pen: ground)
+        }
+    }
+
     func release(fences: Set<GridPoint>) -> PenOutcome {
+        if question == .exclude {
+            return releaseExcluding(fences: fences)
+        }
+
         var escapes: [Escape] = []
         var held: Set<GridPoint> = []
+        var ground: [Animal: Set<GridPoint>] = [:]
 
         for animal in animals {
             switch walk(from: animal.tile, fences: fences) {
             case .out(let route):
                 escapes.append(Escape(animal: animal, route: route))
-            case .stuck(let ground):
-                held.formUnion(ground)
+            case .stuck(let run):
+                held.formUnion(run)
+                ground[animal.kind] = run
             }
         }
 
-        return escapes.isEmpty ? .penned(pen: held) : .escaped(escapes: escapes)
+        guard escapes.isEmpty else { return .escaped(escapes: escapes) }
+
+        // A board that keeps two animals apart is not won by the pen that holds them both:
+        // the ground the pig is standing in must not be the ground the other one is in.
+        if question == .apart, let pigGround = ground[.pig],
+           let sharing = animals.first(where: { $0.kind != .pig && pigGround.contains($0.tile) }) {
+            return .refused(pen: held, refusal: .together(sharing.kind))
+        }
+
+        // And a board that will not have them parted asks the same question the other way
+        // round: the ground the pig is standing in has to be the ground the other one is in,
+        // however well two pens either side of them hold.
+        if question == .together, let pigGround = ground[.pig],
+           let alone = animals.first(where: { $0.kind != .pig && !pigGround.contains($0.tile) }) {
+            return .refused(pen: held, refusal: .apart(alone.kind))
+        }
+
+        return .penned(pen: held)
     }
 
     /// How one animal's walk ends: off the map, or on the ground it is shut into.

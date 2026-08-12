@@ -250,15 +250,15 @@ extension StorybookScene {
                 Shot(
                     motif: "🐗",
                     strewn: ["🌲", "🍄"],
-                    caption: "The boar had this hollow before you did.",
-                    seconds: 2.9
+                    caption: "The boar was here first. It shares with nobody.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🌲", "🌲", "🍄"],
-                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    caption: "Twenty pieces. Both held, in two pens — never one.",
                     isCard: true,
-                    seconds: 3.3
+                    seconds: 3.2
                 )
             ],
             start: start
@@ -380,15 +380,15 @@ extension StorybookScene {
                 Shot(
                     motif: "🐉",
                     strewn: ["🌋", "🔥"],
-                    caption: "The wyrm had this crater long before you did.",
-                    seconds: 2.9
+                    caption: "Do not fence the wyrm. Nobody is holding that.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🌋", "🪨", "🌰"],
-                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    caption: "Twenty pieces for the pig. Leave the wyrm outside.",
                     isCard: true,
-                    seconds: 3.3
+                    seconds: 3.2
                 )
             ],
             start: start
@@ -457,7 +457,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🐀",
                     strewn: ["🏙️", "🥧"],
-                    caption: "The rat king kept its wharf. You kept the pig to its pens.",
+                    caption: "You fenced the rat king in with your own pig.",
                     seconds: 3.5
                 ),
                 Shot(
@@ -488,9 +488,9 @@ extension StorybookScene {
     ///
     /// Short, and for the same reason: a player standing at this signpost has fenced eight
     /// yards of paving and is owed the one thing this board does that no other board down
-    /// here does — a second animal on it and a single budget for the pair. The middle still
-    /// is the story half: the far quay is not spare ground, it is somewhere something already
-    /// lives, and the pen over there is making room for it rather than shutting it out.
+    /// here does — the city's own rule, which is the woods' rule turned round. The middle
+    /// still is the story half: the rat king is not something to shut out or to pen off on
+    /// its own, since a yard of its own is exactly what it is after.
     ///
     /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
     /// reading rather than admiring.
@@ -501,23 +501,23 @@ extension StorybookScene {
             light: .cityDay,
             shots: [
                 Shot(
-                    motif: "🌊",
-                    strewn: ["🏙️", "🧱", "💨"],
-                    caption: "Rat King Wharf. A canal through the middle.",
+                    motif: "🏙️",
+                    strewn: ["🧱", "💨", "🕳️"],
+                    caption: "Rat King Wharf. The last yard in the city.",
                     seconds: 2.7
                 ),
                 Shot(
                     motif: "🐀",
                     strewn: ["🏙️", "🕳️"],
-                    caption: "The rat king had this wharf before you did.",
-                    seconds: 2.9
+                    caption: "Pen the rat king apart and it keeps that yard.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🏙️", "🧱", "🥧"],
-                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    caption: "Nineteen pieces. Both held, in one pen — never two.",
                     isCard: true,
-                    seconds: 3.3
+                    seconds: 3.2
                 )
             ],
             start: start

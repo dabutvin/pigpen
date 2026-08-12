@@ -35,10 +35,11 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   narrow for a circle is run out and back instead, one too tight for that is bounced on the
   spot, and the best pen the map has in it gets its confetti in every colour there is. Ask
   for reduced motion and the field keeps still.
-- **The boss keeps two.** A world's last puzzle stands a second animal on the field as well
-  as the pig — a deer in the meadow, a boar in the thicket, a wyrm on the mountain, a rat
-  king in the city — and one budget has to hold both of them. One pen round the pair or a pen
-  apiece is up to you — a pen holds whatever ground
+- **The boss changes a rule.** A world's last puzzle stands a second animal on the field as
+  well as the pig — a deer in the meadow, a boar in the thicket, a wyrm on the mountain, a rat
+  king in the city — and each world asks something different of the pair. The meadow's one
+  budget has to hold both of them. One pen round the pair or a pen apiece is up to you — a pen
+  holds whatever ground
   it shuts in, whether that ground is in one piece or two — but an animal left loose loses
   the field however well the other one is held.
 - **A pen that closes colours itself in.** The moment the last gap is filled, the ground the
@@ -229,7 +230,7 @@ the meadow at nothing.
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 17 | 26 | 34% |
 | 8 | Elderwood | 15 | 3 truffles, 1 bramble | 28 | 41 | 31% |
-| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 30 | 34 | 11% |
+| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 30 | 43 | 30% |
 
 Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
@@ -275,7 +276,7 @@ is measured by that yardstick.
 | 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 17 | 27 | 37% |
 | 7 | Crater Pools | 12 | 1 chestnut, 1 ember | 17 | 34 | 50% |
 | 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 29 | 42 | 30% |
-| 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 32 | 39 | 17% |
+| 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 27 | 43 | 37% |
 
 Smoulder Ridge holds the biggest pen on any world trail — 42, off sixteen pieces, three
 chestnuts and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself: the pig up on the north
@@ -318,7 +319,7 @@ them as usual.
 | 6 | Gutter Lane | 14 | 2 drains | 15 | 26 | 42% |
 | 7 | Foundry Corner | 9 | 2 drains | 15 | 27 | 44% |
 | 8 | Clocktower Square | 17 | 3 pies, 2 drains | 25 | 40 | 37% |
-| 9 | Rat King Wharf | 20 | a rat king, 3 pies, 2 drains | 31 | 39 | 20% |
+| 9 | Rat King Wharf | 19 | a rat king, 2 pies, 2 drains | 25 | 43 | 41% |
 
 Two of its fields ask questions nothing has asked since the meadow: Culvert Row puts its two
 banks at opposite ends of the street where The Narrows put them a stride apart, and Lock Gate
@@ -326,11 +327,15 @@ stakes a drain under the ford Otter Ford handed over for a single piece. Foundry
 third `corner` field in the game and the first to stake anything on the diagonal itself —
 Puddle Corner and Willow Corner were both eight pieces on clean ground, and both asked 38%.
 
-Its boss, Rat King Wharf, is the canal itself: the pig on the near quay, the rat king on the
-far one, and one budget for the pair. It charges the same 21 of the 24 stars below it that
-every boss charges and stops for the same briefing on the way in; what it adds is that both
-quays are worth having, so it is the only boss whose twenty pieces split ten and ten. Every
-pen is drawn out in [`solutions.md`](solutions.md).
+Its boss, Rat King Wharf, adds the city's own rule, and it is the thicket's rule turned round:
+**the rat king will not be left on its own**. Both of them held, and in one pen — a yard of its
+own is exactly what a rat king is after, so two enclosures, however well they hold, are refused.
+Which makes the single pen a player learned not to build in Boar Hollow the only pen that counts
+here, and the whole question is what shape it has to be: the pair stand four tiles apart on the
+diagonal, so the smallest block that takes them both is a five by five with a drain in a corner
+it cannot avoid. It charges the same 21 of the 24 stars below it that every boss charges and
+stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -644,9 +649,12 @@ than the last time the universe asked it.
 | `detour` | Is the windfall worth the ground you give up reaching it? | Nothing |
 | `obstruction` | Swallow the hazard and pay, or step the wall in beside it? | Nothing |
 | `bare` | Nothing is free. What shape holds the most per piece? | Nothing at all |
-| `herd` | One budget, two animals | The water between them |
+| `herd` | One budget, two animals, held together or apart — whichever scores | The water between them |
+| `apart` | One budget, two animals that will not share ground | The water between them |
+| `exclude` | Hold the pig and leave the other animal outside | Nothing — its tile is a hole |
+| `together` | One budget, two animals that will not be parted | Nothing — one pen has to reach both |
 
-`herd` is reserved for a boss. Everything else is a field.
+`herd`, `apart`, `exclude` and `together` are the **boss rules**, and a field never asks one.
 
 #### The shape of a world
 
@@ -654,7 +662,9 @@ than the last time the universe asked it.
 - **Field 8 is the broad board** — the widest map in the world and the biggest pen in it. It
   stands outside the climb, because the gap a big board leaves against a squared-off pen says
   more about its size than about its difficulty.
-- **Field 9 is the boss**: type `herd`, a second animal, one budget, and a star toll.
+- **Field 9 is the boss**: the field where the world adds a rule its other eight do not use,
+  plus a star toll. **No two worlds may add the same rule** — otherwise every world climbs to
+  the same finale with a different animal painted on it, which is what the first three did.
 - The boss stops for a briefing film. Nothing else does.
 
 A world may repeat a type, and it need not use them all. What it may not do is ship a field
@@ -687,6 +697,9 @@ is one the player cannot build.
 | `obstruction` | Moving the hazard from the edge of the ground into the middle of it |
 | `bare` | A longer budget — a bigger ring beats a bigger rectangle by more |
 | `herd` | Splitting the value unevenly, so the budget split stops being symmetric |
+| `apart` | Bringing the two close enough that one pen round the pair nearly wins |
+| `exclude` | Standing the one to be left out in the middle of the ground worth having |
+| `together` | Standing the two further apart, so the block that holds both costs more |
 
 #### Authoring one
 

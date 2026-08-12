@@ -257,35 +257,41 @@ extension PuzzleLevel {
             """
     )
 
-    /// The city's boss: the canal itself, cut straight across the wharf with the pig on the
-    /// near quay and the rat king on the far one, and the same rule the last field of every
-    /// world has taught — one budget has to hold both of them. The water walls one side of
-    /// each enclosure the way Stag Mere's mere and Wyrm Caldera's lake do, so the twenty
-    /// pieces go out as two pens rather than one.
+    /// The city's boss, and the fourth rule the game has: **the rat king will not be left on
+    /// its own**. Both of them held, and in one pen — two enclosures, however well they hold,
+    /// are two enclosures the rat king comes out of the moment your back is turned, since a
+    /// yard of its own is exactly what it wants.
     ///
-    /// What the wharf adds is that both quays are worth having. The mountain's rim was narrow
-    /// ground hardly worth a piece; here there is a pie on each side of the canal and a drain
-    /// on each side too, so the split is a real question rather than a formality — and the
-    /// pen that wins takes every pie in the world and pays for both drains. 34 tiles and
-    /// three pies, less the two drains, come to 39. It asks for most of the stars the fields
-    /// below it hold before it will open.
+    /// Which is the mere's answer forbidden and the hollow's reversed. Stag Mere splits its
+    /// budget because water between two animals is one wall doing two jobs; Boar Hollow
+    /// insists on the split; Wyrm Caldera throws the second animal out altogether. Here the
+    /// single pen a player learned not to build in the woods is the only pen that counts,
+    /// and the whole question is what shape it has to be.
+    ///
+    /// A rectangle can hold the pair — they stand four tiles apart on the diagonal, so the
+    /// smallest block that takes them both is a five by five, and a drain sits in each of the
+    /// two corners such a block cannot avoid. That is 25. The pen that wins runs out along
+    /// the diagonal instead, leaning on both cuts, taking a pie off each end of it and
+    /// leaving both drains outside: 33 tiles and two pies, which is 43, for every one of the
+    /// nineteen pieces. It asks for most of the stars the fields below it hold before it will
+    /// open.
     static let ratKingWharf = cogsworth(
         id: "rat-king-wharf",
         name: "Rat King Wharf",
-        fenceBudget: 20,
-        twoStarScore: 22,
-        threeStarScore: 37,
-        maximumScore: 39,
-        question: .herd,
+        fenceBudget: 19,
+        twoStarScore: 25,
+        threeStarScore: 40,
+        maximumScore: 43,
+        question: .together,
         map: """
             .........
-            ..P.a....
+            .a....~..
+            ..P...~x.
+            ......~..
             .........
-            ...x.....
-            ~~~~~~~~~
-            .........
-            ..a...R..
-            ....a.x..
+            .~~~.....
+            ......R..
+            ...x...a.
             .........
             """
     )
@@ -321,8 +327,8 @@ private func cogsworth(
 }
 
 extension WorldMap {
-    /// Cogsworth City: nine yards, lanes and wharves, ending at a canal with a second animal
-    /// across it and a toll of most of the stars below it.
+    /// Cogsworth City: nine yards, lanes and wharves, ending on a wharf with a second animal
+    /// standing on it and a toll of most of the stars below it.
     ///
     /// The trail is ordered by what each field asks — the gap between the pen it holds and the
     /// pen a player gets by squaring the map off — and it climbs the whole way from Gasworks

@@ -476,42 +476,33 @@ going round it would cost more ground than the five it does.
 Cut to the shape of the mere, the pen gathers its three truffles on the way round and leaves
 the bramble on the outside.
 
-## 9. Boar Hollow — 20 pieces, 34
+## 9. Boar Hollow — 20 pieces, 43
 
 ```
-...###....
-..#ooa#...
-.#Poooo#..
-..#xooo#..
-...~~~~...
-..~~~~~~..
-...~~~~o#.
-..#ooooxo#
+..#.......
+.#a#...x..
+#ooP#.....
+#oooo#....
+#ooo~~~...
+.#o~~~~...
+..#o~~o#..
 .#aooooB#.
-..#oaoo#..
-...####...
+..#ooooa#.
+..x#ooo#..
+....###...
 ```
 
-The boss, and the thicket's answer to Stag Mere: the pig north of the hollow, the boar
-south, and one budget for both. Both have to be held, but *how* they are held is open —
-a pen holds whatever ground it shuts in, in one piece or two.
+The boss, and the field where the woods stop copying the meadow. The pool has been pulled back
+into the middle of the wood and touches neither animal, so Stag Mere's answer — two pens sharing
+a stretch of water — is not on offer here.
 
-One pen round the pair of them has to go the whole way round the pool, and there is no
-budget in the woods long enough to do that and hold anything worth having. Two pens, one
-on each shore, use the same water as a wall twice over and pay for it once — which is the
-answer, and then the puzzle is only where to split twenty pieces.
+For a while it looks as though one big pen round the pair is right, and with twenty pieces it
+very nearly is. It is not, because the boar will not have it: this is the first field in the
+game that refuses a pen for a reason other than something walking out of it. Hold them both,
+but never in the same ground.
 
-Nine pieces go to the pig and eleven to the boar, and each side is the octagon the earlier
-levels teach, tucked up against the water and cut to reach the truffle on its own shore.
-There is a bramble on each shore, both of them in the middle of the ground its pen wants,
-and neither will take a piece of fencing. Walling round either one would cut its pen in
-half for the sake of five points, so each pen takes its bramble in and pays. The pig holds
-12 tiles, a truffle and a bramble; the boar 17 tiles, two truffles and a bramble: 29 tiles,
-three truffles, two brambles, 34.
-
-Boxing the pig into its own tile for four pieces and pouring the other sixteen into the
-boar's shore is the tempting shortcut. The north shore gives up far more than four pieces'
-worth of ground when it is abandoned, which is what makes the split the puzzle.
+So the twenty go out as two enclosures leaning on the pool from opposite sides, sharing not one
+tile: 28 tiles and three truffles, 43, against a squared-off 30.
 
 It asks for 21 of the 24 stars below it before it opens.
 
@@ -540,7 +531,7 @@ to Crater Pools rather than for six stops and then sorting by what it scatters.
 | 6 | Fumarole Field | 14 | 17 | 2 chestnuts | 27 | 17 |
 | 7 | Crater Pools | 12 | 29 | 1 chestnut | 34 | 17 |
 | 8 | Smoulder Ridge | 16 | 32 | 3 chestnuts, 1 ember | 42 | 29 |
-| 9 | Wyrm Caldera | 20 | 29 | 3 chestnuts, 1 ember | 39 | 32 |
+| 9 | Wyrm Caldera | 20 | 38 | 3 chestnuts, 2 embers | 43 | 27 |
 
 ## 1. Cinder Slope — 9 pieces, 25
 
@@ -731,36 +722,33 @@ middle of the pen and is bought for five; the lower one is out on the southern e
 stepping the wall in beside it costs a single tile — so it is left outside, and the notch it
 makes is the difference between a good pen here and the best one.
 
-## 9. Wyrm Caldera — 20 pieces, 39
+## 9. Wyrm Caldera — 20 pieces, 43
 
 ```
-...#......
-..#a#.....
-.#Poo#....
-#ooo#x....
-.~~~~~~~..
-.~~~~~~~~.
-#o~~~~~~o#
-#oooxoooo#
-#aooooWo#.
-.#ooooa#..
-..#####...
+..##......
+.#Po#.....
+#oooa#....
+#oxooo#...
+#oooooo~..
+#oooooo~..
+#oooxo#...
+#oaoo#W...
+.#oooo#...
+..#oa#.x..
+...##.....
 ```
 
-The boss. The pig is up on the north rim, the wyrm is down on the crater floor, the lake is
-between them, and one budget has to hold the pair. As at the mere and the hollow, two pens
-sharing the water beat one pen dragged the whole way round it.
+The boss, and the only field in the game that does not ask you to hold everything on it.
 
-What the caldera adds is how unevenly the budget wants splitting. The rim is narrow ground:
-seven pieces buy the pig 7 tiles and the chestnut lying on them, and an eighth would buy
-almost nothing, because there is nothing up there to buy. The other thirteen go to the
-crater floor, which is the widest ground in the world — 22 tiles, two chestnuts and the
-ember in the middle of it, bought for five rather than walled round. 29 tiles, three
-chestnuts, one ember, 39.
+The wyrm is not livestock. The board does not want it fenced — it wants it left where it is, on
+the outside of whatever you build — so its tile is a hole you can neither cover nor stand a post
+on, like an ember that walks. Only the pig's ground counts.
 
-The ember above the pig is left outside for the same reason the one below is taken in: it
-is at the edge of that pen rather than in the middle of it, so the wall steps in beside it
-and gives up one tile instead of five points.
+Which turns the boss inside out. The mere and the hollow are a budget split two ways; here all
+twenty pieces go to the pig, and the question is how much of the mountain you can take before
+the wall has to bend round the thing sitting in the middle of it. Thirty-eight tiles and three
+chestnuts, less the two embers it swallows on the way, come to 43 — where squaring off well
+clear of the wyrm is worth 27.
 
 It asks for 21 of the 24 stars below it before it opens.
 
@@ -771,7 +759,8 @@ It asks for 21 of the 24 stars below it before it opens.
 The fourth world, solved the same way and drawn the same way. A pie takes the meadow's apple
 and a drain its skull, so an `a` below is a pie worth five tiles to shut in, and an `x` a
 drain worth five fewer that no piece will build on — nothing drives a post through cast iron
-— and an `R` is the rat king, held like the deer, the boar and the wyrm before it.
+— and an `R` is the rat king, which is held like the deer and the boar before it and, unlike
+either, will not be penned on its own.
 
 What the city does differently is that somebody built it. Every drop of water down here is
 canal, cut one tile wide and turned at right angles: nowhere in this world do two tiles of
@@ -795,7 +784,7 @@ Gasworks Cut to Foundry Corner.
 | 6 | Gutter Lane | 14 | 26 | — | 26 | 15 |
 | 7 | Foundry Corner | 9 | 32 | 1 drain | 27 | 15 |
 | 8 | Clocktower Square | 17 | 35 | 2 pies, 1 drain | 40 | 25 |
-| 9 | Rat King Wharf | 20 | 34 | 3 pies, 2 drains | 39 | 31 |
+| 9 | Rat King Wharf | 19 | 33 | 2 pies | 43 | 25 |
 
 ## 1. Gasworks Cut — 9 pieces, 26
 
@@ -966,32 +955,32 @@ long way for it and give up more than five tiles doing it. The drain by the pig'
 in the middle of the ground and is bought; the one on the south rim is outside the wall
 altogether. A block leaning on the canal holds 25.
 
-## 9. Rat King Wharf — 20 pieces, 39
+## 9. Rat King Wharf — 19 pieces, 43
 
 ```
-..####...
-.#Poao#..
-#oooooo#.
-#ooxoooo#
-~~~~~~~~~
+.#####...
+#aoooo~..
+#oPooo~x.
+#ooooo~#.
 #ooooooo#
-.#aoooRo#
-..#oaox#.
-...####..
+.~~~oooo#
+...#ooRo#
+...x#ooa#
+.....###.
 ```
 
-The boss. The canal is cut straight across the wharf, the pig is on the near quay and the rat
-king on the far one, and one budget has to hold the pair. As at the mere, the hollow and the
-caldera, two pens sharing the water beat one pen dragged the whole way round it.
+The boss, and the city's own rule: **the rat king will not be left on its own**. Both of them
+held, in one pen — never two. Boar Hollow refuses the single pen; this refuses the pair of
+them, and a player who learned the woods' answer has to unlearn it here.
 
-What the wharf adds is that both quays are worth having, which the caldera's rim was not. Ten
-pieces buy the pig 17 tiles and the pie on them and ten buy the far quay 17 tiles, two pies
-and the rat king — the only boss in the game whose budget splits down the middle, where the
-mere's went nine and eleven and the caldera's seven and thirteen.
+So the question is what shape one pen has to be. The pig and the rat king stand four tiles
+apart on the diagonal, which makes the smallest block that takes them both a five by five —
+and a drain sits in one of the corners such a block cannot avoid, so squaring off is worth 25.
 
-Both drains are in the middle of the ground they stand on rather than out at its edge, so both
-are bought for five rather than walled round: 34 tiles, three pies, two drains, 39 — every
-treat on the board taken in, the way the mere's pens take in every treat on theirs.
+The pen that wins runs out along the diagonal instead of round it: it leans on the culvert in
+the north-east and the cut in the south-west, takes the pie at each end of the run, and leaves
+both drains outside — the one by the culvert steps in beside it, the one down in the yard is
+never reached. 33 tiles and two pies, 43, for every one of the nineteen pieces.
 
 It asks for 21 of the 24 stars below it before it opens.
 
