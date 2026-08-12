@@ -12,6 +12,14 @@
 /// authored, and keeps only those whose gap between that pen and the obvious one falls in
 /// the band its weekday asks for. That is what makes a week a climb: the number is measured
 /// rather than declared.
+///
+/// Running the other way across that climb is what the water on a board looks like. Most
+/// days drop it in bodies until the board is wet enough, but about a quarter of the book
+/// has it arranged instead — freckled over every other square, stepped across a corner as
+/// a shore, or split into two banks with a neck of ground between them. It changes nothing
+/// about what a day asks, since the band is measured on the board that came out either way.
+/// It is only there so that opening the archive on the fourth Tuesday running is not the
+/// same board a fourth time.
 enum DailyAlmanac {
     /// One day's line of the almanac, split from its date.
     ///

@@ -14,6 +14,15 @@ the budget has in it and also squares the map off, the way `level_search.py --de
 for the meadow's levels, and keeps the map only if the gap between the two falls in the band
 its weekday asks for. The bands do not overlap, so a Tuesday always asks more than a Monday.
 
+Across that climb runs a second thing, which is what the water on a board looks like. Most
+days lay it the plain way — bodies of it dropped until the day is wet enough — but roughly
+two days a week are handed one of the shapes in `SHAPES` instead: water freckled over the
+board a tile at a time, a shore stepping across a corner on the diagonal, or two banks
+pinching the board down to a neck. The shape does not change what a day asks; its weekday
+still sets the wetness, the pool cap and the band, and the map is thrown back and reshaped
+until it lands in that band like any other. It only changes what the board looks like to
+build on, which after seven hundred boards of one arrangement is worth something on its own.
+
     Tools/generate_dailies.py --years 2026 2027
 
 It writes two files, both generated and both committed:
@@ -99,6 +108,24 @@ def seeded(day):
     """A generator of a day's own, so days can be worked out in any order or all at once."""
     digest = hashlib.sha256(f"pigpen-daily-{day.isoformat()}".encode()).digest()
     return random.Random(int.from_bytes(digest[:8], "big"))
+
+
+def shape_of(day):
+    """The shape this day's water takes: `plain`, or one of the shapes in `SHAPES`.
+
+    Drawn from the date on its own rather than from the day's generator, which is what
+    makes this a change to *some* of the book rather than all of it: a day that comes up
+    plain asks its generator for exactly what it always asked, in exactly the same order,
+    and comes out the board it always was.
+    """
+    offered = [name for name, water in SHAPES.items() if rung(day) in water["rungs"]]
+    if not offered:
+        return "plain"
+    digest = hashlib.sha256(f"pigpen-shape-{day.isoformat()}".encode()).digest()
+    roll = int.from_bytes(digest[:4], "big") / 2**32
+    if roll >= VARIED:
+        return "plain"
+    return offered[min(int(roll / VARIED * len(offered)), len(offered) - 1)]
 
 
 # --- Shaping a map ---------------------------------------------------------------------
@@ -208,19 +235,22 @@ def run_of_ground(grid, start):
     return reached
 
 
-def shape(rng, profile):
-    """A map, or nothing at all if the water swallowed everything worth penning."""
-    rows, columns = profile["rows"], profile["cols"]
-    grid = [["." for _ in range(columns)] for _ in range(rows)]
+def flood(rng, grid, rows, columns, profile, share):
+    """Lakes and rivers, until `share` of the board is under water.
 
-    # Water is a budget rather than a floor. Laying it down until the board was wet enough
-    # and then stopping meant a day whose share was smaller than one river got one river
-    # anyway and overshot — which is how Saturday and Sunday, asked for 8% and 5%, both
-    # ended up at 13% of the board under a single stretch of water running its whole width.
-    # Each body is drawn into a copy first and kept only if it fits both what is left of the
-    # day's water and what the day allows to lie in one piece.
-    allowed = round(rows * columns * profile["water"])
-    wet, guard = 0, 0
+    Water is a budget rather than a floor. Laying it down until the board was wet enough
+    and then stopping meant a day whose share was smaller than one river got one river
+    anyway and overshot — which is how Saturday and Sunday, asked for 8% and 5%, both
+    ended up at 13% of the board under a single stretch of water running its whole width.
+    Each body is drawn into a copy first and kept only if it fits both what is left of the
+    day's water and what the day allows to lie in one piece.
+
+    Whatever water the grid arrives with counts against the share, so a shape that has
+    already laid its own signature body is topped up to the day's wetness rather than
+    drowned past it.
+    """
+    allowed = round(rows * columns * share)
+    wet, guard = under_water(grid), 0
     while wet < allowed and guard < 60:
         guard += 1
         drawn = [row[:] for row in grid]
@@ -234,6 +264,207 @@ def shape(rng, profile):
         laid = under_water(drawn)
         if wet < laid <= allowed and biggest_pool(drawn) <= profile["pool"]:
             grid, wet = drawn, laid
+    return grid
+
+
+# --- The shapes a day's water can take ---------------------------------------------------
+#
+# What a board is made of is water, and until now every board was made of it the same way:
+# bodies of it dropped one after another until the day was wet enough. That is the right
+# default — it is the shape that lets a weekday's share of water mean what the table above
+# says it means — but seven hundred boards of it in a row is seven hundred boards of one
+# idea. So a day can instead be handed one of the shapes below, which lay the day's water
+# in a particular arrangement first and then let `flood` top the board up to the wetness
+# its weekday asks for. The weekday still sets how wet the day is, how much may lie in one
+# piece, and what the board has to ask of a player; the shape only decides where it goes.
+#
+# `lonely` is how many tiles of water a shape promises to leave standing entirely on their
+# own. `DailyAlmanacTests` counts them on the boards that shipped, so a shape cannot come
+# out looking like every other day and still be filed under its own name.
+
+
+def plainly(rng, grid, rows, columns, profile):
+    """Bodies of water dropped until the day is wet enough. What most days are."""
+    return flood(rng, grid, rows, columns, profile, profile["water"])
+
+
+def speckled(rng, grid, rows, columns, profile):
+    """Water freckled over the board a tile at a time, on every other square.
+
+    Specks are laid only on one colour of the board's checkerboard and never beside water
+    already there, so every one of them stands alone: a speck is a hole rather than a wall,
+    worth nothing to lean on and costing nothing to fence round, and a board full of them
+    is one where the ground a pen wants is everywhere and nowhere. It is the change of pace
+    the plain shape cannot give — there is still plenty of room, but no run of it is clean.
+
+    `body` says how much of the day's water still goes down as ordinary lakes and rivers
+    before any of this, so a Monday keeps the long free wall a Monday owes and only gets
+    freckled around it. The freckles are laid over the top of that rather than out of the
+    same share, so a speckled board runs a little wetter than its weekday's figure — what
+    is held to that figure is the water that could be leant on, which the freckles are not.
+    """
+    grid = flood(rng, grid, rows, columns, profile, profile["water"] * profile["body"])
+
+    parity = rng.randrange(2)
+    lattice = [
+        (row, column)
+        for row in range(rows)
+        for column in range(columns)
+        if (row + column) % 2 == parity and grid[row][column] == "."
+    ]
+    rng.shuffle(lattice)
+    for row, column in lattice[: round(len(lattice) * profile["speck"])]:
+        if all(
+            not (0 <= row + down < rows and 0 <= column + across < columns)
+            or grid[row + down][column + across] != "~"
+            for down, across in NEIGHBOURS
+        ):
+            grid[row][column] = "~"
+    return grid
+
+
+def coasted(rng, grid, rows, columns, profile):
+    """A shore cut across one corner of the board on the diagonal.
+
+    A lake hugging an edge hands over a straight wall, and a straight wall is the one a
+    player would have built anyway. A shore that steps in a tile at a time hands over a
+    staircase instead — the shape this whole game is about — and leaves the player to work
+    out only the other half of it. Wet days can afford a long one; by Thursday the day's
+    share of water runs out well before the corner does.
+    """
+    most = min(profile["pool"], round(rows * columns * profile["water"]))
+    south = rng.random() < 0.5
+    east = rng.random() < 0.5
+    reach = rng.randint(2, max(2, columns - 3))
+    spent = 0
+    for row in range(rows) if south else reversed(range(rows)):
+        if reach <= 0 or spent >= most:
+            break
+        for step in range(reach):
+            column = columns - 1 - step if east else step
+            if grid[row][column] != "~" and spent < most:
+                grid[row][column] = "~"
+                spent += 1
+        reach -= rng.randint(1, 2)
+    return flood(rng, grid, rows, columns, profile, profile["water"])
+
+
+def straited(rng, grid, rows, columns, profile):
+    """Two banks of water reaching in from opposite edges and stopping short of each other.
+
+    The board comes out very nearly cut in two, with a neck of ground a tile or three wide
+    holding the halves together. Both banks are wall handed over for free, so this is a
+    generous shape — but it is generous in a way that asks a question the plain shape never
+    does, which is whether the pen belongs on one side of the neck, the other, or across it.
+    """
+    most = min(profile["pool"], max(2, round(rows * columns * profile["water"] / 2)))
+    neck = rng.randint(1, 3)
+    if rng.random() < 0.5:
+        column = rng.randrange(2, max(3, columns - 2))
+        near = rng.randint(1, max(1, min(most, rows - neck - 1)))
+        far = rng.randint(0, max(0, min(most, rows - neck - near)))
+        for row in range(near):
+            grid[row][column] = "~"
+        for row in range(rows - far, rows):
+            grid[row][column] = "~"
+    else:
+        row = rng.randrange(2, max(3, rows - 2))
+        near = rng.randint(1, max(1, min(most, columns - neck - 1)))
+        far = rng.randint(0, max(0, min(most, columns - neck - near)))
+        for column in range(near):
+            grid[row][column] = "~"
+        for column in range(columns - far, columns):
+            grid[row][column] = "~"
+    return flood(rng, grid, rows, columns, profile, profile["water"])
+
+
+# The shapes other than the plain one, what each wants from the day it lands on, and which
+# rungs of the week can carry it.
+SHAPES = {
+    "speckle": dict(
+        lay=speckled,
+        rungs=(1, 2, 3, 4, 5, 6, 7),
+        lonely=4,
+        # How much of the day's water still goes down as ordinary bodies, and how much of
+        # the board's lattice is freckled on top of it. The wet end of the week keeps nearly
+        # all of its water in one piece — a Monday that handed over nothing to lean on would
+        # not be a Monday — and by Friday the bodies are mostly gone and the board is
+        # freckles.
+        #
+        # The freckles pull a day *towards* the easy end rather than away from it, which is
+        # the opposite of what a tile of water usually does and worth knowing before these
+        # are touched. A freckle beside the block of ground a player squares off is a free
+        # fence piece for the pen that needed one most, while the staircase pen it is being
+        # measured against was already spending its budget well. So water broken up small
+        # closes the gap between the two, and the dry end of the week has to be given back
+        # some of what the freckles cost it — which is why Saturday keeps nearly all of its
+        # bodies too. These are the pairs that landed in band oftenest when swept.
+        knobs={
+            1: dict(body=0.95, speck=0.17),
+            2: dict(body=0.75, speck=0.17),
+            3: dict(body=0.75, speck=0.17),
+            4: dict(body=0.55, speck=0.17),
+            5: dict(body=0.35, speck=0.17),
+            6: dict(body=0.95, speck=0.13),
+            7: dict(body=0.35, speck=0.17),
+        },
+    ),
+    # A coast is one long body of water, so it wants a day with a pool cap big enough to
+    # spend on it, and a strait wants enough for two banks with a gap left between them.
+    # Neither is offered a rung whose band it could only reach by accident, and the rungs
+    # here were measured rather than guessed: by Saturday there is not enough water left on
+    # the board to step a shore down more than a tile or two, a Tuesday coast lands around
+    # 20% against a band of 6–14, and a Wednesday strait lands around 30% against 15–23.
+    "coast": dict(lay=coasted, rungs=(1, 3, 4, 5), lonely=0, knobs={}),
+    "strait": dict(lay=straited, rungs=(1, 2, 4, 5), lonely=0, knobs={}),
+}
+
+# How much of the book is given a shape other than the plain one. Roughly two days a week,
+# so a shape is a change of pace rather than the new normal.
+VARIED = 0.30
+
+
+def profile_for(step, water):
+    """A weekday's profile with the knobs its water's shape wants folded in."""
+    if water == "plain":
+        return PROFILES[step]
+    return {**PROFILES[step], **SHAPES[water]["knobs"].get(step, {})}
+
+
+def lonely_water(grid):
+    """Tiles of water with no water beside them — the freckles, as a board shows them."""
+    rows, columns = len(grid), len(grid[0])
+    return sum(
+        1
+        for row in range(rows)
+        for column in range(columns)
+        if grid[row][column] == "~"
+        and all(
+            not (0 <= row + down < rows and 0 <= column + across < columns)
+            or grid[row + down][column + across] != "~"
+            for down, across in NEIGHBOURS
+        )
+    )
+
+
+def shape(rng, profile, water="plain"):
+    """A map, or nothing at all if the water swallowed everything worth penning.
+
+    `profile` is the day's weekday profile with the shape's knobs already folded into it,
+    which is what `profile_for` does.
+    """
+    rows, columns = profile["rows"], profile["cols"]
+    grid = [["." for _ in range(columns)] for _ in range(rows)]
+
+    if water == "plain":
+        grid = plainly(rng, grid, rows, columns, profile)
+    else:
+        laying = SHAPES[water]
+        grid = laying["lay"](rng, grid, rows, columns, profile)
+        # A shape that did not come out looking like itself is not worth shipping under its
+        # own name, and the tests will say so, so it is thrown back here instead.
+        if lonely_water(grid) < laying["lonely"]:
+            return None
 
     room = int(rows * columns * 0.30)
     inland = [
@@ -322,12 +553,13 @@ def plan_of(weighed, pen):
 
 def puzzle(day):
     """The one puzzle a day gets, shaped and measured until it asks what its weekday asks."""
-    profile = PROFILES[rung(day)]
+    water = shape_of(day)
+    profile = profile_for(rung(day), water)
     rng = seeded(day)
     low, high = profile["band"]
 
     for _ in range(ATTEMPTS):
-        drawn = shape(rng, profile)
+        drawn = shape(rng, profile, water)
         if drawn is None:
             continue
         budget = rng.randint(*profile["budget"])
@@ -363,10 +595,11 @@ def puzzle(day):
             map=settled["map"].split("\n"),
             plan=plan_of(settled, settled["pen"]),
             demand=settled["demand"],
+            shape=water,
         )
 
     raise SystemExit(
-        f"{day} ({profile['name']}) would not give up a map asking {low}–{high}% "
+        f"{day} ({profile['name']}, {water}) would not give up a map asking {low}–{high}% "
         f"in {ATTEMPTS} tries — loosen its band or its water"
     )
 
@@ -389,7 +622,7 @@ def almanac_line(entry):
 
 
 def fixture_line(entry):
-    return f"{entry['day']} {entry['demand']} {'/'.join(entry['plan'])}"
+    return f"{entry['day']} {entry['demand']} {entry['shape']} {'/'.join(entry['plan'])}"
 
 
 BANNER = """\
@@ -439,7 +672,8 @@ def write_fixtures(path, years, entries):
         "///\n"
         "/// One line to a day: the date, what the day asks — the gap between the best pen the\n"
         "/// map has in it and the pen a player gets by squaring the map off, as a percentage —\n"
-        "/// and the wall of that best pen, as a grid of `#` with its rows run together by `/`.\n"
+        "/// the shape its water was laid in, and the wall of that best pen, as a grid of `#`\n"
+        "/// with its rows run together by `/`.\n"
         "///\n"
         "/// `DailyAlmanacTests` lays every one of those walls out on its day's board and lets\n"
         "/// the pig go, so no day can promise a pen its map does not hold.\n"
@@ -492,18 +726,18 @@ def main():
 
     if options.sample:
         for step in range(1, 8):
-            asked = [
-                entry["demand"]
-                for entry, day in zip(entries, wanted)
-                if rung(day) == step
-            ]
-            best = [
-                entry["best"] for entry, day in zip(entries, wanted) if rung(day) == step
-            ]
-            print(
-                f"{PROFILES[step]['name']:9} band={PROFILES[step]['band']} "
-                f"asks={sorted(asked)} best={sorted(best)}"
-            )
+            for water in ["plain", *SHAPES]:
+                asked = sorted(
+                    entry["demand"]
+                    for entry, day in zip(entries, wanted)
+                    if rung(day) == step and entry["shape"] == water
+                )
+                if not asked:
+                    continue
+                print(
+                    f"{PROFILES[step]['name']:9} {water:8} band={PROFILES[step]['band']} "
+                    f"asks={asked}"
+                )
         return
 
     write_almanac(options.almanac, years, entries)

@@ -295,6 +295,14 @@ A puzzle a day, on its own board, with a clock running on it.
   gap between the two — what the level asks, the same number the meadow is ordered by — has
   to fall in the band its weekday was given. The bands are laid end to end, so a Tuesday
   always asks more than a Monday.
+- **Not every board is laid out the same way.** Running across the climb is a second thing,
+  which is what the water on a board actually looks like. Most days drop it in bodies until
+  the board is wet enough, but about a quarter of them arrange it instead: freckled over
+  every other square so there is plenty of room and no clean run of it, stepped across a
+  corner as a shore that hands you half a staircase, or split into two banks that pinch the
+  board down to a neck and leave you to decide which side the pen belongs on. It changes
+  nothing about what the day asks — the band is measured on whatever board came out — and
+  everything about what you are looking at when you open it.
 - **The clock counts up.** It starts when the board opens and stops the moment the pen
   holds, so the lap of honour is not charged to you. *Go bigger* picks the clock back up
   where it stood; *Start over* puts it back to nothing; *Put it back* puts the submitted
@@ -589,12 +597,28 @@ Both halves are budgets rather than floors, which is the part that used to go wr
 
 The bands are laid end to end and never overlap, which is what makes a week a climb rather than a claim. Skulls are kept off the four tiles around the pig, so the four pieces boxed round it that hold on every other board in this game hold on a daily too.
 
+#### The shape a day's water takes
+
+The table above says how much water a day gets. It says nothing about where it goes, and for seven hundred boards the answer was the same one: bodies of it dropped one after another until the day was wet enough. That is the right default — it is the arrangement a weekday's share of water was tuned against — but it is also the reason a Tuesday in March looks like a Tuesday in September. So roughly two days a week are handed one of the shapes in `SHAPES` instead:
+
+| Shape | What the board looks like | Rungs |
+|---|---|---|
+| `speckle` | Water freckled a tile at a time over one colour of the board's checkerboard, never beside water already there, so every freckle stands alone. Part of the day's water still goes down as ordinary bodies first; the rest of the board gets the lattice. | all |
+| `coast` | A shore cut across one corner on the diagonal, stepping in a tile at a time. A lake against an edge hands over a straight wall, which is the wall a player would have built anyway; a stepped shore hands over half a staircase. | Mon, Wed–Fri |
+| `strait` | Two banks of water reaching in from opposite edges and stopping short of each other, so the board is very nearly cut in two and a neck of ground a tile or three wide holds the halves together. | Mon, Tue, Thu, Fri |
+
+A shape only decides where the water goes. The weekday still sets how wet the board is, how much of it may lie in one piece, and what the day has to ask, and a shaped map is thrown back and drawn again until it lands in its band exactly like a plain one. Which days get a shape is drawn from the date alone rather than from the day's generator, which is what made adding this a change to some of the book rather than all of it: a day that comes up plain asks its generator for the same things in the same order and comes out the board it always was.
+
+A shape is only offered a rung it can actually be built on, and the rungs in the table are measured rather than guessed. A coast is one long body, so it wants a pool cap worth spending — and because a stepped shore is a *staircase*, it widens the gap between the best pen and the squared-off one rather than closing it, which is why a Tuesday coast lands around 20% against a band of 6–14 and is not offered. The freckles pull the other way, and that is the counter-intuitive one: a freckle beside the block of ground a player squares off is a free fence piece for the pen that needed one most, while the staircase pen it is being measured against was already spending its budget well. Water broken up small therefore makes a day *easier*, so the dry end of the week keeps more of its water in bodies to pay for its freckles.
+
+Because a shape is a claim about the board a player is handed, and a claim nobody counts is one the generator can quietly stop honouring, the shape each day came out as is written into the fixtures beside what it asks. `DailyAlmanacTests` counts them, holds the plain board to still being what a day usually looks like, and makes every freckled day prove it really is freckled rather than a plain board filed under another name.
+
 It writes two files, both generated and both committed:
 
 - `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, one line to a day: the date, the fence budget, the two star thresholds, the best pen the map has in it, and the map itself with its rows run together by `/`.
-- `PigpenTests/DailyAlmanacFixtures.swift` — what each day asks, and the wall of the pen its `maximumScore` was measured on.
+- `PigpenTests/DailyAlmanacFixtures.swift` — what each day asks, the shape its water was laid in, and the wall of the pen its `maximumScore` was measured on.
 
-`DailyAlmanacTests` lays every one of those walls out on its day's board and lets the pig go, so a day that promised a pen its map does not hold fails in CI rather than withholding the "best pen there is" verdict from a player forever. It checks the rest of what the almanac claims too: that the book runs from New Year's Day to New Year's Eve without a gap, that every day falls in its weekday's band, that every week climbs from Monday to Sunday, and that four pieces round the pig hold on every board in it.
+`DailyAlmanacTests` lays every one of those walls out on its day's board and lets the pig go, so a day that promised a pen its map does not hold fails in CI rather than withholding the "best pen there is" verdict from a player forever. It checks the rest of what the almanac claims too: that the book runs from New Year's Day to New Year's Eve without a gap, that every day falls in its weekday's band, that every week climbs from Monday to Sunday, that the book still holds every shape of water the generator knows how to lay, and that four pieces round the pig hold on every board in it.
 
 Everything a day is made of comes out of a generator seeded from that date alone, so days are independent, the work spreads over as many cores as there are, and the same run of the tool produces the same year twice over. Running it takes the better part of an hour across four cores, which is the price of measuring what a puzzle asks rather than declaring it.
 
