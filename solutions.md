@@ -39,7 +39,7 @@ five fewer for every skull.
 | 1 | River Bend | 12 | 35 | — | 35 | 35 |
 | 2 | Horseshoe Lake | 6 | 24 | — | 24 | 24 |
 | 3 | The Narrows | 10 | 22 | — | 22 | 19 |
-| 4 | The Big Meadow | 16 | 33 | — | 33 | 26 |
+| 4 | The Dew Ponds | 12 | 44 | — | 44 | 32 |
 | 5 | Otter Ford | 12 | 24 | — | 24 | 16 |
 | 6 | Puddle Corner | 8 | 26 | — | 26 | 16 |
 | 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 | 26 |
@@ -149,27 +149,32 @@ bottom one as free walls. Four pieces down the west rim close that side; the oth
 a diagonal down the east, wide enough to take in the ground past the arms of both lakes.
 22 tiles.
 
-## 4. The Big Meadow — 16 pieces, 33
+## 4. The Dew Ponds — 12 pieces, 44
 
 ```
-..........
-.~~~~~....
-.~~~~~~...
-..~~~~~~..
-.#o~~~~~..
-#ooo~~~o#.
-#oPoooooo#
-#oooooooo#
-.#ooooooo#
-..#ooooo#.
-...#####..
+...#~.....
+..#oo~....
+.#oooo~...
+#oooooo~..
+#ooooooo~.
+#oooPoooo~
+#ooooooo~.
+#oooooo~..
+.#oooo~...
+..##~#....
 ```
 
-The widest board in the meadow, with a lake down one side and no corner to hide in.
-Sixteen pieces make an octagon, and the only trick is cutting the top of it to the shape of
-the shore rather than walling straight underneath the lake: the pen tucks up the west side
-of the water and round the foot of it, taking ground that a tidy octagon would leave out.
-33 tiles.
+A line of ponds down the east of the field, one tile apart, and nothing else on the map. Each
+pond is a tile of wall you do not pay for — and they are laid along the side of a pen nobody
+has drawn.
+
+A rectangle cannot use a single one of them: a right-angled wall runs past a diagonal line of
+ponds and touches it once. So the block pays for its own east wall and holds 32. The twelve
+pieces spent along the *west* instead, letting the ponds do the east, close a diamond of 44 —
+the biggest pen in the meadow.
+
+The ponds here sit a tile apart, so the shape is nearly drawn for you. That is the gentle
+version; the woods space them two apart and the mountain three.
 
 ## 5. Otter Ford — 12 pieces, 24
 
@@ -373,22 +378,32 @@ goes after the second gives up more ground on the way down than five points can 
 A brook bars the north, so the ground under it is cheap to wall, and the pen closes round the
 truffle it was going to hold anyway — the first windfall that costs nothing to take.
 
-## 4. Gnarl Ford — 12 pieces, 24
+## 4. Fairy Ring — 13 pieces, 36
 
 ```
 ..........
-..........
-.....#....
-~~~~~o~~~~
-#oooooooo#
-.#ooPoooo#
-..#ooooo#.
-...#ooo#..
-....###...
+...##.....
+..~oo~#a..
+.#ooooo~..
+#ooooooo#.
+~oooPoooo#
+#ooooooo~.
+.#ooooo#..
+..~oo~#...
+...##.....
 ```
 
-One dry stone is the only way across the stream; a single piece shuts it and hands you the
-whole far bank as a free wall. Nothing lies on this one — the woods do not fill every clearing.
+Seven pools set round a clearing, no two of them touching, and a truffle out past the
+north-east. This is the meadow's dew ponds with the spacing opened out — two tiles between
+pools instead of one — so what they trace is a good deal less obvious.
+
+Squaring off is worth 19 and reaches nothing, because not one pool falls where a rectangle
+wants its wall. The thirteen pieces are exactly the rest of the ring the pools are sitting on:
+lay them in the gaps and it closes on 36 tiles.
+
+The truffle is the decoy. Breaking the ring to reach it gives up more ground than five points
+ever pays for, which is the same lesson Foxglove Dell taught two fields earlier, asked the
+other way round.
 
 ## 5. Fern Gully — 12 pieces, 34
 
@@ -513,7 +528,7 @@ What the mountain does differently is refuse to hand out clean ground: every fie
 has at least one ember staked in it, so there is nowhere a wall runs straight without
 something in the way. It is also the dry world — Basalt Flats has no water on it at all,
 which no field in either world below can say — and it climbs the whole way from Cinder Slope
-to Obsidian Corner rather than for six stops and then sorting by what it scatters.
+to Crater Pools rather than for six stops and then sorting by what it scatters.
 
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
@@ -523,7 +538,7 @@ to Obsidian Corner rather than for six stops and then sorting by what it scatter
 | 4 | Chestnut Scree | 12 | 27 | 2 chestnuts, 1 ember | 32 | 21 |
 | 5 | Sulphur Rill | 13 | 24 | — | 24 | 15 |
 | 6 | Fumarole Field | 14 | 17 | 2 chestnuts | 27 | 17 |
-| 7 | Obsidian Corner | 10 | 39 | 1 ember | 34 | 21 |
+| 7 | Crater Pools | 12 | 29 | 1 chestnut | 34 | 17 |
 | 8 | Smoulder Ridge | 16 | 32 | 3 chestnuts, 1 ember | 42 | 29 |
 | 9 | Wyrm Caldera | 20 | 29 | 3 chestnuts, 1 ember | 39 | 32 |
 
@@ -667,28 +682,29 @@ It is the smallest pen on the mountain and one of the best paid: 17 tiles, but b
 chestnuts are inside it, which is 27 against a block worth 17. The vents themselves cost
 nothing — the wall is laid one tile clear of each.
 
-## 7. Obsidian Corner — 10 pieces, 34
+## 7. Crater Pools — 12 pieces, 34
 
 ```
-~~~~~~~~~
-~ooooooo#
-~ooooooo#
-~ooPoooo#
-~oooooo#.
-~oooxo#..
-~oooo#...
-~ooo#....
-.###.....
+..........
+....~.....
+...#o#.x..
+..~ooo#...
+.#ooooo~..
+#oooPooo#.
+.~ooooo#..
+#ooooo~...
+.#aoo#....
+..##~.....
 ```
 
-The mountain's staircase, and the widest gap on the trail. Water takes the whole north and
-west, so the pen needs two walls of its own and the puzzle is entirely their shape: ten
-pieces on the diagonal from shore to shore hold 39 tiles, where the best right-angled block
-those ten can wall holds 21.
+Tarns caught in the rock three tiles apart — the widest spacing in the game — with an ember
+staked beyond them and a chestnut lying inside. At this spacing the pools give away almost
+nothing: five hints of a ring, and two thirds of it left to work out.
 
-The ember in the middle of it is the one this world lets you swallow. Every wall that steps
-round it gives up a good deal more than five tiles of that corner to do it, so it goes
-inside and is paid for: 39 tiles less five is 34.
+Which is why this is the field that asks the most of any in the game. A block is worth 17. The
+ring the pools imply holds 29 tiles and the chestnut, which is 34, and it leaves the ember on
+the outside — out at the edge of the pen, where stepping the wall in beside it costs one tile
+rather than five points.
 
 ## 8. Smoulder Ridge — 16 pieces, 42
 

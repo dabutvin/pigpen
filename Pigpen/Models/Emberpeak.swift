@@ -37,6 +37,7 @@ extension PuzzleLevel {
         twoStarScore: 14,
         threeStarScore: 24,
         maximumScore: 25,
+        question: .shore,
         map: """
             ..........
             ..........
@@ -65,6 +66,7 @@ extension PuzzleLevel {
         twoStarScore: 13,
         threeStarScore: 22,
         maximumScore: 23,
+        question: .bare,
         map: """
             ..........
             ..........
@@ -95,6 +97,7 @@ extension PuzzleLevel {
         twoStarScore: 18,
         threeStarScore: 29,
         maximumScore: 31,
+        question: .detour,
         map: """
             ..........
             .~~~~~~~..
@@ -121,6 +124,7 @@ extension PuzzleLevel {
         twoStarScore: 18,
         threeStarScore: 30,
         maximumScore: 32,
+        question: .detour,
         map: """
             ..........
             ~~~~~~~~~~
@@ -147,6 +151,7 @@ extension PuzzleLevel {
         twoStarScore: 14,
         threeStarScore: 23,
         maximumScore: 24,
+        question: .obstruction,
         map: """
             .........~
             .........~
@@ -175,6 +180,7 @@ extension PuzzleLevel {
         twoStarScore: 15,
         threeStarScore: 25,
         maximumScore: 27,
+        question: .obstruction,
         map: """
             ..........
             ..........
@@ -189,31 +195,34 @@ extension PuzzleLevel {
             """
     )
 
-    /// The mountain's staircase, and the widest gap on the trail. A tarn takes the whole
-    /// north and west, so the pen only ever needs two walls of its own and the puzzle is
-    /// entirely the shape of them: ten pieces run diagonally from shore to shore hold
-    /// thirty-nine tiles, where the best right-angled block those ten can wall holds
-    /// twenty-one.
+    /// The hardest field in the game, and the third turn of the idea the meadow's dew ponds
+    /// opened. Tarns caught in the rock at three-tile intervals, an ember staked out beyond
+    /// them and a chestnut lying inside: the pools are the wall of a pen nobody has drawn, and
+    /// at this spacing they give away almost nothing — five hints of a ring, and the other
+    /// two thirds of it to work out.
     ///
-    /// The ember inside is the one this world lets you swallow. It costs five, and every wall
-    /// that steps round it gives up more than five tiles of the corner to do it.
-    static let obsidianCorner = emberpeak(
-        id: "obsidian-corner",
-        name: "Obsidian Corner",
-        fenceBudget: 10,
-        twoStarScore: 19,
+    /// Which is why squaring off is worth 17 here and the ring is worth 34. The meadow spaced
+    /// its ponds one tile apart and asked 27%; the thicket two, and asked 44%; the mountain
+    /// three, and asks 50% — more than any other field in the game, Sour Ground included.
+    static let craterPools = emberpeak(
+        id: "crater-pools",
+        name: "Crater Pools",
+        fenceBudget: 12,
+        twoStarScore: 16,
         threeStarScore: 32,
         maximumScore: 34,
+        question: .constellation,
         map: """
-            ~~~~~~~~~
-            ~........
-            ~........
-            ~..P.....
-            ~........
-            ~...x....
-            ~........
-            ~........
-            .........
+            ..........
+            ....~.....
+            .......x..
+            ..~.......
+            .......~..
+            ....P.....
+            .~........
+            ......~...
+            ..a.......
+            ....~.....
             """
     )
 
@@ -230,6 +239,7 @@ extension PuzzleLevel {
         twoStarScore: 24,
         threeStarScore: 39,
         maximumScore: 42,
+        question: .detour,
         map: """
             ..........
             .~~~~.....
@@ -263,6 +273,7 @@ extension PuzzleLevel {
         twoStarScore: 22,
         threeStarScore: 37,
         maximumScore: 39,
+        question: .herd,
         map: """
             ..........
             ...a......
@@ -290,6 +301,7 @@ private func emberpeak(
     twoStarScore: Int,
     threeStarScore: Int,
     maximumScore: Int,
+    question: Question? = nil,
     map: String
 ) -> PuzzleLevel {
     guard let level = PuzzleLevel(
@@ -299,6 +311,7 @@ private func emberpeak(
         twoStarScore: twoStarScore,
         threeStarScore: threeStarScore,
         maximumScore: maximumScore,
+        question: question,
         map: map
     ) else {
         preconditionFailure("The built-in \(name) map is malformed")
@@ -312,7 +325,7 @@ extension WorldMap {
     ///
     /// The trail is ordered by what each field asks — the gap between the pen it holds and
     /// the pen a player gets by squaring the map off — the way the meadow's opening stretch
-    /// is, and it climbs the whole way from Cinder Slope to Obsidian Corner. The last two
+    /// is, and it climbs the whole way from Cinder Slope to Crater Pools. The last two
     /// stops step out of that order for the same reason the meadow's do: Smoulder Ridge is
     /// the widest board in the world and the caldera is a boss, and neither is measured by
     /// the same yardstick as a field with one animal and one wall to shape.
@@ -325,7 +338,7 @@ extension WorldMap {
             WorldNode(level: .chestnutScree, across: 0.72, up: 3.06),
             WorldNode(level: .sulphurRill, across: 0.26, up: 4.02),
             WorldNode(level: .fumaroleField, across: 0.74, up: 5.06),
-            WorldNode(level: .obsidianCorner, across: 0.28, up: 6.02),
+            WorldNode(level: .craterPools, across: 0.28, up: 6.02),
             WorldNode(level: .smoulderRidge, across: 0.70, up: 7.04),
             WorldNode(level: .wyrmCaldera, across: 0.32, up: 8.06, starToll: 21)
         ]

@@ -121,7 +121,7 @@ trail like this one.
 | 1 | River Bend | 12 | — | 35 | 35 | — |
 | 2 | Horseshoe Lake | 6 | — | 24 | 24 | — |
 | 3 | The Narrows | 10 | — | 19 | 22 | 13% |
-| 4 | The Big Meadow | 16 | — | 26 | 33 | 21% |
+| 4 | The Dew Ponds | 12 | — | 32 | 44 | 27% |
 | 5 | Otter Ford | 12 | — | 16 | 24 | 33% |
 | 6 | Puddle Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Windfall Orchard | 12 | 4 apples | 26 | 37 | 29% |
@@ -222,7 +222,7 @@ the meadow at nothing.
 | 1 | Bramble Brook | 9 | — | 20 | 27 | 25% |
 | 2 | Foxglove Dell | 7 | 2 truffles | 21 | 29 | 27% |
 | 3 | Hazel Copse | 12 | 1 truffle | 23 | 30 | 23% |
-| 4 | Gnarl Ford | 12 | — | 16 | 24 | 33% |
+| 4 | Fairy Ring | 13 | 1 truffle | 19 | 36 | 47% |
 | 5 | Fern Gully | 12 | 2 truffles | 23 | 34 | 32% |
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 17 | 26 | 34% |
@@ -259,8 +259,9 @@ and the meadow 159.
 
 And it **climbs the whole way**. Where the meadow climbs for six fields and then orders the
 last three by what they scatter, the mountain has something on the ground everywhere, so it is
-sorted by what it asks from Cinder Slope's 28% up to Obsidian Corner's 38% — with the widest
-board in the game and then the boss after them, since neither is measured by that yardstick.
+sorted by what it asks from Cinder Slope's 28% up to Crater Pools' 50% — the widest gap any
+field in the game leaves — with the broadest board and then the boss after them, since neither
+is measured by that yardstick.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
@@ -270,7 +271,7 @@ board in the game and then the boss after them, since neither is measured by tha
 | 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 21 | 32 | 34% |
 | 5 | Sulphur Rill | 13 | 2 embers | 15 | 24 | 37% |
 | 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 17 | 27 | 37% |
-| 7 | Obsidian Corner | 10 | 1 ember | 21 | 34 | 38% |
+| 7 | Crater Pools | 12 | 1 chestnut, 1 ember | 17 | 34 | 50% |
 | 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 29 | 42 | 30% |
 | 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 32 | 39 | 17% |
 
@@ -572,6 +573,91 @@ A whole new world has one more number to author: its **floor**, the least any of
 A map with a second animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
 The search carries its pens as bitmasks — one bit per tile of the board — rather than as sets of coordinates, which is the same search written so that it finishes in a second rather than half a minute. Nothing about which pens it keeps changed when it was rewritten, and the nine shipped levels come out at exactly the numbers they always did, which is what `PuzzleLevelTests` and `DifficultyTests` are there to say. That speed is what makes a year of daily puzzles possible at all.
+
+### Building a world
+
+A world is not nine maps. It is **nine questions in an order**.
+
+Every field on a trail declares the question it asks — its *type* — and a world is built by
+choosing nine of them, ordering them by how much they ask, and making sure each one asks more
+than the last time the universe asked it.
+
+#### The questions
+
+| Type | What the field asks | What it hands you free |
+|---|---|---|
+| `shore` | Which stretch of bank is worth walling? | One long straight wall |
+| `basin` | The water has nearly done it — where is the mouth? | Three sides of a pen |
+| `span` | Two banks that are each useless alone | Two facing walls, if you can reach both |
+| `gap` | Where exactly does one piece go? | A whole bank, for a single piece |
+| `corner` | How much does a diagonal buy over a right angle? | Two sides meeting at a corner |
+| `constellation` | The free walls are scattered — what shape do they imply? | A wall tile here and there |
+| `detour` | Is the windfall worth the ground you give up reaching it? | Nothing |
+| `obstruction` | Swallow the hazard and pay, or step the wall in beside it? | Nothing |
+| `bare` | Nothing is free. What shape holds the most per piece? | Nothing at all |
+| `herd` | One budget, two animals | The water between them |
+
+`herd` is reserved for a boss. Everything else is a field.
+
+#### The shape of a world
+
+- **Fields 1–7 climb.** Each asks at least as much as the one before it.
+- **Field 8 is the broad board** — the widest map in the world and the biggest pen in it. It
+  stands outside the climb, because the gap a big board leaves against a squared-off pen says
+  more about its size than about its difficulty.
+- **Field 9 is the boss**: type `herd`, a second animal, one budget, and a star toll.
+- The boss stops for a briefing film. Nothing else does.
+
+A world may repeat a type, and it need not use them all. What it may not do is ship a field
+with no type at all.
+
+#### The two ladders
+
+1. **Down a world** — fields are ordered by what they ask: `(maximumScore − squaredOff) / maximumScore`.
+2. **Across the universe, one type at a time** — a type's *hardest* field in a world asks at
+   least what that type's hardest field asked in the last world that had it.
+
+The second ladder is what stops a fourth world being the meadow in a new coat. It binds from the
+second world onward: Mudlark Meadow is the baseline every type is measured from, and it is
+allowed to have overshot, because it was authored before any of this existed. Sour Ground asks
+48% — more than anything in the two worlds above it — for a reason that is about blocks rather
+than about difficulty: a skull refuses fencing, so every squared-off pen worth having on that map
+is one the player cannot build.
+
+#### Making a type harder next time
+
+| Type | Turn it up by |
+|---|---|
+| `shore` | Shortening the bank, or bending it so a rectangle cannot follow it |
+| `basin` | Widening the mouth, so plugging it is no longer most of the answer |
+| `span` | Moving the two banks further apart than one wall can reach |
+| `gap` | Staking a hazard beside the gap, so the cheap plug costs shape |
+| `corner` | A longer budget — a diagonal pays more the further it runs |
+| `constellation` | Widening the spacing of the dots: every 2nd tile ≈ 27%, every 3rd ≈ 50% |
+| `detour` | Moving the windfall further off the tidy line, or making two of them compete |
+| `obstruction` | Moving the hazard from the edge of the ground into the middle of it |
+| `bare` | A longer budget — a bigger ring beats a bigger rectangle by more |
+| `herd` | Splitting the value unevenly, so the budget split stops being symmetric |
+
+#### Authoring one
+
+`Tools/level_search.py --budget N --plan --demand` prints the best pen, the squared-off block and
+the gap between them. A `constellation` is the one type easier to author backwards: choose the pen
+you want the player to find, take its wall with `fences_around`, lay water on every second or
+third tile of it, and **give the level exactly the rest of that wall as its budget**. The dots
+then imply the answer without drawing it, and no rectangle can use them, which is where the gap
+comes from.
+
+That budget rule is the whole of it, and getting it wrong is quiet. Hand out fewer pieces than
+the wall needs and the best pen is some smaller shape that only touches a few of the dots — the
+rest are then decoration, the level still measures hard because the dots are useless to
+*everyone*, and what shipped is a scatter rather than a constellation. So every constellation
+field is replayed with `Constellation.idleWater`, which fails the build if the pen it is
+authored around leaves a single tile of water unused.
+
+Every field is pinned twice — its best pen in its world's tests, its squared-off block in
+`DifficultyTests` — and both are replayed through the game's own rules, so a level that stops
+giving up what it claims fails the build.
 
 ### The daily almanac
 
