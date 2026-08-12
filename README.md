@@ -35,9 +35,9 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   narrow for a circle is run out and back instead, one too tight for that is bounced on the
   spot, and the best pen the map has in it gets its confetti in every colour there is. Ask
   for reduced motion and the field keeps still.
-- **The boss keeps two.** A world's last puzzle stands a second animal on the field as well
-  as the pig — a deer in the meadow, a boar in the thicket, a wyrm on the mountain — and one
-  budget has to hold both
+- **The boss changes a rule.** A world's last puzzle stands a second animal on the field as
+  well as the pig — a deer in the meadow, a boar in the thicket, a wyrm on the mountain — and
+  each world asks something different of the pair. The meadow's one budget has to hold both
   of them. One pen round the pair or a pen apiece is up to you — a pen holds whatever ground
   it shuts in, whether that ground is in one piece or two — but an animal left loose loses
   the field however well the other one is held.
@@ -227,7 +227,7 @@ the meadow at nothing.
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 17 | 26 | 34% |
 | 8 | Elderwood | 15 | 3 truffles, 1 bramble | 28 | 41 | 31% |
-| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 30 | 34 | 11% |
+| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 30 | 43 | 30% |
 
 Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
@@ -273,7 +273,7 @@ is measured by that yardstick.
 | 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 17 | 27 | 37% |
 | 7 | Crater Pools | 12 | 1 chestnut, 1 ember | 17 | 34 | 50% |
 | 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 29 | 42 | 30% |
-| 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 32 | 39 | 17% |
+| 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 27 | 43 | 37% |
 
 Smoulder Ridge holds the biggest pen on any world trail — 42, off sixteen pieces, three
 chestnuts and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself: the pig up on the north
@@ -595,9 +595,11 @@ than the last time the universe asked it.
 | `detour` | Is the windfall worth the ground you give up reaching it? | Nothing |
 | `obstruction` | Swallow the hazard and pay, or step the wall in beside it? | Nothing |
 | `bare` | Nothing is free. What shape holds the most per piece? | Nothing at all |
-| `herd` | One budget, two animals | The water between them |
+| `herd` | One budget, two animals, held together or apart — whichever scores | The water between them |
+| `apart` | One budget, two animals that will not share ground | The water between them |
+| `exclude` | Hold the pig and leave the other animal outside | Nothing — its tile is a hole |
 
-`herd` is reserved for a boss. Everything else is a field.
+`herd`, `apart` and `exclude` are the **boss rules**, and a field never asks one.
 
 #### The shape of a world
 
@@ -605,7 +607,9 @@ than the last time the universe asked it.
 - **Field 8 is the broad board** — the widest map in the world and the biggest pen in it. It
   stands outside the climb, because the gap a big board leaves against a squared-off pen says
   more about its size than about its difficulty.
-- **Field 9 is the boss**: type `herd`, a second animal, one budget, and a star toll.
+- **Field 9 is the boss**: the field where the world adds a rule its other eight do not use,
+  plus a star toll. **No two worlds may add the same rule** — otherwise every world climbs to
+  the same finale with a different animal painted on it, which is what the first three did.
 - The boss stops for a briefing film. Nothing else does.
 
 A world may repeat a type, and it need not use them all. What it may not do is ship a field
@@ -638,6 +642,8 @@ is one the player cannot build.
 | `obstruction` | Moving the hazard from the edge of the ground into the middle of it |
 | `bare` | A longer budget — a bigger ring beats a bigger rectangle by more |
 | `herd` | Splitting the value unevenly, so the budget split stops being symmetric |
+| `apart` | Bringing the two close enough that one pen round the pair nearly wins |
+| `exclude` | Standing the one to be left out in the middle of the ground worth having |
 
 #### Authoring one
 

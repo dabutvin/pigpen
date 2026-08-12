@@ -12,6 +12,9 @@ final class PuzzleGame {
         case escaped(escapes: [Escape])
         /// Everything is penned in `pen`.
         case penned(pen: Set<GridPoint>)
+        /// Nothing got out, but the field's rule is broken: the ground is shut and still
+        /// not won. Shown like a pen so the player can see what they built.
+        case refused(pen: Set<GridPoint>, refusal: Refusal)
     }
 
     /// A pen that held, kept whole: what it was worth and the fencing that held it.
@@ -259,6 +262,8 @@ final class PuzzleGame {
             phase = .escaped(escapes: escapes)
         case .penned(let pen):
             phase = .penned(pen: pen)
+        case .refused(let pen, let refusal):
+            phase = .refused(pen: pen, refusal: refusal)
         }
     }
 

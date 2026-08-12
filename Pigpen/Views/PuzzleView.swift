@@ -349,8 +349,37 @@ struct PuzzleView: View {
             ) {
                 pennedActions
             }
+        case .refused(_, let refusal):
+            verdictCard(
+                headline: refusedHeadline(refusal),
+                detail: refusedDetail(refusal),
+                tint: GamePalette.barn
+            ) {
+                Button { game.resumeBuilding() } label: {
+                    Label("Keep building", systemImage: "hammer")
+                }
+                .buttonStyle(.borderedProminent)
+            }
         case .building:
             EmptyView()
+        }
+    }
+
+    /// What a field says when the fencing holds everything and the board still will not have
+    /// it: the two that will not share are in one pen, or the one that had to stay out is in.
+    private func refusedHeadline(_ refusal: Refusal) -> String {
+        switch refusal {
+        case .together(let animal): "The \(animal.name) will not share"
+        case .shutIn(let animal): "The \(animal.name) is inside"
+        }
+    }
+
+    private func refusedDetail(_ refusal: Refusal) -> String {
+        switch refusal {
+        case .together(let animal):
+            "Both of them are held, but in the one pen. The \(animal.name) needs ground of its own."
+        case .shutIn(let animal):
+            "The pig is held, and so is the \(animal.name). Leave that one on the outside."
         }
     }
 
@@ -594,6 +623,13 @@ struct PuzzleView: View {
             // otherwise the walk keeps stepping after sendHome and leaves a deer painted
             // on the grass outside the board.
             guard await walk(escapes) else { return }
+            guard !Task.isCancelled else { return }
+            reveal()
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+        case .refused:
+            // Nothing walks anywhere — everything is where it was fenced. The card says what
+            // the board wanted instead, and no clock is stopped and no score is told, since
+            // the field is not won.
             guard !Task.isCancelled else { return }
             reveal()
             UINotificationFeedbackGenerator().notificationOccurred(.error)

@@ -247,34 +247,38 @@ extension PuzzleLevel {
             """
     )
 
-    /// The thicket's boss: a hollow pool across the middle of the wood, the pig grazing
-    /// north of it and a boar south, with the same rule the meadow's last field taught —
-    /// one budget has to hold both of them. The pool walls one side of each enclosure the
-    /// way Stag Mere's water does, so the twenty pieces go out as two pens rather than one.
-    /// Truffles on both shores are worth going out of the way for, and there is a bramble
-    /// on each: neither wall can pass over one, and on this board walling round either of
-    /// them costs more ground than the bramble does, so each pen takes its own in and pays
-    /// for it. 29 tiles and three truffles, less the two brambles, come to 34. It asks for
-    /// most of the stars the fields below it hold before it will open.
+    /// The thicket's boss, and the field where the woods stop copying the meadow.
+    ///
+    /// Stag Mere taught that two pens sharing a stretch of water beat one pen dragged round
+    /// both animals. Here the pool is pulled back into the middle of the wood and touches
+    /// neither animal, so that lesson does not apply — and for a while the board looks as
+    /// though one big pen round the pair is the answer, because with twenty pieces it very
+    /// nearly is.
+    ///
+    /// It is not, because the boar will not have it. This is the first field in the game that
+    /// refuses a pen for a reason other than something walking out of it: hold them both, but
+    /// never in the same ground. So the twenty pieces go out as two enclosures that lean on
+    /// the pool from opposite sides and share not one tile — 28 tiles and three truffles, 43,
+    /// against a squared-off 30. It asks for most of the stars the fields below it hold.
     static let boarHollow = woodland(
         id: "boar-hollow",
         name: "Boar Hollow",
         fenceBudget: 20,
-        twoStarScore: 19,
-        threeStarScore: 32,
-        maximumScore: 34,
-        question: .herd,
+        twoStarScore: 25,
+        threeStarScore: 40,
+        maximumScore: 43,
+        question: .apart,
         map: """
             ..........
-            .....a....
-            ..P.......
-            ...x......
+            ..a....x..
+            ...P......
+            ..........
+            ....~~~...
             ...~~~~...
-            ..~~~~~~..
-            ...~~~~...
-            .......x..
+            ....~~....
             ..a....B..
-            ....a.....
+            .......a..
+            ..x.......
             ..........
             """
     )

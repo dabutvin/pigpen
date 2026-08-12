@@ -98,14 +98,14 @@ def fences_around(pen, mud):
     return edge
 
 
-def can_be_walled(edge, treats):
+def can_be_walled(edge, treats, staked=()):
     """Whether the wall a pen needs is one that could actually be built.
 
     A skull takes no fence, so a pen with one on its edge cannot be closed there. Such a
     pen is not thrown away while the search runs — growing out over the skull turns it
     back into a pen that holds — but it is never an answer.
     """
-    return all(treats.get(tile) != SKULL for tile in edge)
+    return all(treats.get(tile) != SKULL and tile not in staked for tile in edge)
 
 
 def on_rim(tile, rows, columns):
@@ -113,7 +113,7 @@ def on_rim(tile, rows, columns):
     return tile[0] in (0, rows - 1) or tile[1] in (0, columns - 1)
 
 
-def search(mud, treats, starts, rows, columns, budget, beam):
+def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
     """The best pen within budget, as (score, tiles).
 
     The pens are carried as bitmasks — one bit per tile of the board — rather than as sets
@@ -176,12 +176,43 @@ def search(mud, treats, starts, rows, columns, budget, beam):
         """Whether a wall of these tiles is within budget and can be built at all."""
         return edge.bit_count() <= budget and not edge & staked
 
+    # Which animals the pen has to grow from, and which tile it may never cover.
+    others = [tile for animal, tile in starts.items() if animal != "P"]
+    if rule == "exclude":
+        if len(others) != 1:
+            raise SystemExit("--rule exclude wants exactly one animal besides the pig")
+        seeds = [starts["P"]]
+        # The one left outside is a hole in the ground the wall can neither cover nor stand
+        # on: no piece may be laid on an animal, so its tile is staked exactly like a skull.
+        pennable &= ~bit(others[0])
+        staked |= bit(others[0])
+    else:
+        seeds = list(starts.values())
+
+    def keeps_the_rule(pen):
+        """Whether a pen that holds is one this board will actually accept."""
+        if rule != "apart":
+            return True
+        # The two will not share ground, so the pig's run of it must not reach the other.
+        seen, queue = bit(starts["P"]), [bit(starts["P"])]
+        while queue:
+            tile = queue.pop()
+            spreading = reach[tile] & pen & ~seen
+            while spreading:
+                step = spreading & -spreading
+                spreading ^= step
+                seen |= step
+                queue.append(step)
+        return not seen & bit(others[0])
+
     alone, touching = 0, 0
-    for start in starts.values():
+    for start in seeds:
         alone |= bit(start)
         touching |= reach[bit(start)]
 
-    best = (points(alone), alone) if holds(touching & ground & ~alone) else (0, 0)
+    best = (points(alone), alone) if (
+        holds(touching & ground & ~alone) and keeps_the_rule(alone)
+    ) else (0, 0)
     live = {alone: touching}
 
     while live:
@@ -203,7 +234,7 @@ def search(mud, treats, starts, rows, columns, budget, beam):
             edge = halo & ground & ~pen
             cost[pen] = edge.bit_count()
             held[pen] = points(pen)
-            if holds(edge) and held[pen] > best[0]:
+            if holds(edge) and held[pen] > best[0] and keeps_the_rule(pen):
                 best = (held[pen], pen)
 
         # Cheap pens are the ones worth widening: a pen over budget is not thrown away,
@@ -270,7 +301,7 @@ def blocks_around(pennable, start, rows, columns):
     return found - {frozenset()}
 
 
-def squared_off(mud, treats, starts, rows, columns, budget):
+def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
     """The best pen a player gets by squaring the map off, as (score, tiles).
 
     One block of ground per animal, leaning on whatever water happens to be there, and
@@ -285,7 +316,14 @@ def squared_off(mud, treats, starts, rows, columns, budget):
     learnt something, and those belong further along.
     """
     pennable = {tile for tile in mud if not on_rim(tile, rows, columns)}
-    each = [blocks_around(pennable, start, rows, columns) for start in starts.values()]
+    others = [tile for animal, tile in starts.items() if animal != "P"]
+    staked = set(others) if rule == "exclude" else set()
+    if rule == "exclude":
+        # Only the pig is being held, and no block may swallow the one left outside.
+        pennable = pennable - set(others)
+        each = [blocks_around(pennable, starts["P"], rows, columns)]
+    else:
+        each = [blocks_around(pennable, start, rows, columns) for start in starts.values()]
 
     best = (0, frozenset())
     for choice in itertools.product(*each):
@@ -294,8 +332,13 @@ def squared_off(mud, treats, starts, rows, columns, budget):
         if any(one & other for one, other in itertools.combinations(choice, 2)):
             continue
         pen = frozenset().union(*choice)
+        # A board that keeps two apart is not squared off by a pair of blocks that touch,
+        # since ground the pig can walk from one into the other is one pen, not two.
+        if rule == "apart" and others:
+            if others[0] in run_of_ground(pen, starts["P"]):
+                continue
         edge = fences_around(pen, mud)
-        if len(edge) <= budget and can_be_walled(edge, treats):
+        if len(edge) <= budget and can_be_walled(edge, treats, staked):
             best = max(best, (score(pen, treats), pen))
     return best
 
@@ -332,6 +375,13 @@ def main():
     parser.add_argument("--budget", type=int, required=True, help="Fence pieces the level hands out")
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
+        "--rule",
+        choices=("herd", "apart", "exclude"),
+        default="herd",
+        help="What a board with a second animal on it asks: hold both, hold them apart, or "
+             "hold the pig and shut the other one out",
+    )
+    parser.add_argument(
         "--plan",
         action="store_true",
         help="Also print the pen as the bare plan PigpenTests pins the level to",
@@ -345,7 +395,7 @@ def main():
     options = parser.parse_args()
 
     mud, treats, starts, rows, columns = parse(options.map.read())
-    points, pen = search(mud, treats, starts, rows, columns, options.budget, options.beam)
+    points, pen = search(mud, treats, starts, rows, columns, options.budget, options.beam, options.rule)
     if not pen:
         raise SystemExit("No pen holds within that budget")
 
@@ -355,7 +405,7 @@ def main():
         print(draw(mud, treats, starts, rows, columns, pen, plan_only=True))
 
     if options.demand:
-        plain, block = squared_off(mud, treats, starts, rows, columns, options.budget)
+        plain, block = squared_off(mud, treats, starts, rows, columns, options.budget, options.rule)
         print()
         print(draw(mud, treats, starts, rows, columns, block))
         if options.plan:
