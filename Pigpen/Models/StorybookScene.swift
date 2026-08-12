@@ -394,12 +394,144 @@ extension StorybookScene {
             start: start
         )
     }
+}
 
+// MARK: - The city's films
+
+extension StorybookScene {
+    /// Before the first walk into Cogsworth City. It carries the two things the city changes
+    /// — a pie to shut in, a drain to build around — says out loud that the water down here
+    /// is cut one tile wide rather than lying about in ponds, and then hands the game back on
+    /// the rule it has always been.
+    static func cogsworthOpening(start: Date = .now) -> Self {
+        Self(
+            key: "cogsworth-opening",
+            title: "Cogsworth City",
+            light: .cityDay,
+            shots: [
+                Shot(
+                    motif: "🏙️",
+                    strewn: ["🧱", "💨", "🧱"],
+                    caption: "Cogsworth City. Everything in it was built by somebody.",
+                    seconds: 3.6
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🧱", "💨"],
+                    caption: "Your pig came in under the gate and kept going.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🥧",
+                    strewn: ["🧱", "🪟", "🧱"],
+                    caption: "Pies dropped outside the shops. Five apiece, shut in.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["🧱", "💨"],
+                    caption: "Drains take no fence. Build around them, or pay the five.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🏙️", "🧱"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the city holds. It says what became of the rat king, that every
+    /// yard is fenced, and — like the three send-offs before it — points on past this world
+    /// to the next one waiting.
+    static func cogsworthHeld(start: Date = .now) -> Self {
+        Self(
+            key: "cogsworth-held",
+            title: "Cogsworth City held",
+            light: .cityDusk,
+            shots: [
+                Shot(
+                    motif: "🐀",
+                    strewn: ["🏙️", "🥧"],
+                    caption: "You fenced the rat king in with your own pig.",
+                    seconds: 3.5
+                ),
+                Shot(
+                    motif: "🏙️",
+                    strewn: ["🪔", "✨", "🪔"],
+                    caption: "Every yard in Cogsworth, fenced and held.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🌍",
+                    strewn: ["✨", "⭐️"],
+                    caption: "Nothing gets out of this city now.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🛸",
+                    strewn: ["✨", "⭐️", "✨"],
+                    caption: "Above the rooftops, something came down out of the stars.",
+                    isCard: true,
+                    seconds: 3.4
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the city's last field, the way `wyrmCaldera` goes before the mountain's.
+    ///
+    /// Short, and for the same reason: a player standing at this signpost has fenced eight
+    /// yards of paving and is owed the one thing this board does that no other board down
+    /// here does — the city's own rule, which is the woods' rule turned round. The middle
+    /// still is the story half: the rat king is not something to shut out or to pen off on
+    /// its own, since a yard of its own is exactly what it is after.
+    ///
+    /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
+    /// reading rather than admiring.
+    static func ratKingWharf(start: Date = .now) -> Self {
+        Self(
+            key: "rat-king-wharf-briefing",
+            title: "Rat King Wharf",
+            light: .cityDay,
+            shots: [
+                Shot(
+                    motif: "🏙️",
+                    strewn: ["🧱", "💨", "🕳️"],
+                    caption: "Rat King Wharf. The last yard in the city.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐀",
+                    strewn: ["🏙️", "🕳️"],
+                    caption: "Pen the rat king apart and it keeps that yard.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🏙️", "🧱", "🥧"],
+                    caption: "Nineteen pieces. Both held, in one pen — never two.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
             .thornwoodOpening(), .boarHollow(), .thornwoodHeld(),
-            .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld()
+            .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld(),
+            .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld()
         ]
     }
 }

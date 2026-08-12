@@ -4,9 +4,9 @@
 `PuzzleLevel` carries a `maximumScore` that the game uses to tell a player there is
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
-an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's) and a budget and
-it prints the best pen, an example of it, and star thresholds in the proportions the
-shipped levels use.
+an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
+rat's) and a budget and it prints the best pen, an example of it, and star thresholds in
+the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -22,7 +22,7 @@ around its edge. Water costs nothing, which is the whole game. A skull is staked
 the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
 skull has to be shut in and paid for, or the wall has to go round it.
 
-A map with a second animal on it as well as the pig — a deer, a boar or a wyrm — is held by
+A map with a second animal on it as well as the pig — a deer, a boar, a wyrm or a rat — is held by
 ground in two pieces just as happily as by one, since what has to hold is each animal
 rather than the pen: the search grows out from both animals at once and the ground it
 ends up with is connected to one or the other, so a wall shared between two enclosures
@@ -50,7 +50,7 @@ WORTH = {"a": 5, "x": -5}
 # A skull is staked into the mud, and nothing can be built on top of it.
 SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on.
-ANIMALS = ("P", "D", "B", "W")
+ANIMALS = ("P", "D", "B", "W", "R")
 
 
 def parse(map_text):
@@ -191,9 +191,11 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
-        if rule != "apart":
+        if rule not in ("apart", "together"):
             return True
-        # The two will not share ground, so the pig's run of it must not reach the other.
+        # Both rules turn on the same question — whether the pig can walk to the other one
+        # without leaving the pen — and want opposite answers: `apart` refuses ground the
+        # two share, `together` refuses ground they do not.
         seen, queue = bit(starts["P"]), [bit(starts["P"])]
         while queue:
             tile = queue.pop()
@@ -203,7 +205,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 spreading ^= step
                 seen |= step
                 queue.append(step)
-        return not seen & bit(others[0])
+        shared = bool(seen & bit(others[0]))
+        return not shared if rule == "apart" else shared
 
     alone, touching = 0, 0
     for start in seeds:
@@ -322,6 +325,10 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # Only the pig is being held, and no block may swallow the one left outside.
         pennable = pennable - set(others)
         each = [blocks_around(pennable, starts["P"], rows, columns)]
+    elif rule == "together":
+        # One pen holds the pair, so squaring the map off is one rectangle rather than two:
+        # the block a player picks is the one with both animals standing in it.
+        each = [blocks_around(pennable, starts["P"], rows, columns)]
     else:
         each = [blocks_around(pennable, start, rows, columns) for start in starts.values()]
 
@@ -336,6 +343,11 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # since ground the pig can walk from one into the other is one pen, not two.
         if rule == "apart" and others:
             if others[0] in run_of_ground(pen, starts["P"]):
+                continue
+        # And a board that wants them in one pen is not squared off by a block that leaves
+        # the other one standing outside it.
+        if rule == "together" and others:
+            if others[0] not in run_of_ground(pen, starts["P"]):
                 continue
         edge = fences_around(pen, mud)
         if len(edge) <= budget and can_be_walled(edge, treats, staked):
@@ -376,10 +388,10 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude"),
+        choices=("herd", "apart", "exclude", "together"),
         default="herd",
-        help="What a board with a second animal on it asks: hold both, hold them apart, or "
-             "hold the pig and shut the other one out",
+        help="What a board with a second animal on it asks: hold both, hold them apart, "
+             "hold the pig and shut the other one out, or hold the pair in a single pen",
     )
     parser.add_argument(
         "--plan",

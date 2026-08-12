@@ -11,6 +11,8 @@ struct Escape: Equatable, Sendable {
 enum Refusal: Equatable, Sendable {
     /// Two animals that will not share are standing in the same pen.
     case together(Animal)
+    /// Two animals that will not be parted are standing in pens of their own.
+    case apart(Animal)
     /// The animal that had to be left outside has been fenced in.
     case shutIn(Animal)
 }
@@ -79,6 +81,14 @@ extension PuzzleLevel {
         if question == .apart, let pigGround = ground[.pig],
            let sharing = animals.first(where: { $0.kind != .pig && pigGround.contains($0.tile) }) {
             return .refused(pen: held, refusal: .together(sharing.kind))
+        }
+
+        // And a board that will not have them parted asks the same question the other way
+        // round: the ground the pig is standing in has to be the ground the other one is in,
+        // however well two pens either side of them hold.
+        if question == .together, let pigGround = ground[.pig],
+           let alone = animals.first(where: { $0.kind != .pig && !pigGround.contains($0.tile) }) {
+            return .refused(pen: held, refusal: .apart(alone.kind))
         }
 
         return .penned(pen: held)

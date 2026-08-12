@@ -4,9 +4,9 @@ import SwiftUI
 @main
 struct PigpenApp: App {
     /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`,
-    /// `-embers`, `-map`, `-universe`, `-woods-map`, `-peak-map`, `-tutorial`, `-daily`,
-    /// `-archive`, `-title`, `-settings` or one of the film arguments so the pull request
-    /// screenshots can show
+    /// `-embers`, `-pies`, `-map`, `-universe`, `-woods-map`, `-peak-map`, `-city-map`,
+    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-settings` or one of the film
+    /// arguments so the pull request screenshots can show
     /// the boards, the universe map, each world's trail, the practice pen, the daily
     /// puzzle and its archive, the settings sheet and every shot of every cut scene
     /// rather than only the title screen.
@@ -92,6 +92,16 @@ struct PigpenApp: App {
                         day: .emberDay,
                         dusk: .emberDusk
                     )
+                } else if launch.contains("-pies") {
+                    // A city board: the pie and the drain stand where the apple and the
+                    // skull would, the same +5 and -5 dressed for the streets, on paving
+                    // rather than meadow grass.
+                    PuzzleView(
+                        level: .clocktowerSquare,
+                        treatSkin: WorldTheme.cogsworth.treats,
+                        day: .cityDay,
+                        dusk: .cityDusk
+                    )
                 } else if launch.contains("-map") {
                     WorldMapView(progress: .partWayThrough())
                 } else if launch.contains("-universe") {
@@ -107,6 +117,11 @@ struct PigpenApp: App {
                     WorldMapView(
                         world: .emberpeak,
                         progress: .partWayThrough(world: .emberpeak)
+                    )
+                } else if launch.contains("-city-map") {
+                    WorldMapView(
+                        world: .cogsworthCity,
+                        progress: .partWayThrough(world: .cogsworthCity)
                     )
                 } else if launch.contains("-tutorial") {
                     TutorialView()

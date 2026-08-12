@@ -133,4 +133,26 @@ extension WorldTheme {
         accent: Color(red: 0.92, green: 0.47, blue: 0.26),
         accentDeep: Color(red: 0.55, green: 0.18, blue: 0.12)
     )
+
+    /// Cogsworth City, the fourth world: down off the mountain and in under the gate, where
+    /// the ground is paved and the water is a canal somebody dug. The windfall is a pie
+    /// dropped outside a shop and the hazard a drain sunk in the road — each worth exactly
+    /// what its meadow twin was, so the board underneath is the board it always was.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for three worlds, so
+    /// the planet a player has been walking towards is the planet they arrive at.
+    static let cogsworth = WorldTheme(
+        id: "cogsworth-city",
+        name: "Cogsworth City",
+        blurb: "Alleys, rooftops and a pig on the loose. Pies on the pavement, drains under it.",
+        day: .cityDay,
+        dusk: .cityDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🥧", bonusScale: 0.58, bonusName: "pie",
+            hazardGlyph: "🕳️", hazardScale: 0.60, hazardName: "drain"
+        ),
+        boss: BossMark(glyph: "🐀", name: "the rat king"),
+        accent: Color(red: 0.62, green: 0.66, blue: 0.73),
+        accentDeep: Color(red: 0.31, green: 0.35, blue: 0.42)
+    )
 }

@@ -87,10 +87,13 @@ enum Question: String, Sendable, CaseIterable {
     /// Hold the pig and leave the other animal outside, where its tile is a hole the wall has
     /// to go round and cannot pay for. Only the pig's ground counts. A boss, and nothing else.
     case exclude
+    /// One budget, two animals that will not be parted: both held, and in the same pen.
+    /// A boss, and nothing else.
+    case together
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude] }
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
@@ -140,7 +143,8 @@ struct PuzzleLevel: Identifiable, Sendable {
     let treats: [GridPoint: Treat]
     /// Everything on the map that has to be shut in, in the order the map writes it down.
     /// Every level stands a pig on its ground; a world's last one stands a second animal
-    /// there too — a deer in the meadow, a boar in the thicket, a wyrm on the mountain.
+    /// there too — a deer in the meadow, a boar in the thicket, a wyrm on the mountain, a
+    /// rat king in the city.
     let animals: [AnimalStart]
     /// The pig's own tile. Kept beside `animals` because every map has exactly one pig and
     /// most of the game only ever has the one animal to think about.
@@ -230,7 +234,8 @@ struct PuzzleLevel: Identifiable, Sendable {
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
-    /// the pig starts on, and an optional `D`, `B` or `W` for a deer, a boar or a wyrm.
+    /// the pig starts on, and an optional `D`, `B`, `W` or `R` for a deer, a boar, a wyrm
+    /// or a rat king.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.

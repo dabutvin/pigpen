@@ -54,7 +54,7 @@ struct GameWorld: Sendable {
     let farewell: WorldFilmSpec?
     /// The films that set a particular level up before it opens, by level id.
     ///
-    /// Only a boss has one, in either world built so far. Every other field is the same game on
+    /// Only a boss has one, in every world built so far. Every other field is the same game on
     /// new ground — there is nothing to say about it that the ground does not say itself — where
     /// a boss stands a second animal on the board and puts one budget on the pair, and a rule is
     /// worth stopping nine seconds for.
@@ -128,6 +128,23 @@ extension GameWorld {
         briefings: [
             PuzzleLevel.wyrmCaldera.id: WorldFilmSpec(key: "wyrm-caldera-briefing") {
                 .storybook(.wyrmCaldera(start: $0))
+            }
+        ]
+    )
+
+    /// Cogsworth City: the fourth world, wrapped in storybook films the way the two worlds
+    /// below it are. The send-off points on up past the rooftops to something coming down
+    /// out of the stars, the way the mountain's points down off the peak to the city, and
+    /// Rat King Wharf stops for a briefing because it stands a second animal on the board —
+    /// the same courtesy every boss before it pays.
+    static let cogsworthCity = GameWorld(
+        theme: .cogsworth,
+        map: .cogsworthCity,
+        opening: WorldFilmSpec(key: "cogsworth-opening") { .storybook(.cogsworthOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "cogsworth-held") { .storybook(.cogsworthHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.ratKingWharf.id: WorldFilmSpec(key: "rat-king-wharf-briefing") {
+                .storybook(.ratKingWharf(start: $0))
             }
         ]
     )

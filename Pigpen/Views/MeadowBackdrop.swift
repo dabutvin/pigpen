@@ -6,7 +6,7 @@ import UIKit
 /// laid behind the puzzle so a level looks like a patch of ground somebody has staked out
 /// rather than a grid on a slab of colour. A themed world hands its own light in, and the
 /// dressing follows — leaf litter and ferns in a thicket, ash and cinder on a mountain,
-/// where the meadow had mowing and wildflowers.
+/// paving and drains in a city, where the meadow had mowing and wildflowers.
 ///
 /// The ground it is all standing on is painted once. Only the things that would move in a
 /// breeze — the grass, the flowers, the fireflies over them after dark — are on a clock,
@@ -66,13 +66,15 @@ private struct Paddock {
     private let clearings: [ClosedRange<Double>] = [0.19...0.28, 0.82...0.99]
 
     /// The field itself: grass and the bands it was mown in, the leaf litter under a
-    /// canopy, or the drifts of ash on a mountain. Nothing here moves.
+    /// canopy, the drifts of ash on a mountain, or the paving of a city street. Nothing
+    /// here moves.
     func drawGround(in context: inout GraphicsContext) {
         drawGrass(in: &context)
         switch colors.cover {
         case .pasture: drawMowing(in: &context)
         case .woodland: drawLeafLitter(in: &context)
         case .scree: drawAshDrifts(in: &context)
+        case .cobbles: drawPaving(in: &context)
         }
     }
 
@@ -188,6 +190,41 @@ private struct Paddock {
         }
     }
 
+    /// Courses of setts, laid in rows with every other course offset by half a stone, so a
+    /// city board sits on paving rather than on a grey field. The joints are what read at
+    /// this size, so the stones themselves are only lightened and darkened a shade either
+    /// side of the ground colour and the mortar between them does the drawing.
+    private func drawPaving(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_277)
+        let course = y(0.028)
+        let sett = x(0.075)
+        var top = -course
+        var offset = false
+        while top < size.height {
+            var across = offset ? -sett / 2 : 0
+            while across < size.width {
+                let stone = CGRect(
+                    x: across + sett * 0.04,
+                    y: top + course * 0.08,
+                    width: sett * 0.92,
+                    height: course * 0.84
+                )
+                let roll = scatter.next()
+                context.fill(
+                    Path(roundedRect: stone, cornerRadius: course * 0.18),
+                    with: .color(
+                        roll < 0.5
+                            ? Color.white.opacity(colors.isNight ? 0.014 : 0.05)
+                            : Color.black.opacity(colors.isNight ? 0.10 : 0.05)
+                    )
+                )
+                across += sett
+            }
+            offset.toggle()
+            top += course
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -207,15 +244,17 @@ private struct Paddock {
     }
 
     /// Grass, wildflowers and the odd stone on a meadow; ferns, mushrooms and a denser
-    /// verge in a thicket; stones, cinders and hardly anything alive on a mountain.
-    /// Scattered on a fixed seed so the ground behind a level is the same ground every time
-    /// the level is opened.
+    /// verge in a thicket; stones, cinders and hardly anything alive on a mountain; loose
+    /// setts, drains and whatever comes up between the paving in a city. Scattered on a
+    /// fixed seed so the ground behind a level is the same ground every time the level is
+    /// opened.
     private func drawDressing(in context: inout GraphicsContext) {
         var scatter = Scatter(seed: 2_311)
         let count: Int = switch colors.cover {
         case .pasture: 15
         case .woodland: 18
         case .scree: 13
+        case .cobbles: 12
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -245,6 +284,12 @@ private struct Paddock {
                     case ..<0.84: drawCinder(in: &context, at: spot, scale: scale)
                     default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     }
+                case .cobbles:
+                    switch roll {
+                    case ..<0.46: drawStone(in: &context, at: spot, scale: scale)
+                    case ..<0.76: drawDrain(in: &context, at: spot, scale: scale)
+                    default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    }
                 }
             }
         }
@@ -258,6 +303,7 @@ private struct Paddock {
         case .pasture: 26
         case .woodland: 32
         case .scree: 22
+        case .cobbles: 20
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -277,6 +323,10 @@ private struct Paddock {
                 // A verge of loose rock rather than long grass: nothing takes root this
                 // close to the peak.
                 drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)))
+            case .cobbles where roll < 0.6:
+                // A kerb rather than a verge: the grass in a city is whatever has pushed up
+                // through the joints, so most of the foot of the screen is stone.
+                drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.7)))
             default:
                 drawTuft(
                     in: &context,
@@ -490,9 +540,35 @@ private struct Paddock {
         )
     }
 
+    /// A drain sunk into the paving with its bars across it — the backdrop's echo of the
+    /// drains staked out on the board itself, and what a city has instead of wildflowers.
+    private func drawDrain(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let spread = x(0.020) * scale
+        let grate = CGRect(
+            x: foot.x - spread * 0.5, y: foot.y - spread * 0.34,
+            width: spread, height: spread * 0.44
+        )
+        context.fill(
+            Path(roundedRect: grate, cornerRadius: spread * 0.08),
+            with: .color(Color(red: 0.14, green: 0.14, blue: 0.15).opacity(colors.isNight ? 0.75 : 0.6))
+        )
+        var bars = Path()
+        for line in [0.3, 0.5, 0.7] {
+            let across = grate.minX + grate.width * CGFloat(line)
+            bars.move(to: CGPoint(x: across, y: grate.minY + grate.height * 0.16))
+            bars.addLine(to: CGPoint(x: across, y: grate.maxY - grate.height * 0.16))
+        }
+        context.stroke(
+            bars,
+            with: .color(GamePalette.stone.opacity(colors.isNight ? 0.3 : 0.55)),
+            style: StrokeStyle(lineWidth: max(1, spread * 0.07), lineCap: .round)
+        )
+    }
+
     /// The corners taken down a little, which is all it takes to make the board the lit
-    /// thing on the screen. A thicket closes in harder, so the canopy feels overhead, and a
-    /// mountain sits somewhere between the two: open sky, but a hazed one.
+    /// thing on the screen. A thicket closes in harder, so the canopy feels overhead; a
+    /// mountain sits somewhere between the two, open sky but a hazed one; and a city closes
+    /// in nearly as hard as a wood, since the buildings are the canopy here.
     func drawVignette(in context: inout GraphicsContext) {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
@@ -500,6 +576,7 @@ private struct Paddock {
         case .pasture: colors.isNight ? 0.3 : 0.2
         case .woodland: colors.isNight ? 0.42 : 0.32
         case .scree: colors.isNight ? 0.38 : 0.26
+        case .cobbles: colors.isNight ? 0.44 : 0.30
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
@@ -603,5 +680,10 @@ private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
 
 #Preview("Emberpeak") {
     MeadowBackdrop(day: .emberDay, dusk: .emberDusk)
+        .ignoresSafeArea()
+}
+
+#Preview("Cogsworth City") {
+    MeadowBackdrop(day: .cityDay, dusk: .cityDusk)
         .ignoresSafeArea()
 }
