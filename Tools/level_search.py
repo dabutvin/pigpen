@@ -5,8 +5,8 @@
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
-rat's) and a budget and it prints the best pen, an example of it, and star thresholds in
-the proportions the shipped levels use.
+rat's, `V` a visitor's) and a budget and it prints the best pen, an example of it, and star
+thresholds in the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -22,7 +22,8 @@ around its edge. Water costs nothing, which is the whole game. A skull is staked
 the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
 skull has to be shut in and paid for, or the wall has to go round it.
 
-A map with a second animal on it as well as the pig — a deer, a boar, a wyrm or a rat — is held by
+A map with a second animal on it as well as the pig — a deer, a boar, a wyrm, a rat or a
+visitor — is held by
 ground in two pieces just as happily as by one, since what has to hold is each animal
 rather than the pen: the search grows out from both animals at once and the ground it
 ends up with is connected to one or the other, so a wall shared between two enclosures
@@ -50,7 +51,7 @@ WORTH = {"a": 5, "x": -5}
 # A skull is staked into the mud, and nothing can be built on top of it.
 SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on.
-ANIMALS = ("P", "D", "B", "W", "R")
+ANIMALS = ("P", "D", "B", "W", "R", "V")
 
 
 def parse(map_text):
@@ -189,14 +190,9 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
     else:
         seeds = list(starts.values())
 
-    def keeps_the_rule(pen):
-        """Whether a pen that holds is one this board will actually accept."""
-        if rule not in ("apart", "together"):
-            return True
-        # Both rules turn on the same question — whether the pig can walk to the other one
-        # without leaving the pen — and want opposite answers: `apart` refuses ground the
-        # two share, `together` refuses ground they do not.
-        seen, queue = bit(starts["P"]), [bit(starts["P"])]
+    def run_of(seed, pen):
+        """The tiles of `pen` an animal standing on `seed` can walk to, as a mask."""
+        seen, queue = bit(seed), [bit(seed)]
         while queue:
             tile = queue.pop()
             spreading = reach[tile] & pen & ~seen
@@ -205,8 +201,35 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 spreading ^= step
                 seen |= step
                 queue.append(step)
-        shared = bool(seen & bit(others[0]))
-        return not shared if rule == "apart" else shared
+        return seen
+
+    def halo_of(run):
+        """Every tile beside that run of ground and not in it: the wall it stands behind."""
+        halo, spreading = 0, run
+        while spreading:
+            tile = spreading & -spreading
+            spreading ^= tile
+            halo |= reach[tile]
+        return halo & ~run
+
+    def keeps_the_rule(pen):
+        """Whether a pen that holds is one this board will actually accept."""
+        if rule not in ("apart", "together", "beside"):
+            return True
+        # All three rules turn on the same question — whether the pig can walk to the other
+        # one without leaving the pen — and want different answers: `apart` refuses ground
+        # the two share, `together` refuses ground they do not, and `beside` refuses both,
+        # since it wants two pens with a single wall between them.
+        mine = run_of(starts["P"], pen)
+        shared = bool(mine & bit(others[0]))
+        if rule == "together":
+            return shared
+        if rule == "apart":
+            return not shared
+        if shared:
+            return False
+        # Wall to wall: some tile neither pen holds stands beside them both.
+        return bool(halo_of(mine) & halo_of(run_of(others[0], pen)) & ~pen)
 
     alone, touching = 0, 0
     for start in seeds:
@@ -281,6 +304,25 @@ def run_of_ground(tiles, start):
     return reached
 
 
+def beside(mine, theirs, pen, rows, columns):
+    """Whether two runs of ground stand wall to wall: one tile between them, no more.
+
+    The tile between may be a fence piece or a tile of water — a pen does not care which
+    of the two is holding it — so what this asks is only that the two runs are neighbours
+    across a single tile neither of them holds.
+    """
+    def halo(run):
+        found = set()
+        for row, column in run:
+            for down, across in NEIGHBOURS:
+                neighbour = (row + down, column + across)
+                if 0 <= neighbour[0] < rows and 0 <= neighbour[1] < columns:
+                    found.add(neighbour)
+        return found - set(run)
+
+    return bool(halo(mine) & halo(theirs) - set(pen))
+
+
 def blocks_around(pennable, start, rows, columns):
     """Every block of ground that holds `start`.
 
@@ -341,8 +383,15 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         pen = frozenset().union(*choice)
         # A board that keeps two apart is not squared off by a pair of blocks that touch,
         # since ground the pig can walk from one into the other is one pen, not two.
-        if rule == "apart" and others:
+        if rule in ("apart", "beside") and others:
             if others[0] in run_of_ground(pen, starts["P"]):
+                continue
+        # And a board that wants the two pens wall to wall is not squared off by a pair of
+        # blocks with the width of the world between them.
+        if rule == "beside" and others:
+            mine = run_of_ground(pen, starts["P"])
+            theirs = run_of_ground(pen, others[0])
+            if not beside(mine, theirs, pen, rows, columns):
                 continue
         # And a board that wants them in one pen is not squared off by a block that leaves
         # the other one standing outside it.
@@ -388,10 +437,11 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together"),
+        choices=("herd", "apart", "exclude", "together", "beside"),
         default="herd",
         help="What a board with a second animal on it asks: hold both, hold them apart, "
-             "hold the pig and shut the other one out, or hold the pair in a single pen",
+             "hold the pig and shut the other one out, hold the pair in a single pen, or "
+             "hold them in two pens with one wall between them",
     )
     parser.add_argument(
         "--plan",
