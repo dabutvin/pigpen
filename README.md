@@ -222,7 +222,7 @@ the meadow at nothing.
 | 1 | Bramble Brook | 9 | — | 20 | 27 | 25% |
 | 2 | Foxglove Dell | 7 | 2 truffles | 21 | 29 | 27% |
 | 3 | Hazel Copse | 12 | 1 truffle | 23 | 30 | 23% |
-| 4 | Fairy Ring | 13 | 1 truffle | 16 | 29 | 44% |
+| 4 | Fairy Ring | 13 | 1 truffle | 19 | 36 | 47% |
 | 5 | Fern Gully | 12 | 2 truffles | 23 | 34 | 32% |
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 17 | 26 | 34% |
@@ -643,9 +643,17 @@ is one the player cannot build.
 
 `Tools/level_search.py --budget N --plan --demand` prints the best pen, the squared-off block and
 the gap between them. A `constellation` is the one type easier to author backwards: choose the pen
-you want the player to find, take its wall with `fences_around`, and lay water on every second or
-third tile of it. The dots then imply the answer without drawing it, and no rectangle can use
-them, which is where the gap comes from.
+you want the player to find, take its wall with `fences_around`, lay water on every second or
+third tile of it, and **give the level exactly the rest of that wall as its budget**. The dots
+then imply the answer without drawing it, and no rectangle can use them, which is where the gap
+comes from.
+
+That budget rule is the whole of it, and getting it wrong is quiet. Hand out fewer pieces than
+the wall needs and the best pen is some smaller shape that only touches a few of the dots — the
+rest are then decoration, the level still measures hard because the dots are useless to
+*everyone*, and what shipped is a scatter rather than a constellation. So every constellation
+field is replayed with `Constellation.idleWater`, which fails the build if the pen it is
+authored around leaves a single tile of water unused.
 
 Every field is pinned twice — its best pen in its world's tests, its squared-off block in
 `DifficultyTests` — and both are replayed through the game's own rules, so a level that stops

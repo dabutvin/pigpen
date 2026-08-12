@@ -113,33 +113,35 @@ extension PuzzleLevel {
             """
     )
 
-    /// A ring of pools set round a clearing at wider intervals than the meadow's dew ponds,
-    /// and the field where the woods stop handing shapes over. Six pools, no two of them
-    /// touching, laid on the wall of a pen that is not drawn anywhere: the player has to see
-    /// the ring in them and build the four fifths of it that are missing.
+    /// A ring of pools set round a clearing, and the thicket's turn of the idea the meadow's
+    /// dew ponds opened. Seven pools, no two of them touching, laid on the wall of a pen that
+    /// is not drawn anywhere: each is a tile of wall nobody pays for, and the thirteen pieces
+    /// are exactly the rest of that wall — no more, no less.
     ///
-    /// A block cannot use a single one of them and holds 16. The ring holds 24 tiles and the
-    /// truffle sitting inside it, which is 29. The meadow's ponds were a tile apart; these are
-    /// two, and the shape is that much less obvious for it.
+    /// Which is the whole of the field. A rectangle cannot use a single pool, so squaring off
+    /// is worth 19; the ring the pools imply holds 36. The truffle out past the north-east is
+    /// the decoy, since reaching it means breaking the ring and giving up more ground than
+    /// five points. The meadow spaced its ponds a tile apart; these are two, and the shape is
+    /// that much less obvious for it.
     static let fairyRing = woodland(
         id: "fairy-ring",
         name: "Fairy Ring",
         fenceBudget: 13,
-        twoStarScore: 15,
-        threeStarScore: 27,
-        maximumScore: 29,
+        twoStarScore: 19,
+        threeStarScore: 34,
+        maximumScore: 36,
         question: .constellation,
         map: """
-            ..~..~....
-            .......~..
-            .......a..
-            ~.........
-            .........~
-            ....P.....
-            ~.........
-            .........~
             ..........
-            .~..~..~..
+            ..........
+            ..~..~.a..
+            .......~..
+            ..........
+            ~...P.....
+            ........~.
+            ..........
+            ..~..~....
+            ..........
             """
     )
 

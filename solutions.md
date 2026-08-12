@@ -378,28 +378,32 @@ goes after the second gives up more ground on the way down than five points can 
 A brook bars the north, so the ground under it is cheap to wall, and the pen closes round the
 truffle it was going to hold anyway — the first windfall that costs nothing to take.
 
-## 4. Fairy Ring — 13 pieces, 29
+## 4. Fairy Ring — 13 pieces, 36
 
 ```
-..~..~#...
-....#oo~..
-...#oooa#.
-~.#oooooo#
-..#oooooo~
-...#Pooo#.
-~...#oo#..
-.....##..~
 ..........
-.~..~..~..
+...##.....
+..~oo~#a..
+.#ooooo~..
+#ooooooo#.
+~oooPoooo#
+#ooooooo~.
+.#ooooo#..
+..~oo~#...
+...##.....
 ```
 
-Six pools set round a clearing, no two of them touching, with a truffle inside the ring. This
-is the meadow's dew ponds with the spacing opened out: two tiles between pools instead of one,
-so what they trace is a good deal less obvious.
+Seven pools set round a clearing, no two of them touching, and a truffle out past the
+north-east. This is the meadow's dew ponds with the spacing opened out — two tiles between
+pools instead of one — so what they trace is a good deal less obvious.
 
-Squaring off is worth 16 and reaches nothing, because not one pool falls where a rectangle
-wants its wall. Thirteen pieces laid in the gaps between them close a ring holding 24 tiles and
-the truffle — 29. The pools are four of the wall; you build the rest.
+Squaring off is worth 19 and reaches nothing, because not one pool falls where a rectangle
+wants its wall. The thirteen pieces are exactly the rest of the ring the pools are sitting on:
+lay them in the gaps and it closes on 36 tiles.
+
+The truffle is the decoy. Breaking the ring to reach it gives up more ground than five points
+ever pays for, which is the same lesson Foxglove Dell taught two fields earlier, asked the
+other way round.
 
 ## 5. Fern Gully — 12 pieces, 34
 
