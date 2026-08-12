@@ -250,15 +250,15 @@ extension StorybookScene {
                 Shot(
                     motif: "🐗",
                     strewn: ["🌲", "🍄"],
-                    caption: "The boar had this hollow before you did.",
-                    seconds: 2.9
+                    caption: "The boar was here first. It shares with nobody.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🌲", "🌲", "🍄"],
-                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    caption: "Twenty pieces. Both held, in two pens — never one.",
                     isCard: true,
-                    seconds: 3.3
+                    seconds: 3.2
                 )
             ],
             start: start
@@ -380,15 +380,15 @@ extension StorybookScene {
                 Shot(
                     motif: "🐉",
                     strewn: ["🌋", "🔥"],
-                    caption: "The wyrm had this crater long before you did.",
-                    seconds: 2.9
+                    caption: "Do not fence the wyrm. Nobody is holding that.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🌋", "🪨", "🌰"],
-                    caption: "Twenty pieces. Both of them held, or neither counts.",
+                    caption: "Twenty pieces for the pig. Leave the wyrm outside.",
                     isCard: true,
-                    seconds: 3.3
+                    seconds: 3.2
                 )
             ],
             start: start

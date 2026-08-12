@@ -255,36 +255,39 @@ extension PuzzleLevel {
             """
     )
 
-    /// The mountain's boss: the crater lake itself, with the pig up on the north rim and the
-    /// wyrm down on the crater floor, and the same rule the last field of every world has
-    /// taught — one budget has to hold both of them. The lake walls one side of each
-    /// enclosure the way Stag Mere's water and Boar Hollow's pool do, so the twenty pieces go
-    /// out as two pens rather than one.
+    /// The mountain's boss, and the only field in the game you are not asked to hold
+    /// everything on.
     ///
-    /// What the caldera adds is how unevenly it wants them split. The rim the pig grazes is
-    /// narrow ground with a chestnut on it and an ember beside it, and it is not worth many
-    /// pieces; the crater floor is the widest ground in the world and worth nearly all of
-    /// them. 29 tiles and three chestnuts, less the one ember, come to 39. It asks for most
-    /// of the stars the fields below it hold before it will open.
+    /// The wyrm is not livestock. It is what the mountain has instead of weather, and the
+    /// board does not want it fenced — it wants it left where it is, on the outside of
+    /// whatever you build. So its tile is a hole you can neither cover nor stand a post on,
+    /// like an ember that walks, and the only ground that counts is the pig's.
+    ///
+    /// Which turns the boss inside out. Stag Mere and Boar Hollow are a budget split two
+    /// ways; here every one of the twenty pieces goes to the pig, and the question is how
+    /// much of the mountain you can take before the wall has to bend round the thing sitting
+    /// in the middle of it. Thirty-eight tiles and three chestnuts, less two embers, come to 43,
+    /// where
+    /// squaring off well clear of the wyrm is worth 27.
     static let wyrmCaldera = emberpeak(
         id: "wyrm-caldera",
         name: "Wyrm Caldera",
         fenceBudget: 20,
-        twoStarScore: 22,
-        threeStarScore: 37,
-        maximumScore: 39,
-        question: .herd,
+        twoStarScore: 25,
+        threeStarScore: 40,
+        maximumScore: 43,
+        question: .exclude,
         map: """
             ..........
-            ...a......
             ..P.......
-            .....x....
-            .~~~~~~~..
-            .~~~~~~~~.
-            ..~~~~~~..
+            ....a.....
+            ..x.......
+            .......~..
+            .......~..
             ....x.....
-            .a....W...
-            ......a...
+            ..a...W...
+            ..........
+            ....a..x..
             ..........
             """
     )
