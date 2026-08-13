@@ -525,13 +525,156 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The reaches' films
+
+extension StorybookScene {
+    /// Before the first walk out into Starfall Reaches. It carries the two things the reaches
+    /// change — a stardrop to shut in, a meteor to build around — and then hands the game back
+    /// on the rule it has always been.
+    ///
+    /// It is the one opening with six stills in it rather than five, and the extra one is the
+    /// water: every drop out here stands on its own, a single well where a star went in, and
+    /// that is a thing about the ground a player cannot be left to work out from the ground.
+    /// The woods, the mountain and the city all changed their water too and each of them let
+    /// the board say so, because a pool and a tarn and a canal all still read as water lying
+    /// about. Water broken into single tiles reads as decoration until somebody says it is a
+    /// wall.
+    static func starfallOpening(start: Date = .now) -> Self {
+        Self(
+            key: "starfall-opening",
+            title: "Starfall Reaches",
+            light: .starDay,
+            shots: [
+                Shot(
+                    motif: "🌌",
+                    strewn: ["✨", "🌑", "✨"],
+                    caption: "Starfall Reaches. Room to the horizon, and a sky that keeps landing in it.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["✨", "🌑"],
+                    caption: "Your pig went up off the rooftops and out into the dust.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "💧",
+                    strewn: ["✨", "🌑", "✨"],
+                    caption: "Every star that lands leaves one well. No two of them touch.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌟",
+                    strewn: ["✨", "🌑"],
+                    caption: "Stardrops cooling where they fell. Five apiece, shut in.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "☄️",
+                    strewn: ["✨", "🌑"],
+                    caption: "Meteors take no fence. Build around them, or pay the five.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌌", "✨"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.5
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the reaches holds. It says what became of the visitor, that the
+    /// whole of the reaches is fenced, and — like the four send-offs before it — points on
+    /// past this world to the next one waiting.
+    static func starfallHeld(start: Date = .now) -> Self {
+        Self(
+            key: "starfall-held",
+            title: "Starfall Reaches held",
+            light: .starDusk,
+            shots: [
+                Shot(
+                    motif: "🛸",
+                    strewn: ["🌟", "☄️"],
+                    caption: "The visitor got a pen of its own, and not a tile less than yours.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🌌",
+                    strewn: ["✨", "🌟", "✨"],
+                    caption: "Every well in the reaches, fenced and held.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🌍",
+                    strewn: ["✨", "⭐️"],
+                    caption: "Nothing gets off these reaches now.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🦇",
+                    strewn: ["✨", "⭐️", "✨"],
+                    caption: "Under the dust, a cavern is breathing out.",
+                    isCard: true,
+                    seconds: 3.4
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the reaches' last field, the way `ratKingWharf` goes before the city's.
+    ///
+    /// Short, and for the same reason: a player standing at this signpost has fenced eight
+    /// stretches of dust and is owed the one thing this board does that no other board up here
+    /// does — the reaches' own rule, which is the first one that asks for two pens *and* says
+    /// how much ground each of them holds. The middle still is the story half: the visitor is
+    /// not something to shut out and not something to share with either.
+    ///
+    /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
+    /// reading rather than admiring.
+    static func visitorCrater(start: Date = .now) -> Self {
+        Self(
+            key: "visitor-crater-briefing",
+            title: "Visitor Crater",
+            light: .starDay,
+            shots: [
+                Shot(
+                    motif: "🌠",
+                    strewn: ["✨", "🌑", "☄️"],
+                    caption: "Visitor Crater. The last of the reaches, and the newest.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🛸",
+                    strewn: ["🌌", "🌟"],
+                    caption: "The visitor wants ground of its own — as much of it as the pig has.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌌", "✨", "🌟"],
+                    caption: "Twenty pieces. Two pens, the same ground in each — never one, never lopsided.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
 extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
             .thornwoodOpening(), .boarHollow(), .thornwoodHeld(),
             .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld(),
-            .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld()
+            .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld(),
+            .starfallOpening(), .visitorCrater(), .starfallHeld()
         ]
     }
 }
