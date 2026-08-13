@@ -77,6 +77,7 @@ private struct Paddock {
         case .scree: drawAshDrifts(in: &context)
         case .cobbles: drawPaving(in: &context)
         case .dust: drawDust(in: &context)
+        case .flowstone: drawFlowstone(in: &context)
         }
     }
 
@@ -251,6 +252,42 @@ private struct Paddock {
         }
     }
 
+    /// Flowstone: the floor of a cave, which is rock the water has been running over long
+    /// enough to lay it down in ribs. So the ground is banded the way the meadow's mowing is
+    /// banded and for the opposite reason — nobody laid these out, they poured — and the near
+    /// edge of every rib catches what light there is while the step under it stays black.
+    private func drawFlowstone(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 3_167)
+        var top = y(-0.02)
+        while top < size.height {
+            let deep = y(scatter.next(in: 0.05...0.11))
+            let rib = band(from: top, to: top + deep, wobble: scatter.next(in: -1.2...1.2))
+            context.fill(rib, with: .color(.black.opacity(scatter.next(in: 0.05...0.13))))
+            // The lip of the ledge, where the water comes over and the light with it.
+            context.stroke(
+                rib,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.05 : 0.13)),
+                lineWidth: max(1, y(0.0016))
+            )
+            top += deep
+        }
+
+        // And the wet of it: shallow sheets standing where the rock dipped, which is what
+        // makes a cave floor read as wet rather than as a dark meadow.
+        for _ in 0..<9 {
+            let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.06...0.16))
+            let sheet = CGRect(
+                x: centre.x - spread * 0.5, y: centre.y - spread * 0.13,
+                width: spread, height: spread * 0.26
+            )
+            context.fill(
+                Path(ellipseIn: sheet),
+                with: .color(colors.disc.opacity(colors.isNight ? 0.07 : 0.13))
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -283,6 +320,7 @@ private struct Paddock {
         case .scree: 13
         case .cobbles: 12
         case .dust: 11
+        case .flowstone: 14
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -325,6 +363,16 @@ private struct Paddock {
                     case ..<0.52: drawStone(in: &context, at: spot, scale: scale)
                     default: drawSpark(in: &context, at: spot, scale: scale)
                     }
+                case .flowstone:
+                    // Nothing grows down here either, and the light does not come from
+                    // overhead: it comes out of the rock. So the floor is dressed with what
+                    // the roof has dropped on it and what the water has grown up out of it,
+                    // with a crystal here and there doing the work the sky does elsewhere.
+                    switch roll {
+                    case ..<0.42: drawStalagmite(in: &context, at: spot, scale: scale)
+                    case ..<0.72: drawStone(in: &context, at: spot, scale: scale)
+                    default: drawCrystal(in: &context, at: spot, scale: scale)
+                    }
                 }
             }
         }
@@ -340,6 +388,7 @@ private struct Paddock {
         case .scree: 22
         case .cobbles: 20
         case .dust: 18
+        case .flowstone: 24
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -370,6 +419,16 @@ private struct Paddock {
                     drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.7)))
                 } else {
                     drawSpark(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)))
+                }
+            case .flowstone:
+                // A rank of stalagmites along the front of the cave instead of long grass,
+                // with the odd crystal in among them.
+                if roll < 0.78 {
+                    drawStalagmite(
+                        in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.1...2.1))
+                    )
+                } else {
+                    drawCrystal(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.7)))
                 }
             default:
                 drawTuft(
@@ -651,11 +710,98 @@ private struct Paddock {
         context.fill(points, with: .color(glow))
     }
 
+    /// A stalagmite stood up off the cave floor where the roof has been dripping on one spot
+    /// for long enough — what the caverns have instead of a tuft of grass. It does not move,
+    /// because nothing down here does: the one thing a cave has no weather.
+    private func drawStalagmite(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = x(0.03) * scale
+        let base = tall * 0.34
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - base * 0.7, y: foot.y - base * 0.12,
+                width: base * 1.4, height: base * 0.34
+            )),
+            with: .color(.black.opacity(0.18))
+        )
+
+        var cone = Path()
+        cone.move(to: CGPoint(x: foot.x - base * 0.5, y: foot.y))
+        cone.addQuadCurve(
+            to: CGPoint(x: foot.x + base * 0.08, y: foot.y - tall),
+            control: CGPoint(x: foot.x - base * 0.34, y: foot.y - tall * 0.55)
+        )
+        cone.addQuadCurve(
+            to: CGPoint(x: foot.x + base * 0.5, y: foot.y),
+            control: CGPoint(x: foot.x + base * 0.42, y: foot.y - tall * 0.5)
+        )
+        cone.closeSubpath()
+        context.fill(cone, with: .color(GamePalette.stone.opacity(colors.isNight ? 0.42 : 0.78)))
+
+        // The wet side of it, which is the side the light is coming from.
+        var sheen = Path()
+        sheen.move(to: CGPoint(x: foot.x - base * 0.28, y: foot.y - tall * 0.06))
+        sheen.addQuadCurve(
+            to: CGPoint(x: foot.x + base * 0.02, y: foot.y - tall * 0.92),
+            control: CGPoint(x: foot.x - base * 0.2, y: foot.y - tall * 0.5)
+        )
+        context.stroke(
+            sheen,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.14 : 0.3)),
+            style: StrokeStyle(lineWidth: max(1, base * 0.16), lineCap: .round)
+        )
+    }
+
+    /// A crystal growing out of the flowstone with its own light in it — the backdrop's echo
+    /// of the crystals lying on the board, and what the caverns have instead of wildflowers.
+    /// It reads brightest after dark for the same reason a stardrop does, and for a better
+    /// one: down here it is the only light there is.
+    private func drawCrystal(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = x(0.024) * scale
+        let wide = tall * 0.46
+
+        context.fill(
+            circle(at: CGPoint(x: foot.x, y: foot.y - tall * 0.5), radius: tall * 1.5),
+            with: .radialGradient(
+                Gradient(colors: [
+                    colors.disc.opacity(colors.isNight ? 0.32 : 0.18),
+                    colors.disc.opacity(0)
+                ]),
+                center: CGPoint(x: foot.x, y: foot.y - tall * 0.5),
+                startRadius: 0,
+                endRadius: tall * 1.5
+            )
+        )
+
+        // Three shards out of one root, the tallest leaning a little off upright.
+        for lean in [-0.42, 0.06, 0.5] {
+            let tip = CGPoint(
+                x: foot.x + tall * CGFloat(lean) * 0.7,
+                y: foot.y - tall * (lean == 0.06 ? 1.0 : 0.62)
+            )
+            let spread = wide * (lean == 0.06 ? 1.0 : 0.66)
+            var shard = Path()
+            shard.move(to: tip)
+            shard.addLine(to: CGPoint(x: tip.x + spread * 0.5, y: foot.y - spread * 0.3))
+            shard.addLine(to: CGPoint(x: tip.x + spread * 0.28, y: foot.y))
+            shard.addLine(to: CGPoint(x: tip.x - spread * 0.28, y: foot.y))
+            shard.addLine(to: CGPoint(x: tip.x - spread * 0.5, y: foot.y - spread * 0.3))
+            shard.closeSubpath()
+            context.fill(shard, with: .color(colors.disc.opacity(colors.isNight ? 0.9 : 0.72)))
+            context.stroke(
+                shard,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.5 : 0.32)),
+                lineWidth: max(0.6, wide * 0.08)
+            )
+        }
+    }
+
     /// The corners taken down a little, which is all it takes to make the board the lit
     /// thing on the screen. A thicket closes in harder, so the canopy feels overhead; a
     /// mountain sits somewhere between the two, open sky but a hazed one; a city closes
-    /// in nearly as hard as a wood, since the buildings are the canopy here; and the reaches
-    /// close in hardest of all, because what is round the edge of them is space.
+    /// in nearly as hard as a wood, since the buildings are the canopy here; the reaches close
+    /// in harder still, because what is round the edge of them is space; and the caverns close
+    /// in hardest of all, because what is round the edge of them is rock and no light on it.
     func drawVignette(in context: inout GraphicsContext) {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
@@ -665,6 +811,7 @@ private struct Paddock {
         case .scree: colors.isNight ? 0.38 : 0.26
         case .cobbles: colors.isNight ? 0.44 : 0.30
         case .dust: colors.isNight ? 0.52 : 0.34
+        case .flowstone: colors.isNight ? 0.62 : 0.44
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
@@ -674,7 +821,8 @@ private struct Paddock {
                     .black.opacity(edge)
                 ]),
                 center: centre,
-                startRadius: reach * (colors.cover == .woodland ? 0.32 : 0.4),
+                startRadius: reach * (colors.cover == .woodland || colors.cover == .flowstone
+                    ? 0.32 : 0.4),
                 endRadius: reach
             )
         )
@@ -778,5 +926,10 @@ private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
 
 #Preview("Starfall Reaches") {
     MeadowBackdrop(day: .starDay, dusk: .starDusk)
+        .ignoresSafeArea()
+}
+
+#Preview("Gloamdeep Caverns") {
+    MeadowBackdrop(day: .gloamDay, dusk: .gloamDusk)
         .ignoresSafeArea()
 }
