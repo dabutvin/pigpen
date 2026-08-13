@@ -689,13 +689,13 @@ extension StorybookScene {
                 Shot(
                     motif: "🕳️",
                     strewn: ["💎", "🪨", "💧"],
-                    caption: "Gloamdeep Caverns. Under everything, in the dark.",
+                    caption: "Gloamdeep Caverns. Under it all, in the dark.",
                     seconds: 2.9
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["💎", "🪨"],
-                    caption: "Your pig went down a hole in the reaches.",
+                    caption: "Your pig went down a hole in the dust.",
                     seconds: 2.5
                 ),
                 Shot(
@@ -707,7 +707,7 @@ extension StorybookScene {
                 Shot(
                     motif: "💎",
                     strewn: ["💧", "🪨"],
-                    caption: "Crystals in the flowstone. Five each, shut in.",
+                    caption: "Crystals in the flowstone. Five each.",
                     seconds: 2.7
                 ),
                 Shot(
@@ -792,13 +792,13 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🦇", "💎"],
-                    caption: "A pup hangs where its mother hangs. Not near a pig.",
+                    caption: "A pup hangs where its mother does. Not by a pig.",
                     seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦇", "💧", "💎"],
-                    caption: "Twenty pieces. Both bats in one pen, the pig in another.",
+                    caption: "Twenty pieces. Both bats in one pen, pig in another.",
                     isCard: true,
                     seconds: 3.2
                 )
