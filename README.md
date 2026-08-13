@@ -163,9 +163,10 @@ floor of the world below it, while its opening field has to ask more than the la
 opening field did. The meadow floors at nothing and opens on a map with no trick in it; the
 thicket floors at 23% and opens at 25%, so the second world starts around where the first
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
-the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; and Starfall
-Reaches floors and opens at 32%, the highest floor any world has stood on, on the biggest boards
-in the game. Bosses are held to each other rather than to the floor:
+the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
+Reaches floors and opens at 32%, on the biggest boards in the game; and Gloamdeep Caverns floors
+and opens at 34%, the highest floor any world has stood on. Bosses are held to each other rather
+than to the floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
@@ -184,7 +185,8 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree or paving — what the windfall and the hazard look like on that ground,
+  floor, bare scree, paving, star dust or wet flowstone — what the windfall and the hazard look
+  like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
 - **Each world plays its own films.** An opening the first time you walk into it, and a
@@ -196,7 +198,7 @@ carries the same game into every one of them.
   be going.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City** and **Starfall Reaches** to play, then Gloamdeep Caverns, Lantern Carnival, Sunbaked
+City**, **Starfall Reaches** and **Gloamdeep Caverns** to play, then Lantern Carnival, Sunbaked
 Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
 silhouettes.
 Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
@@ -393,6 +395,66 @@ missing out of it, so plugging that neck is what turns one pen into two; then th
 uneven, and the last thing to work out is which tiles of the wider one to hand back. It charges
 the same 21 of the 24 stars below it that every boss charges and stops for the same briefing on
 the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+
+### Gloamdeep Caverns
+
+The sixth world, and the first one under the ground. The pig went down a hole in the dust, so the
+trail runs through wet limestone by crystal light, the windfall is a **crystal** growing out of the
+flowstone and the hazard a **boulder** come off the roof — each worth exactly what its meadow twin
+was, a crystal five tiles to shut in, a boulder five to shut in with and no fencing at all, since
+nothing will drive a post through a block of limestone the size of a cow.
+
+The caverns' own idea is that all the water is **one river**. A meadow has meres, a thicket pools,
+a mountain tarns, a city canals and drains, and the reaches twelve wells apiece; every board down
+here has one body of water on it at most, and it comes in off the rim of the cave, because it is
+the same river the whole way and a cave has no second river in it. `GloamdeepTests` pins both
+halves, and one field has no water at all — The Blind Grike, the cave the river never found.
+
+Which is not less wall to lean on but more of it in one place, and the shape it leaves is what the
+world is built on. A river that runs in off the rim and stops short of the far wall has done nine
+tenths of a wall's work and left a **neck** — the strip of dry floor where the two halves of the
+cave still run into one another — and a single piece laid in the neck buys the whole length of the
+water. And because the only way to make a river long enough to matter on a board this size is to
+step it, the banks down here are staircases rather than straight lines, so the pen that follows one
+is a wedge or a lozenge and never a box.
+
+The other thing it does is keep **the light**. Emberpeak staked an ember in all nine of its fields;
+this is that idea turned the other way up — there is a crystal on every board in the world, because
+a crystal is the only light in the Gloamdeep and a field with none would be a field nobody could
+see. It makes the caverns the first world with nothing in it that scores flat.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Sinter Basin | 12 | 2 crystals | 21 | 32 | 34% |
+| 2 | Dripstone Shelf | 11 | 2 crystals | 22 | 36 | 38% |
+| 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 21 | 34 | 38% |
+| 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
+| 5 | Glowworm Reach | 13 | 3 crystals | 20 | 33 | 39% |
+| 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
+| 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
+| 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 41 | 63 | 34% |
+| 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 22 | 45 | 51% |
+
+Rimstone Corner is the corner question with nothing else in the way of it: the river takes the
+whole roof of the cave and the whole east wall, and nine pieces laid corner to corner across the
+bend hold 46 where the same nine laid as a right angle hold 25. It is the smallest budget any
+field in the game has been given and it holds the third biggest pen in it. The Great Gallery holds
+the second biggest, at 63.
+
+Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
+animals on the ground: **the roost hangs together and the pig hangs apart**. A bat, its pup and the
+pig, one budget, and two things asked at once that pull opposite ways — the two bats in the same
+pen, the pig in another. Which forbids every other multi-animal board's answer at once, and two of
+them with the same wall: Stag Mere splits its budget wherever it scores best, Boar Hollow wants two
+pens and does not mind what is in them, Wyrm Caldera throws its second animal out, Rat King Wharf
+demands the single pen this one refuses, Visitor Crater wants two pens holding the same ground.
+Here the pens are two and *which animal is in which* is the whole of it — so the cheap answer every
+one of those five leaves open, three little boxes so that nothing can possibly be sharing, is
+turned down flat, because a pup boxed on its own is a roost split. The river climbs across the cave
+and the bat and its pup hang either side of the tip of it, so joining them means reaching round
+that tip — and reaching round the tip is what hands the pig the whole staircase as the wall of its
+own pen. It charges the same 21 of the 24 stars below it that every boss charges and stops for the
+same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -661,7 +723,7 @@ Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the scrip
 
 ### Adding a level
 
-A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar, `W` a wyrm, `R` a rat king, `V` a visitor — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
+A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar, `W` a wyrm, `R` a rat king, `V` a visitor, `T` a bat and `U` its pup — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
 
 ```bash
 Tools/level_search.py --budget 12 --plan <<'MAP'
@@ -679,9 +741,9 @@ The star thresholds are the judgement call, but not a free one: `DifficultyTests
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
-A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
+A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A map with a second animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
+A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
 The search carries its pens as bitmasks — one bit per tile of the board — rather than as sets of coordinates, which is the same search written so that it finishes in a second rather than half a minute. Nothing about which pens it keeps changed when it was rewritten, and the nine shipped levels come out at exactly the numbers they always did, which is what `PuzzleLevelTests` and `DifficultyTests` are there to say. That speed is what makes a year of daily puzzles possible at all.
 
@@ -711,9 +773,10 @@ than the last time the universe asked it.
 | `exclude` | Hold the pig and leave the other animal outside | Nothing — its tile is a hole |
 | `together` | One budget, two animals that will not be parted | Nothing — one pen has to reach both |
 | `even` | Two pens, and the same ground in each | The water between them |
+| `roost` | Three animals: two that will not be split, and a third they will not share with | The water between them |
 
-`herd`, `apart`, `exclude`, `together` and `even` are the **boss rules**, and a field never asks
-one.
+`herd`, `apart`, `exclude`, `together`, `even` and `roost` are the **boss rules**, and a field
+never asks one.
 
 #### The shape of a world
 
@@ -760,6 +823,7 @@ is one the player cannot build.
 | `exclude` | Standing the one to be left out in the middle of the ground worth having |
 | `together` | Standing the two further apart, so the block that holds both costs more |
 | `even` | Making the two halves the free wall leaves more lopsided, so more has to be handed back |
+| `roost` | Running the free wall *between* the two that must share, so joining them is the expensive part |
 
 #### Authoring one
 
@@ -968,6 +1032,7 @@ Pigpen/
 │   ├── Emberpeak.swift          # Emberpeak: its nine levels and the trail up them
 │   ├── Cogsworth.swift          # Cogsworth City: its nine levels and the trail through them
 │   ├── Starfall.swift           # Starfall Reaches: its nine levels and the trail out across them
+│   ├── Gloamdeep.swift          # Gloamdeep Caverns: its nine levels and the trail down through them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
