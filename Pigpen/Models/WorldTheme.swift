@@ -155,4 +155,27 @@ extension WorldTheme {
         accent: Color(red: 0.62, green: 0.66, blue: 0.73),
         accentDeep: Color(red: 0.31, green: 0.35, blue: 0.42)
     )
+
+    /// Starfall Reaches, the fifth world: up off the rooftops onto ground the sky keeps
+    /// falling on. The windfall is a stardrop still cooling where it landed and the hazard a
+    /// meteor sunk into the dust — each worth exactly what its meadow twin was, a stardrop
+    /// five tiles to shut in, a meteor five to shut in with and no fencing at all, since
+    /// nothing will drive a post through a stone that came in from that far out.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for four worlds, so
+    /// the planet a player has been walking towards is the planet they arrive at.
+    static let starfall = WorldTheme(
+        id: "starfall-reaches",
+        name: "Starfall Reaches",
+        blurb: "Fence a pig loose among the stars. Stardrops in the dust, meteors under it.",
+        day: .starDay,
+        dusk: .starDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🌟", bonusScale: 0.58, bonusName: "stardrop",
+            hazardGlyph: "☄️", hazardScale: 0.62, hazardName: "meteor"
+        ),
+        boss: BossMark(glyph: "🛸", name: "the visitor"),
+        accent: Color(red: 0.61, green: 0.53, blue: 0.89),
+        accentDeep: Color(red: 0.29, green: 0.23, blue: 0.52)
+    )
 }

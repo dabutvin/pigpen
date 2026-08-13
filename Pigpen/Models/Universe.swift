@@ -75,19 +75,15 @@ struct Universe: Sendable {
 }
 
 extension Universe {
-    /// The map the game ships: the meadow, the thicket, the mountain and the city to play,
-    /// and eight more worlds standing out past them as silhouettes — a boss apiece, waiting
-    /// to be built.
+    /// The map the game ships: the meadow, the thicket, the mountain, the city and the reaches
+    /// to play, and seven more worlds standing out past them as silhouettes — a boss apiece,
+    /// waiting to be built.
     static let all = Universe(worlds: [
         UniverseWorld(theme: .meadow, game: .mudlarkMeadow),
         UniverseWorld(theme: .thornwood, game: .thornwoodThicket),
         UniverseWorld(theme: .emberpeak, game: .emberpeak),
         UniverseWorld(theme: .cogsworth, game: .cogsworthCity),
-        UniverseWorld(theme: silhouette(
-            id: "starfall-reaches", name: "Starfall Reaches", blurb: "Fence a pig loose among the stars.",
-            boss: "🛸", bossName: "the visitor",
-            accent: Color(red: 0.61, green: 0.53, blue: 0.89), deep: Color(red: 0.29, green: 0.23, blue: 0.52)
-        ), game: nil),
+        UniverseWorld(theme: .starfall, game: .starfallReaches),
         UniverseWorld(theme: silhouette(
             id: "gloamdeep-caverns", name: "Gloamdeep Caverns", blurb: "Deep dark, and something with wings.",
             boss: "🦇", bossName: "the roost",

@@ -90,10 +90,13 @@ enum Question: String, Sendable, CaseIterable {
     /// One budget, two animals that will not be parted: both held, and in the same pen.
     /// A boss, and nothing else.
     case together
+    /// One budget, two animals that will not be housed unequally: both held, in two pens, and
+    /// the same ground in each. A boss, and nothing else.
+    case even
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude, .together] }
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
