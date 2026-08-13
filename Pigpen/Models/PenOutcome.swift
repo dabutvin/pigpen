@@ -15,6 +15,8 @@ enum Refusal: Equatable, Sendable {
     case apart(Animal)
     /// Two animals that will not be housed unequally are standing in pens of different sizes.
     case uneven(Animal)
+    /// One of a roost that hangs together is standing in a pen of its own.
+    case split(Animal)
     /// The animal that had to be left outside has been fenced in.
     case shutIn(Animal)
 }
@@ -91,6 +93,22 @@ extension PuzzleLevel {
         if question == .together, let pigGround = ground[.pig],
            let alone = animals.first(where: { $0.kind != .pig && !pigGround.contains($0.tile) }) {
             return .refused(pen: held, refusal: .apart(alone.kind))
+        }
+
+        // A roost asks two things at once as well, and they pull opposite ways: the bat and its
+        // pup have to be in the same pen, and the pig has to be somewhere else. So the pen that
+        // holds all three is refused, and so is the one that hangs the pup on its own.
+        if question == .roost, let pigGround = ground[.pig] {
+            if let sharing = animals.first(where: { $0.kind != .pig && pigGround.contains($0.tile) }) {
+                return .refused(pen: held, refusal: .together(sharing.kind))
+            }
+            if let bat = animals.first(where: { $0.kind == .bat }),
+               let batGround = ground[.bat],
+               let strays = animals.first(where: {
+                   $0.kind != .pig && $0.kind != bat.kind && !batGround.contains($0.tile)
+               }) {
+                return .refused(pen: held, refusal: .split(strays.kind))
+            }
         }
 
         // And a board that will not have one animal better housed than the other asks two

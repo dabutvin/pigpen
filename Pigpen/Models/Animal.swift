@@ -5,6 +5,11 @@
 /// the last field of the reaches, where the same budget has to hold two animals instead of
 /// one — together in a single pen, apart in two, or in two pens holding the same ground,
 /// depending on what that world asks — but both of them, or the level is lost.
+///
+/// The caverns' last field is the first to stand three animals on one board: a bat, its pup and
+/// the pig. The two bats are one roost and the board asks for them in one pen, so they are drawn
+/// alike on purpose — what a player has to read off the floor is *there hang two bats*, and the
+/// game only needs them told apart to say which of them is the one hanging on its own.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -12,6 +17,8 @@ enum Animal: Character, CaseIterable, Sendable {
     case wyrm = "W"
     case rat = "R"
     case visitor = "V"
+    case bat = "T"
+    case pup = "U"
 
     /// What the field draws it as.
     var glyph: String {
@@ -22,6 +29,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .wyrm: "🐉"
         case .rat: "🐀"
         case .visitor: "🛸"
+        case .bat, .pup: "🦇"
         }
     }
 
@@ -34,6 +42,8 @@ enum Animal: Character, CaseIterable, Sendable {
         case .wyrm: "wyrm"
         case .rat: "rat king"
         case .visitor: "visitor"
+        case .bat: "bat"
+        case .pup: "pup"
         }
     }
 }

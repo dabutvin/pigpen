@@ -178,4 +178,28 @@ extension WorldTheme {
         accent: Color(red: 0.61, green: 0.53, blue: 0.89),
         accentDeep: Color(red: 0.29, green: 0.23, blue: 0.52)
     )
+
+    /// Gloamdeep Caverns, the sixth world: down off the dust and in under it, where the ground is
+    /// wet flowstone and the water is one river running through the dark. The windfall is a
+    /// crystal, which is the only light there is down here, and the hazard a boulder come off the
+    /// roof — each worth exactly what its meadow twin was, a crystal five tiles to shut in, a
+    /// boulder five to shut in with and no fencing at all, since nothing drives a post through a
+    /// fallen stone.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for five worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let gloamdeep = WorldTheme(
+        id: "gloamdeep-caverns",
+        name: "Gloamdeep Caverns",
+        blurb: "Deep dark, and something with wings. Crystals in the flowstone, boulders on it.",
+        day: .gloamDay,
+        dusk: .gloamDusk,
+        treats: TreatSkin(
+            bonusGlyph: "💎", bonusScale: 0.56, bonusName: "crystal",
+            hazardGlyph: "🪨", hazardScale: 0.60, hazardName: "boulder"
+        ),
+        boss: BossMark(glyph: "🦇", name: "the roost"),
+        accent: Color(red: 0.53, green: 0.47, blue: 0.63),
+        accentDeep: Color(red: 0.24, green: 0.20, blue: 0.34)
+    )
 }
