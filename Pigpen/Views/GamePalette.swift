@@ -69,7 +69,7 @@ enum GamePalette {
         let cover: Cover
     }
 
-    /// The four kinds of ground the game draws. A world picks one and the backdrop and the
+    /// The five kinds of ground the game draws. A world picks one and the backdrop and the
     /// world map both follow it, which is the whole of what makes a thicket read as woods,
     /// a mountain as bare rock and a city as somewhere paved rather than as a meadow tinted
     /// a different colour.
@@ -78,6 +78,8 @@ enum GamePalette {
         case woodland
         case scree
         case cobbles
+        /// Star dust: fine grey ground with the sky in it, pitted where things have landed.
+        case dust
     }
 }
 
@@ -250,5 +252,45 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.11, green: 0.10, blue: 0.14),
         isNight: true,
         cover: .cobbles
+    )
+
+    /// The fifth world by day, which up here is not much of a day at all: the sky is thin
+    /// enough that the violet of what is behind it comes through, the sun is small and cold,
+    /// and the ground is dust with the light of the sky lying on it. The same trail and the
+    /// same board as everywhere else, on ground nothing has ever grown in.
+    static let starDay = Self(
+        skyTop: Color(red: 0.30, green: 0.27, blue: 0.56),
+        skyHorizon: Color(red: 0.86, green: 0.79, blue: 0.90),
+        disc: Color(red: 1.00, green: 0.97, blue: 0.88),
+        discHalo: Color(red: 0.88, green: 0.82, blue: 0.99),
+        cloud: Color(red: 0.80, green: 0.78, blue: 0.91),
+        farHill: Color(red: 0.35, green: 0.32, blue: 0.50),
+        ground: Color(red: 0.53, green: 0.50, blue: 0.61),
+        foreground: Color(red: 0.41, green: 0.38, blue: 0.50),
+        blade: Color(red: 0.33, green: 0.31, blue: 0.45),
+        canopy: Color(red: 0.47, green: 0.44, blue: 0.57),
+        canopyShade: Color(red: 0.31, green: 0.29, blue: 0.43),
+        isNight: false,
+        cover: .dust
+    )
+
+    /// The reaches after dark, which is what they are for. The sky goes out altogether and
+    /// what is left is the stars in it and the light coming *up* off the ground, out of every
+    /// well a star put there — so this world reads cold and violet where the mountain's dark
+    /// reads red and the city's warm.
+    static let starDusk = Self(
+        skyTop: Color(red: 0.02, green: 0.02, blue: 0.08),
+        skyHorizon: Color(red: 0.17, green: 0.13, blue: 0.33),
+        disc: Color(red: 0.94, green: 0.95, blue: 1.00),
+        discHalo: Color(red: 0.64, green: 0.60, blue: 0.95),
+        cloud: Color(red: 0.15, green: 0.14, blue: 0.26),
+        farHill: Color(red: 0.11, green: 0.10, blue: 0.21),
+        ground: Color(red: 0.12, green: 0.11, blue: 0.21),
+        foreground: Color(red: 0.09, green: 0.08, blue: 0.16),
+        blade: Color(red: 0.07, green: 0.06, blue: 0.14),
+        canopy: Color(red: 0.15, green: 0.13, blue: 0.25),
+        canopyShade: Color(red: 0.09, green: 0.08, blue: 0.18),
+        isNight: true,
+        cover: .dust
     )
 }

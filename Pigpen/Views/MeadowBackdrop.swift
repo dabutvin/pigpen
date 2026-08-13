@@ -6,7 +6,8 @@ import UIKit
 /// laid behind the puzzle so a level looks like a patch of ground somebody has staked out
 /// rather than a grid on a slab of colour. A themed world hands its own light in, and the
 /// dressing follows — leaf litter and ferns in a thicket, ash and cinder on a mountain,
-/// paving and drains in a city, where the meadow had mowing and wildflowers.
+/// paving and drains in a city, dust and sparks out in the reaches, where the meadow had
+/// mowing and wildflowers.
 ///
 /// The ground it is all standing on is painted once. Only the things that would move in a
 /// breeze — the grass, the flowers, the fireflies over them after dark — are on a clock,
@@ -75,6 +76,7 @@ private struct Paddock {
         case .woodland: drawLeafLitter(in: &context)
         case .scree: drawAshDrifts(in: &context)
         case .cobbles: drawPaving(in: &context)
+        case .dust: drawDust(in: &context)
         }
     }
 
@@ -225,6 +227,30 @@ private struct Paddock {
         }
     }
 
+    /// Dust with things having landed in it: shallow pits ringed pale where the ground was
+    /// thrown up, and no bands and no courses, because nobody has ever mown or laid anything
+    /// out here. It is the emptiest ground the game draws, which is the point of the world.
+    private func drawDust(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 1_609)
+        for _ in 0..<20 {
+            let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.05...0.17))
+            let pit = CGRect(
+                x: centre.x - spread * 0.5, y: centre.y - spread * 0.2,
+                width: spread, height: spread * 0.4
+            )
+            context.fill(
+                Path(ellipseIn: pit),
+                with: .color(.black.opacity(colors.isNight ? 0.22 : 0.12))
+            )
+            context.stroke(
+                Path(ellipseIn: pit.insetBy(dx: -spread * 0.05, dy: -spread * 0.02)),
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.05 : 0.14)),
+                lineWidth: max(1, spread * 0.05)
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -245,7 +271,8 @@ private struct Paddock {
 
     /// Grass, wildflowers and the odd stone on a meadow; ferns, mushrooms and a denser
     /// verge in a thicket; stones, cinders and hardly anything alive on a mountain; loose
-    /// setts, drains and whatever comes up between the paving in a city. Scattered on a
+    /// setts, drains and whatever comes up between the paving in a city; thrown stone and
+    /// cooling sparks out in the reaches, where nothing comes up at all. Scattered on a
     /// fixed seed so the ground behind a level is the same ground every time the level is
     /// opened.
     private func drawDressing(in context: inout GraphicsContext) {
@@ -255,6 +282,7 @@ private struct Paddock {
         case .woodland: 18
         case .scree: 13
         case .cobbles: 12
+        case .dust: 11
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -290,6 +318,13 @@ private struct Paddock {
                     case ..<0.76: drawDrain(in: &context, at: spot, scale: scale)
                     default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     }
+                case .dust:
+                    // Nothing grows out here, so the ground is dressed with what has landed
+                    // on it: stones thrown out of the pits, and the odd spark still cooling.
+                    switch roll {
+                    case ..<0.52: drawStone(in: &context, at: spot, scale: scale)
+                    default: drawSpark(in: &context, at: spot, scale: scale)
+                    }
                 }
             }
         }
@@ -304,6 +339,7 @@ private struct Paddock {
         case .woodland: 32
         case .scree: 22
         case .cobbles: 20
+        case .dust: 18
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -327,6 +363,14 @@ private struct Paddock {
                 // A kerb rather than a verge: the grass in a city is whatever has pushed up
                 // through the joints, so most of the foot of the screen is stone.
                 drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.7)))
+            case .dust:
+                // No verge at all up here — a scatter of what came down, all the way to the
+                // bottom of the screen.
+                if roll < 0.7 {
+                    drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.7)))
+                } else {
+                    drawSpark(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)))
+                }
             default:
                 drawTuft(
                     in: &context,
@@ -565,10 +609,53 @@ private struct Paddock {
         )
     }
 
+    /// A four-pointed spark lying in the dust with a little of the sky still in it — the
+    /// backdrop's echo of the stardrops out on the board, and what the reaches have instead
+    /// of wildflowers. It reads brightest after dark, since it is the one thing out here
+    /// giving off light of its own.
+    private func drawSpark(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let reach = x(0.013) * scale
+        let glow = GamePalette.cream.opacity(colors.isNight ? 0.85 : 0.55)
+
+        context.fill(
+            circle(at: foot, radius: reach * 1.9),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 0.78, green: 0.72, blue: 1.00).opacity(colors.isNight ? 0.34 : 0.18),
+                    Color(red: 0.78, green: 0.72, blue: 1.00).opacity(0)
+                ]),
+                center: foot,
+                startRadius: 0,
+                endRadius: reach * 1.9
+            )
+        )
+
+        var points = Path()
+        points.move(to: CGPoint(x: foot.x, y: foot.y - reach))
+        points.addQuadCurve(
+            to: CGPoint(x: foot.x + reach * 0.55, y: foot.y),
+            control: CGPoint(x: foot.x + reach * 0.12, y: foot.y - reach * 0.12)
+        )
+        points.addQuadCurve(
+            to: CGPoint(x: foot.x, y: foot.y + reach),
+            control: CGPoint(x: foot.x + reach * 0.12, y: foot.y + reach * 0.12)
+        )
+        points.addQuadCurve(
+            to: CGPoint(x: foot.x - reach * 0.55, y: foot.y),
+            control: CGPoint(x: foot.x - reach * 0.12, y: foot.y + reach * 0.12)
+        )
+        points.addQuadCurve(
+            to: CGPoint(x: foot.x, y: foot.y - reach),
+            control: CGPoint(x: foot.x - reach * 0.12, y: foot.y - reach * 0.12)
+        )
+        context.fill(points, with: .color(glow))
+    }
+
     /// The corners taken down a little, which is all it takes to make the board the lit
     /// thing on the screen. A thicket closes in harder, so the canopy feels overhead; a
-    /// mountain sits somewhere between the two, open sky but a hazed one; and a city closes
-    /// in nearly as hard as a wood, since the buildings are the canopy here.
+    /// mountain sits somewhere between the two, open sky but a hazed one; a city closes
+    /// in nearly as hard as a wood, since the buildings are the canopy here; and the reaches
+    /// close in hardest of all, because what is round the edge of them is space.
     func drawVignette(in context: inout GraphicsContext) {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
@@ -577,6 +664,7 @@ private struct Paddock {
         case .woodland: colors.isNight ? 0.42 : 0.32
         case .scree: colors.isNight ? 0.38 : 0.26
         case .cobbles: colors.isNight ? 0.44 : 0.30
+        case .dust: colors.isNight ? 0.52 : 0.34
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
@@ -685,5 +773,10 @@ private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
 
 #Preview("Cogsworth City") {
     MeadowBackdrop(day: .cityDay, dusk: .cityDusk)
+        .ignoresSafeArea()
+}
+
+#Preview("Starfall Reaches") {
+    MeadowBackdrop(day: .starDay, dusk: .starDusk)
         .ignoresSafeArea()
 }

@@ -5,7 +5,8 @@ import SwiftUI
 /// where the pig set out from. Every other world keeps the same trail and draws it the same
 /// way, on its own ground — denser trees, leaf litter, ferns and a hollow stump in a
 /// thicket; ash, loose rock, scorched pines and a cairn on a mountain; paving, lamp posts,
-/// crates and a clocktower in a city.
+/// crates and a clocktower in a city; dust, craters, splinters of star-stone and the first
+/// crater of all out in the reaches.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
 /// path or on a signpost however wide the screen is. It is drawn once rather than on a
@@ -45,6 +46,7 @@ private struct Meadow {
         case .woodland: drawHollow(in: &context)
         case .scree: drawCairn(in: &context)
         case .cobbles: drawClocktower(in: &context)
+        case .dust: drawFirstCrater(in: &context)
         }
     }
 
@@ -58,6 +60,34 @@ private struct Meadow {
         case .woodland: drawLeafLitter(in: &context)
         case .scree: drawAshDrifts(in: &context)
         case .cobbles: drawPaving(in: &context)
+        case .dust: drawPits(in: &context)
+        }
+    }
+
+    /// Pits in the dust where things have come down, ringed pale with what they threw up. It
+    /// is the only ground on any trail with no pattern laid over it at all — no bands, no
+    /// courses, no drifts — because out here nothing has ever been farmed, burnt or built.
+    private func drawPits(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 2_129)
+        for _ in 0..<26 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 34...96))
+            let pit = CGRect(
+                x: centre.x - spread * 0.5, y: centre.y - spread * 0.2,
+                width: spread, height: spread * 0.4
+            )
+            context.fill(
+                Path(ellipseIn: pit),
+                with: .color(.black.opacity(colors.isNight ? 0.24 : 0.13))
+            )
+            context.stroke(
+                Path(ellipseIn: pit.insetBy(dx: -4, dy: -2)),
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.06 : 0.16)),
+                lineWidth: 2
+            )
         }
     }
 
@@ -210,12 +240,19 @@ private struct Meadow {
         // reaches up into the hills. A mountain sky is hazed rather than clouded, so what
         // is up there is thin and hangs low, and a city sky is whatever its chimneys have
         // put into it.
+        // Out in the reaches the sky is thin enough that the stars are up in it whatever the
+        // hour, which is the one thing this world's sky has that no other world's does.
+        if colors.cover == .dust {
+            drawStars(in: &context)
+        }
+
         var scatter = Scatter(seed: 311)
         let clouds: Int = switch colors.cover {
         case .pasture: 3
         case .woodland: 1
         case .scree: 2
         case .cobbles: 3
+        case .dust: 1
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -227,6 +264,46 @@ private struct Meadow {
                 with: .color(colors.cloud.opacity(cloudOpacity))
             )
         }
+    }
+
+    /// The stars over the reaches, with one of them on its way down. They are what the world
+    /// is named for, so they are in the sky by day as well as after dark — thinner by day,
+    /// the way a star is when there is still some light to compete with.
+    private func drawStars(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 3_581)
+        for _ in 0..<46 {
+            let spot = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: CGFloat(scatter.next(in: 0.04...0.92)) * horizon
+            )
+            let radius = CGFloat(scatter.next(in: 0.8...2.2))
+            context.fill(
+                circle(at: spot, radius: radius),
+                with: .color(
+                    GamePalette.cream.opacity(
+                        (colors.isNight ? 0.9 : 0.45) * scatter.next(in: 0.4...1.0)
+                    )
+                )
+            )
+        }
+
+        // One coming in, drawn as the streak it leaves rather than as the star itself.
+        let entry = CGPoint(x: size.width * 0.22, y: horizon * 0.24)
+        var streak = Path()
+        streak.move(to: entry)
+        streak.addLine(to: CGPoint(x: entry.x + size.width * 0.13, y: entry.y + horizon * 0.34))
+        context.stroke(
+            streak,
+            with: .linearGradient(
+                Gradient(colors: [
+                    GamePalette.cream.opacity(0),
+                    GamePalette.cream.opacity(colors.isNight ? 0.75 : 0.5)
+                ]),
+                startPoint: entry,
+                endPoint: CGPoint(x: entry.x + size.width * 0.13, y: entry.y + horizon * 0.34)
+            ),
+            style: StrokeStyle(lineWidth: 2.4, lineCap: .round)
+        )
     }
 
     private func cloud(at centre: CGPoint, width: CGFloat) -> Path {
@@ -274,6 +351,8 @@ private struct Meadow {
             drawCanopyLine(in: &context)
         } else if colors.cover == .cobbles {
             drawSkyline(in: &context)
+        } else if colors.cover == .dust {
+            drawFarRim(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -290,10 +369,37 @@ private struct Meadow {
     }
 
     /// How solid what is up in the sky reads: a full white cloud over the meadow, something
-    /// thinner over a canopy or a peak, and everything faint after dark.
+    /// thinner over a canopy or a peak, and everything faint after dark. There is next to no
+    /// air over the reaches, so what little is up there barely shows at all.
     private var cloudOpacity: Double {
+        if colors.cover == .dust { return colors.isNight ? 0.16 : 0.24 }
         if colors.isNight { return 0.55 }
         return colors.cover == .pasture ? 0.9 : 0.55
+    }
+
+    /// The far rim along the horizon of the reaches: the raised lip of the craters out past
+    /// the trail, low and broken. Where a thicket closes the sky with a canopy and a city with
+    /// rooftops, this world closes it with the ground it has been battered into — which leaves
+    /// the sky wide open above it, and the sky is what is worth looking at here.
+    private func drawFarRim(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 4_507)
+        let base = horizon + 26
+        var rim = Path()
+        rim.move(to: CGPoint(x: -10, y: base))
+        var across: CGFloat = -10
+        while across < size.width + 20 {
+            let step = CGFloat(scatter.next(in: 34...78))
+            let lift = CGFloat(scatter.next(in: 5...22))
+            rim.addQuadCurve(
+                to: CGPoint(x: across + step, y: base - CGFloat(scatter.next(in: 0...8))),
+                control: CGPoint(x: across + step * 0.5, y: base - lift)
+            )
+            across += step
+        }
+        rim.addLine(to: CGPoint(x: across, y: base + 12))
+        rim.addLine(to: CGPoint(x: -10, y: base + 12))
+        rim.closeSubpath()
+        context.fill(rim, with: .color(colors.canopyShade))
     }
 
     /// The peak itself, standing up out of the hills with smoke coming off the top of it.
@@ -406,6 +512,8 @@ private struct Meadow {
         case stump
         case lamp
         case crate
+        case crater
+        case shard
     }
 
     private struct Place {
@@ -478,6 +586,14 @@ private struct Meadow {
             case ..<0.86: .rock
             default: .tree
             }
+        case .dust:
+            // Nothing grows out here and nobody has built anything: what the ground has on it
+            // is the pits things have made in it and the pieces they broke into.
+            switch roll {
+            case ..<0.44: .crater
+            case ..<0.76: .rock
+            default: .shard
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -500,6 +616,8 @@ private struct Meadow {
         case .stump: drawStump(in: &context, at: place.at, scale: place.size)
         case .lamp: drawLamp(in: &context, at: place.at, scale: place.size)
         case .crate: drawCrate(in: &context, at: place.at, scale: place.size)
+        case .crater: drawCrater(in: &context, at: place.at, scale: place.size)
+        case .shard: drawShard(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -850,9 +968,65 @@ private struct Meadow {
         )
     }
 
+    /// A crater in the dust with a well of water standing in the bottom of it — the same thing
+    /// the boards of this world are scattered with, and what the reaches have instead of a
+    /// bush or a hay bale.
+    private func drawCrater(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let spread = 22 * scale
+        let bowl = CGRect(
+            x: foot.x - spread * 0.5, y: foot.y - spread * 0.24,
+            width: spread, height: spread * 0.48
+        )
+
+        // The lip, thrown up all round and lit on the western side like everything else here.
+        context.fill(
+            Path(ellipseIn: bowl.insetBy(dx: -spread * 0.08, dy: -spread * 0.04)),
+            with: .color(GamePalette.stone.opacity(colors.isNight ? 0.4 : 0.72))
+        )
+        context.fill(Path(ellipseIn: bowl), with: .color(.black.opacity(0.35)))
+        context.fill(
+            Path(ellipseIn: bowl.insetBy(dx: spread * 0.16, dy: spread * 0.08)),
+            with: .color(GamePalette.water.opacity(colors.isNight ? 0.7 : 0.85))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: bowl.minX + spread * 0.24, y: bowl.minY + spread * 0.12,
+                width: spread * 0.2, height: spread * 0.08
+            )),
+            with: .color(GamePalette.waterRipple.opacity(colors.isNight ? 0.5 : 0.8))
+        )
+    }
+
+    /// A splinter of whatever came down, standing up out of the dust where it landed. It is
+    /// the one thing on this trail that is taller than it is wide, so it does for the reaches
+    /// what a tree does everywhere else.
+    private func drawShard(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let height = 26 * scale
+        shadow(in: &context, at: foot, width: height * 0.5)
+
+        var splinter = Path()
+        splinter.move(to: CGPoint(x: foot.x - height * 0.16, y: foot.y))
+        splinter.addLine(to: CGPoint(x: foot.x - height * 0.06, y: foot.y - height * 0.86))
+        splinter.addLine(to: CGPoint(x: foot.x + height * 0.13, y: foot.y - height * 0.62))
+        splinter.addLine(to: CGPoint(x: foot.x + height * 0.18, y: foot.y))
+        splinter.closeSubpath()
+        context.fill(splinter, with: .color(colors.canopyShade))
+
+        var lit = Path()
+        lit.move(to: CGPoint(x: foot.x - height * 0.16, y: foot.y))
+        lit.addLine(to: CGPoint(x: foot.x - height * 0.06, y: foot.y - height * 0.86))
+        lit.addLine(to: CGPoint(x: foot.x - height * 0.01, y: foot.y))
+        lit.closeSubpath()
+        context.fill(
+            lit,
+            with: .color(Color(red: 0.80, green: 0.74, blue: 1.00).opacity(colors.isNight ? 0.3 : 0.45))
+        )
+    }
+
     /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
-    /// stump in the thicket, a cairn on the mountain, a clocktower in the city — down below
-    /// the first signpost, on whichever side of the world the trail does not start on.
+    /// stump in the thicket, a cairn on the mountain, a clocktower in the city, the first
+    /// crater out in the reaches — down below the first signpost, on whichever side of the
+    /// world the trail does not start on.
     private var landmarkStand: CGPoint {
         CGPoint(
             x: trail.point(of: 0).x < size.width / 2 ? size.width - 74 : 74,
@@ -1057,6 +1231,89 @@ private struct Meadow {
         context.fill(
             Path(roundedRect: arch, cornerRadius: wide * 0.14),
             with: .color(GamePalette.post.opacity(0.9))
+        )
+    }
+
+    /// The first crater, at the foot of the trail through the reaches: the one that came down
+    /// on the night the pig got up here, with a well of water standing in it and the stardrop
+    /// that made it still lying in the middle. It is this world's answer to the barn the pig
+    /// came out of, the stump it went past in the woods, the cairn somebody left on the
+    /// mountain and the clocktower it walked in under in the city — the thing at the bottom of
+    /// the world that says where all this started.
+    private func drawFirstCrater(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 92
+        let tall: CGFloat = 46
+
+        let bowl = CGRect(
+            x: centre.x - wide / 2, y: centre.y - tall / 2,
+            width: wide, height: tall
+        )
+
+        // The lip, thrown up all round and standing higher on the far side.
+        context.fill(
+            Path(ellipseIn: bowl.insetBy(dx: -9, dy: -6)),
+            with: .color(GamePalette.stone.opacity(colors.isNight ? 0.45 : 0.8))
+        )
+        context.fill(
+            Path(ellipseIn: bowl.insetBy(dx: -4, dy: -3)),
+            with: .color(.black.opacity(0.3))
+        )
+
+        // The well itself, and the light coming up out of it — which is why the trail through
+        // this world reads as lit from below rather than from the sky.
+        let well = bowl.insetBy(dx: 14, dy: 8)
+        context.fill(
+            Path(ellipseIn: well.insetBy(dx: -18, dy: -12)),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 0.72, green: 0.68, blue: 1.00).opacity(colors.isNight ? 0.4 : 0.2),
+                    Color(red: 0.72, green: 0.68, blue: 1.00).opacity(0)
+                ]),
+                center: CGPoint(x: well.midX, y: well.midY),
+                startRadius: 0,
+                endRadius: well.width * 0.9
+            )
+        )
+        context.fill(
+            Path(ellipseIn: well),
+            with: .color(GamePalette.waterDeep.opacity(colors.isNight ? 0.85 : 0.95))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: well.minX + well.width * 0.16, y: well.minY + well.height * 0.2,
+                width: well.width * 0.3, height: well.height * 0.24
+            )),
+            with: .color(GamePalette.waterRipple.opacity(colors.isNight ? 0.45 : 0.75))
+        )
+
+        // The stardrop that dug it, still sitting in the middle of its own crater.
+        let star = CGPoint(x: well.midX, y: well.midY - 1)
+        context.fill(
+            circle(at: star, radius: 12),
+            with: .radialGradient(
+                Gradient(colors: [
+                    GamePalette.cream.opacity(0.6),
+                    GamePalette.cream.opacity(0)
+                ]),
+                center: star,
+                startRadius: 0,
+                endRadius: 12
+            )
+        )
+        var points = Path()
+        for turn in 0..<4 {
+            let angle = Double(turn) * .pi / 2
+            points.move(to: star)
+            points.addLine(to: CGPoint(
+                x: star.x + 9 * CGFloat(cos(angle)),
+                y: star.y + 6 * CGFloat(sin(angle))
+            ))
+        }
+        context.stroke(
+            points,
+            with: .color(GamePalette.cream.opacity(0.95)),
+            style: StrokeStyle(lineWidth: 2.6, lineCap: .round)
         )
     }
 
