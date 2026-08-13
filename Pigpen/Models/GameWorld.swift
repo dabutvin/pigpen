@@ -148,4 +148,20 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Starfall Reaches: the fifth world, wrapped in storybook films the way the three below
+    /// it are. The send-off points on down into the dark under the dust, the way the city's
+    /// points up off the rooftops to the reaches, and Visitor Crater stops for a briefing
+    /// because it stands a second animal on the board — the same courtesy every boss pays.
+    static let starfallReaches = GameWorld(
+        theme: .starfall,
+        map: .starfallReaches,
+        opening: WorldFilmSpec(key: "starfall-opening") { .storybook(.starfallOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "starfall-held") { .storybook(.starfallHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.visitorCrater.id: WorldFilmSpec(key: "visitor-crater-briefing") {
+                .storybook(.visitorCrater(start: $0))
+            }
+        ]
+    )
 }
