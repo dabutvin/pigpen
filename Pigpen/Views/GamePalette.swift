@@ -301,18 +301,24 @@ extension GamePalette.Pasture {
     /// and what stands in for the sun is the crystal light coming off the flowstone. This is the
     /// world's *lit* palette all the same — a gallery deep enough to see across, where the far
     /// wall catches enough light to tell there is one.
+    ///
+    /// The rock is a wet limestone grey with the green of standing water in it, which is the one
+    /// thing this world cannot borrow from the one above it. The reaches are violet dust lit from
+    /// the sky; a cave dimmed to the same violet would only read as the reaches after dark. So the
+    /// floor goes cold and mineral and the light on it goes to crystal, and the two worlds are
+    /// told apart by their colour rather than only by their brightness.
     static let gloamDay = Self(
-        skyTop: Color(red: 0.10, green: 0.09, blue: 0.16),
-        skyHorizon: Color(red: 0.44, green: 0.41, blue: 0.56),
-        disc: Color(red: 0.74, green: 0.91, blue: 0.95),
-        discHalo: Color(red: 0.44, green: 0.69, blue: 0.81),
-        cloud: Color(red: 0.24, green: 0.22, blue: 0.33),
-        farHill: Color(red: 0.22, green: 0.20, blue: 0.31),
-        ground: Color(red: 0.42, green: 0.40, blue: 0.50),
-        foreground: Color(red: 0.31, green: 0.29, blue: 0.39),
-        blade: Color(red: 0.25, green: 0.24, blue: 0.33),
-        canopy: Color(red: 0.36, green: 0.34, blue: 0.45),
-        canopyShade: Color(red: 0.22, green: 0.21, blue: 0.30),
+        skyTop: Color(red: 0.08, green: 0.11, blue: 0.11),
+        skyHorizon: Color(red: 0.34, green: 0.42, blue: 0.42),
+        disc: Color(red: 0.74, green: 0.94, blue: 0.95),
+        discHalo: Color(red: 0.38, green: 0.74, blue: 0.76),
+        cloud: Color(red: 0.19, green: 0.25, blue: 0.25),
+        farHill: Color(red: 0.17, green: 0.23, blue: 0.23),
+        ground: Color(red: 0.41, green: 0.46, blue: 0.44),
+        foreground: Color(red: 0.30, green: 0.35, blue: 0.34),
+        blade: Color(red: 0.24, green: 0.29, blue: 0.29),
+        canopy: Color(red: 0.35, green: 0.41, blue: 0.40),
+        canopyShade: Color(red: 0.21, green: 0.26, blue: 0.26),
         isNight: false,
         cover: .flowstone
     )
@@ -322,17 +328,17 @@ extension GamePalette.Pasture {
     /// for having nothing to compete with: the reaches took their light from the sky and this
     /// world takes what it has out of the rock.
     static let gloamDusk = Self(
-        skyTop: Color(red: 0.02, green: 0.02, blue: 0.04),
-        skyHorizon: Color(red: 0.08, green: 0.09, blue: 0.16),
-        disc: Color(red: 0.63, green: 0.93, blue: 0.97),
-        discHalo: Color(red: 0.29, green: 0.60, blue: 0.73),
-        cloud: Color(red: 0.06, green: 0.06, blue: 0.11),
-        farHill: Color(red: 0.05, green: 0.05, blue: 0.10),
-        ground: Color(red: 0.09, green: 0.09, blue: 0.14),
-        foreground: Color(red: 0.06, green: 0.06, blue: 0.11),
-        blade: Color(red: 0.04, green: 0.04, blue: 0.09),
-        canopy: Color(red: 0.08, green: 0.07, blue: 0.14),
-        canopyShade: Color(red: 0.04, green: 0.04, blue: 0.09),
+        skyTop: Color(red: 0.02, green: 0.03, blue: 0.03),
+        skyHorizon: Color(red: 0.07, green: 0.10, blue: 0.10),
+        disc: Color(red: 0.66, green: 0.96, blue: 0.98),
+        discHalo: Color(red: 0.26, green: 0.68, blue: 0.72),
+        cloud: Color(red: 0.05, green: 0.08, blue: 0.08),
+        farHill: Color(red: 0.04, green: 0.06, blue: 0.06),
+        ground: Color(red: 0.10, green: 0.14, blue: 0.13),
+        foreground: Color(red: 0.07, green: 0.10, blue: 0.10),
+        blade: Color(red: 0.05, green: 0.08, blue: 0.08),
+        canopy: Color(red: 0.09, green: 0.13, blue: 0.12),
+        canopyShade: Color(red: 0.05, green: 0.08, blue: 0.08),
         isNight: true,
         cover: .flowstone
     )
