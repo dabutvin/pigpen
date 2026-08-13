@@ -548,39 +548,39 @@ extension StorybookScene {
                 Shot(
                     motif: "🌌",
                     strewn: ["✨", "🌑", "✨"],
-                    caption: "Starfall Reaches. Room to the horizon, and a sky that keeps landing in it.",
-                    seconds: 3.0
+                    caption: "Starfall Reaches. The sky keeps landing in it.",
+                    seconds: 2.9
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["✨", "🌑"],
-                    caption: "Your pig went up off the rooftops and out into the dust.",
-                    seconds: 2.8
+                    caption: "Your pig went up off the rooftops.",
+                    seconds: 2.5
                 ),
                 Shot(
                     motif: "💧",
                     strewn: ["✨", "🌑", "✨"],
-                    caption: "Every star that lands leaves one well. No two of them touch.",
-                    seconds: 3.0
+                    caption: "Every star that lands leaves one well.",
+                    seconds: 2.9
                 ),
                 Shot(
                     motif: "🌟",
                     strewn: ["✨", "🌑"],
-                    caption: "Stardrops cooling where they fell. Five apiece, shut in.",
-                    seconds: 2.8
+                    caption: "Stardrops in the dust. Five each, shut in.",
+                    seconds: 2.7
                 ),
                 Shot(
                     motif: "☄️",
                     strewn: ["✨", "🌑"],
-                    caption: "Meteors take no fence. Build around them, or pay the five.",
-                    seconds: 2.8
+                    caption: "Meteors take no fence. Build round them.",
+                    seconds: 2.9
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🌌", "✨"],
                     caption: "Same as the meadow. Fence it in, big and shut.",
                     isCard: true,
-                    seconds: 2.5
+                    seconds: 3.0
                 )
             ],
             start: start
@@ -599,7 +599,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🛸",
                     strewn: ["🌟", "☄️"],
-                    caption: "The visitor got a pen of its own, and not a tile less than yours.",
+                    caption: "The visitor got a pen to match your own.",
                     seconds: 3.4
                 ),
                 Shot(
@@ -645,19 +645,19 @@ extension StorybookScene {
                 Shot(
                     motif: "🌠",
                     strewn: ["✨", "🌑", "☄️"],
-                    caption: "Visitor Crater. The last of the reaches, and the newest.",
+                    caption: "Visitor Crater. The newest ground there is.",
                     seconds: 2.7
                 ),
                 Shot(
                     motif: "🛸",
                     strewn: ["🌌", "🌟"],
-                    caption: "The visitor wants ground of its own — as much of it as the pig has.",
+                    caption: "The visitor wants as much ground as the pig.",
                     seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🌌", "✨", "🌟"],
-                    caption: "Twenty pieces. Two pens, the same ground in each — never one, never lopsided.",
+                    caption: "Twenty pieces. Two pens, and neither one bigger.",
                     isCard: true,
                     seconds: 3.2
                 )

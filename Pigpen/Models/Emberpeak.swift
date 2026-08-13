@@ -195,15 +195,16 @@ extension PuzzleLevel {
             """
     )
 
-    /// The hardest field in the game, and the third turn of the idea the meadow's dew ponds
-    /// opened. Tarns caught in the rock at three-tile intervals, an ember staked out beyond
-    /// them and a chestnut lying inside: the pools are the wall of a pen nobody has drawn, and
-    /// at this spacing they give away almost nothing — five hints of a ring, and the other
-    /// two thirds of it to work out.
+    /// The hardest field in the three worlds up to here, and the third turn of the idea the
+    /// meadow's dew ponds opened. Tarns caught in the rock at three-tile intervals, an ember
+    /// staked out beyond them and a chestnut lying inside: the pools are the wall of a pen
+    /// nobody has drawn, and at this spacing they give away almost nothing — five hints of a
+    /// ring, and the other two thirds of it to work out.
     ///
     /// Which is why squaring off is worth 17 here and the ring is worth 34. The meadow spaced
     /// its ponds one tile apart and asked 27%; the thicket two, and asked 44%; the mountain
-    /// three, and asks 50% — more than any other field in the game, Sour Ground included.
+    /// three, and asks 50% — more than Sour Ground and more than anything the city has, and
+    /// beaten in the end only by the reaches, which ask the same three tiles on a wider board.
     static let craterPools = emberpeak(
         id: "crater-pools",
         name: "Crater Pools",

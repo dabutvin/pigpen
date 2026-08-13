@@ -23,7 +23,7 @@ import Foundation
 /// piece bridging two of them — and it is a wall no rectangle can ever use. So this world's
 /// water hands over staircases rather than banks, and squaring a board off against a staircase
 /// wastes more than squaring off against anything the four worlds below had. It is why the
-/// reaches floor at 31% where the city floors at 30, on boards half again as big: there is more
+/// reaches floor at 32% where the city floors at 30, on boards half again as big: there is more
 /// room out here than anywhere in the game, and less of it that a plain block can reach.
 extension PuzzleLevel {
     /// The chain runs from the north-west corner down across the middle of the reaches, seven
@@ -63,14 +63,15 @@ extension PuzzleLevel {
             """
     )
 
-    /// A whole shower of them landed here: wells strung along the top of the reaches, wells down
-    /// the west, and a second line of them falling away south-east through the middle. Three
-    /// sides of a pen are as good as given, and the mouth is the east — which is the question
-    /// Horseshoe Lake and Foxglove Dell asked with one body of water apiece, asked here with
-    /// twelve separate drops that only add up to a basin if you let them.
+    /// A whole shower of them landed here: wells along the top of the reaches, wells down the
+    /// west, and a third line falling away south-west through the middle. Twelve drops, and
+    /// every one of them every other tile — which is the question Horseshoe Lake and Foxglove
+    /// Dell asked with one body of water apiece, asked here with a basin that is dotted rather
+    /// than drawn.
     ///
-    /// Thirteen pieces squared off between the north bank and the west hold 24 tiles. The same
-    /// thirteen, spent closing the mouth and stepping in past the inner drops, hold 36.
+    /// So the wall of the answer is half water: almost every one of the thirteen pieces goes in
+    /// the gap between two drops, and the drops do the rest. Squared off between the north bank
+    /// and the west those thirteen hold 24 tiles; laid in the gaps instead they hold 36.
     static let fallwaterBasin = starfall(
         id: "fallwater-basin",
         name: "Fallwater Basin",
@@ -95,8 +96,8 @@ extension PuzzleLevel {
     )
 
     /// One chain again, longer, and with a well missing out of the middle of it. Everything the
-    /// chain seals is free and the hole is a way out, so the entire bank — seven wells, nine
-    /// tiles of staircase — costs exactly one piece, laid in the gap.
+    /// chain seals is free and the hole is a way out, so the whole bank — eight tiles of
+    /// diagonal, seven of them wells — costs exactly one piece, laid in the hole.
     ///
     /// Which is Otter Ford's lesson and Lock Gate's, taught on the only board in the game where
     /// the bank is diagonal: fifteen pieces squared off hold 24 tiles, and the same fifteen with
@@ -160,10 +161,11 @@ extension PuzzleLevel {
             """
     )
 
-    /// Two stardrops cooling on the north rim of a hollow, four tiles apart, and thirteen pieces
-    /// with six wells scattered round the ground to lean on. The near one is worth the ground
-    /// the wall gives up bending out to it and the far one is not, which is the whole of what a
-    /// stardrop is for.
+    /// Two stardrops cooling on the north rim of a hollow with a single tile of dust between
+    /// them, and thirteen pieces with seven wells scattered round the ground to lean on. The
+    /// near one is worth the ground the wall gives up bending out to it and the far one is not,
+    /// which is the whole of what a stardrop is for — and here the two are close enough that
+    /// the line between worth it and not runs between neighbours.
     ///
     /// Thirteen pieces squared off under the wells hold 24. The same thirteen, bent out over the
     /// near drop and cut back on the diagonal to pay for it, hold 34 tiles and that drop, which
@@ -227,9 +229,9 @@ extension PuzzleLevel {
     )
 
     /// Six wells and nothing else: two on the north, two on the south, one out west and one out
-    /// east, none of them touching anything. They are the corners of a shape nobody has drawn,
+    /// east, none of them touching anything. They are six corners of a shape nobody has drawn,
     /// and the budget is exactly the rest of that shape's wall — twelve pieces, which is what
-    /// the octagon they imply needs and one piece less than any other pen worth having.
+    /// the octagon they imply needs and not one to spare.
     ///
     /// So this is Dew Ponds and Fairy Ring and Crater Pools again, and the hardest field in the
     /// world: twelve pieces squared off between two of the drops hold 14 tiles, and the same
@@ -263,7 +265,7 @@ extension PuzzleLevel {
     /// six wells thrown across it, one stardrop lying down in the south-west, and twenty pieces.
     ///
     /// The wells are a constellation the way the ring's are — the budget is the rest of the wall
-    /// they imply — but out here that wall is a diamond eleven tiles across, and the diamond is
+    /// they imply — but out here that wall is a diamond ten tiles across, and the diamond is
     /// the point: twenty pieces laid as a staircase all the way round shut 64 tiles and take the
     /// stardrop in on the way, which is 69, where the best block those same twenty can square
     /// off holds 43. Nothing else in the game holds sixty tiles.
@@ -307,19 +309,21 @@ extension PuzzleLevel {
     /// standing in the better country and box the other one in four pieces — is exactly what
     /// the board sends back.
     ///
-    /// A chain of wells falls across the floor of the crater from the north rim to the south,
-    /// which is dividing wall the sky laid and nobody pays for, and it stops two tiles short: a
-    /// neck of plain ground where the two halves of the crater still run into one another.
-    /// Plugging the neck is what turns one pen into two. What is left after that is the rule
-    /// itself, because the halves the chain leaves are not the same size — a player who plugs
-    /// the neck and stops has a pen that holds every tile and a board that will not have it, and
-    /// the last thing to work out is which tiles of the wider half to hand back.
+    /// A line of wells falls down the middle of the crater, north-east rim to south-west, and it
+    /// is dividing wall the sky laid and nobody pays for — except that two tiles of it are
+    /// missing, a neck of plain dust where the two halves of the crater still run into one
+    /// another. Plugging the neck for two pieces is what turns one pen into two. What is left
+    /// after that is the rule itself, because the halves the line leaves are not the same size:
+    /// a player who plugs the neck and fences the rim has a pen that holds every tile in the
+    /// crater and a board that will not have it, and the last thing to work out is which tiles
+    /// of the wider half to hand back.
     ///
     /// Twenty pieces. The best pair of blocks holds 27 between them; the answer holds 22 tiles
-    /// apiece with a stardrop in each half, which is 49. A third stardrop lies out past the east
-    /// rim where no wall on this board can reach it, and both meteors stand where a tidy wall
-    /// would want to go. It asks for most of the stars the eight fields below it hold before it
-    /// will open at all.
+    /// apiece with a stardrop in each half and a meteor swallowed by the visitor's, which comes
+    /// to 49. A third stardrop lies out past the east rim where no wall on this board can reach
+    /// it, and the other meteor stands out on the north rim where the tidy wall would want to
+    /// go. It asks for most of the stars the eight fields below it hold before it will open at
+    /// all.
     static let visitorCrater = starfall(
         id: "visitor-crater",
         name: "Visitor Crater",

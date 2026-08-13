@@ -163,8 +163,9 @@ floor of the world below it, while its opening field has to ask more than the la
 opening field did. The meadow floors at nothing and opens on a map with no trick in it; the
 thicket floors at 23% and opens at 25%, so the second world starts around where the first
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
-the thicket asked before its fourth field; and Cogsworth City floors and opens at 30%, the
-highest floor any world has stood on. Bosses are held to each other rather than to the floor:
+the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; and Starfall
+Reaches floors and opens at 32%, the highest floor any world has stood on, on the biggest boards
+in the game. Bosses are held to each other rather than to the floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
@@ -194,10 +195,10 @@ carries the same game into every one of them.
   whole journey is on the map from the first time you see it, so there is always somewhere to
   be going.
 
-Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak** and
-**Cogsworth City** to play, then Starfall Reaches, Gloamdeep Caverns, Lantern Carnival,
-Sunbaked Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights
-waiting as silhouettes.
+Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
+City** and **Starfall Reaches** to play, then Gloamdeep Caverns, Lantern Carnival, Sunbaked
+Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
+silhouettes.
 Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
 films are already there.
 
@@ -262,9 +263,9 @@ and the meadow 159.
 
 And it **climbs the whole way**. Where the meadow climbs for six fields and then orders the
 last three by what they scatter, the mountain has something on the ground everywhere, so it is
-sorted by what it asks from Cinder Slope's 28% up to Crater Pools' 50% — the widest gap any
-field in the game leaves — with the broadest board and then the boss after them, since neither
-is measured by that yardstick.
+sorted by what it asks from Cinder Slope's 28% up to Crater Pools' 50% — the widest gap any field
+left until the reaches — with the broadest board and then the boss after them, since neither is
+measured by that yardstick.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
@@ -278,13 +279,13 @@ is measured by that yardstick.
 | 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 29 | 42 | 30% |
 | 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 27 | 43 | 37% |
 
-Smoulder Ridge holds the biggest pen on any world trail — 42, off sixteen pieces, three
-chestnuts and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself: the pig up on the north
-rim, the wyrm down on the crater floor, and one budget for the pair. It charges the same 21 of
-the 24 stars below it that Stag Mere and Boar Hollow charge and stops for the same briefing on
-the way in; what it adds is how unevenly it wants the budget split, since the rim is narrow
-ground and the crater floor is the widest in the world. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+Smoulder Ridge held the biggest pen on any world trail until Wide Reaches — 42, off sixteen
+pieces, three chestnuts and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself:
+the pig up on the north rim, the wyrm down on the crater floor, and one budget for the pair. It
+charges the same 21 of the 24 stars below it that Stag Mere and Boar Hollow charge and stops for
+the same briefing on the way in; what it adds is how unevenly it wants the budget split, since
+the rim is narrow ground and the crater floor is the widest in the world. Every pen is drawn out
+in [`solutions.md`](solutions.md).
 
 ### Cogsworth City
 
@@ -336,6 +337,62 @@ diagonal, so the smallest block that takes them both is a five by five with a dr
 it cannot avoid. It charges the same 21 of the 24 stars below it that every boss charges and
 stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions.md`](solutions.md).
+
+### Starfall Reaches
+
+The fifth world, and the first one the sky keeps landing on. Up out of the gaslight the pig has
+walked out onto open dust under a violet sky, so the windfall is a **stardrop** still cooling
+where it fell and the hazard a **meteor** sunk into the ground — each worth exactly what its
+meadow twin was, a stardrop five tiles to shut in, a meteor five to shut in with and no fencing
+at all, since nothing will drive a post through a stone that came in from that far out.
+
+The reaches' own idea is that the **water is in single drops**. A meadow has meres, a thicket
+pools, a mountain tarns, and the city cut its canals in straight runs a tile wide; every drop out
+here is one tile alone — a well where a star went in — and no two wells in the world share an
+edge. `StarfallTests` pins it, and it is the first world whose water cannot be walked along.
+
+Which sounds like the end of free walls and is not, because of the one arrangement the law still
+allows: **wells laid corner to corner**. A chain of them on the diagonal is a wall a pig cannot
+cross, and it is a wall no rectangle can ever lean on. So the reaches hand over staircases where
+every world below handed over banks, and squaring a board off against a staircase wastes more
+than squaring off against anything in the game so far.
+
+The other thing it does is **give the room back**. Every board here is bigger than the widest
+board in any world below — eleven by eleven at the smallest, twelve by twelve for Wide Reaches,
+which is the biggest board in the game and holds the biggest pen in it at 69. More room and less
+of it a block can reach is what holds the whole world at 32% and above, and it climbs the whole
+way from Dust Shore to Starwell Ring.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Dust Shore | 12 | — | 21 | 31 | 32% |
+| 2 | Fallwater Basin | 13 | — | 24 | 36 | 33% |
+| 3 | Broken Chain | 15 | — | 24 | 38 | 36% |
+| 4 | Swept Flat | 18 | — | 20 | 32 | 37% |
+| 5 | Stardrop Hollow | 13 | 2 stardrops | 24 | 39 | 38% |
+| 6 | Meteor Field | 15 | 2 meteors | 17 | 32 | 46% |
+| 7 | Starwell Ring | 12 | — | 14 | 32 | 56% |
+| 8 | Wide Reaches | 20 | 1 stardrop | 43 | 69 | 37% |
+| 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
+
+Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
+pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing
+at. Swept Flat is the second field in the game with no water on it at all, after Basalt Flats,
+and eighteen pieces on eleven tiles of bare dust is the largest budget anything has ever been
+given with nothing to lean on.
+
+Its boss, Visitor Crater, adds the reaches' rule, and it is the first one to weigh two pens
+against each other: **the visitor will not be housed worse than the pig**. Both of them held, in
+two pens rather than one, and the same ground in each. Which forbids every other two-animal
+board's answer at once — Stag Mere splits its budget wherever it scores best, Boar Hollow wants
+two pens and does not mind what is in them, Wyrm Caldera throws its second animal out, Rat King
+Wharf demands the single pen this one refuses — and it kills the cheap move all four of them
+reward, which is to pour the budget into the animal standing in the better country and box the
+other one in four pieces. A line of wells falls down the middle of the crater with two tiles
+missing out of it, so plugging that neck is what turns one pen into two; then the halves come out
+uneven, and the last thing to work out is which tiles of the wider one to hand back. It charges
+the same 21 of the 24 stars below it that every boss charges and stops for the same briefing on
+the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -604,7 +661,7 @@ Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the scrip
 
 ### Adding a level
 
-A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar, `W` a wyrm, `R` a rat king — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
+A level is an ASCII map — `.` mud, `~` water, `a` an apple, `x` a skull, `P` the pig, `D` a deer, `B` a boar, `W` a wyrm, `R` a rat king, `V` a visitor — and four numbers: the fence budget, the scores the second and third stars are worth, and `maximumScore` — the best pen the map and that budget allow. The first three are a judgement call. The last one is not, and getting it wrong either withholds the "best pen there is" verdict forever or hands it out for a pen that could still be bettered. `Tools/level_search.py` works it out:
 
 ```bash
 Tools/level_search.py --budget 12 --plan <<'MAP'
@@ -622,7 +679,7 @@ The star thresholds are the judgement call, but not a free one: `DifficultyTests
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
-A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
+A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
 A map with a second animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -653,8 +710,10 @@ than the last time the universe asked it.
 | `apart` | One budget, two animals that will not share ground | The water between them |
 | `exclude` | Hold the pig and leave the other animal outside | Nothing — its tile is a hole |
 | `together` | One budget, two animals that will not be parted | Nothing — one pen has to reach both |
+| `even` | Two pens, and the same ground in each | The water between them |
 
-`herd`, `apart`, `exclude` and `together` are the **boss rules**, and a field never asks one.
+`herd`, `apart`, `exclude`, `together` and `even` are the **boss rules**, and a field never asks
+one.
 
 #### The shape of a world
 
@@ -700,6 +759,7 @@ is one the player cannot build.
 | `apart` | Bringing the two close enough that one pen round the pair nearly wins |
 | `exclude` | Standing the one to be left out in the middle of the ground worth having |
 | `together` | Standing the two further apart, so the block that holds both costs more |
+| `even` | Making the two halves the free wall leaves more lopsided, so more has to be handed back |
 
 #### Authoring one
 
@@ -907,6 +967,7 @@ Pigpen/
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
 │   ├── Emberpeak.swift          # Emberpeak: its nine levels and the trail up them
 │   ├── Cogsworth.swift          # Cogsworth City: its nine levels and the trail through them
+│   ├── Starfall.swift           # Starfall Reaches: its nine levels and the trail out across them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
