@@ -164,4 +164,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Gloamdeep Caverns: the sixth world, wrapped in storybook films the way the four below it
+    /// are. The send-off points on out of the dark towards lights and a crowd, the way the
+    /// reaches' points down under the dust to the caverns, and The Roost stops for a briefing
+    /// because it stands two more animals on the board and asks two things of them at once — the
+    /// same courtesy every boss pays, and the one that has most to explain.
+    static let gloamdeepCaverns = GameWorld(
+        theme: .gloamdeep,
+        map: .gloamdeepCaverns,
+        opening: WorldFilmSpec(key: "gloamdeep-opening") { .storybook(.gloamdeepOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "gloamdeep-held") { .storybook(.gloamdeepHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theRoost.id: WorldFilmSpec(key: "the-roost-briefing") {
+                .storybook(.theRoost(start: $0))
+            }
+        ]
+    )
 }
