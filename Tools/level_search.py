@@ -5,8 +5,8 @@
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
-rat's, `V` a visitor's) and a budget and it prints the best pen, an example of it, and star
-thresholds in the proportions the shipped levels use.
+rat's, `V` a visitor's, `T` a bat's and `U` its pup's) and a budget and it prints the best
+pen, an example of it, and star thresholds in the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -22,12 +22,11 @@ around its edge. Water costs nothing, which is the whole game. A skull is staked
 the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
 skull has to be shut in and paid for, or the wall has to go round it.
 
-A map with a second animal on it as well as the pig — a deer, a boar, a wyrm, a rat or a
-visitor — is held by
-ground in two pieces just as happily as by one, since what has to hold is each animal
-rather than the pen: the search grows out from both animals at once and the ground it
-ends up with is connected to one or the other, so a wall shared between two enclosures
-is paid for once, like any other.
+A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, or a bat and
+its pup — is held by ground in two pieces just as happily as by one, since what has to hold
+is each animal rather than the pen: the search grows out from every animal at once and the
+ground it ends up with is connected to one or another of them, so a wall shared between two
+enclosures is paid for once, like any other.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -50,8 +49,11 @@ NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
 WORTH = {"a": 5, "x": -5}
 # A skull is staked into the mud, and nothing can be built on top of it.
 SKULL = "x"
-# The animals a map can stand on its ground, and the tile each one starts on.
-ANIMALS = ("P", "D", "B", "W", "R", "V")
+# The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
+# the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U")
+# The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
+ROOST = ("T", "U")
 
 
 def parse(map_text):
@@ -203,8 +205,23 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 queue.append(step)
         return seen
 
+    def roost_holds(pen):
+        """Whether a pen keeps the roost together and the pig out of it.
+
+        Two questions at once, which is what makes it the sixth rule rather than a fourth
+        turn of the third: the bat and its pup have to be in one run of ground, and the pig
+        has to be in another. The pen that holds everything on the board is refused, and so
+        is the pen that hangs the pup on its own.
+        """
+        mine = run_of(starts["P"], pen)
+        if mine & (bit(starts["T"]) | bit(starts["U"])):
+            return False
+        return bool(run_of(starts["T"], pen) & bit(starts["U"]))
+
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
+        if rule == "roost":
+            return roost_holds(pen)
         if rule not in ("apart", "together", "even"):
             return True
         # All three rules turn on the same question first — whether the pig can walk to the
@@ -251,6 +268,31 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 keeping.add(pen)
         return keeping
 
+    def hanging(grown, cost):
+        """Which pens are worth widening on a board that wants the roost in one pen.
+
+        Two things have to be true of the answer and only one of them can be pruned for. A
+        pen the pig can already walk out of into a bat will never come apart again, so those
+        are impossible rather than slow and every one dropped is room in the beam for a pen
+        that could still win. The other half is the opposite: the bat and its pup start apart,
+        and the pen that joins them costs more wall than the pen that leaves them hanging in
+        separate corners — so cost alone would throw the answer away every time. A share of
+        the beam is therefore held back for pens that have already gathered the roost.
+        """
+        ordered = sorted(grown, key=lambda pen: cost[pen])
+        keeping, gathered = set(), 0
+        for pen in ordered[: beam * 4]:
+            if run_of(starts["P"], pen) & (bit(starts["T"]) | bit(starts["U"])):
+                continue
+            joined = bool(run_of(starts["T"], pen) & bit(starts["U"]))
+            if len(keeping) < beam:
+                keeping.add(pen)
+                gathered += 1 if joined else 0
+            elif joined and gathered < beam // 2:
+                keeping.add(pen)
+                gathered += 1
+        return keeping
+
     alone, touching = 0, 0
     for start in seeds:
         alone |= bit(start)
@@ -294,6 +336,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         keeping.update(thriftiest)
         if rule == "even":
             keeping = divided(grown, cost)
+        if rule == "roost":
+            keeping = hanging(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
@@ -374,6 +418,17 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # One pen holds the pair, so squaring the map off is one rectangle rather than two:
         # the block a player picks is the one with both animals standing in it.
         each = [blocks_around(pennable, starts["P"], rows, columns)]
+    elif rule == "roost":
+        # Two blocks rather than three: one round the pig, and one that has to have both the
+        # bat and its pup standing in it, since the roost is one pen however many bats it is.
+        each = [
+            blocks_around(pennable, starts["P"], rows, columns),
+            {
+                block
+                for block in blocks_around(pennable, starts["T"], rows, columns)
+                if starts["U"] in block
+            },
+        ]
     else:
         each = [blocks_around(pennable, start, rows, columns) for start in starts.values()]
 
@@ -398,6 +453,14 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # the other one standing outside it.
         if rule == "together" and others:
             if others[0] not in run_of_ground(pen, starts["P"]):
+                continue
+        # The caverns want both at once: the pig's block clear of the roost, and the roost's
+        # block holding the pair of them. Two blocks that meet are one pen, not two.
+        if rule == "roost":
+            mine = run_of_ground(pen, starts["P"])
+            if starts["T"] in mine or starts["U"] in mine:
+                continue
+            if starts["U"] not in run_of_ground(pen, starts["T"]):
                 continue
         edge = fences_around(pen, mud)
         if len(edge) <= budget and can_be_walled(edge, treats, staked):
@@ -438,11 +501,12 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost"),
         default="herd",
-        help="What a board with a second animal on it asks: hold both, hold them apart, "
-             "hold the pig and shut the other one out, hold the pair in a single pen, or "
-             "hold them in two pens with the same ground in each",
+        help="What a board with more than the pig on it asks: hold both, hold them apart, "
+             "hold the pig and shut the other one out, hold the pair in a single pen, "
+             "hold them in two pens with the same ground in each, or hold the roost in one "
+             "pen with the pig in another",
     )
     parser.add_argument(
         "--plan",
