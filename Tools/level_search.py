@@ -203,23 +203,13 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 queue.append(step)
         return seen
 
-    def halo_of(run):
-        """Every tile beside that run of ground and not in it: the wall it stands behind."""
-        halo, spreading = 0, run
-        while spreading:
-            tile = spreading & -spreading
-            spreading ^= tile
-            halo |= reach[tile]
-        return halo & ~run
-
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
-        if rule not in ("apart", "together", "beside"):
+        if rule not in ("apart", "together", "even"):
             return True
-        # All three rules turn on the same question — whether the pig can walk to the other
-        # one without leaving the pen — and want different answers: `apart` refuses ground
-        # the two share, `together` refuses ground they do not, and `beside` refuses both,
-        # since it wants two pens with a single wall between them.
+        # All three rules turn on the same question first — whether the pig can walk to the
+        # other one without leaving the pen — and want different answers: `together` refuses
+        # ground the two do not share, and `apart` and `even` refuse ground they do.
         mine = run_of(starts["P"], pen)
         shared = bool(mine & bit(others[0]))
         if rule == "together":
@@ -228,8 +218,38 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             return not shared
         if shared:
             return False
-        # Wall to wall: some tile neither pen holds stands beside them both.
-        return bool(halo_of(mine) & halo_of(run_of(others[0], pen)) & ~pen)
+        # `even` then asks the thing no rule has asked before: that the two pens hold the
+        # same amount of ground. It is what stops one budget being spent almost entirely on
+        # one animal, which every other two-animal rule allows and most boards reward.
+        return mine.bit_count() == run_of(others[0], pen).bit_count()
+
+    def divided(grown, cost):
+        """Which pens are worth widening on a board that wants two pens of the same size.
+
+        A pen only ever grows, so a pen whose ground the pig can already walk from itself to
+        the other animal will never come apart again: for `even` those are not slow
+        candidates but impossible ones, and every one of them dropped is room in the beam for
+        a pen that could still be an answer. Which matters here and nowhere else — two pens
+        need a wall between them that one pen does not, so a beam kept by cost alone fills up
+        with single blobs and the rule's own shape is gone long before it is big enough to
+        win.
+
+        The cheapest divided pen of a given size is the most lopsided one — a tile of ground
+        for the visitor and all the rest for the pig costs less wall than any fair split of
+        the same ground — so cost alone would throw the answer away too. A share of the beam
+        is therefore set aside for each way the ground comes out divided.
+        """
+        ordered = sorted(grown, key=lambda pen: cost[pen])
+        keeping, shares = set(), {}
+        for pen in ordered[: beam * 4]:
+            mine = run_of(starts["P"], pen)
+            if mine & bit(others[0]):
+                continue
+            share = shares.setdefault(mine.bit_count(), 0)
+            if len(keeping) < beam or share < beam // 8:
+                shares[mine.bit_count()] = share + 1
+                keeping.add(pen)
+        return keeping
 
     alone, touching = 0, 0
     for start in seeds:
@@ -272,6 +292,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         thriftiest = sorted(grown, key=lambda pen: cost[pen] - held[pen])[: beam // 2]
         keeping = set(cheapest)
         keeping.update(thriftiest)
+        if rule == "even":
+            keeping = divided(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
@@ -302,25 +324,6 @@ def run_of_ground(tiles, start):
                 reached.add(neighbour)
                 queue.append(neighbour)
     return reached
-
-
-def beside(mine, theirs, pen, rows, columns):
-    """Whether two runs of ground stand wall to wall: one tile between them, no more.
-
-    The tile between may be a fence piece or a tile of water — a pen does not care which
-    of the two is holding it — so what this asks is only that the two runs are neighbours
-    across a single tile neither of them holds.
-    """
-    def halo(run):
-        found = set()
-        for row, column in run:
-            for down, across in NEIGHBOURS:
-                neighbour = (row + down, column + across)
-                if 0 <= neighbour[0] < rows and 0 <= neighbour[1] < columns:
-                    found.add(neighbour)
-        return found - set(run)
-
-    return bool(halo(mine) & halo(theirs) - set(pen))
 
 
 def blocks_around(pennable, start, rows, columns):
@@ -383,15 +386,13 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         pen = frozenset().union(*choice)
         # A board that keeps two apart is not squared off by a pair of blocks that touch,
         # since ground the pig can walk from one into the other is one pen, not two.
-        if rule in ("apart", "beside") and others:
+        if rule in ("apart", "even") and others:
             if others[0] in run_of_ground(pen, starts["P"]):
                 continue
-        # And a board that wants the two pens wall to wall is not squared off by a pair of
-        # blocks with the width of the world between them.
-        if rule == "beside" and others:
-            mine = run_of_ground(pen, starts["P"])
-            theirs = run_of_ground(pen, others[0])
-            if not beside(mine, theirs, pen, rows, columns):
+        # And a board that wants the same ground in each is not squared off by a big block
+        # and a little one: the blocks a player picks have to come out the same size.
+        if rule == "even" and others:
+            if len(run_of_ground(pen, starts["P"])) != len(run_of_ground(pen, others[0])):
                 continue
         # And a board that wants them in one pen is not squared off by a block that leaves
         # the other one standing outside it.
@@ -437,11 +438,11 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "beside"),
+        choices=("herd", "apart", "exclude", "together", "even"),
         default="herd",
         help="What a board with a second animal on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, or "
-             "hold them in two pens with one wall between them",
+             "hold them in two pens with the same ground in each",
     )
     parser.add_argument(
         "--plan",
