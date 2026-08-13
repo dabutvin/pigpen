@@ -1279,7 +1279,7 @@ limestone that size. A `T` is a bat and a `U` its pup: two animals to the board,
 rule, and the last field will not have them in separate pens.
 
 What the caverns do differently is that all the water is **one river**. Every world above has
-water lying in more than one place somewhere — two lakes, seven pools, six tarns, canals and
+water lying in more than one place somewhere — ten ponds, seven pools, six tarns, canals and
 drains, twelve wells — and down here there is one body of it at most on any board, and it comes in
 off the rim of the cave. A `~` below is always part of the same river, and one field has none of it
 at all.
@@ -1327,10 +1327,10 @@ the east: a shallow V of free wall with the whole floor of the chamber under it.
 V is walled for nothing, which is most of a pen already, and it is why this is the gentlest field
 in the caverns.
 
-What it leaves is the mouth, and the mouth here is the entire southern side. Twelve pieces plugged
-straight down under the eastern arm hold 21 tiles and one crystal, which is what the board hands
-over. The same twelve hung under the belly as a lozenge — stepping out west and east, then closing
-again on the diagonal — hold 22 tiles and both crystals, which is 32.
+What it leaves is the mouth, and the mouth here is the entire southern side. Twelve pieces hung
+straight down off the belly as a rectangle hold 16 tiles and one crystal, which is 21 and what the
+board hands over. The same twelve hung under the belly as a lozenge — stepping out west and east,
+then closing again on the diagonal — hold 22 tiles and both crystals, which is 32.
 
 ## 2. Dripstone Shelf — 11 pieces, 36
 
@@ -1382,13 +1382,13 @@ of dry floor round the tip of the water, and the only way from one half of the c
 Shut the corridor and the entire river is wall — eight tiles of bank for one piece. Twelve pieces
 squared off north of the water hold 21, because a wall that stops short of the east rim has to pay
 for its own eastern side; the same twelve run right out along the bank and closed with a single
-piece at the corridor hold 29 tiles and both the crystals over the river, which is 34.
+piece at the corridor hold 29 tiles and both the crystals over the river.
 
 The corridor is not clear ground, which is the rest of the field. A boulder stands in it just
-behind the tip of the water, so a pen that comes round the river swallows it and pays its five —
-and the eight tiles of free bank behind it are worth that twice over, which is a sum rather than a
-sight. The third crystal lies out past the river on the south side, where nothing on this board
-reaches it.
+behind the tip of the water, so the pen that comes round the river swallows it and pays its five —
+29 and two crystals less one boulder, or 34. The eight tiles of free bank that piece bought are
+worth that twice over, which is a sum rather than a sight. The third crystal lies out past the river
+on the south side, where nothing on this board reaches it.
 
 ## 4. The Blind Grike — 19 pieces, 41
 
@@ -1458,16 +1458,17 @@ single tile: 28 tiles and that crystal, which is 33.
 .........#~.
 ```
 
-The river takes the whole roof of the cave and the whole east wall — in along the north, round the
-corner, and down the far side — so two sides of the pen are handed over and there are nine pieces
-to draw the other two.
+The river takes the length of the roof of the cave and the length of the east wall — in along the
+north, round the corner, and down the far side — so two sides of the pen are handed over and there
+are nine pieces to draw the other two. It runs a tile inside the rim, so the strip beyond it is a
+far bank: no pen can reach it, the way no pen reaches the far shore of the Dew Ponds.
 
 Nine laid as a right angle in the corner hold 25. The same nine laid corner to corner, one long
 diagonal from the west wall down to the south-east that cuts the entire bend off in a single line,
-hold 36 tiles and both crystals: 46. It is the smallest budget any field in the game hands out and
-the third biggest pen in it, which is the corner question with nothing whatever in the way of it —
-Foundry Corner asked this on a canal bend with fifteen pieces, and every one of these nine has to be
-on the diagonal or the pen falls apart.
+hold 36 tiles and both crystals: 46. That is the smallest budget in the caverns paying out the
+second biggest score in them, which is the corner question with nothing whatever in the way of it —
+Foundry Corner asked it on a canal bend with the same nine pieces and could only reach round 27, and
+every one of these nine has to be on the diagonal or the pen falls apart.
 
 ## 7. Boulder Chamber — 15 pieces, 44
 
@@ -1512,9 +1513,9 @@ the board that costs less to abandon than to shut in.
 ....#####...
 ```
 
-The widest floor in the caverns with the longest river in them down the length of it: twelve tiles
-by twelve, three crystals, one boulder and nineteen pieces. It holds the second biggest pen in the
-game.
+The widest floor in the caverns with a river stepping down the length of it: twelve tiles by twelve,
+three crystals, one boulder and nineteen pieces. It holds the second biggest pen in the game, at 58
+tiles.
 
 Nineteen pieces squared off down the west of the gallery hold 41 tiles, with a crystal and a boulder
 in them cancelling each other out. The same nineteen laid along the river and closed round the south

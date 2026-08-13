@@ -404,11 +404,12 @@ flowstone and the hazard a **boulder** come off the roof — each worth exactly 
 was, a crystal five tiles to shut in, a boulder five to shut in with and no fencing at all, since
 nothing will drive a post through a block of limestone the size of a cow.
 
-The caverns' own idea is that all the water is **one river**. A meadow has meres, a thicket pools,
-a mountain tarns, a city canals and drains, and the reaches twelve wells apiece; every board down
-here has one body of water on it at most, and it comes in off the rim of the cave, because it is
-the same river the whole way and a cave has no second river in it. `GloamdeepTests` pins both
-halves, and one field has no water at all — The Blind Grike, the cave the river never found.
+The caverns' own idea is that all the water is **one river**. A meadow has meres, a thicket pools, a
+mountain tarns, a city canals and drains, and the reaches a scatter of wells no two of which touch;
+every board down here has one body of water on it at most, and it comes in off the rim of the cave,
+because it is the same river the whole way and a cave has no second river in it. `GloamdeepTests`
+pins both halves, and one field has no water at all — The Blind Grike, the cave the river never
+found.
 
 Which is not less wall to lean on but more of it in one place, and the shape it leaves is what the
 world is built on. A river that runs in off the rim and stops short of the far wall has done nine
@@ -421,7 +422,9 @@ is a wedge or a lozenge and never a box.
 The other thing it does is keep **the light**. Emberpeak staked an ember in all nine of its fields;
 this is that idea turned the other way up — there is a crystal on every board in the world, because
 a crystal is the only light in the Gloamdeep and a field with none would be a field nobody could
-see. It makes the caverns the first world with nothing in it that scores flat.
+see. Emberpeak is the only other world that guarantees anything on every board, and what it
+guarantees is a hazard; the caverns are the only world where every board has something worth going
+out for.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
@@ -435,11 +438,11 @@ see. It makes the caverns the first world with nothing in it that scores flat.
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 41 | 63 | 34% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 22 | 45 | 51% |
 
-Rimstone Corner is the corner question with nothing else in the way of it: the river takes the
-whole roof of the cave and the whole east wall, and nine pieces laid corner to corner across the
-bend hold 46 where the same nine laid as a right angle hold 25. It is the smallest budget any
-field in the game has been given and it holds the third biggest pen in it. The Great Gallery holds
-the second biggest, at 63.
+Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
+in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
+laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
+Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
+round 27. The Great Gallery holds the second biggest pen in the game, at 58 tiles.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
 animals on the ground: **the roost hangs together and the pig hangs apart**. A bat, its pup and the

@@ -12,11 +12,11 @@ import Foundation
 ///
 /// What the caverns do that no world above them did is **put all the water in one river**. A
 /// meadow has meres, a thicket has pools, a mountain has tarns, a city has canals and the reaches
-/// have wells, and every one of those worlds scatters its water in bodies — two lakes, three
-/// pools, twelve drops. There is one body of water on every board down here and it comes in off
-/// the rim of the cave, because it is the same river the whole way and a cave has no second river
-/// in it. `GloamdeepTests` pins both halves: every drop of water on a board belongs to one run,
-/// and that run touches the edge.
+/// have wells, and every one of those worlds scatters its water in bodies — ten ponds, seven pools,
+/// twelve drops. There is at most one body of water on a board down here and it comes in off the
+/// rim of the cave, because it is the same river the whole way and a cave has no second river in
+/// it. `GloamdeepTests` pins both halves: every drop of water on a board belongs to one run, and
+/// that run touches the edge.
 ///
 /// Which sounds like less water to lean on and is in fact a great deal more of it in one place.
 /// A river that runs in off the rim and stops short of the far wall has done nine tenths of a
@@ -39,10 +39,9 @@ extension PuzzleLevel {
     /// a pen already — and it is why this is the gentlest field in the world.
     ///
     /// What it leaves is the mouth, and the mouth here is the entire southern side. Twelve pieces
-    /// plugged straight down under the eastern arm hold 21 tiles and one crystal, which is a fair
-    /// answer and the one the board hands over. The same twelve hung under the belly as a lozenge
-    /// — stepping out west and east and closing again on the diagonal — hold 22 tiles and both
-    /// crystals, which is 32.
+    /// hung straight down off the belly as a rectangle hold 16 tiles and one crystal, which is 21
+    /// and a fair answer. The same twelve hung under the belly as a lozenge — stepping out west and
+    /// east and closing again on the diagonal — hold 22 tiles and both crystals, which is 32.
     ///
     /// It opens the world the way Dust Shore opened the reaches, and asks a little more than that
     /// did — 34 against 32 — because a bent bank is a bank that has to be read before it can be
@@ -112,13 +111,13 @@ extension PuzzleLevel {
     /// tiles long that cost nothing: shut the corridor and the whole of it is wall. Twelve pieces
     /// squared off north of the water hold 21, because a wall that stops short of the east rim has
     /// to pay for its own eastern side. The same twelve run right out along the bank and closed
-    /// with a single piece in the corridor hold 29 tiles and both the crystals over the river,
-    /// which is 34.
+    /// with a single piece in the corridor hold 29 tiles and both the crystals over the river.
     ///
     /// And the corridor is not clear ground, which is the rest of the field. A boulder stands in
-    /// it, just behind the tip of the water, so a pen that comes round the river swallows it and
-    /// pays its five — and the eight tiles of free bank behind it are worth that twice over, which
-    /// is a sum a player has to do rather than see.
+    /// it, just behind the tip of the water, so the pen that comes round the river swallows it and
+    /// pays its five — 29 and two crystals less one boulder, or 34. The eight tiles of free bank
+    /// that piece bought are worth that twice over, which is a sum a player has to do rather than
+    /// see.
     static let stillwaterNeck = gloamdeep(
         id: "stillwater-neck",
         name: "Stillwater Neck",
@@ -209,17 +208,19 @@ extension PuzzleLevel {
             """
     )
 
-    /// The river takes the whole roof of the cave and the whole of the east wall — it comes in
-    /// along the north, turns at the corner and runs down the far side, and both of those are free
-    /// wall for anybody standing in the rimstone under them. Two sides handed over, and nine
-    /// pieces to draw the other two.
+    /// The river takes the length of the roof of the cave and the length of the east wall — it
+    /// comes in along the north, turns at the corner and runs down the far side, and both of those
+    /// are free wall for anybody standing in the rimstone under them. Two sides handed over, and
+    /// nine pieces to draw the other two. It runs a tile inside the rim rather than along it, so
+    /// there is a far bank beyond it, and like every far bank in the game nothing can reach it.
     ///
-    /// Which is the corner question with nothing else in the way of it, and the widest gap in the
-    /// caverns. Nine pieces laid as a right angle in the corner hold 25. The same nine laid corner
+    /// Which is the corner question with nothing else in the way of it, and the hardest corner in
+    /// the game. Nine pieces laid as a right angle in the corner hold 25. The same nine laid corner
     /// to corner — one long diagonal from the west wall down to the south-east, cutting the whole
     /// bend off in a single line — hold 36 tiles and both crystals, which is 46. Foundry Corner
-    /// asked this on a canal bend with fifteen pieces; this asks it with nine, and every one of
-    /// them has to be on the diagonal or the pen falls apart.
+    /// asked this on a canal bend with the same nine pieces and could only reach round 27; two free
+    /// sides instead of one is what takes those nine to 46, and every one of them has to be on the
+    /// diagonal or the pen falls apart.
     static let rimstoneCorner = gloamdeep(
         id: "rimstone-corner",
         name: "Rimstone Corner",
@@ -277,14 +278,15 @@ extension PuzzleLevel {
             """
     )
 
-    /// The widest floor in the caverns with the longest river in them running the length of it:
-    /// twelve tiles by twelve, a staircase of water from the roof in the north-west to the east
-    /// wall, three crystals, one boulder and nineteen pieces.
+    /// The widest floor in the caverns with a river running the length of it: twelve tiles by
+    /// twelve, a staircase of water in off the roof at the north-west and stepping south-east to
+    /// within a column of the east wall, three crystals, one boulder and nineteen pieces.
     ///
     /// The gallery stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide
     /// Reaches do. A broad board leaves a wide gap against a squared-off pen because it is broad,
     /// which says more about its size than about how hard it is to hold — and this one asks 34,
-    /// the least anything in the world asks, while holding the second biggest pen in the game.
+    /// as little as the field that opens the world, while holding the second biggest pen in the
+    /// game at 58 tiles.
     /// Nineteen pieces squared off down the west of it hold 41 tiles with a crystal and a boulder
     /// in them cancelling each other out. The same nineteen laid along the river and closed round
     /// the south as a staircase hold 58 tiles, two crystals and that same boulder, which is 63.
