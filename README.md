@@ -164,9 +164,9 @@ opening field did. The meadow floors at nothing and opens on a map with no trick
 thicket floors at 23% and opens at 25%, so the second world starts around where the first
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
 the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
-Reaches floors and opens at 32%, on the biggest boards in the game; and Gloamdeep Caverns floors
-and opens at 34%, the highest floor any world has stood on. Bosses are held to each other rather
-than to the floor:
+Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
+opens at 34%; and Lantern Carnival floors and opens at 37%, the highest floor any world has stood
+on. Bosses are held to each other rather than to the floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
@@ -185,8 +185,8 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree, paving, star dust or wet flowstone — what the windfall and the hazard look
-  like on that ground,
+  floor, bare scree, paving, star dust, wet flowstone or trodden sawdust — what the windfall and
+  the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
 - **Each world plays its own films.** An opening the first time you walk into it, and a
@@ -198,8 +198,8 @@ carries the same game into every one of them.
   be going.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches** and **Gloamdeep Caverns** to play, then Lantern Carnival, Sunbaked
-Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
+City**, **Starfall Reaches**, **Gloamdeep Caverns** and **Lantern Carnival** to play, then
+Sunbaked Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
 silhouettes.
 Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
 films are already there.
@@ -458,6 +458,71 @@ and the bat and its pup hang either side of the tip of it, so joining them means
 that tip — and reaching round the tip is what hands the pig the whole staircase as the wall of its
 own pen. It charges the same 21 of the 24 stars below it that every boss charges and stops for the
 same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+
+### Lantern Carnival
+
+The seventh world, and the way back up out of the dark. The pig came out of a cave into a field
+full of lights, so the trail runs over trodden sawdust under paper lanterns, the windfall is a
+**toffee apple** dropped off its stick and the hazard a **guy rope** pegged down to hold a tent
+up — each worth exactly what its meadow twin was, a toffee apple five tiles to shut in, a guy rope
+five to shut in with and no fencing at all, since a peg is already somebody else's post and there
+is no room beside it for one of yours.
+
+What the water is up here is **the crowd**, and the carnival's own idea is that the crowd stands
+in **blocks**. A meadow has meres, a thicket pools, a mountain tarns, a city canals, the reaches a
+scatter of single drops and the caverns one long river; on every field here each body of crowd is a
+filled rectangle of two tiles or more — a stall, a queue, the wall of a tent — with never a bend in
+it and never a drop standing on its own. `CarnivalTests` pins that, and pins the boss as the one
+deliberate exception: its crowd is a three by three with the ringmaster in the middle of it, so what
+closes round him is a ring of eight rather than a block of nine.
+
+Which changes what a wall is *for*. A river hands a pen one long edge to follow; a block hands it a
+short one and then stops, and the ground between two blocks is a **gangway** a single piece closes.
+So a pen out here is assembled rather than followed — pick which blocks to string together, pay a
+piece for each gap between them, and the shape that comes out is whatever those blocks happened to
+leave, which is why the carnival's answers are lopsided where the caverns' were wedges.
+
+The other thing it does is keep **the guying**. Emberpeak staked an ember in all nine of its
+fields and the caverns hung a crystal in all nine of theirs; there is rope on every board here,
+and the *run* is the point — never one peg on its own, always two or more in a straight line. A
+single hazard is one tile to build around, which every world since the meadow has had. A run of
+them is a length of ground no wall may cross, because a rope takes no fence and a pen may not lean
+on one either, so a run of two is a strip of dead ground three tiles wide. The crowd is a wall the
+board gives you and a guy rope is a wall the board forbids you, and reading the difference is the
+world.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 18 | 29 | 37% |
+| 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 24 | 39 | 38% |
+| 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 21 | 35 | 40% |
+| 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 20 | 34 | 41% |
+| 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 21 | 38 | 44% |
+| 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
+| 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 18 | 41 | 56% |
+| 8 | The Midway | 19 | 3 toffee apples, a run of rope | 29 | 49 | 40% |
+| 9 | The Centre Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
+
+The Big Top is the corner question with the crowd along the front of the tent and down its far
+side, so two of the four walls are handed over: eleven pieces laid corner to corner hold 51 tiles,
+the biggest pen in the world for the smallest budget in it, where the same eleven laid as a right
+angle hold 25 — because the pair of guy ropes is pegged inside every rectangle worth drawing, and
+the tidy pen has to swallow them and pay their ten. The Rigging carries seven pegs in three runs —
+more rope than any other field at the fair, and the only line of three in the game — and at 56% it
+ties Starwell Ring for the widest gap any field in the game leaves.
+
+Its boss, The Centre Ring, adds the carnival's rule, and it is the first rule in the game about
+**where one pen stands in relation to another** rather than about which animal is in which:
+the ringmaster keeps the middle, and the pig has to close all the way round him. So the answer
+five worlds have taught is refused — four pieces round the pig where she stands hold her perfectly
+well, and a pen beside his is a pen and not a ring — and so is the wall that comes three quarters
+of the way round and closes on itself, because he walks out of the side that was left open. He is
+standing in the middle of a three by three of crowd, which is the one thing that makes squaring
+the board off possible at all: a rectangle laid over that crowd comes out as a ring with him in the
+hole of it, worth 17, where the same twenty-two pieces run out to the corners as an octagon hold 35
+tiles and the apple hanging over the ring, which is 40. It charges the same 21 of the 24 stars below
+it that every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -744,7 +809,7 @@ The star thresholds are the judgement call, but not a free one: `DifficultyTests
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
-A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
+A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -1036,6 +1101,7 @@ Pigpen/
 │   ├── Cogsworth.swift          # Cogsworth City: its nine levels and the trail through them
 │   ├── Starfall.swift           # Starfall Reaches: its nine levels and the trail out across them
 │   ├── Gloamdeep.swift          # Gloamdeep Caverns: its nine levels and the trail down through them
+│   ├── Carnival.swift           # Lantern Carnival: its nine levels and the trail round them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name

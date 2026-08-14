@@ -6,7 +6,8 @@ import UIKit
 /// laid behind the puzzle so a level looks like a patch of ground somebody has staked out
 /// rather than a grid on a slab of colour. A themed world hands its own light in, and the
 /// dressing follows — leaf litter and ferns in a thicket, ash and cinder on a mountain,
-/// paving and drains in a city, dust and sparks out in the reaches, where the meadow had
+/// paving and drains in a city, dust and sparks out in the reaches, flowstone and stalagmites
+/// in the caverns, and sawdust with tent pegs in it at the carnival, where the meadow had
 /// mowing and wildflowers.
 ///
 /// The ground it is all standing on is painted once. Only the things that would move in a
@@ -78,6 +79,7 @@ private struct Paddock {
         case .cobbles: drawPaving(in: &context)
         case .dust: drawDust(in: &context)
         case .flowstone: drawFlowstone(in: &context)
+        case .sawdust: drawSawdust(in: &context)
         }
     }
 
@@ -288,6 +290,79 @@ private struct Paddock {
         }
     }
 
+    /// Sawdust: a field that has had a fairground put on it for the week. The grass is still
+    /// under there and it is still trodden into mud in the walkways, and over the top of that
+    /// somebody has thrown down sawdust in the places people stand.
+    ///
+    /// Then the lights. Every other world in the game is lit from one place — a sun, a fissure,
+    /// a crystal — and this one is lit by a string of lanterns nobody thought about, so the
+    /// ground comes in pools of colour that overlap and disagree. That is the whole of why the
+    /// carnival reads as a carnival rather than as the meadow after dark: not the tents, which
+    /// are off the top of the screen, but the fact that the floor is three colours at once.
+    private func drawSawdust(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 4_099)
+
+        // Walkways worn through to the mud, running the way a crowd walks rather than the way
+        // a mower drives: wide, wandering and crossing one another.
+        for _ in 0..<5 {
+            let down = y(scatter.next())
+            var track = Path()
+            track.move(to: CGPoint(x: -x(0.05), y: down))
+            track.addCurve(
+                to: CGPoint(x: size.width + x(0.05), y: down + y(scatter.next(in: -0.08...0.08))),
+                control1: CGPoint(x: x(0.3), y: down + y(scatter.next(in: -0.06...0.06))),
+                control2: CGPoint(x: x(0.7), y: down + y(scatter.next(in: -0.06...0.06)))
+            )
+            context.stroke(
+                track,
+                with: .color(.black.opacity(colors.isNight ? 0.16 : 0.09)),
+                style: StrokeStyle(lineWidth: y(scatter.next(in: 0.02...0.05)), lineCap: .round)
+            )
+        }
+
+        // The sawdust itself, thrown down in patches where the standing is.
+        for _ in 0..<16 {
+            let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.05...0.15))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.17,
+                    width: spread, height: spread * 0.34
+                )),
+                with: .color(
+                    Color(red: 0.86, green: 0.74, blue: 0.52)
+                        .opacity(colors.isNight ? 0.10 : 0.24)
+                )
+            )
+        }
+
+        // And the lanterns' pools, which are the light in this world. They are laid on the
+        // ground rather than hung in the air, because the string itself is above the screen.
+        let lanterns: [Color] = [
+            Color(red: 1.00, green: 0.78, blue: 0.36),
+            Color(red: 0.98, green: 0.40, blue: 0.48),
+            Color(red: 0.46, green: 0.72, blue: 0.96),
+            Color(red: 0.62, green: 0.92, blue: 0.66)
+        ]
+        for index in 0..<9 {
+            let centre = CGPoint(x: x(scatter.next(in: -0.05...1.05)), y: y(scatter.next()))
+            let reach = x(scatter.next(in: 0.14...0.30))
+            context.fill(
+                circle(at: centre, radius: reach),
+                with: .radialGradient(
+                    Gradient(colors: [
+                        lanterns[index % lanterns.count]
+                            .opacity(colors.isNight ? 0.20 : 0.13),
+                        lanterns[index % lanterns.count].opacity(0)
+                    ]),
+                    center: centre,
+                    startRadius: 0,
+                    endRadius: reach
+                )
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -321,6 +396,7 @@ private struct Paddock {
         case .cobbles: 12
         case .dust: 11
         case .flowstone: 14
+        case .sawdust: 16
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -373,6 +449,17 @@ private struct Paddock {
                     case ..<0.72: drawStone(in: &context, at: spot, scale: scale)
                     default: drawCrystal(in: &context, at: spot, scale: scale)
                     }
+                case .sawdust:
+                    // A field with a fair on it is still a field, so the grass is here — but
+                    // it is trodden grass with the fair's own leavings in it: pegs driven in
+                    // with the rope going up out of shot, and a lantern hung low enough to
+                    // stand beside. The board's own hazard is a guy rope, and this is where a
+                    // player has already seen one before the first field asks about it.
+                    switch roll {
+                    case ..<0.44: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.76: drawPeg(in: &context, at: spot, scale: scale)
+                    default: drawLantern(in: &context, at: spot, scale: scale)
+                    }
                 }
             }
         }
@@ -389,6 +476,7 @@ private struct Paddock {
         case .cobbles: 20
         case .dust: 18
         case .flowstone: 24
+        case .sawdust: 28
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -420,6 +508,10 @@ private struct Paddock {
                 } else {
                     drawSpark(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)))
                 }
+            case .sawdust where roll < 0.3:
+                // The front of the fair is where the ropes are pegged out, so the verge is
+                // long grass with pegs standing in it.
+                drawPeg(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.7)))
             case .flowstone:
                 // A rank of stalagmites along the front of the cave instead of long grass,
                 // with the odd crystal in among them.
@@ -796,12 +888,97 @@ private struct Paddock {
         }
     }
 
+    /// A tent peg driven into the ground with the guy rope going up off the top of the screen
+    /// — the backdrop's echo of the ropes staked out on the board, and what the carnival has
+    /// instead of wildflowers. The rope is drawn taut because a slack one is a tent down.
+    private func drawPeg(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = x(0.026) * scale
+        let lean = tall * 0.42
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - tall * 0.22, y: foot.y - tall * 0.05,
+                width: tall * 0.44, height: tall * 0.14
+            )),
+            with: .color(.black.opacity(0.2))
+        )
+
+        var peg = Path()
+        peg.move(to: CGPoint(x: foot.x - lean * 0.5, y: foot.y - tall * 0.34))
+        peg.addLine(to: CGPoint(x: foot.x + lean * 0.2, y: foot.y))
+        context.stroke(
+            peg,
+            with: .color(Color(red: 0.32, green: 0.24, blue: 0.18).opacity(colors.isNight ? 0.7 : 0.85)),
+            style: StrokeStyle(lineWidth: max(1, tall * 0.13), lineCap: .round)
+        )
+
+        var rope = Path()
+        rope.move(to: CGPoint(x: foot.x - lean * 0.5, y: foot.y - tall * 0.3))
+        rope.addLine(to: CGPoint(x: foot.x + lean * 1.5, y: foot.y - tall * 1.5))
+        context.stroke(
+            rope,
+            with: .color(
+                Color(red: 0.80, green: 0.70, blue: 0.52).opacity(colors.isNight ? 0.42 : 0.62)
+            ),
+            style: StrokeStyle(lineWidth: max(0.8, tall * 0.07), lineCap: .round)
+        )
+    }
+
+    /// A paper lantern hung low on its own short pole, with the light it is throwing on the
+    /// ground under it. It reads brightest after dark for the reason a crystal does — and for
+    /// a better one, since after dark it is the only reason anybody can see the fair at all.
+    private func drawLantern(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = x(0.034) * scale
+        let bulb = CGPoint(x: foot.x, y: foot.y - tall)
+        let wide = tall * 0.34
+        let shade = Color(red: 0.98, green: 0.52, blue: 0.42)
+
+        context.fill(
+            circle(at: bulb, radius: tall * 1.1),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 1.00, green: 0.80, blue: 0.46).opacity(colors.isNight ? 0.36 : 0.18),
+                    Color(red: 1.00, green: 0.80, blue: 0.46).opacity(0)
+                ]),
+                center: bulb,
+                startRadius: 0,
+                endRadius: tall * 1.1
+            )
+        )
+
+        var pole = Path()
+        pole.move(to: foot)
+        pole.addLine(to: CGPoint(x: bulb.x, y: bulb.y + wide * 0.5))
+        context.stroke(
+            pole,
+            with: .color(Color(red: 0.26, green: 0.19, blue: 0.16).opacity(colors.isNight ? 0.6 : 0.8)),
+            style: StrokeStyle(lineWidth: max(1, tall * 0.07), lineCap: .round)
+        )
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: bulb.x - wide * 0.5, y: bulb.y - wide * 0.6,
+                width: wide, height: wide * 1.2
+            )),
+            with: .color(shade.opacity(colors.isNight ? 0.92 : 0.78))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: bulb.x - wide * 0.22, y: bulb.y - wide * 0.42,
+                width: wide * 0.44, height: wide * 0.84
+            )),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.7 : 0.45))
+        )
+    }
+
     /// The corners taken down a little, which is all it takes to make the board the lit
     /// thing on the screen. A thicket closes in harder, so the canopy feels overhead; a
     /// mountain sits somewhere between the two, open sky but a hazed one; a city closes
     /// in nearly as hard as a wood, since the buildings are the canopy here; the reaches close
     /// in harder still, because what is round the edge of them is space; and the caverns close
     /// in hardest of all, because what is round the edge of them is rock and no light on it.
+    /// The carnival is the exception in both directions: it opens back up, since what is round
+    /// the edge of it is more fair.
     func drawVignette(in context: inout GraphicsContext) {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
@@ -812,6 +989,9 @@ private struct Paddock {
         case .cobbles: colors.isNight ? 0.44 : 0.30
         case .dust: colors.isNight ? 0.52 : 0.34
         case .flowstone: colors.isNight ? 0.62 : 0.44
+        // The one world that closes in *less* after dark than by day, because after dark
+        // somebody has switched the lights on.
+        case .sawdust: colors.isNight ? 0.40 : 0.28
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),

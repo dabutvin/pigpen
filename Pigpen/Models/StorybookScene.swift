@@ -808,6 +808,143 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The carnival's films
+
+extension StorybookScene {
+    /// Before the first walk in through the gate of the Lantern Carnival. It carries the two
+    /// things the carnival changes — a toffee apple to shut in, a guy rope to build around — and
+    /// hands the game back on the rule it has always been.
+    ///
+    /// Six stills, the way the reaches' and the caverns' openings have, and the extra one is the
+    /// world's own idea rather than its water. Every world so far has staked its hazard about the
+    /// board one tile at a time; here they come pegged out in straight runs, and a run of them is
+    /// a line no wall crosses. A player who reads a rope as one more thing to step round will
+    /// build square pens all the way through this world and never understand why they will not
+    /// close, so the film says it before the first board does.
+    static func lanternOpening(start: Date = .now) -> Self {
+        Self(
+            key: "lantern-opening",
+            title: "Lantern Carnival",
+            light: .lanternDay,
+            shots: [
+                Shot(
+                    motif: "🎪",
+                    strewn: ["🍭", "🪢", "🎡"],
+                    caption: "Lantern Carnival. Music, lights, and a crowd.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🍭", "🪢"],
+                    caption: "Your pig went in under the tent flap.",
+                    seconds: 2.4
+                ),
+                Shot(
+                    motif: "👥",
+                    strewn: ["🎪", "🍭", "👥"],
+                    caption: "The crowd will not move. Lean on it for free.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🍭",
+                    strewn: ["👥", "🪢"],
+                    caption: "Toffee apples in the sawdust. Five each.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🪢",
+                    strewn: ["🍭", "👥"],
+                    caption: "Guy ropes take no fence, and they run in lines.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🎪", "🍭"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the carnival holds. It says what became of the ringmaster, that the
+    /// whole fairground is fenced, and — like the six send-offs before it — points on past this
+    /// world to the next one waiting.
+    static func lanternHeld(start: Date = .now) -> Self {
+        Self(
+            key: "lantern-held",
+            title: "Lantern Carnival held",
+            light: .lanternDusk,
+            shots: [
+                Shot(
+                    motif: "🤹",
+                    strewn: ["🎪", "👥"],
+                    caption: "The ringmaster has his ring. The pig has the rest.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🍭",
+                    strewn: ["🪢", "🎪", "🪢"],
+                    caption: "Every toffee apple on the field, fenced and held.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🎡",
+                    strewn: ["🍭", "👥"],
+                    caption: "The lights go out one string at a time.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🦂",
+                    strewn: ["🏜️", "🍭", "🏜️"],
+                    caption: "Past the last stall, sand as far as it goes.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the carnival's last field, the way `theRoost` goes before the caverns'.
+    ///
+    /// Short, and for the same reason: a player standing at this signpost has fenced eight
+    /// fairgrounds and is owed the one thing this board does that no other board here does. It is
+    /// the only rule in the game about where one pen stands in relation to another rather than
+    /// about who is in which, so the middle still is the whole of it said in a line.
+    static func theCentreRing(start: Date = .now) -> Self {
+        Self(
+            key: "the-centre-ring-briefing",
+            title: "The Centre Ring",
+            light: .lanternDay,
+            shots: [
+                Shot(
+                    motif: "🤹",
+                    strewn: ["🎪", "👥", "🍭"],
+                    caption: "The Centre Ring. He will not step aside.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🤹", "👥"],
+                    caption: "He keeps the middle. Take the ring round him.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🤹", "👥", "🍭"],
+                    caption: "Twenty-two pieces, and they meet where they started.",
+                    isCard: true,
+                    seconds: 3.4
+                )
+            ],
+            start: start
+        )
+    }
+}
+
 extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
@@ -816,7 +953,8 @@ extension StorybookScene {
             .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld(),
             .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld(),
             .starfallOpening(), .visitorCrater(), .starfallHeld(),
-            .gloamdeepOpening(), .theRoost(), .gloamdeepHeld()
+            .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
+            .lanternOpening(), .theCentreRing(), .lanternHeld()
         ]
     }
 }

@@ -10,6 +10,10 @@
 /// the pig. The two bats are one roost and the board asks for them in one pen, so they are drawn
 /// alike on purpose — what a player has to read off the floor is *there hang two bats*, and the
 /// game only needs them told apart to say which of them is the one hanging on its own.
+///
+/// The carnival's is the first one that is not an animal at all. The ringmaster stands in the
+/// middle of his ring and will not be moved off it, so as far as the board is concerned he is one
+/// more thing to be shut in — which is the joke, and also the rule.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -19,6 +23,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case visitor = "V"
     case bat = "T"
     case pup = "U"
+    case ringmaster = "M"
 
     /// What the field draws it as.
     var glyph: String {
@@ -30,6 +35,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .rat: "🐀"
         case .visitor: "🛸"
         case .bat, .pup: "🦇"
+        case .ringmaster: "🤹"
         }
     }
 
@@ -44,6 +50,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .visitor: "visitor"
         case .bat: "bat"
         case .pup: "pup"
+        case .ringmaster: "ringmaster"
         }
     }
 }
