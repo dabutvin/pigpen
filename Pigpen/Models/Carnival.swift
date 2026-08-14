@@ -14,9 +14,14 @@ import Foundation
 /// What the water is here is **the crowd**, and what the carnival does that no world above it did
 /// is stand that crowd in **solid blocks**. A meadow has meres, a thicket pools, a mountain tarns,
 /// a city canals, the reaches a scatter of single drops and the caverns one long staircase of a
-/// river; up here every body of water on a board is a filled rectangle of two tiles or more — a
+/// river; on every field here each body of crowd is a filled rectangle of two tiles or more — a
 /// stall, a queue, the wall of a tent — and on all but one field there is more than one of them.
-/// `CarnivalTests` pins it: no bend anywhere in the world, and no single drop either.
+/// `CarnivalTests` pins it: no bend on any field, and no single drop either.
+///
+/// The boss is the one board that steps outside that, and steps outside it deliberately: its crowd
+/// is a three by three with the ringmaster standing in the middle of it, so the body that closes
+/// round him is a ring of eight rather than a filled block of nine. Eight fields of solid blocks
+/// are what make that one shape read as a ring at all.
 ///
 /// Which changes what a wall is for. A river hands a pen one long edge to follow; a block of
 /// crowd hands it a short one and then stops, and the ground between two blocks is a **gangway** a
@@ -148,9 +153,13 @@ extension PuzzleLevel {
     /// The span question: neither queue is any use on its own, and no rectangle on this board
     /// reaches both, so squaring off leans on one of them and holds 20. Fifteen pieces run
     /// diagonally from the corner of the near queue to the corner of the far one hold 34 tiles
-    /// with both apples in them and the rope run swallowed on the way past, which comes back to
-    /// 34 — and the swallowing is the choice. The pair of ropes costs ten to shut in and the
-    /// ground behind them is worth more than that, which is a sum rather than a sight.
+    /// with both apples and both ropes inside them, which comes back to 34.
+    ///
+    /// The ropes are not a choice here, which makes this the only board at the fair where they are
+    /// not: the pig stands directly under the pair of them and no piece will stand on a rope, so
+    /// nothing can be walled between her and them and every pen on this board has them in it. What
+    /// the diagonal buys is the second queue — a rectangle leans on one, and only a slanted wall
+    /// leans on both — and the two apples it collects on the way pay the ropes back.
     static let ticketLine = carnival(
         id: "ticket-line",
         name: "Ticket Line",
@@ -250,11 +259,12 @@ extension PuzzleLevel {
     /// pen may not lean on one either — so a wall has to stand a clear tile off a run it does not
     /// shut in, which makes every run of two a strip of dead ground three wide.
     ///
-    /// Sour Ground made that choice once, Sulphur Rill and Gutter Lane and Meteor Field made it
-    /// twice, Boulder Chamber three times with single boulders; this is the first board in the
-    /// game where the things in the way come in lines. Every rectangle worth having here runs into
-    /// one, so squaring off means retreating to the strip of ground the two blocks of crowd leave
-    /// down the west, which is 18 tiles and nothing on them. The same eighteen pieces fitted round
+    /// Every board above this one lays its hazards down one at a time and never two of them
+    /// touching — two on Sour Ground, two on Gutter Lane, three on Boulder Chamber. Here there are
+    /// seven pegs in three runs, which is more rope than any other field at the fair carries and
+    /// includes the only line of three anywhere in the game. Every rectangle worth having runs
+    /// into one of them, so squaring off means retreating to the strip of ground the two blocks of
+    /// crowd leave down the west, which is 18 tiles and nothing on them. The same eighteen pieces fitted round
     /// the rigging instead hold 46 tiles, one apple and the pair of ropes nearest the pig, which
     /// comes to 41. The run of three and the pair beside it are left standing out in the north,
     /// because the ground behind them is not worth the twenty-five points they would cost to shut
@@ -283,9 +293,9 @@ extension PuzzleLevel {
             """
     )
 
-    /// The widest board at the carnival: twelve tiles by twelve, a stall at the top of the walk, a
-    /// crowd round the waltzer at the bottom of it, three toffee apples down the length and
-    /// nineteen pieces.
+    /// The longest walk at the carnival: twelve tiles by twelve with the biggest budget of any
+    /// field at the fair laid out along it, a stall at the top of the walk, a crowd round the
+    /// waltzer at the bottom of it and three toffee apples down the length.
     ///
     /// The midway stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide
     /// Reaches and the Great Gallery do. A broad board leaves a wide gap against a squared-off pen
@@ -411,9 +421,9 @@ extension WorldMap {
     /// a player gets by squaring the map off — and it climbs the whole way from Coconut Shy to The
     /// Rigging, the way Emberpeak climbs to Crater Pools, the city to Foundry Corner, the reaches
     /// to Starwell Ring and the caverns to Boulder Chamber. The last two stops step out of that
-    /// order for the same reason every world's do: the Midway is the widest board at the fair, and
-    /// the Centre Ring is a boss, and neither is measured by the same yardstick as a field with
-    /// one animal and one wall to shape.
+    /// order for the same reason every world's do: the Midway holds the second biggest pen at the
+    /// fair, and the Centre Ring is a boss, and neither is measured by the same yardstick as a
+    /// field with one animal and one wall to shape.
     static let lanternCarnival = WorldMap(
         name: "Lantern Carnival",
         nodes: [
