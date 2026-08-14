@@ -89,6 +89,9 @@ enum GamePalette {
         /// Desert: baked hardpan with wind ripples combed across it, the odd cactus standing up
         /// out of it, and nothing overhead but glare.
         case sand
+        /// Tide flats: wet sand with the water still lying in it, weed along the last high mark,
+        /// and shells and barnacled rock where the sea has been and will be again.
+        case flats
     }
 }
 
@@ -437,5 +440,47 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.12, green: 0.18, blue: 0.17),
         isNight: true,
         cover: .sand
+    )
+}
+
+extension GamePalette.Pasture {
+    /// The cove in daylight, which is the wettest ground in the game and the only ground that
+    /// shines. Everywhere else the light lands on the field and stops; here half of it comes back
+    /// off water lying in the flats, so the sand is pale and the sky is in it, and the far side of
+    /// the bay is a haze rather than a line. The one warm thing on the board is the weed along the
+    /// tide mark, which is the only part of a cove that is never underwater and never dry.
+    static let tideDay = Self(
+        skyTop: Color(red: 0.36, green: 0.68, blue: 0.88),
+        skyHorizon: Color(red: 0.87, green: 0.95, blue: 0.96),
+        disc: Color(red: 1.00, green: 0.99, blue: 0.95),
+        discHalo: Color(red: 0.93, green: 0.98, blue: 0.98),
+        cloud: Color(red: 0.98, green: 0.99, blue: 1.00),
+        farHill: Color(red: 0.58, green: 0.75, blue: 0.76),
+        ground: Color(red: 0.80, green: 0.82, blue: 0.76),
+        foreground: Color(red: 0.68, green: 0.71, blue: 0.65),
+        blade: Color(red: 0.44, green: 0.52, blue: 0.42),
+        canopy: Color(red: 0.40, green: 0.54, blue: 0.40),
+        canopyShade: Color(red: 0.26, green: 0.38, blue: 0.30),
+        isNight: false,
+        cover: .flats
+    )
+
+    /// The cove after dark, and the one night in the game with light coming up out of the ground.
+    /// The water left in the flats holds the last of the sky long after the sky has gone, so the
+    /// board reads as a dark field with bright cracks all through it rather than as a dark field.
+    static let tideDusk = Self(
+        skyTop: Color(red: 0.03, green: 0.07, blue: 0.16),
+        skyHorizon: Color(red: 0.16, green: 0.31, blue: 0.40),
+        disc: Color(red: 0.95, green: 0.98, blue: 1.00),
+        discHalo: Color(red: 0.63, green: 0.83, blue: 0.88),
+        cloud: Color(red: 0.11, green: 0.20, blue: 0.28),
+        farHill: Color(red: 0.09, green: 0.19, blue: 0.25),
+        ground: Color(red: 0.19, green: 0.27, blue: 0.30),
+        foreground: Color(red: 0.13, green: 0.20, blue: 0.23),
+        blade: Color(red: 0.10, green: 0.16, blue: 0.17),
+        canopy: Color(red: 0.13, green: 0.24, blue: 0.24),
+        canopyShade: Color(red: 0.08, green: 0.16, blue: 0.17),
+        isNight: true,
+        cover: .flats
     )
 }

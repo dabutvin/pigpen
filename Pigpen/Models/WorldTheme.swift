@@ -249,4 +249,26 @@ extension WorldTheme {
         accent: Color(red: 0.93, green: 0.77, blue: 0.43),
         accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20)
     )
+
+    /// Tidepool Cove, the ninth world: past the last dune the sand goes down under water, and the
+    /// tide has been through the field and cut it up. The windfall is a clam lying open on the flats
+    /// and the hazard a sea urchin, which is worth what a skull is worth and takes a fence exactly
+    /// as well — there is nowhere on an urchin to stand a post.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for eight worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let tidepoolCove = WorldTheme(
+        id: "tidepool-cove",
+        name: "Tidepool Cove",
+        blurb: "Where the tide keeps rearranging the walls.",
+        day: .tideDay,
+        dusk: .tideDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🦪", bonusScale: 0.56, bonusName: "clam",
+            hazardGlyph: "🪸", hazardScale: 0.58, hazardName: "urchin"
+        ),
+        boss: BossMark(glyph: "🦀", name: "the crab"),
+        accent: Color(red: 0.37, green: 0.74, blue: 0.72),
+        accentDeep: Color(red: 0.16, green: 0.44, blue: 0.46)
+    )
 }

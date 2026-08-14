@@ -52,6 +52,7 @@ private struct Meadow {
         case .flowstone: drawCaveMouth(in: &context)
         case .sawdust: drawBigTop(in: &context)
         case .sand: drawRockArch(in: &context)
+        case .flats: drawStackAndArch(in: &context)
         }
     }
 
@@ -69,6 +70,7 @@ private struct Meadow {
         case .flowstone: drawSinterTerraces(in: &context)
         case .sawdust: drawTroddenGround(in: &context)
         case .sand: drawRippledSand(in: &context)
+        case .flats: drawTideFlats(in: &context)
         }
     }
 
@@ -347,6 +349,8 @@ private struct Meadow {
         case .sawdust: 2
         // One cloud, a long way off, doing nobody any good.
         case .sand: 1
+        // A coast makes its own weather: there is always something coming in off the water.
+        case .flats: 4
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -453,6 +457,8 @@ private struct Meadow {
             drawFairSkyline(in: &context)
         } else if colors.cover == .sand {
             drawDuneHorizon(in: &context)
+        } else if colors.cover == .flats {
+            drawOpenSea(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -632,6 +638,230 @@ private struct Meadow {
         }
     }
 
+    /// The floor of the cove: sand the tide has just left, with the tide's own marks all over it.
+    ///
+    /// Where the dunes' ripples all lean one way because one wind combed them, these lie in long
+    /// arcs *along* the shore, because what combed them came in and went out again. And where the
+    /// desert has pans of hardpan swept pale and bare, the cove has water still lying in the low
+    /// places — which is the one thing on any of these nine grounds that is brighter than the sky
+    /// above it.
+    private func drawTideFlats(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 8_231)
+        let shade = Color(red: 0.14, green: 0.28, blue: 0.32)
+
+        // Bands of wetter ground, marking how far each tide got before it turned.
+        for _ in 0..<6 {
+            let down = horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            var mark = Path()
+            mark.move(to: CGPoint(x: -20, y: down))
+            mark.addCurve(
+                to: CGPoint(x: size.width + 20, y: down + CGFloat(scatter.next(in: -14...14))),
+                control1: CGPoint(x: size.width * 0.3, y: down + CGFloat(scatter.next(in: -26...26))),
+                control2: CGPoint(x: size.width * 0.7, y: down + CGFloat(scatter.next(in: -26...26)))
+            )
+            context.stroke(
+                mark,
+                with: .color(shade.opacity(colors.isNight ? 0.20 : 0.13)),
+                style: StrokeStyle(
+                    lineWidth: CGFloat(scatter.next(in: 8...22)),
+                    lineCap: .round
+                )
+            )
+        }
+
+        // The ripples, lit on top and shadowed underneath the same way the desert's are — it is
+        // the only way a pale flat ground shows any shape at all.
+        for _ in 0..<20 {
+            let down = horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            var crest = Path()
+            crest.move(to: CGPoint(x: -20, y: down))
+            crest.addCurve(
+                to: CGPoint(x: size.width + 20, y: down + CGFloat(scatter.next(in: -12...12))),
+                control1: CGPoint(x: size.width * 0.3, y: down + CGFloat(scatter.next(in: -14...14))),
+                control2: CGPoint(x: size.width * 0.7, y: down + CGFloat(scatter.next(in: -14...14)))
+            )
+            let width = CGFloat(scatter.next(in: 1.4...3.4))
+            context.translateBy(x: 0, y: width)
+            context.stroke(
+                crest,
+                with: .color(shade.opacity(colors.isNight ? 0.24 : 0.16)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width)
+            context.stroke(
+                crest,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : 0.34)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+
+        // And the runnels the water went back out along, which branch downhill and catch the sky.
+        for _ in 0..<8 {
+            var runnel = Path()
+            var here = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: horizon + CGFloat(scatter.next(in: 0...0.5)) * (size.height - horizon)
+            )
+            runnel.move(to: here)
+            for _ in 0..<3 {
+                let next = CGPoint(
+                    x: here.x + CGFloat(scatter.next(in: -50...50)),
+                    y: here.y + CGFloat(scatter.next(in: 20...70))
+                )
+                runnel.addQuadCurve(
+                    to: next,
+                    control: CGPoint(x: here.x + CGFloat(scatter.next(in: -30...30)), y: next.y)
+                )
+                here = next
+            }
+            context.stroke(
+                runnel,
+                with: .color(colors.discHalo.opacity(colors.isNight ? 0.36 : 0.44)),
+                style: StrokeStyle(
+                    lineWidth: CGFloat(scatter.next(in: 2...5)),
+                    lineCap: .round
+                )
+            )
+        }
+    }
+
+    /// A pool left in a dip when the tide went out, which is what the world is named for.
+    ///
+    /// Drawn as water rather than as a hole: a dark rim with the sky sitting inside it and a rock
+    /// or two breaking the surface. It is the shape the last field of the world turns on — three
+    /// walls of it going spare, and not one of them any use against the thing sitting in it.
+    private func drawTidepool(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 46 * scale
+        let tall = wide * 0.42
+
+        let bowl = Path(ellipseIn: CGRect(
+            x: foot.x - wide * 0.5, y: foot.y - tall * 0.5, width: wide, height: tall
+        ))
+        context.fill(
+            bowl,
+            with: .color(
+                Color(red: 0.11, green: 0.26, blue: 0.30).opacity(colors.isNight ? 0.66 : 0.44)
+            )
+        )
+        // The sky in it, off to one side, which is what makes it read as a surface.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - wide * 0.34, y: foot.y - tall * 0.34,
+                width: wide * 0.58, height: tall * 0.42
+            )),
+            with: .color(colors.discHalo.opacity(colors.isNight ? 0.40 : 0.62))
+        )
+        context.stroke(
+            bowl,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.16 : 0.36)),
+            lineWidth: max(1, wide * 0.03)
+        )
+        // Two rocks standing out of it, so the pool has a floor.
+        for side in [-1.0, 0.7] {
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: foot.x + wide * CGFloat(side) * 0.24 - wide * 0.07,
+                    y: foot.y + tall * 0.06,
+                    width: wide * 0.14, height: tall * 0.2
+                )),
+                with: .color(
+                    Color(red: 0.30, green: 0.31, blue: 0.30).opacity(colors.isNight ? 0.6 : 0.8)
+                )
+            )
+        }
+    }
+
+    /// A heap of weed along the tide mark: the cove's only warm colour, and the one thing on the
+    /// board that has been somewhere else. Its fronds all fall the same way, because what laid
+    /// them there was going that way at the time.
+    private func drawWeedHeap(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let reach = 30 * scale
+        let olive = Color(red: 0.39, green: 0.38, blue: 0.19)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - reach * 0.6, y: foot.y - reach * 0.08,
+                width: reach * 1.2, height: reach * 0.18
+            )),
+            with: .color(
+                Color(red: 0.14, green: 0.28, blue: 0.32).opacity(colors.isNight ? 0.28 : 0.2)
+            )
+        )
+        var scatter = Scatter(seed: 4_099)
+        for index in 0..<6 {
+            let side: CGFloat = index.isMultiple(of: 2) ? -1 : 1
+            let out = reach * CGFloat(0.3 + 0.12 * Double(index))
+            var frond = Path()
+            frond.move(to: foot)
+            frond.addQuadCurve(
+                to: CGPoint(x: foot.x + out * side, y: foot.y - reach * 0.04),
+                control: CGPoint(
+                    x: foot.x + out * side * 0.5,
+                    y: foot.y - reach * CGFloat(scatter.next(in: 0.20...0.40))
+                )
+            )
+            context.stroke(
+                frond,
+                with: .color(olive.opacity(colors.isNight ? 0.5 : 0.8)),
+                style: StrokeStyle(lineWidth: max(1, reach * 0.09), lineCap: .round)
+            )
+        }
+        for _ in 0..<3 {
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: foot.x + reach * CGFloat(scatter.next(in: -0.4...0.4)),
+                    y: foot.y - reach * CGFloat(scatter.next(in: 0.06...0.24)),
+                    width: reach * 0.11, height: reach * 0.11
+                )),
+                with: .color(olive.opacity(colors.isNight ? 0.6 : 0.92))
+            )
+        }
+    }
+
+    /// A log that came in on the water. It is the only wood in the world and it did not grow here
+    /// — which is what makes it worth drawing, the same way the dunes' bones are: it is evidence
+    /// of somewhere else.
+    private func drawDriftwood(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let long = 40 * scale
+        let thick = long * 0.16
+        let bleached = Color(red: 0.74, green: 0.71, blue: 0.65)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - long * 0.5, y: foot.y - thick * 0.2,
+                width: long, height: thick * 0.5
+            )),
+            with: .color(
+                Color(red: 0.14, green: 0.28, blue: 0.32).opacity(colors.isNight ? 0.28 : 0.2)
+            )
+        )
+
+        var log = Path()
+        log.addRoundedRect(
+            in: CGRect(
+                x: foot.x - long * 0.5, y: foot.y - thick * 0.9,
+                width: long, height: thick
+            ),
+            cornerSize: CGSize(width: thick * 0.5, height: thick * 0.5)
+        )
+        // A stub of a branch, so it is a log rather than a plank.
+        log.addRoundedRect(
+            in: CGRect(
+                x: foot.x + long * 0.1, y: foot.y - thick * 1.7,
+                width: thick * 0.5, height: thick
+            ),
+            cornerSize: CGSize(width: thick * 0.25, height: thick * 0.25)
+        )
+        context.fill(log, with: .color(bleached.opacity(colors.isNight ? 0.5 : 0.9)))
+        context.stroke(
+            log,
+            with: .color(
+                Color(red: 0.44, green: 0.40, blue: 0.35).opacity(colors.isNight ? 0.4 : 0.6)
+            ),
+            lineWidth: max(0.8, thick * 0.1)
+        )
+    }
+
     /// The dunes out along the horizon: a rank of crests going away one behind another, each one
     /// lit on the windward side and shaded on the lee.
     ///
@@ -685,6 +915,76 @@ private struct Meadow {
                 )
             )
         }
+    }
+
+    /// What closes the sky over a cove: the sea itself, out past the last of the sand.
+    ///
+    /// Every world so far has shut its horizon with something standing up — a canopy, a skyline,
+    /// a crater rim, a cave roof, tent tops, a rank of dunes. This one shuts it with something
+    /// lying flat, which is the only reason a player can tell at a glance that the trail has run
+    /// out of land: there is nothing out there to put a field on.
+    ///
+    /// So it is drawn as bands rather than shapes — a dark line where the water starts, a paler
+    /// one further out where it catches the light, and two rows of breakers coming in. The
+    /// breakers are the one place on the map where the ninth world's rule is visible before it is
+    /// stated: the water is *moving*, and everything a player has been leaning pens against for
+    /// eight worlds has been standing still.
+    private func drawOpenSea(in context: inout GraphicsContext) {
+        let waterline = horizon + 8
+        var scatter = Scatter(seed: 6_701)
+
+        // The open water, darkest at the far edge and paler as it comes in — which is the way
+        // round a shallow coast actually reads.
+        var offing = Path()
+        offing.addRect(CGRect(
+            x: -20, y: horizon - 34,
+            width: size.width + 40, height: waterline - horizon + 34
+        ))
+        context.fill(
+            offing,
+            with: .linearGradient(
+                Gradient(colors: [
+                    Color(red: 0.09, green: 0.24, blue: 0.34).opacity(colors.isNight ? 0.9 : 0.72),
+                    colors.discHalo.opacity(colors.isNight ? 0.42 : 0.60)
+                ]),
+                startPoint: CGPoint(x: 0, y: horizon - 34),
+                endPoint: CGPoint(x: 0, y: waterline)
+            )
+        )
+
+        // Two rows of breakers, the far row shorter and fainter than the near one.
+        for (rank, fade) in [(0, 0.34), (1, 0.62)] {
+            let down = horizon - 14 + CGFloat(rank) * 15
+            for _ in 0..<(6 + rank * 4) {
+                let middle = CGFloat(scatter.next()) * size.width
+                let across = CGFloat(scatter.next(in: 40...130)) * CGFloat(1 + rank)
+                var wash = Path()
+                wash.move(to: CGPoint(x: middle - across / 2, y: down))
+                wash.addQuadCurve(
+                    to: CGPoint(x: middle + across / 2, y: down),
+                    control: CGPoint(x: middle, y: down - CGFloat(3 + rank * 3))
+                )
+                context.stroke(
+                    wash,
+                    with: .color(GamePalette.cream.opacity(fade * (colors.isNight ? 0.4 : 1))),
+                    style: StrokeStyle(lineWidth: CGFloat(1.4 + Double(rank)), lineCap: .round)
+                )
+            }
+        }
+
+        // And the last wave, breaking on the sand right across the width of the map.
+        var edge = Path()
+        edge.move(to: CGPoint(x: -20, y: waterline))
+        edge.addCurve(
+            to: CGPoint(x: size.width + 20, y: waterline + 4),
+            control1: CGPoint(x: size.width * 0.3, y: waterline + 9),
+            control2: CGPoint(x: size.width * 0.7, y: waterline - 5)
+        )
+        context.stroke(
+            edge,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.44 : 0.9)),
+            style: StrokeStyle(lineWidth: 4, lineCap: .round)
+        )
     }
 
     /// The rest of the fair, out along the horizon: tent tops, a big wheel turned side on, and
@@ -844,6 +1144,9 @@ private struct Meadow {
         case cactus
         case sandMound
         case bones
+        case weed
+        case tidepool
+        case driftwood
     }
 
     private struct Place {
@@ -953,6 +1256,17 @@ private struct Meadow {
             case ..<0.86: .rock
             default: .bones
             }
+        case .flats:
+            // Nothing has been built here either, and nothing that is here chose to be: every one
+            // of these was carried in and put down by water. A pool left behind in a dip, weed
+            // heaped along the last high mark, a rock with the barnacles still on it, and a log
+            // that came from somewhere with trees on it, which this is not.
+            switch roll {
+            case ..<0.32: .tidepool
+            case ..<0.60: .weed
+            case ..<0.84: .rock
+            default: .driftwood
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -984,6 +1298,9 @@ private struct Meadow {
         case .cactus: drawCactus(in: &context, at: place.at, scale: place.size)
         case .sandMound: drawSandMound(in: &context, at: place.at, scale: place.size)
         case .bones: drawBones(in: &context, at: place.at, scale: place.size)
+        case .weed: drawWeedHeap(in: &context, at: place.at, scale: place.size)
+        case .tidepool: drawTidepool(in: &context, at: place.at, scale: place.size)
+        case .driftwood: drawDriftwood(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -2173,6 +2490,107 @@ private struct Meadow {
                 Color(red: 0.80, green: 0.70, blue: 0.52).opacity(colors.isNight ? 0.5 : 0.75)
             ),
             lineWidth: 1.6
+        )
+    }
+
+    /// The sea stack at the foot of the cove trail: a pillar of rock standing offshore in its own
+    /// puddle of water, with a stub of the arch it used to be still reaching towards it.
+    ///
+    /// The dunes' landmark is a rock arch the wind cut a hole through. This is the same thing a
+    /// world later and the other way about: an arch the *water* cut, and then cut all the way,
+    /// so the far leg is standing on its own and the near leg is a stump. Nothing else on any of
+    /// these nine maps says what this says, which is that the ground here is not staying put.
+    ///
+    /// It is also the only landmark in the game that a player cannot walk to, because there is
+    /// water in the way — which is the ninth world's whole lesson, stood up at the start of the
+    /// trail where the ninth world's boss will make use of it at the end.
+    private func drawStackAndArch(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let tall: CGFloat = 86
+        let wide: CGFloat = 34
+        let rock = Color(red: 0.36, green: 0.36, blue: 0.34)
+        let lit = Color(red: 0.52, green: 0.52, blue: 0.49)
+
+        // The water it is standing in, which is what makes it a stack rather than a boulder.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 1.5, y: centre.y - 7, width: wide * 3, height: 20
+            )),
+            with: .color(
+                Color(red: 0.10, green: 0.25, blue: 0.31).opacity(colors.isNight ? 0.7 : 0.5)
+            )
+        )
+
+        // The stump of the near leg: what is left of the arch on this side.
+        var stump = Path()
+        stump.move(to: CGPoint(x: centre.x - wide * 1.45, y: centre.y))
+        stump.addLine(to: CGPoint(x: centre.x - wide * 1.3, y: centre.y - tall * 0.34))
+        stump.addQuadCurve(
+            to: CGPoint(x: centre.x - wide * 0.78, y: centre.y - tall * 0.30),
+            control: CGPoint(x: centre.x - wide * 1.0, y: centre.y - tall * 0.44)
+        )
+        stump.addLine(to: CGPoint(x: centre.x - wide * 0.72, y: centre.y))
+        stump.closeSubpath()
+        context.fill(stump, with: .color(rock.opacity(colors.isNight ? 0.62 : 0.9)))
+
+        // The stack: narrower at the waist than at the foot or the head, because that is where
+        // the water has been working.
+        var stack = Path()
+        stack.move(to: CGPoint(x: centre.x - wide * 0.5, y: centre.y))
+        stack.addCurve(
+            to: CGPoint(x: centre.x - wide * 0.42, y: centre.y - tall),
+            control1: CGPoint(x: centre.x - wide * 0.18, y: centre.y - tall * 0.4),
+            control2: CGPoint(x: centre.x - wide * 0.52, y: centre.y - tall * 0.7)
+        )
+        stack.addLine(to: CGPoint(x: centre.x + wide * 0.40, y: centre.y - tall * 0.98))
+        stack.addCurve(
+            to: CGPoint(x: centre.x + wide * 0.52, y: centre.y),
+            control1: CGPoint(x: centre.x + wide * 0.50, y: centre.y - tall * 0.7),
+            control2: CGPoint(x: centre.x + wide * 0.20, y: centre.y - tall * 0.4)
+        )
+        stack.closeSubpath()
+        context.fill(stack, with: .color(rock.opacity(colors.isNight ? 0.66 : 0.94)))
+
+        // The lit side, and the bands the sea has cut across it, which are what give it its age.
+        var seaward = Path()
+        seaward.move(to: CGPoint(x: centre.x + wide * 0.16, y: centre.y))
+        seaward.addLine(to: CGPoint(x: centre.x + wide * 0.30, y: centre.y - tall * 0.95))
+        seaward.addLine(to: CGPoint(x: centre.x + wide * 0.40, y: centre.y - tall * 0.96))
+        seaward.addCurve(
+            to: CGPoint(x: centre.x + wide * 0.52, y: centre.y),
+            control1: CGPoint(x: centre.x + wide * 0.50, y: centre.y - tall * 0.7),
+            control2: CGPoint(x: centre.x + wide * 0.20, y: centre.y - tall * 0.4)
+        )
+        seaward.closeSubpath()
+        context.fill(seaward, with: .color(lit.opacity(colors.isNight ? 0.4 : 0.8)))
+
+        for step in 1...4 {
+            let down = centre.y - tall * CGFloat(step) * 0.19
+            var seam = Path()
+            seam.move(to: CGPoint(x: centre.x - wide * 0.44, y: down))
+            seam.addQuadCurve(
+                to: CGPoint(x: centre.x + wide * 0.46, y: down + 2),
+                control: CGPoint(x: centre.x, y: down + 5)
+            )
+            context.stroke(
+                seam,
+                with: .color(
+                    Color(red: 0.22, green: 0.22, blue: 0.21).opacity(colors.isNight ? 0.4 : 0.5)
+                ),
+                lineWidth: 1.4
+            )
+        }
+
+        // A cap of weed and a bird's worth of white on top, so it is a rock in the sea rather
+        // than a monument.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.46, y: centre.y - tall - 5,
+                width: wide * 0.9, height: 10
+            )),
+            with: .color(
+                Color(red: 0.30, green: 0.34, blue: 0.20).opacity(colors.isNight ? 0.5 : 0.82)
+            )
         )
     }
 
