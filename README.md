@@ -443,7 +443,8 @@ Rimstone Corner is the corner question with nothing else in the way of it, and t
 in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
 laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
 Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
-round 27. The Great Gallery holds the second biggest pen in the game, at 58 tiles.
+round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
+dunes' Great Erg came in a tile above it.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
 animals on the ground: **the roost hangs together and the pig hangs apart**. A bat, its pup and the
@@ -577,8 +578,8 @@ pays for its own east wall for 20, where the same eleven pieces run out as a che
 western rim, across the whole mouth of the crescent, back up to a point in the south — hold 41
 tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it is the
 hardest corner in the game. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
-holds 59 tiles, the third biggest pen in the game behind Wide Reaches and the Great Gallery, on the
-broadest board out here.
+holds 59 tiles on the broadest board out here, which is the second biggest pen in the game: five
+behind Wide Reaches, one ahead of the Great Gallery.
 
 Its boss, Scorpion Flats, adds the dunes' rule, and it is the direct inversion of the game's oldest
 boss lesson. Stag Mere taught that two pens can share a wall — one boundary doing two jobs — and the

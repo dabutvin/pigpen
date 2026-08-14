@@ -1515,8 +1515,8 @@ the board that costs less to abandon than to shut in.
 ```
 
 The widest floor in the caverns with a river stepping down the length of it: twelve tiles by twelve,
-three crystals, one boulder and nineteen pieces. It holds the second biggest pen in the game, at 58
-tiles.
+three crystals, one boulder and nineteen pieces. It holds the third biggest pen in the game, at 58
+tiles, behind Wide Reaches and the dunes' Great Erg.
 
 Nineteen pieces squared off down the west of the gallery hold 41 tiles, with a crystal and a boulder
 in them cancelling each other out. The same nineteen laid along the river and closed round the south
@@ -2176,8 +2176,8 @@ ends of it, a run of three cacti across the waist and three melons down the leng
 Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 41 tiles,
 two of the melons and all three cacti, which comes to 36. The same nineteen run out to both dunes
 and closed round the south hold 59 tiles, the third melon as well and the same three cacti, which is
-59 — the biggest pen in the world, and the third biggest in the game behind Wide Reaches and the
-Great Gallery.
+59 — the biggest pen in the world, and the second biggest in the game: five tiles behind Wide Reaches
+and one ahead of the Great Gallery, which held second place until the sand came in.
 
 It stands outside the climb the way every world's eighth field does. A broad board leaves a wide gap
 against a squared-off pen because it is broad, which says more about its size than its difficulty —

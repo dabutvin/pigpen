@@ -315,7 +315,8 @@ extension PuzzleLevel {
     /// and the Great Gallery and The Midway do. A broad board leaves a wide gap against a squared-off
     /// pen because it is broad, which says more about its size than about how hard it is to hold —
     /// and this one asks 38, less than every field of the seven above it, while holding the biggest
-    /// pen in the world and the third biggest in the game behind Wide Reaches and the Great Gallery.
+    /// pen in the world and the second biggest in the game, behind Wide Reaches by five tiles and a
+    /// tile ahead of the Great Gallery, which held second place until the sand came in.
     ///
     /// Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 41
     /// tiles, two of the melons and all three cacti, which comes to 36. The same nineteen run out to
@@ -452,7 +453,7 @@ extension WorldMap {
     /// a diamond on bare ground turns out to ask more than a ridge with a hole blown through it.
     ///
     /// The last two stops step out of the order for the same reason every world's do: the Great Erg is
-    /// the broadest board out here and holds the third biggest pen in the game, and Scorpion Flats is
+    /// the broadest board out here and holds the second biggest pen in the game, and Scorpion Flats is
     /// a boss, and neither is measured by the same yardstick as a field with one animal and one wall
     /// to shape.
     static let sunbakedDunes = WorldMap(
