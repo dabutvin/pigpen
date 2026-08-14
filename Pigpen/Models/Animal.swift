@@ -14,6 +14,10 @@
 /// The carnival's is the first one that is not an animal at all. The ringmaster stands in the
 /// middle of his ring and will not be moved off it, so as far as the board is concerned he is one
 /// more thing to be shut in — which is the joke, and also the rule.
+///
+/// The dunes stand a scorpion on the sand, and he is the first one it matters how *near* to. Every
+/// other animal in the game is either in the pig's pen or out of it; a scorpion stings through a
+/// fence, so a wall with the pig on one side of it and him on the other is no wall at all.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -24,6 +28,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case bat = "T"
     case pup = "U"
     case ringmaster = "M"
+    case scorpion = "S"
 
     /// What the field draws it as.
     var glyph: String {
@@ -36,6 +41,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .visitor: "🛸"
         case .bat, .pup: "🦇"
         case .ringmaster: "🤹"
+        case .scorpion: "🦂"
         }
     }
 
@@ -51,6 +57,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .bat: "bat"
         case .pup: "pup"
         case .ringmaster: "ringmaster"
+        case .scorpion: "scorpion"
         }
     }
 }
