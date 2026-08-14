@@ -51,6 +51,7 @@ private struct Meadow {
         case .dust: drawFirstCrater(in: &context)
         case .flowstone: drawCaveMouth(in: &context)
         case .sawdust: drawBigTop(in: &context)
+        case .sand: drawRockArch(in: &context)
         }
     }
 
@@ -67,6 +68,7 @@ private struct Meadow {
         case .dust: drawPits(in: &context)
         case .flowstone: drawSinterTerraces(in: &context)
         case .sawdust: drawTroddenGround(in: &context)
+        case .sand: drawRippledSand(in: &context)
         }
     }
 
@@ -343,6 +345,8 @@ private struct Meadow {
         // Nothing is up there but rock, so there is nothing for a cloud to be.
         case .flowstone: 0
         case .sawdust: 2
+        // One cloud, a long way off, doing nobody any good.
+        case .sand: 1
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -447,6 +451,8 @@ private struct Meadow {
             drawCaveRoof(in: &context)
         } else if colors.cover == .sawdust {
             drawFairSkyline(in: &context)
+        } else if colors.cover == .sand {
+            drawDuneHorizon(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -572,6 +578,112 @@ private struct Meadow {
                 )
             }
             across += wide + CGFloat(scatter.next(in: 0...5))
+        }
+    }
+
+    /// The floor of a desert: hardpan with the wind's combing over it, all of it leaning one way.
+    ///
+    /// Every ground below this was laid out by somebody or grown by something — mown bands, courses
+    /// of paving, walkways trodden by a crowd. Nobody laid this out and nothing grew it. It is the
+    /// record of one wind blowing across it for a long time, which is why every line on it is
+    /// parallel to every other line on it, and why the world reads as empty without being blank.
+    private func drawRippledSand(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 8_527)
+
+        // Pans of bare hardpan where the sand has been scoured off altogether.
+        for _ in 0..<8 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next(in: -0.1...1.1)) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 120...300))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.1,
+                    width: spread, height: spread * 0.2
+                )),
+                with: .color(colors.foreground.opacity(colors.isNight ? 0.4 : 0.5))
+            )
+        }
+
+        // The combing itself, each crest drawn with its own shadow tucked under it.
+        for _ in 0..<30 {
+            let down = horizon + CGFloat(scatter.next(in: -0.02...1.02)) * (size.height - horizon)
+            var crest = Path()
+            crest.move(to: CGPoint(x: -20, y: down))
+            crest.addCurve(
+                to: CGPoint(x: size.width + 20, y: down + CGFloat(scatter.next(in: -40...40))),
+                control1: CGPoint(x: size.width * 0.3, y: down + CGFloat(scatter.next(in: -22...22))),
+                control2: CGPoint(x: size.width * 0.7, y: down + CGFloat(scatter.next(in: -22...22)))
+            )
+            let width = CGFloat(scatter.next(in: 1.6...4.2))
+            context.translateBy(x: 0, y: width)
+            context.stroke(
+                crest,
+                with: .color(shade.opacity(colors.isNight ? 0.22 : 0.17)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width)
+            context.stroke(
+                crest,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.06 : 0.3)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+    }
+
+    /// The dunes out along the horizon: a rank of crests going away one behind another, each one
+    /// lit on the windward side and shaded on the lee.
+    ///
+    /// The city closes its sky with rooftops and the caverns close theirs with rock. This closes
+    /// its sky with more of the same thing the trail is standing on, going back until it runs out
+    /// — which is the one honest thing a desert horizon can be, and what the world's own blurb
+    /// promises: sand to the horizon.
+    private func drawDuneHorizon(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 9_209)
+        let base = horizon + 26
+
+        // Three ranks, the furthest palest, so the sand reads as going a long way back.
+        for rank in 0..<3 {
+            let depth = CGFloat(rank)
+            let lift = 46 - depth * 13
+            let fade = 1.0 - Double(rank) * 0.26
+            var ridge = Path()
+            ridge.move(to: CGPoint(x: -20, y: base - depth * 4))
+            var across: CGFloat = -20
+            var crest = true
+            while across < size.width + 60 {
+                let span = CGFloat(scatter.next(in: 90...190))
+                let top = base - depth * 4 - lift * CGFloat(scatter.next(in: 0.5...1.0))
+                // A dune is not a hill: it rises long and gently to a crest and then drops away
+                // short and steep, so each hump is drawn asymmetric on purpose.
+                if crest {
+                    ridge.addQuadCurve(
+                        to: CGPoint(x: across + span * 0.78, y: top),
+                        control: CGPoint(x: across + span * 0.5, y: top + lift * 0.24)
+                    )
+                    ridge.addQuadCurve(
+                        to: CGPoint(x: across + span, y: base - depth * 4),
+                        control: CGPoint(x: across + span * 0.9, y: top + lift * 0.1)
+                    )
+                } else {
+                    ridge.addLine(to: CGPoint(x: across + span, y: base - depth * 4))
+                }
+                crest = !crest
+                across += span
+            }
+            ridge.addLine(to: CGPoint(x: size.width + 60, y: base + 40))
+            ridge.addLine(to: CGPoint(x: -20, y: base + 40))
+            ridge.closeSubpath()
+
+            context.fill(
+                ridge,
+                with: .color(
+                    rank == 0
+                        ? colors.ground.opacity(0.95)
+                        : colors.farHill.opacity(0.55 + fade * 0.3)
+                )
+            )
         }
     }
 
@@ -729,6 +841,9 @@ private struct Meadow {
         case crystal
         case stall
         case lanternPost
+        case cactus
+        case sandMound
+        case bones
     }
 
     private struct Place {
@@ -828,6 +943,16 @@ private struct Meadow {
             case ..<0.82: .hayBale
             default: .flowers
             }
+        case .sand:
+            // Nothing has been built out here and next to nothing grows: what stands on the sand
+            // is a cactus that found water, a mound the wind has piled up and not yet taken away
+            // again, a rock scoured bare, and the bones of something that did not make it across.
+            switch roll {
+            case ..<0.30: .cactus
+            case ..<0.62: .sandMound
+            case ..<0.86: .rock
+            default: .bones
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -856,7 +981,139 @@ private struct Meadow {
         case .crystal: drawCrystalCluster(in: &context, at: place.at, scale: place.size)
         case .stall: drawStall(in: &context, at: place.at, scale: place.size)
         case .lanternPost: drawLanternPost(in: &context, at: place.at, scale: place.size)
+        case .cactus: drawCactus(in: &context, at: place.at, scale: place.size)
+        case .sandMound: drawSandMound(in: &context, at: place.at, scale: place.size)
+        case .bones: drawBones(in: &context, at: place.at, scale: place.size)
         }
+    }
+
+    /// A cactus standing on the sand with its shadow pulled out long beside it. It is what the
+    /// dunes have where the meadow has a tree — and it is the world's hazard seen doing what a
+    /// hazard does, since a cactus is the one thing on these boards no post will go through.
+    private func drawCactus(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = 42 * scale
+        let wide = tall * 0.24
+
+        var shadow = Path()
+        shadow.move(to: CGPoint(x: foot.x - wide * 0.4, y: foot.y))
+        shadow.addLine(to: CGPoint(x: foot.x + tall * 1.0, y: foot.y + tall * 0.18))
+        shadow.addLine(to: CGPoint(x: foot.x + tall * 1.0, y: foot.y + tall * 0.27))
+        shadow.addLine(to: CGPoint(x: foot.x + wide * 0.4, y: foot.y + tall * 0.11))
+        shadow.closeSubpath()
+        context.fill(shadow, with: .color(shade.opacity(colors.isNight ? 0.24 : 0.32)))
+
+        var body = Path()
+        body.addRoundedRect(
+            in: CGRect(x: foot.x - wide * 0.5, y: foot.y - tall, width: wide, height: tall),
+            cornerSize: CGSize(width: wide * 0.5, height: wide * 0.5)
+        )
+        for (side, height, reach) in [(-1.0, 0.60, 0.32), (1.0, 0.44, 0.28)] {
+            let elbow = CGPoint(x: foot.x + wide * 0.5 * side, y: foot.y - tall * height)
+            let thick = wide * 0.74
+            let out = tall * reach
+            let tip = CGPoint(x: elbow.x + out * side, y: elbow.y - tall * (height * 0.42 + 0.1))
+            // The run out of the trunk, tucked back into it so the two read as one plant.
+            body.addRoundedRect(
+                in: CGRect(
+                    x: min(elbow.x, tip.x) - (side > 0 ? thick * 0.5 : 0),
+                    y: elbow.y - thick * 0.5,
+                    width: out + thick * 0.5,
+                    height: thick
+                ),
+                cornerSize: CGSize(width: thick * 0.5, height: thick * 0.5)
+            )
+            // And the elbow turning up, which is the shape that says cactus and not shrub.
+            body.addRoundedRect(
+                in: CGRect(
+                    x: tip.x - thick * 0.5,
+                    y: tip.y,
+                    width: thick,
+                    height: elbow.y - tip.y + thick * 0.5
+                ),
+                cornerSize: CGSize(width: thick * 0.5, height: thick * 0.5)
+            )
+        }
+        context.fill(body, with: .color(colors.canopy))
+        context.stroke(body, with: .color(colors.canopyShade), lineWidth: max(1, wide * 0.12))
+
+        // Ribs down the trunk, which is what tells a cactus from a green post.
+        var ribs = Path()
+        for offset in [-0.22, 0.0, 0.22] {
+            ribs.move(to: CGPoint(x: foot.x + wide * CGFloat(offset), y: foot.y - tall * 0.9))
+            ribs.addLine(to: CGPoint(x: foot.x + wide * CGFloat(offset), y: foot.y - tall * 0.08))
+        }
+        context.stroke(ribs, with: .color(colors.canopyShade.opacity(0.55)), lineWidth: 1)
+    }
+
+    /// A mound of loose sand the wind has piled up and not yet taken away again: a lit face
+    /// upwind, a sharp crest, and the steep shaded slipface behind it.
+    ///
+    /// Which is the same shape the world's *water* is, at a size a player can stand next to. So
+    /// the map is dressed with little versions of the thing every board is built out of, and the
+    /// first time a crescent turns up on a field it is already a familiar shape.
+    private func drawSandMound(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 52 * scale
+        let tall = wide * 0.34
+
+        var lit = Path()
+        lit.move(to: CGPoint(x: foot.x - wide * 0.5, y: foot.y))
+        lit.addQuadCurve(
+            to: CGPoint(x: foot.x + wide * 0.16, y: foot.y - tall),
+            control: CGPoint(x: foot.x - wide * 0.18, y: foot.y - tall * 0.9)
+        )
+        lit.addLine(to: CGPoint(x: foot.x + wide * 0.5, y: foot.y))
+        lit.closeSubpath()
+        context.fill(lit, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.10 : 0.42)))
+
+        var slipface = Path()
+        slipface.move(to: CGPoint(x: foot.x + wide * 0.16, y: foot.y - tall))
+        slipface.addLine(to: CGPoint(x: foot.x + wide * 0.5, y: foot.y))
+        slipface.addQuadCurve(
+            to: CGPoint(x: foot.x + wide * 0.2, y: foot.y + tall * 0.16),
+            control: CGPoint(x: foot.x + wide * 0.38, y: foot.y + tall * 0.14)
+        )
+        slipface.closeSubpath()
+        context.fill(slipface, with: .color(shade.opacity(colors.isNight ? 0.34 : 0.28)))
+    }
+
+    /// The bones of something that did not get across: a ribcage half buried, and a skull beside
+    /// it. Drawn small and pale, because the joke is only funny at a distance.
+    private func drawBones(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 26 * scale
+        let bone = GamePalette.cream.opacity(colors.isNight ? 0.42 : 0.86)
+
+        var ribs = Path()
+        for index in 0..<4 {
+            let across = foot.x - wide * 0.34 + wide * 0.22 * CGFloat(index)
+            ribs.move(to: CGPoint(x: across, y: foot.y))
+            ribs.addQuadCurve(
+                to: CGPoint(x: across + wide * 0.05, y: foot.y - wide * 0.3),
+                control: CGPoint(x: across - wide * 0.12, y: foot.y - wide * 0.2)
+            )
+        }
+        context.stroke(ribs, with: .color(bone), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x + wide * 0.34, y: foot.y - wide * 0.24,
+                width: wide * 0.3, height: wide * 0.24
+            )),
+            with: .color(bone)
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - wide * 0.5, y: foot.y - wide * 0.02,
+                width: wide, height: wide * 0.12
+            )),
+            with: .color(shade.opacity(colors.isNight ? 0.2 : 0.24))
+        )
+    }
+
+    /// The blue the desert fills a shadow with. There is one small hot sun over this world and
+    /// nothing else to light the shade with except the sky, so every shadow on the sand is a cold
+    /// colour — which is the whole reason the map reads as glare rather than as a yellow meadow.
+    private var shade: Color {
+        Color(red: 0.30, green: 0.34, blue: 0.54)
     }
 
     /// A sideshow booth with a striped awning over it, guyed down at the corners. It is what
@@ -1917,6 +2174,80 @@ private struct Meadow {
             ),
             lineWidth: 1.6
         )
+    }
+
+    /// The rock arch at the foot of the dunes trail: a fin of sandstone the wind has cut a hole
+    /// clean through, standing on its own out on the sand with the sky showing under it.
+    ///
+    /// Every landmark before it was somewhere to shelter or somewhere to go in — a barn, a hollow,
+    /// a cave mouth, a big top with the ring lit behind the door. This one is nowhere to go. It is
+    /// the only thing standing between here and the horizon, and all it is good for is telling a
+    /// player which way is which, which is what a landmark in a desert is actually for.
+    private func drawRockArch(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 104
+        let tall: CGFloat = 78
+
+        // The shadow, thrown long and to one side to match every other shadow in the world.
+        var thrown = Path()
+        thrown.move(to: CGPoint(x: centre.x - wide * 0.44, y: centre.y + tall * 0.06))
+        thrown.addLine(to: CGPoint(x: centre.x + wide * 1.05, y: centre.y + tall * 0.34))
+        thrown.addLine(to: CGPoint(x: centre.x + wide * 1.05, y: centre.y + tall * 0.46))
+        thrown.addLine(to: CGPoint(x: centre.x - wide * 0.4, y: centre.y + tall * 0.22))
+        thrown.closeSubpath()
+        context.fill(thrown, with: .color(shade.opacity(colors.isNight ? 0.28 : 0.34)))
+
+        let stone = Color(red: 0.74, green: 0.48, blue: 0.32)
+        let sunlit = Color(red: 0.89, green: 0.66, blue: 0.44)
+
+        // The fin: two legs of different weights with a span thrown across the top of them, and
+        // the hole the wind made between. The legs are uneven because a symmetrical arch reads as
+        // something built, and nobody built this.
+        var rock = Path()
+        rock.move(to: CGPoint(x: centre.x - wide * 0.46, y: centre.y + tall * 0.1))
+        rock.addLine(to: CGPoint(x: centre.x - wide * 0.30, y: centre.y - tall * 0.52))
+        rock.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.30, y: centre.y - tall * 0.58),
+            control: CGPoint(x: centre.x, y: centre.y - tall * 0.96)
+        )
+        rock.addLine(to: CGPoint(x: centre.x + wide * 0.48, y: centre.y + tall * 0.1))
+        rock.addLine(to: CGPoint(x: centre.x + wide * 0.26, y: centre.y + tall * 0.1))
+        // The underside of the span, which is the hole.
+        rock.addQuadCurve(
+            to: CGPoint(x: centre.x - wide * 0.24, y: centre.y + tall * 0.1),
+            control: CGPoint(x: centre.x, y: centre.y - tall * 0.56)
+        )
+        rock.closeSubpath()
+        context.fill(
+            rock,
+            with: .linearGradient(
+                Gradient(colors: [sunlit, stone]),
+                startPoint: CGPoint(x: centre.x - wide * 0.5, y: centre.y - tall),
+                endPoint: CGPoint(x: centre.x + wide * 0.5, y: centre.y + tall * 0.1)
+            )
+        )
+        context.stroke(rock, with: .color(stone.opacity(0.9)), lineWidth: 2)
+
+        // Bedding planes, which is what says sandstone rather than boulder.
+        var beds = Path()
+        for level in [0.62, 0.34, 0.06] {
+            beds.move(to: CGPoint(x: centre.x - wide * 0.44, y: centre.y + tall * CGFloat(level) * 0.16))
+            beds.addLine(to: CGPoint(x: centre.x - wide * 0.31, y: centre.y + tall * CGFloat(level) * 0.16))
+            beds.move(to: CGPoint(x: centre.x + wide * 0.28, y: centre.y + tall * CGFloat(level) * 0.16))
+            beds.addLine(to: CGPoint(x: centre.x + wide * 0.46, y: centre.y + tall * CGFloat(level) * 0.16))
+        }
+        context.stroke(beds, with: .color(shade.opacity(0.3)), lineWidth: 1.4)
+
+        // A drift of sand piled against the windward leg, since that is what happens to anything
+        // that stands still out here for long enough.
+        var drift = Path()
+        drift.move(to: CGPoint(x: centre.x - wide * 0.62, y: centre.y + tall * 0.12))
+        drift.addQuadCurve(
+            to: CGPoint(x: centre.x - wide * 0.22, y: centre.y + tall * 0.12),
+            control: CGPoint(x: centre.x - wide * 0.42, y: centre.y - tall * 0.06)
+        )
+        drift.closeSubpath()
+        context.fill(drift, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.12 : 0.44)))
     }
 
     // MARK: - Small helpers
