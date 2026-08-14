@@ -520,8 +520,8 @@ of the way round and closes on itself, because he walks out of the side that was
 standing in the middle of a three by three of crowd, which is the one thing that makes squaring
 the board off possible at all: a rectangle laid over that crowd comes out as a ring with him in the
 hole of it, worth 17, where the same twenty-two pieces run out to the corners as an octagon hold 35
-tiles and the apple hanging over the ring. It charges the same 21 of the 24 stars below it that
-every boss charges and stops for the same briefing on the way in. Every pen is drawn out in
+tiles and the apple hanging over the ring, which is 40. It charges the same 21 of the 24 stars below
+it that every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
