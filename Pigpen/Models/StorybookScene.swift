@@ -1079,6 +1079,141 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk into the cove. Six stills, the way the dunes' opening and the
+    /// carnival's are six: the clam and the urchin have one apiece, and so does the tide — because
+    /// what the water has done to the ground is the whole world here, and a player who reads the
+    /// first board as one field with a river through it will spend the trail fencing ground the
+    /// pig cannot stand on.
+    static func coveOpening(start: Date = .now) -> Self {
+        Self(
+            key: "cove-opening",
+            title: "Tidepool Cove",
+            light: .tideDay,
+            shots: [
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🪨", "🦀", "🐚"],
+                    caption: "Tidepool Cove. The sea got here first.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🌊", "🐚"],
+                    caption: "Your pig went out on the flats at low water.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🪨",
+                    strewn: ["🌊", "🌊"],
+                    caption: "The tide has cut this field into islands.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🦪",
+                    strewn: ["🌊", "🪨"],
+                    caption: "Clams in the sand. Five each.",
+                    seconds: 2.6
+                ),
+                Shot(
+                    motif: "🪸",
+                    strewn: ["🦪", "🌊"],
+                    caption: "An urchin takes no fence, and hugs the coast.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌊", "🦪"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 3.1
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the cove's last field, the way `theScorpionPit` goes before the dunes'.
+    ///
+    /// Short, and it has one thing to say: the water is not a wall any more. Everything else about
+    /// the board follows from that — the ring he needs, the pool inside it, the coast he would be
+    /// over in three steps — and a player who has fenced eight worlds will work all of it out from
+    /// the one line, which is why the film does not spend a still on any of it.
+    static func theHermitPool(start: Date = .now) -> Self {
+        Self(
+            key: "hermit-pool-briefing",
+            title: "Hermit Pool",
+            light: .tideDay,
+            shots: [
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🪨"],
+                    caption: "Hermit Pool. Water will not hold a crab.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦀", "🌊"],
+                    caption: "Hold both. His pen must close all the way round.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦀", "🌊"],
+                    caption: "Every drop he can reach is a way out.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the cove holds. It says what became of the crab and — like the eight
+    /// send-offs before it — points on past this world to the next one waiting, which is water gone
+    /// hard where this one was water.
+    ///
+    /// The middle line is the cove's version of the dunes' careful one. Out here the clams a player
+    /// leaves behind are not out of reach because a wall would not cross the water — they are on the
+    /// far side of it, on ground the pig was never going to stand on, which is the world's whole
+    /// idea. So the send-off says the ones on her own shore, and means it.
+    static func coveHeld(start: Date = .now) -> Self {
+        Self(
+            key: "cove-held",
+            title: "Tidepool Cove held",
+            light: .tideDusk,
+            shots: [
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🪨"],
+                    caption: "The crab is in a ring he cannot swim out of.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🦪",
+                    strewn: ["🌊", "🪨", "🌊"],
+                    caption: "Every clam on her own shore, fenced and held.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌙",
+                    strewn: ["🌊", "🐚"],
+                    caption: "The tide turns and takes the flats back.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🌊", "❄️"],
+                    caption: "North of the cove, the water goes hard.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -1088,7 +1223,8 @@ extension StorybookScene {
             .starfallOpening(), .visitorCrater(), .starfallHeld(),
             .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
             .lanternOpening(), .theCentreRing(), .lanternHeld(),
-            .duneOpening(), .theScorpionPit(), .duneHeld()
+            .duneOpening(), .theScorpionPit(), .duneHeld(),
+            .coveOpening(), .theHermitPool(), .coveHeld()
         ]
     }
 }

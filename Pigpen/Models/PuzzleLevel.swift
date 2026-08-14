@@ -105,8 +105,8 @@ enum Question: String, Sendable, CaseIterable {
     /// for two whole walls. A boss, and nothing else.
     case berth
     /// One budget, two animals, and water that holds only one of them: a crab walks over it, so
-    /// his pen may not touch it anywhere and hers still wants nothing else. A boss, and nothing
-    /// else.
+    /// every drop he can reach has to be shut in with him and pays no ground, where hers still
+    /// wants nothing else. A boss, and nothing else.
     ///
     /// The one boss question that adds no refusal. Every rule above it is about the arrangement
     /// two pens end up in, and this one is about what a wall is — so a board that gets it wrong
@@ -259,8 +259,9 @@ struct PuzzleLevel: Identifiable, Sendable {
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
-    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M` or `S` for a
-    /// deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the ringmaster or a scorpion.
+    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M`, `S` or `C` for
+    /// a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the ringmaster, a scorpion
+    /// or a crab.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.
