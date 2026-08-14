@@ -88,8 +88,17 @@ private struct Paddock {
     func drawGrowth(in context: inout GraphicsContext) {
         drawDressing(in: &context)
         drawVerge(in: &context)
-        if colors.isNight {
-            drawFireflies(in: &context)
+        switch colors.cover {
+        case .sand:
+            // Nothing hatches out over a desert, and nothing needs to. The wind that built every
+            // crescent on these boards has not stopped, and what it carries is the sand itself,
+            // so the dunes get a drift of grains going by where every other world gets flies —
+            // by day as well as after dark, because the wind does not keep their hours.
+            drawBlownSand(in: &context)
+        default:
+            if colors.isNight {
+                drawFireflies(in: &context)
+            }
         }
     }
 
@@ -657,6 +666,67 @@ private struct Paddock {
                     with: .color(GamePalette.pen.opacity(0.75 * glow))
                 )
             }
+        }
+    }
+
+    /// What the dunes have instead of fireflies: sand on the move, low across the ground.
+    ///
+    /// Each streak is a shallow curve travelling left to right, and the whole drift is one wind,
+    /// so they all go the same way at nearly the same speed — the fireflies wander, this does
+    /// not. A streak fades in at one edge and out at the other rather than stopping, and it is
+    /// brightest at the middle of its crossing, so nothing ever pops into being in plain sight.
+    ///
+    /// It is the only moving thing on this ground, and it is the thing that made it: the barchans
+    /// on these boards face the way they face because something like this has been going past
+    /// them one way for a very long time.
+    ///
+    /// The ground under it is already drawn in pale curves lying the same way, so a grain has to
+    /// be told apart from a ripple it is passing over. What does that is the tail: each streak is
+    /// nothing at the back and brightest at the front, which is a thing a ripple combed into
+    /// standing sand never is, and it reads as travelling even in a still frame.
+    private func drawBlownSand(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 4_231)
+        for _ in 0..<20 {
+            let down = y(scatter.next(in: 0.04...1.0))
+            // A grain near the front of the shot goes by faster and shows up bigger than one
+            // further off, the same way the near bank of the title screen outruns the far one.
+            let nearness = Double(down / max(size.height, 1))
+            let start = scatter.next()
+            // How far into its own crossing this grain is, in 0...1, wrapping round for the next.
+            let along = (start + elapsed * (0.06 + 0.10 * nearness))
+                .truncatingRemainder(dividingBy: 1)
+            let head = CGPoint(
+                x: x(-0.1) + (size.width + x(0.2)) * CGFloat(along),
+                // Skipping rather than flying: it lifts off the sand and settles back onto it.
+                y: down + y(0.009) * CGFloat(sin(elapsed * 2.1 + start * 12))
+            )
+            let length = x(scatter.next(in: 0.02...0.055)) * CGFloat(0.7 + nearness)
+            let tail = CGPoint(x: head.x - length, y: down)
+
+            var streak = Path()
+            streak.move(to: tail)
+            streak.addQuadCurve(
+                to: head,
+                control: CGPoint(x: (tail.x + head.x) / 2, y: (tail.y + head.y) / 2 + y(0.004))
+            )
+            // Full at the middle of the crossing and nothing at either edge, so a grain fades
+            // in off one side and out off the other instead of appearing in plain sight.
+            let lit = (colors.isNight ? 0.42 : 0.7) * sin(along * .pi)
+            context.stroke(
+                streak,
+                with: .linearGradient(
+                    Gradient(colors: [
+                        GamePalette.cream.opacity(0),
+                        GamePalette.cream.opacity(lit)
+                    ]),
+                    startPoint: tail,
+                    endPoint: head
+                ),
+                style: StrokeStyle(
+                    lineWidth: max(0.6, y(0.0018) * CGFloat(0.6 + nearness)),
+                    lineCap: .round
+                )
+            )
         }
     }
 
