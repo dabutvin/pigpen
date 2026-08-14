@@ -197,6 +197,25 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
     if rule == "swim" and CRAB not in starts:
         raise SystemExit("--rule swim wants a crab on the board")
 
+    # The shore of every lagoon on the board: the mud tiles beside water that has no way out to
+    # the rim. On a cove board this is the only ground a crab can be held against, and wrapping it
+    # is the only thing a pen can be doing that is on its way to holding him — see `paddling`.
+    pond_shore = 0
+    if rule == "swim":
+        wet = everywhere & ~ground
+        left = wet
+        while left:
+            seed = left & -left
+            body = seed
+            while True:
+                wider = (body | spilling(body)) & wet
+                if wider == body:
+                    break
+                body = wider
+            left &= ~body
+            if not body & rim:
+                pond_shore |= spilling(body) & ground
+
     rays = []
     if rule == "ring":
         if "M" not in starts:
@@ -434,36 +453,52 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 keeping.add(pen)
         return keeping
 
-    def paddling(grown, cost):
+    def paddling(grown, cost, held):
         """Which pens are worth widening on a board where one animal swims.
 
         The hardest beam problem in the game, and for a reason none of the others have. On every
-        board above this one the cheapest pens are at least on their way to being answers. Here
-        the cheapest pens are the ones that lean on the sea, and leaning on the sea is exactly
-        what does not hold a crab — so a beam kept on price alone fills up with pens that were
-        never candidates, and the one shape that wins, a closed ring of fence with water in the
-        middle of it, is the most expensive thing on the board at every size.
+        board above this one the cheapest pens are at least on their way to being answers. Here the
+        cheapest pens are the ones that lean on the sea, and leaning on the sea is exactly what
+        does not hold a crab — so a beam kept on price alone fills up with pens that were never
+        candidates at all, and the one shape that wins is the most expensive thing on the board at
+        every size on the way there.
 
-        Nor can the leaking pens be dropped the way `spaced` drops its spoilt ones. A leak is not
-        permanent: the pen that lets him out through a channel today is the pen that fences the
-        far side of that channel twenty tiles from now. So the pens are sorted by how much water
-        he can still get to instead, in bands, with a share of the beam for each band and a share
-        held back for the pens that have shut him in altogether. A pen that has him down to one
-        pool is further along than a pen that has him in the open sea, whatever the two cost.
+        Nor is there any use sorting the pens by how much water he can still get to, which was the
+        first thing I tried. That number does not climb down towards an answer, it falls off a
+        cliff: until the ring closes he can reach the whole sea, and the moment it closes he can
+        reach one pool. There is no gradient in it to follow.
+
+        What does climb is how much of a **lagoon's shore the pen has taken in**. Holding him means
+        owning or walling every tile of dry ground he could climb out onto, so a pen with four of
+        those tiles is further along than a pen with one however much the cheaper one costs. So
+        that is the bucket, with a share of the beam apiece and the sorting done inside a bucket
+        rather than across the lot — the same trick `circling` plays for the carnival, and for the
+        same reason: a ring never wins a race against a blob on price.
+
+        That alone is still not enough, and the reason is worth setting down. A pen that has wrapped
+        the whole lagoon *and then run on east to the sea* is in the top bucket and is cheaper than
+        the one that stopped, because the sea gave it walls for nothing — and it does not hold him,
+        because he swims down the lagoon and out along the coast. The top bucket fills up with
+        pens that are past being answers. So whether he is actually shut in goes into the bucket
+        as well, which costs a walk per pen and is what makes this the slowest rule in the game.
+
+        The ordinary cheapest-and-thriftiest beam is kept as well as these, rather than instead of
+        them. The pig's pen on this board is an ordinary pen and wants finding the ordinary way;
+        it is only the crab's half that needs the help.
         """
         buckets = {}
         for pen in grown:
-            fenced = spilling(pen) & ground & ~pen
-            reached = paddled(fenced)
-            loose = (reached & ~ground).bit_count()
-            held = not (reached & rim) and not (reached & ground & ~pen)
-            buckets.setdefault((held, min(loose // 4, 10)), []).append(pen)
+            buckets.setdefault(
+                ((pen & pond_shore).bit_count(), swim_holds(pen)), []
+            ).append(pen)
 
         keeping = set()
-        share = max(beam // 6, 1)
+        share = max(beam // 8, 1)
         for penned in buckets.values():
             penned.sort(key=lambda pen: cost[pen])
             keeping.update(penned[:share])
+            penned.sort(key=lambda pen: cost[pen] - held[pen])
+            keeping.update(penned[: max(share // 2, 1)])
         return keeping
 
     def hanging(grown, cost):
@@ -580,7 +615,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         if rule == "berth":
             keeping = spaced(grown, cost)
         if rule == "swim":
-            keeping = paddling(grown, cost)
+            keeping.update(paddling(grown, cost, held))
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
