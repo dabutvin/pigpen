@@ -165,9 +165,10 @@ thicket floors at 23% and opens at 25%, so the second world starts around where 
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
 the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
 Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
-opens at 34%; Lantern Carnival floors and opens at 37%; and Sunbaked Dunes floors at 38% and opens
-at 39%, the highest floor any world has stood on. Bosses are held to each other rather than to the
-floor:
+opens at 34%; Lantern Carnival floors and opens at 37%; Sunbaked Dunes floors at 38% and opens at
+39%; and Tidepool Cove floors and opens at 40%, the highest floor any world has stood on — its
+gentlest field asks more than every field in the meadow but Sour Ground. Bosses are
+held to each other rather than to the floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
@@ -186,8 +187,8 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust or rippled sand — what the
-  windfall and the hazard look like on that ground,
+  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand or wet tide
+  flats — what the windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
 - **Each world plays its own films.** An opening the first time you walk into it, and a
@@ -199,8 +200,8 @@ carries the same game into every one of them.
   be going.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival** and **Sunbaked Dunes** to
-play, then Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
+City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival**, **Sunbaked Dunes** and
+**Tidepool Cove** to play, then Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
 silhouettes.
 Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
 films are already there.
@@ -378,9 +379,10 @@ way from Dust Shore to Starwell Ring.
 | 8 | Wide Reaches | 20 | 1 stardrop | 43 | 69 | 37% |
 | 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
 
-Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
-pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing
-at. Swept Flat is the second field in the game with no water on it at all, after Basalt Flats,
+Starwell Ring asks 56%, which was the widest gap any field in the game left until Urchin Ledge went
+two points past it out in the cove — six wells, twelve pieces, and nothing on the board to say where
+the wall goes but the shape the drops are pointing at. Swept Flat is the second field in the game
+with no water on it at all, after Basalt Flats,
 and eighteen pieces on eleven tiles of bare dust is the largest budget anything has ever been
 given with nothing to lean on.
 
@@ -439,11 +441,12 @@ out for.
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 41 | 63 | 34% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 22 | 45 | 51% |
 
-Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
-in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
-laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
-Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
-round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
+Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner in
+the game when it shipped — three worlds have taken a point off it apiece since, ending with Limpet
+Corner out in the cove. The river takes the whole roof of the cave and the whole east wall, and nine
+pieces laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold
+25. Foundry Corner asked it with the same nine and one free side rather than two, and could only
+reach round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
 dunes' Great Erg came in a tile above it.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
@@ -510,8 +513,9 @@ side, so two of the four walls are handed over: eleven pieces laid corner to cor
 the biggest pen in the world for the smallest budget in it, where the same eleven laid as a right
 angle hold 25 — because the pair of guy ropes is pegged inside every rectangle worth drawing, and
 the tidy pen has to swallow them and pay their ten. The Rigging carries seven pegs in three runs —
-more rope than any other field at the fair, and the only line of three in the game — and at 56% it
-ties Starwell Ring for the widest gap any field in the game leaves.
+more rope than any other field at the fair — and at 56% it ties Starwell Ring, the two of them
+sharing the widest gap any field in the game left until Urchin Ledge came in two points above them
+with a run of four.
 
 Its boss, The Centre Ring, adds the carnival's rule, and it is the first rule in the game about
 **where one pen stands in relation to another** rather than about which animal is in which:
@@ -577,7 +581,8 @@ budget in the world to draw the rest. The right-angled answer hangs a rectangle 
 pays for its own east wall for 20, where the same eleven pieces run out as a chevron — from the
 western rim, across the whole mouth of the crescent, back up to a point in the south — hold 41
 tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it is the
-hardest corner in the game. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
+hardest corner in the game until Limpet Corner asked it again on the flats for a point more. Melon
+Ground, at 48%, held the hardest detour in it until The Mussel Beds. And The Great Erg
 holds 59 tiles on the broadest board out here, which is the second biggest pen in the game: five
 behind Wide Reaches, one ahead of the Great Gallery.
 
@@ -599,10 +604,82 @@ stands on one tile, and the rest wall the open sand east of the notch as the sco
 which is 19. The same sixteen run out from the pig up the west of the flats, along under the great
 back in the north and down round the far side of the notch hold 45 tiles and the melon in the
 north-east, which is 50 — the biggest pen any boss holds, and at 62% the widest gap any board in the
-game leaves. The melon in the lane between the two pens is the board saying what the rule costs: the
+game left until Hermit Pool went a point past it. The melon in the lane between the two pens is the
+board saying what the rule costs: the
 pen that wins this field is the only pen in the game that walks past five points it can see and
 leaves them lying there. It charges the same 21 of the 24 stars below it that every boss charges, and
 stops for the same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+
+### Tidepool Cove
+
+The ninth world, and the first one the water is bigger than. Past the dunes the sand runs out into
+the sea, so the trail runs over wet tide flats under a low sky, the windfall is a **clam** lying open
+where the tide left it and the hazard a **sea urchin** — each worth exactly what its meadow twin was,
+a clam five tiles
+to shut in, an urchin five to shut in with and no fencing at all, since there is nowhere on an urchin
+to stand a post.
+
+What the water is here is **the sea**, which is the plainest thing water has been in nine worlds.
+The cove's own idea is not what the water is but where it has got to: every world under this one is
+**a field with water in it**, and the cove is **water with fields in it.** The tide has come up
+through the ground and cut it into lands that do not touch, so the first question a board asks is not
+what shape of pen but *which of this ground can she reach at all* — and the answer is always less
+than it looks. `CoveTests` pins four promises that make that a world rather than a coincidence: every
+board is two lands or more, no land is smaller than four tiles so the far shore is always big enough
+to want, the pig stands on one land and never on all of it, and every urchin lies at the waterline.
+
+Which is new in what it **withholds**. Eight worlds have handed the pig water for nothing and called
+it a wall; out here the same stroke gives her a coast and fences ground off behind it, so every field
+has land on it she can see and will never stand on. And the two halves of that pull opposite ways,
+which is what makes the boards: a squared-off pen has to fit inside one land, and the lands out here
+are cut on the diagonal as often as not, where a pen that follows a coast can have most of one. That
+is where the gap comes from, and it is why the cove floors at 40% — the highest floor in the game —
+without any of its boards having to be mean.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Cockle Bank | 14 | one channel on the slant, 2 clams | 21 | 35 | 40% |
+| 2 | Ebb Neck | 13 | three lands, 2 clams | 25 | 45 | 44% |
+| 3 | Barnacle Gut | 14 | a gut and an inland pool, 4 clams | 29 | 54 | 46% |
+| 4 | The Long Strand | 13 | open sea and an inlet, 2 clams | 21 | 40 | 47% |
+| 5 | The Mussel Beds | 15 | a strand and a channel, 4 clams | 33 | 65 | 49% |
+| 6 | Limpet Corner | 11 | a bent coast and the open sea, 2 clams | 19 | 40 | 52% |
+| 7 | Urchin Ledge | 12 | a coast either side, 2 clams, a run of five urchins | 18 | 43 | 58% |
+| 8 | Kelp Sound | 15 | the sound and a wedge, 5 clams | 38 | 66 | 42% |
+| 9 | Hermit Pool | 22 | the crab, the sound, an inland pool, 4 clams | 17 | 46 | 63% |
+
+Urchin Ledge asks 58%, which is the widest gap any field in the game leaves — two points past
+Starwell Ring and The Rigging. It has a coast on both sides of it and thirty-five tiles of waterline
+between them, more free wall than any other board in the cove, and a run of four urchins pegged
+exactly where the two coasts come closest, which is where the wall would have gone. Limpet Corner is
+the hardest corner in the game at 52%, The Mussel Beds the hardest detour at 49%, and The Long Strand
+the hardest shore at 47% — five points past The Long Slack out in the dunes.
+
+Its boss, Hermit Pool, adds the cove's rule, and it is the first rule in the game that is not a
+refusal at all. Every rule below it is something a board says no to once everything on it is already
+stuck; this one changes what stuck means. **A crab is at home in the water, so water will not hold
+him.** He is walked over the board rather than over the mud on it, so every drop he can reach is a
+road and the far side of it is the way out — and the sound across the south of this board runs rim to
+rim, which makes it eleven tiles of hole rather than a bay he could be corked in. Cork him against it
+and he is gone, and the board draws him going: the escape route runs out over the water, so the field
+says why without a word.
+
+He stands beside the other half of it. The tide left a pool of four tiles inland, and any wall that
+holds him has to go round the outside of it — dead ground the budget buys and the score does not
+count, which is the exact inverse of every other piece of water in the game. So the answer is one
+closed ring with every piece of it bought, and it is the only pen in the cove that leans on nothing:
+twenty-two pieces run as a lozenge hold the pig, the crab, his pool and 41 tiles of ground, with one
+clam inside and another under a post, which is 46. Twenty-two is the biggest budget in the game and
+only The Centre Ring has handed one out before — it has to be, because on this board a budget is all
+there is. Squaring the map off means something new here as well: a rectangle on the coast holds
+nothing that swims, so the cheapest legal pair is four pieces round the pig where she stands and
+eighteen laid *over* the pool, which is 17. At 63% it is the widest gap any board in the game leaves.
+
+The two clams across the sound are the cove's joke told for the last time and to the wrong animal.
+They are the only treats in the world that anything on the board can reach, and the thing that can
+reach them is the crab — so a player who sees him get there has already lost. It charges the same 21
+of the 24 stars below it that every boss charges, and stops for the same briefing on the way in.
+Every pen is drawn out in [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -1188,6 +1265,7 @@ Pigpen/
 │   ├── Gloamdeep.swift          # Gloamdeep Caverns: its nine levels and the trail down through them
 │   ├── Carnival.swift           # Lantern Carnival: its nine levels and the trail round them
 │   ├── Dunes.swift              # Sunbaked Dunes: its nine levels and the trail out over them
+│   ├── Cove.swift               # Tidepool Cove: its nine levels and the trail along them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name

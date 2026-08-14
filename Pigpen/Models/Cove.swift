@@ -302,10 +302,12 @@ extension PuzzleLevel {
     /// below it, the north-east corner and the eastern rim. 43 tiles, and nothing lying on any of
     /// them.
     ///
-    /// The tile behind the urchins comes with it. Two of those three pieces sit either side of a
-    /// single square of ledge with the sea above it, so it is walled on all four sides for no more
-    /// fence than the wall was spending anyway — one tile of ground on the far side of the one thing
-    /// on this board a wall may not touch.
+    /// What those three pieces are really doing is plugging a hole, and it is the one thing on the
+    /// board a player has to see. A wall may not stand on an urchin, but nothing stops the pig
+    /// *walking* over one — and this run climbs a column from the middle of the ledge to the northern
+    /// rim, so it is four urchins and a step off the map. The diagonal seals that ladder at its foot
+    /// and at its shoulder, and the tile it picks up west of the seal comes free with the sealing:
+    /// one square of ledge with the sea above it and a post either side.
     ///
     /// Two clams lie across the sound, on the strip the tide cut off in the south. The second board
     /// in the world to put five points where she cannot walk.
