@@ -189,6 +189,24 @@ carries the same game into every one of them.
   the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
+- **The board is dressed too.** Not just the country around it: the field in the middle of the
+  screen is painted in the world it stands in, so the mud, the water and the fencing are that
+  world's. Mud is mud to the rules wherever it is — a tile that takes a fence — and water is
+  still the wall a pen never pays for, but they are drawn as what a place like that would have.
+
+  | World | Ground | Water | Fencing |
+  |---|---|---|---|
+  | Mudlark Meadow | mud, stones turned up in it | open water, light breaking on it | pickets and rails |
+  | Thornwood Thicket | leaf mould, leaves where they fell | peat pools, rings on the still | woven hurdles |
+  | Emberpeak | ash, cinder still going in it | a steaming tarn | stakes burnt black |
+  | Cogsworth City | paving in courses of setts | a canal with a slick on it | wrought iron railings |
+  | Starfall Reaches | dust, pitted where things landed | a well a star went into, still lit | posts with a light strung between |
+  | Gloamdeep Caverns | flowstone in ribs | one river, running | pit props |
+  | Lantern Carnival | trodden ground under sawdust | **a crowd**, not water at all | painted poles and bunting |
+
+  The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
+  a pen exactly as a mere does, because the board cannot tell the difference between a river and
+  a queue for the waltzers.
 - **Each world plays its own films.** An opening the first time you walk into it, and a
   send-off once every pen is held — the send-off pointing on past the world, the way the
   meadow's points past the hills to a gate standing open somewhere else.
@@ -201,8 +219,8 @@ Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak*
 City**, **Starfall Reaches**, **Gloamdeep Caverns** and **Lantern Carnival** to play, then
 Sunbaked Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
 silhouettes.
-Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
-films are already there.
+Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
+the skin its board is painted in — since the map, the unlocking and the films are already there.
 
 ### Thornwood Thicket
 
@@ -1094,7 +1112,7 @@ Pigpen/
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
-│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its boss silhouette
+│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its board skin, its boss silhouette
 │   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
 │   ├── Emberpeak.swift          # Emberpeak: its nine levels and the trail up them
@@ -1126,6 +1144,7 @@ Pigpen/
 │   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
+│   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing
 │   ├── MeadowBackdrop.swift     # The meadow behind a board, and the timber bar over it
 │   ├── FenceRack.swift          # The budget as a rack of pieces, spent ones taken off it
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it

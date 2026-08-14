@@ -131,6 +131,7 @@ extension Universe {
             day: .day,
             dusk: .dusk,
             treats: WorldTheme.meadow.treats,
+            field: WorldTheme.meadow.field,
             boss: BossMark(glyph: boss, name: bossName),
             accent: accent,
             accentDeep: deep
