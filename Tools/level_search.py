@@ -53,9 +53,12 @@ WORTH = {"a": 5, "x": -5}
 SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
+# The cove's crab, and the one animal on any board that water does not stop. Every other rule in
+# the game is about which animal ends up in which pen; this one changes what a wall is.
+CRAB = "C"
 
 
 def parse(map_text):
@@ -191,6 +194,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
     # count of the ones it has crossed. Only the board that asks it needs them.
     if rule == "berth" and "S" not in starts:
         raise SystemExit("--rule berth wants a scorpion on the board")
+    if rule == "swim" and CRAB not in starts:
+        raise SystemExit("--rule swim wants a crab on the board")
 
     rays = []
     if rule == "ring":
@@ -291,6 +296,41 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             return False
         return encircled(mine)
 
+    def paddled(fenced):
+        """Everywhere the crab can get to, over a board where the water is not a wall.
+
+        Every other animal is stopped by two things, fencing and water. A crab is stopped by
+        one. So this is the ordinary walk with the water counted as ground — which is why it
+        takes the fencing rather than the pen: the fencing is the whole of what holds him.
+        """
+        reached = bit(starts[CRAB])
+        while True:
+            wider = (reached | spilling(reached)) & ~fenced
+            if wider == reached:
+                return reached
+            reached = wider
+
+    def swim_holds(pen):
+        """Whether a pen holds an animal that swims.
+
+        The ninth rule, and the only one that is not a refusal: everything else in the game
+        asks which animal ends up in which pen, and this asks what a wall is. The pig has had
+        the cove's whole coastline for free for eight fields; the crab walks over it, so every
+        wall the sea was giving her is worth nothing against him and the lands the tide cut
+        apart are one land to him.
+
+        Two things are asked. He must not reach the rim, since a tile on the edge of the map is
+        a way off it — and reaching it by water is reaching it. And every tile of mud he can get
+        to has to be inside the pen already, so that what the search scores is what the game
+        would hold: a crab who can paddle out to ground the pen never bought has not been held
+        by that pen at all.
+        """
+        fenced = spilling(pen) & ground & ~pen
+        reached = paddled(fenced)
+        if reached & rim:
+            return False
+        return not (reached & ground & ~pen)
+
     def berth_holds(pen):
         """Whether the pen gives the scorpion a wide berth: two pens, and no wall doing for both.
 
@@ -310,6 +350,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
+        if rule == "swim":
+            return swim_holds(pen)
         if rule == "berth":
             return berth_holds(pen)
         if rule == "ring":
@@ -390,6 +432,38 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             if len(keeping) < beam or share < beam // 8:
                 shares[mine.bit_count()] = share + 1
                 keeping.add(pen)
+        return keeping
+
+    def paddling(grown, cost):
+        """Which pens are worth widening on a board where one animal swims.
+
+        The hardest beam problem in the game, and for a reason none of the others have. On every
+        board above this one the cheapest pens are at least on their way to being answers. Here
+        the cheapest pens are the ones that lean on the sea, and leaning on the sea is exactly
+        what does not hold a crab — so a beam kept on price alone fills up with pens that were
+        never candidates, and the one shape that wins, a closed ring of fence with water in the
+        middle of it, is the most expensive thing on the board at every size.
+
+        Nor can the leaking pens be dropped the way `spaced` drops its spoilt ones. A leak is not
+        permanent: the pen that lets him out through a channel today is the pen that fences the
+        far side of that channel twenty tiles from now. So the pens are sorted by how much water
+        he can still get to instead, in bands, with a share of the beam for each band and a share
+        held back for the pens that have shut him in altogether. A pen that has him down to one
+        pool is further along than a pen that has him in the open sea, whatever the two cost.
+        """
+        buckets = {}
+        for pen in grown:
+            fenced = spilling(pen) & ground & ~pen
+            reached = paddled(fenced)
+            loose = (reached & ~ground).bit_count()
+            held = not (reached & rim) and not (reached & ground & ~pen)
+            buckets.setdefault((held, min(loose // 4, 10)), []).append(pen)
+
+        keeping = set()
+        share = max(beam // 6, 1)
+        for penned in buckets.values():
+            penned.sort(key=lambda pen: cost[pen])
+            keeping.update(penned[:share])
         return keeping
 
     def hanging(grown, cost):
@@ -505,6 +579,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             keeping = circling(grown, cost)
         if rule == "berth":
             keeping = spaced(grown, cost)
+        if rule == "swim":
+            keeping = paddling(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
@@ -564,6 +640,40 @@ def wall_between(mine, theirs, mud, pen):
     pen altogether with one run of ground on one side of it and the other run on the other.
     """
     return bool((fences_around(mine, mud) & fences_around(theirs, mud)) - set(pen))
+
+
+def paddles_out(start, fences, mud, rows, columns):
+    """Everywhere a crab can get to, as tiles, for squaring a cove board off.
+
+    The set-of-tiles twin of the search's own `paddled`. Walked over the whole board rather than
+    over the mud on it, because that is the rule: the water is not a wall to this animal, so a
+    board's channels and pools are as good as ground to him and only a fence piece stops him.
+    """
+    reached, queue = {start}, [start]
+    while queue:
+        row, column = queue.pop()
+        for down, across in NEIGHBOURS:
+            step = (row + down, column + across)
+            if not (0 <= step[0] < rows and 0 <= step[1] < columns):
+                continue
+            if step in reached or step in fences:
+                continue
+            reached.add(step)
+            queue.append(step)
+    return reached
+
+
+def crab_held(pen, fences, mud, rows, columns, start):
+    """Whether a block of ground holds the crab: no way to the rim, and no mud outside the pen.
+
+    Which is only ever true of a block laid *over* water rather than up against it — a rectangle
+    with a pool in the middle of it, the way the carnival's winning ring is a rectangle with the
+    ringmaster in the middle of it. A block on the coast holds nothing that swims.
+    """
+    reached = paddles_out(start, fences, mud, rows, columns)
+    if any(on_rim(tile, rows, columns) for tile in reached):
+        return False
+    return not ((reached & mud) - set(pen))
 
 
 def blocks_around(pennable, start, rows, columns):
@@ -685,6 +795,12 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
             if wall_between(mine, run_of_ground(pen, starts["S"]), mud, pen):
                 continue
         edge = fences_around(pen, mud)
+        # And the cove wants a block that holds an animal the water does not stop. A rectangle on
+        # the coast is the obvious answer to every other board in this world and no answer at all
+        # to this one: the only block that holds him is one laid over a pool rather than beside it.
+        if rule == "swim":
+            if not crab_held(pen, edge, mud, rows, columns, starts[CRAB]):
+                continue
         if len(edge) <= budget and can_be_walled(edge, treats, staked):
             best = max(best, (score(pen, treats), pen))
     return best
@@ -723,13 +839,14 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "swim"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
              "hold them in two pens with the same ground in each, hold the roost in one "
              "pen with the pig in another, hold the ringmaster in the middle of the "
-             "pig's own ring, or hold the two in pens that share no wall",
+             "pig's own ring, hold the two in pens that share no wall, or hold an animal "
+             "the water does not stop",
     )
     parser.add_argument(
         "--plan",
