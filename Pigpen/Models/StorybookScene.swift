@@ -667,6 +667,147 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The caverns' films
+
+extension StorybookScene {
+    /// Before the first walk down into Gloamdeep Caverns. It carries the two things the caverns
+    /// change — a crystal to shut in, a boulder to build around — and hands the game back on the
+    /// rule it has always been.
+    ///
+    /// It has six stills, the way the reaches' opening does, and the extra one is the water
+    /// again: down here every board has exactly one river on it and that river always comes in
+    /// off the edge of the cave. The reaches had to say their water was single drops because
+    /// drops read as decoration. The caverns have to say the opposite — that there is only ever
+    /// one of it — because a player who has just come off boards scattered with wells will look
+    /// for a second body of water on every board of this world and never find one.
+    static func gloamdeepOpening(start: Date = .now) -> Self {
+        Self(
+            key: "gloamdeep-opening",
+            title: "Gloamdeep Caverns",
+            light: .gloamDay,
+            shots: [
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["💎", "🪨", "💧"],
+                    caption: "Gloamdeep Caverns. Under it all, in the dark.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["💎", "🪨"],
+                    caption: "Your pig went down a hole in the dust.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "💧",
+                    strewn: ["💎", "🪨", "💧"],
+                    caption: "One river to a cave, and never two.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "💎",
+                    strewn: ["💧", "🪨"],
+                    caption: "Crystals in the flowstone. Five each.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🪨",
+                    strewn: ["💎", "💧"],
+                    caption: "Boulders take no fence. Build round them.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🕳️", "💎"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the caverns holds. It says what became of the roost, that the whole
+    /// of the Gloamdeep is fenced, and — like the five send-offs before it — points on past this
+    /// world to the next one waiting.
+    static func gloamdeepHeld(start: Date = .now) -> Self {
+        Self(
+            key: "gloamdeep-held",
+            title: "Gloamdeep Caverns held",
+            light: .gloamDusk,
+            shots: [
+                Shot(
+                    motif: "🦇",
+                    strewn: ["💎", "🪨"],
+                    caption: "The roost hangs together. The pig sleeps apart.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "💎",
+                    strewn: ["💧", "🦇", "💧"],
+                    caption: "Every crystal in the Gloamdeep, fenced and held.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["💎", "🪨"],
+                    caption: "Nothing comes up out of these caves now.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🤹",
+                    strewn: ["💎", "🎪", "💎"],
+                    caption: "Up ahead there is music, and far too many lights.",
+                    isCard: true,
+                    seconds: 3.4
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the caverns' last field, the way `visitorCrater` goes before the reaches'.
+    ///
+    /// Short, and for the same reason: a player standing at this signpost has fenced eight caves
+    /// and is owed the one thing this board does that no other board down here does. It is the
+    /// only rule in the game that asks two things at once *and* stands three animals on the
+    /// ground — the bat and its pup in one pen, the pig in another — so the middle still is the
+    /// story half and the card is the arithmetic.
+    ///
+    /// It is lit for the caverns' own light where the send-off is lit with it out, because a
+    /// briefing wants reading rather than admiring.
+    static func theRoost(start: Date = .now) -> Self {
+        Self(
+            key: "the-roost-briefing",
+            title: "The Roost",
+            light: .gloamDay,
+            shots: [
+                Shot(
+                    motif: "🦇",
+                    strewn: ["💎", "🪨", "💧"],
+                    caption: "The Roost. Two bats hanging over one river.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦇", "💎"],
+                    caption: "A pup hangs where its mother does. Not by a pig.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦇", "💧", "💎"],
+                    caption: "Twenty pieces. Both bats in one pen, pig in another.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
 extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
@@ -674,7 +815,8 @@ extension StorybookScene {
             .thornwoodOpening(), .boarHollow(), .thornwoodHeld(),
             .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld(),
             .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld(),
-            .starfallOpening(), .visitorCrater(), .starfallHeld()
+            .starfallOpening(), .visitorCrater(), .starfallHeld(),
+            .gloamdeepOpening(), .theRoost(), .gloamdeepHeld()
         ]
     }
 }

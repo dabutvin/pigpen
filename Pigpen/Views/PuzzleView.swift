@@ -372,6 +372,7 @@ struct PuzzleView: View {
         case .together(let animal): "The \(animal.name) will not share"
         case .apart(let animal): "The \(animal.name) is on its own"
         case .uneven(let animal): "The \(animal.name) has the smaller half"
+        case .split(let animal): "The \(animal.name) is hanging alone"
         case .shutIn(let animal): "The \(animal.name) is inside"
         }
     }
@@ -384,6 +385,8 @@ struct PuzzleView: View {
             "Both of them are held, but in pens of their own. The \(animal.name) goes where the pig goes."
         case .uneven(let animal):
             "Both of them are held, but one pen is bigger than the other. The \(animal.name) wants ground to match the pig's."
+        case .split(let animal):
+            "Everything is held, but the roost is in two pens. The \(animal.name) hangs where the other bat hangs."
         case .shutIn(let animal):
             "The pig is held, and so is the \(animal.name). Leave that one on the outside."
         }

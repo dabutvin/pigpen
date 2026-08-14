@@ -69,7 +69,7 @@ enum GamePalette {
         let cover: Cover
     }
 
-    /// The five kinds of ground the game draws. A world picks one and the backdrop and the
+    /// The six kinds of ground the game draws. A world picks one and the backdrop and the
     /// world map both follow it, which is the whole of what makes a thicket read as woods,
     /// a mountain as bare rock and a city as somewhere paved rather than as a meadow tinted
     /// a different colour.
@@ -80,6 +80,9 @@ enum GamePalette {
         case cobbles
         /// Star dust: fine grey ground with the sky in it, pitted where things have landed.
         case dust
+        /// Cave floor: wet flowstone in ribs and ledges, with crystal light coming off it and
+        /// stalactites hanging into the dark overhead.
+        case flowstone
     }
 }
 
@@ -292,5 +295,51 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.09, green: 0.08, blue: 0.18),
         isNight: true,
         cover: .dust
+    )
+
+    /// The sixth world, which has no daylight to offer at all: the sky is the roof of the cave,
+    /// and what stands in for the sun is the crystal light coming off the flowstone. This is the
+    /// world's *lit* palette all the same — a gallery deep enough to see across, where the far
+    /// wall catches enough light to tell there is one.
+    ///
+    /// The rock is a wet limestone grey with the green of standing water in it, which is the one
+    /// thing this world cannot borrow from the one above it. The reaches are violet dust lit from
+    /// the sky; a cave dimmed to the same violet would only read as the reaches after dark. So the
+    /// floor goes cold and mineral and the light on it goes to crystal, and the two worlds are
+    /// told apart by their colour rather than only by their brightness.
+    static let gloamDay = Self(
+        skyTop: Color(red: 0.08, green: 0.11, blue: 0.11),
+        skyHorizon: Color(red: 0.34, green: 0.42, blue: 0.42),
+        disc: Color(red: 0.74, green: 0.94, blue: 0.95),
+        discHalo: Color(red: 0.38, green: 0.74, blue: 0.76),
+        cloud: Color(red: 0.19, green: 0.25, blue: 0.25),
+        farHill: Color(red: 0.17, green: 0.23, blue: 0.23),
+        ground: Color(red: 0.41, green: 0.46, blue: 0.44),
+        foreground: Color(red: 0.30, green: 0.35, blue: 0.34),
+        blade: Color(red: 0.24, green: 0.29, blue: 0.29),
+        canopy: Color(red: 0.35, green: 0.41, blue: 0.40),
+        canopyShade: Color(red: 0.21, green: 0.26, blue: 0.26),
+        isNight: false,
+        cover: .flowstone
+    )
+
+    /// The caverns with the light out — which down here is only a matter of how far off the next
+    /// crystal is. The roof goes altogether, the walls go with it, and the crystals read brighter
+    /// for having nothing to compete with: the reaches took their light from the sky and this
+    /// world takes what it has out of the rock.
+    static let gloamDusk = Self(
+        skyTop: Color(red: 0.02, green: 0.03, blue: 0.03),
+        skyHorizon: Color(red: 0.07, green: 0.10, blue: 0.10),
+        disc: Color(red: 0.66, green: 0.96, blue: 0.98),
+        discHalo: Color(red: 0.26, green: 0.68, blue: 0.72),
+        cloud: Color(red: 0.05, green: 0.08, blue: 0.08),
+        farHill: Color(red: 0.04, green: 0.06, blue: 0.06),
+        ground: Color(red: 0.10, green: 0.14, blue: 0.13),
+        foreground: Color(red: 0.07, green: 0.10, blue: 0.10),
+        blade: Color(red: 0.05, green: 0.08, blue: 0.08),
+        canopy: Color(red: 0.09, green: 0.13, blue: 0.12),
+        canopyShade: Color(red: 0.05, green: 0.08, blue: 0.08),
+        isNight: true,
+        cover: .flowstone
     )
 }

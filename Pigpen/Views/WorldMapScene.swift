@@ -6,7 +6,8 @@ import SwiftUI
 /// way, on its own ground — denser trees, leaf litter, ferns and a hollow stump in a
 /// thicket; ash, loose rock, scorched pines and a cairn on a mountain; paving, lamp posts,
 /// crates and a clocktower in a city; dust, craters, splinters of star-stone and the first
-/// crater of all out in the reaches.
+/// crater of all out in the reaches; sinter terraces, flowstone columns, crystals and the
+/// mouth the pig came in by, down in the caverns.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
 /// path or on a signpost however wide the screen is. It is drawn once rather than on a
@@ -47,6 +48,7 @@ private struct Meadow {
         case .scree: drawCairn(in: &context)
         case .cobbles: drawClocktower(in: &context)
         case .dust: drawFirstCrater(in: &context)
+        case .flowstone: drawCaveMouth(in: &context)
         }
     }
 
@@ -61,6 +63,43 @@ private struct Meadow {
         case .scree: drawAshDrifts(in: &context)
         case .cobbles: drawPaving(in: &context)
         case .dust: drawPits(in: &context)
+        case .flowstone: drawSinterTerraces(in: &context)
+        }
+    }
+
+    /// The floor of a cave: terraces of sinter, poured rather than laid, each with a lip that
+    /// catches the light and a step under it that does not. Where the meadow's bands are mown
+    /// and the city's courses are laid, these are what a few thousand years of water running
+    /// over the same rock leaves behind — so they wander, and they are never the same depth
+    /// twice, and there is standing water lying in the dips between them.
+    private func drawSinterTerraces(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 5_231)
+        var top = horizon
+        while top < size.height {
+            let depth = CGFloat(scatter.next(in: 58...124))
+            let terrace = band(from: top, to: top + depth, wobble: scatter.next())
+            context.fill(terrace, with: .color(.black.opacity(scatter.next(in: 0.06...0.16))))
+            context.stroke(
+                terrace,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.05 : 0.14)),
+                lineWidth: 2
+            )
+            top += depth
+        }
+
+        for _ in 0..<14 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 40...104))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.12,
+                    width: spread, height: spread * 0.24
+                )),
+                with: .color(GamePalette.water.opacity(colors.isNight ? 0.24 : 0.34))
+            )
         }
     }
 
@@ -253,6 +292,8 @@ private struct Meadow {
         case .scree: 2
         case .cobbles: 3
         case .dust: 1
+        // Nothing is up there but rock, so there is nothing for a cloud to be.
+        case .flowstone: 0
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -353,6 +394,8 @@ private struct Meadow {
             drawSkyline(in: &context)
         } else if colors.cover == .dust {
             drawFarRim(in: &context)
+        } else if colors.cover == .flowstone {
+            drawCaveRoof(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -514,6 +557,8 @@ private struct Meadow {
         case crate
         case crater
         case shard
+        case column
+        case crystal
     }
 
     private struct Place {
@@ -594,6 +639,15 @@ private struct Meadow {
             case ..<0.76: .rock
             default: .shard
             }
+        case .flowstone:
+            // Nothing grows down here and nobody has built anything either: what stands on the
+            // floor is what the roof has been dripping onto it, and what light there is comes
+            // out of the rock rather than down onto it.
+            switch roll {
+            case ..<0.42: .column
+            case ..<0.72: .rock
+            default: .crystal
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -618,6 +672,8 @@ private struct Meadow {
         case .crate: drawCrate(in: &context, at: place.at, scale: place.size)
         case .crater: drawCrater(in: &context, at: place.at, scale: place.size)
         case .shard: drawShard(in: &context, at: place.at, scale: place.size)
+        case .column: drawColumn(in: &context, at: place.at, scale: place.size)
+        case .crystal: drawCrystalCluster(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -997,6 +1053,34 @@ private struct Meadow {
         )
     }
 
+    /// What the caverns have where every other world has a horizon: the roof, come down close
+    /// enough to see, with stalactites hanging off it. A thicket closes the sky with a canopy
+    /// and a city with rooftops; here there is no sky to close, so the top of the world is the
+    /// underside of the rock and the far end of the gallery is simply where the light stops.
+    private func drawCaveRoof(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_143)
+        let base = horizon + 26
+
+        var roof = Path()
+        roof.move(to: CGPoint(x: -10, y: base))
+        var across: CGFloat = -10
+        while across < size.width + 20 {
+            let step = CGFloat(scatter.next(in: 26...58))
+            // A stalactite every so often, hanging a good deal further down than the rock
+            // between them, so the roof reads as teeth rather than as a hedge.
+            let drop = scatter.next() < 0.42
+                ? CGFloat(scatter.next(in: 26...64))
+                : CGFloat(scatter.next(in: 4...14))
+            roof.addLine(to: CGPoint(x: across + step * 0.5, y: base + drop))
+            roof.addLine(to: CGPoint(x: across + step, y: base + CGFloat(scatter.next(in: 0...6))))
+            across += step
+        }
+        roof.addLine(to: CGPoint(x: across, y: base - 40))
+        roof.addLine(to: CGPoint(x: -10, y: base - 40))
+        roof.closeSubpath()
+        context.fill(roof, with: .color(colors.canopyShade))
+    }
+
     /// A splinter of whatever came down, standing up out of the dust where it landed. It is
     /// the one thing on this trail that is taller than it is wide, so it does for the reaches
     /// what a tree does everywhere else.
@@ -1023,10 +1107,89 @@ private struct Meadow {
         )
     }
 
+    /// A column of flowstone, grown up off the floor to meet what was coming down off the roof
+    /// and joined to it somewhere in the middle. It is what the caverns have instead of a tree,
+    /// and it is the only thing on this trail that reaches all the way up out of the frame.
+    private func drawColumn(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let height = 30 * scale
+        shadow(in: &context, at: foot, width: height * 0.56)
+
+        // The waist is narrower than either end: a column is two cones that met.
+        var stone = Path()
+        stone.move(to: CGPoint(x: foot.x - height * 0.26, y: foot.y))
+        stone.addQuadCurve(
+            to: CGPoint(x: foot.x - height * 0.09, y: foot.y - height),
+            control: CGPoint(x: foot.x - height * 0.08, y: foot.y - height * 0.52)
+        )
+        stone.addLine(to: CGPoint(x: foot.x + height * 0.11, y: foot.y - height))
+        stone.addQuadCurve(
+            to: CGPoint(x: foot.x + height * 0.26, y: foot.y),
+            control: CGPoint(x: foot.x + height * 0.10, y: foot.y - height * 0.52)
+        )
+        stone.closeSubpath()
+        context.fill(stone, with: .color(colors.canopy))
+
+        // The lit western side, where the light in this game always is.
+        var lit = Path()
+        lit.move(to: CGPoint(x: foot.x - height * 0.26, y: foot.y))
+        lit.addQuadCurve(
+            to: CGPoint(x: foot.x - height * 0.09, y: foot.y - height),
+            control: CGPoint(x: foot.x - height * 0.08, y: foot.y - height * 0.52)
+        )
+        lit.addLine(to: CGPoint(x: foot.x - height * 0.02, y: foot.y - height))
+        lit.addLine(to: CGPoint(x: foot.x - height * 0.09, y: foot.y))
+        lit.closeSubpath()
+        context.fill(lit, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.10 : 0.22)))
+    }
+
+    /// A cluster of crystals growing out of the floor with their own light in them — the same
+    /// thing the boards of this world are scattered with, and what the caverns have instead of
+    /// wildflowers. It is the only light source on any trail in the game that is on the ground
+    /// rather than in the sky.
+    private func drawCrystalCluster(
+        in context: inout GraphicsContext,
+        at foot: CGPoint,
+        scale: CGFloat
+    ) {
+        let height = 20 * scale
+
+        context.fill(
+            circle(at: CGPoint(x: foot.x, y: foot.y - height * 0.5), radius: height * 1.6),
+            with: .radialGradient(
+                Gradient(colors: [
+                    colors.disc.opacity(colors.isNight ? 0.30 : 0.18),
+                    colors.disc.opacity(0)
+                ]),
+                center: CGPoint(x: foot.x, y: foot.y - height * 0.5),
+                startRadius: 0,
+                endRadius: height * 1.6
+            )
+        )
+
+        for lean in [-0.5, 0.05, 0.55] {
+            let tall = height * (lean == 0.05 ? 1.0 : 0.6)
+            let wide = height * (lean == 0.05 ? 0.24 : 0.17)
+            let tip = CGPoint(x: foot.x + height * CGFloat(lean) * 0.6, y: foot.y - tall)
+            var shard = Path()
+            shard.move(to: tip)
+            shard.addLine(to: CGPoint(x: tip.x + wide, y: foot.y - wide * 1.4))
+            shard.addLine(to: CGPoint(x: tip.x + wide * 0.6, y: foot.y))
+            shard.addLine(to: CGPoint(x: tip.x - wide * 0.6, y: foot.y))
+            shard.addLine(to: CGPoint(x: tip.x - wide, y: foot.y - wide * 1.4))
+            shard.closeSubpath()
+            context.fill(shard, with: .color(colors.disc.opacity(colors.isNight ? 0.9 : 0.75)))
+            context.stroke(
+                shard,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.5 : 0.35)),
+                lineWidth: 1.2
+            )
+        }
+    }
+
     /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
     /// stump in the thicket, a cairn on the mountain, a clocktower in the city, the first
-    /// crater out in the reaches — down below the first signpost, on whichever side of the
-    /// world the trail does not start on.
+    /// crater out in the reaches, the mouth of the cave down in the caverns — below the first
+    /// signpost, on whichever side of the world the trail does not start on.
     private var landmarkStand: CGPoint {
         CGPoint(
             x: trail.point(of: 0).x < size.width / 2 ? size.width - 74 : 74,
@@ -1314,6 +1477,75 @@ private struct Meadow {
             points,
             with: .color(GamePalette.cream.opacity(0.95)),
             style: StrokeStyle(lineWidth: 2.6, lineCap: .round)
+        )
+    }
+
+    /// The way in, down at the foot of the caverns: the mouth of the cave with daylight still
+    /// coming through it. Every other world's landmark is something the pig arrived to find —
+    /// a barn, a stump, a cairn, a clocktower, the crater that started the reaches. This one is
+    /// the hole it came down, which is the only daylight anywhere in the world and is behind
+    /// the pig from the first field on.
+    private func drawCaveMouth(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 86
+        let tall: CGFloat = 76
+
+        // The rock round it, thrown up in a heap the way a sink hole leaves it.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.62, y: centre.y - tall * 0.2,
+                width: wide * 1.24, height: tall * 0.44
+            )),
+            with: .color(colors.canopyShade)
+        )
+
+        // The arch itself: a mouth taller than it is wide, cut into the far wall.
+        var arch = Path()
+        arch.move(to: CGPoint(x: centre.x - wide * 0.42, y: centre.y + tall * 0.06))
+        arch.addLine(to: CGPoint(x: centre.x - wide * 0.36, y: centre.y - tall * 0.3))
+        arch.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.36, y: centre.y - tall * 0.3),
+            control: CGPoint(x: centre.x, y: centre.y - tall * 0.86)
+        )
+        arch.addLine(to: CGPoint(x: centre.x + wide * 0.42, y: centre.y + tall * 0.06))
+        arch.closeSubpath()
+
+        // The light coming down it, brightest at the top where the outside is.
+        context.fill(
+            arch,
+            with: .linearGradient(
+                Gradient(colors: [
+                    GamePalette.cream.opacity(colors.isNight ? 0.34 : 0.72),
+                    colors.disc.opacity(colors.isNight ? 0.18 : 0.34),
+                    .black.opacity(0.5)
+                ]),
+                startPoint: CGPoint(x: centre.x, y: centre.y - tall * 0.8),
+                endPoint: CGPoint(x: centre.x, y: centre.y + tall * 0.1)
+            )
+        )
+        context.stroke(
+            arch,
+            with: .color(GamePalette.stone.opacity(colors.isNight ? 0.5 : 0.8)),
+            style: StrokeStyle(lineWidth: 5, lineCap: .round)
+        )
+
+        // And a shaft of it lying across the floor, pointing the way the pig came.
+        var shaft = Path()
+        shaft.move(to: CGPoint(x: centre.x - wide * 0.3, y: centre.y + tall * 0.06))
+        shaft.addLine(to: CGPoint(x: centre.x + wide * 0.3, y: centre.y + tall * 0.06))
+        shaft.addLine(to: CGPoint(x: centre.x + wide * 0.52, y: centre.y + tall * 0.4))
+        shaft.addLine(to: CGPoint(x: centre.x - wide * 0.52, y: centre.y + tall * 0.4))
+        shaft.closeSubpath()
+        context.fill(
+            shaft,
+            with: .linearGradient(
+                Gradient(colors: [
+                    GamePalette.cream.opacity(colors.isNight ? 0.16 : 0.3),
+                    GamePalette.cream.opacity(0)
+                ]),
+                startPoint: CGPoint(x: centre.x, y: centre.y + tall * 0.06),
+                endPoint: CGPoint(x: centre.x, y: centre.y + tall * 0.4)
+            )
         )
     }
 
