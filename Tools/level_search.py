@@ -5,8 +5,9 @@
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
-rat's, `V` a visitor's, `T` a bat's and `U` its pup's) and a budget and it prints the best
-pen, an example of it, and star thresholds in the proportions the shipped levels use.
+rat's, `V` a visitor's, `T` a bat's, `U` its pup's and `M` the ringmaster's) and a budget
+and it prints the best pen, an example of it, and star thresholds in the proportions the
+shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -22,11 +23,11 @@ around its edge. Water costs nothing, which is the whole game. A skull is staked
 the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
 skull has to be shut in and paid for, or the wall has to go round it.
 
-A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, or a bat and
-its pup — is held by ground in two pieces just as happily as by one, since what has to hold
-is each animal rather than the pen: the search grows out from every animal at once and the
-ground it ends up with is connected to one or another of them, so a wall shared between two
-enclosures is paid for once, like any other.
+A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
+pup, or a ringmaster — is held by ground in two pieces just as happily as by one, since what
+has to hold is each animal rather than the pen: the search grows out from every animal at
+once and the ground it ends up with is connected to one or another of them, so a wall shared
+between two enclosures is paid for once, like any other.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -51,7 +52,7 @@ WORTH = {"a": 5, "x": -5}
 SKULL = "x"
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
 
@@ -161,6 +162,45 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 mask |= bit(neighbour)
         reach[bit(tile)] = mask
 
+    # The whole board rather than the ground on it, and the way off it. A pen shuts an animal
+    # in with fencing and water together; whether one animal is standing *inside* another's pen
+    # is a question about the board, so it is asked over every tile there is, wet or dry.
+    everywhere = (1 << (rows * columns)) - 1
+    first_column, last_column, rim = 0, 0, 0
+    for row in range(rows):
+        for column in range(columns):
+            tile = 1 << (row * columns + column)
+            if column == 0:
+                first_column |= tile
+            if column == columns - 1:
+                last_column |= tile
+            if row in (0, rows - 1) or column in (0, columns - 1):
+                rim |= tile
+
+    def spilling(mask):
+        """The same tiles and every tile touching them, kept from wrapping round the edge."""
+        return (
+            ((mask & ~last_column) << 1)
+            | ((mask & ~first_column) >> 1)
+            | (mask << columns)
+            | (mask >> columns)
+        ) & everywhere
+
+    # The eight ways out of the ringmaster, as masks, so how far a pen has got round him is a
+    # count of the ones it has crossed. Only the board that asks it needs them.
+    rays = []
+    if rule == "ring":
+        if "M" not in starts:
+            raise SystemExit("--rule ring wants a ringmaster on the board")
+        for down, across in ((-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)):
+            mask, row, column = 0, *starts["M"]
+            while True:
+                row, column = row + down, column + across
+                if not (0 <= row < rows and 0 <= column < columns):
+                    break
+                mask |= 1 << (row * columns + column)
+            rays.append(mask)
+
     for animal, start in starts.items():
         if not bit(start) & pennable:
             raise SystemExit(f"{animal!r} starts on the rim of the map, where no pen can hold it")
@@ -218,8 +258,39 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             return False
         return bool(run_of(starts["T"], pen) & bit(starts["U"]))
 
+    def encircled(mine):
+        """Whether every way off the board from the ringmaster crosses the pig's ground.
+
+        Walked over the whole board rather than over the mud, so the crowd is no help: a
+        ringmaster standing on an island in the middle of a pond would otherwise be surrounded
+        before a single piece was laid, and the one thing this rule asks is that the pig go
+        round him. Water is a wall to an animal and no wall at all to this question.
+        """
+        reached = bit(starts["M"])
+        while True:
+            wider = (reached | spilling(reached)) & ~mine
+            if wider & rim:
+                return False
+            if wider == reached:
+                return True
+            reached = wider
+
+    def ring_holds(pen):
+        """Whether the pen leaves the ringmaster in the middle of the pig's own ground.
+
+        Two things, as with the roost, and again they pull opposite ways: the pig may not be
+        standing in with him, and the pig's ground has to close all the way round him. The pen
+        that holds the pair together is refused, and so is the tidy pair of pens side by side.
+        """
+        mine = run_of(starts["P"], pen)
+        if mine & bit(starts["M"]):
+            return False
+        return encircled(mine)
+
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
+        if rule == "ring":
+            return ring_holds(pen)
         if rule == "roost":
             return roost_holds(pen)
         if rule not in ("apart", "together", "even"):
@@ -293,6 +364,45 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 gathered += 1
         return keeping
 
+    def circling(grown, cost):
+        """Which pens are worth widening on a board that wants one pen inside another.
+
+        A pen the pig can already walk out of into the ringmaster will never come apart again,
+        so those go. The rest are a harder problem than any rule before this one: the answer is
+        a pen with a hole in it, and a pen with a hole in it costs more wall than the same
+        ground in a blob every step of the way there, so a beam kept by cost is a beam of
+        blobs. Nor can the pens that already close be held back on their own the way the roost's
+        are — a pen only encircles on the very last tile of the loop, and by then the search
+        has thrown away everything that was on its way to being one.
+
+        So the pens are sorted into how far round they have got: the eight compass rays out of
+        the ringmaster, counted by how many of them the pig's ground has crossed. A blob beside
+        him crosses two or three, a horseshoe round him crosses seven, and the pen that wins
+        crosses all eight and has shut. Each of those is a bucket with its own share of the
+        beam, and the sorting by cost happens inside a bucket rather than across the lot — which
+        is the whole trick, since a horseshoe never wins a race against a blob on price.
+
+        The pig's ground is taken as the pen less the ringmaster's own run rather than by
+        walking out from the pig. A pen only ever grows from the tiles the animals started on,
+        so it is in one piece or two and never three, and his piece is the small one.
+        """
+        buckets = {}
+        for pen in grown:
+            theirs = run_of(starts["M"], pen)
+            if theirs & bit(starts["P"]):
+                continue
+            mine = pen & ~theirs
+            crossed = sum(1 for ray in rays if mine & ray)
+            shut = crossed == 8 and encircled(mine)
+            buckets.setdefault((crossed, shut), []).append(pen)
+
+        keeping = set()
+        share = max(beam // 8, 1)
+        for penned in buckets.values():
+            penned.sort(key=lambda pen: cost[pen])
+            keeping.update(penned[:share])
+        return keeping
+
     alone, touching = 0, 0
     for start in seeds:
         alone |= bit(start)
@@ -338,6 +448,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             keeping = divided(grown, cost)
         if rule == "roost":
             keeping = hanging(grown, cost)
+        if rule == "ring":
+            keeping = circling(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
@@ -368,6 +480,26 @@ def run_of_ground(tiles, start):
                 reached.add(neighbour)
                 queue.append(neighbour)
     return reached
+
+
+def shut_inside(tile, pen, rows, columns):
+    """Whether every way off the board from `tile` crosses `pen`.
+
+    The set-of-tiles twin of the search's own `encircled`, for squaring a carnival board off.
+    Walked over the whole board rather than over the mud, so a crowd standing round the
+    ringmaster is no help to him: the ring has to be the pig's own ground.
+    """
+    reached, queue = {tile}, [tile]
+    while queue:
+        row, column = queue.pop()
+        for down, across in NEIGHBOURS:
+            step = (row + down, column + across)
+            if not (0 <= step[0] < rows and 0 <= step[1] < columns):
+                return False
+            if step not in reached and step not in pen:
+                reached.add(step)
+                queue.append(step)
+    return True
 
 
 def blocks_around(pennable, start, rows, columns):
@@ -418,6 +550,15 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # One pen holds the pair, so squaring the map off is one rectangle rather than two:
         # the block a player picks is the one with both animals standing in it.
         each = [blocks_around(pennable, starts["P"], rows, columns)]
+    elif rule == "ring":
+        # One block round the pig and one round the ringmaster, the same as any two-animal
+        # board. What squaring off cannot do here is make a ring out of nothing: the only
+        # rectangle that comes out with a hole in it is one laid over a crowd, so the boards
+        # that have an obvious answer at all are the ones with the crowd standing round him.
+        each = [
+            blocks_around(pennable, starts["P"], rows, columns),
+            blocks_around(pennable, starts["M"], rows, columns),
+        ]
     elif rule == "roost":
         # Two blocks rather than three: one round the pig, and one that has to have both the
         # bat and its pup standing in it, since the roost is one pen however many bats it is.
@@ -462,6 +603,14 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
                 continue
             if starts["U"] not in run_of_ground(pen, starts["T"]):
                 continue
+        # And the carnival wants one block standing inside the other: the pig clear of the
+        # ringmaster, and his ground with no way off the board that does not cross hers.
+        if rule == "ring":
+            mine = run_of_ground(pen, starts["P"])
+            if starts["M"] in mine:
+                continue
+            if not shut_inside(starts["M"], mine, rows, columns):
+                continue
         edge = fences_around(pen, mud)
         if len(edge) <= budget and can_be_walled(edge, treats, staked):
             best = max(best, (score(pen, treats), pen))
@@ -501,12 +650,13 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
-             "hold them in two pens with the same ground in each, or hold the roost in one "
-             "pen with the pig in another",
+             "hold them in two pens with the same ground in each, hold the roost in one "
+             "pen with the pig in another, or hold the ringmaster in the middle of the "
+             "pig's own ring",
     )
     parser.add_argument(
         "--plan",
