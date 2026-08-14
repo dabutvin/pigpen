@@ -202,4 +202,28 @@ extension WorldTheme {
         accent: Color(red: 0.53, green: 0.47, blue: 0.63),
         accentDeep: Color(red: 0.24, green: 0.20, blue: 0.34)
     )
+
+    /// Lantern Carnival, the seventh world: up out of the dark and into a field full of lights,
+    /// where the ground is trodden sawdust and the water is a crowd. The windfall is a toffee
+    /// apple dropped off its stick and the hazard a guy rope pegged down to hold a tent up —
+    /// each worth exactly what its meadow twin was, a toffee apple five tiles to shut in, a guy
+    /// rope five to shut in with and no fencing at all, since a peg is already somebody else's
+    /// post and there is no room beside it for one of yours.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for six worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let lanternCarnival = WorldTheme(
+        id: "lantern-carnival",
+        name: "Lantern Carnival",
+        blurb: "Lights, crowds and a pig on the loose. Toffee apples in the sawdust, guy ropes across it.",
+        day: .lanternDay,
+        dusk: .lanternDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🍭", bonusScale: 0.58, bonusName: "toffee apple",
+            hazardGlyph: "🪢", hazardScale: 0.58, hazardName: "guy rope"
+        ),
+        boss: BossMark(glyph: "🤹", name: "the ringmaster"),
+        accent: Color(red: 0.93, green: 0.43, blue: 0.67),
+        accentDeep: Color(red: 0.55, green: 0.20, blue: 0.41)
+    )
 }

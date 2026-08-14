@@ -7,7 +7,8 @@ import SwiftUI
 /// thicket; ash, loose rock, scorched pines and a cairn on a mountain; paving, lamp posts,
 /// crates and a clocktower in a city; dust, craters, splinters of star-stone and the first
 /// crater of all out in the reaches; sinter terraces, flowstone columns, crystals and the
-/// mouth the pig came in by, down in the caverns.
+/// mouth the pig came in by, down in the caverns; trodden sawdust, booths, lantern poles and
+/// the big top itself at the carnival.
 ///
 /// Everything is placed from the shape of the trail itself, so no tree ever lands on the
 /// path or on a signpost however wide the screen is. It is drawn once rather than on a
@@ -49,6 +50,7 @@ private struct Meadow {
         case .cobbles: drawClocktower(in: &context)
         case .dust: drawFirstCrater(in: &context)
         case .flowstone: drawCaveMouth(in: &context)
+        case .sawdust: drawBigTop(in: &context)
         }
     }
 
@@ -64,6 +66,52 @@ private struct Meadow {
         case .cobbles: drawPaving(in: &context)
         case .dust: drawPits(in: &context)
         case .flowstone: drawSinterTerraces(in: &context)
+        case .sawdust: drawTroddenGround(in: &context)
+        }
+    }
+
+    /// The floor of a fairground: grass that a week of people have walked into mud, with
+    /// sawdust thrown down over the worst of it and rings of it trodden out where a crowd has
+    /// stood round something. Where the meadow's bands were mown and the city's courses were
+    /// laid, nobody laid these out at all — they are the marks of the people who were here.
+    private func drawTroddenGround(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_101)
+
+        for _ in 0..<7 {
+            let down = horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            var walkway = Path()
+            walkway.move(to: CGPoint(x: -20, y: down))
+            walkway.addCurve(
+                to: CGPoint(x: size.width + 20, y: down + CGFloat(scatter.next(in: -70...70))),
+                control1: CGPoint(x: size.width * 0.32, y: down + CGFloat(scatter.next(in: -50...50))),
+                control2: CGPoint(x: size.width * 0.68, y: down + CGFloat(scatter.next(in: -50...50)))
+            )
+            context.stroke(
+                walkway,
+                with: .color(.black.opacity(colors.isNight ? 0.16 : 0.10)),
+                style: StrokeStyle(lineWidth: CGFloat(scatter.next(in: 18...42)), lineCap: .round)
+            )
+        }
+
+        // Rings worn in the grass where a crowd has stood round an attraction, which is the
+        // shape the whole world is about.
+        for _ in 0..<9 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 46...118))
+            context.stroke(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.19,
+                    width: spread, height: spread * 0.38
+                )),
+                with: .color(
+                    Color(red: 0.86, green: 0.74, blue: 0.52)
+                        .opacity(colors.isNight ? 0.12 : 0.26)
+                ),
+                lineWidth: CGFloat(scatter.next(in: 5...12))
+            )
         }
     }
 
@@ -294,6 +342,7 @@ private struct Meadow {
         case .dust: 1
         // Nothing is up there but rock, so there is nothing for a cloud to be.
         case .flowstone: 0
+        case .sawdust: 2
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -396,6 +445,8 @@ private struct Meadow {
             drawFarRim(in: &context)
         } else if colors.cover == .flowstone {
             drawCaveRoof(in: &context)
+        } else if colors.cover == .sawdust {
+            drawFairSkyline(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -524,6 +575,123 @@ private struct Meadow {
         }
     }
 
+    /// The rest of the fair, out along the horizon: tent tops, a big wheel turned side on, and
+    /// a string of bunting slung over the lot. Where the city closes the sky with rooftops and
+    /// the caverns close it with rock, this closes it with more of itself — so a player looking
+    /// up from the trail sees that the nine fields they are walking are one corner of something
+    /// much larger, which is what a fairground is.
+    private func drawFairSkyline(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 7_331)
+        let base = horizon + 24
+
+        // The big wheel, stood off to one side so the tents can run under it.
+        let hub = CGPoint(x: size.width * 0.72, y: base - 54)
+        let spokes = 12
+        context.stroke(
+            circle(at: hub, radius: 46),
+            with: .color(colors.canopyShade),
+            lineWidth: 3
+        )
+        var frame = Path()
+        for spoke in 0..<spokes {
+            let angle = Double(spoke) / Double(spokes) * 2 * .pi
+            frame.move(to: hub)
+            frame.addLine(to: CGPoint(x: hub.x + 46 * cos(angle), y: hub.y + 46 * sin(angle)))
+        }
+        context.stroke(frame, with: .color(colors.canopyShade.opacity(0.7)), lineWidth: 1.6)
+        var legs = Path()
+        legs.move(to: CGPoint(x: hub.x - 26, y: base + 6))
+        legs.addLine(to: hub)
+        legs.addLine(to: CGPoint(x: hub.x + 26, y: base + 6))
+        context.stroke(legs, with: .color(colors.canopyShade), lineWidth: 4)
+        if colors.isNight {
+            for spoke in 0..<spokes {
+                let angle = Double(spoke) / Double(spokes) * 2 * .pi
+                context.fill(
+                    circle(
+                        at: CGPoint(x: hub.x + 46 * cos(angle), y: hub.y + 46 * sin(angle)),
+                        radius: 2.6
+                    ),
+                    with: .color(Color(red: 1.00, green: 0.82, blue: 0.44).opacity(0.75))
+                )
+            }
+        }
+
+        // Tent tops running the width of the world, none of them the same height.
+        var across: CGFloat = -14
+        while across < size.width + 14 {
+            let wide = CGFloat(scatter.next(in: 34...66))
+            let tall = CGFloat(scatter.next(in: 24...52))
+            var tent = Path()
+            tent.move(to: CGPoint(x: across, y: base + 6))
+            tent.addQuadCurve(
+                to: CGPoint(x: across + wide / 2, y: base - tall),
+                control: CGPoint(x: across + wide * 0.28, y: base - tall * 0.55)
+            )
+            tent.addQuadCurve(
+                to: CGPoint(x: across + wide, y: base + 6),
+                control: CGPoint(x: across + wide * 0.72, y: base - tall * 0.55)
+            )
+            tent.closeSubpath()
+            context.fill(tent, with: .color(colors.canopyShade))
+
+            // A pennant on the pole of about half of them.
+            if scatter.next() < 0.5 {
+                var flag = Path()
+                let peak = CGPoint(x: across + wide / 2, y: base - tall)
+                flag.move(to: CGPoint(x: peak.x, y: peak.y - 12))
+                flag.addLine(to: CGPoint(x: peak.x + 11, y: peak.y - 8))
+                flag.addLine(to: CGPoint(x: peak.x, y: peak.y - 4))
+                flag.closeSubpath()
+                context.fill(flag, with: .color(colors.canopy.opacity(0.9)))
+                context.stroke(
+                    Path { line in
+                        line.move(to: peak)
+                        line.addLine(to: CGPoint(x: peak.x, y: peak.y - 12))
+                    },
+                    with: .color(colors.canopyShade),
+                    lineWidth: 1.6
+                )
+            }
+            across += wide * 0.88
+        }
+
+        // And the bunting, which is the one thing on this horizon that is neither ground nor
+        // building: a line of flags slung from one side of the world to the other.
+        var string = Path()
+        string.move(to: CGPoint(x: -10, y: base - 62))
+        string.addQuadCurve(
+            to: CGPoint(x: size.width + 10, y: base - 68),
+            control: CGPoint(x: size.width / 2, y: base - 34)
+        )
+        context.stroke(string, with: .color(colors.canopyShade.opacity(0.8)), lineWidth: 1.8)
+        let flags: [Color] = [
+            Color(red: 1.00, green: 0.78, blue: 0.36),
+            Color(red: 0.98, green: 0.40, blue: 0.48),
+            Color(red: 0.46, green: 0.72, blue: 0.96),
+            Color(red: 0.62, green: 0.92, blue: 0.66)
+        ]
+        for index in 0..<18 {
+            let along = CGFloat(index) / 17
+            let hang = CGPoint(
+                x: -10 + (size.width + 20) * along,
+                // The same quadratic the string is drawn with, so the flags hang off it.
+                y: (1 - along) * (1 - along) * (base - 62)
+                    + 2 * (1 - along) * along * (base - 34)
+                    + along * along * (base - 68)
+            )
+            var flag = Path()
+            flag.move(to: CGPoint(x: hang.x - 5, y: hang.y))
+            flag.addLine(to: CGPoint(x: hang.x + 5, y: hang.y))
+            flag.addLine(to: CGPoint(x: hang.x, y: hang.y + 11))
+            flag.closeSubpath()
+            context.fill(
+                flag,
+                with: .color(flags[index % flags.count].opacity(colors.isNight ? 0.62 : 0.85))
+            )
+        }
+    }
+
     /// A run of dark crowns along the horizon, so the thicket feels closed in rather than
     /// opening onto open country.
     private func drawCanopyLine(in context: inout GraphicsContext) {
@@ -559,6 +727,8 @@ private struct Meadow {
         case shard
         case column
         case crystal
+        case stall
+        case lanternPost
     }
 
     private struct Place {
@@ -648,6 +818,16 @@ private struct Meadow {
             case ..<0.72: .rock
             default: .crystal
             }
+        case .sawdust:
+            // A field somebody has put a fair on for the week: booths and lantern poles
+            // wherever there was room for them, straw thrown down between, and the grass and
+            // the odd stone still there underneath the whole arrangement.
+            switch roll {
+            case ..<0.34: .stall
+            case ..<0.62: .lanternPost
+            case ..<0.82: .hayBale
+            default: .flowers
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -674,7 +854,104 @@ private struct Meadow {
         case .shard: drawShard(in: &context, at: place.at, scale: place.size)
         case .column: drawColumn(in: &context, at: place.at, scale: place.size)
         case .crystal: drawCrystalCluster(in: &context, at: place.at, scale: place.size)
+        case .stall: drawStall(in: &context, at: place.at, scale: place.size)
+        case .lanternPost: drawLanternPost(in: &context, at: place.at, scale: place.size)
         }
+    }
+
+    /// A sideshow booth with a striped awning over it, guyed down at the corners. It is what
+    /// the carnival has where the meadow has a tree — and the ropes going down off the awning
+    /// are the hazard the world's boards are strewn with, seen doing the job they are for.
+    private func drawStall(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 34 * scale
+        let tall = 26 * scale
+        shadow(in: &context, at: foot, width: wide * 0.9)
+
+        let counter = CGRect(
+            x: foot.x - wide * 0.42, y: foot.y - tall * 0.5,
+            width: wide * 0.84, height: tall * 0.5
+        )
+        context.fill(
+            Path(roundedRect: counter, cornerRadius: 2),
+            with: .color(GamePalette.rail)
+        )
+
+        // The awning, in the two colours every awning at every fair has ever been.
+        let stripes = 5
+        for stripe in 0..<stripes {
+            let left = counter.minX - wide * 0.08
+                + (counter.width + wide * 0.16) * CGFloat(stripe) / CGFloat(stripes)
+            var panel = Path()
+            panel.move(to: CGPoint(x: left, y: counter.minY))
+            panel.addLine(to: CGPoint(
+                x: left + (counter.width + wide * 0.16) / CGFloat(stripes),
+                y: counter.minY
+            ))
+            panel.addLine(to: CGPoint(x: foot.x, y: counter.minY - tall * 0.62))
+            panel.closeSubpath()
+            context.fill(
+                panel,
+                with: .color(stripe % 2 == 0 ? colors.canopy : GamePalette.cream.opacity(0.85))
+            )
+        }
+
+        var guys = Path()
+        guys.move(to: CGPoint(x: foot.x, y: counter.minY - tall * 0.62))
+        guys.addLine(to: CGPoint(x: counter.minX - wide * 0.22, y: foot.y))
+        guys.move(to: CGPoint(x: foot.x, y: counter.minY - tall * 0.62))
+        guys.addLine(to: CGPoint(x: counter.maxX + wide * 0.22, y: foot.y))
+        context.stroke(
+            guys,
+            with: .color(
+                Color(red: 0.80, green: 0.70, blue: 0.52).opacity(colors.isNight ? 0.45 : 0.7)
+            ),
+            lineWidth: 1.4
+        )
+    }
+
+    /// A pole with a lantern hung off the top of it, throwing a pool of light on the ground.
+    /// The city has lamp posts doing the same job; the difference is that a lamp post is put
+    /// up for the year and this went in on Tuesday and comes out on Sunday.
+    private func drawLanternPost(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = 44 * scale
+        shadow(in: &context, at: foot, width: 14 * scale)
+
+        let head = CGPoint(x: foot.x, y: foot.y - tall)
+        context.stroke(
+            Path { pole in
+                pole.move(to: foot)
+                pole.addLine(to: head)
+            },
+            with: .color(GamePalette.rail),
+            lineWidth: 3
+        )
+
+        let glow = Color(red: 1.00, green: 0.80, blue: 0.44)
+        context.fill(
+            circle(at: CGPoint(x: head.x, y: head.y + 6), radius: 22 * scale),
+            with: .radialGradient(
+                Gradient(colors: [
+                    glow.opacity(colors.isNight ? 0.34 : 0.16),
+                    glow.opacity(0)
+                ]),
+                center: CGPoint(x: head.x, y: head.y + 6),
+                startRadius: 0,
+                endRadius: 22 * scale
+            )
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: head.x - 6 * scale, y: head.y, width: 12 * scale, height: 15 * scale
+            )),
+            with: .color(Color(red: 0.98, green: 0.52, blue: 0.42).opacity(colors.isNight ? 0.95 : 0.8))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: head.x - 2.6 * scale, y: head.y + 3 * scale,
+                width: 5.2 * scale, height: 9 * scale
+            )),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.8 : 0.5))
+        )
     }
 
     private func drawTree(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
@@ -1546,6 +1823,99 @@ private struct Meadow {
                 startPoint: CGPoint(x: centre.x, y: centre.y + tall * 0.06),
                 endPoint: CGPoint(x: centre.x, y: centre.y + tall * 0.4)
             )
+        )
+    }
+
+    /// The big top at the foot of the carnival trail, with its doorway open and the light of
+    /// the ring coming out of it. Every landmark before this was something standing still that
+    /// the pig arrived to find — a barn, a stump, a cairn, a clocktower, a crater, the hole it
+    /// came down. This one has somebody in it, and at the end of the world the pig has to go in
+    /// and fence him.
+    private func drawBigTop(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 96
+        let tall: CGFloat = 84
+
+        shadow(in: &context, at: CGPoint(x: centre.x, y: centre.y + tall * 0.34), width: wide)
+
+        // The canvas: a tall cone with the walls hanging straight down off it, panelled in the
+        // two colours a big top is always painted.
+        let eaves = centre.y - tall * 0.06
+        let panels = 6
+        for panel in 0..<panels {
+            let left = centre.x - wide * 0.5 + wide * CGFloat(panel) / CGFloat(panels)
+            var cloth = Path()
+            cloth.move(to: CGPoint(x: left, y: eaves))
+            cloth.addLine(to: CGPoint(x: left + wide / CGFloat(panels), y: eaves))
+            cloth.addLine(to: CGPoint(x: centre.x, y: centre.y - tall * 0.86))
+            cloth.closeSubpath()
+            context.fill(
+                cloth,
+                with: .color(
+                    panel % 2 == 0
+                        ? colors.canopy
+                        : GamePalette.cream.opacity(colors.isNight ? 0.72 : 0.92)
+                )
+            )
+        }
+        let walls = CGRect(
+            x: centre.x - wide * 0.5, y: eaves, width: wide, height: tall * 0.34
+        )
+        context.fill(Path(walls), with: .color(colors.canopyShade))
+
+        // The doorway, tied back, with the ring lit behind it.
+        let door = CGRect(
+            x: centre.x - wide * 0.15, y: walls.minY + walls.height * 0.1,
+            width: wide * 0.3, height: walls.height * 0.9
+        )
+        context.fill(
+            Path(roundedRect: door, cornerRadius: door.width * 0.4),
+            with: .color(Color(red: 1.00, green: 0.82, blue: 0.48).opacity(colors.isNight ? 0.9 : 0.75))
+        )
+        context.fill(
+            circle(at: CGPoint(x: door.midX, y: door.midY), radius: wide * 0.34),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 1.00, green: 0.82, blue: 0.48).opacity(colors.isNight ? 0.30 : 0.14),
+                    Color(red: 1.00, green: 0.82, blue: 0.48).opacity(0)
+                ]),
+                center: CGPoint(x: door.midX, y: door.midY),
+                startRadius: 0,
+                endRadius: wide * 0.34
+            )
+        )
+
+        // The king pole and its flag, and the guys running down off the eaves to their pegs.
+        let peak = CGPoint(x: centre.x, y: centre.y - tall * 0.86)
+        context.stroke(
+            Path { pole in
+                pole.move(to: peak)
+                pole.addLine(to: CGPoint(x: peak.x, y: peak.y - 18))
+            },
+            with: .color(GamePalette.rail),
+            lineWidth: 2.4
+        )
+        var flag = Path()
+        flag.move(to: CGPoint(x: peak.x, y: peak.y - 18))
+        flag.addLine(to: CGPoint(x: peak.x + 16, y: peak.y - 13))
+        flag.addLine(to: CGPoint(x: peak.x, y: peak.y - 8))
+        flag.closeSubpath()
+        context.fill(flag, with: .color(colors.canopy))
+
+        var guys = Path()
+        for side in [-1.0, 1.0] {
+            guys.move(to: CGPoint(x: centre.x + wide * 0.5 * CGFloat(side), y: eaves))
+            guys.addLine(to: CGPoint(
+                x: centre.x + wide * 0.72 * CGFloat(side),
+                y: centre.y + tall * 0.3
+            ))
+        }
+        context.stroke(
+            guys,
+            with: .color(
+                Color(red: 0.80, green: 0.70, blue: 0.52).opacity(colors.isNight ? 0.5 : 0.75)
+            ),
+            lineWidth: 1.6
         )
     }
 

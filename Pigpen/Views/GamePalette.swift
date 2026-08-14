@@ -83,6 +83,9 @@ enum GamePalette {
         /// Cave floor: wet flowstone in ribs and ledges, with crystal light coming off it and
         /// stalactites hanging into the dark overhead.
         case flowstone
+        /// Fairground: trodden grass under sawdust, with guy ropes pegged across it and a string
+        /// of lanterns overhead throwing coloured light down onto all of it.
+        case sawdust
     }
 }
 
@@ -341,5 +344,50 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.05, green: 0.08, blue: 0.08),
         isNight: true,
         cover: .flowstone
+    )
+
+    /// The seventh world's lit palette, which is a fairground in the last of the evening rather
+    /// than a fairground by day — a carnival lit at noon is a field with tents in it.
+    ///
+    /// The light comes from two places at once and that is the whole look of the world: a warm
+    /// low sun going down behind the big top, and the lanterns already on. So the sky is amber at
+    /// the horizon and plum above it, and the ground has both of those lying on it. Every world
+    /// so far has taken its colour from what its ground is made of; this one takes it from what
+    /// is strung up over the ground, which is why it is the only world in the game where the
+    /// brightest thing is not the sky or the floor but the lights between them.
+    static let lanternDay = Self(
+        skyTop: Color(red: 0.24, green: 0.12, blue: 0.30),
+        skyHorizon: Color(red: 0.96, green: 0.62, blue: 0.44),
+        disc: Color(red: 1.00, green: 0.88, blue: 0.58),
+        discHalo: Color(red: 0.99, green: 0.66, blue: 0.46),
+        cloud: Color(red: 0.60, green: 0.32, blue: 0.44),
+        farHill: Color(red: 0.35, green: 0.17, blue: 0.33),
+        ground: Color(red: 0.49, green: 0.38, blue: 0.31),
+        foreground: Color(red: 0.37, green: 0.28, blue: 0.25),
+        blade: Color(red: 0.30, green: 0.22, blue: 0.21),
+        canopy: Color(red: 0.83, green: 0.36, blue: 0.48),
+        canopyShade: Color(red: 0.55, green: 0.19, blue: 0.33),
+        isNight: false,
+        cover: .sawdust
+    )
+
+    /// The carnival once the sun has gone, which is when a carnival is itself. Nothing is left of
+    /// the sky, the tents go to silhouettes, and the lanterns are the only light there is — so
+    /// the ground reads warm and the dark reads plum, where the reaches after dark read cold and
+    /// the caverns read wet. It is the one night in the game that somebody put on purpose.
+    static let lanternDusk = Self(
+        skyTop: Color(red: 0.05, green: 0.02, blue: 0.09),
+        skyHorizon: Color(red: 0.27, green: 0.09, blue: 0.23),
+        disc: Color(red: 1.00, green: 0.84, blue: 0.62),
+        discHalo: Color(red: 0.86, green: 0.42, blue: 0.44),
+        cloud: Color(red: 0.16, green: 0.06, blue: 0.16),
+        farHill: Color(red: 0.11, green: 0.04, blue: 0.13),
+        ground: Color(red: 0.24, green: 0.15, blue: 0.16),
+        foreground: Color(red: 0.17, green: 0.10, blue: 0.13),
+        blade: Color(red: 0.13, green: 0.07, blue: 0.11),
+        canopy: Color(red: 0.48, green: 0.17, blue: 0.29),
+        canopyShade: Color(red: 0.28, green: 0.09, blue: 0.19),
+        isNight: true,
+        cover: .sawdust
     )
 }
