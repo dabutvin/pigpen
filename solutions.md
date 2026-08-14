@@ -2295,7 +2295,7 @@ Every one of these spends its whole budget.
 ~~~.....~#.
 ```
 
-One channel, cut at the ebb. It comes in off the north rim, turns at the third row and runs the whole
+One channel, cut at the ebb. It comes in off the north rim, turns at the fourth row and runs the whole
 diagonal down to the south-east corner, with a wedge of water left standing in the south-west.
 Sixty-four tiles of cockle bank on her side of it and thirty-three on the other, which is a third of
 the field gone before a piece is laid.
@@ -2307,8 +2307,9 @@ steps in it, so squaring off can only ever meet the water at a corner. The whole
 length of the cut and closed along the eastern rim holds 30 tiles instead.
 
 The top of that wall is the part worth looking at: a tongue two rows deep, drawn round the clam
-standing on its own above the bank. Capping the pen off flat below it would have cost five pieces;
-going round it costs five as well, and comes back with a tile and five points more. Which is 35.
+standing on its own above the bank. Five pieces to fetch four tiles and five points, and the one
+place on the board where the wall leaves the line of the cut for something lying on the ground.
+Which is 35.
 
 The other clam is up on the north rim. That is ground no pen may hold on any board in the game, since
 a pen touching the rim is a pen with a way out of it — the cove will spend the rest of the trail
@@ -2414,7 +2415,7 @@ and the same clam, which is 40 — and every tile of both coasts between the two
 board gave away. At 47% it is the hardest shore in the game, five points past The Long Slack out in
 the dunes.
 
-The second clam is pegged on the western rim four rows above the inlet: on her own ground this time,
+The second clam is pegged on the western rim two rows above the inlet: on her own ground this time,
 and still outside every pen that can be drawn on the board.
 
 ## 5. The Mussel Beds — 15 pieces, 65
@@ -2433,7 +2434,8 @@ and still outside every pen that can be drawn on the board.
 ~###.......
 ```
 
-The beds: a strand down the whole western rim, and a channel down the north-east that turns and runs
+The beds: a strand down the western rim for eight of its eleven rows, and a channel down the
+north-east that turns and runs
 out to the eastern rim, cutting eight tiles off that corner. Four clams on the mussel beds between
 them, three in the open and the fourth right on the line the closing wall takes.
 
@@ -2477,12 +2479,12 @@ asked it, and at 52% the hardest corner in the game. The right-angled answer run
 across the flats and drops one piece down to the sea: 19 tiles, and it reaches no clam at all.
 
 The eleven run instead as one long chevron. It goes up into the north-west first, four rows north of
-where the tidy wall stopped, to take the clam standing above the coast; then out across the open flats
+where the tidy wall stopped, to take the nearer of the two clams lying in the north; then out across the open flats
 on the diagonal, where a wall shuts two tiles a piece where a straight one shuts one; then closes on
 the sea's edge in the south. 35 tiles and the clam, which is 40 — more than twice the block, off a
 budget of eleven.
 
-The second clam is four tiles east of the chevron's line, and there is no version of this pen that
+The second clam is two tiles east of the chevron's line, and there is no version of this pen that
 reaches it. On a board where two of the walls came free, five points is still four pieces of fence.
 
 ## 7. Urchin Ledge — 12 pieces, 43
@@ -2602,7 +2604,7 @@ The four `~` inside the ring above are worth nothing at all.
 
 So the answer is one closed ring with every piece of it bought, and it is the only pen in the cove
 that leans on nothing. Twenty-two pieces run as a lozenge round the middle of the flats hold the pig,
-the crab, his pool and 41 tiles of ground, with the clam south of him inside it and the one at her own
+the crab, his pool and 41 tiles of ground, with the clam south-west of him inside it and the one at her own
 shoulder under a post: 46. Twenty-two is the biggest budget in the game, and only The Centre Ring has
 handed one out before — it has to be, because on this board a budget is all there is.
 
@@ -2616,8 +2618,9 @@ round the lot holds 41 tiles and a clam. At 63% that is the widest gap any board
 point past Scorpion Flats.
 
 The two clams across the sound are the cove's joke told for the last time and to the wrong animal.
-They are the only treats in the world that anything on the board can reach, and the thing that can
-reach them is the crab — so a player who sees him get there has already lost.
+Four boards in the world peg a clam on ground she cannot reach, and on the other three it is out of
+everything's reach as well. Here it is not: the crab walks to them, so a player who sees him get
+there has already lost.
 
 It asks for 21 of the 24 stars below it before it opens.
 

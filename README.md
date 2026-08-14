@@ -676,8 +676,9 @@ nothing that swims, so the cheapest legal pair is four pieces round the pig wher
 eighteen laid *over* the pool, which is 17. At 63% it is the widest gap any board in the game leaves.
 
 The two clams across the sound are the cove's joke told for the last time and to the wrong animal.
-They are the only treats in the world that anything on the board can reach, and the thing that can
-reach them is the crab — so a player who sees him get there has already lost. It charges the same 21
+Four boards in the world peg a clam on ground she cannot reach, and on the other three it is out of
+everything's reach as well. Here it is not: the crab walks to them, so a player who sees him get
+there has already lost. It charges the same 21
 of the 24 stars below it that every boss charges, and stops for the same briefing on the way in.
 Every pen is drawn out in [`solutions.md`](solutions.md).
 
