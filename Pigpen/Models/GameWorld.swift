@@ -181,4 +181,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Lantern Carnival: the seventh world, wrapped in storybook films the way the five below it
+    /// are. The send-off points on past the last stall to sand, the way the caverns' points up out
+    /// of the dark towards the lights, and The Centre Ring stops for a briefing because it stands
+    /// a second animal on the board and asks the one thing no board has asked before — not who is
+    /// in which pen, but where one pen stands in relation to the other.
+    static let lanternCarnival = GameWorld(
+        theme: .lanternCarnival,
+        map: .lanternCarnival,
+        opening: WorldFilmSpec(key: "lantern-opening") { .storybook(.lanternOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "lantern-held") { .storybook(.lanternHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theCentreRing.id: WorldFilmSpec(key: "the-centre-ring-briefing") {
+                .storybook(.theCentreRing(start: $0))
+            }
+        ]
+    )
 }
