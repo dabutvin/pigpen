@@ -15,11 +15,13 @@ import Foundation
 /// tile thick, so the sand comes back on itself. A meadow has meres, a thicket pools, a mountain
 /// tarns, a city canals in straight runs, the reaches a scatter of single drops, the caverns one
 /// stepped river and the carnival filled blocks with never a bend in them; here there is nothing but
-/// bends, and `DunesTests` pins it.
+/// bends. `DunesTests` pins it, and pins the other half of it too — every crescent on a board opens
+/// the same way, because barchans are made by a wind and a wind blows one way across a field.
 ///
 /// Which is new in what it **offers** rather than in what it forbids. Every world below hands a pen
 /// one wall to follow, or two meeting at a corner, and the player draws the rest. A crescent hands
-/// over a finished pen: three sides free, and a mouth that is the cheapest wall in the game.
+/// over a finished pen: three sides free, and a mouth to plug that is shorter than the back it hangs
+/// off. It is the cheapest pen in the game.
 ///
 /// And it is a trap, which is the whole world. The belly of a dune is rectangle-shaped, so it is
 /// exactly what squaring a board off finds — and it is small, and it cannot be made bigger, because
@@ -37,10 +39,10 @@ extension PuzzleLevel {
     /// of its shade, and the pig out on the sand below its mouth.
     ///
     /// The basin question, asked on the only kind of bank this world has — and asked as a refusal,
-    /// which is how the dunes introduce themselves. The shade under the back is a finished pen: ten
-    /// tiles with three free walls round them and a six-tile mouth to plug. It is also where both
-    /// cacti are, so it is worth six tiles less ten points, and a player who takes the gift the sand
-    /// is holding out has been given nothing.
+    /// which is how the dunes introduce themselves. The shade under the back is a finished pen: six
+    /// tiles with sand on three sides of them and a six-tile mouth to plug. It is also where both
+    /// cacti are, so six pieces buy six tiles and minus ten points — and the pig is out on the sand
+    /// below in any case. A player who takes the gift the sand is holding out has been given nothing.
     ///
     /// So the answer is the shade *and* everything under it. The best rectangle fourteen pieces can
     /// square off is the belly plus three rows below it — thirty tiles with the pair of cacti in
@@ -87,8 +89,9 @@ extension PuzzleLevel {
     /// straight one closes one, and a rank of dunes set out on the slant is how the sand says so.
     ///
     /// The pair of cacti is pegged against the western rim right where the pig stands, and the
-    /// answer walls in beside them rather than swallowing them: one piece between her and the pair,
-    /// and their ten points stay outside.
+    /// answer walls in beside them rather than swallowing them: the staircase comes down between her
+    /// and the pair, and their ten points stay outside. The second melon is a row further south
+    /// again, outside everything.
     static let theLongSlack = dunes(
         id: "the-long-slack",
         name: "The Long Slack",
@@ -116,15 +119,17 @@ extension PuzzleLevel {
     /// out of it — with a single dry tile blown through the middle where the wind got round.
     ///
     /// So this is Otter Ford's lesson and Lock Gate's and The Turnstile's, taught on fifteen tiles of
-    /// free wall that cost one piece: put a piece in the blowout and the whole ridge is wall. Everybody
-    /// finds that piece, and the block this field is measured against spends it too — it hangs a
-    /// four-by-four rectangle under the gap for 18. What the rectangle cannot then do is use the rest
-    /// of the ridge, because a rectangle only has one north side. The same thirteen pieces run out
-    /// under the whole length of the sand and closed as a lozenge hold 32 tiles.
+    /// sand: put a piece in the blowout and the whole ridge is the north wall of one pen. Everybody
+    /// finds that piece, and the block this field is measured against spends it too — it hangs a four
+    /// by four under the gap, which with the two tiles of the blowout itself comes to 18. What the
+    /// rectangle cannot then do is use the rest of the ridge, because a rectangle only has one north
+    /// side. The same thirteen pieces run out under the whole length of the sand and closed as a
+    /// lozenge hold 32 tiles.
     ///
     /// The melon north of the ridge is on the far side of the sand, and like every far bank in the
-    /// game nothing reaches it. The one in the south-east is a tile outside the lozenge, which is the
-    /// cheaper lesson of the two: a melon is five points and a wall out to it is four pieces.
+    /// game nothing reaches it. The one in the south-east is three tiles outside the lozenge, in the
+    /// corner the taper leaves behind, which is the cheaper lesson of the two: a melon is five points
+    /// and the wall that fetches it is four pieces of shape.
     static let theBlowout = dunes(
         id: "the-blowout",
         name: "The Blowout",
@@ -186,13 +191,16 @@ extension PuzzleLevel {
             """
     )
 
-    /// Two barchans set corner to corner — one in the north-west, one in the south-east — with the
-    /// horn of each pointing at the horn of the other, and the pig on the open sand between them.
+    /// Two barchans set on the diagonal from one another — one in the north-west, one in the
+    /// south-east, both with their mouths open to the south — and the pig on the open sand between
+    /// them.
     ///
     /// The span question: neither dune is any use on its own, and no rectangle on this board reaches
-    /// round both, so squaring off leans on the pair of them across the middle and holds 28. Eighteen
-    /// pieces run out as a great lozenge from one to the other hold 50 tiles, both melons and both
-    /// cacti — the melons pay the cacti back exactly, so the pen is worth its ground and no more.
+    /// round both, so squaring off gets one corner against each of them across the middle and holds
+    /// 28. Eighteen pieces run out as a great lozenge from one to the other hold 50 tiles, both melons
+    /// and both cacti — the melons pay the cacti back exactly, so the pen is worth its ground and no
+    /// more. It takes the northern dune's shade inside and leaves the southern one's out, which is the
+    /// board's own answer to the question it asks.
     ///
     /// The run of cactus is pegged directly north of the pig, which is the one thing that stops the
     /// lozenge being tidier than it is: no piece will stand on a cactus and no pen may lean on one,
@@ -223,13 +231,18 @@ extension PuzzleLevel {
     /// One barchan with its back to the east and its mouth open west, three melons lying out past
     /// where the tidy wall goes, and a run of cactus pegged along the line the tidy wall would take.
     ///
-    /// The best block seventeen pieces can square off against that back holds 24 tiles, one melon and
-    /// both cacti, which is 19. So the whole field is which of the other two to go out for. The one
-    /// hanging north of the mouth is three tiles of wall above where the pen would otherwise stop and
-    /// the run of cactus is pegged between it and the pig, so the wall that fetches it has to come
-    /// round the pair as well; that one is not worth it. The two in the east and the south are, and
-    /// the seventeen pieces that fetch them run out as a lozenge holding 37 tiles, two melons and the
-    /// same two cacti, which is 37.
+    /// The best block seventeen pieces can square off against that back holds 24 tiles, the melon in
+    /// the south and both cacti, which is 19. So the whole field is which melons to go out for, and
+    /// the answer is the other two: seventeen pieces run out as a lozenge that reaches the one in the
+    /// north and the one in the east hold 37 tiles and the same pair of cacti, which is 37.
+    ///
+    /// It gives up the melon the tidy block was already holding — and it builds its own southern wall
+    /// on top of it, which is the plainest way any board in the game has said that five points is
+    /// worth less than a tile of shape.
+    ///
+    /// The run of cactus lies square in the middle of the ground the crescent encloses, so there is no
+    /// drawing this pen without swallowing the pair and paying their ten. The tiles the detour fetches
+    /// cover it twice over.
     ///
     /// It is the hardest of the seven ordinary fields but one, and the hardest detour in the game.
     static let melonGround = dunes(
@@ -255,19 +268,22 @@ extension PuzzleLevel {
             """
     )
 
-    /// The scarp: one great barchan hooked into the north-west of the board so its back is the whole
-    /// north wall and its western horn stands on the rim. Two sides of a pen handed over, and eleven
-    /// pieces — the smallest budget in the world — to draw the rest.
+    /// The scarp: one great barchan hooked into the north-west of the board so its back runs nearly
+    /// the whole width of the north and its western horn stands on the rim. Two sides of a pen handed
+    /// over, and eleven pieces — the smallest budget in the world — to draw the rest.
     ///
     /// Which is the corner question with two free sides, the way Rimstone Corner and The Big Top
     /// asked it, and the hardest corner in the game. The right-angled answer is a rectangle hung
-    /// under the back with its own east wall paid for: 20 tiles, and it stops dead at the horn. The
-    /// eleven pieces run instead as one long chevron — out from the western rim, down across the
-    /// whole mouth of the crescent and back up to a point in the south — hold 41 tiles, which is the
-    /// biggest pen in the world for the smallest budget in it. That is what two free sides and a
-    /// diagonal are worth together, and it is the top of the world's climb.
+    /// under the back with its own east wall paid for: 20 tiles, stopping three columns short of the
+    /// eastern horn, because eleven pieces will not reach it and turn the corner as well. The eleven
+    /// run instead as one long chevron — out from the western rim, down across the whole mouth of the
+    /// crescent and back up to a point in the south — and hold 41 tiles. That is nearly four tiles a
+    /// piece, the best rate anywhere in the world, and it is what two free sides and a diagonal are
+    /// worth together. It is the top of the world's climb.
     ///
-    /// The two melons lie in the south, either side of the tip of the chevron and a tile outside it.
+    /// The two melons lie in the south, well outside the chevron on either side of its tip. Eleven
+    /// pieces will not stretch to either, and on a board where two of the walls came free five points
+    /// is still four pieces of fence.
     static let scarpCorner = dunes(
         id: "scarp-corner",
         name: "Scarp Corner",
@@ -299,11 +315,12 @@ extension PuzzleLevel {
     /// and the Great Gallery and The Midway do. A broad board leaves a wide gap against a squared-off
     /// pen because it is broad, which says more about its size than about how hard it is to hold —
     /// and this one asks 38, less than every field of the seven above it, while holding the biggest
-    /// pen in the world.
+    /// pen in the world and the third biggest in the game behind Wide Reaches and the Great Gallery.
     ///
-    /// Nineteen pieces squared off down the middle of the sea hold 33 tiles, two melons and all three
-    /// cacti, which comes to 36. The same nineteen run out to both dunes and closed round the south
-    /// hold 59 tiles, all three melons and the same three cacti, which is 59.
+    /// Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 41
+    /// tiles, two of the melons and all three cacti, which comes to 36. The same nineteen run out to
+    /// both dunes and closed round the south hold 59 tiles, the third melon as well and the same three
+    /// cacti, which is 59.
     static let theGreatErg = dunes(
         id: "the-great-erg",
         name: "The Great Erg",
@@ -344,17 +361,25 @@ extension PuzzleLevel {
     /// so the three tiles of sand round it are ground she may not have either. Her wall has to come
     /// past the notch and close behind it, giving it a berth, which is a thing no rectangle can do.
     ///
-    /// So the answer five worlds have taught is turned down. Sixteen pieces is the smallest budget
-    /// any boss in the game hands out, and the cheapest legal pair it buys is the tidy pair of pens
-    /// side by side: four pieces box the pig where she stands on one tile, and the rest wall the
-    /// open sand east of the notch as the scorpion's own yard with the melon in the lane inside it —
-    /// 14 tiles and that melon, which is 19. A fair answer, and one nobody has to be taught. The
-    /// same sixteen run out from the pig up the west of the flats, along under the great back in the
-    /// north and down round the far side of the notch hold 45 tiles and the melon in the north-east,
-    /// which is 50 — the biggest pen any boss holds.
+    /// So the answer five worlds have taught is turned down twice over. One pen round the pair of
+    /// them wins Stag Mere and Rat King Wharf, and nine pieces do it here with seven of the budget
+    /// unspent; the board sends it back. And so does the answer below with a single piece moved a
+    /// single tile — run the wall straight up to his own south wall instead of stopping short and
+    /// closing behind it, and every piece still holds, nothing is loose, the pig has one tile *more*
+    /// than she has in the answer, and it would score 51. One piece of fence then has her ground on
+    /// one side of it and his on the other, which is a wall the sting goes straight through.
     ///
-    /// The melon in the lane is the board saying what the rule costs. It lies in the clear ground
-    /// between the two pens, so the pen that wins this field is the only pen in the world that walks
+    /// Sixteen pieces is the smallest budget any boss in the game hands out. The cheapest legal pair
+    /// it buys is the tidy pair of pens side by side: four pieces box the pig where she stands on one
+    /// tile, and the rest wall the open sand east of the notch as the scorpion's own yard with the
+    /// melon inside it — 14 tiles and that melon, which is 19. A fair answer, and one nobody has to
+    /// be taught. The same sixteen run out from the pig up the west of the flats, along under the
+    /// great back in the north and down round the far side of the notch hold 45 tiles and the melon
+    /// in the north-east, which is 50 — the biggest pen any boss holds, and at 62% the widest gap
+    /// any board in the game leaves.
+    ///
+    /// The melon left lying in the lane is the board saying what the rule costs. In the answer it
+    /// sits in the clear ground between the two pens, so this is the only pen in the game that walks
     /// past five points it can see and leaves them where they are.
     ///
     /// It asks for 21 of the 24 stars below it before it opens, the way every boss since the thicket
@@ -426,9 +451,10 @@ extension WorldMap {
     /// is the one field here with no sand on it, so it is the one field a player has met before, and
     /// a diamond on bare ground turns out to ask more than a ridge with a hole blown through it.
     ///
-    /// The last two stops step out of the order for the same reason every world's do: the Great Erg
-    /// holds the biggest pen in the game outside Wide Reaches, and Scorpion Flats is a boss, and
-    /// neither is measured by the same yardstick as a field with one animal and one wall to shape.
+    /// The last two stops step out of the order for the same reason every world's do: the Great Erg is
+    /// the broadest board out here and holds the third biggest pen in the game, and Scorpion Flats is
+    /// a boss, and neither is measured by the same yardstick as a field with one animal and one wall
+    /// to shape.
     static let sunbakedDunes = WorldMap(
         name: "Sunbaked Dunes",
         nodes: [

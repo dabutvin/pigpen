@@ -1033,9 +1033,14 @@ extension StorybookScene {
         )
     }
 
-    /// After the last pen in the dunes holds. It says what became of the scorpion, that every
-    /// melon is in, and — like the seven send-offs before it — points on past this world to the
-    /// next one waiting, which is water where this one was sand.
+    /// After the last pen in the dunes holds. It says what became of the scorpion and — like the
+    /// seven send-offs before it — points on past this world to the next one waiting, which is water
+    /// where this one was sand.
+    ///
+    /// The middle line is the one place a send-off does not say *every* windfall is in, because out
+    /// here that would be a lie the whole world was built to tell against. Sand is both where the
+    /// melons lie and the thing no wall crosses, so most of the fruit on these boards is out of
+    /// reach on purpose, and the pen that wins the last field walks past five points it can see.
     static func duneHeld(start: Date = .now) -> Self {
         Self(
             key: "dune-held",
@@ -1051,7 +1056,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🍈",
                     strewn: ["🌵", "🏜️", "🌵"],
-                    caption: "Every melon in the sand, fenced and held.",
+                    caption: "Every melon worth fencing, fenced and held.",
                     seconds: 3.0
                 ),
                 Shot(
