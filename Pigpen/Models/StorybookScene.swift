@@ -946,6 +946,134 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk into the dunes. Six stills, the way the carnival's opening is six:
+    /// the melon and the cactus have a still apiece, and so does the sand — because the shape of
+    /// the water here is the whole world, and a player who does not know a dune is a crescent
+    /// will read the first board as a wall with a dent in it.
+    static func duneOpening(start: Date = .now) -> Self {
+        Self(
+            key: "dune-opening",
+            title: "Sunbaked Dunes",
+            light: .duneDay,
+            shots: [
+                Shot(
+                    motif: "🏜️",
+                    strewn: ["☀️", "🌵", "🦴"],
+                    caption: "Sunbaked Dunes. Sand to the horizon.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🌵", "🍈"],
+                    caption: "Your pig went over the last dune at noon.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🌙",
+                    strewn: ["🏜️", "🌵"],
+                    caption: "Every dune is a crescent. Three free walls.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🍈",
+                    strewn: ["🏜️", "🌵"],
+                    caption: "Melons lying in the sand. Five each.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🌵",
+                    strewn: ["🍈", "🏜️"],
+                    caption: "A cactus takes no fence. Walls go round.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🏜️", "🍈"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 3.1
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the dunes' last field, the way `theCentreRing` goes before the carnival's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced seven worlds. What they
+    /// are owed is the one thing this board does that no board in the game has done — every boss
+    /// since the meadow has been allowed to let one wall do for both pens, and this one is not.
+    static func theScorpionPit(start: Date = .now) -> Self {
+        Self(
+            key: "scorpion-flats-briefing",
+            title: "Scorpion Flats",
+            light: .duneDay,
+            shots: [
+                Shot(
+                    motif: "🦂",
+                    strewn: ["🏜️", "🌵"],
+                    caption: "Scorpion Flats. He stings through a fence.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦂", "🏜️"],
+                    caption: "Hold them both. No wall may do for two.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦂", "🌵"],
+                    caption: "Leave clear ground between them.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the dunes holds. It says what became of the scorpion, that every
+    /// melon is in, and — like the seven send-offs before it — points on past this world to the
+    /// next one waiting, which is water where this one was sand.
+    static func duneHeld(start: Date = .now) -> Self {
+        Self(
+            key: "dune-held",
+            title: "Sunbaked Dunes held",
+            light: .duneDusk,
+            shots: [
+                Shot(
+                    motif: "🦂",
+                    strewn: ["🏜️", "🌵"],
+                    caption: "The scorpion has his own pen and his own walls.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🍈",
+                    strewn: ["🌵", "🏜️", "🌵"],
+                    caption: "Every melon in the sand, fenced and held.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌙",
+                    strewn: ["🏜️", "🦴"],
+                    caption: "The sun goes down and the sand goes cold.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🍈", "🌊"],
+                    caption: "Past the last dune, the sea comes in.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -954,7 +1082,8 @@ extension StorybookScene {
             .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld(),
             .starfallOpening(), .visitorCrater(), .starfallHeld(),
             .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
-            .lanternOpening(), .theCentreRing(), .lanternHeld()
+            .lanternOpening(), .theCentreRing(), .lanternHeld(),
+            .duneOpening(), .theScorpionPit(), .duneHeld()
         ]
     }
 }
