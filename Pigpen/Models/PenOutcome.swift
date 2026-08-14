@@ -19,6 +19,9 @@ enum Refusal: Equatable, Sendable {
     case split(Animal)
     /// The animal that had to be left outside has been fenced in.
     case shutIn(Animal)
+    /// Two pens that should have been one inside the other are standing side by side: the pig
+    /// is held and so is the other one, but the ring does not go round him.
+    case beside(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -111,6 +114,20 @@ extension PuzzleLevel {
             }
         }
 
+        // The carnival asks for two pens with one of them inside the other, which is two things
+        // at once as well: the pig may not be standing in with the ringmaster, and her ground
+        // has to close the whole way round him. A pen beside his is a pen, not a ring.
+        if question == .ring, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                if !isSurrounded(animal.tile, by: pigGround) {
+                    return .refused(pen: held, refusal: .beside(animal.kind))
+                }
+            }
+        }
+
         // And a board that will not have one animal better housed than the other asks two
         // things at once: two pens rather than one, and the same ground in each of them.
         if question == .even, let pigGround = ground[.pig] {
@@ -126,6 +143,34 @@ extension PuzzleLevel {
         }
 
         return .penned(pen: held)
+    }
+
+    /// Whether every way off the board from a tile crosses the given ground.
+    ///
+    /// Walked over the whole board rather than over the mud it is made of, because the crowd
+    /// is no help with this question: a ringmaster standing on an island in the middle of one
+    /// would be surrounded before a single piece was laid, and what the ring asks is that the
+    /// pig herself go round him. Fenced tiles are walked over for the same reason — it is the
+    /// ground she holds that has to close the circle, not the wall she holds it with.
+    private func isSurrounded(_ tile: GridPoint, by ground: Set<GridPoint>) -> Bool {
+        var reached: Set<GridPoint> = [tile]
+        var queue: [GridPoint] = [tile]
+        var next = 0
+
+        while next < queue.count {
+            let here = queue[next]
+            next += 1
+
+            for direction in Direction.allCases {
+                let step = here.stepped(direction)
+                guard contains(step) else { return false }
+                guard !ground.contains(step), !reached.contains(step) else { continue }
+                reached.insert(step)
+                queue.append(step)
+            }
+        }
+
+        return true
     }
 
     /// How one animal's walk ends: off the map, or on the ground it is shut into.

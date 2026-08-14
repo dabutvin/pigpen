@@ -97,10 +97,13 @@ enum Question: String, Sendable, CaseIterable {
     /// share ground with. Both at once — the bat and its pup in one pen, and the pig in
     /// another. A boss, and nothing else.
     case roost
+    /// One budget and two pens, one of them inside the other: the ringmaster keeps the middle
+    /// and the pig has to close all the way round him. A boss, and nothing else.
+    case ring
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost] }
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
@@ -241,8 +244,8 @@ struct PuzzleLevel: Identifiable, Sendable {
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
-    /// the pig starts on, and an optional `D`, `B`, `W` or `R` for a deer, a boar, a wyrm
-    /// or a rat king.
+    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U` or `M` for a
+    /// deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup or the ringmaster.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.
