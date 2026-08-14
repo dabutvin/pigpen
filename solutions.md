@@ -2100,20 +2100,25 @@ comes down between the two horns has to come round the pair.
 .....#.....
 ```
 
-One barchan with its back to the east and its mouth open west, three melons lying out past where the
-tidy wall goes, and a run of cactus pegged along the line the tidy wall would take. The detour
-question, and the hardest one in the game.
+One barchan with its back to the east and its mouth open west, three melons scattered wide over the
+open sand, and a pair of cacti pegged down the middle of the field. The detour question, and the
+hardest one in the game.
 
-The best block seventeen pieces can square off against that back holds 24 tiles, the melon in the
-south and both cacti, which is 19. So the whole field is which melons to go out for, and the answer
-is the other two: seventeen pieces run out as a lozenge that reaches the one in the north and the one
-in the east hold 37 tiles and the same pair of cacti, which is 37. It gives up the one the tidy block
-was already holding — and it builds its own southern wall on top of it, which is the plainest way a
-board has ever said that a melon is worth five and a tile of shape is worth more.
+Seventeen pieces will square off a block under the crescent's southern horn, which does the
+north-west corner for nothing: 24 tiles holding the melon in the south and both cacti, which is 19.
+That is the tidy answer, and the melon it is holding is the one melon of the three that is easy to
+hold.
 
-The run of cactus lies square in the middle of the ground the crescent encloses, so there is no
-drawing this pen without swallowing the pair and paying their ten. The tiles the detour fetches
-cover it twice over.
+So the field is whether to give that one up and go out for the other two, and it is: the same
+seventeen run out as a lozenge reach the melon in the north and the melon in the east, 37 tiles with
+those two in them and the same pair of cacti, which is 37. What is more, the wall the lozenge comes
+back on lands square on top of the melon it left behind. A piece laid on windfall wastes it, so this
+pen spends a melon on its own shape — the plainest way a board has ever said that a tile of pen is
+worth having.
+
+The pair of cacti lies in the middle of the ground either answer has to cross, so there is no drawing
+either pen without swallowing them and paying their ten. The tiles the detour fetches cover it twice
+over.
 
 ## 7. Scarp Corner — 11 pieces, 41
 
