@@ -226,4 +226,27 @@ extension WorldTheme {
         accent: Color(red: 0.93, green: 0.43, blue: 0.67),
         accentDeep: Color(red: 0.55, green: 0.20, blue: 0.41)
     )
+
+    /// Sunbaked Dunes, the eighth world: out past the last of the lights and into sand to the
+    /// horizon, where the ground is baked hardpan and the water is a dune. The windfall is a
+    /// desert melon split open where it lay and the hazard a cactus — each worth exactly what its
+    /// meadow twin was, a melon five tiles to shut in, a cactus five to shut in with and no
+    /// fencing at all, since a cactus is all spine and there is nothing in it to nail to.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for seven worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let sunbakedDunes = WorldTheme(
+        id: "sunbaked-dunes",
+        name: "Sunbaked Dunes",
+        blurb: "Sand to the horizon, and a sting in it.",
+        day: .duneDay,
+        dusk: .duneDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🍈", bonusScale: 0.58, bonusName: "melon",
+            hazardGlyph: "🌵", hazardScale: 0.60, hazardName: "cactus"
+        ),
+        boss: BossMark(glyph: "🦂", name: "the scorpion"),
+        accent: Color(red: 0.93, green: 0.77, blue: 0.43),
+        accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20)
+    )
 }

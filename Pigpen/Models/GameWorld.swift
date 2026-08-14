@@ -198,4 +198,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Sunbaked Dunes: the eighth world, wrapped in storybook films the way the six below it are.
+    /// The send-off points on past the last dune to a sea coming in, the way the carnival's points
+    /// past the last stall to sand, and Scorpion Flats stops for a briefing because it stands a
+    /// second animal on the board and takes away the discount every boss since the meadow has been
+    /// allowed — one wall doing for two pens.
+    static let sunbakedDunes = GameWorld(
+        theme: .sunbakedDunes,
+        map: .sunbakedDunes,
+        opening: WorldFilmSpec(key: "dune-opening") { .storybook(.duneOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "dune-held") { .storybook(.duneHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.scorpionFlats.id: WorldFilmSpec(key: "scorpion-flats-briefing") {
+                .storybook(.theScorpionPit(start: $0))
+            }
+        ]
+    )
 }

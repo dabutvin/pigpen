@@ -80,6 +80,7 @@ private struct Paddock {
         case .dust: drawDust(in: &context)
         case .flowstone: drawFlowstone(in: &context)
         case .sawdust: drawSawdust(in: &context)
+        case .sand: drawSand(in: &context)
         }
     }
 
@@ -87,8 +88,17 @@ private struct Paddock {
     func drawGrowth(in context: inout GraphicsContext) {
         drawDressing(in: &context)
         drawVerge(in: &context)
-        if colors.isNight {
-            drawFireflies(in: &context)
+        switch colors.cover {
+        case .sand:
+            // Nothing hatches out over a desert, and nothing needs to. The wind that built every
+            // crescent on these boards has not stopped, and what it carries is the sand itself,
+            // so the dunes get a drift of grains going by where every other world gets flies —
+            // by day as well as after dark, because the wind does not keep their hours.
+            drawBlownSand(in: &context)
+        default:
+            if colors.isNight {
+                drawFireflies(in: &context)
+            }
         }
     }
 
@@ -363,6 +373,84 @@ private struct Paddock {
         }
     }
 
+    /// Sand: baked hardpan with the wind's own combing across it, and the shadow of a dune lying
+    /// over one end of the board.
+    ///
+    /// Where every ground below this is dressed with things standing on it — grass, litter,
+    /// cinders, paving, sawdust — the desert has almost nothing on it and is drawn with what the
+    /// wind has done to it instead. Ripples, all running the same way, because there is one wind;
+    /// a crust of hardpan showing through where the sand has been scoured off it; and the long
+    /// blue shade of something out of shot. The blue is the point. There is one small hot sun up
+    /// there and nothing else to fill a shadow with except the sky, so shade in this world is
+    /// colder than shade anywhere else in the game, and it is what says *noon* without a sun on
+    /// the screen at all.
+    private func drawSand(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_143)
+
+        // Hardpan showing through: wide flat pans the sand has been swept off.
+        for _ in 0..<7 {
+            let centre = CGPoint(x: x(scatter.next(in: -0.1...1.1)), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.16...0.40))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.11,
+                    width: spread, height: spread * 0.22
+                )),
+                with: .color(colors.blade.opacity(colors.isNight ? 0.22 : 0.16))
+            )
+        }
+
+        // The wind's combing. Every ripple leans the same way, since there is only one wind out
+        // here, and each is drawn twice — a lit crest with its own shadow under it — which is the
+        // only reason a flat pale ground reads as having any shape to it at all.
+        for _ in 0..<26 {
+            let down = y(scatter.next(in: -0.02...1.02))
+            let drift = y(scatter.next(in: -0.05...0.05))
+            var crest = Path()
+            crest.move(to: CGPoint(x: -x(0.05), y: down))
+            crest.addCurve(
+                to: CGPoint(x: size.width + x(0.05), y: down + drift),
+                control1: CGPoint(x: x(0.32), y: down + y(scatter.next(in: -0.035...0.035))),
+                control2: CGPoint(x: x(0.68), y: down + y(scatter.next(in: -0.035...0.035)))
+            )
+            let width = max(0.7, y(scatter.next(in: 0.004...0.011)))
+            context.translateBy(x: 0, y: width * 0.9)
+            context.stroke(
+                crest,
+                with: .color(
+                    Color(red: 0.36, green: 0.38, blue: 0.52)
+                        .opacity(colors.isNight ? 0.20 : 0.15)
+                ),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width * 0.9)
+            context.stroke(
+                crest,
+                with: .color(
+                    GamePalette.cream.opacity(colors.isNight ? 0.06 : 0.26)
+                ),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+
+        // And the shade of a dune standing off the edge of the board, thrown across one corner.
+        // Blue rather than black, for the same reason the ripples' shadows are.
+        let shade = CGPoint(x: x(-0.15), y: y(0.62))
+        context.fill(
+            circle(at: shade, radius: x(0.7)),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 0.30, green: 0.34, blue: 0.54)
+                        .opacity(colors.isNight ? 0.26 : 0.20),
+                    Color(red: 0.30, green: 0.34, blue: 0.54).opacity(0)
+                ]),
+                center: shade,
+                startRadius: 0,
+                endRadius: x(0.7)
+            )
+        )
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -397,6 +485,7 @@ private struct Paddock {
         case .dust: 11
         case .flowstone: 14
         case .sawdust: 16
+        case .sand: 9
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -449,6 +538,17 @@ private struct Paddock {
                     case ..<0.72: drawStone(in: &context, at: spot, scale: scale)
                     default: drawCrystal(in: &context, at: spot, scale: scale)
                     }
+                case .sand:
+                    // Nothing much lives out here, so the ground is dressed with the three
+                    // things that do: a cactus standing up out of the hardpan, a stone the wind
+                    // has scoured bare, and a dry tussock that has found water somewhere. The
+                    // board's own hazard is a cactus, and this is where a player has already seen
+                    // one before the first field asks about it.
+                    switch roll {
+                    case ..<0.44: drawCactus(in: &context, at: spot, scale: scale)
+                    case ..<0.78: drawStone(in: &context, at: spot, scale: scale)
+                    default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    }
                 case .sawdust:
                     // A field with a fair on it is still a field, so the grass is here — but
                     // it is trodden grass with the fair's own leavings in it: pegs driven in
@@ -477,6 +577,7 @@ private struct Paddock {
         case .dust: 18
         case .flowstone: 24
         case .sawdust: 28
+        case .sand: 14
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -507,6 +608,14 @@ private struct Paddock {
                     drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.7)))
                 } else {
                     drawSpark(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)))
+                }
+            case .sand:
+                // Hardly a verge at all: a desert does not have long grass along the front of
+                // it, so the foot of the screen is bare stone with the odd cactus in among it.
+                if roll < 0.72 {
+                    drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.8)))
+                } else {
+                    drawCactus(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.7)))
                 }
             case .sawdust where roll < 0.3:
                 // The front of the fair is where the ropes are pegged out, so the verge is
@@ -557,6 +666,67 @@ private struct Paddock {
                     with: .color(GamePalette.pen.opacity(0.75 * glow))
                 )
             }
+        }
+    }
+
+    /// What the dunes have instead of fireflies: sand on the move, low across the ground.
+    ///
+    /// Each streak is a shallow curve travelling left to right, and the whole drift is one wind,
+    /// so they all go the same way at nearly the same speed — the fireflies wander, this does
+    /// not. A streak fades in at one edge and out at the other rather than stopping, and it is
+    /// brightest at the middle of its crossing, so nothing ever pops into being in plain sight.
+    ///
+    /// It is the only moving thing on this ground, and it is the thing that made it: the barchans
+    /// on these boards face the way they face because something like this has been going past
+    /// them one way for a very long time.
+    ///
+    /// The ground under it is already drawn in pale curves lying the same way, so a grain has to
+    /// be told apart from a ripple it is passing over. What does that is the tail: each streak is
+    /// nothing at the back and brightest at the front, which is a thing a ripple combed into
+    /// standing sand never is, and it reads as travelling even in a still frame.
+    private func drawBlownSand(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 4_231)
+        for _ in 0..<20 {
+            let down = y(scatter.next(in: 0.04...1.0))
+            // A grain near the front of the shot goes by faster and shows up bigger than one
+            // further off, the same way the near bank of the title screen outruns the far one.
+            let nearness = Double(down / max(size.height, 1))
+            let start = scatter.next()
+            // How far into its own crossing this grain is, in 0...1, wrapping round for the next.
+            let along = (start + elapsed * (0.06 + 0.10 * nearness))
+                .truncatingRemainder(dividingBy: 1)
+            let head = CGPoint(
+                x: x(-0.1) + (size.width + x(0.2)) * CGFloat(along),
+                // Skipping rather than flying: it lifts off the sand and settles back onto it.
+                y: down + y(0.009) * CGFloat(sin(elapsed * 2.1 + start * 12))
+            )
+            let length = x(scatter.next(in: 0.02...0.055)) * CGFloat(0.7 + nearness)
+            let tail = CGPoint(x: head.x - length, y: down)
+
+            var streak = Path()
+            streak.move(to: tail)
+            streak.addQuadCurve(
+                to: head,
+                control: CGPoint(x: (tail.x + head.x) / 2, y: (tail.y + head.y) / 2 + y(0.004))
+            )
+            // Full at the middle of the crossing and nothing at either edge, so a grain fades
+            // in off one side and out off the other instead of appearing in plain sight.
+            let lit = (colors.isNight ? 0.42 : 0.7) * sin(along * .pi)
+            context.stroke(
+                streak,
+                with: .linearGradient(
+                    Gradient(colors: [
+                        GamePalette.cream.opacity(0),
+                        GamePalette.cream.opacity(lit)
+                    ]),
+                    startPoint: tail,
+                    endPoint: head
+                ),
+                style: StrokeStyle(
+                    lineWidth: max(0.6, y(0.0018) * CGFloat(0.6 + nearness)),
+                    lineCap: .round
+                )
+            )
         }
     }
 
@@ -924,6 +1094,72 @@ private struct Paddock {
         )
     }
 
+    /// A cactus: a trunk with an arm each side of it, and the shadow it is throwing pulled out
+    /// long and blue across the sand.
+    ///
+    /// The shadow is the whole of what makes it read as desert rather than as a green stick. It is
+    /// laid down first, longer than the plant is tall and going off to one side, because the sun
+    /// out here is never overhead by the time anybody is looking — and every cactus on the screen
+    /// throws it the same way, since they are all standing under the one sun.
+    private func drawCactus(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = x(0.030) * scale
+        let wide = tall * 0.26
+        let flesh = Color(red: 0.36, green: 0.50, blue: 0.31)
+
+        var shadow = Path()
+        shadow.move(to: CGPoint(x: foot.x - wide * 0.4, y: foot.y))
+        shadow.addLine(to: CGPoint(x: foot.x + tall * 1.15, y: foot.y + tall * 0.16))
+        shadow.addLine(to: CGPoint(x: foot.x + tall * 1.15, y: foot.y + tall * 0.24))
+        shadow.addLine(to: CGPoint(x: foot.x + wide * 0.4, y: foot.y + tall * 0.1))
+        shadow.closeSubpath()
+        context.fill(
+            shadow,
+            with: .color(
+                Color(red: 0.28, green: 0.32, blue: 0.52).opacity(colors.isNight ? 0.22 : 0.30)
+            )
+        )
+
+        // The trunk, and an arm each side going up at a different height — which is the shape
+        // everybody draws a cactus as, and it happens to be the shape they grow in.
+        var body = Path()
+        body.addRoundedRect(
+            in: CGRect(x: foot.x - wide * 0.5, y: foot.y - tall, width: wide, height: tall),
+            cornerSize: CGSize(width: wide * 0.5, height: wide * 0.5)
+        )
+        for (side, height, reach) in [(-1.0, 0.62, 0.34), (1.0, 0.46, 0.30)] {
+            let elbow = CGPoint(x: foot.x + wide * 0.5 * side, y: foot.y - tall * height)
+            let thick = wide * 0.72
+            let out = tall * reach
+            let tip = CGPoint(x: elbow.x + out * side, y: elbow.y - tall * (height * 0.42 + 0.1))
+            body.addRoundedRect(
+                in: CGRect(
+                    x: min(elbow.x, tip.x) - (side > 0 ? thick * 0.5 : 0),
+                    y: elbow.y - thick * 0.5,
+                    width: out + thick * 0.5,
+                    height: thick
+                ),
+                cornerSize: CGSize(width: thick * 0.5, height: thick * 0.5)
+            )
+            body.addRoundedRect(
+                in: CGRect(
+                    x: tip.x - thick * 0.5,
+                    y: tip.y,
+                    width: thick,
+                    height: elbow.y - tip.y + thick * 0.5
+                ),
+                cornerSize: CGSize(width: thick * 0.5, height: thick * 0.5)
+            )
+        }
+        context.fill(body, with: .color(flesh.opacity(colors.isNight ? 0.66 : 0.92)))
+        context.stroke(
+            body,
+            with: .color(
+                Color(red: 0.20, green: 0.30, blue: 0.19).opacity(colors.isNight ? 0.5 : 0.7)
+            ),
+            lineWidth: max(0.5, wide * 0.09)
+        )
+    }
+
     /// A paper lantern hung low on its own short pole, with the light it is throwing on the
     /// ground under it. It reads brightest after dark for the reason a crystal does — and for
     /// a better one, since after dark it is the only reason anybody can see the fair at all.
@@ -992,6 +1228,10 @@ private struct Paddock {
         // The one world that closes in *less* after dark than by day, because after dark
         // somebody has switched the lights on.
         case .sawdust: colors.isNight ? 0.40 : 0.28
+        // Nothing closes in on a desert. What is round the edge of it is more desert, so it opens
+        // out further than any ground in the game by day — and shuts down hardest of the lot
+        // after dark, when what is round the edge of it is a great deal of nothing.
+        case .sand: colors.isNight ? 0.56 : 0.16
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
