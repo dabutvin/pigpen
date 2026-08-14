@@ -25,8 +25,9 @@ D  the deer                 B  the boar
 W  the wyrm                 R  the rat king
 V  the visitor              T  a bat
 U  its pup                  M  the ringmaster
-S  the scorpion             a  an apple
-x  a skull                  ~  water
+S  the scorpion             C  the crab
+a  an apple                 x  a skull
+~  water
 ```
 
 A treat inside the pen shows as its own letter on `o` ground. An apple with a `#` on it has
@@ -1596,7 +1597,8 @@ its own — always two or more in a straight line. One hazard is a tile to build
 world since the meadow has had. A run of them is a length of ground no wall may cross, and since a
 pen may not lean on a rope either, a run of two is a strip of dead ground three tiles wide. The
 crowd is a wall the board gives you and a guy rope is a wall the board forbids you, and that is
-what holds the world at 37% and above, the highest floor in the game.
+what holds the world at 37% and above — the highest floor any world had stood on until the sand
+took it to 38% and the tide to 40%.
 
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
@@ -1766,8 +1768,9 @@ apples, which is 38.
 
 The crowd runs along the front of the big top, turns at the corner and goes down the far side, so
 two of the four walls are handed over before a piece is laid. The corner question the way Rimstone
-Corner asked it, and the hardest corner in the game — with eleven pieces, the smallest budget at
-the fair, to draw the other two sides.
+Corner asked it, and the hardest corner in the game when it shipped — with eleven pieces, the
+smallest budget at the fair, to draw the other two sides. Scarp Corner out in the dunes has taken a
+point off it since, and Limpet Corner in the cove another.
 
 What makes it hard is where the guy ropes are pegged. A right-angled block in this corner is a
 rectangle hung under the crowd, and the pair of ropes lies inside every rectangle worth drawing, so
@@ -1809,8 +1812,9 @@ The answer fits itself round the rigging instead. It takes the wide ground south
 finger of pen north between the north-west stall and the nearest pair of ropes, and shuts that pair
 in on the way: 46 tiles, one apple and two ropes, which comes to 41. The run of three and the pair
 beside it are left standing out in the north — five pegs, twenty-five points to shut in, and the
-ground behind them is not worth that. At 56% it leaves the widest gap of any field in the game,
-tying Starwell Ring.
+ground behind them is not worth that. At 56% it ties Starwell Ring, and the two of them shared the
+widest gap of any field in the game until Urchin Ledge went two points past them both out in the
+cove — with a run of four hazards to the rigging's three, and a coast on either side of it.
 
 ## 8. The Midway — 19 pieces, 49
 
@@ -2102,7 +2106,7 @@ comes down between the two horns has to come round the pair.
 
 One barchan with its back to the east and its mouth open west, three melons scattered wide over the
 open sand, and a pair of cacti pegged down the middle of the field. The detour question, and the
-hardest one in the game.
+hardest one in the game until The Mussel Beds asked it a point harder out in the cove.
 
 Seventeen pieces will square off a block under the crescent's southern horn, which does the
 north-west corner for nothing: 24 tiles holding the melon in the south and both cacti, which is 19.
@@ -2140,7 +2144,8 @@ over.
 The scarp: one great barchan hooked into the north-west so its back runs nearly the whole width of
 the north and its western horn stands on the rim of the board. Two sides of a pen handed over, and
 eleven pieces — the smallest budget in the world — to draw the rest. The corner question with two
-free sides, the way Rimstone Corner and The Big Top asked it, and the hardest corner in the game.
+free sides, the way Rimstone Corner and The Big Top asked it, and the hardest corner in the game
+until Limpet Corner asked it again on the flats for a point more.
 
 The right-angled answer hangs a rectangle under the back and pays for its own east wall: 20 tiles,
 stopping three columns short of the eastern horn because eleven pieces will not reach it and turn the
@@ -2228,11 +2233,394 @@ and the rest wall the open sand east of the notch as the scorpion's own yard wit
 it — 14 tiles and that melon, which is 19. A fair answer, and one nobody has to be taught. The same
 sixteen laid as above — out from the pig up the west of the flats, along under the great back in the
 north and down round the far side of the notch — hold 45 tiles and the melon in the north-east, which
-is 50: the biggest pen any boss holds, and at 62% the widest gap any board in the game leaves.
+is 50: the biggest pen any boss holds, and at 62% the widest gap any board in the game left until
+Hermit Pool went a point past it out in the cove.
 
 The melon left lying in the lane is the board saying what the rule costs. It sits in the clear ground
 between the two pens, so this is the only pen in the game that walks past five points it can see and
 leaves them where they are.
+
+It asks for 21 of the 24 stars below it before it opens.
+
+---
+
+# Tidepool Cove
+
+The ninth world, solved the same way and drawn the same way. A clam takes the meadow's apple and a
+sea urchin its skull, so an `a` below is a clam worth five tiles to shut in, and an `x` an urchin
+worth five fewer that no piece will build on. A `C` is the crab, and the last field is the first in
+the game where the water is not a wall.
+
+What the cove does differently is where its water **is**. Every world below is a field with water in
+it; out here the tide has come up through the ground, so each board is two or more **lands** that do
+not touch. A pen can only ever hold ground the pig can walk to, and on every board below there is
+land she cannot — no smaller than four tiles, so it is always big enough to have wanted. Read the
+diagrams for that first: a good deal of the `.` on each one is not ground she turned down, it is
+ground she was never offered.
+
+Which is new in what it **withholds**. Eight worlds have handed the pig water for nothing and called
+it a wall. The cove hands her a coast on every board and fences ground off with the same stroke, and
+the two halves pull opposite ways: a squared-off pen has to fit inside one land, and the lands out
+here are cut on the diagonal as often as not, where a pen that follows a coast can have most of one.
+That is where every gap below comes from, and it is why the world floors at 40% — the highest floor in
+the game — without a single mean board on it.
+
+| # | Level | Pieces | Ground held | In the pen | Score | Squared off |
+|---|---|---|---|---|---|---|
+| 1 | Cockle Bank | 14 | 30 | 1 clam | 35 | 21 |
+| 2 | Ebb Neck | 13 | 35 | 2 clams | 45 | 25 |
+| 3 | Barnacle Gut | 14 | 44 | 2 clams | 54 | 29 |
+| 4 | The Long Strand | 13 | 35 | 1 clam | 40 | 21 |
+| 5 | The Mussel Beds | 15 | 50 | 3 clams | 65 | 33 |
+| 6 | Limpet Corner | 11 | 35 | 1 clam | 40 | 19 |
+| 7 | Urchin Ledge | 12 | 43 | nothing | 43 | 18 |
+| 8 | Kelp Sound | 15 | 51 | 3 clams | 66 | 38 |
+| 9 | Hermit Pool | 22 | 41 | 1 clam | 46 | 17 |
+
+Every one of these spends its whole budget.
+
+## 1. Cockle Bank — 14 pieces, 35
+
+```
+.~.....#.a.
+.~....#a#..
+.~...#ooo#.
+.~~.#ooooo#
+..~~oooooo#
+...~~ooooo#
+....~~oooo#
+.....~~ooo#
+~.....~~oo#
+~~.....~~P#
+~~~.....~#.
+```
+
+One channel, cut at the ebb. It comes in off the north rim, turns at the fourth row and runs the whole
+diagonal down to the south-east corner, with a wedge of water left standing in the south-west.
+Sixty-four tiles of cockle bank on her side of it and thirty-three on the other, which is a third of
+the field gone before a piece is laid.
+
+The shore question, asked on the longest bank the world has and asked on the slant. Thirteen pieces
+laid against the cut get their western side free where the steps happen to line up with it, and buy a
+north wall and an east wall: 21 tiles. But a rectangle has one north side and this coast has eight
+steps in it, so squaring off can only ever meet the water at a corner. The whole budget run down the
+length of the cut and closed along the eastern rim holds 30 tiles instead.
+
+The top of that wall is the part worth looking at: a tongue two rows deep, drawn round the clam
+standing on its own above the bank. Five pieces to fetch four tiles and five points, and the one
+place on the board where the wall leaves the line of the cut for something lying on the ground.
+Which is 35.
+
+The other clam is up on the north rim. That is ground no pen may hold on any board in the game, since
+a pen touching the rim is a pen with a way out of it — the cove will spend the rest of the trail
+putting clams where she cannot walk, and this one is only out of reach.
+
+## 2. Ebb Neck — 13 pieces, 45
+
+```
+.....~~....
+.....~~....
+~~~~~~.....
+#oooP~.....
+#ooo~~~~~~~
+#oooo~aooo~
+#oooooooo#.
+.#oooooo#..
+..#ooao#...
+...#oo#....
+....##.....
+```
+
+Three runs of water that all meet: a channel down from the north rim, a bar across the north-west and
+a longer bar across the middle and out to the eastern rim. It leaves three lands — seventy-three
+tiles in the south, eighteen in the north-east, ten in the north-west — and stands the pig on the neck
+between the two bars, walled north, east and south by the sea.
+
+The basin question, and the water has done three sides of it. What is left is the mouth, which is the
+whole south and west. Thirteen pieces hung down off the neck as a rectangle hold 20 tiles and the
+clam in the south, which is 25, and it is a fair answer: the north wall comes free, and so do the
+three tiles of channel that bite into the eastern side of it.
+
+What a rectangle cannot do is go under the middle bar. The same thirteen run as a lozenge — four
+pieces down the western rim and the rest stepped round the south — hold 35 tiles, and four of those
+are the strip lying in the lee of that bar out to the east, with the second clam on it. Both clams
+inside, which is 45.
+
+Both lands across the water are left empty on purpose. This is the one board in the cove whose best
+pen comes back with every clam on the map, and it is the second field of nine: the world says what it
+is going to do before it starts doing it.
+
+## 3. Barnacle Gut — 14 pieces, 54
+
+```
+...####~...
+.~~oooo~.a.
+.~~oooo~...
+#oooooo~...
+#oooooo~...
+#oooooo~...
+#aooooo~...
+.#ooooo~...
+..#oaoo~...
+...#oPo~.a.
+....###~...
+```
+
+The gut: one tile of water running the whole height of the board, rim to rim, with the flats on the
+west of it and an island of thirty-three tiles on the east. And a pool two by two, left inland in the
+north-west of her side.
+
+The span question. The gut is a wall down one whole side and nothing else; the pool is four tiles of
+water in a corner and nothing else. Fourteen pieces squared off against the gut hold 24 tiles and one
+clam, which is 29 — and that is every rectangle on this board, because there is no rectangle that
+touches both.
+
+The same fourteen thrown from the pool's shoulder across to the gut, run down the western rim and
+closed on the diagonal in the south hold 44 tiles and two clams, which is 54. Four pieces of that
+wall are the span itself, laid across the north between the two bodies of water, and what they buy is
+the two rows behind the pool — which no rectangle can have without paying for a west wall as well.
+
+Two clams lie on the island across the gut, five points apiece and in plain sight on ground she
+cannot walk to. Every board in the cove has ground like that on it. This is the first one that puts
+anything worth having on it.
+
+## 4. The Long Strand — 13 pieces, 40
+
+```
+........#~~
+.......#o~~
+......#oo~~
+.....#ooo~~
+a...#oooo~~
+...#ooaoo~~
+~~~~ooooo~~
+~~~~oooooP#
+..~~ooooo#.
+..~~oooo#..
+..~~####...
+```
+
+Open sea two tiles deep down the whole of the north-east, and an inlet in the west that turns south
+and runs out to the rim, cutting six tiles off the south-west corner. Eighty-seven tiles of strand
+between them, with two clams lying on it.
+
+Which is the shore question again, three fields on and asked the hard way round. Squaring off is not
+the problem here — this is the one board in the cove where a rectangle gets both coasts at once, its
+east side against the sea and its west against the inlet, for 16 tiles and the clam, which is 21. The
+problem is that both coasts keep going and the rectangle stops.
+
+So the answer is a band on the slant: a staircase down the north-west from the sea's edge to the mouth
+of the inlet, and another back up the south-east from the inlet to the sea. Thirteen pieces, 35 tiles
+and the same clam, which is 40 — and every tile of both coasts between the two staircases is wall the
+board gave away. At 47% it is the hardest shore in the game, five points past The Long Slack out in
+the dunes.
+
+The second clam is pegged on the western rim two rows above the inlet: on her own ground this time,
+and still outside every pen that can be drawn on the board.
+
+## 5. The Mussel Beds — 15 pieces, 65
+
+```
+...#####~..
+..#ooooo~..
+.#oooaoo~..
+~ooooooo~..
+~ooooooo~~~
+~oooaooa#..
+~oooooo#...
+~ooooo#....
+~Pooo#.....
+~ooo#......
+~###.......
+```
+
+The beds: a strand down the western rim for eight of its eleven rows, and a channel down the
+north-east that turns and runs
+out to the eastern rim, cutting eight tiles off that corner. Four clams on the mussel beds between
+them, three in the open and the fourth right on the line the closing wall takes.
+
+The detour question, and the hardest in the game. A rectangle against the western strand holds 28
+tiles and the clam standing in the middle of them, which is 33 — the strand pays for its west wall and
+it pays for nothing else, because a rectangle that reached east for the other clams would have to buy
+the whole of its own north side.
+
+Fifteen pieces run instead round the north of the beds and back down the east on the diagonal: 50
+tiles, three clams, 65. Twenty-two tiles and two clams more than the tidy answer gets, off the same
+budget.
+
+Two of those clams lie side by side at the eastern edge of the beds, right where the wall has to turn
+for home, and the diagram shows what the answer does about it: it reaches out for the first and closes
+on top of the second. A clam takes a post perfectly well, and the five points go under it. Melon
+Ground said that first, out in the sand; this is the same sentence with the choice made twice in one
+step.
+
+## 6. Limpet Corner — 11 pieces, 40
+
+```
+...........
+..##.......
+.#oo#......
+~ooao#.a...
+~ooooo#....
+~oooooo#...
+~~oooooo#..
+.~~ooooo~~~
+..~~oooo~~~
+...~~Poo~~~
+....~###~~~
+```
+
+One bent coast down the west — the rim for four rows, then a diagonal away to the south — and the open
+sea filling the whole south-east corner, three columns of it by four rows. The two nearly meet in the
+south, and eleven pieces, the smallest budget in the world, are handed over to do the rest.
+
+The corner question with two free sides, the way Rimstone Corner and The Big Top and Scarp Corner
+asked it, and at 52% the hardest corner in the game. The right-angled answer runs a straight wall
+across the flats and drops one piece down to the sea: 19 tiles, and it reaches no clam at all.
+
+The eleven run instead as one long chevron. It goes up into the north-west first, four rows north of
+where the tidy wall stopped, to take the nearer of the two clams lying in the north; then out across the open flats
+on the diagonal, where a wall shuts two tiles a piece where a straight one shuts one; then closes on
+the sea's edge in the south. 35 tiles and the clam, which is 40 — more than twice the block, off a
+budget of eleven.
+
+The second clam is two tiles east of the chevron's line, and there is no version of this pen that
+reaches it. On a board where two of the walls came free, five points is still four pieces of fence.
+
+## 7. Urchin Ledge — 12 pieces, 43
+
+```
+~~x~~~~~...
+~~x~~~~~...
+~~xx#oPo#..
+~~x#ooooo#.
+#o#ooooooo#
+#ooooooooo#
+#ooooooooo#
+~ooooooooo#
+~~~~~~~~~~~
+.a......a..
+...........
+```
+
+The ledge, with a coast on both sides of it: the sea across the whole north but for a corner, the
+sound across the whole south, and thirty-five tiles of waterline between them — more free wall than
+any other board in the cove has. And a run of five urchins standing in the north-west, four in a line
+down a column and one turned out of it.
+
+The obstruction question, and at 58% the widest gap any field in the game leaves — two points past
+Starwell Ring and The Rigging. An urchin takes no fencing and no pen may lean on one, so the run is a
+length of ground no wall may cross, and it is pegged exactly where the two coasts come closest, which
+is where a wall would have gone. Twelve pieces squared off between the two seas get their north wall
+and their south wall for nothing and hold 18 tiles: two paid sides, standing clear of the urchins in
+the west and stopping short of the dry corner in the north-east, because a rectangle that took the
+corner would have to buy a north wall too.
+
+The same twelve run round the whole ledge instead. Three of them cut the north-west corner on the
+diagonal, skirting the urchins tile by tile; the other nine take the western rim below it, the
+north-east corner and the eastern rim. 43 tiles, and nothing lying on any of them.
+
+Those three pieces are the whole field, and it is worth seeing what they are for. A wall may not stand
+on an urchin, but nothing stops the pig *walking* over one — and this run climbs a column from the
+middle of the ledge to the northern rim, so it is four urchins and a step off the map. The diagonal
+seals that ladder at its foot and at its shoulder. The single tile of ledge west of the seal, with the
+sea above it and a post either side, comes free with the sealing.
+
+Two clams lie across the sound, on the strip the tide cut off in the south. The second board in the
+world to put five points where she cannot walk, and the only pen in it that comes back with nothing.
+
+## 8. Kelp Sound — 15 pieces, 66
+
+```
+~~~#........
+~~oo#.......
+~oooa#......
+#ooooo#.....
+#oooooo#....
+#ooooooo#...
+#ooooPooo#..
+#ooooooooo#.
+#oaoooooaoo#
+~~~~~~~~~~~~
+.....a..a...
+............
+```
+
+The sound: twelve tiles by twelve, the open water across the whole southern side of it and a wedge of
+it in the north-west corner. A hundred and two tiles of kelp bed on her side, and twenty-four on the
+far shore.
+
+The broad board stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide Reaches
+and the Great Gallery and The Midway and the Great Erg do. A broad board leaves a wide gap against a
+squared-off pen because it is broad, which says more about its size than about how hard it is to hold
+— and this one asks 42, less than six of the seven fields above it, while holding the biggest pen in
+the cove at 51 tiles.
+
+Fifteen pieces squared off against the sound hold 28 tiles and the two clams at the water's edge,
+which is 38. The same fifteen run out as one great wedge — up the western rim, along the water in the
+north-west corner and away on the diagonal to the eastern rim — hold 51 tiles, the same two clams and
+the one in the north, which is 66.
+
+And two more clams lie on the far shore: ten points on ground no wall on this board reaches, which is
+where the cove says its own idea loudest. The biggest field in the world looks half again as big as it
+is.
+
+## 9. Hermit Pool — 22 pieces, 46
+
+```
+...####....
+..#oooo#...
+.#Pooooo#..
+#oooooooo#.
+#ooooo~~oo#
+#oooooC~~#.
+.#oooooo#..
+..#aooo#...
+...####....
+~~~~~~~~~~~
+....a..a...
+...........
+```
+
+The cove's boss, and the ninth rule the game has: **a crab is at home in the water, so water will not
+hold him.**
+
+Every rule below this one is a refusal. They may not share a pen, they may not be parted, they may not
+be housed unequally, one has to be left outside, one has to be ringed, they may not share a wall —
+eight worlds of things a board says no to once everything on it is already stuck. The ninth says no to
+nothing. It changes what stuck means: the crab is walked over the board rather than over the mud on
+it, so every drop of water he can reach is a road and the far side of it is the way out.
+
+Which turns the whole world against itself. Nine fields of coastline have taught that water is a wall
+handed over for nothing, and the sound across the south of this board is eleven tiles of it — every
+one a hole, and both ends of it off the map, so it is not a bay he could be corked in at all. Cork him
+against it and he is gone, and the field draws him going: the escape route runs out over the water, so
+the board says why without a word.
+
+He stands beside the other half of it. The tide left a pool of four tiles inland, stepped on the
+diagonal, and any wall that holds him has to go round the outside of it — dead ground the budget buys
+and the score does not count, which is the exact inverse of every other piece of water in the game.
+The four `~` inside the ring above are worth nothing at all.
+
+So the answer is one closed ring with every piece of it bought, and it is the only pen in the cove
+that leans on nothing. Twenty-two pieces run as a lozenge round the middle of the flats hold the pig,
+the crab, his pool and 41 tiles of ground, with the clam south-west of him inside it and the one at her own
+shoulder under a post: 46. Twenty-two is the biggest budget in the game, and only The Centre Ring has
+handed one out before — it has to be, because on this board a budget is all there is.
+
+It is also the plan every other boss in the game sends back. One pen round the pair of them wins here,
+because the ninth rule is not about the arrangement two pens end up in.
+
+Squaring the map off means something new as well. A rectangle on the coast holds nothing that swims,
+so the cheapest legal pair is four pieces round the pig where she stands and eighteen laid *over* the
+pool — 16 tiles of mud, four of water that pay nothing, 17 between them, where the one closed ring
+round the lot holds 41 tiles and a clam. At 63% that is the widest gap any board in the game leaves, a
+point past Scorpion Flats.
+
+The two clams across the sound are the cove's joke told for the last time and to the wrong animal.
+Four boards in the world peg a clam on ground she cannot reach, and on the other three it is out of
+everything's reach as well. Here it is not: the crab walks to them, so a player who sees him get
+there has already lost.
 
 It asks for 21 of the 24 stars below it before it opens.
 

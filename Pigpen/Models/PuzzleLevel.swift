@@ -104,10 +104,21 @@ enum Question: String, Sendable, CaseIterable {
     /// the ground between the two of them has to be given up unclaimed and the budget has to pay
     /// for two whole walls. A boss, and nothing else.
     case berth
+    /// One budget, two animals, and water that holds only one of them: a crab walks over it, so
+    /// every drop he can reach has to be shut in with him and pays no ground, where hers still
+    /// wants nothing else. A boss, and nothing else.
+    ///
+    /// The one boss question that adds no refusal. Every rule above it is about the arrangement
+    /// two pens end up in, and this one is about what a wall is — so a board that gets it wrong
+    /// does not come back refused, it comes back with the crab swimming out, which the field
+    /// draws as a route through the water.
+    case swim
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth] }
+    static var bossly: [Question] {
+        [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .swim]
+    }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
@@ -248,8 +259,9 @@ struct PuzzleLevel: Identifiable, Sendable {
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
-    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M` or `S` for a
-    /// deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the ringmaster or a scorpion.
+    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M`, `S` or `C` for
+    /// a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the ringmaster, a scorpion
+    /// or a crab.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.

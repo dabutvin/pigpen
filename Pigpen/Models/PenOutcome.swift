@@ -76,7 +76,7 @@ extension PuzzleLevel {
         var ground: [Animal: Set<GridPoint>] = [:]
 
         for animal in animals {
-            switch walk(from: animal.tile, fences: fences) {
+            switch walk(from: animal.tile, fences: fences, swimming: animal.kind.swims) {
             case .out(let route):
                 escapes.append(Escape(animal: animal, route: route))
             case .stuck(let run):
@@ -85,6 +85,11 @@ extension PuzzleLevel {
             }
         }
 
+        // Which is where the cove's rule has already been applied, and the whole of it. Eight boss
+        // rules below this one are refusals laid on top of a board where everything is stuck; the
+        // ninth changes what stuck means, so it is decided in the walk and there is nothing left
+        // to check down here. A crab who was not held is a crab who swam off the map, and the
+        // escape carries the route he took through the water.
         guard escapes.isEmpty else { return .escaped(escapes: escapes) }
 
         // A board that keeps two animals apart is not won by the pen that holds them both:
@@ -218,7 +223,16 @@ extension PuzzleLevel {
         case stuck(ground: Set<GridPoint>)
     }
 
-    private func walk(from home: GridPoint, fences: Set<GridPoint>) -> Walk {
+    /// - Parameter swimming: whether water is ground to this animal rather than a wall. True for
+    ///   the cove's crab and nothing else, and the whole of the ninth world's rule: he is walked
+    ///   over the board rather than over the mud on it, so the only thing that stops him is a
+    ///   fence piece. What comes back is still the ground he holds — water is not ground and
+    ///   scores nothing, however freely he paddles across it.
+    private func walk(
+        from home: GridPoint,
+        fences: Set<GridPoint>,
+        swimming: Bool = false
+    ) -> Walk {
         var reached: Set<GridPoint> = [home]
         var cameFrom: [GridPoint: GridPoint] = [:]
         var queue: [GridPoint] = [home]
@@ -235,7 +249,7 @@ extension PuzzleLevel {
                 guard contains(step) else {
                     return .out(route: route(to: tile, cameFrom: cameFrom) + [step])
                 }
-                guard isWalkable(step), !fences.contains(step), !reached.contains(step)
+                guard isWalkable(step) || swimming, !fences.contains(step), !reached.contains(step)
                 else { continue }
 
                 reached.insert(step)
@@ -244,7 +258,7 @@ extension PuzzleLevel {
             }
         }
 
-        return .stuck(ground: reached)
+        return .stuck(ground: swimming ? reached.filter(isWalkable) : reached)
     }
 
     private func route(to tile: GridPoint, cameFrom: [GridPoint: GridPoint]) -> [GridPoint] {

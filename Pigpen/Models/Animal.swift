@@ -18,6 +18,11 @@
 /// The dunes stand a scorpion on the sand, and he is the first one it matters how *near* to. Every
 /// other animal in the game is either in the pig's pen or out of it; a scorpion stings through a
 /// fence, so a wall with the pig on one side of it and him on the other is no wall at all.
+///
+/// The cove's crab is the first one the *board* works differently for. Every animal above him is
+/// stopped by two things, fencing and water; he is stopped by one. Nine worlds have handed the pig
+/// water for nothing and called it a wall, and the last field of the ninth stands something on the
+/// sand that walks straight over it.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -29,6 +34,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case pup = "U"
     case ringmaster = "M"
     case scorpion = "S"
+    case crab = "C"
 
     /// What the field draws it as.
     var glyph: String {
@@ -42,6 +48,20 @@ enum Animal: Character, CaseIterable, Sendable {
         case .bat, .pup: "🦇"
         case .ringmaster: "🤹"
         case .scorpion: "🦂"
+        case .crab: "🦀"
+        }
+    }
+
+    /// Whether water is ground to this animal rather than a wall.
+    ///
+    /// True of the crab and nothing else. It is the ninth world's whole rule, and it lives here
+    /// rather than on the question because it is a fact about the animal: a crab would swim on any
+    /// board in the game, and the only reason no board above the cove has to think about it is
+    /// that no board above the cove has a crab standing on it.
+    var swims: Bool {
+        switch self {
+        case .crab: true
+        case .pig, .deer, .boar, .wyrm, .rat, .visitor, .bat, .pup, .ringmaster, .scorpion: false
         }
     }
 
@@ -58,6 +78,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .pup: "pup"
         case .ringmaster: "ringmaster"
         case .scorpion: "scorpion"
+        case .crab: "crab"
         }
     }
 }

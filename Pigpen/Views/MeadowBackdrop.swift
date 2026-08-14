@@ -81,6 +81,7 @@ private struct Paddock {
         case .flowstone: drawFlowstone(in: &context)
         case .sawdust: drawSawdust(in: &context)
         case .sand: drawSand(in: &context)
+        case .flats: drawTideFlats(in: &context)
         }
     }
 
@@ -95,6 +96,12 @@ private struct Paddock {
             // so the dunes get a drift of grains going by where every other world gets flies —
             // by day as well as after dark, because the wind does not keep their hours.
             drawBlownSand(in: &context)
+        case .flats:
+            // A cove has no fireflies either, and what it has instead is the thing the world is
+            // named for: the water in the flats does not sit still. So the pools take a slow
+            // swell across them, by day and after dark both, and after dark they are the only
+            // light on the board — the sky has gone and the ground still has yesterday's in it.
+            drawTidePools(in: &context)
         default:
             if colors.isNight {
                 drawFireflies(in: &context)
@@ -451,6 +458,128 @@ private struct Paddock {
         )
     }
 
+    /// The ground of the ninth world: sand the sea has just gone off, with the sea still in it.
+    ///
+    /// A desert and a cove are drawn out of the same two things — ripples in sand, and a light with
+    /// nothing between it and the ground — and they have to read as opposites, so everything the
+    /// dunes do one way this does the other. The dunes' ripples all lean one way because one wind
+    /// combed them; these run in long shallow arcs *along* the shore, because what combed them came
+    /// in and went out again rather than past. The dunes have pans of hardpan swept bare and pale;
+    /// the cove has runnels of water left lying, darker than the sand and brighter at the same time,
+    /// since a pool holds the sky and dry ground only takes it.
+    ///
+    /// The result is the one ground in the game with light coming *out* of it. That is the whole
+    /// look of the world and it is why the palette is so pale: half of what the player is seeing has
+    /// bounced off water on its way to them.
+    private func drawTideFlats(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 7_717)
+
+        // Wet sand in broad bands, darker where the tide got to last and never quite dried.
+        for _ in 0..<5 {
+            let top = y(scatter.next(in: -0.05...0.95))
+            context.fill(
+                band(from: top, to: top + y(scatter.next(in: 0.05...0.16)), wobble: 0.6),
+                with: .color(colors.blade.opacity(colors.isNight ? 0.20 : 0.13))
+            )
+        }
+
+        // The ripples: long, shallow, and lying along the shore rather than across it. Drawn as a
+        // lit crest with its own shadow under it, the same way the dunes' are, because a pale flat
+        // ground reads as having no shape to it otherwise.
+        for _ in 0..<22 {
+            let down = y(scatter.next(in: -0.02...1.02))
+            var crest = Path()
+            crest.move(to: CGPoint(x: -x(0.05), y: down))
+            crest.addCurve(
+                to: CGPoint(x: size.width + x(0.05), y: down + y(scatter.next(in: -0.03...0.03))),
+                control1: CGPoint(x: x(0.3), y: down + y(scatter.next(in: -0.02...0.02))),
+                control2: CGPoint(x: x(0.7), y: down + y(scatter.next(in: -0.02...0.02)))
+            )
+            let width = max(0.7, y(scatter.next(in: 0.003...0.009)))
+            context.translateBy(x: 0, y: width * 0.9)
+            context.stroke(
+                crest,
+                with: .color(
+                    Color(red: 0.16, green: 0.30, blue: 0.34)
+                        .opacity(colors.isNight ? 0.22 : 0.14)
+                ),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width * 0.9)
+            context.stroke(
+                crest,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : 0.30)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+
+        // Runnels: the water's own way back off the beach, cut in shallow branching lines. These
+        // are the brightest thing on the ground by day and the only bright thing after dark.
+        for _ in 0..<9 {
+            let head = CGPoint(x: x(scatter.next(in: -0.05...1.05)), y: y(scatter.next()))
+            var runnel = Path()
+            runnel.move(to: head)
+            var here = head
+            for _ in 0..<3 {
+                let next = CGPoint(
+                    x: here.x + x(scatter.next(in: -0.10...0.10)),
+                    y: here.y + y(scatter.next(in: 0.02...0.07))
+                )
+                runnel.addQuadCurve(
+                    to: next,
+                    control: CGPoint(x: here.x + x(scatter.next(in: -0.05...0.05)), y: next.y)
+                )
+                here = next
+            }
+            context.stroke(
+                runnel,
+                with: .color(colors.discHalo.opacity(colors.isNight ? 0.34 : 0.42)),
+                style: StrokeStyle(
+                    lineWidth: max(0.9, y(scatter.next(in: 0.004...0.010))),
+                    lineCap: .round
+                )
+            )
+        }
+    }
+
+    /// The water still lying in the flats, and the one thing on this ground that moves.
+    ///
+    /// Every other world's night gets fireflies over it; a cove gets its own pools instead, which
+    /// is a better trade than it sounds. A firefly is a light above the field and these are lights
+    /// *in* it, so the cove after dark reads as a dark field with the sky caught in cracks all
+    /// through it — which is what a beach at night actually looks like, and is the one effect in
+    /// the game that is as much use by day as after it.
+    ///
+    /// The swell is one slow wave crossing the whole board rather than each pool shining on its
+    /// own phase, because they are all the same water. So they brighten in order, west to east, and
+    /// the board has a direction to it that no other night has.
+    private func drawTidePools(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 5_281)
+        for clearing in clearings {
+            for _ in 0..<4 {
+                let centre = CGPoint(x: x(scatter.next()), y: y(scatter.next(in: clearing)))
+                let spread = x(scatter.next(in: 0.05...0.13))
+                // One wave, travelling: how bright a pool is depends on where it stands.
+                let swell = 0.5 + 0.5 * sin(elapsed * 0.7 - Double(centre.x / max(size.width, 1)) * 4)
+                let pool = Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.13,
+                    width: spread, height: spread * 0.26
+                ))
+                context.fill(
+                    pool,
+                    with: .color(colors.discHalo.opacity((colors.isNight ? 0.30 : 0.34) * (0.55 + 0.45 * swell)))
+                )
+                // A lit rim on the far side, which is what makes it read as water in a dip
+                // rather than as a pale patch of sand.
+                context.stroke(
+                    pool,
+                    with: .color(GamePalette.cream.opacity((colors.isNight ? 0.22 : 0.40) * swell)),
+                    style: StrokeStyle(lineWidth: max(0.7, y(0.0025)), lineCap: .round)
+                )
+            }
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -486,6 +615,7 @@ private struct Paddock {
         case .flowstone: 14
         case .sawdust: 16
         case .sand: 9
+        case .flats: 13
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -560,6 +690,17 @@ private struct Paddock {
                     case ..<0.76: drawPeg(in: &context, at: spot, scale: scale)
                     default: drawLantern(in: &context, at: spot, scale: scale)
                     }
+                case .flats:
+                    // Ground the sea has just left, dressed with what the sea left on it: weed
+                    // in heaps along the tide mark, a rock with barnacles on it, and an urchin
+                    // sitting in the wet where it was stranded. The board's own hazard is an
+                    // urchin, and this is where a player has already seen one before the first
+                    // field asks about it.
+                    switch roll {
+                    case ..<0.40: drawWeed(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.74: drawStone(in: &context, at: spot, scale: scale)
+                    default: drawUrchin(in: &context, at: spot, scale: scale)
+                    }
                 }
             }
         }
@@ -578,6 +719,7 @@ private struct Paddock {
         case .flowstone: 24
         case .sawdust: 28
         case .sand: 14
+        case .flats: 20
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -621,6 +763,20 @@ private struct Paddock {
                 // The front of the fair is where the ropes are pegged out, so the verge is
                 // long grass with pegs standing in it.
                 drawPeg(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.7)))
+            case .flats:
+                // The front of the screen is the top of the beach, which is the one strip of a
+                // cove that is never underwater: so it is weed thrown up in a line, with the
+                // rocks it was thrown against showing through it.
+                if roll < 0.62 {
+                    drawWeed(
+                        in: &context,
+                        at: foot,
+                        scale: CGFloat(scatter.next(in: 1.1...1.9)),
+                        scatter: &scatter
+                    )
+                } else {
+                    drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.7)))
+                }
             case .flowstone:
                 // A rank of stalagmites along the front of the cave instead of long grass,
                 // with the odd crystal in among them.
@@ -1160,6 +1316,106 @@ private struct Paddock {
         )
     }
 
+    /// A heap of weed thrown up by the tide, lying where it landed rather than growing.
+    ///
+    /// The one warm colour on a cove board, and the one thing on it with a shape that could be
+    /// mistaken for a plant — so it is drawn as fronds that all fall the *same* way and lie flat at
+    /// the ends, which is what tells a player it was put there by water rather than by growing.
+    /// Grass drawn like this would look broken.
+    private func drawWeed(
+        in context: inout GraphicsContext,
+        at foot: CGPoint,
+        scale: CGFloat,
+        scatter: inout Scatter
+    ) {
+        let reach = x(0.026) * scale
+        let lean = CGFloat(gust(at: foot)) * reach * 0.16
+        let olive = Color(red: 0.41, green: 0.40, blue: 0.21)
+
+        // The wet mark it is lying in, which is what stops it looking stuck on.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - reach * 0.7, y: foot.y - reach * 0.11,
+                width: reach * 1.4, height: reach * 0.22
+            )),
+            with: .color(colors.blade.opacity(colors.isNight ? 0.26 : 0.18))
+        )
+
+        for index in 0..<5 {
+            let out = reach * CGFloat(0.4 + 0.16 * Double(index)) * CGFloat(scatter.next(in: 0.8...1.2))
+            let side: CGFloat = index.isMultiple(of: 2) ? -1 : 1
+            var frond = Path()
+            frond.move(to: foot)
+            frond.addQuadCurve(
+                to: CGPoint(x: foot.x + out * side + lean, y: foot.y - reach * 0.06),
+                control: CGPoint(
+                    x: foot.x + out * side * 0.5,
+                    y: foot.y - reach * CGFloat(scatter.next(in: 0.22...0.42))
+                )
+            )
+            context.stroke(
+                frond,
+                with: .color(olive.opacity(colors.isNight ? 0.52 : 0.78)),
+                style: StrokeStyle(lineWidth: max(0.7, reach * 0.11), lineCap: .round)
+            )
+        }
+
+        // A bladder or two, which is the detail that names it: nothing else on a beach is beaded.
+        for _ in 0..<2 {
+            context.fill(
+                circle(
+                    at: CGPoint(
+                        x: foot.x + reach * CGFloat(scatter.next(in: -0.5...0.5)),
+                        y: foot.y - reach * CGFloat(scatter.next(in: 0.05...0.24))
+                    ),
+                    radius: reach * 0.09
+                ),
+                with: .color(olive.opacity(colors.isNight ? 0.6 : 0.9))
+            )
+        }
+    }
+
+    /// A sea urchin stranded in the wet, which is the cove's hazard standing on the ground the
+    /// cove's hazard stands on. Drawn as a low dome with spines all round it and none of them
+    /// leaning, because it is the one thing in the dressing the breeze has no hold over at all —
+    /// which is exactly the property the board's rule turns on: there is nowhere on it to nail to.
+    private func drawUrchin(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let across = x(0.016) * scale
+        let shell = Color(red: 0.36, green: 0.22, blue: 0.40)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - across * 0.8, y: foot.y - across * 0.12,
+                width: across * 1.6, height: across * 0.24
+            )),
+            with: .color(colors.blade.opacity(colors.isNight ? 0.24 : 0.18))
+        )
+
+        for index in 0..<11 {
+            let angle = Double.pi * (0.06 + 0.88 * Double(index) / 10)
+            let out = across * CGFloat(0.6 + 0.25 * sin(Double(index) * 2.3))
+            var spine = Path()
+            spine.move(to: CGPoint(x: foot.x, y: foot.y - across * 0.16))
+            spine.addLine(to: CGPoint(
+                x: foot.x - out * CGFloat(cos(angle)),
+                y: foot.y - across * 0.16 - out * CGFloat(sin(angle)) * 0.8
+            ))
+            context.stroke(
+                spine,
+                with: .color(shell.opacity(colors.isNight ? 0.52 : 0.74)),
+                style: StrokeStyle(lineWidth: max(0.6, across * 0.09), lineCap: .round)
+            )
+        }
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - across * 0.34, y: foot.y - across * 0.42,
+                width: across * 0.68, height: across * 0.46
+            )),
+            with: .color(shell.opacity(colors.isNight ? 0.7 : 0.94))
+        )
+    }
+
     /// A paper lantern hung low on its own short pole, with the light it is throwing on the
     /// ground under it. It reads brightest after dark for the reason a crystal does — and for
     /// a better one, since after dark it is the only reason anybody can see the fair at all.
@@ -1232,6 +1488,10 @@ private struct Paddock {
         // out further than any ground in the game by day — and shuts down hardest of the lot
         // after dark, when what is round the edge of it is a great deal of nothing.
         case .sand: colors.isNight ? 0.56 : 0.16
+        // Nor on a cove, and for the opposite reason: the ground is holding the light rather than
+        // taking it, so a corner of the board is the last place to go dark. It is the only cover
+        // in the game whose night is barely closer in than its day.
+        case .flats: colors.isNight ? 0.30 : 0.18
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),

@@ -215,4 +215,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Tidepool Cove: the ninth world, wrapped in storybook films the way the seven below it are.
+    /// The send-off points on north to water gone hard, the way the dunes' points past the last dune
+    /// to a sea coming in, and Hermit Pool stops for a briefing because it stands a second animal on
+    /// the board and takes back the one thing every world since the meadow has handed over for
+    /// nothing — water as a wall.
+    static let tidepoolCove = GameWorld(
+        theme: .tidepoolCove,
+        map: .tidepoolCove,
+        opening: WorldFilmSpec(key: "cove-opening") { .storybook(.coveOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "cove-held") { .storybook(.coveHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.hermitPool.id: WorldFilmSpec(key: "hermit-pool-briefing") {
+                .storybook(.theHermitPool(start: $0))
+            }
+        ]
+    )
 }
