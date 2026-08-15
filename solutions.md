@@ -1306,7 +1306,7 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 | 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 23 |
 | 3 | Stillwater Neck | 12 | 27 | 2 crystals, 1 boulder | 32 | 20 |
 | 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 25 |
-| 5 | Glowworm Reach | 13 | 28 | 1 crystal | 33 | 24 |
+| 5 | Glowworm Reach | 11 | 21 | 1 crystal | 26 | 15 |
 | 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 25 |
 | 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 23 |
 | 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 42 |
@@ -1422,7 +1422,7 @@ a diamond hold 36 tiles, both crystals and the boulder they cannot avoid swallow
 which is 41. A diagonal wall shuts two tiles per piece where a straight one shuts one, and in a
 cave with no river in it there is nothing else to know.
 
-## 5. Glowworm Reach — 13 pieces, 33
+## 5. Glowworm Reach — 11 pieces, 26
 
 ```
 ..~........
@@ -1431,23 +1431,24 @@ cave with no river in it there is nothing else to know.
 #ooo~~.....
 #oooo~~....
 #oooPo~~...
-.#oooooo#..
-..#ooooo#..
-...#ooo#.a.
-....#a#....
-.....#.....
+#oooo#.....
+#aoo#......
+.#o#.....a.
+..#........
+...........
 ```
 
 Three crystals, and not one of them on the line the tidy pen wants. The river steps in off the roof
-at the north-west and away south-east, and the best block thirteen pieces can hang under it holds 20
-tiles and no crystal at all — there is no rectangle on this board that reaches any of the three.
+at the north-west and away south-east, and the best block eleven pieces can hang under it holds 15
+tiles and no crystal at all — there is no rectangle on this board that reaches any of the three, and
+no piece will lie on one to sweep it up in passing either.
 
-So the whole field is which one to go out for. The crystal above the river's arm is on the far side
-of the water: a pen that wants it has to come round the tip of the river and climb back up, and no
-thirteen-piece wall does. The one out east is four tiles of wall from the nearest ground worth
-holding, and four tiles of wall costs more than five points pay. The one hanging in the south is two
-rows below where the wall would otherwise stop, and the tongue that fetches it pinches down to a
-single tile: 28 tiles and that crystal, which is 33.
+So the whole field is which one to go out for, on the tightest budget in the caverns. The crystal
+above the river's arm is on the far side of the water: a pen that wants it has to come round the tip
+of the river and climb back up, and no wall of eleven does. The one out east is four tiles of wall
+from the nearest ground worth holding, and four tiles of wall cost more than five points pay. The one
+against the west wall is a row below where the pen would otherwise stop, and the tongue that fetches
+it pinches down to a single tile: 21 tiles and that crystal, which is 26.
 
 ## 6. Rimstone Corner — 9 pieces, 46
 

@@ -347,7 +347,7 @@ them as usual.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | — | 18 | 26 | 30% |
-| 2 | Pieman's Row | 11 | 2 pies | 16 | 24 | 33% |
+| 2 | Pieman's Row | 12 | 2 pies | 16 | 24 | 33% |
 | 3 | Cobble Yard | 14 | 2 drains | 12 | 18 | 33% |
 | 4 | Lock Gate | 13 | 1 drain | 14 | 22 | 36% |
 | 5 | Culvert Row | 13 | — | 16 | 27 | 40% |
@@ -464,7 +464,7 @@ out for.
 | 2 | Dripstone Shelf | 11 | 2 crystals | 23 | 36 | 36% |
 | 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 20 | 32 | 37% |
 | 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
-| 5 | Glowworm Reach | 13 | 3 crystals | 24 | 33 | 27% |
+| 5 | Glowworm Reach | 11 | 3 crystals | 15 | 26 | 42% |
 | 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
 | 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 42 | 63 | 33% |

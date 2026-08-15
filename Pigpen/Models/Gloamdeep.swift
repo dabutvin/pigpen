@@ -178,24 +178,24 @@ extension PuzzleLevel {
 
     /// Three crystals in a reach the glowworms have got into, and not one of them on the line the
     /// tidy pen wants. The river steps in off the roof at the north-west and away south-east, and
-    /// the best block thirteen pieces can hang under it holds 19 tiles and, at the edge of it, the
-    /// one crystal a wall would otherwise have run over: 24, and no rectangle on this board reaches
-    /// either of the other two.
+    /// the best block eleven pieces can hang under it holds 15 tiles and not one crystal — there is
+    /// no rectangle on this board that reaches any of the three, and none of them will take a piece
+    /// of wall to be swept up by one either.
     ///
-    /// So the whole field is which one to go out for. The crystal above the river's arm is on the
-    /// far side of the water: a pen that wants it has to come round the tip of the river and climb
-    /// back up, and there is no thirteen-piece wall that does. The one out east is four tiles of
-    /// wall from the nearest ground worth holding, and four tiles of wall costs more than five
-    /// points pay. The one hanging in the south is two rows below where the wall would otherwise
-    /// stop, and the tongue that fetches it pinches down to a single tile — which is 28 tiles and
-    /// that one crystal, or 33.
+    /// So the whole field is which one to go out for, on the tightest budget in the caverns. The
+    /// crystal above the river's arm is on the far side of the water: a pen that wants it has to
+    /// come round the tip of the river and climb back up, and there is no wall of eleven that does.
+    /// The one out east is four tiles of wall from the nearest ground worth holding, and four tiles
+    /// of wall cost more than five points pay. The one against the west wall is a row below where
+    /// the pen would otherwise stop, and the tongue that fetches it pinches down to a single tile —
+    /// which is 21 tiles and that one crystal, or 26.
     static let glowwormReach = gloamdeep(
         id: "glowworm-reach",
         name: "Glowworm Reach",
-        fenceBudget: 13,
-        twoStarScore: 19,
-        threeStarScore: 31,
-        maximumScore: 33,
+        fenceBudget: 11,
+        twoStarScore: 15,
+        threeStarScore: 24,
+        maximumScore: 26,
         question: .detour,
         map: """
             ..~........
@@ -205,9 +205,9 @@ extension PuzzleLevel {
             .....~~....
             ....P.~~...
             ...........
-            ...........
+            .a.........
             .........a.
-            .....a.....
+            ...........
             ...........
             """
     )

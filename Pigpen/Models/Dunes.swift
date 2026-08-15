@@ -462,9 +462,9 @@ extension WorldMap {
         nodes: [
             WorldNode(level: .slipfaceHollow, across: 0.26, up: 0.00),
             WorldNode(level: .theLongSlack, across: 0.74, up: 1.06),
-            WorldNode(level: .theBlowout, across: 0.28, up: 2.02),
-            WorldNode(level: .theHardpan, across: 0.72, up: 3.04),
-            WorldNode(level: .twoHorns, across: 0.22, up: 4.00),
+            WorldNode(level: .twoHorns, across: 0.28, up: 2.02),
+            WorldNode(level: .theBlowout, across: 0.72, up: 3.04),
+            WorldNode(level: .theHardpan, across: 0.22, up: 4.00),
             WorldNode(level: .melonGround, across: 0.70, up: 5.06),
             WorldNode(level: .scarpCorner, across: 0.30, up: 6.02),
             WorldNode(level: .theGreatErg, across: 0.76, up: 7.04),
