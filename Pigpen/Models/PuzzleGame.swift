@@ -337,7 +337,8 @@ extension PuzzleGame {
 
     /// Windfall Orchard with the best pen the map has in it standing, which is the board to
     /// look at when the question is what an apple does: two of them are inside the pen and
-    /// worth five tiles apiece, and the other two are under the fencing that got there.
+    /// worth five tiles apiece, and the other two are left standing out in the open, since
+    /// no piece may be laid on one and the wall that passes them has to pass them by.
     static func theOrchardsBestPen() -> PuzzleGame {
         let game = PuzzleGame(level: .windfallOrchard)
         for row in 3...8 {

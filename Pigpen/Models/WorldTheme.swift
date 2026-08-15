@@ -33,11 +33,12 @@ struct WorldTheme: Sendable {
 }
 
 /// How a world dresses the two things that can lie on its ground: the windfall worth five
-/// tiles to shut in, and the hazard that costs five and takes no fencing. The mechanic is the
-/// meadow's apple and skull whatever the skin; only the glyph and the word for it change, so a
-/// truffle scores like an apple and reads like a truffle.
+/// tiles to shut in, and the hazard that costs five. Neither takes fencing. The mechanic is
+/// the meadow's apple and skull whatever the skin; only the glyph and the word for it change,
+/// so a truffle scores like an apple and reads like a truffle.
 struct TreatSkin: Sendable {
-    /// The +5 windfall: an apple in the meadow, a truffle in the woods.
+    /// The +5 windfall, staked in the ground and never fenced: an apple in the meadow, a
+    /// truffle in the woods.
     let bonusGlyph: String
     let bonusScale: CGFloat
     let bonusName: String

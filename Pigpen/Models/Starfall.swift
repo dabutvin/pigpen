@@ -167,7 +167,8 @@ extension PuzzleLevel {
     /// which is the whole of what a stardrop is for — and here the two are close enough that
     /// the line between worth it and not runs between neighbours.
     ///
-    /// Thirteen pieces squared off under the wells hold 24. The same thirteen, bent out over the
+    /// Thirteen pieces squared off under the wells hold 13 tiles and, since no piece goes on a
+    /// stardrop, both of the drops as well — which is 23. The same thirteen, bent out over the
     /// near drop and cut back on the diagonal to pay for it, hold 34 tiles and that drop, which
     /// is 39. The far one stays where it fell: reaching it costs more tiles than its five ever
     /// pays for, and the reaches are wide enough that the difference is obvious once it has been
@@ -268,7 +269,8 @@ extension PuzzleLevel {
     /// they imply — but out here that wall is a diamond ten tiles across, and the diamond is
     /// the point: twenty pieces laid as a staircase all the way round shut 64 tiles and take the
     /// stardrop in on the way, which is 69, where the best block those same twenty can square
-    /// off holds 43. Nothing else in the game holds sixty tiles.
+    /// off holds 40 tiles and the same stardrop, or 45. Nothing else in the game holds sixty
+    /// tiles.
     ///
     /// It stands outside the climb the way Smoulder Ridge and Clocktower Square do: a broad
     /// board leaves a wide gap against a squared-off pen because it is broad, which says more
@@ -318,7 +320,7 @@ extension PuzzleLevel {
     /// crater and a board that will not have it, and the last thing to work out is which tiles
     /// of the wider half to hand back.
     ///
-    /// Twenty pieces. The best pair of blocks holds 27 between them; the answer holds 22 tiles
+    /// Twenty pieces. The best pair of blocks holds 32 between them; the answer holds 22 tiles
     /// apiece with a stardrop in each half and a meteor swallowed by the visitor's, which comes
     /// to 49. A third stardrop lies out past the east rim where no wall on this board can reach
     /// it, and the other meteor stands out on the north rim where the tidy wall would want to

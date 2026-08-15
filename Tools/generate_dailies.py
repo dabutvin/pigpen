@@ -480,27 +480,29 @@ def shape(rng, profile, water="plain"):
 
     # Treats go on ground the pig can actually reach, and never on the rim, where nothing
     # can ever be shut in with it.
+    #
+    # Nor do any of them go against the pig. No treat takes fencing, so one laid beside it
+    # would take away the four pieces boxed round it that hold on every other board in this
+    # game — and that box is the promise that no puzzle is unpennable, which the dailies keep
+    # as much as the authored fields do. It used to be a rule for skulls alone, because an
+    # apple could be paved over and so was never in the way; now that neither can be, the
+    # apples keep their distance too.
     home = run_of_ground(grid, pig)
+    beside = {(pig[0] + down, pig[1] + across) for down, across in NEIGHBOURS}
     spare = [
         tile
         for tile in home
-        if tile != pig and 1 <= tile[0] < rows - 1 and 1 <= tile[1] < columns - 1
+        if tile != pig
+        and tile not in beside
+        and 1 <= tile[0] < rows - 1
+        and 1 <= tile[1] < columns - 1
     ]
     rng.shuffle(spare)
-    for _ in range(profile["apples"]):
-        if spare:
-            row, column = spare.pop()
-            grid[row][column] = "a"
-
-    # A skull takes no fencing, so one laid against the pig would take away the four pieces
-    # boxed round it that hold on every other board in this game. Skulls keep their
-    # distance, and the promise that no puzzle is unpennable holds for the dailies too.
-    beside = {(pig[0] + down, pig[1] + across) for down, across in NEIGHBOURS}
-    spare = [tile for tile in spare if tile not in beside]
-    for _ in range(profile["skulls"]):
-        if spare:
-            row, column = spare.pop()
-            grid[row][column] = "x"
+    for treat in ("a", "x"):
+        for _ in range(profile["apples" if treat == "a" else "skulls"]):
+            if spare:
+                row, column = spare.pop()
+                grid[row][column] = treat
 
     grid[pig[0]][pig[1]] = "P"
     return "\n".join("".join(row) for row in grid)

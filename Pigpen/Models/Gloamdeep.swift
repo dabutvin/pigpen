@@ -75,7 +75,8 @@ extension PuzzleLevel {
     ///
     /// Which is the shore question asked on the only kind of bank the caverns have. Eleven pieces
     /// squared off beside the staircase can only get one of their four sides against it and hold
-    /// 22; the same eleven laid as a staircase of their own, mirroring the river back at itself,
+    /// 17 tiles, which the two crystals their wall cannot stand on bring up to 27; the same eleven
+    /// laid as a staircase of their own, mirroring the river back at itself,
     /// shut 26 tiles and both crystals, which is 36. A diagonal wall closes two tiles a piece
     /// where a straight one closes one, and following a river that is already diagonal is how the
     /// caverns say so.
@@ -109,8 +110,9 @@ extension PuzzleLevel {
     ///
     /// So this is Otter Ford's lesson and Lock Gate's and Broken Chain's, taught on a bank eight
     /// tiles long that cost nothing: shut the corridor and the whole of it is wall. Twelve pieces
-    /// squared off north of the water hold 21, because a wall that stops short of the east rim has
-    /// to pay for its own eastern side. The same twelve run right out along the bank and closed
+    /// squared off north of the water hold 22 tiles, because a wall that stops short of the east
+    /// rim has to pay for its own eastern side, and both crystals and a boulder come inside with
+    /// them, which is 27. The same twelve run right out along the bank and closed
     /// with a single piece in the corridor hold 29 tiles and both the crystals over the river.
     ///
     /// And the corridor is not clear ground, which is the rest of the field. A boulder stands in
@@ -146,7 +148,8 @@ extension PuzzleLevel {
     /// Every tile of this pen is bought.
     ///
     /// It is Basalt Flats and Cobble Yard and Swept Flat again, and the answer is the answer it
-    /// always was: the best block nineteen pieces can square off holds 25, and the same nineteen
+    /// always was: the best block nineteen pieces can square off holds 27 once the crystals and
+    /// the boulder on its wall line are counted, and the same nineteen
     /// run round as a diamond hold 36 tiles, both crystals and the boulder they cannot avoid
     /// swallowing, which is 41. A diagonal wall shuts two tiles per piece where a straight one
     /// shuts one, and in a cave with no river in it there is nothing else to know.
@@ -175,8 +178,9 @@ extension PuzzleLevel {
 
     /// Three crystals in a reach the glowworms have got into, and not one of them on the line the
     /// tidy pen wants. The river steps in off the roof at the north-west and away south-east, and
-    /// the best block thirteen pieces can hang under it holds 20 tiles and no crystal at all —
-    /// there is no rectangle on this board that reaches any of the three.
+    /// the best block thirteen pieces can hang under it holds 19 tiles and, at the edge of it, the
+    /// one crystal a wall would otherwise have run over: 24, and no rectangle on this board reaches
+    /// either of the other two.
     ///
     /// So the whole field is which one to go out for. The crystal above the river's arm is on the
     /// far side of the water: a pen that wants it has to come round the tip of the river and climb
@@ -215,7 +219,8 @@ extension PuzzleLevel {
     /// there is a far bank beyond it, and like every far bank in the game nothing can reach it.
     ///
     /// Which is the corner question with nothing else in the way of it, and the hardest corner in
-    /// the game. Nine pieces laid as a right angle in the corner hold 25. The same nine laid corner
+    /// the game. Nine pieces laid as a right angle in the corner hold 21 tiles and both crystals,
+    /// which is 31. The same nine laid corner
     /// to corner — one long diagonal from the west wall down to the south-east, cutting the whole
     /// bend off in a single line — hold 36 tiles and both crystals, which is 46. Foundry Corner
     /// asked this on a canal bend with the same nine pieces and could only reach round 27; two free
@@ -251,7 +256,8 @@ extension PuzzleLevel {
     /// Sour Ground made that choice once, Sulphur Rill and Gutter Lane and Meteor Field made it
     /// twice; this makes it three times, on a board where the river down the west side is worth
     /// having and the boulders are strung across the way to it. Fifteen pieces squared off in the
-    /// long chamber beside the water hold 23. The same fifteen run round as a diamond hold 44
+    /// long chamber beside the water hold 32 tiles, a crystal and two boulders, which comes back
+    /// to 27. The same fifteen run round as a diamond hold 44
     /// tiles, both crystals and two of the three boulders, which comes back to 44 — the third is
     /// left out in the east where the wall goes round it, because it is the one boulder on the
     /// board that costs less to abandon than to shut in.
@@ -284,11 +290,11 @@ extension PuzzleLevel {
     ///
     /// The gallery stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide
     /// Reaches do. A broad board leaves a wide gap against a squared-off pen because it is broad,
-    /// which says more about its size than about how hard it is to hold — and this one asks 34,
-    /// as little as the field that opens the world, while holding the second biggest pen in the
+    /// which says more about its size than about how hard it is to hold — and this one asks 25,
+    /// less than the field that opens the world, while holding the second biggest pen in the
     /// game at 58 tiles.
-    /// Nineteen pieces squared off down the west of it hold 41 tiles with a crystal and a boulder
-    /// in them cancelling each other out. The same nineteen laid along the river and closed round
+    /// Nineteen pieces squared off down the west of it hold 42 tiles with two crystals and a
+    /// boulder in them, which is 47. The same nineteen laid along the river and closed round
     /// the south as a staircase hold 58 tiles, two crystals and that same boulder, which is 63.
     /// The third crystal lies out east past the tip of the water, where nothing these nineteen
     /// pieces can draw will reach it.
@@ -337,7 +343,7 @@ extension PuzzleLevel {
     /// pig the whole staircase as the wall of its own pen — so the one wall the budget cannot
     /// afford to leave out does both jobs, and finding it is finding the field.
     ///
-    /// Twenty pieces. The best pair of blocks holds 22 between them. The answer hangs the roost in
+    /// Twenty pieces. The best pair of blocks holds 24 between them. The answer hangs the roost in
     /// a pocket of 14 tiles off the east end of the river with two crystals in it, and gives the
     /// pig 21 tiles of the wide floor south-west of the water with the third crystal and a boulder
     /// it cannot get out of swallowing, which comes to 45. It asks for most of the stars the eight

@@ -22,7 +22,7 @@ import Foundation
 /// The other thing it does is take the room away. Every board here is smaller than the
 /// smallest shelf on Emberpeak, so the rim is always close, and a pen that wants to be big has
 /// to be the shape of the yard it stands in rather than the shape a player would draw. It is
-/// why the city floors at 30% where the mountain floors at 28: on ground this tight, squaring
+/// why the city floors at 16% where the mountain floors at 14: on ground this tight, squaring
 /// off wastes more than it ever did in open country.
 extension PuzzleLevel {
     /// The cut runs the whole width of the world along the top of the gasworks and turns
@@ -57,9 +57,11 @@ extension PuzzleLevel {
     /// out on the row — one halfway down the paving, one at the far end past where any tidy
     /// wall would stop — and the cut down the west is the only free wall there is.
     ///
-    /// Eleven pieces squared off against the cut hold twelve tiles and the near pie, which is
-    /// 17. The pen that wins gives up the tidy shape altogether and runs out on the diagonal
-    /// to take that same pie with twenty tiles round it instead of twelve: 25. The far one
+    /// Eleven pieces squared off against the cut hold fifteen tiles, and the near pie comes in
+    /// with them whether the block wants it or not, since the wall that would have run over it
+    /// has to go round: sixteen tiles and a pie, which is 21. The pen that wins gives up the tidy
+    /// shape altogether and runs out on the diagonal to take that same pie with twenty tiles
+    /// round it instead of sixteen: 25. The far one
     /// stays where it fell, because the ground a wall gives up bending out to it costs more
     /// than the five it pays — which is the whole of what a pie is for.
     static let piemansRow = cogsworth(
@@ -270,7 +272,9 @@ extension PuzzleLevel {
     ///
     /// A rectangle can hold the pair — they stand four tiles apart on the diagonal, so the
     /// smallest block that takes them both is a five by five, and a drain sits in each of the
-    /// two corners such a block cannot avoid. That is 25. The pen that wins runs out along
+    /// two corners such a block cannot avoid. Nudged out over what its wall cannot stand on, the
+    /// best of those blocks comes to 31 — a pie inside paying for a drain inside, and the wharf's
+    /// whole west bank held. The pen that wins runs out along
     /// the diagonal instead, leaning on both cuts, taking a pie off each end of it and
     /// leaving both drains outside: 33 tiles and two pies, which is 43, for every one of the
     /// nineteen pieces. It asks for most of the stars the fields below it hold before it will

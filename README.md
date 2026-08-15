@@ -18,14 +18,17 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
 - **Water** — rivers and lakes — is a permanent boundary the pig cannot cross. You cannot
   build on it and you never need to: it walls the pen for free. Build against it instead of
   spending fences.
-- **Apples and skulls** lie on the mud rather than being mud of their own. An apple shut
-  into the pen is worth five ordinary tiles, so a pen that goes out of its way for one is
-  usually worth the ground it gives up getting there. An apple takes a fence like any other
-  tile, which is how one gets wasted. A skull costs five, and it is staked into the ground:
-  no piece can be laid on it, so a wall that wants a skull's tile has to be built round it —
-  and a wall built round one still has to shut it out, since ground you leave open is ground
-  the pig walks onto. Sour ground is planned around, not paved over. Tapping a skull says
-  what it costs — `-5 points` — rather than shaking the fence rack like a spent budget.
+- **Apples and skulls** lie on the mud rather than being mud of their own, and neither of
+  them takes a fence. Both are staked into the ground: no piece can be laid on either, so a
+  wall that wants one of those tiles has to be built round it — and a wall built round one
+  still has to shut it out, since ground you leave open is ground the pig walks onto. Ground
+  with something on it is planned around, not paved over.
+  What separates them is only the sign. An apple shut into the pen is worth five ordinary
+  tiles, so a pen that goes out of its way for one is usually worth the ground it gives up
+  getting there; a skull costs five, so a pen usually wants it outside. Either way the choice
+  cannot be declined: a wall that meets a treat has to swallow it or step in beside it.
+  Tapping either says what it is worth — `+5 points`, `-5 points` — rather than shaking the
+  fence rack like a spent budget.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
 - **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits
@@ -125,8 +128,8 @@ trail like this one.
 | 4 | The Dew Ponds | 12 | — | 32 | 44 | 27% |
 | 5 | Otter Ford | 12 | — | 16 | 24 | 33% |
 | 6 | Puddle Corner | 8 | — | 16 | 26 | 38% |
-| 7 | Windfall Orchard | 12 | 4 apples | 26 | 37 | 29% |
-| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 15 | 29 | 48% |
+| 7 | Windfall Orchard | 12 | 4 apples | 30 | 37 | 18% |
+| 8 | Sour Ground | 14 | 3 apples, 2 skulls | 22 | 29 | 24% |
 | 9 | Stag Mere | 20 | a deer, 3 apples, 2 skulls | 34 | 38 | 10% |
 
 "Best pen" is the most that budget can be made to score on that map: the level's
@@ -144,6 +147,14 @@ it is always worth at least two stars — nobody is ever stuck on one for want o
 What a level **asks** is the gap between the two, and that is what the first six are ordered
 by rather than by board size or budget.
 
+Since nothing lying on the ground takes a fence, a block whose wall would have to stand on
+an apple is nudged out over it before it is weighed — one piece more, one tile and five
+points better off. That is the obvious local move, and it is the same widening the game
+itself promises when it says every level can be finished by boxing the animals in where they
+stand. It also means the treat-carrying levels ask less than they used to: a player who
+never learnt to detour for an apple now collects the ones that happen to sit on the wall
+they were going to build anyway.
+
 The meadow opens on two maps whose best pen *is* the obvious pen, so the first three stars
 are free and the game gets to explain itself. From there the gap widens the whole way to
 Puddle Corner — eight pieces, a small board, and nothing to lean on but the shape of the
@@ -151,10 +162,12 @@ wall, which is the widest gap on that stretch and why the smallest-looking level
 instead of opening it. The last three change what is on the ground rather than what the wall
 has to do, so they run apples, then skulls to build around as well, then a second animal and
 one budget to split: sorting *those* by the gap would put the ideas in the wrong order. Sour
-Ground has the widest gap in the game and still belongs eighth — a skull refuses fencing, so
-every squared-off block worth having on that map is one the player cannot build, and the
-number says more about the block than about the level. `DifficultyTests` pins the lot, so the
-climb cannot quietly flatten out again.
+Ground used to read as the widest gap in the game, which said more about the block than about
+the level — every squared-off block worth having on that map was one the player could not
+build, so the measure had nothing sensible to compare against. Nudging the block out over
+what it cannot be built on gives it something, and Sour Ground now reads as the ordinary
+eighth stop it always was. `DifficultyTests` pins the lot, so the climb cannot quietly
+flatten out again.
 
 The same number keeps the *worlds* in order. Free three stars are something the first world
 gets because it has the game to teach, and nothing after it is owed them: each world declares
@@ -226,14 +239,14 @@ the meadow at nothing.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Bramble Brook | 9 | — | 20 | 27 | 25% |
-| 2 | Foxglove Dell | 7 | 2 truffles | 21 | 29 | 27% |
+| 2 | Foxglove Dell | 7 | 2 truffles | 20 | 29 | 31% |
 | 3 | Hazel Copse | 12 | 1 truffle | 23 | 30 | 23% |
 | 4 | Fairy Ring | 13 | 1 truffle | 19 | 36 | 47% |
-| 5 | Fern Gully | 12 | 2 truffles | 23 | 34 | 32% |
+| 5 | Fern Gully | 12 | 2 truffles | 27 | 34 | 20% |
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
-| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 17 | 26 | 34% |
-| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 28 | 41 | 31% |
-| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 30 | 43 | 30% |
+| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 18 | 26 | 30% |
+| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 30 | 41 | 26% |
+| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 36 | 43 | 16% |
 
 Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
@@ -273,12 +286,12 @@ measured by that yardstick.
 |---|---|---|---|---|---|---|
 | 1 | Cinder Slope | 9 | 1 ember | 18 | 25 | 28% |
 | 2 | Basalt Flats | 17 | 2 embers | 16 | 23 | 30% |
-| 3 | Ashfall Terrace | 13 | 1 chestnut, 1 ember | 21 | 31 | 32% |
-| 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 21 | 32 | 34% |
+| 3 | Ashfall Terrace | 13 | 1 chestnut, 1 ember | 22 | 31 | 29% |
+| 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 23 | 32 | 28% |
 | 5 | Sulphur Rill | 13 | 2 embers | 15 | 24 | 37% |
-| 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 17 | 27 | 37% |
+| 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 23 | 27 | 14% |
 | 7 | Crater Pools | 12 | 1 chestnut, 1 ember | 17 | 34 | 50% |
-| 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 29 | 42 | 30% |
+| 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 30 | 42 | 28% |
 | 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 27 | 43 | 37% |
 
 Smoulder Ridge held the biggest pen on any world trail until Wide Reaches — 42, off sixteen
@@ -315,14 +328,14 @@ them as usual.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | — | 18 | 26 | 30% |
-| 2 | Pieman's Row | 11 | 2 pies | 17 | 25 | 32% |
+| 2 | Pieman's Row | 11 | 2 pies | 21 | 25 | 16% |
 | 3 | Cobble Yard | 14 | 2 drains | 12 | 18 | 33% |
 | 4 | Lock Gate | 13 | 1 drain | 14 | 22 | 36% |
 | 5 | Culvert Row | 13 | — | 16 | 27 | 40% |
 | 6 | Gutter Lane | 14 | 2 drains | 15 | 26 | 42% |
 | 7 | Foundry Corner | 9 | 2 drains | 15 | 27 | 44% |
 | 8 | Clocktower Square | 17 | 3 pies, 2 drains | 25 | 40 | 37% |
-| 9 | Rat King Wharf | 19 | a rat king, 2 pies, 2 drains | 25 | 43 | 41% |
+| 9 | Rat King Wharf | 19 | a rat king, 2 pies, 2 drains | 31 | 43 | 27% |
 
 Two of its fields ask questions nothing has asked since the meadow: Culvert Row puts its two
 banks at opposite ends of the street where The Narrows put them a stride apart, and Lock Gate
@@ -371,11 +384,11 @@ way from Dust Shore to Starwell Ring.
 | 2 | Fallwater Basin | 13 | — | 24 | 36 | 33% |
 | 3 | Broken Chain | 15 | — | 24 | 38 | 36% |
 | 4 | Swept Flat | 18 | — | 20 | 32 | 37% |
-| 5 | Stardrop Hollow | 13 | 2 stardrops | 24 | 39 | 38% |
+| 5 | Stardrop Hollow | 13 | 2 stardrops | 23 | 39 | 41% |
 | 6 | Meteor Field | 15 | 2 meteors | 17 | 32 | 46% |
 | 7 | Starwell Ring | 12 | — | 14 | 32 | 56% |
-| 8 | Wide Reaches | 20 | 1 stardrop | 43 | 69 | 37% |
-| 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
+| 8 | Wide Reaches | 20 | 1 stardrop | 45 | 69 | 34% |
+| 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 32 | 49 | 34% |
 
 Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
 pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing
@@ -429,14 +442,14 @@ out for.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 2 crystals | 21 | 32 | 34% |
-| 2 | Dripstone Shelf | 11 | 2 crystals | 22 | 36 | 38% |
-| 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 21 | 34 | 38% |
-| 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
-| 5 | Glowworm Reach | 13 | 3 crystals | 20 | 33 | 39% |
-| 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
-| 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
-| 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 41 | 63 | 34% |
-| 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 22 | 45 | 51% |
+| 2 | Dripstone Shelf | 11 | 2 crystals | 27 | 36 | 25% |
+| 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 27 | 34 | 20% |
+| 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 27 | 41 | 34% |
+| 5 | Glowworm Reach | 13 | 3 crystals | 24 | 33 | 27% |
+| 6 | Rimstone Corner | 9 | 2 crystals | 31 | 46 | 32% |
+| 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 27 | 44 | 38% |
+| 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 47 | 63 | 25% |
+| 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 24 | 45 | 46% |
 
 Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
 in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
@@ -493,14 +506,14 @@ world.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 18 | 29 | 37% |
-| 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 24 | 39 | 38% |
-| 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 21 | 35 | 40% |
-| 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 20 | 34 | 41% |
-| 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 21 | 38 | 44% |
-| 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
-| 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 18 | 41 | 56% |
-| 8 | The Midway | 19 | 3 toffee apples, a run of rope | 29 | 49 | 40% |
+| 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 21 | 29 | 27% |
+| 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 32 | 39 | 17% |
+| 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 27 | 35 | 22% |
+| 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 21 | 34 | 38% |
+| 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 26 | 38 | 31% |
+| 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 31 | 51 | 39% |
+| 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 42 | 50% |
+| 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
 | 9 | The Centre Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
 
 The Big Top is the corner question with the crowd along the front of the tent and down its far
@@ -508,8 +521,8 @@ side, so two of the four walls are handed over: eleven pieces laid corner to cor
 the biggest pen in the world for the smallest budget in it, where the same eleven laid as a right
 angle hold 25 — because the pair of guy ropes is pegged inside every rectangle worth drawing, and
 the tidy pen has to swallow them and pay their ten. The Rigging carries seven pegs in three runs —
-more rope than any other field at the fair, and the only line of three in the game — and at 56% it
-ties Starwell Ring for the widest gap any field in the game leaves.
+more rope than any other field at the fair, and the only line of three in the game — and at 50% it
+leaves the widest gap of any ordinary field at the fair.
 
 Its boss, The Centre Ring, adds the carnival's rule, and it is the first rule in the game about
 **where one pen stands in relation to another** rather than about which animal is in which:
@@ -803,9 +816,9 @@ Tools/level_search.py --budget 12 --plan <<'MAP'
 MAP
 ```
 
-It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: a skull takes no fencing, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in that world's tests, which replays the pen and fails if the level stops giving up what it claims.
+It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: nothing lying on the ground takes fencing, apple or skull, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in that world's tests, which replays the pen and fails if the level stops giving up what it claims.
 
-The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with skulls on it — walling round one can cost a plain block far more than it costs a shaped pen, and the second star has to stay under what the block is worth.
+The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with anything lying on it — a treat in the way moves a plain block and a shaped pen by different amounts, and the second star has to stay under what the block is worth.
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
@@ -868,10 +881,11 @@ with no type at all.
 
 The second ladder is what stops a fourth world being the meadow in a new coat. It binds from the
 second world onward: Mudlark Meadow is the baseline every type is measured from, and it is
-allowed to have overshot, because it was authored before any of this existed. Sour Ground asks
-48% — more than anything in the two worlds above it — for a reason that is about blocks rather
-than about difficulty: a skull refuses fencing, so every squared-off pen worth having on that map
-is one the player cannot build.
+allowed to have overshot, because it was authored before any of this existed. Sour Ground used
+to overshoot the worst — 48%, more than anything in the two worlds above it — for a reason that
+was about blocks rather than about difficulty: every squared-off pen worth having on that map was
+one the player could not build, so the measure had nothing to compare against. Now that a block
+is nudged out over what it cannot stand on, it asks 24% and sits where it belongs.
 
 #### Making a type harder next time
 
@@ -935,7 +949,7 @@ Water is the knob that does nearly all of the work, and it has two halves. Water
 
 Both halves are budgets rather than floors, which is the part that used to go wrong quietly. The generator laid water down until the board was wet enough and then stopped, so a day whose whole share came to less than one river got a river anyway and overshot: Saturday and Sunday, asked for 8% and 5% of the board, both landed at 13% of it under a single run of water crossing the map. Sunday was Saturday with more apples on it, and its hardest-of-the-week band was being met by maps that hand the player most of the wall. Now each body of water is drawn only if it fits what is left of the day's share and what the day allows in one piece, so by Sunday there really is nothing to lean on. `DailyAlmanacTests` measures the stretch on every board that ships and holds it to the table above, so this cannot go quiet again.
 
-The bands are laid end to end and never overlap, which is what makes a week a climb rather than a claim. Skulls are kept off the four tiles around the pig, so the four pieces boxed round it that hold on every other board in this game hold on a daily too.
+The bands are laid end to end and never overlap, which is what makes a week a climb rather than a claim. Treats are kept off the four tiles around the pig — apples as well as skulls, now that neither takes a fence — so the four pieces boxed round it that hold on every other board in this game hold on a daily too.
 
 #### The shape a day's water takes
 
@@ -995,7 +1009,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple inside the pen and an apple buried under the fencing can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where the plain title shot has the card as a new player finds it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.

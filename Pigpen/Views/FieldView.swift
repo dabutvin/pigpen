@@ -682,12 +682,11 @@ struct FieldView: View {
 
     /// What is lying about on the mud: an apple worth five tiles of ground to shut in with
     /// the pig, a skull worth five fewer. Each sits on a pale scuff of ground so it reads
-    /// against the mud, and a tile with fencing on it is covered over, treat and all —
-    /// which is how an apple gets wasted. A skull is never covered over: it takes no
-    /// fencing, so it is on the board for as long as the board is, and a tap on one says
-    /// what it costs rather than planting a post.
+    /// against the mud, and neither is ever covered over: no treat takes fencing, so every
+    /// one of them is on the board for as long as the board is, and a tap on one says what
+    /// it is worth rather than planting a post.
     private func drawTreats(in context: inout GraphicsContext, board: BoardGeometry) {
-        for (tile, treat) in level.treats where !fences.contains(tile) {
+        for (tile, treat) in level.treats {
             let rect = board.rect(for: tile)
             context.fill(
                 Path(ellipseIn: rect.insetBy(dx: board.cell * 0.15, dy: board.cell * 0.15)),
@@ -821,7 +820,8 @@ struct FieldView: View {
 
 /// The best pen Windfall Orchard has in it: the fencing narrows as it goes south so that
 /// two of the four apples end up inside, which is worth more than the ground given up to
-/// reach them. The two apples left out sit under fencing, spent for nothing.
+/// reach them. The two apples left out are left out in the open — no piece may be laid on
+/// one, so the wall that passes them has to pass them by.
 #Preview("Fruit worth reaching for") {
     let level = PuzzleLevel.windfallOrchard
     let fences = Set((3...8).flatMap { row in
