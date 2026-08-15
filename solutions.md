@@ -2182,10 +2182,10 @@ The sand sea: twelve tiles by twelve, two barchans with their backs to the west 
 ends of it, a run of three cacti across the waist and three melons down the length.
 
 Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 38 tiles,
-two of the melons and all three cacti, which comes to 36. The same nineteen run out to both dunes
+two of the melons and all three cacti, which comes to 33. The same nineteen run out to both dunes
 and closed round the south hold 56 tiles, the third melon as well and the same three cacti, which is
-59 — the biggest pen in the world, and the second biggest in the game: five tiles behind Wide Reaches
-and one ahead of the Great Gallery, which held second place until the sand came in.
+56 — the biggest pen in the world, and the third biggest in the game, behind Wide Reaches and
+the Great Gallery, which the sand very nearly took second place from.
 
 It stands outside the climb the way every world's eighth field does. A broad board leaves a wide gap
 against a squared-off pen because it is broad, which says more about its size than its difficulty —
