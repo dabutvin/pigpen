@@ -595,7 +595,7 @@ laid out across bare hardpan to buy it.
 | 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
 | 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
-| 4 | The Hardpan | 21 | no sand at all, 2 melons | 31 | 45 | 31% |
+| 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
 | 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 30 | 50 | 40% |
 | 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 25 | 37 | 32% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |

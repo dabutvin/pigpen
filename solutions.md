@@ -1926,7 +1926,7 @@ The Hardpan, where every tile is bought.
 | 1 | Slipface Hollow | 14 | 43 | 2 cacti | 33 | 20 |
 | 2 | The Long Slack | 14 | 28 | 1 melon | 33 | 19 |
 | 3 | The Blowout | 13 | 32 | nothing | 32 | 18 |
-| 4 | The Hardpan | 21 | 45 | nothing | 45 | 31 |
+| 4 | The Hardpan | 21 | 45 | nothing | 45 | 25 |
 | 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 30 |
 | 6 | Melon Ground | 17 | 37 | 2 melons, 2 cacti | 37 | 25 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |

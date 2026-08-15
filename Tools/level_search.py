@@ -598,7 +598,7 @@ def blocks_around(pennable, start, rows, columns):
     return found - {frozenset()}
 
 
-def nudged_over_treats(pen, mud, treats):
+def nudged_over_treats(pen, mud, treats, rows, columns):
     """A block of ground with the wall bumped out round whatever it cannot be built on.
 
     Nothing lying on the ground takes a fence, so a rectangle whose edge happens to fall on
@@ -610,12 +610,18 @@ def nudged_over_treats(pen, mud, treats):
 
     Taking it in rather than stepping round it is the same closure the game itself promises
     with `smallestPen` — and on an apple it is what a player would want anyway.
+
+    What cannot be swallowed is a treat lying on the rim. Nothing on the rim can ever be shut
+    in — an animal standing there is already off the map — so a block whose wall wants that
+    tile has nowhere to bump out to, and is no block at all. Returns nothing for those.
     """
     pen = set(pen)
     while True:
         staked = {tile for tile in fences_around(pen, mud) if tile in treats}
         if not staked:
             return frozenset(pen)
+        if any(on_rim(tile, rows, columns) for tile in staked):
+            return None
         pen |= staked
 
 
@@ -680,7 +686,9 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
             continue
         # Nudged out over its treats before anything is asked of it, since that is the pen
         # the player would actually be holding, and every rule below turns on its shape.
-        pen = nudged_over_treats(frozenset().union(*choice), mud, treats)
+        pen = nudged_over_treats(frozenset().union(*choice), mud, treats, rows, columns)
+        if pen is None:
+            continue
         # A board that keeps two apart is not squared off by a pair of blocks that touch,
         # since ground the pig can walk from one into the other is one pen, not two.
         if rule in ("apart", "even") and others:
