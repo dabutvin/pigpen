@@ -595,11 +595,11 @@ laid out across bare hardpan to buy it.
 | 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
 | 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
-| 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
-| 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 28 | 50 | 44% |
-| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 37 | 48% |
+| 4 | The Hardpan | 21 | no sand at all, 2 melons | 31 | 45 | 31% |
+| 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 30 | 50 | 40% |
+| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 25 | 37 | 32% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
-| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 36 | 59 | 38% |
+| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 42 | 59 | 28% |
 | 9 | Scorpion Flats | 16 | the scorpion, two barchans, 2 melons | 19 | 50 | 62% |
 
 Scarp Corner is the corner question with one great barchan hooked into the north-west, so its back

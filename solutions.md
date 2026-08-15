@@ -1926,11 +1926,11 @@ The Hardpan, where every tile is bought.
 | 1 | Slipface Hollow | 14 | 43 | 2 cacti | 33 | 20 |
 | 2 | The Long Slack | 14 | 28 | 1 melon | 33 | 19 |
 | 3 | The Blowout | 13 | 32 | nothing | 32 | 18 |
-| 4 | The Hardpan | 21 | 45 | nothing | 45 | 25 |
-| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 28 |
-| 6 | Melon Ground | 17 | 37 | 2 melons, 2 cacti | 37 | 19 |
+| 4 | The Hardpan | 21 | 45 | nothing | 45 | 31 |
+| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 30 |
+| 6 | Melon Ground | 17 | 37 | 2 melons, 2 cacti | 37 | 25 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |
-| 8 | The Great Erg | 19 | 59 | 3 melons, 3 cacti | 59 | 36 |
+| 8 | The Great Erg | 19 | 59 | 3 melons, 3 cacti | 59 | 42 |
 | 9 | Scorpion Flats | 16 | 45 | 1 melon | 50 | 19 |
 
 ## 1. Slipface Hollow — 14 pieces, 33
@@ -2095,17 +2095,17 @@ comes down between the two horns has to come round the pair.
 ## 6. Melon Ground — 17 pieces, 37
 
 ```
-......#....
-.....#o#...
-....#ooa#..
-.~~~ooooo#.
-...~oooooo#
-.~~~oooooo#
-.#ooPoooa#.
-..#xxooo#..
-...#ooo#...
-....#o#....
+...........
 .....#.....
+....#o#a...
+.~~~ooo#...
+...~oooo#..
+.~~~ooooo#.
+#oooPoooao#
+.#oxxoooo#.
+..#ooooo#..
+...#ooa#...
+....###....
 ```
 
 One barchan with its back to the east and its mouth open west, three melons scattered wide over the
