@@ -825,10 +825,11 @@ the ground it gives up at the bottom. 26 tiles, and every one the yard has in it
 ..####...
 ```
 
-Two pies on the row and one canal down the west. A block against the canal takes the near pie
-and twelve tiles with it, which is 17 and two stars.
+Two pies on the row and one canal down the west. A block against the canal holds sixteen tiles
+and neither pie — both lie below where a rectangle stops, and no piece will lie on one to sweep
+it up on the way past — which is 16 and two stars.
 
-The pen that wins takes the same pie and puts twenty tiles round it instead, by running the
+The pen that wins goes out for the near pie and puts nineteen tiles round it, by running the
 wall out on the diagonal and back. The far pie stays where it fell: the ground a wall gives up
 bending out to it costs more than the five it pays, which is the whole of what a pie is for.
 
@@ -980,7 +981,7 @@ them, and a player who learned the woods' answer has to unlearn it here.
 
 So the question is what shape one pen has to be. The pig and the rat king stand four tiles
 apart on the diagonal, which makes the smallest block that takes them both a five by five —
-and a drain sits in one of the corners such a block cannot avoid, so squaring off is worth 25.
+and a drain sits in one of the corners such a block cannot avoid, so squaring off is worth 26.
 
 The pen that wins runs out along the diagonal instead of round it: it leans on the culvert in
 the north-east and the cut in the south-west, takes the pie at each end of the run, and leaves

@@ -57,11 +57,10 @@ extension PuzzleLevel {
     /// out on the row — one halfway down the paving, one at the far end past where any tidy
     /// wall would stop — and the cut down the west is the only free wall there is.
     ///
-    /// Eleven pieces squared off against the cut hold fifteen tiles, and the near pie comes in
-    /// with them whether the block wants it or not, since the wall that would have run over it
-    /// has to go round: sixteen tiles and a pie, which is 21. The pen that wins gives up the tidy
-    /// shape altogether and runs out on the diagonal to take that same pie with twenty tiles
-    /// round it instead of sixteen: 25. The far one
+    /// Twelve pieces squared off against the cut hold sixteen tiles and neither pie — both lie
+    /// below where a rectangle hung off the canal stops, and no piece will lie on one to sweep it
+    /// up in passing. That is 16. The pen that wins gives up the tidy shape altogether and runs
+    /// out on the diagonal for the near pie: nineteen tiles and that pie, which is 24. The far one
     /// stays where it fell, because the ground a wall gives up bending out to it costs more
     /// than the five it pays — which is the whole of what a pie is for.
     static let piemansRow = cogsworth(
@@ -273,8 +272,8 @@ extension PuzzleLevel {
     /// A rectangle can hold the pair — they stand four tiles apart on the diagonal, so the
     /// smallest block that takes them both is a five by five, and a drain sits in each of the
     /// two corners such a block cannot avoid. Nudged out over what its wall cannot stand on, the
-    /// best of those blocks comes to 31 — a pie inside paying for a drain inside, and the wharf's
-    /// whole west bank held. The pen that wins runs out along
+    /// best of those blocks holds 31 tiles with a pie and both drains in them, which comes back to
+    /// 26. The pen that wins runs out along
     /// the diagonal instead, leaning on both cuts, taking a pie off each end of it and
     /// leaving both drains outside: 33 tiles and two pies, which is 43, for every one of the
     /// nineteen pieces. It asks for most of the stars the fields below it hold before it will
