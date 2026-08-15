@@ -1304,11 +1304,11 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 22 | 2 crystals | 32 | 21 |
 | 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 23 |
-| 3 | Stillwater Neck | 12 | 29 | 2 crystals, 1 boulder | 34 | 27 |
-| 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 27 |
+| 3 | Stillwater Neck | 12 | 27 | 2 crystals, 1 boulder | 32 | 20 |
+| 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 25 |
 | 5 | Glowworm Reach | 13 | 28 | 1 crystal | 33 | 24 |
-| 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 31 |
-| 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 27 |
+| 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 25 |
+| 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 23 |
 | 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 47 |
 | 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 23 |
 
@@ -1365,16 +1365,16 @@ in again. Twenty-six tiles and both crystals, which is 36. A diagonal wall close
 where a straight one closes one, and following a bank that is already diagonal is how the caverns
 say so.
 
-## 3. Stillwater Neck — 12 pieces, 34
+## 3. Stillwater Neck — 12 pieces, 32
 
 ```
-.....###...
-....#oao#..
-...#ooooo#.
-..#oooaooo#
-~~oooooooo#
-.~~~~Poxoo#
-....~~~~o#.
+.....####..
+....#oooo#.
+...#oooooa#
+..#ooooooa#
+~~ooooooo#.
+.~~~~Pox#..
+....~~~~...
 ..a....~~..
 ...........
 ...........
@@ -1400,16 +1400,16 @@ on the south side, where nothing on this board reaches it.
 ## 4. The Blind Grike — 19 pieces, 41
 
 ```
-....##.....
-...#oa#....
-..#oooo#...
-.#oxoooo#..
-#oooooooo#.
-#aoooPoo#..
-.#ooooo#...
-..#ooo#....
-...#o#.....
-....#......
+.....#.....
+....#a#....
+...#ooo#...
+..#ooooo#..
+.#ooxoooo#.
+.#oooPoooo#
+..#oooooo#.
+...#oooo#..
+....#ao#...
+.....##....
 ...........
 ```
 
@@ -1454,11 +1454,11 @@ single tile: 28 tiles and that crystal, which is 33.
 ```
 ............
 ~~~~~~~~~~~.
-.#oooaoooo~.
+.#aooooooo~.
 ..#ooooooo~.
 ...#oooPoo~.
-....#ooooo~.
-.....#aooo~.
+....#oaooo~.
+.....#oooo~.
 ......#ooo~.
 .......#oo~.
 ........#o~.
@@ -1480,17 +1480,17 @@ every one of these nine has to be on the diagonal or the pen falls apart.
 ## 7. Boulder Chamber — 15 pieces, 44
 
 ```
-.~#####....
+.~####.....
+.~oooo#....
 .~ooooo#...
-.~oooooo#..
-.~~oooooo#.
-..~oooooao#
+.~~ooooo#..
+..~oooooa#.
 ..~ooxoooo#
-..~~ooPoo#.
-...~xooo#..
-...~ooo#x..
-...~~a#....
-.....#.....
+..~~ooPooa#
+...~xoooo#.
+...~oooo#..
+...~~oo#x..
+.....##....
 ```
 
 Three boulders down off the roof into the middle of the only ground worth having, and the hardest

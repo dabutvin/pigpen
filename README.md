@@ -443,11 +443,11 @@ out for.
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 2 crystals | 21 | 32 | 34% |
 | 2 | Dripstone Shelf | 11 | 2 crystals | 23 | 36 | 36% |
-| 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 27 | 34 | 20% |
-| 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 27 | 41 | 34% |
+| 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 20 | 32 | 37% |
+| 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
 | 5 | Glowworm Reach | 13 | 3 crystals | 24 | 33 | 27% |
-| 6 | Rimstone Corner | 9 | 2 crystals | 31 | 46 | 32% |
-| 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 27 | 44 | 38% |
+| 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
+| 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 47 | 63 | 25% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
