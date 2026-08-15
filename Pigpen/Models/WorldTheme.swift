@@ -257,6 +257,7 @@ extension WorldTheme {
             bonusGlyph: "🍈", bonusScale: 0.58, bonusName: "melon",
             hazardGlyph: "🌵", hazardScale: 0.60, hazardName: "cactus"
         ),
+        field: .sunbakedDunes,
         boss: BossMark(glyph: "🦂", name: "the scorpion"),
         accent: Color(red: 0.93, green: 0.77, blue: 0.43),
         accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20)
