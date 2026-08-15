@@ -46,6 +46,20 @@ def redrawn(rows, at, to, mark):
     return "\n".join("".join(line) for line in grid)
 
 
+def blocked(job):
+    """Only the obvious pen, which is the cheap half and the half a treat actually moves.
+
+    Squaring a map off is an enumeration of rectangles rather than a beam search, so it costs
+    a fraction of what weighing the best pen costs — and it is the number a treat standing in
+    the wall's way changes. So every standing is screened on this, and the search proper is
+    run on the handful that survive.
+    """
+    drawn, budget, rule = job
+    mud, treats, starts, rows, columns = parse(drawn)
+    plain, block = squared_off(mud, treats, starts, rows, columns, budget, rule)
+    return plain if block else None
+
+
 def weigh(job):
     drawn, budget, rule, beam = job
     mud, treats, starts, rows, columns = parse(drawn)
@@ -114,17 +128,24 @@ def main():
     )
     print(f"trying {len(where)} standings for the {mark!r} at {at}\n")
 
+    # Screen on the obvious pen alone. A standing can only ask what `least` asks if squaring
+    # the map off is worth little enough, and the best pen can never beat the one the map
+    # already gives up — so anything whose block is too rich is out without a search at all.
+    ceiling = standing["best"]
     with Pool(options.jobs) as pool:
-        screened = pool.map(
-            weigh,
-            [(redrawn(rows, at, to, mark), budget, rule, SCREENING_BEAM) for to in where],
+        blocks = pool.map(
+            blocked, [(redrawn(rows, at, to, mark), budget, rule) for to in where]
         )
 
+    # Measured against the best pen as the map stands, with room either side: moving a treat
+    # can lift the best pen as well as the block, and a standing that is close on this screen
+    # is cheap enough to weigh properly.
     close = [
         to
-        for to, got in zip(where, screened)
-        if got and got["demand"] >= options.least - 6
+        for to, plain in zip(where, blocks)
+        if plain is not None and (ceiling - plain) * 100 // ceiling >= options.least - 8
     ]
+    print(f"{len(close)} of them worth searching properly\n")
     with Pool(options.jobs) as pool:
         settled = pool.map(
             weigh,
