@@ -599,7 +599,7 @@ laid out across bare hardpan to buy it.
 | 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 29 | 50 | 42% |
 | 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 35 | 45% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
-| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 42 | 59 | 28% |
+| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 33 | 56 | 41% |
 | 9 | Scorpion Flats | 16 | the scorpion, two barchans, 2 melons | 19 | 50 | 62% |
 
 Scarp Corner is the corner question with one great barchan hooked into the north-west, so its back

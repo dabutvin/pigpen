@@ -1930,7 +1930,7 @@ The Hardpan, where every tile is bought.
 | 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 29 |
 | 6 | Melon Ground | 17 | 35 | 2 melons, 2 cacti | 35 | 19 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |
-| 8 | The Great Erg | 19 | 59 | 3 melons, 3 cacti | 59 | 42 |
+| 8 | The Great Erg | 19 | 56 | 3 melons, 3 cacti | 56 | 33 |
 | 9 | Scorpion Flats | 16 | 45 | 1 melon | 50 | 19 |
 
 ## 1. Slipface Hollow — 14 pieces, 33
@@ -2161,7 +2161,7 @@ The two melons lie in the south, well outside the chevron on either side of its 
 will not stretch to either, and on a board where two of the walls came free five points is still four
 pieces of fence.
 
-## 8. The Great Erg — 19 pieces, 59
+## 8. The Great Erg — 19 pieces, 56
 
 ```
 .....###....
@@ -2171,11 +2171,11 @@ pieces of fence.
 .#oPooooooo#
 #oooooooooo#
 #oooxxxooo#.
-#oooooo~~~..
-.#aoooo~....
-..#oooo~~~..
-...#oa#.....
-....##......
+.#ooooo~~~..
+..#oooo~....
+...#ooo~~~..
+....#aa#....
+.....##.....
 ```
 
 The sand sea: twelve tiles by twelve, two barchans with their backs to the west standing at opposite
