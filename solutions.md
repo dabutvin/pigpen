@@ -1303,7 +1303,7 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 22 | 2 crystals | 32 | 21 |
-| 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 27 |
+| 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 23 |
 | 3 | Stillwater Neck | 12 | 29 | 2 crystals, 1 boulder | 34 | 27 |
 | 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 27 |
 | 5 | Glowworm Reach | 13 | 28 | 1 crystal | 33 | 24 |
@@ -1347,9 +1347,9 @@ then closing again on the diagonal — hold 22 tiles and both crystals, which is
 ..~~ooo#..
 ...~oooo#.
 ...~ooPoo#
-...~~oooo#
+...~~oooa#
 ....~ooo#.
-....~oa#..
+....~oo#..
 ....~~#...
 ..........
 ```

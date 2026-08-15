@@ -442,7 +442,7 @@ out for.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 2 crystals | 21 | 32 | 34% |
-| 2 | Dripstone Shelf | 11 | 2 crystals | 27 | 36 | 25% |
+| 2 | Dripstone Shelf | 11 | 2 crystals | 23 | 36 | 36% |
 | 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 27 | 34 | 20% |
 | 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 27 | 41 | 34% |
 | 5 | Glowworm Reach | 13 | 3 crystals | 24 | 33 | 27% |
