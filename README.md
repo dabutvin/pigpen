@@ -448,7 +448,7 @@ out for.
 | 5 | Glowworm Reach | 13 | 3 crystals | 24 | 33 | 27% |
 | 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
 | 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
-| 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 47 | 63 | 25% |
+| 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 42 | 63 | 33% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
 Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
@@ -506,11 +506,11 @@ world.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 21 | 29 | 27% |
-| 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 32 | 39 | 17% |
+| 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 18 | 29 | 37% |
+| 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 24 | 39 | 38% |
 | 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 21 | 35 | 40% |
 | 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 20 | 34 | 41% |
-| 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 26 | 38 | 31% |
+| 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 22 | 38 | 42% |
 | 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
 | 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 42 | 50% |
 | 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |

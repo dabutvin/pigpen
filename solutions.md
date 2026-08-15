@@ -1309,7 +1309,7 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 | 5 | Glowworm Reach | 13 | 28 | 1 crystal | 33 | 24 |
 | 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 25 |
 | 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 23 |
-| 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 47 |
+| 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 42 |
 | 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 23 |
 
 ## 1. Sinter Basin — 12 pieces, 32
@@ -1507,18 +1507,18 @@ the board that costs less to abandon than to shut in.
 ## 8. Great Gallery — 19 pieces, 63
 
 ```
-....~.......
-...#~~......
-..#oo~~.....
-.#aooo~~....
+...#~.......
+..#o~~......
+.#ooo~~.....
+#aoooo~~....
 #oooooo~~a..
 #ooooooo~~..
 #ooPooooo~~.
 #ooooooxooo#
-.#ooooooooo#
-..#ooaoooo#.
-...#ooooo#..
-....#####...
+.#oooooooo#.
+..#oooooo#..
+...#oaoo#...
+....####....
 ```
 
 The widest floor in the caverns with a river stepping down the length of it: twelve tiles by twelve,
@@ -1607,11 +1607,11 @@ what holds the world at 37% and above, the highest floor in the game.
 
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
-| 1 | Coconut Shy | 14 | 24 | 1 toffee apple | 29 | 21 |
-| 2 | Sideshow Row | 14 | 39 | 2 toffee apples, 2 guy ropes | 39 | 32 |
+| 1 | Coconut Shy | 14 | 24 | 1 toffee apple | 29 | 18 |
+| 2 | Sideshow Row | 14 | 39 | 2 toffee apples, 2 guy ropes | 39 | 24 |
 | 3 | The Turnstile | 14 | 30 | 1 toffee apple | 35 | 21 |
 | 4 | Ticket Line | 15 | 34 | 2 toffee apples, 2 guy ropes | 34 | 20 |
-| 5 | The Toffee Stand | 17 | 28 | 2 toffee apples | 38 | 26 |
+| 5 | The Toffee Stand | 17 | 33 | 1 toffee apple | 38 | 22 |
 | 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 25 |
 | 7 | The Rigging | 18 | 37 | 1 toffee apple | 42 | 21 |
 | 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 30 |
@@ -1625,12 +1625,12 @@ what holds the world at 37% and above, the highest floor in the game.
 .....#.....
 ...~~o~~...
 ..#ooooo#..
-...#oPooo#.
-....#ooooo#
-..a..#ooao#
-....xx#ooo#
-.......#o#.
-........#..
+..#ooPooo#.
+...#oooooo#
+....##oooo#
+..a.xx#oa#.
+.......##..
+...........
 ```
 
 Four stalls set out in a shallow vee across the top of the ground, with the gangways between them
@@ -1655,10 +1655,10 @@ it.
 #ooooo~~...
 #ooPoo~~...
 #ooooooo~~.
-#aoooooo~~.
-.#oxxooo#..
-..#oooa#...
-...####....
+#ooooooo~~.
+#aoxxoo#...
+.#oooa#....
+..####.....
 ```
 
 A row of sideshows stepping away south-east, each one its own block of crowd, with a gangway on
@@ -1732,16 +1732,16 @@ two apples it collects on the way are what pay the ropes back.
 ## 5. The Toffee Stand — 17 pieces, 38
 
 ```
-..####.....
-.#aooo#....
-#oooooo#...
-.~~~oooo#..
-.~~~ooooo#.
-...#Poooo#.
-....#ooa#..
-...xx#o#...
-......#....
-.....a.....
+......##...
+.a...#oo#..
+....#oooo#.
+.~~~oooooo#
+.~~~oooooo#
+...#Pooooo#
+....#ooooo#
+...xx#ooo#.
+......#a#..
+.....a.#...
 ...........
 ```
 
