@@ -388,7 +388,7 @@ way from Dust Shore to Starwell Ring.
 | 6 | Meteor Field | 15 | 2 meteors | 17 | 32 | 46% |
 | 7 | Starwell Ring | 12 | — | 14 | 32 | 56% |
 | 8 | Wide Reaches | 20 | 1 stardrop | 45 | 69 | 34% |
-| 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 32 | 49 | 34% |
+| 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
 
 Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
 pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing

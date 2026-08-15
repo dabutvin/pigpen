@@ -1022,7 +1022,7 @@ more room out here than anywhere else and less of it a plain block can reach.
 | 6 | Meteor Field | 15 | 42 | 2 meteors | 32 | 17 |
 | 7 | Starwell Ring | 12 | 32 | — | 32 | 14 |
 | 8 | Wide Reaches | 20 | 64 | 1 stardrop | 69 | 45 |
-| 9 | Visitor Crater | 20 | 44 | 2 stardrops, 1 meteor | 49 | 32 |
+| 9 | Visitor Crater | 20 | 44 | 2 stardrops, 1 meteor | 49 | 27 |
 
 ## 1. Dust Shore — 12 pieces, 31
 
@@ -1235,8 +1235,8 @@ rather than being wasted: it seals that corner, so the fencing stops one piece s
 
 ```
 ...##~......
-..#ooo#.....
-.#oaoo#x~#a.
+..#ooo#.a...
+.#oaoo#x~#..
 #oooooo~oo#.
 #oooPo~ooo~.
 .#ooo#oVo~..
