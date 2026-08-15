@@ -1,7 +1,15 @@
 import SwiftUI
 
-/// The colours of the field. Mud is warm and dull so the water and the finished pen
-/// can be the two things that catch the eye.
+/// The colours of the game. Mud is warm and dull so the water and the finished pen can be
+/// the two things that catch the eye.
+///
+/// The board in the middle of the screen no longer draws itself out of these: a world hands
+/// it a `FieldSkin` and the ground, the water and the fencing come out of that, so the
+/// mountain's field is ash and the city's is paving. What is left here is the meadow's own
+/// version of those colours — which the films, the world map and the title screen are all
+/// still painted in, since every one of them is somewhere in Mudlark Meadow — along with the
+/// colours that belong to no world at all: the pen's gold, the cream of a painted board, barn
+/// red for bad news and clover for good.
 enum GamePalette {
     static let mud = Color(red: 0.64, green: 0.49, blue: 0.36)
     /// The same mud with the light full on it and with the light off it, so the field can

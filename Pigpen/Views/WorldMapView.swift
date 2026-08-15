@@ -108,6 +108,7 @@ struct WorldMapView: View {
             PuzzleView(
                 level: world[index].level,
                 treatSkin: theme.treats,
+                skin: theme.field,
                 day: theme.day,
                 dusk: theme.dusk
             ) { verdict, _, _ in

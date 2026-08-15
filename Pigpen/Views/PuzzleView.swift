@@ -28,6 +28,10 @@ struct PuzzleView: View {
     /// How this world dresses its windfall and hazard, handed on to the field. Meadow levels,
     /// dailies and the tutorial keep the apple and the skull; a themed world passes its own.
     private let treatSkin: TreatSkin
+    /// How this world paints the board itself — its ground, its water and its fencing. The
+    /// meadow's mud and blue water are the default, and a themed world passes its own, so the
+    /// mountain's board is ash with a steaming tarn in it rather than mud with a mere.
+    private let skin: FieldSkin
     /// Daylight and dusk for the ground the board is cut out of. Defaults to the meadow;
     /// a themed world passes its own so the thicket sits in leaf litter rather than mowing.
     private let day: GamePalette.Pasture
@@ -68,6 +72,7 @@ struct PuzzleView: View {
         level: PuzzleLevel,
         clock: Stopwatch? = nil,
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
+        skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
         dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
@@ -79,6 +84,7 @@ struct PuzzleView: View {
             game: PuzzleGame(level: level),
             clock: clock,
             treatSkin: treatSkin,
+            skin: skin,
             day: day,
             dusk: dusk,
             wayOutTitle: wayOutTitle,
@@ -94,6 +100,7 @@ struct PuzzleView: View {
         game: PuzzleGame,
         clock: Stopwatch? = nil,
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
+        skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
         dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
@@ -104,6 +111,7 @@ struct PuzzleView: View {
         self.onPenned = onPenned
         self.onLeave = onLeave
         self.treatSkin = treatSkin
+        self.skin = skin
         self.day = day
         self.dusk = dusk
         self.wayOutTitle = wayOutTitle
@@ -161,6 +169,7 @@ struct PuzzleView: View {
                         if worthCallout?.id == id { worthCallout = nil }
                     },
                     treatSkin: treatSkin,
+                    skin: skin,
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )
