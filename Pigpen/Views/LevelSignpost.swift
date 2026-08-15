@@ -11,10 +11,11 @@ struct LevelSignpost: View {
         case open
         /// Still shut, because the level before it has not been beaten.
         case shut
-        /// Shut behind a toll of stars, and how many the world wants for it. The number is
-        /// shown where the stars earned would go, since it is the one thing worth knowing
-        /// about a level nobody can open yet.
-        case tolled(stars: Int)
+        /// Shut behind a toll of stars: how many the world already holds, and how many it
+        /// wants. Both are shown where the stars earned would go — as `have/need` — since a
+        /// running count against the price is the one thing worth knowing about a level
+        /// nobody can open yet, and says plainly that stars are what unlock it.
+        case tolled(have: Int, need: Int)
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -57,10 +58,11 @@ struct LevelSignpost: View {
     /// in them and which are still worth going back down for.
     @ViewBuilder
     private var tally: some View {
-        if case .tolled(let toll) = standing {
+        if case .tolled(let have, let need) = standing {
             HStack(spacing: 3) {
                 Image(systemName: "star.fill")
-                Text("\(toll)")
+                Text("\(have)/\(need)")
+                    .monospacedDigit()
             }
             .font(.system(size: 11, weight: .black, design: .rounded))
             .foregroundStyle(GamePalette.pen)
@@ -215,8 +217,8 @@ struct LevelSignpost: View {
         switch standing {
         case .shut:
             return "Level \(number), \(name), locked"
-        case .tolled(let toll):
-            return "Level \(number), \(name), locked until \(toll) stars"
+        case .tolled(let have, let need):
+            return "Level \(number), \(name), locked until \(need) stars, \(have) so far"
         case .open:
             return "Level \(number), \(name), not yet played"
         case .cleared:
@@ -246,7 +248,7 @@ struct SignpostButtonStyle: ButtonStyle {
         LevelSignpost(number: 2, name: "Puddle Corner", stars: 3, standing: .cleared)
         LevelSignpost(number: 3, name: "Horseshoe Lake", stars: 0, standing: .open)
         LevelSignpost(number: 4, name: "The Narrows", stars: 0, standing: .shut)
-        LevelSignpost(number: 9, name: "Stag Mere", stars: 0, standing: .tolled(stars: 21))
+        LevelSignpost(number: 9, name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
     }
     .padding(40)
     .background(GamePalette.beyond)

@@ -221,8 +221,9 @@ struct WorldMapView: View {
             .open
         } else if !progress.isTollPaid(index) {
             // Shown from the off, before the trail has even got there: a boss the player
-            // can see the price of is one worth going back down the trail for.
-            .tolled(stars: world[index].starToll)
+            // can see the price of — and how close they are to it — is one worth going back
+            // down the trail for.
+            .tolled(have: progress.totalStars, need: world[index].starToll)
         } else {
             .shut
         }
