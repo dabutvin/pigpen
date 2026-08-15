@@ -533,6 +533,7 @@ struct FieldView: View {
         case .pits: drawPits(in: &context, rect: rect, scatter: &scatter)
         case .ribs: drawRibs(in: &context, rect: rect, scatter: &scatter)
         case .sawdust: drawSawdust(in: &context, rect: rect, scatter: &scatter)
+        case .hardpan: drawHardpan(in: &context, rect: rect, scatter: &scatter)
         }
     }
 
@@ -736,10 +737,60 @@ struct FieldView: View {
         }
     }
 
+    /// Hardpan: clay that dried out and went on drying until it cracked into plates. The crack
+    /// does the drawing — a dark line with a pale lip along the top of it, since a plate that
+    /// has curled at the edge catches the sun on the way up and hides it on the way down.
+    private func drawHardpan(in context: inout GraphicsContext, rect: CGRect, scatter: inout Scatter) {
+        for _ in 0..<2 {
+            let down = rect.minY + rect.height * CGFloat(scatter.next(in: 0.18...0.82))
+            let kink = rect.midX + rect.width * CGFloat(scatter.next(in: -0.25...0.25))
+            var crack = Path()
+            crack.move(to: CGPoint(x: rect.minX, y: down))
+            crack.addLine(to: CGPoint(
+                x: kink,
+                y: down + rect.height * CGFloat(scatter.next(in: -0.12...0.12))
+            ))
+            crack.addLine(to: CGPoint(
+                x: rect.maxX,
+                y: down + rect.height * CGFloat(scatter.next(in: -0.10...0.10))
+            ))
+            context.stroke(
+                crack.applying(CGAffineTransform(translationX: 0, y: -max(1, rect.width * 0.03))),
+                with: .color(GamePalette.cream.opacity(0.18)),
+                style: StrokeStyle(lineWidth: max(1, rect.width * 0.03), lineJoin: .round)
+            )
+            context.stroke(
+                crack,
+                with: .color(skin.grit.opacity(scatter.next(in: 0.22...0.38))),
+                style: StrokeStyle(lineWidth: max(1, rect.width * 0.035), lineJoin: .round)
+            )
+        }
+
+        // And the odd branch off one, because a crack in a pan never runs alone for long.
+        if scatter.next() < 0.5 {
+            let foot = CGPoint(
+                x: rect.minX + rect.width * CGFloat(scatter.next(in: 0.25...0.75)),
+                y: rect.minY + rect.height * CGFloat(scatter.next(in: 0.2...0.8))
+            )
+            var branch = Path()
+            branch.move(to: foot)
+            branch.addLine(to: CGPoint(
+                x: foot.x + rect.width * CGFloat(scatter.next(in: -0.3...0.3)),
+                y: foot.y + rect.height * CGFloat(scatter.next(in: 0.18...0.34))
+            ))
+            context.stroke(
+                branch,
+                with: .color(skin.grit.opacity(0.24)),
+                style: StrokeStyle(lineWidth: max(1, rect.width * 0.028), lineCap: .round)
+            )
+        }
+    }
+
     /// What is going on on the surface, which is not the same thing twice: light breaking on
     /// open water in the meadow, rings on a standing pool in the wood, steam off a mountain
-    /// tarn, a slick on a canal, the light still in the well a star made, one river running —
-    /// and, at the carnival, a crowd stood where every other world has water.
+    /// tarn, a slick on a canal, the light still in the well a star made, one river running,
+    /// a crowd stood at the carnival where every other world has water — and, in the dunes,
+    /// sand doing the same job standing still.
     private func drawSurface(in context: inout GraphicsContext, board: BoardGeometry) {
         switch skin.surface {
         case .ripples: drawRipples(in: &context, board: board)
@@ -749,6 +800,7 @@ struct FieldView: View {
         case .starlight: drawGlints(in: &context, board: board)
         case .flow: drawFlow(in: &context, board: board)
         case .crowd: drawCrowd(in: &context, board: board)
+        case .dune: drawDune(in: &context, board: board)
         }
     }
 
@@ -974,6 +1026,73 @@ struct FieldView: View {
         }
     }
 
+    /// The dune: sand where every other world has water, and it walls a pen for the same
+    /// reason a mere does — a pig will no more climb a slipface than it will swim. What makes
+    /// a bank of tiles read as a ridge rather than a pool is the two edges of it: the crest
+    /// along the top, where the sand runs out into the light, and the slipface under the
+    /// bottom, dropping away into its own shadow. The wind's combing goes over both.
+    private func drawDune(in context: inout GraphicsContext, board: BoardGeometry) {
+        let sand = waterTiles
+        for tile in sand {
+            let rect = board.rect(for: tile)
+            var noise = scatter(on: tile)
+
+            // The combing the wind leaves up the back of a dune: parallel, and running the
+            // same way on every tile, since it is one dune rather than a tile's worth each.
+            var ripples = Path()
+            for lane in [0.3, 0.55, 0.8] {
+                let y = rect.minY + board.cell * CGFloat(lane)
+                ripples.move(to: CGPoint(x: rect.minX, y: y))
+                ripples.addQuadCurve(
+                    to: CGPoint(x: rect.maxX, y: y),
+                    control: CGPoint(
+                        x: rect.midX,
+                        y: y - board.cell * CGFloat(noise.next(in: 0.04...0.09))
+                    )
+                )
+            }
+            context.stroke(
+                ripples,
+                with: .color(skin.waterLight.opacity(0.28)),
+                style: StrokeStyle(lineWidth: max(1, board.cell * 0.03), lineCap: .round)
+            )
+
+            // The crest, on the tiles that have nothing above them.
+            if !sand.contains(GridPoint(row: tile.row - 1, column: tile.column)) {
+                var crest = Path()
+                let top = rect.minY + board.cell * 0.09
+                crest.move(to: CGPoint(x: rect.minX, y: top))
+                crest.addQuadCurve(
+                    to: CGPoint(x: rect.maxX, y: top),
+                    control: CGPoint(x: rect.midX, y: top - board.cell * 0.06)
+                )
+                context.stroke(
+                    crest,
+                    with: .color(skin.waterLight.opacity(0.7)),
+                    style: StrokeStyle(lineWidth: max(1, board.cell * 0.05), lineCap: .round)
+                )
+            }
+
+            // And the slipface, on the tiles that have nothing below them: the steep side,
+            // which is the side a pig would have to come up and the reason it does not.
+            if !sand.contains(GridPoint(row: tile.row + 1, column: tile.column)) {
+                context.fill(
+                    Path(CGRect(
+                        x: rect.minX,
+                        y: rect.maxY - board.cell * 0.34,
+                        width: rect.width,
+                        height: board.cell * 0.34
+                    )),
+                    with: .linearGradient(
+                        Gradient(colors: [skin.waterDeep.opacity(0), skin.waterDeep.opacity(0.75)]),
+                        startPoint: CGPoint(x: rect.midX, y: rect.maxY - board.cell * 0.34),
+                        endPoint: CGPoint(x: rect.midX, y: rect.maxY)
+                    )
+                )
+            }
+        }
+    }
+
     /// The lines between the tiles, ruled over the ground and stopped at the water. A lake
     /// is one sheet of it; squaring it off would only make the map look like a spreadsheet.
     private func drawGridLines(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
@@ -1156,6 +1275,7 @@ struct FieldView: View {
             case .beacons: drawBeacons(in: &context, plot: plot)
             case .props: drawProps(in: &context, plot: plot)
             case .bunting: drawBunting(in: &context, plot: plot)
+            case .driftFence: drawDriftFence(in: &context, plot: plot)
             }
         }
     }
@@ -1503,6 +1623,57 @@ struct FieldView: View {
             context.fill(flag, with: .color(flags[index % flags.count]))
         }
     }
+
+    /// The desert's: a drift fence. Palings bleached to bone and wired together in a row with
+    /// the gaps left in on purpose, since a fence out here is put up to slow the sand rather
+    /// than to stop it — and the sand has already drifted up the foot of this one, which is
+    /// what happens to everything anybody leaves standing in the dunes.
+    private func drawDriftFence(in context: inout GraphicsContext, plot: CGRect) {
+        var palings = Path()
+        var lit = Path()
+        let width = plot.width * 0.09
+        let foot = plot.minY + plot.height * 0.9
+        let stations: [CGFloat] = [0.14, 0.32, 0.5, 0.68, 0.86]
+        for (index, paling) in stations.enumerated() {
+            let x = plot.minX + plot.width * paling
+            // No two of them the same height: they were cut where they stood and put in by hand.
+            let top = plot.minY + plot.height * (index.isMultiple(of: 2) ? 0.15 : 0.21)
+            palings.addRect(CGRect(x: x - width / 2, y: top, width: width, height: foot - top))
+            lit.addRect(CGRect(x: x - width / 2, y: top, width: width * 0.38, height: foot - top))
+        }
+        context.fill(palings, with: .color(skin.picket))
+        context.fill(lit, with: .color(.white.opacity(0.22)))
+
+        // The two wires holding the row together, which is the whole of the joinery.
+        var wires = Path()
+        for wire in [0.34, 0.66] {
+            let y = plot.minY + plot.height * CGFloat(wire)
+            wires.move(to: CGPoint(x: plot.minX + plot.width * 0.08, y: y))
+            wires.addLine(to: CGPoint(x: plot.maxX - plot.width * 0.08, y: y))
+        }
+        context.stroke(
+            wires,
+            with: .color(skin.rail),
+            style: StrokeStyle(lineWidth: max(1, plot.width * 0.045), lineCap: .round)
+        )
+
+        // The drift the fence has caught, banked up the near side of it and burying the feet.
+        var drift = Path()
+        drift.move(to: CGPoint(x: plot.minX, y: foot))
+        drift.addQuadCurve(
+            to: CGPoint(x: plot.maxX, y: foot - plot.height * 0.06),
+            control: CGPoint(x: plot.midX, y: foot - plot.height * 0.24)
+        )
+        drift.addLine(to: CGPoint(x: plot.maxX, y: plot.maxY))
+        drift.addLine(to: CGPoint(x: plot.minX, y: plot.maxY))
+        drift.closeSubpath()
+        context.fill(drift, with: .color(skin.groundLit))
+        context.stroke(
+            drift,
+            with: .color(.white.opacity(0.24)),
+            style: StrokeStyle(lineWidth: max(1, plot.width * 0.03), lineCap: .round)
+        )
+    }
 }
 
 #Preview("Building") {
@@ -1522,16 +1693,17 @@ struct FieldView: View {
     .padding()
 }
 
-/// The same field in every world there is: one board, one line of fencing, seven grounds. The
-/// board underneath is River Bend in all seven, so anything that changes between them is the
+/// The same field in every world there is: one board, one line of fencing, eight grounds. The
+/// board underneath is River Bend in all eight, so anything that changes between them is the
 /// skin and nothing else — which is the quickest way to see whether a world reads as its own
 /// place or only as the meadow tinted a different colour.
-#Preview("Seven grounds") {
+#Preview("Eight grounds") {
     let level = PuzzleLevel.riverBend
     let fences = Set((3...9).map { GridPoint(row: $0, column: 0) })
         .union((1...5).map { GridPoint(row: 10, column: $0) })
     let grounds: [FieldSkin] = [
-        .meadow, .thornwood, .emberpeak, .cogsworth, .starfall, .gloamdeep, .lanternCarnival
+        .meadow, .thornwood, .emberpeak, .cogsworth,
+        .starfall, .gloamdeep, .lanternCarnival, .sunbakedDunes
     ]
 
     return ScrollView {

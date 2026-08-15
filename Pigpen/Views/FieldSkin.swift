@@ -13,7 +13,7 @@ import SwiftUI
 /// still the ground a fence goes into and water is still the wall a pen never pays for,
 /// whatever either is called here — but the mud on Emberpeak is ash with cinder in it, the
 /// water in Cogsworth is a canal with a slick on it, and the fencing at the carnival is
-/// bunting strung between two poles. One board, one solver, seven grounds.
+/// bunting strung between two poles. One board, one solver, eight grounds.
 ///
 /// Unlike the trail's palette, a skin does not follow the player's screen from daylight to
 /// dusk. The board has always kept one set of colours whatever the appearance, because the
@@ -64,6 +64,8 @@ struct FieldSkin: Sendable {
         case ribs
         /// Trodden ground with sawdust thrown down over it.
         case sawdust
+        /// Hardpan: baked clay dried until it cracked, in plates with the light on their lips.
+        case hardpan
     }
 
     /// What the water of a world does. Water is a wall the pen never pays for, so it is worth
@@ -83,6 +85,9 @@ struct FieldSkin: Sendable {
         case flow
         /// Not water at all: a crowd, stood shoulder to shoulder under the lanterns.
         case crowd
+        /// Not water either: a dune, combed by the wind, lit along the crest and dropping away
+        /// down the slipface under it.
+        case dune
     }
 
     /// What a piece of fencing is on this world's ground. Every one of them is the same
@@ -103,6 +108,8 @@ struct FieldSkin: Sendable {
         case props
         /// Painted poles with a swag of bunting between them.
         case bunting
+        /// A drift fence: bleached palings wired together and half buried in what they caught.
+        case driftFence
     }
 }
 
@@ -247,5 +254,27 @@ extension FieldSkin {
         rail: Color(red: 0.98, green: 0.80, blue: 0.36),
         picket: Color(red: 0.96, green: 0.93, blue: 0.88),
         fencing: .bunting
+    )
+
+    /// The desert's: hardpan baked until it cracked into plates, and a dune where every other
+    /// world has water — sand too steep to climb and too loose to hold a post, which walls a pen
+    /// exactly as a river does and is the only wall in the game that could blow somewhere else by
+    /// morning. The fencing is a drift fence: bleached palings wired together and already half
+    /// buried in the sand they were put up to stop.
+    static let sunbakedDunes = Self(
+        ground: Color(red: 0.76, green: 0.67, blue: 0.51),
+        groundLit: Color(red: 0.84, green: 0.75, blue: 0.58),
+        groundShade: Color(red: 0.66, green: 0.57, blue: 0.42),
+        grit: Color(red: 0.48, green: 0.38, blue: 0.27),
+        grain: .hardpan,
+        water: Color(red: 0.90, green: 0.76, blue: 0.47),
+        waterDeep: Color(red: 0.70, green: 0.54, blue: 0.31),
+        waterLight: Color(red: 1.00, green: 0.96, blue: 0.80),
+        shore: Color(red: 0.86, green: 0.75, blue: 0.55),
+        surface: .dune,
+        post: Color(red: 0.35, green: 0.26, blue: 0.18),
+        rail: Color(red: 0.58, green: 0.47, blue: 0.34),
+        picket: Color(red: 0.88, green: 0.82, blue: 0.70),
+        fencing: .driftFence
     )
 }
