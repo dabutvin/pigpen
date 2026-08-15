@@ -320,11 +320,10 @@ extension PuzzleLevel {
     /// crater and a board that will not have it, and the last thing to work out is which tiles
     /// of the wider half to hand back.
     ///
-    /// Twenty pieces. The best pair of blocks holds 32 between them; the answer holds 22 tiles
+    /// Twenty pieces. The best pair of blocks holds 27 between them; the answer holds 22 tiles
     /// apiece with a stardrop in each half and a meteor swallowed by the visitor's, which comes
-    /// to 49. A third stardrop lies out past the east rim where no wall on this board can reach
-    /// it, and the other meteor stands out on the north rim where the tidy wall would want to
-    /// go. It asks for most of the stars the eight fields below it hold before it will open at
+    /// to 49. A third stardrop hangs above the north rim where no wall on this board can reach
+    /// it, and the other meteor stands out on the rim where the tidy wall would want to go. It asks for most of the stars the eight fields below it hold before it will open at
     /// all.
     static let visitorCrater = starfall(
         id: "visitor-crater",

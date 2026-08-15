@@ -74,10 +74,10 @@ extension PuzzleLevel {
     /// staircase and the ground either side of it is a wedge.
     ///
     /// Which is the shore question asked on the only kind of bank the caverns have. Eleven pieces
-    /// squared off beside the staircase can only get one of their four sides against it and hold
-    /// 17 tiles, which the two crystals their wall cannot stand on bring up to 27; the same eleven
-    /// laid as a staircase of their own, mirroring the river back at itself,
-    /// shut 26 tiles and both crystals, which is 36. A diagonal wall closes two tiles a piece
+    /// squared off beside the staircase can only get one of their four sides against it, and hold
+    /// 18 tiles and the one crystal lying inside them, which is 23; the same eleven laid as a
+    /// staircase of their own, mirroring the river back at itself, shut 26 tiles and both
+    /// crystals, which is 36. A diagonal wall closes two tiles a piece
     /// where a straight one closes one, and following a river that is already diagonal is how the
     /// caverns say so.
     static let dripstoneShelf = gloamdeep(
