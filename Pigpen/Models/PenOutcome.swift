@@ -22,6 +22,10 @@ enum Refusal: Equatable, Sendable {
     /// Two pens that should have been one inside the other are standing side by side: the pig
     /// is held and so is the other one, but the ring does not go round him.
     case beside(Animal)
+    /// Two pens that should have had clear ground between them are sharing a wall: both are
+    /// held, and one fence piece has the pig on one side of it and something that stings on
+    /// the other.
+    case tooClose(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -128,6 +132,22 @@ extension PuzzleLevel {
             }
         }
 
+        // The dunes ask for two pens with clear ground between them, which is the one rule that
+        // is about the wall rather than the ground: everywhere else a piece with the pig on one
+        // side and something else on the other is one wall doing two jobs, and a sting goes
+        // straight through it.
+        if question == .berth, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                guard let theirs = ground[animal.kind] else { continue }
+                if sharesAWall(pigGround, theirs, fences: fences) {
+                    return .refused(pen: held, refusal: .tooClose(animal.kind))
+                }
+            }
+        }
+
         // And a board that will not have one animal better housed than the other asks two
         // things at once: two pens rather than one, and the same ground in each of them.
         if question == .even, let pigGround = ground[.pig] {
@@ -143,6 +163,25 @@ extension PuzzleLevel {
         }
 
         return .penned(pen: held)
+    }
+
+    /// Whether one fence piece is doing for both pens: whether any wall the player laid has one
+    /// run of ground on one side of it and the other run on the other.
+    ///
+    /// Only the fencing is asked about, because the fencing is the whole of what the rule is
+    /// against. Sand between two pens is another matter — a dune is yards of it, and nothing
+    /// reaches across one — and the two runs cannot be touching without a wall between them in
+    /// any case, since ground the pig could walk into would be her own ground and not a second
+    /// pen at all.
+    private func sharesAWall(
+        _ mine: Set<GridPoint>,
+        _ theirs: Set<GridPoint>,
+        fences: Set<GridPoint>
+    ) -> Bool {
+        fences.contains { piece in
+            let beside = Direction.allCases.map(piece.stepped)
+            return beside.contains(where: mine.contains) && beside.contains(where: theirs.contains)
+        }
     }
 
     /// Whether every way off the board from a tile crosses the given ground.

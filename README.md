@@ -178,8 +178,9 @@ thicket floors at 23% and opens at 25%, so the second world starts around where 
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
 the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
 Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
-opens at 34%; and Lantern Carnival floors and opens at 37%, the highest floor any world has stood
-on. Bosses are held to each other rather than to the floor:
+opens at 34%; Lantern Carnival floors and opens at 37%; and Sunbaked Dunes floors at 38% and opens
+at 39%, the highest floor any world has stood on. Bosses are held to each other rather than to the
+floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
@@ -198,10 +199,28 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree, paving, star dust, wet flowstone or trodden sawdust — what the windfall and
-  the hazard look like on that ground,
+  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust or rippled sand — what the
+  windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
+- **The board is dressed too.** Not just the country around it: the field in the middle of the
+  screen is painted in the world it stands in, so the mud, the water and the fencing are that
+  world's. Mud is mud to the rules wherever it is — a tile that takes a fence — and water is
+  still the wall a pen never pays for, but they are drawn as what a place like that would have.
+
+  | World | Ground | Water | Fencing |
+  |---|---|---|---|
+  | Mudlark Meadow | mud, stones turned up in it | open water, light breaking on it | pickets and rails |
+  | Thornwood Thicket | leaf mould, leaves where they fell | peat pools, rings on the still | woven hurdles |
+  | Emberpeak | ash, cinder still going in it | a steaming tarn | stakes burnt black |
+  | Cogsworth City | paving in courses of setts | a canal with a slick on it | wrought iron railings |
+  | Starfall Reaches | dust, pitted where things landed | a well a star went into, still lit | posts with a light strung between |
+  | Gloamdeep Caverns | flowstone in ribs | one river, running | pit props |
+  | Lantern Carnival | trodden ground under sawdust | **a crowd**, not water at all | painted poles and bunting |
+
+  The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
+  a pen exactly as a mere does, because the board cannot tell the difference between a river and
+  a queue for the waltzers.
 - **Each world plays its own films.** An opening the first time you walk into it, and a
   send-off once every pen is held — the send-off pointing on past the world, the way the
   meadow's points past the hills to a gate standing open somewhere else.
@@ -211,11 +230,11 @@ carries the same game into every one of them.
   be going.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches**, **Gloamdeep Caverns** and **Lantern Carnival** to play, then
-Sunbaked Dunes, Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
+City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival** and **Sunbaked Dunes** to
+play, then Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
 silhouettes.
-Adding one is a matter of authoring its levels and its theme — the map, the unlocking and the
-films are already there.
+Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
+the skin its board is painted in — since the map, the unlocking and the films are already there.
 
 ### Thornwood Thicket
 
@@ -455,7 +474,8 @@ Rimstone Corner is the corner question with nothing else in the way of it, and t
 in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
 laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
 Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
-round 27. The Great Gallery holds the second biggest pen in the game, at 58 tiles.
+round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
+dunes' Great Erg came in a tile above it.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
 animals on the ground: **the roost hangs together and the pig hangs apart**. A bat, its pup and the
@@ -536,6 +556,84 @@ hole of it, worth 17, where the same twenty-two pieces run out to the corners as
 tiles and the apple hanging over the ring, which is 40. It charges the same 21 of the 24 stars below
 it that every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions.md`](solutions.md).
+
+### Sunbaked Dunes
+
+The eighth world, and the driest. The lights of the fair are behind and there is sand to the
+horizon, so the trail runs over rippled sand under a white sky, the windfall is a **melon** lying
+where it fell and the hazard a **cactus** rooted in the sand — each worth exactly what its meadow
+twin was, a melon five tiles to shut in, a cactus five to shut in with and no fencing at all, since
+there is no room beside a cactus for a post of yours.
+
+What the water is out here is **a dune**: sand too steep to climb and too loose to hold a post, so
+it stops a pig and a fence exactly as a river does. And the world's own idea is the shape of it —
+**every dune is a crescent.** A barchan: a straight back with a horn trailing off each end, one tile
+thick, so the sand comes back on itself. A meadow has meres, a thicket pools, a mountain tarns, a
+city canals in straight runs, the reaches a scatter of single drops, the caverns one stepped river
+and the carnival filled blocks with never a bend in them; here there is nothing but bends.
+`DunesTests` pins it, and pins the other half of it too — every crescent on a board opens the same
+way, because barchans are made by a wind and a wind blows one way across a field.
+
+Which is new in what it **offers** rather than in what it forbids. Every world below hands a pen one
+wall to follow, or two meeting at a corner, and the player draws the rest. A crescent hands over a
+finished pen: the shade inside it is dry ground, walled on three sides, and the only thing to pay
+for is the mouth — which is shorter than the back it hangs off. It is the cheapest pen in the game.
+
+And that is the trap, which is the whole world. The belly of a dune is rectangle-shaped, so it is
+exactly what squaring a board off finds; it is also a fixed size, because the sand is where it is
+and no amount of budget makes the shade any wider. So the question every field here asks is *is the
+free pen worth having*, and the answer is almost always no. Slipface Hollow says it on the first
+board by standing a cactus in each end of the shade: take the gift the sand is holding out and you
+have been given six tiles and ten points of debt.
+
+One field has no dune on it anywhere, the way The Blind Grike has no river: The Hardpan, the ground
+the sand never reached, where every tile of the pen is bought and the biggest budget in the world is
+laid out across bare hardpan to buy it.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
+| 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
+| 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
+| 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
+| 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 28 | 50 | 44% |
+| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 37 | 48% |
+| 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
+| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 36 | 59 | 38% |
+| 9 | Scorpion Flats | 16 | the scorpion, two barchans, 2 melons | 19 | 50 | 62% |
+
+Scarp Corner is the corner question with one great barchan hooked into the north-west, so its back
+is the north wall and its western horn stands on the rim: two sides handed over, and the smallest
+budget in the world to draw the rest. The right-angled answer hangs a rectangle under the back and
+pays for its own east wall for 20, where the same eleven pieces run out as a chevron — from the
+western rim, across the whole mouth of the crescent, back up to a point in the south — hold 41
+tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it is the
+hardest corner in the game. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
+holds 59 tiles on the broadest board out here, which is the second biggest pen in the game: five
+behind Wide Reaches, one ahead of the Great Gallery.
+
+Its boss, Scorpion Flats, adds the dunes' rule, and it is the direct inversion of the game's oldest
+boss lesson. Stag Mere taught that two pens can share a wall — one boundary doing two jobs — and the
+search has priced a shared wall at half ever since; every boss from Boar Hollow to The Centre Ring
+is built on that discount. **A scorpion stings straight through a fence**, so here there is no
+discount: the pig may not be standing in with him, and no piece of fence may have her ground on one
+side of it and his on the other. The ground between the two pens has to be given up unclaimed, and
+one budget has to pay for two whole walls.
+
+He is standing in the shade of a barchan three tiles wide, which is what makes the board answerable
+and what makes it hard at the same time. Three of his walls are free and one piece shuts him in —
+and that piece is one she may not lean on, so the sand round it is ground she may not have either.
+Her wall has to come past the notch and close behind it, giving it a berth, which is a thing no
+rectangle can do. Sixteen pieces is the smallest budget any boss in the game hands out, and the
+cheapest legal pair it buys is the tidy pair of pens side by side: four pieces box the pig where she
+stands on one tile, and the rest wall the open sand east of the notch as the scorpion's own yard,
+which is 19. The same sixteen run out from the pig up the west of the flats, along under the great
+back in the north and down round the far side of the notch hold 45 tiles and the melon in the
+north-east, which is 50 — the biggest pen any boss holds, and at 62% the widest gap any board in the
+game leaves. The melon in the lane between the two pens is the board saying what the rule costs: the
+pen that wins this field is the only pen in the game that walks past five points it can see and
+leaves them lying there. It charges the same 21 of the 24 stars below it that every boss charges, and
+stops for the same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -822,7 +920,8 @@ The star thresholds are the judgement call, but not a free one: `DifficultyTests
 
 Then work out where on the trail it belongs. `--demand` squares the map off as well — the best plain block of ground per animal — and prints that pen, `squaredOff`, and the gap between it and the best pen as a percentage. That gap is what the level asks of a player, and the fencing-and-water stretch is ordered by it. Add the level and its squared-off plan to `baselines` in `DifficultyTests`, which replays that pen too and fails if the trail stops climbing.
 
-A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
+A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
+Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -855,9 +954,11 @@ than the last time the universe asked it.
 | `together` | One budget, two animals that will not be parted | Nothing — one pen has to reach both |
 | `even` | Two pens, and the same ground in each | The water between them |
 | `roost` | Three animals: two that will not be split, and a third they will not share with | The water between them |
+| `ring` | Two pens, one inside the other: the pig's ground has to close round him | The water between them |
+| `berth` | Two pens with clear ground between them: no piece of wall may serve both | The water between them |
 
-`herd`, `apart`, `exclude`, `together`, `even` and `roost` are the **boss rules**, and a field
-never asks one.
+`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring` and `berth` are the **boss rules**,
+and a field never asks one.
 
 #### The shape of a world
 
@@ -906,6 +1007,8 @@ is nudged out over what it cannot stand on, it asks 24% and sits where it belong
 | `together` | Standing the two further apart, so the block that holds both costs more |
 | `even` | Making the two halves the free wall leaves more lopsided, so more has to be handed back |
 | `roost` | Running the free wall *between* the two that must share, so joining them is the expensive part |
+| `ring` | Standing him further off centre, so the ring has to be lopsided to close |
+| `berth` | Standing the two so close that the cheap wall between them is the one that serves both |
 
 #### Authoring one
 
@@ -1108,7 +1211,7 @@ Pigpen/
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars and best pens, what that unlocks, which films are owed
-│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its boss silhouette
+│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its board skin, its boss silhouette
 │   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
 │   ├── Emberpeak.swift          # Emberpeak: its nine levels and the trail up them
@@ -1116,6 +1219,7 @@ Pigpen/
 │   ├── Starfall.swift           # Starfall Reaches: its nine levels and the trail out across them
 │   ├── Gloamdeep.swift          # Gloamdeep Caverns: its nine levels and the trail down through them
 │   ├── Carnival.swift           # Lantern Carnival: its nine levels and the trail round them
+│   ├── Dunes.swift              # Sunbaked Dunes: its nine levels and the trail out over them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
@@ -1140,6 +1244,7 @@ Pigpen/
 │   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
+│   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing
 │   ├── MeadowBackdrop.swift     # The meadow behind a board, and the timber bar over it
 │   ├── FenceRack.swift          # The budget as a rack of pieces, spent ones taken off it
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it

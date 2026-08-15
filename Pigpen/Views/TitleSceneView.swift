@@ -40,6 +40,13 @@ private struct TitleScene {
     private let hopDuration: TimeInterval = 0.62
     private let hopHeight = 0.028
 
+    /// The whole pasture is drawn a shade higher than the space would put it, so the fence
+    /// and the pig trotting along it sit in the open band between the wordmark and the menu
+    /// rather than behind them. It scales every vertical measure — bands, clouds, birds and
+    /// motes alike — by the same amount, so the scene lifts without any part of it coming
+    /// loose from another, and the ground still runs off the bottom of the screen.
+    private let rise: CGFloat = 0.82
+
     // The bands of the scene, top to bottom.
     private var horizon: CGFloat { y(0.56) }
     private var ridge: CGFloat { y(0.62) }
@@ -552,7 +559,7 @@ private struct TitleScene {
     // MARK: - Small helpers
 
     private func x(_ fraction: Double) -> CGFloat { size.width * CGFloat(fraction) }
-    private func y(_ fraction: Double) -> CGFloat { size.height * CGFloat(fraction) }
+    private func y(_ fraction: Double) -> CGFloat { size.height * CGFloat(fraction) * rise }
 
     private func circle(at center: CGPoint, radius: CGFloat) -> Path {
         Path(ellipseIn: CGRect(

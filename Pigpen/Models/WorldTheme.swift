@@ -5,11 +5,12 @@ import SwiftUI
 ///
 /// A world is the meadow's game played on new ground — fence in the pig, the biggest pen you
 /// can, so long as it is shut. What a theme changes is only ever the dressing: the light the
-/// trail and the board are drawn in, what grows around them, what the +5 windfall and the −5
-/// hazard look like lying on the mud, and the shape that waits at the end of it. An apple in
-/// the meadow is a truffle in the woods and worth the same five tiles; a skull is a bramble
-/// and costs the same five. The board does not know the difference, which is why one board
-/// and one solver serve every world there is.
+/// trail and the board are drawn in, what grows around them, what the ground and the water of
+/// the board itself are made of, what the +5 windfall and the −5 hazard look like lying on
+/// that ground, and the shape that waits at the end of it. An apple in the meadow is a truffle
+/// in the woods and worth the same five tiles; a skull is a bramble and costs the same five;
+/// mud is ash on the mountain and takes a fence just the same. The board does not know the
+/// difference, which is why one board and one solver serve every world there is.
 struct WorldTheme: Sendable {
     let id: String
     /// What the world is called, on the universe map and across the top of its own trail.
@@ -22,6 +23,10 @@ struct WorldTheme: Sendable {
     let dusk: GamePalette.Pasture
     /// How the windfall bonus and the staked hazard are dressed on this world's ground.
     let treats: TreatSkin
+    /// How the board itself is painted: the ground it is cut out of, the water lying in that
+    /// ground, and the fencing built on top. The rules underneath are untouched — mud takes a
+    /// fence and water never does, whatever either is called here.
+    let field: FieldSkin
     /// The thing at the end of the world, as its silhouette shows on the universe map.
     let boss: BossMark
     /// The world's own colour on the universe map: the planet it is drawn as, lit and shaded.
@@ -93,6 +98,7 @@ extension WorldTheme {
             bonusGlyph: "🍎", bonusScale: 0.58, bonusName: "apple",
             hazardGlyph: "☠️", hazardScale: 0.68, hazardName: "skull"
         ),
+        field: .meadow,
         boss: BossMark(glyph: "🦌", name: "the stag"),
         accent: Color(red: 0.58, green: 0.78, blue: 0.45),
         accentDeep: Color(red: 0.36, green: 0.58, blue: 0.30)
@@ -111,6 +117,7 @@ extension WorldTheme {
             bonusGlyph: "🍄", bonusScale: 0.56, bonusName: "truffle",
             hazardGlyph: "🥀", hazardScale: 0.60, hazardName: "bramble"
         ),
+        field: .thornwood,
         boss: BossMark(glyph: "🐗", name: "the boar"),
         accent: Color(red: 0.40, green: 0.62, blue: 0.36),
         accentDeep: Color(red: 0.20, green: 0.38, blue: 0.22)
@@ -130,6 +137,7 @@ extension WorldTheme {
             bonusGlyph: "🌰", bonusScale: 0.56, bonusName: "chestnut",
             hazardGlyph: "🔥", hazardScale: 0.62, hazardName: "ember"
         ),
+        field: .emberpeak,
         boss: BossMark(glyph: "🐉", name: "the wyrm"),
         accent: Color(red: 0.92, green: 0.47, blue: 0.26),
         accentDeep: Color(red: 0.55, green: 0.18, blue: 0.12)
@@ -152,6 +160,7 @@ extension WorldTheme {
             bonusGlyph: "🥧", bonusScale: 0.58, bonusName: "pie",
             hazardGlyph: "🕳️", hazardScale: 0.60, hazardName: "drain"
         ),
+        field: .cogsworth,
         boss: BossMark(glyph: "🐀", name: "the rat king"),
         accent: Color(red: 0.62, green: 0.66, blue: 0.73),
         accentDeep: Color(red: 0.31, green: 0.35, blue: 0.42)
@@ -175,6 +184,7 @@ extension WorldTheme {
             bonusGlyph: "🌟", bonusScale: 0.58, bonusName: "stardrop",
             hazardGlyph: "☄️", hazardScale: 0.62, hazardName: "meteor"
         ),
+        field: .starfall,
         boss: BossMark(glyph: "🛸", name: "the visitor"),
         accent: Color(red: 0.61, green: 0.53, blue: 0.89),
         accentDeep: Color(red: 0.29, green: 0.23, blue: 0.52)
@@ -199,6 +209,7 @@ extension WorldTheme {
             bonusGlyph: "💎", bonusScale: 0.56, bonusName: "crystal",
             hazardGlyph: "🪨", hazardScale: 0.60, hazardName: "boulder"
         ),
+        field: .gloamdeep,
         boss: BossMark(glyph: "🦇", name: "the roost"),
         accent: Color(red: 0.53, green: 0.47, blue: 0.63),
         accentDeep: Color(red: 0.24, green: 0.20, blue: 0.34)
@@ -223,8 +234,33 @@ extension WorldTheme {
             bonusGlyph: "🍭", bonusScale: 0.58, bonusName: "toffee apple",
             hazardGlyph: "🪢", hazardScale: 0.58, hazardName: "guy rope"
         ),
+        field: .lanternCarnival,
         boss: BossMark(glyph: "🤹", name: "the ringmaster"),
         accent: Color(red: 0.93, green: 0.43, blue: 0.67),
         accentDeep: Color(red: 0.55, green: 0.20, blue: 0.41)
+    )
+
+    /// Sunbaked Dunes, the eighth world: out past the last of the lights and into sand to the
+    /// horizon, where the ground is baked hardpan and the water is a dune. The windfall is a
+    /// desert melon split open where it lay and the hazard a cactus — each worth exactly what its
+    /// meadow twin was, a melon five tiles to shut in, a cactus five to shut in with and no
+    /// fencing at all, since a cactus is all spine and there is nothing in it to nail to.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for seven worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let sunbakedDunes = WorldTheme(
+        id: "sunbaked-dunes",
+        name: "Sunbaked Dunes",
+        blurb: "Sand to the horizon, and a sting in it.",
+        day: .duneDay,
+        dusk: .duneDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🍈", bonusScale: 0.58, bonusName: "melon",
+            hazardGlyph: "🌵", hazardScale: 0.60, hazardName: "cactus"
+        ),
+        field: .sunbakedDunes,
+        boss: BossMark(glyph: "🦂", name: "the scorpion"),
+        accent: Color(red: 0.93, green: 0.77, blue: 0.43),
+        accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20)
     )
 }

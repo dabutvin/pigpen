@@ -1,7 +1,15 @@
 import SwiftUI
 
-/// The colours of the field. Mud is warm and dull so the water and the finished pen
-/// can be the two things that catch the eye.
+/// The colours of the game. Mud is warm and dull so the water and the finished pen can be
+/// the two things that catch the eye.
+///
+/// The board in the middle of the screen no longer draws itself out of these: a world hands
+/// it a `FieldSkin` and the ground, the water and the fencing come out of that, so the
+/// mountain's field is ash and the city's is paving. What is left here is the meadow's own
+/// version of those colours — which the films, the world map and the title screen are all
+/// still painted in, since every one of them is somewhere in Mudlark Meadow — along with the
+/// colours that belong to no world at all: the pen's gold, the cream of a painted board, barn
+/// red for bad news and clover for good.
 enum GamePalette {
     static let mud = Color(red: 0.64, green: 0.49, blue: 0.36)
     /// The same mud with the light full on it and with the light off it, so the field can
@@ -86,6 +94,9 @@ enum GamePalette {
         /// Fairground: trodden grass under sawdust, with guy ropes pegged across it and a string
         /// of lanterns overhead throwing coloured light down onto all of it.
         case sawdust
+        /// Desert: baked hardpan with wind ripples combed across it, the odd cactus standing up
+        /// out of it, and nothing overhead but glare.
+        case sand
     }
 }
 
@@ -389,5 +400,50 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.28, green: 0.09, blue: 0.19),
         isNight: true,
         cover: .sawdust
+    )
+
+    /// The eighth world's daylight, and the one light in the game that is too much of it.
+    ///
+    /// Every world below this has a sky somebody would want to stand under. A desert at noon has
+    /// glare instead: the sun is small and white rather than big and yellow, the horizon is
+    /// burnt out to nearly nothing, and the blue only comes back well overhead. Which makes the
+    /// sand the brightest thing on the screen and the shadows the bluest — the only light left to
+    /// fill them with is the sky — so the world reads hot by being pale, where Emberpeak reads hot
+    /// by being orange.
+    static let duneDay = Self(
+        skyTop: Color(red: 0.34, green: 0.58, blue: 0.82),
+        skyHorizon: Color(red: 0.98, green: 0.93, blue: 0.80),
+        disc: Color(red: 1.00, green: 0.99, blue: 0.92),
+        discHalo: Color(red: 1.00, green: 0.95, blue: 0.74),
+        cloud: Color(red: 0.99, green: 0.96, blue: 0.89),
+        farHill: Color(red: 0.83, green: 0.72, blue: 0.55),
+        ground: Color(red: 0.91, green: 0.79, blue: 0.55),
+        foreground: Color(red: 0.80, green: 0.66, blue: 0.43),
+        blade: Color(red: 0.66, green: 0.52, blue: 0.34),
+        canopy: Color(red: 0.45, green: 0.56, blue: 0.34),
+        canopyShade: Color(red: 0.29, green: 0.40, blue: 0.24),
+        isNight: false,
+        cover: .sand
+    )
+
+    /// The desert after dark, which is the coldest night in the game for the same reason the day
+    /// is the hottest: there is nothing over the sand to hold anything in. So the heat goes
+    /// straight up and out, the sand turns from gold to a blue-grey with no warmth left in it at
+    /// all, and the sky comes down further than anywhere else — the caverns are dark and the
+    /// reaches are cold, and this is both at once with a great deal of sky on top.
+    static let duneDusk = Self(
+        skyTop: Color(red: 0.03, green: 0.05, blue: 0.14),
+        skyHorizon: Color(red: 0.20, green: 0.24, blue: 0.40),
+        disc: Color(red: 0.97, green: 0.97, blue: 1.00),
+        discHalo: Color(red: 0.72, green: 0.78, blue: 0.94),
+        cloud: Color(red: 0.14, green: 0.17, blue: 0.28),
+        farHill: Color(red: 0.12, green: 0.14, blue: 0.24),
+        ground: Color(red: 0.24, green: 0.25, blue: 0.32),
+        foreground: Color(red: 0.17, green: 0.18, blue: 0.25),
+        blade: Color(red: 0.12, green: 0.13, blue: 0.19),
+        canopy: Color(red: 0.20, green: 0.28, blue: 0.24),
+        canopyShade: Color(red: 0.12, green: 0.18, blue: 0.17),
+        isNight: true,
+        cover: .sand
     )
 }

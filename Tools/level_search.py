@@ -5,9 +5,9 @@
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
-rat's, `V` a visitor's, `T` a bat's, `U` its pup's and `M` the ringmaster's) and a budget
-and it prints the best pen, an example of it, and star thresholds in the proportions the
-shipped levels use.
+rat's, `V` a visitor's, `T` a bat's, `U` its pup's, `M` the ringmaster's and `S` the
+scorpion's) and a budget and it prints the best pen, an example of it, and star thresholds
+in the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -27,10 +27,11 @@ five against for the skull — which is what makes a treat a fork rather than a 
 tax: the pen can never simply ignore one it is standing next to.
 
 A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
-pup, or a ringmaster — is held by ground in two pieces just as happily as by one, since what
-has to hold is each animal rather than the pen: the search grows out from every animal at
-once and the ground it ends up with is connected to one or another of them, so a wall shared
-between two enclosures is paid for once, like any other.
+pup, a ringmaster, or a scorpion — is held by ground in two pieces just as happily as by one,
+since what has to hold is each animal rather than the pen: the search grows out from every
+animal at once and the ground it ends up with is connected to one or another of them, so a wall
+shared between two enclosures is paid for once, like any other. `--rule berth` is the one board
+that will not have that discount, and says so.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -59,7 +60,7 @@ SKULL = "x"
 STAKED = (APPLE, SKULL)
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
 
@@ -197,6 +198,9 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
     # The eight ways out of the ringmaster, as masks, so how far a pen has got round him is a
     # count of the ones it has crossed. Only the board that asks it needs them.
+    if rule == "berth" and "S" not in starts:
+        raise SystemExit("--rule berth wants a scorpion on the board")
+
     rays = []
     if rule == "ring":
         if "M" not in starts:
@@ -296,8 +300,27 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             return False
         return encircled(mine)
 
+    def berth_holds(pen):
+        """Whether the pen gives the scorpion a wide berth: two pens, and no wall doing for both.
+
+        The one rule in the game that takes the discount away. Everywhere else a mud tile with
+        the pig on one side of it and something else on the other is one piece paying for two
+        enclosures, which is what makes a boss cheaper than two boards; a sting goes through a
+        fence, so here it is no wall at all and the ground between the two pens has to be left
+        unclaimed.
+        """
+        mine = run_of(starts["P"], pen)
+        if mine & bit(starts["S"]):
+            return False
+        theirs = run_of(starts["S"], pen)
+        # A mud tile outside the pen and touching both runs is exactly the shared wall the
+        # scorpion refuses. Sand between them is another matter: a dune is not a fence.
+        return not (spilling(mine) & spilling(theirs) & ground & ~pen)
+
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
+        if rule == "berth":
+            return berth_holds(pen)
         if rule == "ring":
             return ring_holds(pen)
         if rule == "roost":
@@ -341,6 +364,36 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         for pen in ordered[: beam * 4]:
             mine = run_of(starts["P"], pen)
             if mine & bit(others[0]):
+                continue
+            share = shares.setdefault(mine.bit_count(), 0)
+            if len(keeping) < beam or share < beam // 8:
+                shares[mine.bit_count()] = share + 1
+                keeping.add(pen)
+        return keeping
+
+    def spaced(grown, cost):
+        """Which pens are worth widening on a board that wants clear ground between two pens.
+
+        `divided`'s problem with one clause more. Two pens need a wall between them that one pen
+        does not, so a beam kept by cost alone fills up with single blobs; and the cheapest
+        divided pen of a given size is the most lopsided one, so cost alone throws away the fair
+        split as well. Hence the same shares of the beam, one for each way the ground comes out
+        divided.
+
+        What is new is that a pen can be spoilt for good rather than merely be behind. A pen only
+        ever grows, so once the pig can walk from her ground into the scorpion's — or once one mud
+        tile touches both — no amount of widening puts it right: widening either leaves that tile
+        a shared wall or takes it into the pen, which joins the two runs into one. So those are
+        dropped outright, and every one dropped is room for a pen that could still be an answer.
+        """
+        ordered = sorted(grown, key=lambda pen: cost[pen])
+        keeping, shares = set(), {}
+        for pen in ordered[: beam * 4]:
+            mine = run_of(starts["P"], pen)
+            if mine & bit(starts["S"]):
+                continue
+            theirs = run_of(starts["S"], pen)
+            if spilling(mine) & spilling(theirs) & ground & ~pen:
                 continue
             share = shares.setdefault(mine.bit_count(), 0)
             if len(keeping) < beam or share < beam // 8:
@@ -459,6 +512,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             keeping = hanging(grown, cost)
         if rule == "ring":
             keeping = circling(grown, cost)
+        if rule == "berth":
+            keeping = spaced(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
@@ -509,6 +564,15 @@ def shut_inside(tile, pen, rows, columns):
                 reached.add(step)
                 queue.append(step)
     return True
+
+
+def wall_between(mine, theirs, mud, pen):
+    """Whether one fence piece would do for both pens, for squaring a dune board off.
+
+    The set-of-tiles twin of what `berth_holds` asks in the search: a mud tile lying outside the
+    pen altogether with one run of ground on one side of it and the other run on the other.
+    """
+    return bool((fences_around(mine, mud) & fences_around(theirs, mud)) - set(pen))
 
 
 def blocks_around(pennable, start, rows, columns):
@@ -648,6 +712,15 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
                 continue
             if not shut_inside(starts["M"], mine, rows, columns):
                 continue
+        # And the dunes want the two blocks standing well apart: not merely two blocks rather
+        # than one, but two with clear ground between them, since a piece laid where the pig is
+        # on one side and the scorpion on the other is no wall to a sting.
+        if rule == "berth":
+            mine = run_of_ground(pen, starts["P"])
+            if starts["S"] in mine:
+                continue
+            if wall_between(mine, run_of_ground(pen, starts["S"]), mud, pen):
+                continue
         edge = fences_around(pen, mud)
         if len(edge) <= budget and can_be_walled(edge, treats, staked):
             best = max(best, (score(pen, treats), pen))
@@ -687,13 +760,13 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
              "hold them in two pens with the same ground in each, hold the roost in one "
-             "pen with the pig in another, or hold the ringmaster in the middle of the "
-             "pig's own ring",
+             "pen with the pig in another, hold the ringmaster in the middle of the "
+             "pig's own ring, or hold the two in pens that share no wall",
     )
     parser.add_argument(
         "--plan",

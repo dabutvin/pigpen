@@ -74,31 +74,34 @@ struct PigpenApp: App {
                     PuzzleView(game: .theStagMeresBestPen())
                 } else if launch.contains("-truffles") {
                     // A thicket board: the truffle and the bramble stand where the apple and
-                    // the skull would, the same +5 and -5 dressed for the woods, on thicket
-                    // ground rather than meadow grass.
+                    // the skull would, the same +5 and -5 dressed for the woods, on leaf
+                    // mould with peat pools in it rather than mud and open water.
                     PuzzleView(
                         level: .nettleBank,
                         treatSkin: WorldTheme.thornwood.treats,
+                        skin: WorldTheme.thornwood.field,
                         day: .forestDay,
                         dusk: .forestDusk
                     )
                 } else if launch.contains("-embers") {
                     // A mountain board: the chestnut and the ember stand where the apple and
-                    // the skull would, the same +5 and -5 dressed for the peak, on ash and
-                    // cinder rather than meadow grass.
+                    // the skull would, the same +5 and -5 dressed for the peak, on ash with
+                    // cinder still going in it and a tarn steaming where a mere would be.
                     PuzzleView(
                         level: .smoulderRidge,
                         treatSkin: WorldTheme.emberpeak.treats,
+                        skin: WorldTheme.emberpeak.field,
                         day: .emberDay,
                         dusk: .emberDusk
                     )
                 } else if launch.contains("-pies") {
                     // A city board: the pie and the drain stand where the apple and the
-                    // skull would, the same +5 and -5 dressed for the streets, on paving
-                    // rather than meadow grass.
+                    // skull would, the same +5 and -5 dressed for the streets, on paving,
+                    // with a canal for water and wrought iron for fencing.
                     PuzzleView(
                         level: .clocktowerSquare,
                         treatSkin: WorldTheme.cogsworth.treats,
+                        skin: WorldTheme.cogsworth.field,
                         day: .cityDay,
                         dusk: .cityDusk
                     )
@@ -155,8 +158,8 @@ struct PigpenApp: App {
                     )
                 } else if launch.contains("-title") {
                     // Today complete as well as the fortnight behind it, since what there is to
-                    // see on the card is the stars, the clock and the run of days that a
-                    // day already penned leaves on it.
+                    // see on the daily's row is the stars and the run of days that a day
+                    // already penned leaves on it.
                     TitleScreenView(
                         progress: .partWayThrough(),
                         daily: .partWayThroughTheMonth(

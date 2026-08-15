@@ -274,65 +274,135 @@ struct TitleScreenView: View {
             .frame(width: 6, height: 6)
     }
 
-    // MARK: - Play
+    // MARK: - The list of ways to play
 
+    /// Every way off the title screen, painted on the one run of boards so they read as a
+    /// list rather than as four buttons the game happened to leave lying about: Play at the
+    /// head of it in gold, today's board under it, and the archive and the tutorial below
+    /// that. Each is the same plank with the same press in it; only the paint and what stands
+    /// on the right-hand end tell one from the next.
     private var playBlock: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 9) {
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 play()
             } label: {
-                HStack(spacing: 10) {
-                    Image(systemName: "play.fill")
-                    Text("Play")
+                MenuRow(
+                    icon: "play.fill",
+                    title: "Play",
+                    detail: progress.isTheWorldHeld
+                        ? "A universe of worlds to fence"
+                        : "\(world.name) · \(world.count) puzzles",
+                    tint: GamePalette.pen
+                ) {
+                    chevron
                 }
-                .font(.system(size: 24, weight: .heavy, design: .rounded))
-                .foregroundStyle(GamePalette.post)
-                .frame(maxWidth: 180)
             }
-            .buttonStyle(ChunkyButtonStyle())
+            .buttonStyle(MenuRowButtonStyle())
             .modifier(Breathing(active: !reduceMotion))
 
-            signpost
+            dailyRow
 
-            dailyButton
+            destinationRow(
+                icon: "calendar",
+                title: "Archive",
+                detail: "Every daily puzzle of the year",
+                hint: "Every daily puzzle of the year, a month at a time"
+            ) {
+                isArchiveOpen = true
+            }
 
-            HStack(spacing: 10) {
-                sideButton("Archive", systemImage: "calendar") {
-                    isArchiveOpen = true
-                }
-                .accessibilityHint("Every daily puzzle of the year, a month at a time")
-
-                sideButton("Tutorial", systemImage: "hand.tap.fill") {
-                    isTutorial = true
-                }
-                .accessibilityHint("Walk through how to fence in the pig")
+            destinationRow(
+                icon: "hand.tap.fill",
+                title: "Tutorial",
+                detail: "Walk through how to fence in the pig",
+                hint: "Walk through how to fence in the pig"
+            ) {
+                isTutorial = true
             }
         }
         .opacity(arrived ? 1 : 0)
         .offset(y: arrived ? 0 : 26)
     }
 
-    /// Today's board, as a card rather than a button: what day it is, what the day asks,
-    /// and once it has been held, the stars and the time it gave up. A day with nothing in
-    /// the almanac still gets its card, saying so — better than a button that does nothing.
-    private var dailyButton: some View {
-        Button {
+    /// The chevron on the right of a row that only opens something. The daily wears its stars
+    /// there instead, which is the one row on the list with anything else to say for itself.
+    private var chevron: some View {
+        Image(systemName: "chevron.right")
+            .font(.system(size: 15, weight: .black))
+            .foregroundStyle(GamePalette.post.opacity(0.4))
+    }
+
+    /// Today's board, made to sit in the list as one more row: the day itself along the top,
+    /// how the day has gone underneath, and — once it has been held — the stars it gave up
+    /// where the other rows keep their chevron. A day the almanac has nothing for is greyed
+    /// down rather than left off, so the list never changes height under a finger.
+    private var dailyRow: some View {
+        let stars = daily.stars(on: today)
+        let streak = daily.streak(upTo: today)
+        return Button {
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             openToday()
         } label: {
-            DailyCard(
-                date: today,
-                stars: daily.stars(on: today),
-                hasTheBestPen: daily.hasTheBestPen(on: today),
-                bestTime: daily.bestTime(on: today),
-                streak: daily.streak(upTo: today),
-                hasAPuzzle: hasADailyPuzzle
-            )
+            MenuRow(
+                icon: dailyIcon(stars: stars),
+                title: hasADailyPuzzle ? today.title : "No puzzle today",
+                detail: dailyDetail(stars: stars, streak: streak),
+                tint: GamePalette.cream,
+                dimmed: !hasADailyPuzzle
+            ) {
+                if stars > 0 {
+                    StarRow(stars: stars, size: 12, hasTheBestPen: daily.hasTheBestPen(on: today))
+                } else if hasADailyPuzzle {
+                    chevron
+                }
+            }
         }
-        .buttonStyle(SignpostButtonStyle())
+        .buttonStyle(MenuRowButtonStyle())
         .disabled(!hasADailyPuzzle)
-        .padding(.top, 2)
+        .accessibilityLabel(dailySpoken(stars: stars, streak: streak))
+    }
+
+    /// The seal for a day that has been held, the sun for one still waiting — the same two
+    /// marks the card carried before the board became a row.
+    private func dailyIcon(stars: Int) -> String {
+        stars > 0 ? "checkmark.seal.fill" : "sun.max.fill"
+    }
+
+    /// The daily read out in full, since its stars sit in the row as a picture VoiceOver
+    /// steps past. Everything the old card said aloud is said here instead.
+    private func dailySpoken(stars: Int, streak: Int) -> String {
+        guard hasADailyPuzzle else {
+            return "Today's puzzle. There is none — the almanac stops before today."
+        }
+        let spelled = ["no", "one", "two", "three"]
+        var said = "Today's puzzle. \(today.fullTitle)."
+        if stars > 0 {
+            said += " Penned, \(spelled[min(max(stars, 0), 3)]) star\(stars == 1 ? "" : "s")."
+            if daily.hasTheBestPen(on: today) { said += " The best pen there is." }
+            if let best = daily.bestTime(on: today) {
+                said += " Best time \(Stopwatch.spoken(TimeInterval(best)))."
+            }
+        } else {
+            said += " Not penned yet."
+        }
+        if streak > 1 { said += " \(streak) days in a row." }
+        return said
+    }
+
+    /// What the day has to say for itself under its own name: nothing if the book is empty,
+    /// the run of days once it is going, the best time once it has been held, or simply that
+    /// it is today's and waiting.
+    private func dailyDetail(stars: Int, streak: Int) -> String {
+        guard hasADailyPuzzle else { return "The almanac stops before today" }
+        if stars > 0 {
+            if streak > 1 { return "Penned · \(streak) days in a row" }
+            if let best = daily.bestTime(on: today) {
+                return "Penned · best \(Stopwatch.face(TimeInterval(best)))"
+            }
+            return "Penned — play it again"
+        }
+        return streak > 1 ? "Today's puzzle · \(streak) days in a row" : "Today's puzzle"
     }
 
     /// Opens today's board, or — once a wall has been submitted — offers to put that wall
@@ -346,40 +416,25 @@ struct TitleScreenView: View {
         }
     }
 
-    /// The two smaller ways off this screen, painted on the same boards the puzzle's own
-    /// buttons are.
-    private func sideButton(
-        _ title: String,
-        systemImage: String,
+    /// A row that simply pushes another screen: the archive and the tutorial, cut from the
+    /// same board as Play so the list stays one thing.
+    private func destinationRow(
+        icon: String,
+        title: String,
+        detail: String,
+        hint: String,
         action: @escaping () -> Void
     ) -> some View {
         Button {
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             action()
         } label: {
-            Label(title, systemImage: systemImage)
-                .font(.system(size: 14, weight: .heavy, design: .rounded))
-                .frame(maxWidth: .infinity)
+            MenuRow(icon: icon, title: title, detail: detail, tint: GamePalette.cream) {
+                chevron
+            }
         }
-        .buttonStyle(PlaqueButtonStyle(padding: 8))
-    }
-
-    /// Where Play leads, and what it is played for. The universe stays off the signpost until
-    /// the meadow has been held — until then Play is still a walk up Mudlark Meadow.
-    private var signpost: some View {
-        VStack(spacing: 3) {
-            Text(progress.isTheWorldHeld
-                 ? "A universe of worlds to fence"
-                 : "\(world.name) · \(world.count) puzzles")
-                .font(.footnote.weight(.heavy))
-            Text("Pen in as much mud as you can")
-                .font(.caption2.weight(.semibold))
-                .opacity(0.85)
-        }
-        .foregroundStyle(GamePalette.cream)
-        .multilineTextAlignment(.center)
-        .shadow(color: .black.opacity(0.5), radius: 3, y: 1)
-        .padding(.top, 2)
+        .buttonStyle(MenuRowButtonStyle())
+        .accessibilityHint(hint)
     }
 
     // MARK: - Play
@@ -508,6 +563,99 @@ private struct Breathing: ViewModifier {
 private enum PlayDestination: Hashable {
     case meadow
     case universe
+}
+
+/// One board on the title screen's list of ways to play: a round token on the left with the
+/// row's mark in it, the row's name and a line under it, and whatever the row keeps on its
+/// right-hand end — a chevron for the ones that only open a screen, the day's stars for the
+/// daily.
+///
+/// Every row is the same plank, lit from the top the way the fence rack and the signposts
+/// are, so Play, today's board, the archive and the tutorial read as one list rather than as
+/// four unlike buttons. The paint is the only thing that sets the head of the list apart:
+/// Play stands in gold, the rest on cream.
+private struct MenuRow<Trailing: View>: View {
+    let icon: String
+    let title: String
+    let detail: String
+    /// The paint on the board. Gold marks the row the screen most wants pressed.
+    var tint: Color
+    /// A row with nothing behind it — a day the almanac skips — is greyed down rather than
+    /// dropped, so the list never changes height under a finger.
+    var dimmed = false
+    @ViewBuilder var trailing: () -> Trailing
+
+    var body: some View {
+        HStack(spacing: 13) {
+            token
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 18, weight: .heavy, design: .rounded))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+
+                Text(detail)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(GamePalette.post.opacity(0.62))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+
+            Spacer(minLength: 8)
+
+            trailing()
+        }
+        .foregroundStyle(GamePalette.post)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 11)
+        .padding(.horizontal, 14)
+        .background(plank)
+        .opacity(dimmed ? 0.55 : 1)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// The round token that opens the row, a smaller cousin of the faces on the world map's
+    /// signposts.
+    private var token: some View {
+        Image(systemName: icon)
+            .font(.system(size: 16, weight: .black))
+            .frame(width: 40, height: 40)
+            .background {
+                Circle()
+                    .fill(.white.opacity(0.4))
+                    .overlay(Circle().strokeBorder(GamePalette.post.opacity(0.18), lineWidth: 1))
+            }
+    }
+
+    private var plank: some View {
+        RoundedRectangle(cornerRadius: 16, style: .continuous)
+            .fill(tint)
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [.white.opacity(0.4), .clear],
+                            startPoint: .top,
+                            endPoint: .center
+                        )
+                    )
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1.5)
+            }
+            .shadow(color: .black.opacity(0.28), radius: 5, y: 3)
+    }
+}
+
+/// The press of a row: it sinks a little, the way every board in this game does.
+private struct MenuRowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: configuration.isPressed)
+    }
 }
 
 #Preview {
