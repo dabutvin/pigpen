@@ -197,9 +197,9 @@ extension PuzzleLevel {
     ///
     /// The span question: neither dune is any use on its own, and no rectangle on this board reaches
     /// round both, so squaring off gets one corner against each of them across the middle and holds
-    /// 28. Eighteen pieces run out as a great lozenge from one to the other hold 50 tiles, both melons
-    /// and both cacti — the melons pay the cacti back exactly, so the pen is worth its ground and no
-    /// more. It takes the northern dune's shade inside and leaves the southern one's out, which is the
+    /// 29 — 29 tiles with both melons and both cacti in them, paying each other back exactly.
+    /// Eighteen pieces run out as a great lozenge from one to the other hold 50 tiles and that same
+    /// pair of each, so the pen is worth its ground and no more. It takes the northern dune's shade inside and leaves the southern one's out, which is the
     /// board's own answer to the question it asks.
     ///
     /// The run of cactus is pegged directly north of the pig, which is the one thing that stops the
@@ -222,8 +222,8 @@ extension PuzzleLevel {
             .....P.....
             ....a......
             .......~~~.
-            ...a...~.~.
-            ...........
+            .......~.~.
+            .....a.....
             ...........
             """
     )
@@ -234,11 +234,11 @@ extension PuzzleLevel {
     /// The best block seventeen pieces can square off against that back holds 24 tiles, the melon in
     /// the south and both cacti, which is 19. So the whole field is which melons to go out for, and
     /// the answer is the other two: seventeen pieces run out as a lozenge that reaches the one in the
-    /// north and the one in the east hold 37 tiles and the same pair of cacti, which is 37.
+    /// north and the one out east hold 35 tiles and the same pair of cacti, which is 35.
     ///
-    /// It gives up the melon the tidy block was already holding — and it builds its own southern wall
-    /// on top of it, which is the plainest way any board in the game has said that five points is
-    /// worth less than a tile of shape.
+    /// It gives up the melon the tidy block was already holding, and leaves it standing outside the
+    /// wall rather than under it — no piece will lie on a melon — which is the plainest way any board
+    /// in the game has said that five points is worth less than a tile of shape.
     ///
     /// The run of cactus lies square in the middle of the ground the crescent encloses, so there is no
     /// drawing this pen without swallowing the pair and paying their ten. The tiles the detour fetches
@@ -250,17 +250,17 @@ extension PuzzleLevel {
         name: "Melon Ground",
         fenceBudget: 17,
         twoStarScore: 19,
-        threeStarScore: 35,
-        maximumScore: 37,
+        threeStarScore: 33,
+        maximumScore: 35,
         question: .detour,
         map: """
             ...........
             ...........
             .......a...
-            .~~~.......
+            .~~~.....a.
             ...~.......
             .~~~.......
-            ....P...a..
+            ....P......
             ...xx......
             ...........
             ......a....

@@ -596,8 +596,8 @@ laid out across bare hardpan to buy it.
 | 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
 | 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
-| 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 30 | 50 | 40% |
-| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 25 | 37 | 32% |
+| 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 29 | 50 | 42% |
+| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 35 | 45% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
 | 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 42 | 59 | 28% |
 | 9 | Scorpion Flats | 16 | the scorpion, two barchans, 2 melons | 19 | 50 | 62% |

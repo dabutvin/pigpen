@@ -1927,8 +1927,8 @@ The Hardpan, where every tile is bought.
 | 2 | The Long Slack | 14 | 28 | 1 melon | 33 | 19 |
 | 3 | The Blowout | 13 | 32 | nothing | 32 | 18 |
 | 4 | The Hardpan | 21 | 45 | nothing | 45 | 25 |
-| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 30 |
-| 6 | Melon Ground | 17 | 37 | 2 melons, 2 cacti | 37 | 25 |
+| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 29 |
+| 6 | Melon Ground | 17 | 35 | 2 melons, 2 cacti | 35 | 19 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |
 | 8 | The Great Erg | 19 | 59 | 3 melons, 3 cacti | 59 | 42 |
 | 9 | Scorpion Flats | 16 | 45 | 1 melon | 50 | 19 |
@@ -2065,17 +2065,17 @@ tiles.
 ## 5. Two Horns — 18 pieces, 50
 
 ```
-....##.....
-.~~~oo#....
-.~o~ooo#...
-#ooooooo#..
-#oooxxooo#.
+....###....
+.~~~ooo#...
+.~o~oooo#..
+#oooooooo#.
+#oooxxoooo#
 #ooooPoooo#
-#oooaooooo#
-.#ooooo~~~.
-..#aooo~.~.
-...#oo#....
-....##.....
+.#ooaooooo#
+..#oooo~~~.
+...#ooo~.~.
+....#a#....
+.....#.....
 ```
 
 Two barchans set on the diagonal from one another — one in the north-west, one in the south-east,
@@ -2092,20 +2092,20 @@ The run of cactus is pegged directly north of the pig, and it is the one thing t
 being tidier than it is: no piece will stand on a cactus and no pen may lean on one, so the wall that
 comes down between the two horns has to come round the pair.
 
-## 6. Melon Ground — 17 pieces, 37
+## 6. Melon Ground — 17 pieces, 35
 
 ```
-...........
-.....#.....
-....#o#a...
-.~~~ooo#...
-...~oooo#..
+......##...
+.....#oo#..
+....#ooao#.
+.~~~oooooa#
+...~oooooo#
 .~~~ooooo#.
-#oooPoooao#
-.#oxxoooo#.
-..#ooooo#..
-...#ooa#...
-....###....
+.#ooPooo#..
+..#xxoo#...
+...#oo#....
+....##a....
+...........
 ```
 
 One barchan with its back to the east and its mouth open west, three melons scattered wide over the

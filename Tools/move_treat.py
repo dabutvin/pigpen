@@ -20,7 +20,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from level_search import NEIGHBOURS  # noqa: E402
+from level_search import NEIGHBOURS, parse  # noqa: E402
 from levels_index import SOURCES, levels  # noqa: E402
 
 
@@ -64,23 +64,34 @@ def main():
         rows, mark = moved(rows, at, to)
         said.append(f"{mark!r} {at[0]},{at[1]} -> {to[0]},{to[1]}")
 
-    # Nothing may end up on the rim, or against the pig.
+    # A treat put down on the rim is one nothing can ever shut in, so it may be authored
+    # there deliberately but never moved there by this.
     height, width = len(rows), len(rows[0])
-    pig = next(
-        (row, column)
-        for row, line in enumerate(rows)
-        for column, char in enumerate(line)
-        if char == "P"
-    )
-    beside = {(pig[0] + down, pig[1] + across) for down, across in NEIGHBOURS}
-    for row, line in enumerate(rows):
-        for column, char in enumerate(line):
-            if char not in ("a", "x"):
-                continue
-            if row in (0, height - 1) or column in (0, width - 1):
-                raise SystemExit(f"A treat would stand on the rim at {row},{column}")
-            if (row, column) in beside:
-                raise SystemExit(f"A treat would stand against the pig at {row},{column}")
+    for index in range(0, len(options.moves), 2):
+        to = tile(options.moves[index + 1])
+        if to[0] in (0, height - 1) or to[1] in (0, width - 1):
+            raise SystemExit(f"A treat would be put down on the rim at {to[0]},{to[1]}")
+
+    # And the promise every level makes has to survive the move: an animal boxed in where it
+    # stands, widened over any treat the box would have to be built on, still inside budget.
+    # A treat may stand against the pig — several authored boards do — so long as the four
+    # pieces round her, plus whatever they have to swallow, still fit.
+    mud, treats, starts, _, _ = parse("\n".join(rows))
+    pen = set(starts.values())
+    while True:
+        wall = {
+            (row + down, column + across)
+            for row, column in pen
+            for down, across in NEIGHBOURS
+        } & mud - pen
+        staked = {spot for spot in wall if spot in treats}
+        if not staked:
+            break
+        pen |= staked
+    if len(wall) > level["fenceBudget"]:
+        raise SystemExit(
+            f"The box round the animals would cost {len(wall)} pieces of {level['fenceBudget']}"
+        )
 
     # Everything else about the board has to come through untouched.
     for old, new in zip(before, rows):
