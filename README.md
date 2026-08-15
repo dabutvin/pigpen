@@ -242,7 +242,7 @@ the meadow at nothing.
 | 2 | Foxglove Dell | 7 | 2 truffles | 20 | 29 | 31% |
 | 3 | Hazel Copse | 12 | 1 truffle | 23 | 30 | 23% |
 | 4 | Fairy Ring | 13 | 1 truffle | 19 | 36 | 47% |
-| 5 | Fern Gully | 12 | 2 truffles | 27 | 34 | 20% |
+| 5 | Fern Gully | 12 | 2 truffles | 23 | 34 | 32% |
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
 | 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 18 | 26 | 30% |
 | 8 | Elderwood | 15 | 3 truffles, 1 bramble | 30 | 41 | 26% |
@@ -286,10 +286,10 @@ measured by that yardstick.
 |---|---|---|---|---|---|---|
 | 1 | Cinder Slope | 9 | 1 ember | 18 | 25 | 28% |
 | 2 | Basalt Flats | 17 | 2 embers | 16 | 23 | 30% |
-| 3 | Ashfall Terrace | 13 | 1 chestnut, 1 ember | 22 | 31 | 29% |
-| 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 23 | 32 | 28% |
+| 3 | Ashfall Terrace | 13 | 1 chestnut, 1 ember | 21 | 31 | 32% |
+| 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 21 | 32 | 34% |
 | 5 | Sulphur Rill | 13 | 2 embers | 15 | 24 | 37% |
-| 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 23 | 27 | 14% |
+| 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 16 | 28 | 42% |
 | 7 | Crater Pools | 12 | 1 chestnut, 1 ember | 17 | 34 | 50% |
 | 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 30 | 42 | 28% |
 | 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 27 | 43 | 37% |
@@ -328,14 +328,14 @@ them as usual.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | — | 18 | 26 | 30% |
-| 2 | Pieman's Row | 11 | 2 pies | 21 | 25 | 16% |
+| 2 | Pieman's Row | 11 | 2 pies | 16 | 24 | 33% |
 | 3 | Cobble Yard | 14 | 2 drains | 12 | 18 | 33% |
 | 4 | Lock Gate | 13 | 1 drain | 14 | 22 | 36% |
 | 5 | Culvert Row | 13 | — | 16 | 27 | 40% |
 | 6 | Gutter Lane | 14 | 2 drains | 15 | 26 | 42% |
 | 7 | Foundry Corner | 9 | 2 drains | 15 | 27 | 44% |
 | 8 | Clocktower Square | 17 | 3 pies, 2 drains | 25 | 40 | 37% |
-| 9 | Rat King Wharf | 19 | a rat king, 2 pies, 2 drains | 31 | 43 | 27% |
+| 9 | Rat King Wharf | 19 | a rat king, 2 pies, 2 drains | 26 | 43 | 39% |
 
 Two of its fields ask questions nothing has asked since the meadow: Culvert Row puts its two
 banks at opposite ends of the street where The Narrows put them a stride apart, and Lock Gate
@@ -449,7 +449,7 @@ out for.
 | 6 | Rimstone Corner | 9 | 2 crystals | 31 | 46 | 32% |
 | 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 27 | 44 | 38% |
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 47 | 63 | 25% |
-| 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 24 | 45 | 46% |
+| 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
 Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
 in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
@@ -508,10 +508,10 @@ world.
 |---|---|---|---|---|---|---|
 | 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 21 | 29 | 27% |
 | 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 32 | 39 | 17% |
-| 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 27 | 35 | 22% |
-| 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 21 | 34 | 38% |
+| 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 21 | 35 | 40% |
+| 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 20 | 34 | 41% |
 | 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 26 | 38 | 31% |
-| 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 31 | 51 | 39% |
+| 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
 | 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 42 | 50% |
 | 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
 | 9 | The Centre Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |

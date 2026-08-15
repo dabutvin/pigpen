@@ -118,11 +118,11 @@ extension PuzzleLevel {
     /// So this is Otter Ford's lesson and Lock Gate's and Stillwater Neck's, taught on eleven tiles
     /// of free wall that cost nothing: one piece in the turnstile and the whole queue is wall.
     /// Everybody finds that piece — the block this field is measured against spends it too, and
-    /// hangs a plain rectangle off it for 22 tiles and the apple its wall cannot stand on, or 27.
-    /// What the block cannot then do is spread, because the run of rope is pegged just south-west
-    /// of the gate and no wall may lie along it either. The same
-    /// fourteen pieces opened out east as a lozenge instead hold 30 tiles and the apple in the
-    /// middle of them, which is 35.
+    /// hangs a plain rectangle off it for 21. What the block cannot then do is spread, because the
+    /// run of rope is pegged just south-west of the gate and no wall may lie along it — and the
+    /// apple dropped south-east of the gate is a tile no wall will lie along either, so the
+    /// rectangle stops short of it rather than collecting it. The same fourteen pieces opened out
+    /// east as a lozenge instead hold 30 tiles and that apple, which is 35.
     ///
     /// The apple north of the queue is on the far side of the crowd, and like every far bank in
     /// the game nothing reaches it.
@@ -143,8 +143,8 @@ extension PuzzleLevel {
             ..xx........
             .....P......
             ............
-            ......a.....
             ............
+            .......a....
             ..a.........
             ............
             """
@@ -154,7 +154,7 @@ extension PuzzleLevel {
     /// between them, right where a wall from one to the other would want to lie.
     ///
     /// The span question: neither queue is any use on its own, and no rectangle on this board
-    /// reaches both, so squaring off leans on one of them and holds 21. Fifteen pieces run
+    /// reaches both, so squaring off leans on one of them and holds 20. Fifteen pieces run
     /// diagonally from the corner of the near queue to the corner of the far one hold 34 tiles
     /// with both apples and both ropes inside them, which comes back to 34.
     ///
@@ -179,8 +179,8 @@ extension PuzzleLevel {
             ....xx.....
             .....P.....
             ....a......
-            .......~~..
             ...a...~~..
+            .......~~..
             ...........
             ...........
             """
@@ -228,9 +228,9 @@ extension PuzzleLevel {
     /// hardest corner in the game. What is different is the pair of guy ropes pegged out in the
     /// middle of the ground, and where they are pegged: a right-angled block in this corner is a
     /// rectangle hung under the crowd, and the ropes are lying inside every rectangle worth
-    /// drawing. So the tidy pen has to swallow the pair and pay their ten — and the two apples with
-    /// them, which pay the ropes straight back — and comes to 31. The eleven pieces laid corner to
-    /// corner
+    /// drawing. So the tidy pen has to swallow the pair and pay their ten, and comes to 25 where
+    /// the same block on clear ground would be 35 — the apples are dropped clear of it, and no
+    /// wall will lie on one to sweep it up. The eleven pieces laid corner to corner
     /// instead — one long diagonal from the west side down to the south-east, cutting the whole
     /// bend off in a single line — hold 51 tiles, both apples and the same pair of ropes, which
     /// comes back to 51. The biggest pen in the world for the smallest budget in it, which is what
@@ -251,8 +251,8 @@ extension PuzzleLevel {
             .....a....~.
             ....P.....~.
             .......xx.~.
-            ......a...~.
             ..........~.
+            .......a..~.
             ..........~.
             ..........~.
             """

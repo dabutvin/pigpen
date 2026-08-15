@@ -416,8 +416,8 @@ other way round.
 .~~~~~~~~.
 .~~~~~~~~.
 #ooooooo#.
-#ooPooo#..
-#oaooo#...
+#ooPooa#..
+#ooooo#...
 #oooo#....
 .#ao#.....
 ..##......
@@ -530,10 +530,10 @@ to Crater Pools rather than for six stops and then sorting by what it scatters.
 |---|---|---|---|---|---|---|
 | 1 | Cinder Slope | 9 | 25 | — | 25 | 18 |
 | 2 | Basalt Flats | 17 | 23 | — | 23 | 16 |
-| 3 | Ashfall Terrace | 13 | 31 | 1 chestnut, 1 ember | 31 | 22 |
-| 4 | Chestnut Scree | 12 | 27 | 2 chestnuts, 1 ember | 32 | 23 |
+| 3 | Ashfall Terrace | 13 | 31 | 1 chestnut, 1 ember | 31 | 21 |
+| 4 | Chestnut Scree | 12 | 27 | 2 chestnuts, 1 ember | 32 | 21 |
 | 5 | Sulphur Rill | 13 | 24 | — | 24 | 15 |
-| 6 | Fumarole Field | 14 | 17 | 2 chestnuts | 27 | 23 |
+| 6 | Fumarole Field | 14 | 18 | 2 chestnuts | 28 | 16 |
 | 7 | Crater Pools | 12 | 29 | 1 chestnut | 34 | 17 |
 | 8 | Smoulder Ridge | 16 | 32 | 3 chestnuts, 1 ember | 42 | 30 |
 | 9 | Wyrm Caldera | 20 | 38 | 3 chestnuts, 2 embers | 43 | 27 |
@@ -592,8 +592,8 @@ nothing free on it, five points is a lot to pay for a tile.
 .~~~~~~~..
 #ooooooo#.
 #oPooooao#
-#ooooooo#.
-.#ooxoo#..
+#oooxooo#.
+.#ooooo#..
 ..#ooo#...
 ...#o#....
 ....#.....
@@ -614,7 +614,7 @@ worth 21.
 ..........
 ~~~~~~~~~~
 #oooooooo#
-#ooPooao#.
+#ooPoooa#.
 #oooooo#..
 .#ooxo#...
 ..#ao#....
@@ -655,18 +655,18 @@ tight past the upper ember, and it pinches right in round the lower one — that
 rows from the bottom is a wall built round a tile rather than over it — so it holds 24
 without paying either of them a thing.
 
-## 6. Fumarole Field — 14 pieces, 27
+## 6. Fumarole Field — 14 pieces, 28
 
 ```
 ..........
-.....#....
-..~~~o#...
-...x#oo#..
-...#Pooo#.
-..#ooooa#.
-..x#ooo#..
-...#ao#...
-....##....
+.....##...
+..~~~oo#..
+...x#ooo#.
+...#Poooo#
+....#ooao#
+..x..#ooo#
+......#a#.
+.......#..
 ..........
 ```
 
@@ -782,14 +782,14 @@ Gasworks Cut to Foundry Corner.
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | 26 | — | 26 | 18 |
-| 2 | Pieman's Row | 11 | 20 | 1 pie | 25 | 21 |
+| 2 | Pieman's Row | 12 | 19 | 1 pie | 24 | 16 |
 | 3 | Cobble Yard | 14 | 18 | — | 18 | 12 |
 | 4 | Lock Gate | 13 | 27 | 1 drain | 22 | 14 |
 | 5 | Culvert Row | 13 | 27 | — | 27 | 16 |
 | 6 | Gutter Lane | 14 | 26 | — | 26 | 15 |
 | 7 | Foundry Corner | 9 | 32 | 1 drain | 27 | 15 |
 | 8 | Clocktower Square | 17 | 35 | 2 pies, 1 drain | 40 | 25 |
-| 9 | Rat King Wharf | 19 | 33 | 2 pies | 43 | 31 |
+| 9 | Rat King Wharf | 19 | 33 | 2 pies | 43 | 26 |
 
 ## 1. Gasworks Cut — 9 pieces, 26
 
@@ -812,17 +812,17 @@ The third comes from giving up the square corner: the wall goes down the west fo
 and then steps away south-east, and the ground it picks up on the diagonal is worth more than
 the ground it gives up at the bottom. 26 tiles, and every one the yard has in it.
 
-## 2. Pieman's Row — 11 pieces, 25
+## 2. Pieman's Row — 12 pieces, 24
 
 ```
-~##......
-~oo#.....
-~oPo#..a.
+~#.......
+~o#......
+~oP#...a.
+~ooo#....
 ~oooo#...
-~oooao#..
-~oooo#...
-.#oo#....
-..##.....
+~ooooo#..
+.#oooa#..
+..####...
 ```
 
 Two pies on the row and one canal down the west. A block against the canal takes the near pie
@@ -965,11 +965,11 @@ altogether. A block leaning on the canal holds 25.
 ```
 .#####...
 #aoooo~..
-#oPooo~x.
+#oPooo~..
 #ooooo~#.
 #ooooooo#
 .~~~oooo#
-...#ooRo#
+..x#ooRo#
 ...x#ooa#
 .....###.
 ```
@@ -1310,7 +1310,7 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 | 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 31 |
 | 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 27 |
 | 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 47 |
-| 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 24 |
+| 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 23 |
 
 ## 1. Sinter Basin — 12 pieces, 32
 
@@ -1540,9 +1540,9 @@ anywhere.
 ```
 ......###..
 .....#Toa#.
-...~~~~ooo#
+...~~~~aoo#
 ..~~o#Uooo#
-.~~ooo#oao#
+.~~ooo#ooo#
 ~~ooooo#o#.
 .#ooooPo#..
 ..#oaox#...
@@ -1609,10 +1609,10 @@ what holds the world at 37% and above, the highest floor in the game.
 |---|---|---|---|---|---|---|
 | 1 | Coconut Shy | 14 | 24 | 1 toffee apple | 29 | 21 |
 | 2 | Sideshow Row | 14 | 39 | 2 toffee apples, 2 guy ropes | 39 | 32 |
-| 3 | The Turnstile | 14 | 30 | 1 toffee apple | 35 | 27 |
-| 4 | Ticket Line | 15 | 34 | 2 toffee apples, 2 guy ropes | 34 | 21 |
+| 3 | The Turnstile | 14 | 30 | 1 toffee apple | 35 | 21 |
+| 4 | Ticket Line | 15 | 34 | 2 toffee apples, 2 guy ropes | 34 | 20 |
 | 5 | The Toffee Stand | 17 | 28 | 2 toffee apples | 38 | 26 |
-| 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 31 |
+| 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 25 |
 | 7 | The Rigging | 18 | 37 | 1 toffee apple | 42 | 21 |
 | 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 30 |
 | 9 | The Centre Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
@@ -1681,10 +1681,10 @@ ten — which the tiles round them more than cover.
 .....#ooooo#
 ..xx#oooooo#
 ...#oPooooo#
-....#oooooo#
-.....#aooo#.
-......#oo#..
-..a....##...
+...#oooooo#.
+....#oooo#..
+.....#oa#...
+..a...##....
 ............
 ```
 
@@ -1709,8 +1709,8 @@ treats.
 .#ooxxo#...
 #ooooPoo#..
 #oooaoooo#.
-.#ooooo~~..
-..#aooo~~..
+.#oaooo~~..
+..#oooo~~..
 ...#oo#....
 ....##.....
 ```
@@ -1765,8 +1765,8 @@ apples, which is 38.
 .#oooaoooo~.
 ..#oPooooo~.
 ...#oooxxo~.
-....#oaooo~.
-.....#oooo~.
+....#ooooo~.
+.....#oaoo~.
 ......#ooo~.
 .......###~.
 ```
