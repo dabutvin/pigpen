@@ -2082,7 +2082,7 @@ Two barchans set on the diagonal from one another — one in the north-west, one
 both with their mouths open to the south — and the pig on the open sand between them. The span
 question: neither dune is any use on its own, and no rectangle on this board reaches round both.
 
-Squaring off gets one corner against each of them across the middle of the board and holds 28.
+Squaring off gets one corner against each of them across the middle of the board and holds 29.
 Eighteen pieces run out as a great lozenge from the one to the other hold 50 tiles, both melons and
 both cacti — the melons pay the cacti back exactly, so the pen is worth its ground and no more. It
 takes the northern dune's shade into the pen and leaves the southern one's outside, which is the
@@ -2118,11 +2118,11 @@ That is the tidy answer, and the melon it is holding is the one melon of the thr
 hold.
 
 So the field is whether to give that one up and go out for the other two, and it is: the same
-seventeen run out as a lozenge reach the melon in the north and the melon in the east, 37 tiles with
-those two in them and the same pair of cacti, which is 37. What is more, the wall the lozenge comes
-back on lands square on top of the melon it left behind. A piece laid on windfall wastes it, so this
-pen spends a melon on its own shape — the plainest way a board has ever said that a tile of pen is
-worth having.
+seventeen run out as a lozenge reach the melon in the north and the melon in the east, 35 tiles with
+those two in them and the same pair of cacti, which is 35. What is more, the wall the lozenge comes
+back on has to come round the melon it left behind rather than over it — no piece will lie on a
+melon — so this pen gives up a melon and a tile of ground for its own shape, which is the plainest
+way a board has ever said that a tile of pen is worth having.
 
 The pair of cacti lies in the middle of the ground either answer has to cross, so there is no drawing
 either pen without swallowing them and paying their ten. The tiles the detour fetches cover it twice
@@ -2181,15 +2181,15 @@ pieces of fence.
 The sand sea: twelve tiles by twelve, two barchans with their backs to the west standing at opposite
 ends of it, a run of three cacti across the waist and three melons down the length.
 
-Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 41 tiles,
+Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 38 tiles,
 two of the melons and all three cacti, which comes to 36. The same nineteen run out to both dunes
-and closed round the south hold 59 tiles, the third melon as well and the same three cacti, which is
+and closed round the south hold 56 tiles, the third melon as well and the same three cacti, which is
 59 — the biggest pen in the world, and the second biggest in the game: five tiles behind Wide Reaches
 and one ahead of the Great Gallery, which held second place until the sand came in.
 
 It stands outside the climb the way every world's eighth field does. A broad board leaves a wide gap
 against a squared-off pen because it is broad, which says more about its size than its difficulty —
-this asks 38, less than every one of the seven fields above it.
+this asks 41, less than four of the seven fields above it.
 
 ## 9. Scorpion Flats — 16 pieces, 50
 
