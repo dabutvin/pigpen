@@ -155,8 +155,8 @@ struct PigpenApp: App {
                     )
                 } else if launch.contains("-title") {
                     // Today complete as well as the fortnight behind it, since what there is to
-                    // see on the card is the stars, the clock and the run of days that a
-                    // day already penned leaves on it.
+                    // see on the daily's row is the stars and the run of days that a day
+                    // already penned leaves on it.
                     TitleScreenView(
                         progress: .partWayThrough(),
                         daily: .partWayThroughTheMonth(
