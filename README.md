@@ -462,7 +462,7 @@ out for.
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 2 crystals | 21 | 32 | 34% |
 | 2 | Dripstone Shelf | 11 | 2 crystals | 23 | 36 | 36% |
-| 3 | Stillwater Neck | 12 | 3 crystals, 1 boulder | 20 | 32 | 37% |
+| 3 | Stillwater Neck | 11 | 3 crystals, 1 boulder | 19 | 31 | 38% |
 | 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
 | 5 | Glowworm Reach | 11 | 3 crystals | 15 | 26 | 42% |
 | 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |

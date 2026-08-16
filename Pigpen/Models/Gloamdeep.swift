@@ -109,32 +109,33 @@ extension PuzzleLevel {
     /// half of the cave to the other.
     ///
     /// So this is Otter Ford's lesson and Lock Gate's and Broken Chain's, taught on a bank eight
-    /// tiles long that cost nothing: shut the corridor and the whole of it is wall. Twelve pieces
-    /// squared off north of the water hold 20, because a wall that stops short of the east rim
-    /// has to pay for its own eastern side and neither crystal is standing where it can reach
-    /// them. The same twelve run right out along the bank and closed
-    /// with a single piece in the corridor hold 27 tiles and both the crystals over the river.
+    /// tiles long that cost nothing: shut the corridor and the whole of it is wall. Eleven pieces
+    /// squared off north of the water hold 14 tiles, both crystals and the boulder, which is 19 —
+    /// a wall that stops short of the east rim has to pay for its own eastern side. The same
+    /// eleven run right out along the bank and closed with a single piece in the corridor hold 26
+    /// tiles and the same three things on the floor.
     ///
     /// And the corridor is not clear ground, which is the rest of the field. A boulder stands in
     /// it, just behind the tip of the water, so the pen that comes round the river swallows it and
-    /// pays its five — 27 and two crystals less one boulder, or 32. The eight tiles of free bank
+    /// pays its five — 26 and two crystals less one boulder, or 31. The eight tiles of free bank
     /// that piece bought are worth that twice over, which is a sum a player has to do rather than
-    /// see.
+    /// see. One of those crystals lies out past the tip as well, so the corridor is the only way
+    /// to it: the piece that shuts the cave is the piece that fetches it.
     static let stillwaterNeck = gloamdeep(
         id: "stillwater-neck",
         name: "Stillwater Neck",
-        fenceBudget: 12,
+        fenceBudget: 11,
         twoStarScore: 18,
-        threeStarScore: 30,
-        maximumScore: 32,
+        threeStarScore: 29,
+        maximumScore: 31,
         question: .gap,
         map: """
             ...........
+            ......a....
             ...........
-            .........a.
-            .........a.
+            ...........
             ~~.........
-            .~~~~P.x...
+            .~~~~P.xa..
             ....~~~~...
             ..a....~~..
             ...........

@@ -1305,7 +1305,7 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 22 | 2 crystals | 32 | 21 |
 | 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 23 |
-| 3 | Stillwater Neck | 12 | 27 | 2 crystals, 1 boulder | 32 | 20 |
+| 3 | Stillwater Neck | 11 | 26 | 2 crystals, 1 boulder | 31 | 19 |
 | 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 25 |
 | 5 | Glowworm Reach | 11 | 21 | 1 crystal | 26 | 15 |
 | 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 25 |
@@ -1366,16 +1366,16 @@ in again. Twenty-six tiles and both crystals, which is 36. A diagonal wall close
 where a straight one closes one, and following a bank that is already diagonal is how the caverns
 say so.
 
-## 3. Stillwater Neck — 12 pieces, 32
+## 3. Stillwater Neck — 11 pieces, 31
 
 ```
-.....####..
-....#oooo#.
-...#oooooa#
-..#ooooooa#
-~~ooooooo#.
-.~~~~Pox#..
-....~~~~...
+.....##....
+....#oa#...
+...#oooo#..
+..#oooooo#.
+~~oooooooo#
+.~~~~Poxao#
+....~~~~o#.
 ..a....~~..
 ...........
 ...........
@@ -1386,17 +1386,18 @@ The river runs in off the west wall, steps away south-east across the middle of 
 two columns short of the east. What it leaves is the neck the whole world is named for: a corridor
 of dry floor round the tip of the water, and the only way from one half of the cave to the other.
 
-Shut the corridor and the entire river is wall — eight tiles of bank for one piece. Twelve pieces
-squared off north of the water hold 22 tiles and the treats their wall cannot stand on, or 27,
-because a wall that stops short of the east rim has to pay
-for its own eastern side; the same twelve run right out along the bank and closed with a single
-piece at the corridor hold 29 tiles and both the crystals over the river.
+Shut the corridor and the entire river is wall — eight tiles of bank for one piece. Eleven pieces
+squared off north of the water hold 14 tiles, both crystals and the boulder, or 19, because a wall
+that stops short of the east rim has to pay for its own eastern side; the same eleven run right out
+along the bank and closed with a single piece at the corridor hold 26 tiles and the same three
+things lying on the floor.
 
 The corridor is not clear ground, which is the rest of the field. A boulder stands in it just
 behind the tip of the water, so the pen that comes round the river swallows it and pays its five —
-29 and two crystals less one boulder, or 34. The eight tiles of free bank that piece bought are
-worth that twice over, which is a sum rather than a sight. The third crystal lies out past the river
-on the south side, where nothing on this board reaches it.
+26 and two crystals less one boulder, or 31. The eight tiles of free bank that piece bought are
+worth that twice over, which is a sum rather than a sight. One of those crystals lies out past the
+tip as well, so the corridor is the only way to it: the piece that shuts the cave is the piece that
+fetches it. The third lies away south-west, where nothing on this board reaches it.
 
 ## 4. The Blind Grike — 19 pieces, 41
 
