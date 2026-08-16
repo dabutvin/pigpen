@@ -19,9 +19,12 @@ in the proportions the shipped levels use.
 
 A pen is any run of mud holding every animal on the map and no tile on the rim — an
 animal walks straight off the rim — and it costs one fence piece for every mud tile
-around its edge. Water costs nothing, which is the whole game. A skull is staked into
-the ground and takes no fence, so a pen whose edge falls on one is no pen at all: the
-skull has to be shut in and paid for, or the wall has to go round it.
+around its edge. Water costs nothing, which is the whole game. Anything lying on the
+ground is staked into it and takes no fence, so a pen whose edge falls on an apple or a
+skull is no pen at all: the treat has to be shut in and paid for, or the wall has to go
+round it. The two differ only in what shutting it in is worth — five for the apple and
+five against for the skull — which is what makes a treat a fork rather than a bonus or a
+tax: the pen can never simply ignore one it is standing next to.
 
 A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
 pup, a ringmaster, or a scorpion — is held by ground in two pieces just as happily as by one,
@@ -49,8 +52,12 @@ import sys
 NEIGHBOURS = ((-1, 0), (1, 0), (0, -1), (0, 1))
 # What shutting a tile into the pen is worth, over and above the ground itself.
 WORTH = {"a": 5, "x": -5}
-# A skull is staked into the mud, and nothing can be built on top of it.
+# The apple, which is the treat worth having inside.
+APPLE = "a"
+# The skull, which is the treat worth keeping out.
 SKULL = "x"
+# Both of them are staked into the mud, and nothing can be built on top of either.
+STAKED = (APPLE, SKULL)
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
 ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S")
@@ -106,11 +113,13 @@ def fences_around(pen, mud):
 def can_be_walled(edge, treats, staked=()):
     """Whether the wall a pen needs is one that could actually be built.
 
-    A skull takes no fence, so a pen with one on its edge cannot be closed there. Such a
-    pen is not thrown away while the search runs — growing out over the skull turns it
-    back into a pen that holds — but it is never an answer.
+    Nothing lying on the ground takes a fence, apple or skull alike, so a pen with either
+    on its edge cannot be closed there. Such a pen is not thrown away while the search runs
+    — growing out over the treat turns it back into a pen that holds — but it is never an
+    answer. Which is what makes an apple two things at once: five points if the pen swallows
+    it, and a hole in the wall if the pen tries to run through it.
     """
-    return all(treats.get(tile) != SKULL and tile not in staked for tile in edge)
+    return all(tile not in treats and tile not in staked for tile in edge)
 
 
 def on_rim(tile, rows, columns):
@@ -149,7 +158,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             if lying == treat:
                 mask |= bit(tile)
         worth[treat] = mask
-    staked = worth[SKULL]
+    staked = worth[APPLE] | worth[SKULL]
 
     # Every tile a pen touching this one has along its edge, so widening a pen is a single
     # union rather than a walk over the tiles it has just gained.
@@ -490,7 +499,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
         # Cheap pens are the ones worth widening: a pen over budget is not thrown away,
         # since filling in a notch can hand a piece back, and nor is one walled over a
-        # skull, since growing out over the skull is what makes it buildable. Kept
+        # treat, since growing out over the treat is what makes it buildable. Kept
         # alongside them are the pens holding the most for what they cost, so a pen that
         # went out of its way for an apple is not dropped for a tidier one.
         cheapest = sorted(grown, key=lambda pen: cost[pen])[:beam]
@@ -589,6 +598,33 @@ def blocks_around(pennable, start, rows, columns):
     return found - {frozenset()}
 
 
+def nudged_over_treats(pen, mud, treats, rows, columns):
+    """A block of ground with the wall bumped out round whatever it cannot be built on.
+
+    Nothing lying on the ground takes a fence, so a rectangle whose edge happens to fall on
+    an apple or a skull is not a pen at all. That is not, however, the end of squaring a map
+    off: a player who lays out the obvious block and finds a treat in the wall's way does the
+    obvious local thing and takes it inside, which costs a piece or two and changes nothing
+    else about the shape. Swallowing widens the edge, which can turn up another treat, so it
+    is run to a standstill.
+
+    Taking it in rather than stepping round it is the same closure the game itself promises
+    with `smallestPen` — and on an apple it is what a player would want anyway.
+
+    What cannot be swallowed is a treat lying on the rim. Nothing on the rim can ever be shut
+    in — an animal standing there is already off the map — so a block whose wall wants that
+    tile has nowhere to bump out to, and is no block at all. Returns nothing for those.
+    """
+    pen = set(pen)
+    while True:
+        staked = {tile for tile in fences_around(pen, mud) if tile in treats}
+        if not staked:
+            return frozenset(pen)
+        if any(on_rim(tile, rows, columns) for tile in staked):
+            return None
+        pen |= staked
+
+
 def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
     """The best pen a player gets by squaring the map off, as (score, tiles).
 
@@ -602,6 +638,11 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
     two agree on is one whose best pen is the obvious pen, which is what an early stop on
     a world wants; a wide gap is a level that only gives itself up to a player who has
     learnt something, and those belong further along.
+
+    Since nothing lying on the ground takes a fence, the block is nudged out over any treat
+    its wall would have wanted before it is weighed — otherwise a single apple sitting on the
+    obvious wall line would say the map has no obvious pen at all, which is not what a player
+    holding a fence and looking at an apple does.
     """
     pennable = {tile for tile in mud if not on_rim(tile, rows, columns)}
     others = [tile for animal, tile in starts.items() if animal != "P"]
@@ -643,7 +684,11 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # two blocks is paid for once, so the cost is of the pair together.
         if any(one & other for one, other in itertools.combinations(choice, 2)):
             continue
-        pen = frozenset().union(*choice)
+        # Nudged out over its treats before anything is asked of it, since that is the pen
+        # the player would actually be holding, and every rule below turns on its shape.
+        pen = nudged_over_treats(frozenset().union(*choice), mud, treats, rows, columns)
+        if pen is None:
+            continue
         # A board that keeps two apart is not squared off by a pair of blocks that touch,
         # since ground the pig can walk from one into the other is one pen, not two.
         if rule in ("apart", "even") and others:

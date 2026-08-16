@@ -582,9 +582,11 @@ struct PuzzleView: View {
             // Dragging back over your own fencing is not a refusal, it is just nothing to do.
             guard !game.fences.contains(stroke.tile) else { return }
             guard game.buildFence(on: stroke.tile) else {
-                // A skull takes no fencing, so a tap that would have planted a post says
-                // what the tile costs instead of shaking the rack like a spent budget.
-                if let treat = level.treat(at: stroke.tile), !treat.takesFencing {
+                // No treat takes fencing, so a tap that would have planted a post says what
+                // the tile is worth instead of shaking the rack like a spent budget. On an
+                // apple that is the whole lesson in one tap: the ground is not refusing the
+                // player, it is telling them there are five points here to shut in.
+                if let treat = level.treat(at: stroke.tile) {
                     sayWorth(of: treat, at: stroke.tile)
                 } else {
                     refuse()
@@ -620,7 +622,7 @@ struct PuzzleView: View {
     }
 
     /// Floats what a treat is worth off the tile a finger just found it on, once per
-    /// press: a drag that crosses two skulls should not stack the same five points twice.
+    /// press: a drag that crosses two treats should not stack the same five points twice.
     private func sayWorth(of treat: Treat, at tile: GridPoint) {
         guard !refusedThisPress else { return }
         refusedThisPress = true

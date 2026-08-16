@@ -58,9 +58,10 @@ extension PuzzleLevel {
 
     /// A pool the pig sits in the middle of, walled on every side by water bar the mouth at the
     /// bottom, with a truffle lying out beyond either corner of that mouth. Four pieces plug the
-    /// mouth and hold the pool's 16 tiles; squaring off below it with all seven holds 21 and
-    /// reaches neither truffle, where seven spent leaning the wall out to the east gather the
-    /// truffle on that side and come to 29.
+    /// mouth and hold the pool's 16 tiles; squaring off below it holds 20 and reaches neither
+    /// truffle — the block that used to hold 21 stood a piece on one of them, and no piece goes
+    /// on a truffle — where seven spent leaning the wall out to the east gather the truffle on
+    /// that side and come to 29.
     ///
     /// The choice is which truffle rather than whether — the two lie too far apart for one
     /// budget to reach both, and a wall that goes after the second gives up more ground on the
@@ -145,10 +146,12 @@ extension PuzzleLevel {
             """
     )
 
-    /// A gully with a pool along its head and truffles down its length, strung out south of
-    /// the pig where the walling is dear. A truffle is worth more than the ground a pen gives
-    /// up to bend down and reach it, so the best pen is a long tongue rather than a tidy box:
-    /// twenty-four tiles and both of its truffles, which comes to thirty-four.
+    /// A gully with a pool along its head and a truffle at either end of the walling that is
+    /// dear: one out east on the pig's own line, one well down the gully to the south-west. A
+    /// truffle is worth more than the ground a pen gives up bending to reach it, and no piece
+    /// will lie on one, so the best pen is a long tongue that goes out for both rather than a
+    /// tidy box that takes the near one and stops: twenty-four tiles and both truffles, which
+    /// comes to thirty-four, against a block worth twenty-three.
     static let fernGully = woodland(
         id: "fern-gully",
         name: "Fern Gully",
@@ -162,8 +165,8 @@ extension PuzzleLevel {
             .~~~~~~~~.
             .~~~~~~~~.
             ..........
-            ...P......
-            ..a.......
+            ...P..a...
+            ..........
             ..........
             ..a.......
             ..........
@@ -259,7 +262,9 @@ extension PuzzleLevel {
     /// refuses a pen for a reason other than something walking out of it: hold them both, but
     /// never in the same ground. So the twenty pieces go out as two enclosures that lean on
     /// the pool from opposite sides and share not one tile — 28 tiles and three truffles, 43,
-    /// against a squared-off 30. It asks for most of the stars the fields below it hold.
+    /// against a squared-off 36, since a pair of blocks nudged out over the truffles their walls
+    /// wanted collect all three of those as well. It asks for most of the stars the fields below
+    /// it hold.
     static let boarHollow = woodland(
         id: "boar-hollow",
         name: "Boar Hollow",

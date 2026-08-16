@@ -9,25 +9,24 @@ enum Terrain: Character, CaseIterable, Sendable {
 /// Something lying on a tile of mud, worth having inside the pen or worth keeping out of it.
 ///
 /// A treat does not change what the ground underneath it is: either one can be walked over,
-/// and either one can be shut into a pen. What they do not share is whether they take a
-/// fence. An apple is windfall, and a piece laid on top of one wastes it. A skull is staked
-/// into the ground and refuses the piece altogether, so a wall that wants that tile has to
-/// go round it — which is what makes sour ground something to plan a pen around rather than
+/// and either one can be shut into a pen. Nor does either take a fence. Both are staked into
+/// the ground and refuse the piece altogether, so a wall that wants one of those tiles has to
+/// go round it — which is what makes a treat something to plan a pen around rather than
 /// something to pave over.
+///
+/// That is the whole of what they have in common, and all that is left to tell them apart is
+/// what shutting one in is worth. It is the difference between a fork and a decoration. An
+/// apple that could be buried is a bonus a player may as well ignore when the wall wants its
+/// tile; an apple that cannot is a question asked of every pen that comes near one — swallow
+/// it and take the five, or bend the wall in beside it and give up the ground. A skull asks
+/// the same question with the sign reversed. Neither can be paved over and forgotten.
 enum Treat: Character, CaseIterable, Sendable {
-    /// A windfall apple. Ground with an apple on it is worth five ordinary tiles.
+    /// A windfall apple. Ground with an apple on it is worth five ordinary tiles, and it
+    /// takes no fencing, so it can be neither built on nor buried.
     case apple = "a"
     /// A skull staked in the mud. Sour ground: it costs five tiles to shut a pig in with,
     /// and it takes no fencing, so it can be neither built on nor buried.
     case skull = "x"
-
-    /// Whether a piece of fencing can be laid on the tile this is lying on.
-    var takesFencing: Bool {
-        switch self {
-        case .apple: true
-        case .skull: false
-        }
-    }
 
     /// What shutting the tile into the pen is worth, over and above the ground itself,
     /// counted in mud tiles.
@@ -38,9 +37,9 @@ enum Treat: Character, CaseIterable, Sendable {
         }
     }
 
-    /// What tapping this treat says: five more for an apple, five fewer for a skull. A
-    /// skull takes no fencing, so a tap that would have planted a post lands on the
-    /// cost instead — which is how a player finds out what sour ground is worth without
+    /// What tapping this treat says: five more for an apple, five fewer for a skull. No
+    /// treat takes fencing, so a tap that would have planted a post lands on the worth
+    /// instead — which is how a player finds out what the ground is carrying without
     /// reading the README.
     var pointsSaid: String {
         switch self {
@@ -207,13 +206,14 @@ struct PuzzleLevel: Identifiable, Sendable {
 
     /// A fence takes up a whole tile, so it can only be built on open mud: never in the
     /// water, which is already a boundary and free, never on a tile an animal is standing
-    /// on, and never on a skull, which is staked into the ground and leaves no room for a
-    /// post. Tiles along the outer edge of the map are fair game, and usually where the
-    /// fencing has to go, since that is the ground the animals run off from.
+    /// on, and never on a treat, apple or skull alike, since either is staked into the
+    /// ground and leaves no room for a post. Tiles along the outer edge of the map are fair
+    /// game, and usually where the fencing has to go, since that is the ground the animals
+    /// run off from.
     func canBuildFence(on tile: GridPoint) -> Bool {
         terrain(at: tile) == .mud
             && !animals.contains { $0.tile == tile }
-            && (treats[tile]?.takesFencing ?? true)
+            && treats[tile] == nil
     }
 
     var mudTileCount: Int {
@@ -529,10 +529,12 @@ extension PuzzleLevel {
     /// pays the five, which costs less than the ground a detour round it would give up.
     /// 24 tiles and two apples, less the one skull, come to 29.
     ///
-    /// The second star is set by what squaring the map off is worth rather than by the
-    /// proportion of the maximum the rest of the meadow uses: with both skulls off limits
-    /// to fencing, the best plain block here is only worth 15, and no level withholds its
-    /// second star from the obvious pen.
+    /// The second star is lower here than the proportion of the maximum the rest of the
+    /// meadow uses. It was set back when nothing lying on the ground could be built over
+    /// except an apple, and every plain block worth having on this map ran its wall across a
+    /// skull, so squaring off was worth only 15. It is worth 22 now that a block is nudged
+    /// out over what it cannot stand on — 17 tiles, two apples and one skull — and the
+    /// second star sits under that with room to spare, which is the direction to err in.
     static let sourGround = authored(
         id: "sour-ground",
         name: "Sour Ground",

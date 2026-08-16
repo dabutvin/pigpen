@@ -74,9 +74,10 @@ extension PuzzleLevel {
     /// staircase and the ground either side of it is a wedge.
     ///
     /// Which is the shore question asked on the only kind of bank the caverns have. Eleven pieces
-    /// squared off beside the staircase can only get one of their four sides against it and hold
-    /// 22; the same eleven laid as a staircase of their own, mirroring the river back at itself,
-    /// shut 26 tiles and both crystals, which is 36. A diagonal wall closes two tiles a piece
+    /// squared off beside the staircase can only get one of their four sides against it, and hold
+    /// 18 tiles and the one crystal lying inside them, which is 23; the same eleven laid as a
+    /// staircase of their own, mirroring the river back at itself, shut 26 tiles and both
+    /// crystals, which is 36. A diagonal wall closes two tiles a piece
     /// where a straight one closes one, and following a river that is already diagonal is how the
     /// caverns say so.
     static let dripstoneShelf = gloamdeep(
@@ -94,9 +95,9 @@ extension PuzzleLevel {
             ..~~......
             ...~......
             ...~..P...
-            ...~~.....
+            ...~~...a.
             ....~.....
-            ....~.a...
+            ....~.....
             ....~~....
             ..........
             """
@@ -108,31 +109,33 @@ extension PuzzleLevel {
     /// half of the cave to the other.
     ///
     /// So this is Otter Ford's lesson and Lock Gate's and Broken Chain's, taught on a bank eight
-    /// tiles long that cost nothing: shut the corridor and the whole of it is wall. Twelve pieces
-    /// squared off north of the water hold 21, because a wall that stops short of the east rim has
-    /// to pay for its own eastern side. The same twelve run right out along the bank and closed
-    /// with a single piece in the corridor hold 29 tiles and both the crystals over the river.
+    /// tiles long that cost nothing: shut the corridor and the whole of it is wall. Eleven pieces
+    /// squared off north of the water hold 14 tiles, both crystals and the boulder, which is 19 —
+    /// a wall that stops short of the east rim has to pay for its own eastern side. The same
+    /// eleven run right out along the bank and closed with a single piece in the corridor hold 26
+    /// tiles and the same three things on the floor.
     ///
     /// And the corridor is not clear ground, which is the rest of the field. A boulder stands in
     /// it, just behind the tip of the water, so the pen that comes round the river swallows it and
-    /// pays its five — 29 and two crystals less one boulder, or 34. The eight tiles of free bank
+    /// pays its five — 26 and two crystals less one boulder, or 31. The eight tiles of free bank
     /// that piece bought are worth that twice over, which is a sum a player has to do rather than
-    /// see.
+    /// see. One of those crystals lies out past the tip as well, so the corridor is the only way
+    /// to it: the piece that shuts the cave is the piece that fetches it.
     static let stillwaterNeck = gloamdeep(
         id: "stillwater-neck",
         name: "Stillwater Neck",
-        fenceBudget: 12,
-        twoStarScore: 19,
-        threeStarScore: 32,
-        maximumScore: 34,
+        fenceBudget: 11,
+        twoStarScore: 18,
+        threeStarScore: 29,
+        maximumScore: 31,
         question: .gap,
         map: """
             ...........
             ......a....
             ...........
-            ......a....
+            ...........
             ~~.........
-            .~~~~P.x...
+            .~~~~P.xa..
             ....~~~~...
             ..a....~~..
             ...........
@@ -146,7 +149,8 @@ extension PuzzleLevel {
     /// Every tile of this pen is bought.
     ///
     /// It is Basalt Flats and Cobble Yard and Swept Flat again, and the answer is the answer it
-    /// always was: the best block nineteen pieces can square off holds 25, and the same nineteen
+    /// always was: the best block nineteen pieces can square off holds 25, reaching one crystal
+    /// and paying for the boulder it cannot help swallowing, and the same nineteen
     /// run round as a diamond hold 36 tiles, both crystals and the boulder they cannot avoid
     /// swallowing, which is 41. A diagonal wall shuts two tiles per piece where a straight one
     /// shuts one, and in a cave with no river in it there is nothing else to know.
@@ -162,12 +166,12 @@ extension PuzzleLevel {
             ...........
             .....a.....
             ...........
-            ...x.......
             ...........
-            .a...P.....
+            ....x......
+            .....P.....
             ...........
             ...........
-            ...........
+            .....a.....
             ...........
             ...........
             """
@@ -175,23 +179,24 @@ extension PuzzleLevel {
 
     /// Three crystals in a reach the glowworms have got into, and not one of them on the line the
     /// tidy pen wants. The river steps in off the roof at the north-west and away south-east, and
-    /// the best block thirteen pieces can hang under it holds 20 tiles and no crystal at all —
-    /// there is no rectangle on this board that reaches any of the three.
+    /// the best block eleven pieces can hang under it holds 15 tiles and not one crystal — there is
+    /// no rectangle on this board that reaches any of the three, and none of them will take a piece
+    /// of wall to be swept up by one either.
     ///
-    /// So the whole field is which one to go out for. The crystal above the river's arm is on the
-    /// far side of the water: a pen that wants it has to come round the tip of the river and climb
-    /// back up, and there is no thirteen-piece wall that does. The one out east is four tiles of
-    /// wall from the nearest ground worth holding, and four tiles of wall costs more than five
-    /// points pay. The one hanging in the south is two rows below where the wall would otherwise
-    /// stop, and the tongue that fetches it pinches down to a single tile — which is 28 tiles and
-    /// that one crystal, or 33.
+    /// So the whole field is which one to go out for, on the tightest budget in the caverns. The
+    /// crystal above the river's arm is on the far side of the water: a pen that wants it has to
+    /// come round the tip of the river and climb back up, and there is no wall of eleven that does.
+    /// The one out east is four tiles of wall from the nearest ground worth holding, and four tiles
+    /// of wall cost more than five points pay. The one against the west wall is a row below where
+    /// the pen would otherwise stop, and the tongue that fetches it pinches down to a single tile —
+    /// which is 21 tiles and that one crystal, or 26.
     static let glowwormReach = gloamdeep(
         id: "glowworm-reach",
         name: "Glowworm Reach",
-        fenceBudget: 13,
-        twoStarScore: 19,
-        threeStarScore: 31,
-        maximumScore: 33,
+        fenceBudget: 11,
+        twoStarScore: 15,
+        threeStarScore: 24,
+        maximumScore: 26,
         question: .detour,
         map: """
             ..~........
@@ -201,9 +206,9 @@ extension PuzzleLevel {
             .....~~....
             ....P.~~...
             ...........
-            ...........
+            .a.........
             .........a.
-            .....a.....
+            ...........
             ...........
             """
     )
@@ -215,7 +220,9 @@ extension PuzzleLevel {
     /// there is a far bank beyond it, and like every far bank in the game nothing can reach it.
     ///
     /// Which is the corner question with nothing else in the way of it, and the hardest corner in
-    /// the game. Nine pieces laid as a right angle in the corner hold 25. The same nine laid corner
+    /// the game. Nine pieces laid as a right angle in the corner hold 25 and reach neither
+    /// crystal — both are pegged out west of the bend, where no rectangle hung off two straight
+    /// banks goes. The same nine laid corner
     /// to corner — one long diagonal from the west wall down to the south-east, cutting the whole
     /// bend off in a single line — hold 36 tiles and both crystals, which is 46. Foundry Corner
     /// asked this on a canal bend with the same nine pieces and could only reach round 27; two free
@@ -232,11 +239,11 @@ extension PuzzleLevel {
         map: """
             ............
             ~~~~~~~~~~~.
-            .....a....~.
+            ..a.......~.
             ..........~.
             .......P..~.
-            ..........~.
             ......a...~.
+            ..........~.
             ..........~.
             ..........~.
             ..........~.
@@ -251,7 +258,8 @@ extension PuzzleLevel {
     /// Sour Ground made that choice once, Sulphur Rill and Gutter Lane and Meteor Field made it
     /// twice; this makes it three times, on a board where the river down the west side is worth
     /// having and the boulders are strung across the way to it. Fifteen pieces squared off in the
-    /// long chamber beside the water hold 23. The same fifteen run round as a diamond hold 44
+    /// long chamber beside the water hold 28 tiles and one boulder, which comes back to 23. The
+    /// same fifteen run round as a diamond hold 44
     /// tiles, both crystals and two of the three boulders, which comes back to 44 — the third is
     /// left out in the east where the wall goes round it, because it is the one boulder on the
     /// board that costs less to abandon than to shut in.
@@ -270,10 +278,10 @@ extension PuzzleLevel {
             .~~........
             ..~.....a..
             ..~..x.....
-            ..~~..P....
+            ..~~..P..a.
             ...~x......
-            ...~....x..
-            ...~~a.....
+            ...~.......
+            ...~~...x..
             ...........
             """
     )
@@ -284,11 +292,12 @@ extension PuzzleLevel {
     ///
     /// The gallery stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide
     /// Reaches do. A broad board leaves a wide gap against a squared-off pen because it is broad,
-    /// which says more about its size than about how hard it is to hold — and this one asks 34,
-    /// as little as the field that opens the world, while holding the second biggest pen in the
+    /// which says more about its size than about how hard it is to hold — and this one asks 25,
+    /// less than the field that opens the world, while holding the second biggest pen in the
     /// game at 58 tiles.
-    /// Nineteen pieces squared off down the west of it hold 41 tiles with a crystal and a boulder
-    /// in them cancelling each other out. The same nineteen laid along the river and closed round
+    /// Nineteen pieces squared off down the west of it hold 42 tiles with a crystal and the
+    /// boulder cancelling each other out, which is 42. The same nineteen laid along the river
+    /// and closed round
     /// the south as a staircase hold 58 tiles, two crystals and that same boulder, which is 63.
     /// The third crystal lies out east past the tip of the water, where nothing these nineteen
     /// pieces can draw will reach it.
@@ -304,14 +313,14 @@ extension PuzzleLevel {
             ....~.......
             ....~~......
             .....~~.....
-            ..a...~~....
+            .a....~~....
             .......~~a..
             ........~~..
             ...P.....~~.
             .......x....
             ............
-            .....a......
             ............
+            .....a......
             ............
             """
     )
@@ -337,7 +346,7 @@ extension PuzzleLevel {
     /// pig the whole staircase as the wall of its own pen — so the one wall the budget cannot
     /// afford to leave out does both jobs, and finding it is finding the field.
     ///
-    /// Twenty pieces. The best pair of blocks holds 22 between them. The answer hangs the roost in
+    /// Twenty pieces. The best pair of blocks holds 23 between them. The answer hangs the roost in
     /// a pocket of 14 tiles off the east end of the river with two crystals in it, and gives the
     /// pig 21 tiles of the wide floor south-west of the water with the third crystal and a boulder
     /// it cannot get out of swallowing, which comes to 45. It asks for most of the stars the eight
@@ -353,9 +362,9 @@ extension PuzzleLevel {
         map: """
             ...........
             ......T.a..
-            ...~~~~....
+            ...~~~~a...
             ..~~..U....
-            .~~.....a..
+            .~~........
             ~~.........
             ......P....
             ....a.x....

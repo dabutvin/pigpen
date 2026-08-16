@@ -163,7 +163,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🍄",
                     strewn: ["🌿", "🍂", "🌿"],
-                    caption: "Truffles in the leaf mould. Shut them in — five apiece.",
+                    caption: "Truffles take no fence. Shut them in — five apiece.",
                     seconds: 3.4
                 ),
                 Shot(
@@ -294,7 +294,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🌰",
                     strewn: ["🪨", "🌫️", "🪨"],
-                    caption: "Chestnuts roasting where they fell. Five apiece, shut in.",
+                    caption: "Chestnuts take no fence. Five apiece, shut in.",
                     seconds: 3.4
                 ),
                 Shot(
@@ -424,7 +424,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🥧",
                     strewn: ["🧱", "🪟", "🧱"],
-                    caption: "Pies dropped outside the shops. Five apiece, shut in.",
+                    caption: "Pies take no fence. Five apiece, shut in.",
                     seconds: 3.4
                 ),
                 Shot(
@@ -566,7 +566,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🌟",
                     strewn: ["✨", "🌑"],
-                    caption: "Stardrops in the dust. Five each, shut in.",
+                    caption: "Stardrops take no fence. Five each.",
                     seconds: 2.7
                 ),
                 Shot(
@@ -707,7 +707,7 @@ extension StorybookScene {
                 Shot(
                     motif: "💎",
                     strewn: ["💧", "🪨"],
-                    caption: "Crystals in the flowstone. Five each.",
+                    caption: "Crystals take no fence. Five each.",
                     seconds: 2.7
                 ),
                 Shot(
@@ -848,7 +848,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🍭",
                     strewn: ["👥", "🪢"],
-                    caption: "Toffee apples in the sawdust. Five each.",
+                    caption: "Toffee apples take no fence. Five each.",
                     seconds: 2.7
                 ),
                 Shot(

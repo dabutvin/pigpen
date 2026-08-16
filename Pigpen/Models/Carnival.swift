@@ -47,12 +47,13 @@ extension PuzzleLevel {
     /// The basin question asked on the only kind of bank the carnival has: not one long shore but
     /// four short ones with gaps between, so following it means paying a piece at each gap and
     /// deciding which of them are worth the piece. Fourteen pieces hung under the vee as a
-    /// rectangle hold 18 tiles and neither apple; the same fourteen fitted to the stalls — one in
+    /// rectangle hold 18 tiles and neither apple, since both are dropped a row below where any
+    /// rectangle stops; the same fourteen fitted to the stalls — one in
     /// the gangway at the bottom of the vee, then out east under the arm and tapering back — hold
     /// 24 tiles and the eastern apple, which is 29.
     ///
-    /// It opens the world the way Sinter Basin opened the caverns, and asks more than that did —
-    /// 37 against 34 — because a bank in four pieces has to be read before it can be followed, and
+    /// It opens the world the way Sinter Basin opened the caverns, and asks less than that did —
+    /// 27 against 34 — because a bank in four pieces has to be read before it can be followed, and
     /// a player standing here has held six worlds of pens.
     static let coconutShy = carnival(
         id: "coconut-shy",
@@ -70,8 +71,8 @@ extension PuzzleLevel {
             ...........
             .....P.....
             ...........
-            ..a.....a..
-            ....xx.....
+            ...........
+            ..a.xx..a..
             ...........
             ...........
             """
@@ -82,7 +83,8 @@ extension PuzzleLevel {
     ///
     /// Which is the shore question asked on a bank that is not a bank at all but four of them in
     /// a line. Fourteen pieces squared off beside the row can only get one of their four sides
-    /// against it and hold 24; the same fourteen laid as a staircase of their own, mirroring the
+    /// against it and hold 24, reaching neither apple; the same fourteen laid as a staircase of
+    /// their own, mirroring the
     /// row back at itself and cutting each gangway on the diagonal, shut 39 tiles with both apples
     /// and both ropes inside them, which comes back to 39. A diagonal wall closes two tiles a
     /// piece where a straight one closes one, and a row of stalls set out on the slant is how the
@@ -103,9 +105,9 @@ extension PuzzleLevel {
             ......~~...
             ...P..~~...
             ........~~.
-            .a......~~.
-            ...xx......
-            ......a....
+            ........~~.
+            .a.xx......
+            .....a.....
             ...........
             """
     )
@@ -117,9 +119,10 @@ extension PuzzleLevel {
     /// of free wall that cost nothing: one piece in the turnstile and the whole queue is wall.
     /// Everybody finds that piece — the block this field is measured against spends it too, and
     /// hangs a plain rectangle off it for 21. What the block cannot then do is spread, because the
-    /// run of rope is pegged just south-west of the gate and no wall may lie along it. The same
-    /// fourteen pieces opened out east as a lozenge instead hold 30 tiles and the apple in the
-    /// middle of them, which is 35.
+    /// run of rope is pegged just south-west of the gate and no wall may lie along it — and the
+    /// apple dropped south-east of the gate is a tile no wall will lie along either, so the
+    /// rectangle stops short of it rather than collecting it. The same fourteen pieces opened out
+    /// east as a lozenge instead hold 30 tiles and that apple, which is 35.
     ///
     /// The apple north of the queue is on the far side of the crowd, and like every far bank in
     /// the game nothing reaches it.
@@ -140,8 +143,8 @@ extension PuzzleLevel {
             ..xx........
             .....P......
             ............
-            ......a.....
             ............
+            .......a....
             ..a.........
             ............
             """
@@ -176,8 +179,8 @@ extension PuzzleLevel {
             ....xx.....
             .....P.....
             ....a......
-            .......~~..
             ...a...~~..
+            .......~~..
             ...........
             ...........
             """
@@ -185,7 +188,7 @@ extension PuzzleLevel {
 
     /// Three toffee apples dropped where the tidy pen does not go, and one block of crowd off to
     /// the west doing a third of a wall's work. The best block seventeen pieces can square off
-    /// against that crowd holds 21 and reaches one apple.
+    /// against that crowd holds 17 tiles and the apple up in the north, or 22.
     ///
     /// So the whole field is which of the other two to go out for. The one hanging in the south is
     /// three tiles of wall below where the pen would otherwise stop, and three tiles of wall cost
@@ -203,14 +206,14 @@ extension PuzzleLevel {
         question: .detour,
         map: """
             ...........
-            ..a........
+            .a.........
             ...........
             .~~~.......
             .~~~.......
             ....P......
-            .......a...
-            ...xx......
             ...........
+            ...xx......
+            .......a...
             .....a.....
             ...........
             """
@@ -226,7 +229,8 @@ extension PuzzleLevel {
     /// middle of the ground, and where they are pegged: a right-angled block in this corner is a
     /// rectangle hung under the crowd, and the ropes are lying inside every rectangle worth
     /// drawing. So the tidy pen has to swallow the pair and pay their ten, and comes to 25 where
-    /// the same block on clear ground would be 35. The eleven pieces laid corner to corner
+    /// the same block on clear ground would be 35 — the apples are dropped clear of it, and no
+    /// wall will lie on one to sweep it up. The eleven pieces laid corner to corner
     /// instead — one long diagonal from the west side down to the south-east, cutting the whole
     /// bend off in a single line — hold 51 tiles, both apples and the same pair of ropes, which
     /// comes back to 51. The biggest pen in the world for the smallest budget in it, which is what
@@ -247,8 +251,8 @@ extension PuzzleLevel {
             .....a....~.
             ....P.....~.
             .......xx.~.
-            ......a...~.
             ..........~.
+            .......a..~.
             ..........~.
             ..........~.
             """
@@ -263,19 +267,24 @@ extension PuzzleLevel {
     /// touching — two on Sour Ground, two on Gutter Lane, three on Boulder Chamber. Here there are
     /// seven pegs in three runs, which is more rope than any other field at the fair carries and
     /// includes the only line of three anywhere in the game. Every rectangle worth having runs
-    /// into one of them, so squaring off means retreating to the strip of ground the two blocks of
-    /// crowd leave down the west, which is 18 tiles and nothing on them. The same eighteen pieces fitted round
-    /// the rigging instead hold 46 tiles, one apple and the pair of ropes nearest the pig, which
-    /// comes to 41. The run of three and the pair beside it are left standing out in the north,
-    /// because the ground behind them is not worth the twenty-five points they would cost to shut
-    /// in — the widest gap any field in this world leaves.
+    /// into one of them, so squaring off means retreating down the west and swallowing the pair
+    /// of ropes nearest the pig on the way: 31 tiles less their ten, which is 21. The same
+    /// eighteen pieces fitted round the rigging instead keep clear of every peg on the board and
+    /// hold 37 tiles with the apple in the south-east inside them, which comes to 42.
+    ///
+    /// That apple is the other half of the field. No piece will lie on one any more than on a
+    /// rope, so the wall cannot run through it and cannot pretend it is not there: it comes
+    /// inside and pays for itself, or the pen stops short of it. The pen that wins comes round
+    /// and takes it, and the run of three and the pair beside it are left standing out in the
+    /// north, because the ground behind them is not worth the twenty-five points they would cost
+    /// to shut in.
     static let theRigging = carnival(
         id: "the-rigging",
         name: "The Rigging",
         fenceBudget: 18,
         twoStarScore: 18,
         threeStarScore: 39,
-        maximumScore: 41,
+        maximumScore: 42,
         question: .obstruction,
         map: """
             ............
@@ -300,10 +309,10 @@ extension PuzzleLevel {
     /// The midway stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide
     /// Reaches and the Great Gallery do. A broad board leaves a wide gap against a squared-off pen
     /// because it is broad, which says more about its size than about how hard it is to hold — and
-    /// this one asks 40, less than three of the fields below it, while holding the second biggest
+    /// this one asks 38, less than three of the fields below it, while holding the second biggest
     /// pen at the fair.
-    /// Nineteen pieces squared off down the middle of the walk hold 34 tiles with one apple in
-    /// them and the run of rope lying across them, which comes to 29. The same nineteen run out to
+    /// Nineteen pieces squared off down the middle of the walk hold 30 tiles with two apples in
+    /// them and the pair of ropes lying across them, which comes to 30. The same nineteen run out to
     /// both blocks of crowd and closed round the south hold 49 tiles, two apples and that same run
     /// of rope, which comes back to 49. The third apple hangs up in the north-east past the stall,
     /// where nothing these nineteen pieces can draw will reach it.

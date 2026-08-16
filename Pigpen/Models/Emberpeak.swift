@@ -83,8 +83,8 @@ extension PuzzleLevel {
     )
 
     /// The mountain's first chestnut, lying out east where a tidy pen would never go, with an
-    /// ember staked south of the pig where the wall wants to turn. The tarn along the top is
-    /// the only free wall on the board.
+    /// ember staked just south-east of the pig, on the line the wall wants to turn along. The
+    /// tarn along the top is the only free wall on the board.
     ///
     /// The pen that wins is neither tidy nor cheap: it runs out east far enough to take the
     /// chestnut, then tapers away south past the ember and pays the five rather than walling
@@ -103,8 +103,8 @@ extension PuzzleLevel {
             .~~~~~~~..
             ..........
             ..P....a..
-            ..........
             ....x.....
+            ..........
             ..........
             ..........
             ..........
@@ -129,7 +129,7 @@ extension PuzzleLevel {
             ..........
             ~~~~~~~~~~
             ..........
-            ...P..a...
+            ...P...a..
             ..........
             ....x.....
             ...a......
@@ -165,21 +165,21 @@ extension PuzzleLevel {
             """
     )
 
-    /// Two embers venting either side of the pig, a chestnut beyond each of them and a small
-    /// tarn at the head of the field. There is no block on this map worth having: any
-    /// rectangle big enough to reach a chestnut has an ember on its wall, and an ember takes
-    /// no fencing.
+    /// Two embers venting either side of the pig, both chestnuts dropped out east beyond them
+    /// and a small tarn at the head of the field. There is no block on this map worth having:
+    /// a rectangle that reaches the near chestnut has to swallow an ember to get there, and
+    /// the far one is past where any rectangle stops.
     ///
-    /// So the pen goes out as a lozenge threaded between the two vents, and it gathers both
-    /// chestnuts on the way: seventeen tiles and two chestnuts, twenty-seven, against a block
-    /// worth seventeen.
+    /// So the pen goes out as a lozenge threaded between the two vents and runs on east for the
+    /// second chestnut: eighteen tiles and both of them, twenty-eight, against a block that
+    /// takes one chestnut, pays for an ember and comes to sixteen.
     static let fumaroleField = emberpeak(
         id: "fumarole-field",
         name: "Fumarole Field",
         fenceBudget: 14,
-        twoStarScore: 15,
-        threeStarScore: 25,
-        maximumScore: 27,
+        twoStarScore: 16,
+        threeStarScore: 26,
+        maximumScore: 28,
         question: .obstruction,
         map: """
             ..........
@@ -189,7 +189,7 @@ extension PuzzleLevel {
             ....P.....
             .......a..
             ..x.......
-            ....a.....
+            .......a..
             ..........
             ..........
             """

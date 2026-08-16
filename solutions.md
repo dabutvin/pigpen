@@ -29,9 +29,9 @@ S  the scorpion             a  an apple
 x  a skull                  ~  water
 ```
 
-A treat inside the pen shows as its own letter on `o` ground. An apple with a `#` on it has
-been fenced over and wasted. A skull never has one on it: nothing can be built on a skull,
-so a wall that wants its tile is built round it instead.
+A treat inside the pen shows as its own letter on `o` ground. Neither kind ever has a `#` on
+it: nothing can be built on an apple or a skull, so a wall that wants one of those tiles is
+built round it instead.
 
 A pen scores a point per tile of ground it holds, five more for every apple inside it and
 five fewer for every skull.
@@ -44,8 +44,8 @@ five fewer for every skull.
 | 4 | The Dew Ponds | 12 | 44 | — | 44 | 32 |
 | 5 | Otter Ford | 12 | 24 | — | 24 | 16 |
 | 6 | Puddle Corner | 8 | 26 | — | 26 | 16 |
-| 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 | 26 |
-| 8 | Sour Ground | 14 | 24 | 2 apples, 1 skull | 29 | 15 |
+| 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 | 30 |
+| 8 | Sour Ground | 14 | 24 | 2 apples, 1 skull | 29 | 22 |
 | 9 | Stag Mere | 20 | 33 | 3 apples, 2 skulls | 38 | 34 |
 
 Every one of these spends its whole budget.
@@ -55,11 +55,12 @@ staircase, no detour for an apple — and the gap between it and the score is wh
 is really asking. It is nothing on the first two, which is why they are the first two, and
 it widens the whole way to Puddle Corner. `Tools/level_search.py --demand` prints both.
 
-Sour Ground's block is worth less than the gap suggests, and for a reason of its own: a
-plain block on that map wants a wall over one skull or the other, and a skull takes no
-fencing, so every block worth having is one you cannot build. That is a fact about blocks
-rather than about the level, which is why the last three stops are ordered by what they
-scatter rather than by this column.
+Sour Ground used to read far harder than it is, for a reason of its own: a plain block on
+that map wants a wall over one skull or the other, and no piece will lie on a skull, so every
+block worth having was one you could not build at all. A block is nudged out over what it
+cannot stand on now — the obvious local move, and the one the game itself makes when it
+promises every level can be finished — so the column says something about the level again.
+The last three stops are still ordered by what they scatter rather than by it.
 
 ## What the solutions have in common
 
@@ -238,8 +239,9 @@ pen is no longer the best one.
 
 The fencing runs a diagonal down each side, tapering as it goes south, and closes just past
 the near pair of apples. Two apples inside and 27 tiles of ground make 37. The far pair are
-left out, and the two pieces that close the bottom happen to land on top of them, which
-costs nothing: an apple outside the pen is worth nothing whether it is buried or not.
+left out in the open: the two pieces that close the bottom go between them rather than over
+them, because no piece will lie on an apple. An apple outside the pen is worth nothing, but
+it is still a tile the wall has to work around.
 
 ## 8. Sour Ground — 14 pieces, 29
 
@@ -414,8 +416,8 @@ other way round.
 .~~~~~~~~.
 .~~~~~~~~.
 #ooooooo#.
-#ooPooo#..
-#oaooo#...
+#ooPooa#..
+#ooooo#...
 #oooo#....
 .#ao#.....
 ..##......
@@ -504,7 +506,8 @@ game that refuses a pen for a reason other than something walking out of it. Hol
 but never in the same ground.
 
 So the twenty go out as two enclosures leaning on the pool from opposite sides, sharing not one
-tile: 28 tiles and three truffles, 43, against a squared-off 30.
+tile: 28 tiles and three truffles, 43, against a squared-off 36 — a pair of blocks nudged out
+over the truffles their walls wanted picks up all three of those as well.
 
 It asks for 21 of the 24 stars below it before it opens.
 
@@ -530,9 +533,9 @@ to Crater Pools rather than for six stops and then sorting by what it scatters.
 | 3 | Ashfall Terrace | 13 | 31 | 1 chestnut, 1 ember | 31 | 21 |
 | 4 | Chestnut Scree | 12 | 27 | 2 chestnuts, 1 ember | 32 | 21 |
 | 5 | Sulphur Rill | 13 | 24 | — | 24 | 15 |
-| 6 | Fumarole Field | 14 | 17 | 2 chestnuts | 27 | 17 |
+| 6 | Fumarole Field | 14 | 18 | 2 chestnuts | 28 | 16 |
 | 7 | Crater Pools | 12 | 29 | 1 chestnut | 34 | 17 |
-| 8 | Smoulder Ridge | 16 | 32 | 3 chestnuts, 1 ember | 42 | 29 |
+| 8 | Smoulder Ridge | 16 | 32 | 3 chestnuts, 1 ember | 42 | 30 |
 | 9 | Wyrm Caldera | 20 | 38 | 3 chestnuts, 2 embers | 43 | 27 |
 
 ## 1. Cinder Slope — 9 pieces, 25
@@ -589,8 +592,8 @@ nothing free on it, five points is a lot to pay for a tile.
 .~~~~~~~..
 #ooooooo#.
 #oPooooao#
-#ooooooo#.
-.#ooxoo#..
+#oooxooo#.
+.#ooooo#..
 ..#ooo#...
 ...#o#....
 ....#.....
@@ -611,7 +614,7 @@ worth 21.
 ..........
 ~~~~~~~~~~
 #oooooooo#
-#ooPooao#.
+#ooPoooa#.
 #oooooo#..
 .#ooxo#...
 ..#ao#....
@@ -652,18 +655,18 @@ tight past the upper ember, and it pinches right in round the lower one — that
 rows from the bottom is a wall built round a tile rather than over it — so it holds 24
 without paying either of them a thing.
 
-## 6. Fumarole Field — 14 pieces, 27
+## 6. Fumarole Field — 14 pieces, 28
 
 ```
 ..........
-.....#....
-..~~~o#...
-...x#oo#..
-...#Pooo#.
-..#ooooa#.
-..x#ooo#..
-...#ao#...
-....##....
+.....##...
+..~~~oo#..
+...x#ooo#.
+...#Poooo#
+....#ooao#
+..x..#ooo#
+......#a#.
+.......#..
 ..........
 ```
 
@@ -773,20 +776,20 @@ gift than it sounds.
 The other thing is the room, or the want of it. Every board in the city is smaller than the
 tightest shelf on Emberpeak, so the rim is always close and a block squared off against it
 wastes more than a block ever wasted in open country. That is why the gentlest field here
-asks 30% where the mountain's gentlest asks 28, and why the trail climbs the whole way from
+asks 16% where the mountain's gentlest asks 14, and why the trail climbs the whole way from
 Gasworks Cut to Foundry Corner.
 
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | 26 | — | 26 | 18 |
-| 2 | Pieman's Row | 11 | 20 | 1 pie | 25 | 17 |
+| 2 | Pieman's Row | 12 | 19 | 1 pie | 24 | 16 |
 | 3 | Cobble Yard | 14 | 18 | — | 18 | 12 |
 | 4 | Lock Gate | 13 | 27 | 1 drain | 22 | 14 |
 | 5 | Culvert Row | 13 | 27 | — | 27 | 16 |
 | 6 | Gutter Lane | 14 | 26 | — | 26 | 15 |
 | 7 | Foundry Corner | 9 | 32 | 1 drain | 27 | 15 |
 | 8 | Clocktower Square | 17 | 35 | 2 pies, 1 drain | 40 | 25 |
-| 9 | Rat King Wharf | 19 | 33 | 2 pies | 43 | 25 |
+| 9 | Rat King Wharf | 19 | 33 | 2 pies | 43 | 26 |
 
 ## 1. Gasworks Cut — 9 pieces, 26
 
@@ -809,23 +812,24 @@ The third comes from giving up the square corner: the wall goes down the west fo
 and then steps away south-east, and the ground it picks up on the diagonal is worth more than
 the ground it gives up at the bottom. 26 tiles, and every one the yard has in it.
 
-## 2. Pieman's Row — 11 pieces, 25
+## 2. Pieman's Row — 12 pieces, 24
 
 ```
-~##......
-~oo#.....
-~oPo#..a.
+~#.......
+~o#......
+~oP#...a.
+~ooo#....
 ~oooo#...
-~oooao#..
-~oooo#...
-.#oo#....
-..##.....
+~ooooo#..
+.#oooa#..
+..####...
 ```
 
-Two pies on the row and one canal down the west. A block against the canal takes the near pie
-and twelve tiles with it, which is 17 and two stars.
+Two pies on the row and one canal down the west. A block against the canal holds sixteen tiles
+and neither pie — both lie below where a rectangle stops, and no piece will lie on one to sweep
+it up on the way past — which is 16 and two stars.
 
-The pen that wins takes the same pie and puts twenty tiles round it instead, by running the
+The pen that wins goes out for the near pie and puts nineteen tiles round it, by running the
 wall out on the diagonal and back. The far pie stays where it fell: the ground a wall gives up
 bending out to it costs more than the five it pays, which is the whole of what a pie is for.
 
@@ -962,11 +966,11 @@ altogether. A block leaning on the canal holds 25.
 ```
 .#####...
 #aoooo~..
-#oPooo~x.
+#oPooo~..
 #ooooo~#.
 #ooooooo#
 .~~~oooo#
-...#ooRo#
+..x#ooRo#
 ...x#ooa#
 .....###.
 ```
@@ -977,7 +981,7 @@ them, and a player who learned the woods' answer has to unlearn it here.
 
 So the question is what shape one pen has to be. The pig and the rat king stand four tiles
 apart on the diagonal, which makes the smallest block that takes them both a five by five —
-and a drain sits in one of the corners such a block cannot avoid, so squaring off is worth 25.
+and a drain sits in one of the corners such a block cannot avoid, so squaring off is worth 26.
 
 The pen that wins runs out along the diagonal instead of round it: it leans on the culvert in
 the north-east and the cut in the south-west, takes the pie at each end of the run, and leaves
@@ -1015,10 +1019,10 @@ more room out here than anywhere else and less of it a plain block can reach.
 | 2 | Fallwater Basin | 13 | 36 | — | 36 | 24 |
 | 3 | Broken Chain | 15 | 38 | — | 38 | 24 |
 | 4 | Swept Flat | 18 | 32 | — | 32 | 20 |
-| 5 | Stardrop Hollow | 13 | 34 | 1 stardrop | 39 | 24 |
+| 5 | Stardrop Hollow | 13 | 34 | 1 stardrop | 39 | 23 |
 | 6 | Meteor Field | 15 | 42 | 2 meteors | 32 | 17 |
 | 7 | Starwell Ring | 12 | 32 | — | 32 | 14 |
-| 8 | Wide Reaches | 20 | 64 | 1 stardrop | 69 | 43 |
+| 8 | Wide Reaches | 20 | 64 | 1 stardrop | 69 | 45 |
 | 9 | Visitor Crater | 20 | 44 | 2 stardrops, 1 meteor | 49 | 27 |
 
 ## 1. Dust Shore — 12 pieces, 31
@@ -1140,7 +1144,8 @@ there is nothing else to know.
 ```
 
 Two stardrops cooling on the north rim with a single tile of dust between them, and seven wells
-scattered round the hollow to lean on. Thirteen pieces squared off under the wells hold 24.
+scattered round the hollow to lean on. Thirteen pieces squared off under the wells hold 13 tiles
+and, since no piece goes on a stardrop, both drops with them: 23.
 
 The pen that wins bends out over the near drop and pays for it by cutting back on the diagonal
 underneath: 34 tiles and one stardrop, 39. The far one stays where it fell, one tile further
@@ -1221,7 +1226,8 @@ thrown across it, one stardrop down in the south-west, twenty pieces.
 The wells are a constellation the way the ring's are, but the wall they imply out here is a
 diamond ten tiles across, and the diamond is the point: twenty pieces laid as a staircase all
 the way round shut 64 tiles and take the stardrop in on the way, which is 69, where the best
-block those same twenty can square off holds 43. Nothing else in the game holds sixty tiles.
+block those same twenty can square off holds 40 tiles and the same stardrop, or 45. Nothing
+else in the game holds sixty tiles.
 
 The well showing inside the diagram, down at the bottom, is standing in the pen's own wall
 rather than being wasted: it seals that corner, so the fencing stops one piece short there.
@@ -1230,8 +1236,8 @@ rather than being wasted: it seals that corner, so the fencing stops one piece s
 
 ```
 ...##~......
-..#ooo#.....
-.#oaoo#x~#a.
+..#ooo#.a...
+.#oaoo#x~#..
 #oooooo~oo#.
 #oooPo~ooo~.
 .#ooo#oVo~..
@@ -1298,14 +1304,14 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
 | 1 | Sinter Basin | 12 | 22 | 2 crystals | 32 | 21 |
-| 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 22 |
-| 3 | Stillwater Neck | 12 | 29 | 2 crystals, 1 boulder | 34 | 21 |
+| 2 | Dripstone Shelf | 11 | 26 | 2 crystals | 36 | 23 |
+| 3 | Stillwater Neck | 11 | 26 | 2 crystals, 1 boulder | 31 | 19 |
 | 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 25 |
-| 5 | Glowworm Reach | 13 | 28 | 1 crystal | 33 | 20 |
+| 5 | Glowworm Reach | 11 | 21 | 1 crystal | 26 | 15 |
 | 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 25 |
 | 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 23 |
-| 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 41 |
-| 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 22 |
+| 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 42 |
+| 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 23 |
 
 ## 1. Sinter Basin — 12 pieces, 32
 
@@ -1342,9 +1348,9 @@ then closing again on the diagonal — hold 22 tiles and both crystals, which is
 ..~~ooo#..
 ...~oooo#.
 ...~ooPoo#
-...~~oooo#
+...~~oooa#
 ....~ooo#.
-....~oa#..
+....~oo#..
 ....~~#...
 ..........
 ```
@@ -1360,15 +1366,15 @@ in again. Twenty-six tiles and both crystals, which is 36. A diagonal wall close
 where a straight one closes one, and following a bank that is already diagonal is how the caverns
 say so.
 
-## 3. Stillwater Neck — 12 pieces, 34
+## 3. Stillwater Neck — 11 pieces, 31
 
 ```
-.....###...
-....#oao#..
-...#ooooo#.
-..#oooaooo#
+.....##....
+....#oa#...
+...#oooo#..
+..#oooooo#.
 ~~oooooooo#
-.~~~~Poxoo#
+.~~~~Poxao#
 ....~~~~o#.
 ..a....~~..
 ...........
@@ -1380,30 +1386,32 @@ The river runs in off the west wall, steps away south-east across the middle of 
 two columns short of the east. What it leaves is the neck the whole world is named for: a corridor
 of dry floor round the tip of the water, and the only way from one half of the cave to the other.
 
-Shut the corridor and the entire river is wall — eight tiles of bank for one piece. Twelve pieces
-squared off north of the water hold 21, because a wall that stops short of the east rim has to pay
-for its own eastern side; the same twelve run right out along the bank and closed with a single
-piece at the corridor hold 29 tiles and both the crystals over the river.
+Shut the corridor and the entire river is wall — eight tiles of bank for one piece. Eleven pieces
+squared off north of the water hold 14 tiles, both crystals and the boulder, or 19, because a wall
+that stops short of the east rim has to pay for its own eastern side; the same eleven run right out
+along the bank and closed with a single piece at the corridor hold 26 tiles and the same three
+things lying on the floor.
 
 The corridor is not clear ground, which is the rest of the field. A boulder stands in it just
 behind the tip of the water, so the pen that comes round the river swallows it and pays its five —
-29 and two crystals less one boulder, or 34. The eight tiles of free bank that piece bought are
-worth that twice over, which is a sum rather than a sight. The third crystal lies out past the river
-on the south side, where nothing on this board reaches it.
+26 and two crystals less one boulder, or 31. The eight tiles of free bank that piece bought are
+worth that twice over, which is a sum rather than a sight. One of those crystals lies out past the
+tip as well, so the corridor is the only way to it: the piece that shuts the cave is the piece that
+fetches it. The third lies away south-west, where nothing on this board reaches it.
 
 ## 4. The Blind Grike — 19 pieces, 41
 
 ```
-....##.....
-...#oa#....
-..#oooo#...
-.#oxoooo#..
-#oooooooo#.
-#aoooPoo#..
-.#ooooo#...
-..#ooo#....
-...#o#.....
-....#......
+.....#.....
+....#a#....
+...#ooo#...
+..#ooooo#..
+.#ooxoooo#.
+.#oooPoooo#
+..#oooooo#.
+...#oooo#..
+....#ao#...
+.....##....
 ...........
 ```
 
@@ -1416,7 +1424,7 @@ a diamond hold 36 tiles, both crystals and the boulder they cannot avoid swallow
 which is 41. A diagonal wall shuts two tiles per piece where a straight one shuts one, and in a
 cave with no river in it there is nothing else to know.
 
-## 5. Glowworm Reach — 13 pieces, 33
+## 5. Glowworm Reach — 11 pieces, 26
 
 ```
 ..~........
@@ -1425,34 +1433,35 @@ cave with no river in it there is nothing else to know.
 #ooo~~.....
 #oooo~~....
 #oooPo~~...
-.#oooooo#..
-..#ooooo#..
-...#ooo#.a.
-....#a#....
-.....#.....
+#oooo#.....
+#aoo#......
+.#o#.....a.
+..#........
+...........
 ```
 
 Three crystals, and not one of them on the line the tidy pen wants. The river steps in off the roof
-at the north-west and away south-east, and the best block thirteen pieces can hang under it holds 20
-tiles and no crystal at all — there is no rectangle on this board that reaches any of the three.
+at the north-west and away south-east, and the best block eleven pieces can hang under it holds 15
+tiles and no crystal at all — there is no rectangle on this board that reaches any of the three, and
+no piece will lie on one to sweep it up in passing either.
 
-So the whole field is which one to go out for. The crystal above the river's arm is on the far side
-of the water: a pen that wants it has to come round the tip of the river and climb back up, and no
-thirteen-piece wall does. The one out east is four tiles of wall from the nearest ground worth
-holding, and four tiles of wall costs more than five points pay. The one hanging in the south is two
-rows below where the wall would otherwise stop, and the tongue that fetches it pinches down to a
-single tile: 28 tiles and that crystal, which is 33.
+So the whole field is which one to go out for, on the tightest budget in the caverns. The crystal
+above the river's arm is on the far side of the water: a pen that wants it has to come round the tip
+of the river and climb back up, and no wall of eleven does. The one out east is four tiles of wall
+from the nearest ground worth holding, and four tiles of wall cost more than five points pay. The one
+against the west wall is a row below where the pen would otherwise stop, and the tongue that fetches
+it pinches down to a single tile: 21 tiles and that crystal, which is 26.
 
 ## 6. Rimstone Corner — 9 pieces, 46
 
 ```
 ............
 ~~~~~~~~~~~.
-.#oooaoooo~.
+.#aooooooo~.
 ..#ooooooo~.
 ...#oooPoo~.
-....#ooooo~.
-.....#aooo~.
+....#oaooo~.
+.....#oooo~.
 ......#ooo~.
 .......#oo~.
 ........#o~.
@@ -1474,24 +1483,25 @@ every one of these nine has to be on the diagonal or the pen falls apart.
 ## 7. Boulder Chamber — 15 pieces, 44
 
 ```
-.~#####....
+.~####.....
+.~oooo#....
 .~ooooo#...
-.~oooooo#..
-.~~oooooo#.
-..~oooooao#
+.~~ooooo#..
+..~oooooa#.
 ..~ooxoooo#
-..~~ooPoo#.
-...~xooo#..
-...~ooo#x..
-...~~a#....
-.....#.....
+..~~ooPooa#
+...~xoooo#.
+...~oooo#..
+...~~oo#x..
+.....##....
 ```
 
 Three boulders down off the roof into the middle of the only ground worth having, and the hardest
 field in the caverns. A fence will not go through any of them: the pen swallows one and pays its
 five, or it steps the wall in beside it and gives up the ground behind it as well.
 
-Fifteen pieces squared off in the long chamber beside the river hold 23. The same fifteen run round
+Fifteen pieces squared off in the long chamber beside the river hold 32 tiles, a crystal and two
+boulders, which comes back to 27. The same fifteen run round
 as a diamond hold 44 tiles, both crystals and two of the three boulders, which comes back to 44 —
 the two in the middle are inside the pen because there is no way round them worth taking, and the
 third is left out in the east with the wall stepped in beside it, because it is the one boulder on
@@ -1500,26 +1510,26 @@ the board that costs less to abandon than to shut in.
 ## 8. Great Gallery — 19 pieces, 63
 
 ```
-....~.......
-...#~~......
-..#oo~~.....
-.#aooo~~....
+...#~.......
+..#o~~......
+.#ooo~~.....
+#aoooo~~....
 #oooooo~~a..
 #ooooooo~~..
 #ooPooooo~~.
 #ooooooxooo#
-.#ooooooooo#
-..#ooaoooo#.
-...#ooooo#..
-....#####...
+.#oooooooo#.
+..#oooooo#..
+...#oaoo#...
+....####....
 ```
 
 The widest floor in the caverns with a river stepping down the length of it: twelve tiles by twelve,
 three crystals, one boulder and nineteen pieces. It holds the third biggest pen in the game, at 58
 tiles, behind Wide Reaches and the dunes' Great Erg.
 
-Nineteen pieces squared off down the west of the gallery hold 41 tiles, with a crystal and a boulder
-in them cancelling each other out. The same nineteen laid along the river and closed round the south
+Nineteen pieces squared off down the west of the gallery hold 42 tiles, with two crystals and a
+boulder in them, which is 47. The same nineteen laid along the river and closed round the south
 as a staircase hold 58 tiles, two crystals and that same boulder: 63. The third crystal lies out east
 past the tip of the water, where nothing these nineteen pieces can draw will reach it.
 
@@ -1533,9 +1543,9 @@ anywhere.
 ```
 ......###..
 .....#Toa#.
-...~~~~ooo#
+...~~~~aoo#
 ..~~o#Uooo#
-.~~ooo#oao#
+.~~ooo#ooo#
 ~~ooooo#o#.
 .#ooooPo#..
 ..#oaox#...
@@ -1604,10 +1614,10 @@ what holds the world at 37% and above, the highest floor in the game.
 | 2 | Sideshow Row | 14 | 39 | 2 toffee apples, 2 guy ropes | 39 | 24 |
 | 3 | The Turnstile | 14 | 30 | 1 toffee apple | 35 | 21 |
 | 4 | Ticket Line | 15 | 34 | 2 toffee apples, 2 guy ropes | 34 | 20 |
-| 5 | The Toffee Stand | 17 | 28 | 2 toffee apples | 38 | 21 |
+| 5 | The Toffee Stand | 17 | 33 | 1 toffee apple | 38 | 22 |
 | 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 25 |
-| 7 | The Rigging | 18 | 46 | 1 toffee apple, 2 guy ropes | 41 | 18 |
-| 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 29 |
+| 7 | The Rigging | 18 | 37 | 1 toffee apple | 42 | 21 |
+| 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 30 |
 | 9 | The Centre Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
 
 ## 1. Coconut Shy — 14 pieces, 29
@@ -1618,12 +1628,12 @@ what holds the world at 37% and above, the highest floor in the game.
 .....#.....
 ...~~o~~...
 ..#ooooo#..
-...#oPooo#.
-....#ooooo#
-..a..#ooao#
-....xx#ooo#
-.......#o#.
-........#..
+..#ooPooo#.
+...#oooooo#
+....##oooo#
+..a.xx#oa#.
+.......##..
+...........
 ```
 
 Four stalls set out in a shallow vee across the top of the ground, with the gangways between them
@@ -1648,10 +1658,10 @@ it.
 #ooooo~~...
 #ooPoo~~...
 #ooooooo~~.
-#aoooooo~~.
-.#oxxooo#..
-..#oooa#...
-...####....
+#ooooooo~~.
+#aoxxoo#...
+.#oooa#....
+..####.....
 ```
 
 A row of sideshows stepping away south-east, each one its own block of crowd, with a gangway on
@@ -1674,10 +1684,10 @@ ten — which the tiles round them more than cover.
 .....#ooooo#
 ..xx#oooooo#
 ...#oPooooo#
-....#oooooo#
-.....#aooo#.
-......#oo#..
-..a....##...
+...#oooooo#.
+....#oooo#..
+.....#oa#...
+..a...##....
 ............
 ```
 
@@ -1702,8 +1712,8 @@ treats.
 .#ooxxo#...
 #ooooPoo#..
 #oooaoooo#.
-.#ooooo~~..
-..#aooo~~..
+.#oaooo~~..
+..#oooo~~..
 ...#oo#....
 ....##.....
 ```
@@ -1725,16 +1735,16 @@ two apples it collects on the way are what pay the ropes back.
 ## 5. The Toffee Stand — 17 pieces, 38
 
 ```
-..####.....
-.#aooo#....
-#oooooo#...
-.~~~oooo#..
-.~~~ooooo#.
-...#Poooo#.
-....#ooa#..
-...xx#o#...
-......#....
-.....a.....
+......##...
+.a...#oo#..
+....#oooo#.
+.~~~oooooo#
+.~~~oooooo#
+...#Pooooo#
+....#ooooo#
+...xx#ooo#.
+......#a#..
+.....a.#...
 ...........
 ```
 
@@ -1758,8 +1768,8 @@ apples, which is 38.
 .#oooaoooo~.
 ..#oPooooo~.
 ...#oooxxo~.
-....#oaooo~.
-.....#oooo~.
+....#ooooo~.
+.....#oaoo~.
 ......#ooo~.
 .......###~.
 ```
@@ -1777,21 +1787,21 @@ south-east, cutting the whole bend off in a single line — hold 51 tiles, both 
 pair of ropes, which comes back to 51. The biggest pen in the world for the smallest budget in it,
 which is what two free sides are worth.
 
-## 7. The Rigging — 18 pieces, 41
+## 7. The Rigging — 18 pieces, 42
 
 ```
 ............
-.~~~#..x.x..
-.~~~o#.x.x..
-.~~~ox#x.a..
-#ooooxo##...
-#oooPoooo#..
-#ooooooooo#.
-.#ooooooooa#
+.~~~...x.x..
+.~~~...x.x..
+.~~~.x.x.a..
+#ooo#x##....
+#oooP#oo#...
+#oooooooo#..
+.#ooooooo#a.
 ..~~~ooooo#.
-..~~~oooo#..
-.....#oo#...
-......##....
+..~~~ooooa#.
+.....#ooo#..
+......###...
 ```
 
 The guying behind the tents, and the hardest field in the world: seven pegs in three runs, laid out
@@ -1801,16 +1811,17 @@ This is the most rope on any field in the game and the only line of three in it,
 is three tiles of dead ground rather than one, because a wall that does not shut a rope in has to
 stand a clear tile off it.
 
-Every rectangle worth having runs into one, so squaring off means retreating to the strip of floor
-the two blocks of crowd leave down the west: 18 tiles with nothing on them, and the whole budget
-spent on a pen barely better than a box.
+Every rectangle worth having runs into one, so squaring off means retreating down the west and
+swallowing the pair of ropes nearest the pig on the way: 31 tiles less their ten, which is 21, and
+the whole budget spent on it.
 
-The answer fits itself round the rigging instead. It takes the wide ground south and east, pushes a
-finger of pen north between the north-west stall and the nearest pair of ropes, and shuts that pair
-in on the way: 46 tiles, one apple and two ropes, which comes to 41. The run of three and the pair
-beside it are left standing out in the north — five pegs, twenty-five points to shut in, and the
-ground behind them is not worth that. At 56% it leaves the widest gap of any field in the game,
-tying Starwell Ring.
+The answer keeps clear of every peg on the board instead. It takes the wide ground south and east
+and comes round the apple lying down there rather than over it: 37 tiles and that apple, which is
+42. No piece will lie on an apple any more than on a rope, so the wall cannot run through it and
+cannot pretend it is not there — it comes inside and pays for itself, or the pen stops short. The
+run of three and the pair beside it are left standing out in the north: five pegs, twenty-five
+points to shut in, and the ground behind them is not worth that. At 50% it leaves the widest gap
+of any ordinary field at the fair.
 
 ## 8. The Midway — 19 pieces, 49
 
@@ -1832,8 +1843,8 @@ tying Starwell Ring.
 The longest walk at the carnival: twelve tiles by twelve, a stall at the top of it, the crowd round
 the waltzer at the bottom, three apples down the length and the biggest budget any field here gets.
 
-Nineteen pieces squared off down the middle of the walk hold 34 tiles with one apple in them and
-the run of rope lying across them, which comes to 29. The same nineteen run out to both blocks of
+Nineteen pieces squared off down the middle of the walk hold 30 tiles with two apples in them and
+the pair of ropes lying across them, which comes to 30. The same nineteen run out to both blocks of
 crowd and closed round the south hold 49 tiles, two apples and that same run of rope: 49. The third
 apple hangs up in the north-east past the stall, where nothing these nineteen pieces draw will
 reach it.
@@ -1919,10 +1930,10 @@ The Hardpan, where every tile is bought.
 | 2 | The Long Slack | 14 | 28 | 1 melon | 33 | 19 |
 | 3 | The Blowout | 13 | 32 | nothing | 32 | 18 |
 | 4 | The Hardpan | 21 | 45 | nothing | 45 | 25 |
-| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 28 |
-| 6 | Melon Ground | 17 | 37 | 2 melons, 2 cacti | 37 | 19 |
+| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 29 |
+| 6 | Melon Ground | 17 | 35 | 2 melons, 2 cacti | 35 | 19 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |
-| 8 | The Great Erg | 19 | 59 | 3 melons, 3 cacti | 59 | 36 |
+| 8 | The Great Erg | 19 | 56 | 3 melons, 3 cacti | 56 | 33 |
 | 9 | Scorpion Flats | 16 | 45 | 1 melon | 50 | 19 |
 
 ## 1. Slipface Hollow — 14 pieces, 33
@@ -2057,24 +2068,24 @@ tiles.
 ## 5. Two Horns — 18 pieces, 50
 
 ```
-....##.....
-.~~~oo#....
-.~o~ooo#...
-#ooooooo#..
-#oooxxooo#.
+....###....
+.~~~ooo#...
+.~o~oooo#..
+#oooooooo#.
+#oooxxoooo#
 #ooooPoooo#
-#oooaooooo#
-.#ooooo~~~.
-..#aooo~.~.
-...#oo#....
-....##.....
+.#ooaooooo#
+..#oooo~~~.
+...#ooo~.~.
+....#a#....
+.....#.....
 ```
 
 Two barchans set on the diagonal from one another — one in the north-west, one in the south-east,
 both with their mouths open to the south — and the pig on the open sand between them. The span
 question: neither dune is any use on its own, and no rectangle on this board reaches round both.
 
-Squaring off gets one corner against each of them across the middle of the board and holds 28.
+Squaring off gets one corner against each of them across the middle of the board and holds 29.
 Eighteen pieces run out as a great lozenge from the one to the other hold 50 tiles, both melons and
 both cacti — the melons pay the cacti back exactly, so the pen is worth its ground and no more. It
 takes the northern dune's shade into the pen and leaves the southern one's outside, which is the
@@ -2084,20 +2095,20 @@ The run of cactus is pegged directly north of the pig, and it is the one thing t
 being tidier than it is: no piece will stand on a cactus and no pen may lean on one, so the wall that
 comes down between the two horns has to come round the pair.
 
-## 6. Melon Ground — 17 pieces, 37
+## 6. Melon Ground — 17 pieces, 35
 
 ```
-......#....
-.....#o#...
-....#ooa#..
-.~~~ooooo#.
+......##...
+.....#oo#..
+....#ooao#.
+.~~~oooooa#
 ...~oooooo#
-.~~~oooooo#
-.#ooPoooa#.
-..#xxooo#..
-...#ooo#...
-....#o#....
-.....#.....
+.~~~ooooo#.
+.#ooPooo#..
+..#xxoo#...
+...#oo#....
+....##a....
+...........
 ```
 
 One barchan with its back to the east and its mouth open west, three melons scattered wide over the
@@ -2110,11 +2121,11 @@ That is the tidy answer, and the melon it is holding is the one melon of the thr
 hold.
 
 So the field is whether to give that one up and go out for the other two, and it is: the same
-seventeen run out as a lozenge reach the melon in the north and the melon in the east, 37 tiles with
-those two in them and the same pair of cacti, which is 37. What is more, the wall the lozenge comes
-back on lands square on top of the melon it left behind. A piece laid on windfall wastes it, so this
-pen spends a melon on its own shape — the plainest way a board has ever said that a tile of pen is
-worth having.
+seventeen run out as a lozenge reach the melon in the north and the melon in the east, 35 tiles with
+those two in them and the same pair of cacti, which is 35. What is more, the wall the lozenge comes
+back on has to come round the melon it left behind rather than over it — no piece will lie on a
+melon — so this pen gives up a melon and a tile of ground for its own shape, which is the plainest
+way a board has ever said that a tile of pen is worth having.
 
 The pair of cacti lies in the middle of the ground either answer has to cross, so there is no drawing
 either pen without swallowing them and paying their ten. The tiles the detour fetches cover it twice
@@ -2153,7 +2164,7 @@ The two melons lie in the south, well outside the chevron on either side of its 
 will not stretch to either, and on a board where two of the walls came free five points is still four
 pieces of fence.
 
-## 8. The Great Erg — 19 pieces, 59
+## 8. The Great Erg — 19 pieces, 56
 
 ```
 .....###....
@@ -2163,25 +2174,25 @@ pieces of fence.
 .#oPooooooo#
 #oooooooooo#
 #oooxxxooo#.
-#oooooo~~~..
-.#aoooo~....
-..#oooo~~~..
-...#oa#.....
-....##......
+.#ooooo~~~..
+..#oooo~....
+...#ooo~~~..
+....#aa#....
+.....##.....
 ```
 
 The sand sea: twelve tiles by twelve, two barchans with their backs to the west standing at opposite
 ends of it, a run of three cacti across the waist and three melons down the length.
 
-Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 41 tiles,
-two of the melons and all three cacti, which comes to 36. The same nineteen run out to both dunes
-and closed round the south hold 59 tiles, the third melon as well and the same three cacti, which is
-59 — the biggest pen in the world, and the second biggest in the game: five tiles behind Wide Reaches
-and one ahead of the Great Gallery, which held second place until the sand came in.
+Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 38 tiles,
+two of the melons and all three cacti, which comes to 33. The same nineteen run out to both dunes
+and closed round the south hold 56 tiles, the third melon as well and the same three cacti, which is
+56 — the biggest pen in the world, and the third biggest in the game, behind Wide Reaches and
+the Great Gallery, which the sand very nearly took second place from.
 
 It stands outside the climb the way every world's eighth field does. A broad board leaves a wide gap
 against a squared-off pen because it is broad, which says more about its size than its difficulty —
-this asks 38, less than every one of the seven fields above it.
+this asks 41, less than four of the seven fields above it.
 
 ## 9. Scorpion Flats — 16 pieces, 50
 
