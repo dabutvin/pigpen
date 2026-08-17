@@ -228,6 +228,17 @@ carries the same game into every one of them.
   its boss as a dark shape on its planet; reach it and the shape comes up in full colour. The
   whole journey is on the map from the first time you see it, so there is always somewhere to
   be going.
+- **Play wears how much of it is done.** The button on the title screen carries a percent —
+  the whole game in one number, counted across every level of every world that is built. A
+  level is worth four marks: one for each star it can give up, and a fourth for the rainbow
+  it keeps for the best pen the map has in it. So three stars on every level in the game
+  reads 75%, and the last quarter is the rainbows. The number is rounded down and held at 99
+  for anything short of the lot, so **100% only ever means every star and every rainbow
+  there is** — and the badge goes rainbow itself when it gets there. It is held at 1% the
+  other way round, so the first star of a long game shows rather than rounding away to
+  nothing. Silhouettes are not counted, since a world with no levels in it would make the
+  game unfinishable and would move the number every time another one was drawn; nor are the
+  dailies, which come and go with the calendar.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
 City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival** and **Sunbaked Dunes** to
@@ -1222,6 +1233,7 @@ Pigpen/
 │   ├── Dunes.swift              # Sunbaked Dunes: its nine levels and the trail out over them
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
+│   ├── GameCompletion.swift     # The whole game as one percent: every star and every rainbow in every world
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
