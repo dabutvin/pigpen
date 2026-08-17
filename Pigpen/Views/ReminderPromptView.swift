@@ -41,10 +41,14 @@ struct ReminderPromptView: View {
                 gate
 
                 VStack(spacing: 10) {
+                    // Wraps rather than truncating. Heading type this size does not fit
+                    // the card on one line, and a `Text` left to itself in a stack this
+                    // narrow gives up and puts an ellipsis on the end of the question.
                     Text("A reminder each morning?")
                         .font(.system(size: 24, weight: .black, design: .rounded))
                         .foregroundStyle(GamePalette.post)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text(offer)
                         .font(.system(size: 14, weight: .semibold))
