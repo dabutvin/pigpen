@@ -578,7 +578,7 @@ world.
 | 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
 | 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 42 | 50% |
 | 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
-| 9 | The Centre Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
+| 9 | The Center Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
 
 The Big Top is the corner question with the crowd along the front of the tent and down its far
 side, so two of the four walls are handed over: eleven pieces laid corner to corner hold 51 tiles,
@@ -588,7 +588,7 @@ the tidy pen has to swallow them and pay their ten. The Rigging carries seven pe
 more rope than any other field at the fair, and the only line of three in the game — and at 50% it
 leaves the widest gap of any ordinary field at the fair.
 
-Its boss, The Centre Ring, adds the carnival's rule, and it is the first rule in the game about
+Its boss, The Center Ring, adds the carnival's rule, and it is the first rule in the game about
 **where one pen stands in relation to another** rather than about which animal is in which:
 the ringmaster keeps the middle, and the pig has to close all the way round him. So the answer
 five worlds have taught is refused — four pieces round the pig where she stands hold her perfectly
@@ -658,7 +658,7 @@ behind Wide Reaches, one ahead of the Great Gallery.
 
 Its boss, Scorpion Flats, adds the dunes' rule, and it is the direct inversion of the game's oldest
 boss lesson. Stag Mere taught that two pens can share a wall — one boundary doing two jobs — and the
-search has priced a shared wall at half ever since; every boss from Boar Hollow to The Centre Ring
+search has priced a shared wall at half ever since; every boss from Boar Hollow to The Center Ring
 is built on that discount. **A scorpion stings straight through a fence**, so here there is no
 discount: the pig may not be standing in with him, and no piece of fence may have her ground on one
 side of it and his on the other. The ground between the two pens has to be given up unclaimed, and

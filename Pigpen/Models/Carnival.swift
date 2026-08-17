@@ -367,9 +367,12 @@ extension PuzzleLevel {
     /// diagonal, and a ring that has to be inside four corners at once is a ring with very little
     /// slack in it. Without them the same budget reaches 46. It asks for most of the stars the
     /// eight fields below it hold before it will open at all.
-    static let theCentreRing = carnival(
+    ///
+    /// Its id keeps the older spelling of the name. Stars and best pens are stored by level id,
+    /// so changing it would hand a player who has already held this ring a fresh, empty board.
+    static let theCenterRing = carnival(
         id: "the-centre-ring",
-        name: "The Centre Ring",
+        name: "The Center Ring",
         fenceBudget: 22,
         twoStarScore: 17,
         threeStarScore: 38,
@@ -431,7 +434,7 @@ extension WorldMap {
     /// Rigging, the way Emberpeak climbs to Crater Pools, the city to Foundry Corner, the reaches
     /// to Starwell Ring and the caverns to Boulder Chamber. The last two stops step out of that
     /// order for the same reason every world's do: the Midway holds the second biggest pen at the
-    /// fair, and the Centre Ring is a boss, and neither is measured by the same yardstick as a
+    /// fair, and the Center Ring is a boss, and neither is measured by the same yardstick as a
     /// field with one animal and one wall to shape.
     static let lanternCarnival = WorldMap(
         name: "Lantern Carnival",
@@ -444,7 +447,7 @@ extension WorldMap {
             WorldNode(level: .theBigTop, across: 0.70, up: 5.04),
             WorldNode(level: .theRigging, across: 0.28, up: 6.02),
             WorldNode(level: .theMidway, across: 0.76, up: 7.06),
-            WorldNode(level: .theCentreRing, across: 0.30, up: 8.02, starToll: 21)
+            WorldNode(level: .theCenterRing, across: 0.30, up: 8.02, starToll: 21)
         ]
     )
 }

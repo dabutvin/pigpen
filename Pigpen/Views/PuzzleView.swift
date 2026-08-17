@@ -473,7 +473,7 @@ struct PuzzleView: View {
         case .shutIn(let animal):
             "The pig is held, and so is the \(animal.name). Leave that one on the outside."
         case .beside(let animal):
-            "Both of them are held, but side by side. The pig has to go all the way round the \(animal.name)."
+            "Both of them are held, but side by side. The pig has to go all the way round the \(animal.name), and it is her own ground that makes the ring — so she needs a clear path to run the whole way round, with nothing she cannot walk across breaking it."
         case .tooClose(let animal):
             "Both of them are held, but one wall does for both pens — and a \(animal.name) stings straight through a fence. Leave clear ground between them."
         }

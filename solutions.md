@@ -1625,7 +1625,7 @@ what holds the world at 37% and above, the highest floor in the game.
 | 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 25 |
 | 7 | The Rigging | 18 | 37 | 1 toffee apple | 42 | 21 |
 | 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 30 |
-| 9 | The Centre Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
+| 9 | The Center Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
 
 ## 1. Coconut Shy — 14 pieces, 29
 
@@ -1861,7 +1861,7 @@ against a squared-off pen because it is broad, which says more about its size th
 this asks 40, less than three of the fields below it, while holding the second biggest pen at the
 fair.
 
-## 9. The Centre Ring — 22 pieces, 40
+## 9. The Center Ring — 22 pieces, 40
 
 ```
 .....#.....
@@ -2220,7 +2220,7 @@ this asks 41, less than four of the seven fields above it.
 The boss, and the eighth rule the game has: **a scorpion stings through a fence, so the two pens may
 not share one.** It is the direct inversion of the game's oldest boss lesson. Stag Mere taught that
 two pens can share a wall — one boundary doing two jobs — and the search has priced a shared wall at
-half ever since; every boss from Boar Hollow to The Centre Ring is built on that discount. This one
+half ever since; every boss from Boar Hollow to The Center Ring is built on that discount. This one
 takes it away. The pig may not be standing in with him, and no piece of fence may have her ground on
 one side of it and his on the other, so the ground between the two pens has to be given up unclaimed
 and one budget has to pay for two whole walls.
