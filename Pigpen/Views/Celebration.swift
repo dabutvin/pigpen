@@ -176,7 +176,7 @@ extension Celebration {
             elapsed = landing
 
             if index < landings.count - 1 {
-                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                Haptics.tap(.soft)
             }
         }
         return true

@@ -248,10 +248,10 @@ struct UniverseMapView: View {
         guard progress.isUnlocked(index) else { return }
         guard let game = progress.universe.game(at: index) else {
             // A silhouette: nothing to drop into yet, but say it was heard.
-            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            Haptics.tap(.rigid)
             return
         }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        Haptics.tap(.medium)
 
         if let opening = game.opening,
            let world = progress.progress(for: index),
@@ -299,7 +299,7 @@ struct UniverseMapView: View {
         defer { frontierWhenLeft = now }
         guard now > frontierWhenLeft else { return }
 
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        Haptics.buzz(.success)
         guard !reduceMotion else { return }
         withAnimation(.spring(duration: 0.5, bounce: 0.5)) { unveiled = now }
         Task {

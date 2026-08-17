@@ -1,8 +1,9 @@
 import SwiftUI
 import UIKit
 
-/// What is behind the gear on the title screen: which version of the game this is, how far
-/// the player has got, and the one button that hands it all back.
+/// What is behind the gear on the title screen: which version of the game this is, whether
+/// the phone is allowed to buzz, how far the player has got, and the one button that hands
+/// it all back.
 ///
 /// Nothing in here is part of playing, so it stays out of the way on a sheet rather than
 /// taking a screen of its own — and the button that throws away every star a player owns
@@ -23,6 +24,9 @@ struct SettingsView: View {
     /// the one reminder the game has, so this card and the fortnight it lays down are always
     /// talking about the same switch.
     let reminder: DailyReminder
+    /// The switch the whole game feels through. The shared one by default, since a toggle
+    /// wired to anything else would move a switch nothing is listening to.
+    @Bindable var haptics: Haptics = .shared
 
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
@@ -50,6 +54,7 @@ struct SettingsView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         about
+                        feel
                         reminders
                         gameData
                     }
@@ -135,7 +140,7 @@ struct SettingsView: View {
 
             Toggle(isOn: knocking) {
                 Text("Knock when a new board goes up")
-                    .font(.subheadline.weight(.bold))
+                    .font(.subheadline.weight(.heavy))
                     .foregroundStyle(GamePalette.post)
             }
             .tint(GamePalette.clover)
@@ -146,7 +151,7 @@ struct SettingsView: View {
                     displayedComponents: .hourAndMinute
                 ) {
                     Text("At")
-                        .font(.subheadline.weight(.bold))
+                        .font(.subheadline.weight(.heavy))
                         .foregroundStyle(GamePalette.post)
                 }
                 .tint(GamePalette.rail)
@@ -179,7 +184,7 @@ struct SettingsView: View {
             .fixedSize(horizontal: false, vertical: true)
 
             Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                Haptics.tap(.light)
                 openTheSystemSettings()
             } label: {
                 Label("Open iPhone Settings", systemImage: "arrow.up.forward.app.fill")
@@ -190,6 +195,34 @@ struct SettingsView: View {
             .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 4))
         }
         .padding(.top, 2)
+    }
+
+    /// The buzzing, and the switch that stops it.
+    ///
+    /// Turning it on gives the tap it is promising straight away, so the switch answers in
+    /// the thing it governs rather than in words. Turning it off says nothing, which is the
+    /// whole point of turning it off.
+    private var feel: some View {
+        card {
+            Text("Feel")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Toggle(isOn: $haptics.isOn) {
+                Text("Haptics")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+            }
+            .tint(GamePalette.clover)
+            .onChange(of: haptics.isOn) { _, _ in
+                haptics.tap(.medium)
+            }
+
+            Text("The little buzz as fencing goes in, a pen holds, or the pig gets away.")
+                .font(.caption2)
+                .foregroundStyle(GamePalette.post.opacity(0.55))
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 
     /// Everything the game has kept, and the way to be rid of it.
@@ -205,7 +238,7 @@ struct SettingsView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             Button {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                haptics.tap(.medium)
                 isAsking = true
             } label: {
                 Label("Clear all game data", systemImage: "trash.fill")
@@ -290,7 +323,7 @@ struct SettingsView: View {
         Binding(
             get: { reminder.isOn && !reminder.isBeingRefused },
             set: { wanted in
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                Haptics.tap(.light)
                 Task {
                     if wanted {
                         await reminder.turnOn(progress: daily)
@@ -320,7 +353,7 @@ struct SettingsView: View {
         progress.eraseEverything()
         daily.eraseEverything()
         hasCleared = true
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        haptics.buzz(.success)
         // The knock is a preference rather than progress, so it survives — but what it had
         // planned does not. Every day is unheld again, so every morning is worth knocking
         // about again, and the fortnight has to be laid down knowing that.
@@ -334,13 +367,21 @@ struct SettingsView: View {
     }
 }
 
+/// A switch held in memory, so that flicking the toggle in a preview is not a change to the
+/// setting on the machine the preview is running on.
+@MainActor
+private func previewHaptics(isOn: Bool = true) -> Haptics {
+    Haptics(store: RememberedHaptics(isOn: isOn), engine: RecordedHaptics())
+}
+
 #Preview("Part way through") {
     Color.clear
         .sheet(isPresented: .constant(true)) {
             SettingsView(
                 progress: .partWayThrough(),
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
-                reminder: .knocking()
+                reminder: .knocking(),
+                haptics: previewHaptics()
             )
             .presentationDetents([.medium, .large])
         }
@@ -350,7 +391,8 @@ struct SettingsView: View {
     SettingsView(
         progress: WorldProgress(store: RememberedProgress()),
         daily: DailyProgress(store: RememberedDailyRecords()),
-        reminder: .neverAsked()
+        reminder: .neverAsked(),
+        haptics: previewHaptics()
     )
 }
 
@@ -358,6 +400,16 @@ struct SettingsView: View {
     SettingsView(
         progress: .partWayThrough(),
         daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
-        reminder: .refused()
+        reminder: .refused(),
+        haptics: previewHaptics()
+    )
+}
+
+#Preview("Haptics off") {
+    SettingsView(
+        progress: .partWayThrough(),
+        daily: DailyProgress(store: RememberedDailyRecords()),
+        reminder: .knocking(),
+        haptics: previewHaptics(isOn: false)
     )
 }

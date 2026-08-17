@@ -90,7 +90,7 @@ struct ReminderPromptView: View {
     private var buttons: some View {
         VStack(spacing: 6) {
             Button {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                Haptics.tap(.medium)
                 onAccept()
                 dismiss()
             } label: {
@@ -102,7 +102,7 @@ struct ReminderPromptView: View {
             .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
 
             Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                Haptics.tap(.light)
                 onDecline()
                 dismiss()
             } label: {

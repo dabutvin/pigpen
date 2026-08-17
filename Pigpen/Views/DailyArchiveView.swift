@@ -115,7 +115,7 @@ struct DailyArchiveView: View {
         }
         .onAppear { progress.reload() }
         .onChange(of: month) { _, _ in
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            Haptics.tap(.light)
         }
     }
 
@@ -295,7 +295,7 @@ struct DailyArchiveView: View {
 
     private func open(_ date: DailyDate) {
         guard DailyAlmanac.isOpen(date, today: today) else { return }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        Haptics.tap(.medium)
         // A day already submitted offers its wall back rather than opening straight onto
         // an empty field — the same *Put it back* the board itself offers mid-session.
         if progress.submittedFences(on: date) != nil {

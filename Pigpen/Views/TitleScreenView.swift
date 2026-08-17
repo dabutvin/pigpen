@@ -8,7 +8,9 @@ import UIKit
 /// does it open the universe map. Under Play is the day's own board on a card of its own — what
 /// day it is, what that day asks, and once it has been held, the stars it gave up, the time it
 /// took and the run of days it is part of. Under that, the archive of every daily there has been
-/// this year, and the tutorial for anybody who wants the walkthrough before the meadow.
+/// this year, and the tutorial for anybody who wants the walkthrough before the meadow — which
+/// on a first run opens itself, so that a player meeting the game has been shown how to lay a
+/// fence before they are asked to.
 @MainActor
 struct TitleScreenView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -20,6 +22,8 @@ struct TitleScreenView: View {
     /// Where Play has sent the player: the meadow trail until that world is held, and the
     /// universe map only once the meadow boss is beaten.
     @State private var playDestination: PlayDestination?
+    /// Whether the practice pen is up. Pushed by the row on the list, and by the screen
+    /// itself the first time the game is opened.
     @State private var isTutorial = false
     @State private var isDailyOpen = false
     @State private var restoreSubmittedDaily = false
@@ -190,6 +194,26 @@ struct TitleScreenView: View {
             raiseTheCurtain()
             Task { await keepTheKnocksTrue() }
         }
+        // The push waits for the screen to be up rather than going out from inside
+        // `onAppear`, which is a stack being asked to walk on before it has finished
+        // standing its own root up.
+        .task { openTheTutorialOnAFirstRun() }
+    }
+
+    /// The walkthrough shows itself on a first run rather than waiting to be found. A player
+    /// opening the game for the first time is handed the practice pen straight away: how a
+    /// pen is laid, why water is worth building against and what closing one is worth are
+    /// not things the title screen can say, and a row fourth down a list is a poor place to
+    /// keep them.
+    ///
+    /// It is written down as seen the moment it goes up rather than when it finishes, the
+    /// same way a film is. A player who backs out of it lands here, and this runs again as
+    /// they land — so anything less would put them straight back into the walkthrough they
+    /// just left, over and over, with no way through to the game.
+    private func openTheTutorialOnAFirstRun() {
+        guard progress.isTheTutorialDue else { return }
+        progress.markTutorialSeen()
+        isTutorial = true
     }
 
     // MARK: - The knock at the gate
@@ -215,8 +239,13 @@ struct TitleScreenView: View {
     /// spending that on somebody who has not yet found out what a daily puzzle is spends it
     /// for nothing.
     private func offerTheKnockIfItIsDue() {
-        guard reminder.isDueAnOffer,
-              daily.completedCount > 0,
+        guard reminder.isDueAnOffer, daily.completedCount > 0 else { return }
+        // Nothing else may be going up or already up. The walkthrough is the one worth
+        // naming: a player who has only ever played dailies is owed both at once, and an
+        // offer sheet arriving over a practice pen pushing itself onto the stack would be
+        // two screens fighting over the same moment. The knock keeps — it is offered the
+        // next time they come back here, which is on the way out of the walkthrough.
+        guard !progress.isTheTutorialDue, !isTutorial,
               !showsSettings, playDestination == nil, !isDailyOpen, !isArchiveOpen
         else { return }
         isOfferingReminders = true
@@ -234,7 +263,7 @@ struct TitleScreenView: View {
             Spacer(minLength: 0)
 
             Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                Haptics.tap(.light)
                 showsSettings = true
             } label: {
                 Image(systemName: "gearshape.fill")
@@ -347,7 +376,7 @@ struct TitleScreenView: View {
     private var playBlock: some View {
         VStack(spacing: 9) {
             Button {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                Haptics.tap(.medium)
                 play()
             } label: {
                 MenuRow(
@@ -439,7 +468,7 @@ struct TitleScreenView: View {
         let stars = daily.stars(on: today)
         let streak = daily.streak(upTo: today)
         return Button {
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            Haptics.tap(.medium)
             openToday()
         } label: {
             MenuRow(
@@ -524,7 +553,7 @@ struct TitleScreenView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            Haptics.tap(.light)
             action()
         } label: {
             MenuRow(icon: icon, title: title, detail: detail, tint: GamePalette.cream) {
@@ -792,7 +821,15 @@ private struct MenuRowButtonStyle: ButtonStyle {
 
 #Preview {
     NavigationStack {
-        TitleScreenView()
+        // The walkthrough already spent, so the preview is the title screen rather than the
+        // practice pen it opens itself into on a first run.
+        TitleScreenView(progress: .beforeTheFirstStar())
+    }
+}
+
+#Preview("A first run") {
+    NavigationStack {
+        TitleScreenView(progress: WorldProgress(store: RememberedProgress()))
     }
 }
 
