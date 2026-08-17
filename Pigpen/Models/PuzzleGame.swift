@@ -29,8 +29,10 @@ final class PuzzleGame {
     /// The tiles filled in with fencing. The pig cannot walk onto any of them.
     private(set) var fences: Set<GridPoint> = []
     private(set) var phase: Phase = .building
-    /// The best pen closed so far this session, fencing and all, so a rearrangement
-    /// that turns out worse can be measured against it and put back.
+    /// The best pen this board has given up, fencing and all, so a rearrangement that turns
+    /// out worse can be measured against it and put back. Usually one closed this go, and on
+    /// a board opened again — a daily, or a trail stop already beaten — the one handed in
+    /// from last time until this go betters it.
     private(set) var bestPen: Pen?
     /// What the animals would do if the gate were opened this instant, kept up to date as
     /// the fencing changes so a closed pen can be shown as closed the moment it closes.
@@ -79,8 +81,21 @@ final class PuzzleGame {
 
     var isBuilding: Bool { phase == .building }
     var fencesRemaining: Int { level.fenceBudget - fences.count }
-    /// The most any pen has been worth this session, and 0 before one has closed.
+    /// The most any pen on this board has been worth, and 0 before one has closed.
     var bestScore: Int { bestPen?.score ?? 0 }
+
+    /// What the map makes of the best pen being kept — its stars, and whether there is
+    /// nothing on the map above it. Nothing at all before a pen has closed.
+    ///
+    /// Told apart from `verdict`, which is what the animals were actually let loose in:
+    /// the best pen counts from the moment it closed, and may have been closed on an
+    /// earlier visit rather than this one.
+    var bestVerdict: PenVerdict? {
+        bestPen.map { level.verdict(forScore: $0.score) }
+    }
+
+    /// The stars the best pen being kept is worth, and 0 before one has closed.
+    var bestStars: Int { bestVerdict?.stars ?? 0 }
 
     /// Whether the fencing and the water together already shut every animal in — true as
     /// soon as the last gap is filled, without waiting for the gate to be opened and prove it.
@@ -162,10 +177,10 @@ final class PuzzleGame {
         return true
     }
 
-    /// Remembers a pen that was held on an earlier visit — a daily's submitted wall —
-    /// without laying it down, so *Put it back* has something to offer the moment the
-    /// board opens empty. A wall that does not hold, or one worse than what the session
-    /// has already kept, is ignored.
+    /// Remembers a pen that was held on an earlier visit — a daily's submitted wall, or a
+    /// trail stop's — without laying it down, so the tally has a best to show and *Put it
+    /// back* something to offer the moment the board opens empty. A wall that does not
+    /// hold, or one worse than what the session has already kept, is ignored.
     func rememberSubmittedPen(_ fences: Set<GridPoint>) {
         guard case .penned(let pen) = level.release(fences: fences) else { return }
         let tally = level.tally(for: pen)
@@ -418,15 +433,49 @@ extension PuzzleGame {
         return game
     }
 
+    /// River Bend opened again by a player who has already held it: bare mud, with the wall
+    /// that took the map's best pen last time remembered behind it. That is what going back
+    /// down the trail to a level looks like — the tally up before a piece is laid, saying
+    /// what there is to beat and the stars it was worth, and *Put it back* offering the
+    /// whole wall to whoever only came for another look at it.
+    static func pickedBackUp() -> PuzzleGame {
+        let game = PuzzleGame(level: .riverBend)
+        game.rememberSubmittedPen(
+            plan("""
+                .........
+                .........
+                .........
+                #........
+                #........
+                #........
+                #........
+                #........
+                #........
+                #........
+                .#####...
+                """)
+        )
+        return game
+    }
+
     /// Lays a plan of fencing out on the board, `#` by `#`. Each piece goes down as a press
     /// of its own, the way a player lays them one tap at a time.
     private func build(_ plan: String) {
+        for tile in Self.plan(plan).sorted(by: { ($0.row, $0.column) < ($1.row, $1.column) }) {
+            beginStroke()
+            buildFence(on: tile)
+            endStroke()
+        }
+    }
+
+    /// The tiles a plan of fencing marks with a `#`.
+    private static func plan(_ plan: String) -> Set<GridPoint> {
+        var tiles: Set<GridPoint> = []
         for (row, line) in plan.split(whereSeparator: \.isNewline).enumerated() {
             for (column, character) in line.enumerated() where character == "#" {
-                beginStroke()
-                buildFence(on: GridPoint(row: row, column: column))
-                endStroke()
+                tiles.insert(GridPoint(row: row, column: column))
             }
         }
+        return tiles
     }
 }
