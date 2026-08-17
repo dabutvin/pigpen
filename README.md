@@ -908,6 +908,72 @@ with the camera held still. They are the only screens in the game lit by somethi
 than the phone: the opening and the send-off are at sunrise, so the world opens and closes
 on one light whatever the system appearance says.
 
+## Counting
+
+The game counts how it is played, so that a level nobody can beat can be found without
+waiting for somebody to write in about it. What is counted is anonymous, the switch that
+stops it is one screen away behind the gear, and nothing about it is a condition of
+playing.
+
+**What goes out.** Seventeen signals, all of them written out in one place —
+`AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
+about its players can be read end to end, by whoever is reading the charts and by whoever
+is filling in Apple's privacy questionnaire.
+
+| Signal | Says |
+|---|---|
+| `Session.started` | A launch, and whether it is the first this phone has had |
+| `Tutorial.opened` / `.finished` / `.leftEarly` | The walkthrough, and which lesson somebody walked out on |
+| `Level.opened` | A trail board opened, which world and how far up it |
+| `Level.held` | A pen that held: stars, score against the map's best, pieces against the budget, goes taken |
+| `Level.escaped` / `.refused` | The gate opened on a pen with a gap in it, or a boss rule broken — and which rule |
+| `Level.leftUnheld` | A board walked away from, and the goes they had at it first |
+| `World.held` | Every pen in a world held |
+| `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
+| `Film.played` | A cut scene, and whether it was watched or skipped |
+| `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
+
+The four questions this is here to answer: where the walkthrough loses people, which level
+is the wall, whether the dailies bring anybody back, and whether the films are worth what
+they cost to draw.
+
+**What does not go out.** No name, no account, no email, no advertising identifier, no
+IDFV, no location, and nothing a player typed — there is nowhere in the shape of a signal
+to put any of it, and `AnalyticsTests` says so. A batch is stamped with two random numbers:
+one minted on this phone the first time the game opens and SHA256'd before it leaves, and
+one minted fresh every launch. Because nothing is used for tracking, the game never asks
+for a tracking permission. `Pigpen/Resources/PrivacyInfo.xcprivacy` says all of the above
+in Apple's own words.
+
+**The switch.** On as the game comes, on the same terms as the buzzing, and off in one tap
+under *Privacy* in settings. Off means nothing is recorded, held or sent — the signal is
+dropped at the door rather than queued quietly. Turning it off sends one last signal saying
+so, because a chart that cannot tell *switched off* from *stopped playing* reads every
+opt-out as a player lost. *Clear all game data* throws the install's number away so the
+player is somebody nobody has counted before, and deliberately leaves the switch alone: a
+player who opted out and then cleared their stars has not asked to be counted again.
+
+**Where it goes.** [TelemetryDeck](https://telemetrydeck.com), over its ingest API — one
+POST of one JSON array, in about a dozen lines of `URLSession` in `TelemetryDeckSink`,
+rather than an SDK that would be the only third-party code in the repo. Signals gather into
+batches of twenty and go when a batch fills or when the player puts the game down. Nothing
+retries and nothing is written to disk: a batch that cannot get out on a train is dropped,
+which costs a few rows on a chart and nothing at all to the player. Debug and simulator
+builds are marked as test signals, so they land on TelemetryDeck's test screen rather than
+beside real players, and the screenshot runs — which open straight onto a board with one of
+the app's own launch arguments — are not counted at all.
+
+**Turning it on.** Set the `TELEMETRYDECK_APP_ID` secret (see
+[Required Secrets](#required-secrets)). Without it the plist key is empty, `TelemetryDeckSink`
+hands back nothing, and the game counts nothing and sends nowhere — which is what a fork, a
+checkout and every CI run get. It is an ordinary build setting — `TELEMETRYDECK_APP_ID` in
+`project.yml`, read into the plist as `TelemetryDeckAppID` — so a local build that wants to
+send somewhere overrides it on the command line:
+
+```bash
+xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=your-app-id
+```
+
 ## Tech Stack
 
 | Layer | Choice |
@@ -1189,6 +1255,7 @@ Set these in GitHub repo settings → Secrets and variables → Actions.
 | `APPLE_DISTRIBUTION_CERT_P12` | Optional. Distribution certificate **and its private key**, base64 | [One stored certificate](#one-stored-certificate) |
 | `APPLE_DISTRIBUTION_CERT_PASSWORD` | Optional. Password protecting that `.p12` | Same |
 | `APPLE_PROVISIONING_PROFILE` | Optional. App Store profile for `com.pigpen.app`, base64 | Same |
+| `TELEMETRYDECK_APP_ID` | Optional. Where usage counting is sent | telemetrydeck.com → your app → App ID. Leave it unset and the game counts nothing |
 
 The App Store Connect app record must exist with bundle ID `com.pigpen.app` (see `project.yml`) before the first TestFlight upload.
 
@@ -1278,7 +1345,9 @@ Pigpen/
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
+│   └── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -1289,7 +1358,7 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, the haptics and counting switches, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
@@ -1308,6 +1377,7 @@ Pigpen/
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
+    ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
 Tools/

@@ -140,9 +140,11 @@ struct TitleScreenView: View {
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
             DailyArchiveView(today: today, progress: daily)
+                .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
         .sheet(isPresented: $showsSettings) {
             SettingsView(progress: progress, daily: daily)
+                .onAppear { Analytics.record(.settingsOpened) }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
@@ -467,6 +469,7 @@ struct TitleScreenView: View {
     /// Opens today's board, or — once a wall has been submitted — offers to put that wall
     /// back before the field comes up empty.
     private func openToday() {
+        Analytics.record(.dailyOpened(isToday: true))
         if daily.submittedFences(on: today) != nil {
             isOfferingSubmittedDaily = true
         } else {

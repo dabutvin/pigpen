@@ -110,9 +110,24 @@ struct WorldMapView: View {
                 treatSkin: theme.treats,
                 skin: theme.field,
                 day: theme.day,
-                dusk: theme.dusk
+                dusk: theme.dusk,
+                trail: (world: world.name, stop: index)
             ) { verdict, _, _ in
+                let wasHeld = progress.isTheWorldHeld
                 progress.record(verdict, for: world[index].id)
+                // The end of the funnel, and the rarest thing the game has to say about
+                // anybody: every pen in a world held. Counted on the pen that does it
+                // rather than on the map noticing, so it is one signal and not one per
+                // visit afterwards.
+                if !wasHeld, progress.isTheWorldHeld {
+                    Analytics.record(
+                        .worldHeld(
+                            world.name,
+                            stars: progress.totalStars,
+                            of: world.starTotal
+                        )
+                    )
+                }
             }
         }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in

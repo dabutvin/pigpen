@@ -59,6 +59,28 @@ struct PigpenApp: App {
         ("-held-beyond", .theMeadowHeld, 13.4)
     ]
 
+    /// Every argument above, and every screen argument beside them: the whole list of ways
+    /// into the app that are not the front door.
+    ///
+    /// It is here rather than anywhere else because this is where they are all spent, and
+    /// it exists so that counting can tell a camera from a player. A run that opens
+    /// straight onto Stag Mere and photographs it is not somebody who beat Stag Mere.
+    static let photographArguments: Set<String> = Set(
+        stills.map { $0.argument } + [
+            "-puzzle", "-orchard", "-sour", "-boss", "-truffles", "-embers", "-pies",
+            "-map", "-universe", "-woods-map", "-peak-map", "-city-map",
+            "-tutorial", "-daily", "-archive", "-title", "-title-fresh", "-settings"
+        ]
+    )
+
+    static func isPhotographing(_ launch: [String] = ProcessInfo.processInfo.arguments) -> Bool {
+        !photographArguments.isDisjoint(with: launch)
+    }
+
+    /// Whether the game has been put down — the cue to send whatever has been counted so
+    /// far, since a player who backgrounds the app may never bring it up again.
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
             NavigationStack {
@@ -181,6 +203,17 @@ struct PigpenApp: App {
                     TitleScreenView()
                 }
             }
+            .task {
+                guard !Self.isPhotographing(launch) else { return }
+                Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // Anything counted since the last batch goes the moment the game is put down.
+            // A phone in a pocket is where most sessions end, and a batch still in hand
+            // when the system reclaims the app is a batch nobody ever sees.
+            guard phase != .active else { return }
+            Analytics.flush()
         }
     }
 }

@@ -19,6 +19,9 @@ struct SettingsView: View {
     /// The switch the whole game feels through. The shared one by default, since a toggle
     /// wired to anything else would move a switch nothing is listening to.
     @Bindable var haptics: Haptics = .shared
+    /// The switch everything the game counts goes through, on the same terms as the
+    /// buzzing: the shared one, so the toggle moves the thing it names.
+    @Bindable var analytics: Analytics = .shared
 
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
@@ -47,6 +50,7 @@ struct SettingsView: View {
                     VStack(spacing: 14) {
                         about
                         feel
+                        counting
                         gameData
                     }
                     .padding(.horizontal, 20)
@@ -129,14 +133,52 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.post)
             }
             .tint(GamePalette.clover)
-            .onChange(of: haptics.isOn) { _, _ in
+            .onChange(of: haptics.isOn) { _, on in
                 haptics.tap(.medium)
+                Analytics.record(.hapticsSwitched(on: on))
             }
 
             Text("The little buzz as fencing goes in, a pen holds, or the pig gets away.")
                 .font(.caption2)
                 .foregroundStyle(GamePalette.post.opacity(0.55))
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// What the game counts, and the switch that stops it.
+    ///
+    /// It says what is counted in the same words it would be said in out loud, because a
+    /// player deciding whether to leave it on deserves the actual answer rather than a
+    /// link to one: which puzzles are played, how they went, and nothing else. There is no
+    /// name here, no account, no advertising identifier and nothing that leaves the phone
+    /// with a player's name on it — which is why the switch sits here rather than in front
+    /// of a game a child might be opening.
+    private var counting: some View {
+        card {
+            Text("Privacy")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Toggle(isOn: $analytics.isOn) {
+                Text("Anonymous usage")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+            }
+            .tint(GamePalette.clover)
+            .onChange(of: analytics.isOn) { _, _ in
+                haptics.tap(.medium)
+            }
+
+            Text(
+                """
+                Which puzzles get played and how they go — stars, scores, and how many \
+                goes a pen took. It is what says which levels are too hard. No name, no \
+                account, no advertising identifier, and nothing that says who you are.
+                """
+            )
+            .font(.caption2)
+            .foregroundStyle(GamePalette.post.opacity(0.55))
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -224,8 +266,14 @@ struct SettingsView: View {
     // MARK: - Actions
 
     private func clearEverything() {
+        // Said before it is thrown away, since the number it would be counted under is one
+        // of the things going. What survives is the switch itself: a player who turned
+        // counting off and then cleared their stars has not asked to be counted again.
+        Analytics.record(.dataCleared)
+        Analytics.flush()
         progress.eraseEverything()
         daily.eraseEverything()
+        analytics.eraseEverything()
         hasCleared = true
         haptics.buzz(.success)
     }
@@ -238,13 +286,21 @@ private func previewHaptics(isOn: Bool = true) -> Haptics {
     Haptics(store: RememberedHaptics(isOn: isOn), engine: RecordedHaptics())
 }
 
+/// Counting held in memory and going nowhere, so that flicking the toggle in a preview
+/// neither changes the setting on this machine nor puts a preview on the charts.
+@MainActor
+private func previewAnalytics(isOn: Bool = true) -> Analytics {
+    Analytics(store: RememberedAnalytics(isOn: isOn), sink: RecordedAnalytics())
+}
+
 #Preview("Part way through") {
     Color.clear
         .sheet(isPresented: .constant(true)) {
             SettingsView(
                 progress: .partWayThrough(),
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
-                haptics: previewHaptics()
+                haptics: previewHaptics(),
+                analytics: previewAnalytics()
             )
             .presentationDetents([.medium, .large])
         }
@@ -254,7 +310,8 @@ private func previewHaptics(isOn: Bool = true) -> Haptics {
     SettingsView(
         progress: WorldProgress(store: RememberedProgress()),
         daily: DailyProgress(store: RememberedDailyRecords()),
-        haptics: previewHaptics()
+        haptics: previewHaptics(),
+        analytics: previewAnalytics()
     )
 }
 
@@ -262,6 +319,7 @@ private func previewHaptics(isOn: Bool = true) -> Haptics {
     SettingsView(
         progress: .partWayThrough(),
         daily: DailyProgress(store: RememberedDailyRecords()),
-        haptics: previewHaptics(isOn: false)
+        haptics: previewHaptics(isOn: false),
+        analytics: previewAnalytics()
     )
 }
