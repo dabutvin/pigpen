@@ -3,10 +3,10 @@ import SwiftUI
 
 @main
 struct PigpenApp: App {
-    /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`,
-    /// `-embers`, `-pies`, `-map`, `-universe`, `-woods-map`, `-peak-map`, `-city-map`,
-    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh`, `-settings` or one of
-    /// the film arguments so the pull request screenshots can show
+    /// CI launches the app with `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`,
+    /// `-truffles`, `-embers`, `-pies`, `-map`, `-universe`, `-woods-map`, `-peak-map`,
+    /// `-city-map`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh`, `-settings`
+    /// or one of the film arguments so the pull request screenshots can show
     /// the boards, the universe map, each world's trail, the practice pen, the daily
     /// puzzle and its archive, the settings sheet and every shot of every cut scene
     /// rather than only the title screen.
@@ -16,7 +16,10 @@ struct PigpenApp: App {
     /// and shut days every time, and the clock over the board is handed over already stopped.
     /// The world and the plain board are shown part-way through, since an untouched world
     /// has nothing on it yet and an untouched field has no fencing and not a control on it
-    /// lit. The next two boards are the ones with something lying on the ground: the
+    /// lit. `-beaten` is the same first level opened again by somebody who has already held
+    /// it: bare mud, and the tally up before a piece is laid with the score they took last
+    /// time, the stars it was worth, and the trophy offering the whole wall back. The next
+    /// two boards are the ones with something lying on the ground: the
     /// orchard with its best pen closed, where an apple inside the pen and an apple under
     /// the fencing sit side by side, and Sour Ground with a pen holding one of each, where
     /// the apple and the skull cancel out. `-boss` is the meadow's last level, where a
@@ -66,6 +69,8 @@ struct PigpenApp: App {
                     CutSceneView(.named(still.scene), still: still.seconds)
                 } else if launch.contains("-puzzle") {
                     PuzzleView(game: .partWayThrough())
+                } else if launch.contains("-beaten") {
+                    PuzzleView(game: .pickedBackUp())
                 } else if launch.contains("-orchard") {
                     PuzzleView(game: .theOrchardsBestPen())
                 } else if launch.contains("-sour") {
