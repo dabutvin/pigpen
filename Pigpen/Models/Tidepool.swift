@@ -349,7 +349,7 @@ extension PuzzleLevel {
     /// the one piece on the break, 17 tiles of ground and nothing on any of them. The same
     /// twenty-two drawn as a great diamond hold 37 tiles and all three pearls — one off each
     /// side of the square's reach, which is exactly where a diamond's points go — and that is
-    /// 52, the widest gap any boss in the game leaves at 67.
+    /// 52, the widest gap any boss in the game left at 67, until the tundra's seal asked 69.
     ///
     /// It asks for 21 of the 24 stars below it before it opens, the way every boss since the
     /// thicket has.

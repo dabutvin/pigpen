@@ -287,4 +287,28 @@ extension WorldTheme {
         accent: Color(red: 0.37, green: 0.74, blue: 0.72),
         accentDeep: Color(red: 0.16, green: 0.44, blue: 0.46)
     )
+
+    /// Frostwhisker Tundra, the tenth world: north along the shore until the sea itself gives
+    /// up and goes white, onto snow lying over frozen ice. The windfall is a fish flipped up
+    /// onto the ice and the hazard a berg calved into the snow — each worth exactly what its
+    /// meadow twin was, a fish five tiles to shut in, a berg five to shut in with and no
+    /// fencing at all, since nothing drives a post through blue ice.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for nine worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let frostwhiskerTundra = WorldTheme(
+        id: "frostwhisker-tundra",
+        name: "Frostwhisker Tundra",
+        blurb: "Ice, snow, and a pig that will not stay put.",
+        day: .frostDay,
+        dusk: .frostDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🐟", bonusScale: 0.58, bonusName: "fish",
+            hazardGlyph: "🧊", hazardScale: 0.58, hazardName: "berg"
+        ),
+        field: .frostwhiskerTundra,
+        boss: BossMark(glyph: "🦭", name: "the bull seal"),
+        accent: Color(red: 0.69, green: 0.84, blue: 0.93),
+        accentDeep: Color(red: 0.36, green: 0.56, blue: 0.71)
+    )
 }

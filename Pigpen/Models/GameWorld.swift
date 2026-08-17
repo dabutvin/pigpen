@@ -232,4 +232,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Frostwhisker Tundra: the tenth world, wrapped in storybook films the way the nine below
+    /// it are. The send-off points on south along the shore to where the ice gives out into mud
+    /// and reeds, the way the cove's points north along the water to the ice, and The Haulout
+    /// stops for a briefing because it stands a second animal on the board and is particular
+    /// about the pen he gets — the same courtesy every boss pays.
+    static let frostwhiskerTundra = GameWorld(
+        theme: .frostwhiskerTundra,
+        map: .frostwhiskerTundra,
+        opening: WorldFilmSpec(key: "frostwhisker-opening") { .storybook(.frostwhiskerOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "frostwhisker-held") { .storybook(.frostwhiskerHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theHaulout.id: WorldFilmSpec(key: "the-haulout-briefing") {
+                .storybook(.theHaulout(start: $0))
+            }
+        ]
+    )
 }

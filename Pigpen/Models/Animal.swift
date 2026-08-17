@@ -22,6 +22,11 @@
 /// The cove stands a crab in the heart of a broken ring of tidewater, and he is the first one
 /// whose home matters as much as he does: the pool walls him in on every side but its break,
 /// and what the board asks is that the pig's own ground close the whole way round the pool.
+///
+/// The tundra stands a bull seal on the ice, and he is the first one particular about the pen
+/// he is given rather than only about who shares it: two pens, the pig's and his, and his has
+/// to lie against the water — a seal penned on dry ice has no breathing hole, and the board
+/// will not have it.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -34,6 +39,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case ringmaster = "M"
     case scorpion = "S"
     case crab = "C"
+    case seal = "L"
 
     /// What the field draws it as.
     var glyph: String {
@@ -48,6 +54,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .ringmaster: "🤹"
         case .scorpion: "🦂"
         case .crab: "🦀"
+        case .seal: "🦭"
         }
     }
 
@@ -70,6 +77,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .ringmaster: "Ta-da!"
         case .scorpion: "Tik-tik!"
         case .crab: "Click!"
+        case .seal: "Arf!"
         }
     }
 
@@ -87,6 +95,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .ringmaster: "ringmaster"
         case .scorpion: "scorpion"
         case .crab: "crab"
+        case .seal: "bull seal"
         }
     }
 }

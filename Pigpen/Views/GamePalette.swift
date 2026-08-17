@@ -100,6 +100,9 @@ enum GamePalette {
         /// Seashore: wet strand the tide has only just let go of, with rock pools standing in
         /// it and wrack thrown down in lines.
         case shingle
+        /// Tundra: snow over sea ice, combed into sastrugi by the wind, with pressure ridges
+        /// standing up out of it and snow coming down through everything.
+        case snowfield
     }
 }
 
@@ -489,5 +492,47 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.10, green: 0.20, blue: 0.19),
         isNight: true,
         cover: .shingle
+    )
+
+    /// The tenth world's daylight, which is the palest light in the game and the flattest: a
+    /// low sun over sea ice, with nothing anywhere for it to warm. The cove read cool by being
+    /// damp; this one reads cold by being blue — snow takes the sky's colour into every shadow
+    /// it has, so the ground and the sky are two blues of the same weather, and the horizon is
+    /// the one line where they nearly stop being different at all.
+    static let frostDay = Self(
+        skyTop: Color(red: 0.51, green: 0.70, blue: 0.86),
+        skyHorizon: Color(red: 0.90, green: 0.94, blue: 0.96),
+        disc: Color(red: 1.00, green: 0.98, blue: 0.90),
+        discHalo: Color(red: 0.96, green: 0.94, blue: 0.82),
+        cloud: Color(red: 0.94, green: 0.96, blue: 0.98),
+        farHill: Color(red: 0.66, green: 0.78, blue: 0.87),
+        ground: Color(red: 0.85, green: 0.90, blue: 0.94),
+        foreground: Color(red: 0.73, green: 0.80, blue: 0.87),
+        blade: Color(red: 0.58, green: 0.68, blue: 0.78),
+        canopy: Color(red: 0.42, green: 0.56, blue: 0.60),
+        canopyShade: Color(red: 0.28, green: 0.41, blue: 0.47),
+        isNight: false,
+        cover: .snowfield
+    )
+
+    /// The tundra after dark, which is the one night in the game with its own light in it: the
+    /// aurora. The desert's night is black because there is nothing overhead; this one never
+    /// quite manages black because there is — a green hanging in the sky and lying faintly on
+    /// every ridge of the snow, so the canopy colours here are borrowed by the sky itself and
+    /// the ground keeps a blue glow the way the cove's sand keeps its sheen.
+    static let frostDusk = Self(
+        skyTop: Color(red: 0.03, green: 0.07, blue: 0.15),
+        skyHorizon: Color(red: 0.12, green: 0.28, blue: 0.32),
+        disc: Color(red: 0.96, green: 0.98, blue: 1.00),
+        discHalo: Color(red: 0.66, green: 0.86, blue: 0.86),
+        cloud: Color(red: 0.10, green: 0.17, blue: 0.24),
+        farHill: Color(red: 0.13, green: 0.21, blue: 0.30),
+        ground: Color(red: 0.16, green: 0.22, blue: 0.32),
+        foreground: Color(red: 0.11, green: 0.16, blue: 0.24),
+        blade: Color(red: 0.08, green: 0.12, blue: 0.19),
+        canopy: Color(red: 0.16, green: 0.42, blue: 0.36),
+        canopyShade: Color(red: 0.09, green: 0.27, blue: 0.25),
+        isNight: true,
+        cover: .snowfield
     )
 }

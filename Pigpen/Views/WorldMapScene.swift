@@ -53,6 +53,7 @@ private struct Meadow {
         case .sawdust: drawBigTop(in: &context)
         case .sand: drawRockArch(in: &context)
         case .shingle: drawWreck(in: &context)
+        case .snowfield: drawIgloo(in: &context)
         }
     }
 
@@ -71,6 +72,7 @@ private struct Meadow {
         case .sawdust: drawTroddenGround(in: &context)
         case .sand: drawRippledSand(in: &context)
         case .shingle: drawTideLines(in: &context)
+        case .snowfield: drawSnowdrifts(in: &context)
         }
     }
 
@@ -350,6 +352,8 @@ private struct Meadow {
         // One cloud, a long way off, doing nobody any good.
         case .sand: 1
         case .shingle: 2
+        // Snow weather: the sky is one low sheet rather than clouds a player could count.
+        case .snowfield: 2
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -458,6 +462,8 @@ private struct Meadow {
             drawDuneHorizon(in: &context)
         } else if colors.cover == .shingle {
             drawSeaHorizon(in: &context)
+        } else if colors.cover == .snowfield {
+            drawBergLine(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -852,6 +858,9 @@ private struct Meadow {
         case strandPool
         case shell
         case driftwood
+        case iceBlade
+        case bergyBit
+        case snowDrift
     }
 
     private struct Place {
@@ -972,6 +981,17 @@ private struct Meadow {
             case ..<0.84: .rock
             default: .driftwood
             }
+        case .snowfield:
+            // Nothing was built on the ice and nothing grows through it: what stands on it is
+            // what the pressure and the weather have made — a blade of ridge ice, which is the
+            // wall every board out here is built with, a drift the wind has piled and not yet
+            // taken back, a bergy bit stranded where it calved, and the odd scoured rock.
+            switch roll {
+            case ..<0.32: .iceBlade
+            case ..<0.60: .snowDrift
+            case ..<0.86: .bergyBit
+            default: .rock
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -1006,6 +1026,9 @@ private struct Meadow {
         case .strandPool: drawStrandPool(in: &context, at: place.at, scale: place.size)
         case .shell: drawShell(in: &context, at: place.at, scale: place.size)
         case .driftwood: drawDriftwood(in: &context, at: place.at, scale: place.size)
+        case .iceBlade: drawIceBlade(in: &context, at: place.at, scale: place.size)
+        case .bergyBit: drawBergyBit(in: &context, at: place.at, scale: place.size)
+        case .snowDrift: drawSnowDrift(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -2565,6 +2588,341 @@ private struct Meadow {
             stub,
             with: .color(GamePalette.cream.opacity(colors.isNight ? 0.36 : 0.7)),
             style: StrokeStyle(lineWidth: max(1.4, wide * 0.06), lineCap: .round)
+        )
+    }
+
+    /// The igloo at the foot of the tundra trail: somebody's winter house, built out of the
+    /// only thing there is to build with, with its low tunnel doorway facing away from the
+    /// wind — and after dark a warm light showing through the doorway, which makes it the one
+    /// landmark since the carnival with somebody at home in it.
+    private func drawIgloo(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 88
+        let tall: CGFloat = 46
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.56, y: centre.y - tall * 0.08,
+                width: wide * 1.12, height: tall * 0.3
+            )),
+            with: .color(
+                Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.22)
+            )
+        )
+
+        let block = Color(red: 0.88, green: 0.93, blue: 0.97)
+        let joint = Color(red: 0.58, green: 0.70, blue: 0.82)
+
+        // The dome, lit the way snow is: nearly white on top, blue in its own shadow.
+        var dome = Path()
+        dome.move(to: CGPoint(x: centre.x - wide * 0.5, y: centre.y))
+        dome.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.5, y: centre.y),
+            control: CGPoint(x: centre.x, y: centre.y - tall * 1.42)
+        )
+        dome.closeSubpath()
+        context.fill(
+            dome,
+            with: .linearGradient(
+                Gradient(colors: [block, Color(red: 0.68, green: 0.78, blue: 0.88)]),
+                startPoint: CGPoint(x: centre.x, y: centre.y - tall),
+                endPoint: CGPoint(x: centre.x, y: centre.y)
+            )
+        )
+        context.stroke(dome, with: .color(joint.opacity(0.8)), lineWidth: 2)
+
+        // The courses of blocks, which is what says built rather than drifted.
+        var courses = Path()
+        for course in [0.36, 0.66] {
+            let y = centre.y - tall * CGFloat(course)
+            let reach = wide * 0.5 * CGFloat(1 - course * 0.55)
+            courses.move(to: CGPoint(x: centre.x - reach, y: y))
+            courses.addQuadCurve(
+                to: CGPoint(x: centre.x + reach, y: y),
+                control: CGPoint(x: centre.x, y: y - tall * 0.1)
+            )
+        }
+        for upright in [-0.3, 0.0, 0.3] {
+            let x = centre.x + wide * CGFloat(upright)
+            courses.move(to: CGPoint(x: x, y: centre.y - tall * 0.04))
+            courses.addLine(to: CGPoint(x: x, y: centre.y - tall * 0.32))
+        }
+        context.stroke(courses, with: .color(joint.opacity(0.55)), lineWidth: 1.6)
+
+        // The tunnel doorway, and whoever is in there keeping a lamp on after dark.
+        var tunnel = Path()
+        tunnel.move(to: CGPoint(x: centre.x + wide * 0.26, y: centre.y))
+        tunnel.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.52, y: centre.y),
+            control: CGPoint(x: centre.x + wide * 0.39, y: centre.y - tall * 0.5)
+        )
+        tunnel.closeSubpath()
+        context.fill(tunnel, with: .color(block))
+        context.stroke(tunnel, with: .color(joint.opacity(0.8)), lineWidth: 1.6)
+        var doorway = Path()
+        doorway.move(to: CGPoint(x: centre.x + wide * 0.33, y: centre.y))
+        doorway.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.45, y: centre.y),
+            control: CGPoint(x: centre.x + wide * 0.39, y: centre.y - tall * 0.3)
+        )
+        doorway.closeSubpath()
+        context.fill(
+            doorway,
+            with: .color(
+                colors.isNight
+                    ? GamePalette.pen.opacity(0.85)
+                    : Color.black.opacity(0.5)
+            )
+        )
+        if colors.isNight {
+            context.fill(
+                circle(at: CGPoint(x: centre.x + wide * 0.39, y: centre.y - tall * 0.08), radius: wide * 0.18),
+                with: .color(GamePalette.pen.opacity(0.18))
+            )
+        }
+
+        // The drift banked up its windward side.
+        var bank = Path()
+        bank.move(to: CGPoint(x: centre.x - wide * 0.64, y: centre.y + 1))
+        bank.addQuadCurve(
+            to: CGPoint(x: centre.x - wide * 0.12, y: centre.y + 1),
+            control: CGPoint(x: centre.x - wide * 0.4, y: centre.y - tall * 0.2)
+        )
+        bank.closeSubpath()
+        context.fill(bank, with: .color(.white.opacity(colors.isNight ? 0.16 : 0.5)))
+    }
+
+    /// The floor of the tundra: snow with the wind's own lines combed across it, every one
+    /// pulled the same way because they are one wind's work, and patches of blue ice scoured
+    /// bare in among them.
+    ///
+    /// Nobody laid this out, the way nobody laid out the cove's tide lines — but where the
+    /// sea's lines were left by something that means to come back, these are being redrawn by
+    /// something that never left.
+    private func drawSnowdrifts(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_121)
+
+        // The scoured patches: old sea ice showing through, flat and blue.
+        for _ in 0..<6 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next(in: -0.1...1.1)) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 60...170))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.08,
+                    width: spread, height: spread * 0.16
+                )),
+                with: .color(
+                    Color(red: 0.46, green: 0.62, blue: 0.80)
+                        .opacity(colors.isNight ? 0.24 : 0.35)
+                )
+            )
+        }
+
+        // The sastrugi: a lit crest over a blue trough, bowed downwind.
+        for _ in 0..<24 {
+            let down = horizon + CGFloat(scatter.next(in: -0.02...1.02)) * (size.height - horizon)
+            var wave = Path()
+            wave.move(to: CGPoint(x: -20, y: down))
+            wave.addCurve(
+                to: CGPoint(x: size.width + 20, y: down + CGFloat(scatter.next(in: -24...24))),
+                control1: CGPoint(x: size.width * 0.3, y: down - CGFloat(scatter.next(in: 6...20))),
+                control2: CGPoint(x: size.width * 0.7, y: down - CGFloat(scatter.next(in: 6...20)))
+            )
+            let width = CGFloat(scatter.next(in: 1.4...3.4))
+            context.translateBy(x: 0, y: width)
+            context.stroke(
+                wave,
+                with: .color(
+                    Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.26 : 0.18)
+                ),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width)
+            context.stroke(
+                wave,
+                with: .color(.white.opacity(colors.isNight ? 0.08 : 0.3)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+    }
+
+    /// The berg line out along the horizon, which is what the tundra's sky comes down to: the
+    /// frozen sea going back in floes and stranded bergs — and after dark the aurora standing
+    /// up over the lot of it, which is the one sky in the game with its own light in it.
+    private func drawBergLine(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 5_209)
+        let base = horizon + 26
+
+        // The frozen sea: one pale band from rim to rim, darkest at the skyline.
+        var sea = Path()
+        sea.move(to: CGPoint(x: -20, y: base - 34))
+        sea.addLine(to: CGPoint(x: size.width + 20, y: base - 36))
+        sea.addLine(to: CGPoint(x: size.width + 20, y: base + 26))
+        sea.addLine(to: CGPoint(x: -20, y: base + 30))
+        sea.closeSubpath()
+        context.fill(
+            sea,
+            with: .linearGradient(
+                Gradient(colors: [
+                    Color(red: 0.44, green: 0.58, blue: 0.74),
+                    Color(red: 0.70, green: 0.80, blue: 0.90)
+                ]),
+                startPoint: CGPoint(x: size.width / 2, y: base - 36),
+                endPoint: CGPoint(x: size.width / 2, y: base + 30)
+            )
+        )
+
+        // The bergs standing out of it, blue-white and flat-topped, smaller further off.
+        for _ in 0..<5 {
+            let x = CGFloat(scatter.next()) * size.width
+            let wide = CGFloat(scatter.next(in: 22...58))
+            let tall = wide * CGFloat(scatter.next(in: 0.3...0.5))
+            var berg = Path()
+            berg.move(to: CGPoint(x: x - wide / 2, y: base - 32))
+            berg.addLine(to: CGPoint(x: x - wide * 0.3, y: base - 32 - tall))
+            berg.addLine(to: CGPoint(x: x + wide * 0.34, y: base - 32 - tall * 0.85))
+            berg.addLine(to: CGPoint(x: x + wide / 2, y: base - 32))
+            berg.closeSubpath()
+            context.fill(
+                berg,
+                with: .color(
+                    Color(red: 0.82, green: 0.90, blue: 0.96).opacity(colors.isNight ? 0.4 : 0.9)
+                )
+            )
+        }
+
+        // After dark, the aurora: two ribbons of green hanging over the skyline, brighter
+        // along their lower edges the way a curtain is at its hem.
+        if colors.isNight {
+            for (index, lift) in [0.30, 0.52].enumerated() {
+                let hang = horizon * CGFloat(lift)
+                var ribbon = Path()
+                ribbon.move(to: CGPoint(x: -20, y: hang))
+                ribbon.addCurve(
+                    to: CGPoint(x: size.width + 20, y: hang - horizon * 0.08),
+                    control1: CGPoint(x: size.width * 0.3, y: hang - horizon * (index == 0 ? 0.14 : 0.06)),
+                    control2: CGPoint(x: size.width * 0.7, y: hang + horizon * 0.1)
+                )
+                context.stroke(
+                    ribbon,
+                    with: .color(Color(red: 0.32, green: 0.84, blue: 0.62).opacity(index == 0 ? 0.3 : 0.2)),
+                    style: StrokeStyle(lineWidth: index == 0 ? 14 : 22, lineCap: .round)
+                )
+                context.stroke(
+                    ribbon,
+                    with: .color(Color(red: 0.52, green: 0.96, blue: 0.74).opacity(0.35)),
+                    style: StrokeStyle(lineWidth: 3, lineCap: .round)
+                )
+            }
+        }
+    }
+
+    /// A blade of pressure ice at trailside size: one shard stood up out of the snow, lit down
+    /// its sunward edge and blue down its lee — the same wall every board in this world is
+    /// built with, so the first ridge a player meets on a field is one they have already stood
+    /// beside on the way there.
+    private func drawIceBlade(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = 34 * scale
+        let half = tall * 0.28
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - half * 1.4, y: foot.y - tall * 0.05,
+                width: half * 2.8, height: tall * 0.16
+            )),
+            with: .color(
+                Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.24)
+            )
+        )
+
+        let peak = CGPoint(x: foot.x + tall * 0.08, y: foot.y - tall)
+        var lee = Path()
+        lee.move(to: CGPoint(x: foot.x - half, y: foot.y))
+        lee.addLine(to: peak)
+        lee.addLine(to: CGPoint(x: foot.x + half, y: foot.y))
+        lee.closeSubpath()
+        context.fill(
+            lee,
+            with: .color(
+                Color(red: 0.40, green: 0.56, blue: 0.76).opacity(colors.isNight ? 0.6 : 0.85)
+            )
+        )
+        var lit = Path()
+        lit.move(to: CGPoint(x: foot.x - half, y: foot.y))
+        lit.addLine(to: peak)
+        lit.addLine(to: CGPoint(x: foot.x - half * 0.15, y: foot.y))
+        lit.closeSubpath()
+        context.fill(lit, with: .color(.white.opacity(colors.isNight ? 0.4 : 0.85)))
+    }
+
+    /// A bergy bit: a knuckle of old glacier ice calved, drifted and stranded — rounder and
+    /// bluer than anything the snow makes, with its lit top and the deep blue showing at its
+    /// waterline.
+    private func drawBergyBit(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 26 * scale
+        let tall = wide * 0.62
+        let berg = CGRect(x: foot.x - wide / 2, y: foot.y - tall, width: wide, height: tall)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - wide * 0.6, y: foot.y - tall * 0.1,
+                width: wide * 1.2, height: tall * 0.26
+            )),
+            with: .color(
+                Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.24)
+            )
+        )
+        context.fill(
+            Path(roundedRect: berg, cornerRadius: wide * 0.24),
+            with: .color(
+                Color(red: 0.72, green: 0.84, blue: 0.94).opacity(colors.isNight ? 0.55 : 0.95)
+            )
+        )
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: berg.minX + wide * 0.08, y: berg.minY, width: wide * 0.84, height: tall * 0.4
+            ), cornerRadius: wide * 0.2),
+            with: .color(.white.opacity(colors.isNight ? 0.3 : 0.7))
+        )
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: berg.minX + wide * 0.1, y: berg.maxY - tall * 0.24,
+                width: wide * 0.8, height: tall * 0.18
+            ), cornerRadius: wide * 0.1),
+            with: .color(Color(red: 0.36, green: 0.56, blue: 0.78).opacity(0.5))
+        )
+    }
+
+    /// A drift the wind has piled and not yet taken back: one long comb of snow with a sharp
+    /// lit crest, lying the same way as every other line on this ground because the one wind
+    /// made all of them.
+    private func drawSnowDrift(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 44 * scale
+        var drift = Path()
+        drift.move(to: CGPoint(x: foot.x - wide * 0.5, y: foot.y))
+        drift.addQuadCurve(
+            to: CGPoint(x: foot.x + wide * 0.5, y: foot.y - wide * 0.05),
+            control: CGPoint(x: foot.x - wide * 0.05, y: foot.y - wide * 0.22)
+        )
+        drift.addLine(to: CGPoint(x: foot.x + wide * 0.5, y: foot.y + wide * 0.02))
+        drift.addLine(to: CGPoint(x: foot.x - wide * 0.5, y: foot.y + wide * 0.02))
+        drift.closeSubpath()
+        context.fill(drift, with: .color(.white.opacity(colors.isNight ? 0.2 : 0.6)))
+        var trough = Path()
+        trough.move(to: CGPoint(x: foot.x - wide * 0.46, y: foot.y + wide * 0.03))
+        trough.addQuadCurve(
+            to: CGPoint(x: foot.x + wide * 0.48, y: foot.y - wide * 0.01),
+            control: CGPoint(x: foot.x, y: foot.y + wide * 0.09)
+        )
+        context.stroke(
+            trough,
+            with: .color(
+                Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.24)
+            ),
+            style: StrokeStyle(lineWidth: max(1.4, wide * 0.05), lineCap: .round)
         )
     }
 

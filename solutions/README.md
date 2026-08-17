@@ -32,6 +32,7 @@ table of best pens and all nine of its maps drawn out, boss last.
 | 7 | [Lantern Carnival](07-lantern-carnival.md) | toffee apple `a` | guy rope `x` | The Center Ring |
 | 8 | [Sunbaked Dunes](08-sunbaked-dunes.md) | melon `a` | cactus `x` | Scorpion Flats |
 | 9 | [Tidepool Cove](09-tidepool-cove.md) | pearl `a` | jellyfish `x` | The Crab Pool |
+| 10 | [Frostwhisker Tundra](10-frostwhisker-tundra.md) | fish `a` | berg `x` | The Haulout |
 
 Every world is the meadow's game on new ground, so a treat is worth five tiles to shut in
 and a hazard five fewer wherever you meet it, whatever it is called locally. The six ideas
@@ -49,8 +50,8 @@ W  the wyrm                 R  the rat king
 V  the visitor              T  a bat
 U  its pup                  M  the ringmaster
 S  the scorpion             C  the crab
-a  an apple                 x  a skull
-~  water
+L  the bull seal            a  an apple
+x  a skull                  ~  water
 ```
 
 A treat inside the pen shows as its own letter on `o` ground. Neither kind ever has a `#` on

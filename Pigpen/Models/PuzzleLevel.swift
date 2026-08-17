@@ -108,10 +108,14 @@ enum Question: String, Sendable, CaseIterable {
     /// pool — break, crab and all — without the crab ever standing in it. A boss, and nothing
     /// else.
     case moat
+    /// One budget, two pens, and one of them spoken for: the bull seal will not share ground
+    /// with the pig, and the ground he is given has to lie against the water — a seal penned
+    /// on dry ice has no breathing hole. A boss, and nothing else.
+    case hole
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .moat] }
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .moat, .hole] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
@@ -253,9 +257,9 @@ struct PuzzleLevel: Identifiable, Sendable {
 
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
-    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M`, `S` or `C`
-    /// for a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the ringmaster, a
-    /// scorpion or a crab.
+    /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M`, `S`, `C`
+    /// or `L` for a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the
+    /// ringmaster, a scorpion, a crab or a bull seal.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.

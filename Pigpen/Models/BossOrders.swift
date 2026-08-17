@@ -63,6 +63,9 @@ extension PuzzleLevel {
         case .moat:
             return "The \(boss.name) keeps his pool and will not leave it. Close the pig's "
                 + "ground the whole way round the pool — break, \(boss.name) and all."
+        case .hole:
+            return "Hold the pig and the \(boss.name), both, in two pens — never one — and pen "
+                + "the \(boss.name) against the water: he keeps a breathing hole."
         case .shore, .basin, .span, .gap, .corner, .constellation, .detour, .obstruction, .bare:
             // The game's own question, asked on new ground. There is nothing to say about it
             // that the ground does not say itself.

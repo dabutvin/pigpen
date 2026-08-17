@@ -1211,6 +1211,135 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk out onto the tundra. Six stills, the way the cove's opening is
+    /// six: the fish and the berg have a still apiece, and so does the ice — because the shape
+    /// of it is the whole world, and a player who does not know a ridge runs on the slant will
+    /// read the first board as a scatter of ponds rather than as two walls already built.
+    static func frostwhiskerOpening(start: Date = .now) -> Self {
+        Self(
+            key: "frostwhisker-opening",
+            title: "Frostwhisker Tundra",
+            light: .frostDay,
+            shots: [
+                Shot(
+                    motif: "❄️",
+                    strewn: ["🧊", "🌨️", "🦭"],
+                    caption: "Frostwhisker Tundra. The sea went white.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["❄️", "🌨️"],
+                    caption: "Your pig came north from the cove onto the ice.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🏔️",
+                    strewn: ["❄️", "🧊"],
+                    caption: "The ice is crushed into ridges. They run on the slant.",
+                    seconds: 3.3
+                ),
+                Shot(
+                    motif: "🐟",
+                    strewn: ["❄️", "🧊"],
+                    caption: "Fish on the ice. Five each.",
+                    seconds: 2.2
+                ),
+                Shot(
+                    motif: "🧊",
+                    strewn: ["🐟", "❄️"],
+                    caption: "A berg takes no fence. Walls go round.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["❄️", "🐟"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the tundra's last field, the way `theCrabPool` goes before the cove's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced nine worlds. What
+    /// they are owed is the one thing this board does that no board in the game has done —
+    /// every two-pen boss so far asked who goes where, and this one is the first to be
+    /// particular about where the second pen *is*.
+    static func theHaulout(start: Date = .now) -> Self {
+        Self(
+            key: "the-haulout-briefing",
+            title: "The Haulout",
+            light: .frostDay,
+            shots: [
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🧊"],
+                    caption: "The Haulout. The bull seal keeps a breathing hole.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦭", "❄️"],
+                    caption: "Box him dry and the board sends it back.",
+                    seconds: 2.6
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦭", "🧊"],
+                    caption: "Two pens — and his must touch the water.",
+                    isCard: true,
+                    seconds: 2.6
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen on the tundra holds. It says what became of the bull seal and — like
+    /// the nine send-offs before it — points on past this world to the next one waiting, which
+    /// is mud and reeds where this one was ice.
+    static func frostwhiskerHeld(start: Date = .now) -> Self {
+        Self(
+            key: "frostwhisker-held",
+            title: "Frostwhisker Tundra held",
+            light: .frostDusk,
+            shots: [
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🧊"],
+                    caption: "The bull seal has his hole, and a pen against it.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🐟",
+                    strewn: ["❄️", "🧊", "❄️"],
+                    caption: "Every fish the ice flipped up, fenced and held.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🌌",
+                    strewn: ["❄️", "✨"],
+                    caption: "The aurora comes up green over the lot of it.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🐊",
+                    strewn: ["🌿", "🐟", "🌿"],
+                    caption: "South along the shore, the ice gives out into mud and reeds.",
+                    isCard: true,
+                    seconds: 3.6
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -1221,7 +1350,8 @@ extension StorybookScene {
             .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
             .lanternOpening(), .theCenterRing(), .lanternHeld(),
             .duneOpening(), .theScorpionPit(), .duneHeld(),
-            .tidepoolOpening(), .theCrabPool(), .tidepoolHeld()
+            .tidepoolOpening(), .theCrabPool(), .tidepoolHeld(),
+            .frostwhiskerOpening(), .theHaulout(), .frostwhiskerHeld()
         ]
     }
 }

@@ -468,6 +468,7 @@ struct PuzzleView: View {
         case .shutIn(let animal): "The \(animal.name) is inside"
         case .beside(let animal): "The \(animal.name) has no ring round him"
         case .tooClose(let animal): "The \(animal.name) is near enough to reach"
+        case .landlocked(let animal): "The \(animal.name) is high and dry"
         }
     }
 
@@ -487,6 +488,8 @@ struct PuzzleView: View {
             "Both of them are held, but side by side. The pig has to go all the way round the \(animal.name), and it is her own ground that makes the ring — so she needs a clear path to run the whole way round, with nothing she cannot walk across breaking it."
         case .tooClose(let animal):
             "Both of them are held, but one wall does for both pens — and a \(animal.name) stings straight through a fence. Leave clear ground between them."
+        case .landlocked(let animal):
+            "Both of them are held, but the \(animal.name)'s pen never touches the water. He keeps a breathing hole, so his ground has to lie against it."
         }
     }
 

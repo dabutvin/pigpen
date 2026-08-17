@@ -94,8 +94,8 @@ struct Universe: Sendable {
 
 extension Universe {
     /// The map the game ships: the meadow, the thicket, the mountain, the city, the reaches, the
-    /// caverns, the carnival, the dunes and the cove to play, and three more worlds standing out
-    /// past them as silhouettes — a boss apiece, waiting to be built.
+    /// caverns, the carnival, the dunes, the cove and the tundra to play, and two more worlds
+    /// standing out past them as silhouettes — a boss apiece, waiting to be built.
     static let all = Universe(worlds: [
         UniverseWorld(theme: .meadow, game: .mudlarkMeadow),
         UniverseWorld(theme: .thornwood, game: .thornwoodThicket),
@@ -106,11 +106,7 @@ extension Universe {
         UniverseWorld(theme: .lanternCarnival, game: .lanternCarnival),
         UniverseWorld(theme: .sunbakedDunes, game: .sunbakedDunes),
         UniverseWorld(theme: .tidepoolCove, game: .tidepoolCove),
-        UniverseWorld(theme: silhouette(
-            id: "frostwhisker-tundra", name: "Frostwhisker Tundra", blurb: "Ice, snow, and a pig that will not stay put.",
-            boss: "🦭", bossName: "the bull seal",
-            accent: Color(red: 0.69, green: 0.84, blue: 0.93), deep: Color(red: 0.36, green: 0.56, blue: 0.71)
-        ), game: nil),
+        UniverseWorld(theme: .frostwhiskerTundra, game: .frostwhiskerTundra),
         UniverseWorld(theme: silhouette(
             id: "mirebog-fen", name: "Mirebog Fen", blurb: "Half water, half mud, all trouble.",
             boss: "🐊", bossName: "the old croc",
