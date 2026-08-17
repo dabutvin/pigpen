@@ -43,6 +43,13 @@ struct TitleScreenView: View {
     /// The same book of days the archive and today's board are handed, so the card below
     /// shows the stars that were just won without having to be told about them.
     @State private var daily: DailyProgress
+    /// The daily reminder. It lives here because this is the screen every road out of a
+    /// puzzle comes back to, and so the one place that reliably gets to lay the fortnight
+    /// of reminders down again against a book of days that has just changed.
+    @State private var reminder: DailyReminder
+    /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
+    /// held — never on the way in, when the player has nothing yet to be reminded about.
+    @State private var isOfferingReminders = false
     /// Which square of the calendar the game is standing on. Read once when the screen
     /// arrives rather than on every redraw, so the card cannot change under a finger — and
     /// read again every time the screen comes back, which is what carries a player over
@@ -59,17 +66,24 @@ struct TitleScreenView: View {
     ///     calendar.
     ///   - showsSettings: Opens with the settings sheet already up, which is how CI
     ///     photographs it without tapping through the title screen.
+    ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
+    ///     for the same reason — and handed in rather than waited for, since the offer's own
+    ///     rule is that it only appears to somebody who has held a day and never been asked.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
+        reminder: DailyReminder = DailyReminder(),
         today: DailyDate? = nil,
-        showsSettings: Bool = false
+        showsSettings: Bool = false,
+        showsReminderPrompt: Bool = false
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
+        _reminder = State(initialValue: reminder)
         _today = State(initialValue: today ?? .today())
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
+        _isOfferingReminders = State(initialValue: showsReminderPrompt)
     }
 
     private var world: WorldMap { progress.world }
@@ -142,9 +156,27 @@ struct TitleScreenView: View {
             DailyArchiveView(today: today, progress: daily)
         }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress, daily: daily)
+            SettingsView(progress: progress, daily: daily, reminder: reminder)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $isOfferingReminders) {
+            ReminderPromptView(
+                streak: daily.streak(upTo: today),
+                time: reminder.time,
+                onAccept: {
+                    // The offer is marked as made whichever way it goes, so the sheet is
+                    // never put up twice — the phone's own prompt follows from here, and
+                    // that one a phone only ever shows once anyway.
+                    reminder.markOffered()
+                    Task { await reminder.turnOn(today: today, progress: daily) }
+                },
+                onDecline: { reminder.markOffered() }
+            )
+            // Half the screen: an offer, made while the title screen is still visible
+            // behind it, rather than a wall the player has to get past to carry on.
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         // The meadow is pushed as the film comes down rather than from inside it, so the
         // two never fight over the screen.
@@ -160,6 +192,7 @@ struct TitleScreenView: View {
             // yesterday's, already held.
             if !dayWasGiven { today = .today() }
             raiseTheCurtain()
+            Task { await keepTheRemindersTrue() }
         }
         // The push waits for the screen to be up rather than going out from inside
         // `onAppear`, which is a stack being asked to walk on before it has finished
@@ -183,10 +216,45 @@ struct TitleScreenView: View {
         isTutorial = true
     }
 
+    // MARK: - The daily reminder
+
+    /// Every road out of a puzzle comes back through here, so this is where the fortnight
+    /// of reminders is laid down again: what is worth reminding about has just changed, and a
+    /// day held at ten past eight must not be reminded about at nine.
+    ///
+    /// The phone is asked where it stands first, because permission is granted and taken
+    /// away in the system settings — somewhere neither this screen nor the game behind it
+    /// can see into.
+    private func keepTheRemindersTrue() async {
+        await reminder.readTheStanding()
+        await reminder.replan(today: today, progress: daily)
+        offerTheReminderIfItIsDue()
+    }
+
+    /// Whether to put the game's own offer up, and the whole of when it is allowed to
+    /// appear: the player has held a daily puzzle, so there is a run of days to lose, and
+    /// neither the game nor the phone has asked them about it before.
+    ///
+    /// Never on the way in. A phone shows its permission sheet once and never again, and
+    /// spending that on somebody who has not yet found out what a daily puzzle is spends it
+    /// for nothing.
+    private func offerTheReminderIfItIsDue() {
+        guard reminder.isDueAnOffer, daily.completedCount > 0 else { return }
+        // Nothing else may be going up or already up. The walkthrough is the one worth
+        // naming: a player who has only ever played dailies is owed both at once, and an
+        // offer sheet arriving over a practice pen pushing itself onto the stack would be
+        // two screens fighting over the same moment. The offer keeps — it is made the
+        // next time they come back here, which is on the way out of the walkthrough.
+        guard !progress.isTheTutorialDue, !isTutorial,
+              !showsSettings, playDestination == nil, !isDailyOpen, !isArchiveOpen
+        else { return }
+        isOfferingReminders = true
+    }
+
     // MARK: - The bar across the top
 
-    /// How much of the meadow has been taken, and a gear well away from Play. What is
-    /// behind the gear — the version, and a button that throws away every star — is
+    /// How much of whatever Play opens has been taken, and a gear well away from Play. What
+    /// is behind the gear — the version, and a button that throws away every star — is
     /// nothing a player needs while they are playing.
     private var topBar: some View {
         HStack(spacing: 10) {
@@ -222,7 +290,7 @@ struct TitleScreenView: View {
                 .foregroundStyle(GamePalette.pen)
                 .shadow(color: GamePalette.post.opacity(0.25), radius: 0.5, y: 0.5)
 
-            Text("\(progress.totalStars) of \(world.starTotal)")
+            Text("\(tally.won) of \(tally.total)")
                 .font(.subheadline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
                 .contentTransition(.numericText())
@@ -233,7 +301,27 @@ struct TitleScreenView: View {
         .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.18), lineWidth: 1))
         .shadow(color: .black.opacity(0.25), radius: 4, y: 3)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(progress.totalStars) of \(world.starTotal) stars")
+        .accessibilityLabel(starsSpoken)
+    }
+
+    /// What the badge counts, which is whatever Play opens. While the meadow is still being
+    /// held it is the meadow's own stars, the same pair the trail wears in its corner. Once the
+    /// meadow is held Play opens the universe instead, and a badge still stuck on the meadow
+    /// would sit full at 27 of 27 for the whole rest of the game — saying there is nothing left
+    /// to take on the very screen a player crosses to go and take it. So it widens to every star
+    /// in every built world, and carries on meaning something all the way out.
+    private var tally: (won: Int, total: Int) {
+        guard progress.isTheWorldHeld else { return (progress.totalStars, world.starTotal) }
+        let universe = Universe.all
+        return (universe.totalStars(stars: progress.bestStars), universe.starTotal)
+    }
+
+    /// The tally read out, with the ground it covers said aloud — the badge shows the widening
+    /// by its numbers alone, which is nothing VoiceOver can point at.
+    private var starsSpoken: String {
+        let counted = tally
+        let ground = progress.isTheWorldHeld ? "across every world" : "in \(world.name)"
+        return "\(counted.won) of \(counted.total) stars \(ground)"
     }
 
     // MARK: - The name
@@ -771,6 +859,12 @@ private struct MenuRowButtonStyle: ButtonStyle {
     }
 }
 
+#Preview("The meadow behind us") {
+    NavigationStack {
+        TitleScreenView(progress: .theMeadowHeld())
+    }
+}
+
 #Preview("Nothing left to take") {
     NavigationStack {
         TitleScreenView(progress: .everythingHeld())
@@ -782,7 +876,23 @@ private struct MenuRowButtonStyle: ButtonStyle {
         TitleScreenView(
             progress: .partWayThrough(),
             daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+            reminder: .reminding(),
             today: DailyDate(year: 2026, month: 4, day: 22)
+        )
+    }
+}
+
+#Preview("The reminder offered") {
+    NavigationStack {
+        TitleScreenView(
+            progress: .partWayThrough(),
+            daily: .partWayThroughTheMonth(
+                today: DailyDate(year: 2026, month: 4, day: 22),
+                includingToday: true
+            ),
+            reminder: .neverAsked(),
+            today: DailyDate(year: 2026, month: 4, day: 22),
+            showsReminderPrompt: true
         )
     }
 }

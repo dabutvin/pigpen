@@ -465,6 +465,29 @@ extension WorldProgress {
         )
     }
 
+    /// The meadow held and nothing past it taken: the standing a player is in the moment Play
+    /// stops leading up the trail and starts opening the universe, which is where the title
+    /// screen's tally has to widen out past the one world.
+    static func theMeadowHeld(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
+        var stars: [String: Int] = [:]
+        for node in WorldMap.mudlarkMeadow.nodes {
+            stars[node.id] = 3
+        }
+        // Somebody holding a world has seen the films it wraps itself in.
+        return WorldProgress(
+            world: world,
+            store: RememberedProgress(
+                stars: stars,
+                scenesPlayed: [
+                    CutScene.Name.opening.rawValue,
+                    CutScene.Name.stagMere.rawValue,
+                    CutScene.Name.theMeadowHeld.rawValue,
+                    TutorialLesson.seenKey
+                ]
+            )
+        )
+    }
+
     /// Every level of every built world at three stars with its rainbow beside it — the whole
     /// game, finished. Previews and screenshots use it to show what a game with nothing left in
     /// it looks like, which is the one standing a real device takes a very long time to reach.

@@ -914,16 +914,19 @@ extension StorybookScene {
     /// fairgrounds and is owed the one thing this board does that no other board here does. It is
     /// the only rule in the game about where one pen stands in relation to another rather than
     /// about who is in which, so the middle still is the whole of it said in a line.
-    static func theCentreRing(start: Date = .now) -> Self {
+    ///
+    /// Its key keeps the older spelling of the name, the way the meadow's films keep theirs: a
+    /// film is remembered by key, and a new one would sit a player back down in front of this.
+    static func theCenterRing(start: Date = .now) -> Self {
         Self(
             key: "the-centre-ring-briefing",
-            title: "The Centre Ring",
+            title: "The Center Ring",
             light: .lanternDay,
             shots: [
                 Shot(
                     motif: "🤹",
                     strewn: ["🎪", "👥", "🍭"],
-                    caption: "The Centre Ring. He will not step aside.",
+                    caption: "The Center Ring. He will not step aside.",
                     seconds: 2.7
                 ),
                 Shot(
@@ -998,7 +1001,7 @@ extension StorybookScene {
         )
     }
 
-    /// Before the dunes' last field, the way `theCentreRing` goes before the carnival's.
+    /// Before the dunes' last field, the way `theCenterRing` goes before the carnival's.
     ///
     /// Short, and for the same reason: a player standing here has fenced seven worlds. What they
     /// are owed is the one thing this board does that no board in the game has done — every boss
@@ -1087,7 +1090,7 @@ extension StorybookScene {
             .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld(),
             .starfallOpening(), .visitorCrater(), .starfallHeld(),
             .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
-            .lanternOpening(), .theCentreRing(), .lanternHeld(),
+            .lanternOpening(), .theCenterRing(), .lanternHeld(),
             .duneOpening(), .theScorpionPit(), .duneHeld()
         ]
     }

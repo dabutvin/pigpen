@@ -29,7 +29,7 @@ table of best pens and all nine of its maps drawn out, boss last.
 | 4 | [Cogsworth City](04-cogsworth-city.md) | pie `a` | drain `x` | Rat King Wharf |
 | 5 | [Starfall Reaches](05-starfall-reaches.md) | stardrop `a` | meteor `x` | Visitor Crater |
 | 6 | [Gloamdeep Caverns](06-gloamdeep-caverns.md) | crystal `a` | boulder `x` | The Roost |
-| 7 | [Lantern Carnival](07-lantern-carnival.md) | toffee apple `a` | guy rope `x` | The Centre Ring |
+| 7 | [Lantern Carnival](07-lantern-carnival.md) | toffee apple `a` | guy rope `x` | The Center Ring |
 | 8 | [Sunbaked Dunes](08-sunbaked-dunes.md) | melon `a` | cactus `x` | Scorpion Flats |
 
 Every world is the meadow's game on new ground, so a treat is worth five tiles to shut in

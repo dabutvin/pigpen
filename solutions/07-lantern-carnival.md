@@ -35,7 +35,7 @@ what holds the world at 37% and above, the highest floor in the game.
 | 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 25 |
 | 7 | The Rigging | 18 | 37 | 1 toffee apple | 42 | 21 |
 | 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 30 |
-| 9 | The Centre Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
+| 9 | The Center Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
 
 ## 1. Coconut Shy — 14 pieces, 29
 
@@ -271,7 +271,7 @@ against a squared-off pen because it is broad, which says more about its size th
 this asks 40, less than three of the fields below it, while holding the second biggest pen at the
 fair.
 
-## 9. The Centre Ring — 22 pieces, 40
+## 9. The Center Ring — 22 pieces, 40
 
 ```
 .....#.....

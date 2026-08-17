@@ -1,6 +1,8 @@
 # Pigpen
 
 <p align="center">
+  <img src="docs/title-screen.png" alt="Title screen: PIGPEN in wooden letters over green hills, a pig peeking over a fence, and buttons for Play, Daily, Archive, and Tutorial" width="320">
+  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="docs/screenshot.png" alt="Windfall Orchard, its pen closed: a rainbow-washed pen of mud holding the pig and two apples, hemmed in by fencing and a lake" width="320">
 </p>
 
@@ -578,7 +580,7 @@ world.
 | 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
 | 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 42 | 50% |
 | 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
-| 9 | The Centre Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
+| 9 | The Center Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
 
 The Big Top is the corner question with the crowd along the front of the tent and down its far
 side, so two of the four walls are handed over: eleven pieces laid corner to corner hold 51 tiles,
@@ -588,7 +590,7 @@ the tidy pen has to swallow them and pay their ten. The Rigging carries seven pe
 more rope than any other field at the fair, and the only line of three in the game — and at 50% it
 leaves the widest gap of any ordinary field at the fair.
 
-Its boss, The Centre Ring, adds the carnival's rule, and it is the first rule in the game about
+Its boss, The Center Ring, adds the carnival's rule, and it is the first rule in the game about
 **where one pen stands in relation to another** rather than about which animal is in which:
 the ringmaster keeps the middle, and the pig has to close all the way round him. So the answer
 five worlds have taught is refused — four pieces round the pig where she stands hold her perfectly
@@ -658,7 +660,7 @@ behind Wide Reaches, one ahead of the Great Gallery.
 
 Its boss, Scorpion Flats, adds the dunes' rule, and it is the direct inversion of the game's oldest
 boss lesson. Stag Mere taught that two pens can share a wall — one boundary doing two jobs — and the
-search has priced a shared wall at half ever since; every boss from Boar Hollow to The Centre Ring
+search has priced a shared wall at half ever since; every boss from Boar Hollow to The Center Ring
 is built on that discount. **A scorpion stings straight through a fence**, so here there is no
 discount: the pig may not be standing in with him, and no piece of fence may have her ground on one
 side of it and his on the other. The ground between the two pens has to be given up unclaimed, and
@@ -736,6 +738,45 @@ The almanac is generated rather than authored — `Tools/generate_dailies.py` wr
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
 pen its map does not hold. See [The daily almanac](#the-daily-almanac).
 
+### A reminder each morning
+
+A run of days is broken by forgetting far more often than by a board nobody could hold, so
+the game is allowed to say once a morning that the new one is up — and allowed to only
+because the player said it could.
+
+- **It asks in its own words first.** A phone shows its permission sheet once and never
+  again, so a game that raises it cold spends that one chance on somebody who has not yet
+  found out what a daily puzzle is. Pigpen's own offer goes up instead, on the game's own
+  boards, and only after a day has actually been held — at which point there is a run of
+  days to lose and the offer can say what it is. *Not now* asks the phone nothing, schedules
+  nothing, and is never put up a second time.
+- **It is a switch behind the gear like any other.** Whether it reminds you and at what
+  hour, so a player who waved the offer away can find it afterwards and one who took it
+  can move it to the evening or stop it. The switch is the player's wish and the phone's
+  permission is a separate thing: turn Pigpen's notifications off in the system settings and
+  the card says so plainly and hands over the one door that can put it right, rather than
+  sitting on a switch that is on and silent.
+- **Nothing is fetched and nothing runs in the background.** The almanac is already in the
+  player's pocket, so the game knows what every morning of the fortnight ahead is going to
+  be and simply lays a reminder down for each of them. Coming back to the title screen lays
+  the whole fortnight down again, which is how a day held at ten past eight loses its
+  reminder before nine — and how a phone left shut for a week is still reminded every
+  morning of it.
+- **A reminder says what sort of morning it is.** The week is a climb, so Monday's says
+  mostly water and free walls everywhere and Sunday's says the worst of the week — the same
+  thing the bands the almanac is generated against are saying, in a line rather than a
+  number. It never gives a board away.
+- **The run of days rides on the next reminder only.** One that says *6 days in a row so
+  far* is one that can be sure of it: the number is written onto today's or tomorrow's
+  reminder and no further, because the run either survives to the next board or it does not,
+  and a reminder four days out cannot know which.
+
+The reminder is a preference rather than progress, so clearing all game data leaves it
+standing — but every day is unheld again afterwards, so the fortnight is laid down knowing
+it. `DailyReminderTests` pins which mornings get reminded about and what each one says, and
+the phone's own notification centre sits behind a protocol so a test, a preview or the
+screenshot runner can never raise a real prompt or leave a real reminder standing.
+
 The name on the title screen plants itself a letter at a time, each one dropping in and
 settling like a fence post going into the ground, over a pasture — drifting clouds by day,
 fireflies at dusk — with a pig trotting up and down a run of fence. The whole backdrop is
@@ -761,12 +802,14 @@ opening film is owed separately and still plays on the first **Play**, so the wa
 teaches the fencing and the film says what the fencing is for.
 
 A gear in the corner opens settings, which holds the version number, a switch for the
-buzzing and one red button. **Haptics** turns off every buzz in the game — the tap as a
-piece of fencing goes into the ground, the verdict when the gate is opened — for a phone on
-a table or a battery being nursed; it is on as the game comes, it is remembered, and
-flicking it on gives the tap it is promising straight away. Clearing all game data throws
-away every star and every day completed, and shuts the trail back to its first level, so it
-asks before it does anything.
+buzzing, a switch for the daily reminder and one red button. **Haptics** turns off every buzz
+in the game — the tap as a piece of fencing goes into the ground, the verdict when the gate
+is opened — for a phone on a table or a battery being nursed; it is on as the game comes, it
+is remembered, and flicking it on gives the tap it is promising straight away. **The daily
+puzzle reminder** is whether the game says so when a new board goes up and at what hour, and
+it admits it plainly when the phone has stopped passing them on. Clearing all game data
+throws away every star and every day completed, and shuts the trail back to its first level,
+so it asks before it does anything.
 
 A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
 wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
@@ -1178,7 +1221,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, the stars it took, and the trophy offering the whole wall back. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shot at the top of this README is one of those — the light `-orchard` frame, scaled down and committed as `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing it is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, the stars it took, and the trophy offering the whole wall back. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -1293,7 +1336,9 @@ Pigpen/
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
+│   └── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -1304,8 +1349,9 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, the daily reminder, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
+│   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
