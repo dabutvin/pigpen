@@ -216,7 +216,7 @@ a boss is one budget split between two animals, so the gap it leaves against a s
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
 
-Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
+Each of those pens is drawn out in [`solutions/`](solutions/), which is spoilers from
 the first line.
 
 ## The Universe
@@ -313,7 +313,7 @@ Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool acros
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
 21 of the 24 stars below it before it opens, the same toll Stag Mere charges, and — like the
 mere — it stops for a briefing on the way in rather than springing its second animal on you.
-Every pen is drawn out in [`solutions.md`](solutions.md).
+Every pen is drawn out in [`solutions/02-thornwood-thicket.md`](solutions/02-thornwood-thicket.md).
 
 ### Emberpeak
 
@@ -361,7 +361,7 @@ the pig up on the north rim, the wyrm down on the crater floor, and one budget f
 charges the same 21 of the 24 stars below it that Stag Mere and Boar Hollow charge and stops for
 the same briefing on the way in; what it adds is how unevenly it wants the budget split, since
 the rim is narrow ground and the crater floor is the widest in the world. Every pen is drawn out
-in [`solutions.md`](solutions.md).
+in [`solutions/03-emberpeak.md`](solutions/03-emberpeak.md).
 
 ### Cogsworth City
 
@@ -412,7 +412,7 @@ here, and the whole question is what shape it has to be: the pair stand four til
 diagonal, so the smallest block that takes them both is a five by five with a drain in a corner
 it cannot avoid. It charges the same 21 of the 24 stars below it that every boss charges and
 stops for the same briefing on the way in. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+[`solutions/04-cogsworth-city.md`](solutions/04-cogsworth-city.md).
 
 ### Starfall Reaches
 
@@ -472,7 +472,7 @@ other one in four pieces. A line of wells falls down the middle of the crater wi
 missing out of it, so plugging that neck is what turns one pen into two; then the halves come out
 uneven, and the last thing to work out is which tiles of the wider one to hand back. It charges
 the same 21 of the 24 stars below it that every boss charges and stops for the same briefing on
-the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+the way in. Every pen is drawn out in [`solutions/05-starfall-reaches.md`](solutions/05-starfall-reaches.md).
 
 ### Gloamdeep Caverns
 
@@ -536,7 +536,7 @@ turned down flat, because a pup boxed on its own is a roost split. The river cli
 and the bat and its pup hang either side of the tip of it, so joining them means reaching round
 that tip — and reaching round the tip is what hands the pig the whole staircase as the wall of its
 own pen. It charges the same 21 of the 24 stars below it that every boss charges and stops for the
-same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+same briefing on the way in. Every pen is drawn out in [`solutions/06-gloamdeep-caverns.md`](solutions/06-gloamdeep-caverns.md).
 
 ### Lantern Carnival
 
@@ -601,7 +601,7 @@ the board off possible at all: a rectangle laid over that crowd comes out as a r
 hole of it, worth 17, where the same twenty-two pieces run out to the corners as an octagon hold 35
 tiles and the apple hanging over the ring, which is 40. It charges the same 21 of the 24 stars below
 it that every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+[`solutions/07-lantern-carnival.md`](solutions/07-lantern-carnival.md).
 
 ### Sunbaked Dunes
 
@@ -679,7 +679,7 @@ north-east, which is 50 — the biggest pen any boss holds, and at 62% the wides
 game leaves. The melon in the lane between the two pens is the board saying what the rule costs: the
 pen that wins this field is the only pen in the game that walks past five points it can see and
 leaves them lying there. It charges the same 21 of the 24 stars below it that every boss charges, and
-stops for the same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+stops for the same briefing on the way in. Every pen is drawn out in [`solutions/08-sunbaked-dunes.md`](solutions/08-sunbaked-dunes.md).
 
 ## The Daily Puzzle
 
