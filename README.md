@@ -703,9 +703,12 @@ complete, the stars it gave up, the time it took and how many days in a row you 
 this year, and **Tutorial** opens a practice pen off the world map and walks through
 tapping a post, dragging a run, building against water, shutting the pen until the ground
 washes gold, and releasing the pig. A gear in the corner opens settings, which holds the
-version number and one red button: clearing all game data throws away every star and every
-day completed, and shuts the trail back to its first level, so it asks before it does
-anything.
+version number, a switch for the buzzing and one red button. **Haptics** turns off every
+buzz in the game — the tap as a piece of fencing goes into the ground, the verdict when the
+gate is opened — for a phone on a table or a battery being nursed; it is on as the game
+comes, it is remembered, and flicking it on gives the tap it is promising straight away.
+Clearing all game data throws away every star and every day completed, and shuts the trail
+back to its first level, so it asks before it does anything.
 
 A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
 wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
@@ -1236,7 +1239,8 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── SettingsView.swift       # Behind the gear: the version, and clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, clearing all game data
+│   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
