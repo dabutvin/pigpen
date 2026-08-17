@@ -92,9 +92,10 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   ground with a piece to spare replaces the best too, since the spare piece is one more to
   widen with.
 - **A level you have beaten opens on the mark to beat.** Walk back down the trail to an old
-  stop and the tally is already up: the score your best pen there was worth, the stars it
-  took beside it — rainbow when nothing on that map beats it — and the trophy offering the
-  whole wall back. The fencing itself still starts in the shed, because taking a level apart
+  stop and the tally is already up: the score your best pen there was worth, and the trophy
+  offering the whole wall back. The stars stay off the tally — they are what opening the
+  gate pays out, so they are shown on the verdict card once you release the pig and nowhere
+  else on the board. The fencing itself still starts in the shed, because taking a level apart
   from nothing is the whole of playing it again; what comes back with you is the number to
   get past. Better it and the new wall is what the level keeps.
 
@@ -216,7 +217,7 @@ a boss is one budget split between two animals, so the gap it leaves against a s
 pen understates it, and what is asked there is only that no world's boss splits its budget
 for less than the last one did.
 
-Each of those pens is drawn out in [`solutions.md`](solutions.md), which is spoilers from
+Each of those pens is drawn out in [`solutions/`](solutions/), which is spoilers from
 the first line.
 
 ## The Universe
@@ -316,7 +317,7 @@ Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool acros
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
 21 of the 24 stars below it before it opens, the same toll Stag Mere charges, and — like the
 mere — it stops for a briefing on the way in rather than springing its second animal on you.
-Every pen is drawn out in [`solutions.md`](solutions.md).
+Every pen is drawn out in [`solutions/02-thornwood-thicket.md`](solutions/02-thornwood-thicket.md).
 
 ### Emberpeak
 
@@ -364,7 +365,7 @@ the pig up on the north rim, the wyrm down on the crater floor, and one budget f
 charges the same 21 of the 24 stars below it that Stag Mere and Boar Hollow charge and stops for
 the same briefing on the way in; what it adds is how unevenly it wants the budget split, since
 the rim is narrow ground and the crater floor is the widest in the world. Every pen is drawn out
-in [`solutions.md`](solutions.md).
+in [`solutions/03-emberpeak.md`](solutions/03-emberpeak.md).
 
 ### Cogsworth City
 
@@ -415,7 +416,7 @@ here, and the whole question is what shape it has to be: the pair stand four til
 diagonal, so the smallest block that takes them both is a five by five with a drain in a corner
 it cannot avoid. It charges the same 21 of the 24 stars below it that every boss charges and
 stops for the same briefing on the way in. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+[`solutions/04-cogsworth-city.md`](solutions/04-cogsworth-city.md).
 
 ### Starfall Reaches
 
@@ -475,7 +476,7 @@ other one in four pieces. A line of wells falls down the middle of the crater wi
 missing out of it, so plugging that neck is what turns one pen into two; then the halves come out
 uneven, and the last thing to work out is which tiles of the wider one to hand back. It charges
 the same 21 of the 24 stars below it that every boss charges and stops for the same briefing on
-the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+the way in. Every pen is drawn out in [`solutions/05-starfall-reaches.md`](solutions/05-starfall-reaches.md).
 
 ### Gloamdeep Caverns
 
@@ -539,7 +540,7 @@ turned down flat, because a pup boxed on its own is a roost split. The river cli
 and the bat and its pup hang either side of the tip of it, so joining them means reaching round
 that tip — and reaching round the tip is what hands the pig the whole staircase as the wall of its
 own pen. It charges the same 21 of the 24 stars below it that every boss charges and stops for the
-same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+same briefing on the way in. Every pen is drawn out in [`solutions/06-gloamdeep-caverns.md`](solutions/06-gloamdeep-caverns.md).
 
 ### Lantern Carnival
 
@@ -604,7 +605,7 @@ the board off possible at all: a rectangle laid over that crowd comes out as a r
 hole of it, worth 17, where the same twenty-two pieces run out to the corners as an octagon hold 35
 tiles and the apple hanging over the ring, which is 40. It charges the same 21 of the 24 stars below
 it that every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+[`solutions/07-lantern-carnival.md`](solutions/07-lantern-carnival.md).
 
 ### Sunbaked Dunes
 
@@ -682,7 +683,7 @@ north-east, which is 50 — the biggest pen any boss holds, and at 62% the wides
 game left until the cove's crab asked for his moat. The melon in the lane between the two pens is the board saying what the rule costs: the
 pen that wins this field is the only pen in the game that walks past five points it can see and
 leaves them lying there. It charges the same 21 of the 24 stars below it that every boss charges, and
-stops for the same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+stops for the same briefing on the way in. Every pen is drawn out in [`solutions/08-sunbaked-dunes.md`](solutions/08-sunbaked-dunes.md).
 
 ### Tidepool Cove
 
@@ -746,7 +747,7 @@ twenty-two pieces swung out as a diamond hold 37 tiles and all three pearls — 
 face of the square's reach, exactly where a diamond's points go — and at 67% that is the widest
 gap any board in the game leaves. It charges the same 21 of the 24 stars below it that every boss
 charges, and stops for the same briefing on the way in. Every pen is drawn out in
-[`solutions.md`](solutions.md).
+[`solutions/09-tidepool-cove.md`](solutions/09-tidepool-cove.md).
 
 ## The Daily Puzzle
 
@@ -805,6 +806,45 @@ The almanac is generated rather than authored — `Tools/generate_dailies.py` wr
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
 pen its map does not hold. See [The daily almanac](#the-daily-almanac).
 
+### A reminder each morning
+
+A run of days is broken by forgetting far more often than by a board nobody could hold, so
+the game is allowed to say once a morning that the new one is up — and allowed to only
+because the player said it could.
+
+- **It asks in its own words first.** A phone shows its permission sheet once and never
+  again, so a game that raises it cold spends that one chance on somebody who has not yet
+  found out what a daily puzzle is. Pigpen's own offer goes up instead, on the game's own
+  boards, and only after a day has actually been held — at which point there is a run of
+  days to lose and the offer can say what it is. *Not now* asks the phone nothing, schedules
+  nothing, and is never put up a second time.
+- **It is a switch behind the gear like any other.** Whether it reminds you and at what
+  hour, so a player who waved the offer away can find it afterwards and one who took it
+  can move it to the evening or stop it. The switch is the player's wish and the phone's
+  permission is a separate thing: turn Pigpen's notifications off in the system settings and
+  the card says so plainly and hands over the one door that can put it right, rather than
+  sitting on a switch that is on and silent.
+- **Nothing is fetched and nothing runs in the background.** The almanac is already in the
+  player's pocket, so the game knows what every morning of the fortnight ahead is going to
+  be and simply lays a reminder down for each of them. Coming back to the title screen lays
+  the whole fortnight down again, which is how a day held at ten past eight loses its
+  reminder before nine — and how a phone left shut for a week is still reminded every
+  morning of it.
+- **A reminder says what sort of morning it is.** The week is a climb, so Monday's says
+  mostly water and free walls everywhere and Sunday's says the worst of the week — the same
+  thing the bands the almanac is generated against are saying, in a line rather than a
+  number. It never gives a board away.
+- **The run of days rides on the next reminder only.** One that says *6 days in a row so
+  far* is one that can be sure of it: the number is written onto today's or tomorrow's
+  reminder and no further, because the run either survives to the next board or it does not,
+  and a reminder four days out cannot know which.
+
+The reminder is a preference rather than progress, so clearing all game data leaves it
+standing — but every day is unheld again afterwards, so the fortnight is laid down knowing
+it. `DailyReminderTests` pins which mornings get reminded about and what each one says, and
+the phone's own notification centre sits behind a protocol so a test, a preview or the
+screenshot runner can never raise a real prompt or leave a real reminder standing.
+
 The name on the title screen plants itself a letter at a time, each one dropping in and
 settling like a fence post going into the ground, over a pasture — drifting clouds by day,
 fireflies at dusk — with a pig trotting up and down a run of fence. The whole backdrop is
@@ -830,12 +870,14 @@ opening film is owed separately and still plays on the first **Play**, so the wa
 teaches the fencing and the film says what the fencing is for.
 
 A gear in the corner opens settings, which holds the version number, a switch for the
-buzzing and one red button. **Haptics** turns off every buzz in the game — the tap as a
-piece of fencing goes into the ground, the verdict when the gate is opened — for a phone on
-a table or a battery being nursed; it is on as the game comes, it is remembered, and
-flicking it on gives the tap it is promising straight away. Clearing all game data throws
-away every star and every day completed, and shuts the trail back to its first level, so it
-asks before it does anything.
+buzzing, a switch for the daily reminder and one red button. **Haptics** turns off every buzz
+in the game — the tap as a piece of fencing goes into the ground, the verdict when the gate
+is opened — for a phone on a table or a battery being nursed; it is on as the game comes, it
+is remembered, and flicking it on gives the tap it is promising straight away. **The daily
+puzzle reminder** is whether the game says so when a new board goes up and at what hour, and
+it admits it plainly when the phone has stopped passing them on. Clearing all game data
+throws away every star and every day completed, and shuts the trail back to its first level,
+so it asks before it does anything.
 
 A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
 wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
@@ -991,6 +1033,88 @@ fourteen shots, and a player who asks for reduced motion gets every shot and eve
 with the camera held still. They are the only screens in the game lit by something other
 than the phone: the opening and the send-off are at sunrise, so the world opens and closes
 on one light whatever the system appearance says.
+
+## Counting
+
+The game counts how it is played, so that a level nobody can beat can be found without
+waiting for somebody to write in about it. What is counted is anonymous, the switch that
+stops it is one screen away behind the gear, and nothing about it is a condition of
+playing.
+
+**What goes out.** Twenty-one signals, all of them written out in one place —
+`AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
+about its players can be read end to end, by whoever is reading the charts and by whoever
+is filling in Apple's privacy questionnaire.
+
+| Signal | Says |
+|---|---|
+| `Session.started` | A launch, and whether it is the first this phone has had |
+| `Tutorial.opened` / `.finished` / `.leftEarly` | The walkthrough, and which lesson somebody walked out on |
+| `Level.opened` | A trail board opened, which world and how far up it |
+| `Level.held` | A pen that held: stars, score against the map's best, pieces against the budget, goes taken |
+| `Level.escaped` / `.refused` | The gate opened on a pen with a gap in it, or a boss rule broken — and which rule |
+| `Level.leftUnheld` | A board walked away from, and the goes they had at it first |
+| `World.held` | Every pen in a world held |
+| `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
+| `Reminder.offered` / `.answered` | The morning reminder offered, and taken or waved away — with the phone's answer beside the player's |
+| `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
+| `Film.played` | A cut scene, and whether it was watched or skipped |
+| `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
+
+The questions this is here to answer: where the walkthrough loses people, which level is
+the wall, whether the dailies bring anybody back, whether the films are worth what they
+cost to draw, and how many players who accept a morning reminder are then let through by
+their phone.
+
+That last pair is why `Reminder.answered` carries the phone's answer as well as the
+player's. A game gets exactly one go at the system permission prompt, so the number worth
+watching is not how many say yes — it is how many say yes and are refused anyway. Nothing
+else on the phone will tell you that is happening.
+
+**What does not go out.** No name, no account, no email, no advertising identifier, no
+IDFV, no location, and nothing a player typed — there is nowhere in the shape of a signal
+to put any of it, and `AnalyticsTests` says so. A batch is stamped with two random numbers:
+one minted on this phone the first time the game opens and SHA256'd before it leaves, and
+one minted fresh every launch. Because nothing is used for tracking, the game never asks
+for a tracking permission. `Pigpen/Resources/PrivacyInfo.xcprivacy` says all of the above
+in Apple's own words.
+
+**The switch.** On as the game comes, on the same terms as the buzzing, and off in one tap
+under *Privacy* in settings. Off means nothing is recorded, held or sent — the signal is
+dropped at the door rather than queued quietly. Turning it off sends one last signal saying
+so, because a chart that cannot tell *switched off* from *stopped playing* reads every
+opt-out as a player lost. *Clear all game data* throws the install's number away so the
+player is somebody nobody has counted before, and deliberately leaves the switch alone: a
+player who opted out and then cleared their stars has not asked to be counted again.
+
+**Where it goes.** [TelemetryDeck](https://telemetrydeck.com), over its ingest API — one
+POST of one JSON array, in about a dozen lines of `URLSession` in `TelemetryDeckSink`,
+rather than an SDK that would be the only third-party code in the repo. Signals gather into
+batches of twenty and go when a batch fills or when the player puts the game down. Nothing
+retries and nothing is written to disk: a batch that cannot get out on a train is dropped,
+which costs a few rows on a chart and nothing at all to the player. Debug and simulator
+builds are marked as test signals, so they land on TelemetryDeck's test screen rather than
+beside real players, and the screenshot runs — which open straight onto a board with one of
+the app's own launch arguments — are not counted at all.
+
+**A camera is not a player.** Which arguments mean *this is CI, not somebody playing* used
+to be a list kept by hand, and it drifted twice in three merges: a new screen argument
+landed and nothing told counting to ignore it, so a fortnight of CI would have charted as
+somebody very good at the meadow. The arguments now live only as cases of
+`PigpenApp.Photograph`. `photographArguments` is derived from them and the switch that
+opens them is exhaustive, so an argument cannot exist without the compiler asking what it
+opens and counting already knowing to ignore it. There is nowhere left to say it twice.
+
+**Turning it on.** Set the `TELEMETRYDECK_APP_ID` secret (see
+[Required Secrets](#required-secrets)). Without it the plist key is empty, `TelemetryDeckSink`
+hands back nothing, and the game counts nothing and sends nowhere — which is what a fork, a
+checkout and every CI run get. It is an ordinary build setting — `TELEMETRYDECK_APP_ID` in
+`project.yml`, read into the plist as `TelemetryDeckAppID` — so a local build that wants to
+send somewhere overrides it on the command line:
+
+```bash
+xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=your-app-id
+```
 
 ## Tech Stack
 
@@ -1248,7 +1372,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, the stars it took, and the trophy offering the whole wall back. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The fourteen film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -1274,6 +1398,7 @@ Set these in GitHub repo settings → Secrets and variables → Actions.
 | `APPLE_DISTRIBUTION_CERT_P12` | Optional. Distribution certificate **and its private key**, base64 | [One stored certificate](#one-stored-certificate) |
 | `APPLE_DISTRIBUTION_CERT_PASSWORD` | Optional. Password protecting that `.p12` | Same |
 | `APPLE_PROVISIONING_PROFILE` | Optional. App Store profile for `com.pigpen.app`, base64 | Same |
+| `TELEMETRYDECK_APP_ID` | Optional. Where usage counting is sent | telemetrydeck.com → your app → App ID. Leave it unset and the game counts nothing |
 
 The App Store Connect app record must exist with bundle ID `com.pigpen.app` (see `project.yml`) before the first TestFlight upload.
 
@@ -1363,7 +1488,11 @@ Pigpen/
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
+│   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
+│   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
+│   └── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -1374,8 +1503,9 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, the daily reminder, the counting switch, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
+│   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
@@ -1393,6 +1523,7 @@ Pigpen/
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
+    ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
 Tools/

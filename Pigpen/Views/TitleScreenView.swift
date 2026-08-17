@@ -43,6 +43,13 @@ struct TitleScreenView: View {
     /// The same book of days the archive and today's board are handed, so the card below
     /// shows the stars that were just won without having to be told about them.
     @State private var daily: DailyProgress
+    /// The daily reminder. It lives here because this is the screen every road out of a
+    /// puzzle comes back to, and so the one place that reliably gets to lay the fortnight
+    /// of reminders down again against a book of days that has just changed.
+    @State private var reminder: DailyReminder
+    /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
+    /// held — never on the way in, when the player has nothing yet to be reminded about.
+    @State private var isOfferingReminders = false
     /// Which square of the calendar the game is standing on. Read once when the screen
     /// arrives rather than on every redraw, so the card cannot change under a finger — and
     /// read again every time the screen comes back, which is what carries a player over
@@ -59,17 +66,24 @@ struct TitleScreenView: View {
     ///     calendar.
     ///   - showsSettings: Opens with the settings sheet already up, which is how CI
     ///     photographs it without tapping through the title screen.
+    ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
+    ///     for the same reason — and handed in rather than waited for, since the offer's own
+    ///     rule is that it only appears to somebody who has held a day and never been asked.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
+        reminder: DailyReminder = DailyReminder(),
         today: DailyDate? = nil,
-        showsSettings: Bool = false
+        showsSettings: Bool = false,
+        showsReminderPrompt: Bool = false
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
+        _reminder = State(initialValue: reminder)
         _today = State(initialValue: today ?? .today())
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
+        _isOfferingReminders = State(initialValue: showsReminderPrompt)
     }
 
     private var world: WorldMap { progress.world }
@@ -140,11 +154,42 @@ struct TitleScreenView: View {
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
             DailyArchiveView(today: today, progress: daily)
+                .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress, daily: daily)
+            SettingsView(progress: progress, daily: daily, reminder: reminder)
+                .onAppear { Analytics.record(.settingsOpened) }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $isOfferingReminders) {
+            ReminderPromptView(
+                streak: daily.streak(upTo: today),
+                time: reminder.time,
+                onAccept: {
+                    // The offer is marked as made whichever way it goes, so the sheet is
+                    // never put up twice — the phone's own prompt follows from here, and
+                    // that one a phone only ever shows once anyway.
+                    reminder.markOffered()
+                    Task {
+                        // Counted on what `turnOn` gives back rather than on the tap, so the
+                        // phone's answer is counted beside the player's. A yes the phone then
+                        // refuses is the one outcome this whole sheet exists to avoid, and
+                        // the only way to find out it is happening is to count it.
+                        let allowed = await reminder.turnOn(today: today, progress: daily)
+                        Analytics.record(.reminderAnswered(taken: true, allowed: allowed))
+                    }
+                },
+                onDecline: {
+                    reminder.markOffered()
+                    Analytics.record(.reminderAnswered(taken: false))
+                }
+            )
+            .onAppear { Analytics.record(.reminderOffered) }
+            // Half the screen: an offer, made while the title screen is still visible
+            // behind it, rather than a wall the player has to get past to carry on.
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         // The meadow is pushed as the film comes down rather than from inside it, so the
         // two never fight over the screen.
@@ -160,6 +205,7 @@ struct TitleScreenView: View {
             // yesterday's, already held.
             if !dayWasGiven { today = .today() }
             raiseTheCurtain()
+            Task { await keepTheRemindersTrue() }
         }
         // The push waits for the screen to be up rather than going out from inside
         // `onAppear`, which is a stack being asked to walk on before it has finished
@@ -181,6 +227,41 @@ struct TitleScreenView: View {
         guard progress.isTheTutorialDue else { return }
         progress.markTutorialSeen()
         isTutorial = true
+    }
+
+    // MARK: - The daily reminder
+
+    /// Every road out of a puzzle comes back through here, so this is where the fortnight
+    /// of reminders is laid down again: what is worth reminding about has just changed, and a
+    /// day held at ten past eight must not be reminded about at nine.
+    ///
+    /// The phone is asked where it stands first, because permission is granted and taken
+    /// away in the system settings — somewhere neither this screen nor the game behind it
+    /// can see into.
+    private func keepTheRemindersTrue() async {
+        await reminder.readTheStanding()
+        await reminder.replan(today: today, progress: daily)
+        offerTheReminderIfItIsDue()
+    }
+
+    /// Whether to put the game's own offer up, and the whole of when it is allowed to
+    /// appear: the player has held a daily puzzle, so there is a run of days to lose, and
+    /// neither the game nor the phone has asked them about it before.
+    ///
+    /// Never on the way in. A phone shows its permission sheet once and never again, and
+    /// spending that on somebody who has not yet found out what a daily puzzle is spends it
+    /// for nothing.
+    private func offerTheReminderIfItIsDue() {
+        guard reminder.isDueAnOffer, daily.completedCount > 0 else { return }
+        // Nothing else may be going up or already up. The walkthrough is the one worth
+        // naming: a player who has only ever played dailies is owed both at once, and an
+        // offer sheet arriving over a practice pen pushing itself onto the stack would be
+        // two screens fighting over the same moment. The offer keeps — it is made the
+        // next time they come back here, which is on the way out of the walkthrough.
+        guard !progress.isTheTutorialDue, !isTutorial,
+              !showsSettings, playDestination == nil, !isDailyOpen, !isArchiveOpen
+        else { return }
+        isOfferingReminders = true
     }
 
     // MARK: - The bar across the top
@@ -487,6 +568,7 @@ struct TitleScreenView: View {
     /// Opens today's board, or — once a wall has been submitted — offers to put that wall
     /// back before the field comes up empty.
     private func openToday() {
+        Analytics.record(.dailyOpened(isToday: true))
         if daily.submittedFences(on: today) != nil {
             isOfferingSubmittedDaily = true
         } else {
@@ -808,7 +890,23 @@ private struct MenuRowButtonStyle: ButtonStyle {
         TitleScreenView(
             progress: .partWayThrough(),
             daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+            reminder: .reminding(),
             today: DailyDate(year: 2026, month: 4, day: 22)
+        )
+    }
+}
+
+#Preview("The reminder offered") {
+    NavigationStack {
+        TitleScreenView(
+            progress: .partWayThrough(),
+            daily: .partWayThroughTheMonth(
+                today: DailyDate(year: 2026, month: 4, day: 22),
+                includingToday: true
+            ),
+            reminder: .neverAsked(),
+            today: DailyDate(year: 2026, month: 4, day: 22),
+            showsReminderPrompt: true
         )
     }
 }

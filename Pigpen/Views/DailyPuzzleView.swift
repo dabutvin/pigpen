@@ -33,6 +33,19 @@ struct DailyPuzzleView: View {
                 wayOutImage: "checkmark.seal.fill",
                 onPenned: { verdict, seconds, fences in
                     progress.record(verdict, seconds: seconds, fences: fences, on: date)
+                    // Counted as a day rather than as a level: a daily's board is generated,
+                    // so its id would be a different word on the charts every morning and
+                    // mean nothing. What is worth knowing about a daily is the run of days
+                    // behind it, which is the one number that says whether the book of days
+                    // is bringing anybody back.
+                    Analytics.record(
+                        .dailyHeld(
+                            stars: verdict.stars,
+                            score: score(of: fences, on: level),
+                            seconds: seconds,
+                            streak: progress.streak(upTo: date)
+                        )
+                    )
                 },
                 onLeave: { game, clock in
                     progress.saveDraft(from: game, clock: clock, on: date)
@@ -41,6 +54,15 @@ struct DailyPuzzleView: View {
         } else {
             NoPuzzleView(date: date)
         }
+    }
+
+    /// What a wall that held was worth, worked out again from the fencing because the
+    /// screen below hands over the wall rather than the tally. One release of one small
+    /// board, once per day held, which is a price worth paying to keep `onPenned` saying
+    /// what it says.
+    private func score(of fences: Set<GridPoint>, on level: PuzzleLevel) -> Int {
+        guard case .penned(let pen) = level.release(fences: fences) else { return 0 }
+        return level.tally(for: pen).score
     }
 
     /// The board the day opens on: whatever fencing was left standing when it was last
