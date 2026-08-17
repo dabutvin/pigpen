@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-/// The game's own offer of a knock each morning, put up once, after the player has held a
+/// The game's own offer of a reminder each morning, put up once, after the player has held a
 /// daily puzzle and so has something to lose by forgetting the next one.
 ///
 /// It stands in front of the phone's prompt rather than instead of it. A phone shows its
@@ -20,7 +20,7 @@ struct ReminderPromptView: View {
     /// What the run of days stands at, so the offer can say what there is to keep rather
     /// than talk about streaks in the abstract.
     var streak = 0
-    /// The hour the knock would come at, in the player's own reckoning of o'clock.
+    /// The hour the reminder would come at, in the player's own reckoning of o'clock.
     var time: ReminderTime = .morning
     /// Taken when the player says yes. Raising the phone's prompt is the caller's to do,
     /// since it is the caller that holds the book of days the fortnight is planned against.
@@ -41,7 +41,7 @@ struct ReminderPromptView: View {
                 gate
 
                 VStack(spacing: 10) {
-                    Text("A knock each morning?")
+                    Text("A reminder each morning?")
                         .font(.system(size: 24, weight: .black, design: .rounded))
                         .foregroundStyle(GamePalette.post)
                         .multilineTextAlignment(.center)
@@ -72,7 +72,7 @@ struct ReminderPromptView: View {
 
     // MARK: - Pieces
 
-    /// A gate on a post, which is the thing being knocked at.
+    /// A bell over the gate, which is the whole of what this is offering.
     private var gate: some View {
         Image(systemName: "bell.badge.fill")
             .font(.system(size: 34, weight: .black))
@@ -94,7 +94,7 @@ struct ReminderPromptView: View {
                 onAccept()
                 dismiss()
             } label: {
-                Label("Knock at \(time.face)", systemImage: "bell.fill")
+                Label("Remind me at \(time.face)", systemImage: "bell.fill")
                     .font(.system(size: 16, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.post)
                     .frame(maxWidth: .infinity)
@@ -128,12 +128,12 @@ struct ReminderPromptView: View {
         guard streak > 1 else {
             return """
                 There is a fresh board every morning, and a day gone by is a day gone. \
-                Pigpen can knock once a day to say the new one is up.
+                Pigpen can remind you once a day that the new one is up.
                 """
         }
         return """
             You are \(streak) days in a row. A run like that is broken by forgetting far \
-            more often than by a board nobody could hold — so Pigpen can knock once a \
+            more often than by a board nobody could hold — so Pigpen can remind you once a \
             morning to say the new one is up.
             """
     }

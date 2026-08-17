@@ -1,8 +1,8 @@
 import Foundation
 import UserNotifications
 
-/// Whatever it is that actually knocks: asks the phone where it stands, raises the system
-/// prompt, and holds the fortnight of knocks the game has laid down.
+/// Whatever it is that actually reminders: asks the phone where it stands, raises the system
+/// prompt, and holds the fortnight of reminders the game has laid down.
 ///
 /// A protocol rather than `UNUserNotificationCenter` outright, for the same reason the
 /// progress stores are protocols. A test cannot raise a permission prompt and a screenshot
@@ -14,9 +14,9 @@ protocol ReminderScheduler: Sendable {
     /// ever shows it once, which is why nothing calls this until the player has already
     /// said yes to the game's own offer.
     func ask() async -> Bool
-    /// Takes down every knock this game has standing and lays these down instead.
-    func replace(with knocks: [ReminderKnock]) async
-    /// Takes down every knock this game has standing, and nothing else on the phone.
+    /// Takes down every reminder this game has standing and lays these down instead.
+    func replace(with reminders: [ScheduledReminder]) async
+    /// Takes down every reminder this game has standing, and nothing else on the phone.
     func clear() async
 }
 
@@ -38,7 +38,7 @@ struct SystemReminderScheduler: ReminderScheduler {
         return switch status {
         case .notDetermined: .notAsked
         case .denied: .refused
-        // Provisional and ephemeral both pass a knock on, which is all this game asks of a
+        // Provisional and ephemeral both pass a reminder on, which is all this game asks of a
         // phone. Anything a later system adds is taken the same way rather than read as a
         // refusal, since a refusal is the one state the settings card apologises for.
         default: .allowed
@@ -57,34 +57,34 @@ struct SystemReminderScheduler: ReminderScheduler {
         return granted
     }
 
-    func replace(with knocks: [ReminderKnock]) async {
+    func replace(with reminders: [ScheduledReminder]) async {
         await clear()
 
         let centre = UNUserNotificationCenter.current()
-        for knock in knocks {
+        for reminder in reminders {
             let content = UNMutableNotificationContent()
-            content.title = knock.title
-            content.body = knock.body
+            content.title = reminder.title
+            content.body = reminder.body
             content.sound = .default
 
             var when = DateComponents()
-            when.year = knock.date.year
-            when.month = knock.date.month
-            when.day = knock.date.day
-            when.hour = knock.time.hour
-            when.minute = knock.time.minute
+            when.year = reminder.date.year
+            when.month = reminder.date.month
+            when.day = reminder.date.day
+            when.hour = reminder.time.hour
+            when.minute = reminder.time.minute
 
-            // Each knock is its own day rather than one repeating every morning, because
-            // what a knock says depends on which morning it is — and because a day already
-            // held has to be able to lose its knock without the rest of them going with it.
+            // Each reminder is its own day rather than one repeating every morning,
+            // because what it says depends on which morning it is — and because a day
+            // already held has to be able to lose its own without the rest going with it.
             //
             // Handed over without waiting for an answer: the only thing that can come back
-            // is that a knock could not be laid down, and there is nothing the game would
+            // is that one could not be laid down, and there is nothing the game would
             // do about that which it does not already do by laying the whole fortnight
             // down again the next time the player comes back.
             centre.add(
                 UNNotificationRequest(
-                    identifier: knock.id,
+                    identifier: reminder.id,
                     content: content,
                     trigger: UNCalendarNotificationTrigger(dateMatching: when, repeats: false)
                 ),
@@ -100,7 +100,7 @@ struct SystemReminderScheduler: ReminderScheduler {
                 asked.resume(
                     returning: pending
                         .map(\.identifier)
-                        .filter { $0.hasPrefix(ReminderKnock.idPrefix) }
+                        .filter { $0.hasPrefix(ScheduledReminder.idPrefix) }
                 )
             }
         }
@@ -109,7 +109,7 @@ struct SystemReminderScheduler: ReminderScheduler {
     }
 }
 
-/// A gate that writes every knock down in a ledger instead of posting one.
+/// A gate that writes every reminder down in a ledger instead of posting one.
 ///
 /// What the tests read to find out what the game would have said, and what the previews and
 /// the screenshot runs are handed so that photographing the offer sheet does not put a real
@@ -119,8 +119,8 @@ actor RememberedReminders: ReminderScheduler {
     private var standingGiven: ReminderStanding
     private let answerToAsking: Bool
 
-    /// The knocks currently laid down, in the order they were handed over.
-    private(set) var laid: [ReminderKnock] = []
+    /// The reminders currently laid down, in the order they were handed over.
+    private(set) var laid: [ScheduledReminder] = []
     private(set) var timesAsked = 0
     private(set) var timesCleared = 0
 
@@ -137,8 +137,8 @@ actor RememberedReminders: ReminderScheduler {
         return answerToAsking
     }
 
-    func replace(with knocks: [ReminderKnock]) async {
-        laid = knocks
+    func replace(with reminders: [ScheduledReminder]) async {
+        laid = reminders
     }
 
     func clear() async {

@@ -16,7 +16,7 @@ struct SettingsView: View {
     /// The book of days goes with the meadow's stars: a player asking for the game back as
     /// they found it means all of it, dailies included.
     let daily: DailyProgress
-    /// The knock at the gate. Here rather than only on the sheet that offers it, because a
+    /// The daily reminder. Here rather than only on the sheet that offers it, because a
     /// player who waved that offer away has to be able to find it afterwards, and one who
     /// took it has to be able to move the hour or stop it.
     ///
@@ -66,7 +66,7 @@ struct SettingsView: View {
         }
         // Permission is granted and taken away in the system settings, which is a place
         // this screen cannot see into. Reading it on the way in is what lets the card admit
-        // that the phone has stopped passing the knocks on.
+        // that the phone has stopped passing the reminders on.
         .task { await reminder.readTheStanding() }
         .alert("Clear all game data?", isPresented: $isAsking) {
             Button("Cancel", role: .cancel) {}
@@ -125,7 +125,7 @@ struct SettingsView: View {
         }
     }
 
-    /// The daily knock: whether the game says anything when a new board goes up, and at
+    /// The daily reminder: whether the game says anything when a new board goes up, and at
     /// what hour.
     ///
     /// The switch is the player's wish and the line under it is the phone's answer, and the
@@ -138,8 +138,8 @@ struct SettingsView: View {
                 .font(.headline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
 
-            Toggle(isOn: knocking) {
-                Text("Knock when a new board goes up")
+            Toggle(isOn: wantsReminding) {
+                Text("Remind me when a new board goes up")
                     .font(.subheadline.weight(.heavy))
                     .foregroundStyle(GamePalette.post)
             }
@@ -170,7 +170,7 @@ struct SettingsView: View {
         .animation(.easeInOut(duration: 0.25), value: reminder.isBeingRefused)
     }
 
-    /// What to say when the player wants a knock and the phone will not pass one on. There
+    /// What to say when the player wants reminding and the phone will not pass it on. There
     /// is nothing the game can do about it from in here, so it says which door to go
     /// through and opens it.
     private var refusal: some View {
@@ -306,12 +306,12 @@ struct SettingsView: View {
         "\(number) \(noun)\(number == 1 ? "" : "s")"
     }
 
-    /// What the knock is going to do, under the hour it is set to. The fortnight is said
+    /// What the reminder is going to do, under the hour it is set to. The fortnight is said
     /// out loud because it is the one surprising thing about it: the game lays down every
-    /// morning it can see ahead at once, so it goes on knocking through a fortnight the
+    /// morning it can see ahead at once, so it goes on reminding through a fortnight the
     /// player never opens it.
     private var planned: String {
-        "A knock at \(reminder.time.face), on any morning you have not already held the day."
+        "A reminder at \(reminder.time.face), on any morning you have not already held the day."
     }
 
     // MARK: - The switch
@@ -319,7 +319,7 @@ struct SettingsView: View {
     /// The player's wish, read out of the reminder and written back through it. Turning it
     /// on is a conversation with the phone rather than a flag, so the switch may come back
     /// off — which is exactly what should happen when the phone says no.
-    private var knocking: Binding<Bool> {
+    private var wantsReminding: Binding<Bool> {
         Binding(
             get: { reminder.isOn && !reminder.isBeingRefused },
             set: { wanted in
@@ -354,13 +354,13 @@ struct SettingsView: View {
         daily.eraseEverything()
         hasCleared = true
         haptics.buzz(.success)
-        // The knock is a preference rather than progress, so it survives — but what it had
-        // planned does not. Every day is unheld again, so every morning is worth knocking
+        // The reminder is a preference rather than progress, so it survives — but what it had
+        // planned does not. Every day is unheld again, so every morning is worth reminding
         // about again, and the fortnight has to be laid down knowing that.
         Task { await reminder.replan(progress: daily) }
     }
 
-    /// The one door out of the game, for the phone that has stopped passing knocks on.
+    /// The one door out of the game, for the phone that has stopped passing reminders on.
     private func openTheSystemSettings() {
         guard let door = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(door)
@@ -380,7 +380,7 @@ private func previewHaptics(isOn: Bool = true) -> Haptics {
             SettingsView(
                 progress: .partWayThrough(),
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
-                reminder: .knocking(),
+                reminder: .reminding(),
                 haptics: previewHaptics()
             )
             .presentationDetents([.medium, .large])
@@ -409,7 +409,7 @@ private func previewHaptics(isOn: Bool = true) -> Haptics {
     SettingsView(
         progress: .partWayThrough(),
         daily: DailyProgress(store: RememberedDailyRecords()),
-        reminder: .knocking(),
+        reminder: .reminding(),
         haptics: previewHaptics(isOn: false)
     )
 }

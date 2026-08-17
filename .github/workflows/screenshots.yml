@@ -98,7 +98,7 @@ jobs:
           # `-title`, `-title-fresh`, `-settings` and `-reminder` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
-          # settings sheet and the offer of a daily knock can be captured without
+          # settings sheet and the offer of a daily reminder can be captured without
           # tapping through the title screen. The reminder screens are handed a
           # reminder held in memory, so nothing on the runner is ever asked for
           # permission to post a notification.

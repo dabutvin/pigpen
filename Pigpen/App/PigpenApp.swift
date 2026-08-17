@@ -8,7 +8,7 @@ struct PigpenApp: App {
     /// `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`
     /// or one of the film arguments so the pull request screenshots can show
     /// the boards, the universe map, each world's trail, the practice pen, the daily
-    /// puzzle and its archive, the settings sheet, the offer of a daily knock and every
+    /// puzzle and its archive, the settings sheet, the offer of a daily reminder and every
     /// shot of every cut scene rather than only the title screen.
     ///
     /// The daily screens are opened on a fixed square of the calendar rather than on
@@ -149,18 +149,18 @@ struct PigpenApp: App {
                 } else if launch.contains("-settings") {
                     // With a fortnight of days complete as well, so the card behind the gear
                     // has the dailies to say something about and the clear button has all
-                    // of it to clear. The knock is switched on and held in memory, so the
+                    // of it to clear. The reminder is switched on and held in memory, so the
                     // reminder card is photographed with its hour showing and nothing is
                     // left standing on the machine that took the picture.
                     TitleScreenView(
                         progress: .partWayThrough(),
                         daily: .partWayThroughTheMonth(today: Self.photographed),
-                        reminder: .knocking(),
+                        reminder: .reminding(),
                         today: Self.photographed,
                         showsSettings: true
                     )
                 } else if launch.contains("-reminder") {
-                    // The game's own offer of a daily knock, over a fortnight of days with
+                    // The game's own offer of a daily reminder, over a fortnight of days with
                     // today held — which is the state it really appears in, since it is only
                     // ever put up to somebody with a run of days to lose. Its reminder is
                     // held in memory too: a screenshot runner must never be asked for

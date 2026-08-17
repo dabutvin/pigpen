@@ -43,11 +43,11 @@ struct TitleScreenView: View {
     /// The same book of days the archive and today's board are handed, so the card below
     /// shows the stars that were just won without having to be told about them.
     @State private var daily: DailyProgress
-    /// The knock at the gate. It lives here because this is the screen every road out of a
+    /// The daily reminder. It lives here because this is the screen every road out of a
     /// puzzle comes back to, and so the one place that reliably gets to lay the fortnight
-    /// of knocks down again against a book of days that has just changed.
+    /// of reminders down again against a book of days that has just changed.
     @State private var reminder: DailyReminder
-    /// Whether the game's own offer of a knock is up. Raised once, after a day has been
+    /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
     /// held — never on the way in, when the player has nothing yet to be reminded about.
     @State private var isOfferingReminders = false
     /// Which square of the calendar the game is standing on. Read once when the screen
@@ -66,7 +66,7 @@ struct TitleScreenView: View {
     ///     calendar.
     ///   - showsSettings: Opens with the settings sheet already up, which is how CI
     ///     photographs it without tapping through the title screen.
-    ///   - showsReminderPrompt: Opens with the game's offer of a daily knock already up,
+    ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
     ///     for the same reason — and handed in rather than waited for, since the offer's own
     ///     rule is that it only appears to somebody who has held a day and never been asked.
     init(
@@ -192,7 +192,7 @@ struct TitleScreenView: View {
             // yesterday's, already held.
             if !dayWasGiven { today = .today() }
             raiseTheCurtain()
-            Task { await keepTheKnocksTrue() }
+            Task { await keepTheRemindersTrue() }
         }
         // The push waits for the screen to be up rather than going out from inside
         // `onAppear`, which is a stack being asked to walk on before it has finished
@@ -216,19 +216,19 @@ struct TitleScreenView: View {
         isTutorial = true
     }
 
-    // MARK: - The knock at the gate
+    // MARK: - The daily reminder
 
     /// Every road out of a puzzle comes back through here, so this is where the fortnight
-    /// of knocks is laid down again: what is worth knocking about has just changed, and a
-    /// day held at ten past eight must not be knocked about at nine.
+    /// of reminders is laid down again: what is worth reminding about has just changed, and a
+    /// day held at ten past eight must not be reminded about at nine.
     ///
     /// The phone is asked where it stands first, because permission is granted and taken
     /// away in the system settings — somewhere neither this screen nor the game behind it
     /// can see into.
-    private func keepTheKnocksTrue() async {
+    private func keepTheRemindersTrue() async {
         await reminder.readTheStanding()
         await reminder.replan(today: today, progress: daily)
-        offerTheKnockIfItIsDue()
+        offerTheReminderIfItIsDue()
     }
 
     /// Whether to put the game's own offer up, and the whole of when it is allowed to
@@ -238,12 +238,12 @@ struct TitleScreenView: View {
     /// Never on the way in. A phone shows its permission sheet once and never again, and
     /// spending that on somebody who has not yet found out what a daily puzzle is spends it
     /// for nothing.
-    private func offerTheKnockIfItIsDue() {
+    private func offerTheReminderIfItIsDue() {
         guard reminder.isDueAnOffer, daily.completedCount > 0 else { return }
         // Nothing else may be going up or already up. The walkthrough is the one worth
         // naming: a player who has only ever played dailies is owed both at once, and an
         // offer sheet arriving over a practice pen pushing itself onto the stack would be
-        // two screens fighting over the same moment. The knock keeps — it is offered the
+        // two screens fighting over the same moment. The offer keeps — it is made the
         // next time they come back here, which is on the way out of the walkthrough.
         guard !progress.isTheTutorialDue, !isTutorial,
               !showsSettings, playDestination == nil, !isDailyOpen, !isArchiveOpen
@@ -850,13 +850,13 @@ private struct MenuRowButtonStyle: ButtonStyle {
         TitleScreenView(
             progress: .partWayThrough(),
             daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
-            reminder: .knocking(),
+            reminder: .reminding(),
             today: DailyDate(year: 2026, month: 4, day: 22)
         )
     }
 }
 
-#Preview("The knock offered") {
+#Preview("The reminder offered") {
     NavigationStack {
         TitleScreenView(
             progress: .partWayThrough(),

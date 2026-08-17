@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// The hour of the day a reminder knocks at. Two plain numbers rather than a `Date`, for
+/// The hour of the day a reminder reminders at. Two plain numbers rather than a `Date`, for
 /// the same reason `DailyDate` is three: half past eight is half past eight wherever the
 /// phone is standing and whichever day it happens to be.
 struct ReminderTime: Hashable, Comparable, Sendable {
@@ -9,7 +9,7 @@ struct ReminderTime: Hashable, Comparable, Sendable {
     let minute: Int
 
     /// Anything outside a day is pulled back into one, so a stored number that has been
-    /// meddled with cannot ask for a knock at the twenty-ninth hour.
+    /// meddled with cannot ask to be reminded at the twenty-ninth hour.
     init(hour: Int, minute: Int) {
         let held = min(max(hour * 60 + minute, 0), 24 * 60 - 1)
         self.hour = held / 60
@@ -20,7 +20,7 @@ struct ReminderTime: Hashable, Comparable, Sendable {
         self.init(hour: 0, minute: minutesFromMidnight)
     }
 
-    /// What o'clock it is now, for deciding whether today's knock has already been missed.
+    /// What o'clock it is now, for deciding whether today's reminder has already been missed.
     init(of moment: Date, calendar: Calendar = .current) {
         let parts = calendar.dateComponents([.hour, .minute], from: moment)
         self.init(hour: parts.hour ?? 0, minute: parts.minute ?? 0)
@@ -33,7 +33,7 @@ struct ReminderTime: Hashable, Comparable, Sendable {
         left.minutesFromMidnight < right.minutesFromMidnight
     }
 
-    /// Nine in the morning: a new board goes up at midnight, and the knock that says so is
+    /// Nine in the morning: a new board goes up at midnight, and the reminder that says so is
     /// worth more over breakfast than it is in the small hours.
     static let morning = ReminderTime(hour: 9, minute: 0)
 
@@ -50,15 +50,15 @@ struct ReminderTime: Hashable, Comparable, Sendable {
     }
 }
 
-/// One knock: the day it is about, the o'clock it goes off at, and what it says when it
+/// One reminder: the day it is about, the o'clock it goes off at, and what it says when it
 /// does.
 ///
 /// Worked out ahead of time rather than at the moment it fires, because nothing of this
-/// game runs while the phone is in a pocket. Every knock for the fortnight ahead is laid
+/// game runs while the phone is in a pocket. Every reminder for the fortnight ahead is laid
 /// down at once and laid down again each time the player comes back, which is what keeps a
-/// day already held from being knocked about.
-struct ReminderKnock: Hashable, Sendable, Identifiable {
-    /// What every knock this game posts is filed under, so clearing them takes ours and
+/// day already held from being reminded about.
+struct ScheduledReminder: Hashable, Sendable, Identifiable {
+    /// What every reminder this game posts is filed under, so clearing them takes ours and
     /// leaves anything else on the phone alone.
     static let idPrefix = "pigpen.daily-reminder."
 
@@ -70,7 +70,7 @@ struct ReminderKnock: Hashable, Sendable, Identifiable {
     var id: String { Self.idPrefix + date.id }
 }
 
-/// Where the player's mind on being reminded is kept: whether they want a knock, what hour
+/// Where the player's mind on being reminded is kept: whether they want reminding, what hour
 /// they want it at, and whether the game has already asked them once.
 ///
 /// A protocol rather than `UserDefaults` outright, for the same reason the book of days is
@@ -138,34 +138,34 @@ final class RememberedReminderSettings: ReminderStore {
     func save(hasBeenOffered: Bool) { self.hasBeenOffered = hasBeenOffered }
 }
 
-/// The knock at the gate: whether the game says anything when a new board goes up, at what
+/// The daily reminder: whether the game says anything when a new board goes up, at what
 /// hour, and what it says.
 ///
 /// Everything a daily puzzle is worth playing for — the run of days, the clock, the square
 /// on the calendar that goes gold — depends on the player being there on the day, and a run
 /// of days is broken by forgetting far more often than by a board somebody could not hold.
-/// So the game is allowed to knock once a morning, and it is allowed to knock only because
+/// So the game is allowed to say so once a morning, and it is allowed to say it only because
 /// the player said it could.
 ///
 /// Nothing here is fetched and nothing here runs in the background. The almanac is already
 /// in the player's pocket, so the game knows what every morning of the fortnight ahead is
-/// going to be and simply lays down a knock for each of them; coming back to the title
+/// going to be and simply lays one down for each of them; coming back to the title
 /// screen lays the lot down again, which is how a day held before the hour comes round has
-/// its knock taken back off.
+/// its reminder taken back off.
 @MainActor
 @Observable
 final class DailyReminder {
-    /// How far ahead the knocks are laid. Long enough that a player who does not open the
-    /// game for a week is still knocked at every morning of it, short enough to sit well
+    /// How far ahead the reminders are laid. Long enough that a player who does not open the
+    /// game for a week is still reminded every morning of it, short enough to sit well
     /// inside the sixty-four pending notifications a phone will hold for one app.
     static let fortnight = 14
 
-    /// Whether the player has asked for a knock. Their wish rather than the phone's
+    /// Whether the player has asked to be reminded. Their wish rather than the phone's
     /// permission — those come apart the moment somebody turns notifications off in the
     /// system settings, and the card behind the gear has to be able to say so.
     private(set) var isOn: Bool
     private(set) var time: ReminderTime
-    /// Where the phone stands on letting this game knock at all.
+    /// Where the phone stands on letting this game post anything at all.
     private(set) var standing: ReminderStanding
     /// Whether the offer has been put up once already.
     private(set) var hasBeenOffered: Bool
@@ -177,7 +177,7 @@ final class DailyReminder {
     ///   properly. Nothing on the device can be read without waiting, and a screen cannot
     ///   wait before it draws, so the honest opening answer is that nobody has asked yet —
     ///   `readTheStanding()` puts it right a moment later. Handed in by the previews, which
-    ///   want a card that is already refusing or already knocking.
+    ///   want a card that is already refusing or already reminding.
     init(
         store: any ReminderStore = StoredReminderSettings(),
         scheduler: any ReminderScheduler = SystemReminderScheduler(),
@@ -200,7 +200,7 @@ final class DailyReminder {
         !hasBeenOffered && standing == .notAsked
     }
 
-    /// Whether the player wants a knock and the phone is refusing to pass it on. The one
+    /// Whether the player wants reminding and the phone is refusing to pass it on. The one
     /// state the settings card has to explain rather than simply show, since nothing this
     /// game can do will fix it.
     var isBeingRefused: Bool {
@@ -220,7 +220,7 @@ final class DailyReminder {
     /// and lays the fortnight down if it is allowed to.
     ///
     /// A refusal leaves the switch off rather than on-and-silent: a game that says it will
-    /// knock and then cannot is worse than one that admits the phone has the last word.
+    /// remind and then cannot is worse than one that admits the phone has the last word.
     @discardableResult
     func turnOn(today: DailyDate = .today(), progress: DailyProgress) async -> Bool {
         standing = await scheduler.standing()
@@ -240,7 +240,7 @@ final class DailyReminder {
         return true
     }
 
-    /// The player has said no, or has changed their mind later. Every knock this game has
+    /// The player has said no, or has changed their mind later. Every reminder this game has
     /// standing is taken back.
     func turnOff() async {
         set(isOn: false)
@@ -248,8 +248,8 @@ final class DailyReminder {
     }
 
     /// A new hour. The fortnight is laid down again at once rather than at the next
-    /// opportunity, so a player who moves the knock to the evening does not get one more
-    /// knock in the morning first.
+    /// opportunity, so a player who moves the reminder to the evening does not get one
+    /// more in the morning first.
     func change(to newTime: ReminderTime, today: DailyDate = .today(), progress: DailyProgress) async {
         guard newTime != time else { return }
         time = newTime
@@ -265,14 +265,14 @@ final class DailyReminder {
         store.save(hasBeenOffered: true)
     }
 
-    // MARK: - Laying the knocks down
+    // MARK: - Laying the reminders down
 
-    /// Works out every knock due over the fortnight ahead and hands the lot to the phone,
+    /// Works out every reminder due over the fortnight ahead and hands the lot to the phone,
     /// replacing whatever was standing before.
     ///
     /// Called on every return to the title screen, and after any day is held, because what
-    /// is worth knocking about changes underneath: a day finished at ten past eight should
-    /// not be knocked about at nine.
+    /// is worth reminding about changes underneath: a day finished at ten past eight should
+    /// not be reminded about at nine.
     func replan(
         today: DailyDate = .today(),
         progress: DailyProgress,
@@ -284,7 +284,7 @@ final class DailyReminder {
         }
 
         await scheduler.replace(
-            with: Self.knocks(
+            with: Self.reminders(
                 from: today,
                 now: ReminderTime(of: now),
                 at: time,
@@ -301,17 +301,17 @@ final class DailyReminder {
 
     // MARK: - What gets said
 
-    /// The knocks due over a run of days: one for every morning the almanac has a board
+    /// The reminders due over a run of days: one for every morning the almanac has a board
     /// for and the player has not already held.
     ///
     /// - Parameters:
     ///   - now: What o'clock it is, so an hour already gone today is not asked of the phone
-    ///     — a knock scheduled for a moment in the past is a knock that never arrives.
-    ///   - streak: The run of days as it stands. It is written onto the first knock alone,
-    ///     and only when that knock is today's or tomorrow's, because that is as far ahead
+    ///     — one scheduled for a moment in the past is one that never arrives.
+    ///   - streak: The run of days as it stands. It is written onto the first reminder alone,
+    ///     and only when that reminder is today's or tomorrow's, because that is as far ahead
     ///     as the number can be promised: the run either survives to the next board or it
-    ///     does not, and a knock four days out cannot know which.
-    static func knocks(
+    ///     does not, and a reminder four days out cannot know which.
+    static func reminders(
         from today: DailyDate,
         now: ReminderTime,
         at time: ReminderTime,
@@ -319,8 +319,8 @@ final class DailyReminder {
         streak: Int = 0,
         holdsAPuzzle: (DailyDate) -> Bool = DailyAlmanac.holdsAPuzzle(on:),
         isComplete: (DailyDate) -> Bool
-    ) -> [ReminderKnock] {
-        var knocks: [ReminderKnock] = []
+    ) -> [ScheduledReminder] {
+        var due: [ScheduledReminder] = []
         var day = today
 
         for step in 0..<max(0, days) {
@@ -329,11 +329,11 @@ final class DailyReminder {
             if step == 0, time <= now { continue }
             guard holdsAPuzzle(day), !isComplete(day) else { continue }
 
-            // As far ahead as the run of days can be promised: the knock the player is
+            // As far ahead as the run of days can be promised: the reminder the player is
             // going to see next, and only while it is today's board or tomorrow's.
-            let carriesTheRun = knocks.isEmpty && step <= 1
-            knocks.append(
-                ReminderKnock(
+            let carriesTheRun = due.isEmpty && step <= 1
+            due.append(
+                ScheduledReminder(
                     date: day,
                     time: time,
                     title: title(for: day),
@@ -342,16 +342,16 @@ final class DailyReminder {
             )
         }
 
-        return knocks
+        return due
     }
 
-    /// What a knock calls itself. The day rather than the game's name, since the phone
+    /// What a reminder calls itself. The day rather than the game's name, since the phone
     /// writes the game's name over the top of it anyway.
     static func title(for date: DailyDate) -> String {
         "\(date.weekday.name)'s puzzle is up"
     }
 
-    /// What a knock says under that: what sort of board it is, and — when it can be
+    /// What a reminder says under that: what sort of board it is, and — when it can be
     /// promised — the run of days riding on it.
     static func body(for date: DailyDate, streak: Int = 0) -> String {
         let said = climb(date.weekday)
@@ -359,7 +359,7 @@ final class DailyReminder {
         return said + " \(streak) days in a row so far."
     }
 
-    /// The week is a climb, and a knock may as well say where on it the morning stands.
+    /// The week is a climb, and a reminder may as well say where on it the morning stands.
     /// Monday is mostly water and free walls; by Sunday there is barely anything to lean
     /// on. Nothing here gives a board away — it says what sort of morning it is, the way
     /// the trail's signposts say which world you are standing in.
@@ -383,9 +383,9 @@ extension DailyReminder {
         DailyReminder(store: RememberedReminderSettings(), scheduler: RememberedReminders())
     }
 
-    /// Switched on and knocking, for the settings card in a preview or a screenshot run —
+    /// Switched on and reminding, for the settings card in a preview or a screenshot run —
     /// held in memory, so nothing is left standing on the machine that photographed it.
-    static func knocking(at time: ReminderTime = .morning) -> DailyReminder {
+    static func reminding(at time: ReminderTime = .morning) -> DailyReminder {
         DailyReminder(
             store: RememberedReminderSettings(isOn: true, time: time, hasBeenOffered: true),
             scheduler: RememberedReminders(standing: .allowed),
@@ -404,7 +404,7 @@ extension DailyReminder {
     }
 }
 
-/// Where the phone stands on letting this game knock.
+/// Where the phone stands on letting this game post a reminder.
 ///
 /// Three states rather than a flag, because the middle one is the whole of why there is an
 /// offer sheet at all: a game gets one chance at the system prompt, and spending it on
@@ -412,7 +412,7 @@ extension DailyReminder {
 enum ReminderStanding: Equatable, Sendable {
     /// The phone has never been asked. The one state in which asking is still possible.
     case notAsked
-    /// Knocks will be passed on.
+    /// Reminders will be passed on.
     case allowed
     /// The player has turned this game's notifications off, here or in the system settings.
     /// Nothing in the game can undo it; only the system settings can.
