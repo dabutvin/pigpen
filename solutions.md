@@ -182,22 +182,23 @@ version; the woods space them two apart and the mountain three.
 ## 5. Otter Ford — 12 pieces, 24
 
 ```
-..........
-..........
-.....#....
-~~~~~o~~~~
-#oooooooo#
-.#ooPoooo#
-..#ooooo#.
-...#ooo#..
-....###...
+...~#....
+...~o#...
+...~oo#..
+...~ooo#.
+...~oPoo#
+..#ooooo#
+...~oooo#
+...~ooo#.
+...~oo#..
+...~##...
 ```
 
-One dry tile breaks the river, and it is the only way north. Fence the tile *above* it
+One dry tile breaks the river, and it is the only way west. Fence the tile *west of* it
 rather than the ford itself: one piece either way, but this way the ford stays inside the
 pen and the entire far bank of the river becomes a free wall. The remaining eleven pieces
 have only three sides left to close, which they do as an octagon pressed up against the
-south side of the river. 24 tiles.
+east side of the river. 24 tiles.
 
 ## 6. Puddle Corner — 8 pieces, 26
 
@@ -324,23 +325,24 @@ did: there is no field here whose third star the obvious block will win.
 ## 1. Bramble Brook — 9 pieces, 27
 
 ```
-..........
-..........
-~~~~~~~~..
-#oooooo~..
-#ooPooo~..
-#oooooo~..
-.#ooooo~..
-..#oooo~..
-...####...
+..~###...
+..~ooo#..
+..~oooo#.
+..~oPooo#
+..~ooooo#
+..~ooooo#
+..~ooooo#
+..~~~~~~.
+.........
+.........
 ```
 
-The brook walls the north and the east, and the two sides left over are yours. Squared off
+The brook walls the west and the south, and the two sides left over are yours. Squared off
 against them the nine pieces hold a block of 20, which is the answer the meadow trained you
 to give and is worth two stars here.
 
-The third comes from spending the same nine on a staircase instead. Each step down the
-south-west trades a tile of wall for a tile of ground the block was paying to keep out, and
+The third comes from spending the same nine on a staircase instead. Each step out to the
+north-east trades a tile of wall for a tile of ground the block was paying to keep out, and
 the diagonal ends up holding 27 — every tile the brook can be made to keep.
 
 ## 2. Foxglove Dell — 7 pieces, 29
@@ -543,15 +545,16 @@ to Crater Pools rather than for six stops and then sorting by what it scatters.
 ## 1. Cinder Slope — 9 pieces, 25
 
 ```
-..........
-..........
-..~~~~~~~~
-..~oooooo#
-..~oPoooo#
-..~oooooo#
-..~oooo##.
-..~ooo#x..
-...###....
+.........
+.........
+..~~~~~~.
+..~ooooo#
+..~oPooo#
+..~ooooo#
+..~oooo#.
+..~ooo#x.
+..~ooo#..
+..~###...
 ```
 
 The melt channel walls the west and the top, and the two sides left over are yours. Nine
@@ -590,20 +593,21 @@ nothing free on it, five points is a lot to pay for a tile.
 ## 3. Ashfall Terrace — 13 pieces, 31
 
 ```
-..........
-.~~~~~~~..
-#ooooooo#.
-#oPooooao#
-#oooxooo#.
-.#ooooo#..
-..#ooo#...
-...#o#....
-....#.....
+..###....
+.~ooo#...
+.~oPoo#..
+.~ooooo#.
+.~ooxooo#
+.~ooooo#.
+.~oooo#..
+.~oao#...
+..#o#....
+...#.....
 ```
 
-The tarn along the top is the only free wall on the terrace, and the chestnut is out east
+The tarn down the west is the only free wall on the terrace, and the chestnut is out south
 where no tidy pen would ever go. The pen that wins is neither tidy nor cheap: it runs out
-far enough east to take the chestnut in, then tapers away south in a long wedge.
+far enough south to take the chestnut in, then tapers away east in a long wedge.
 
 The ember it swallows on the way is the point of the field. Walling round it would cut the
 pen in two — it is in the middle of the ground, not out at the edge of it — so the pen takes
@@ -613,22 +617,23 @@ worth 21.
 ## 4. Chestnut Scree — 12 pieces, 32
 
 ```
-..........
-~~~~~~~~~~
-#oooooooo#
-#ooPoooa#.
-#oooooo#..
-.#ooxo#...
-..#ao#....
-...##.....
-..........
+.~###....
+.~ooo#...
+.~oooo#..
+.~oPooa#.
+.~oooxo#.
+.~oooo#..
+.~ooo#...
+.~oa#....
+.~o#.....
+.~#......
 ```
 
-Fern Gully's lesson on ground with something staked in it. The tarn bars the whole top, so
-the ground under it is cheap to wall, and the chestnuts are strung out south where the
+Fern Gully's lesson on ground with something staked in it. The tarn bars the whole west, so
+the ground beside it is cheap to wall, and the chestnuts are strung out south where the
 walling is dear.
 
-A block under the tarn holds one chestnut and 16 tiles of ground for 21. The tongue that
+A block beside the tarn holds one chestnut and 16 tiles of ground for 21. The tongue that
 reaches down for the second gives up the corners to do it and swallows the ember on the way
 — 27 tiles, two chestnuts, one ember, 32. Five points for a chestnut is worth four tiles of
 detour, and it is worth the ember as well.
@@ -636,24 +641,25 @@ detour, and it is worth the ember as well.
 ## 5. Sulphur Rill — 13 pieces, 24
 
 ```
-.....####~
-....#oooo~
-...#Poooo~
-..#oooooo~
-..x#ooooo~
-....#o#oo~
-.....#x#o~
-........#~
-.........~
+.........
+.........
+...#x....
+..#o#....
+.#Poo#...
+#ooooo#..
+#oooo#x..
+#ooooo#..
+#oooooo#.
+~~~~~~~~~
 ```
 
-The rill down the east edge is the free wall, and the two embers are the field. There is no
+The rill along the foot is the free wall, and the two embers are the field. There is no
 block worth having here: every rectangle big enough to be worth the budget wants a wall over
 one ember or the other, and an ember takes no fencing at all. Squaring off clear of both is
 worth 15.
 
-The pen that wins keeps out of the way of both instead. Its west wall runs down the diagonal
-tight past the upper ember, and it pinches right in round the lower one — that notch two
+The pen that wins keeps out of the way of both instead. Its wall runs out on the diagonal
+tight past the upper ember, and it pinches right in round the lower one — that notch three
 rows from the bottom is a wall built round a tile rather than over it — so it holds 24
 without paying either of them a thing.
 
@@ -796,39 +802,41 @@ Gasworks Cut to Foundry Corner.
 ## 1. Gasworks Cut — 9 pieces, 26
 
 ```
-.........
-~~~~~~~~~
-#ooooooo~
-#oPooooo~
-.#oooooo~
-..#oooo#.
-...#oo#..
-....##...
+.~##....
+.~oo#...
+.~oPo#..
+.~oooo#.
+.~ooooo#
+.~ooooo#
+.~oooo#.
+.~ooo#..
+.~~~~...
 ```
 
-The cut runs the width of the world along the top and turns down the far end of it, which is
-two walls handed over. Nine pieces squared off under them hold a block of 18, and that is
+The cut runs the depth of the world down the west and turns east along the foot of it, which
+is two walls handed over. Nine pieces squared off beside them hold a block of 18, and that is
 worth two stars.
 
-The third comes from giving up the square corner: the wall goes down the west for two tiles
+The third comes from giving up the square corner: the wall runs along the north for two tiles
 and then steps away south-east, and the ground it picks up on the diagonal is worth more than
-the ground it gives up at the bottom. 26 tiles, and every one the yard has in it.
+the ground it gives up at the far end. 26 tiles, and every one the yard has in it.
 
 ## 2. Pieman's Row — 12 pieces, 24
 
 ```
-~#.......
-~o#......
-~oP#...a.
-~ooo#....
-~oooo#...
-~ooooo#..
-.#oooa#..
-..####...
+~~~~~~..
+#ooooo#.
+.#Poooo#
+..#oooo#
+...#ooo#
+....#oa#
+.....##.
+..a.....
+........
 ```
 
-Two pies on the row and one canal down the west. A block against the canal holds sixteen tiles
-and neither pie — both lie below where a rectangle stops, and no piece will lie on one to sweep
+Two pies on the row and one canal along the north. A block under the canal holds sixteen tiles
+and neither pie — both lie past where a rectangle stops, and no piece will lie on one to sweep
 it up on the way past — which is 16 and two stars.
 
 The pen that wins goes out for the near pie and puts nineteen tiles round it, by running the
@@ -838,14 +846,15 @@ bending out to it costs more than the five it pays, which is the whole of what a
 ## 3. Cobble Yard — 14 pieces, 18
 
 ```
-.....#...
-....#o#..
-..x#ooo#.
-..#ooooo#
-.#ooPoo#.
-..#ooo#..
-...#o#x..
-....#....
+........
+....#...
+..x#o#..
+..#ooo#.
+.#ooPoo#
+#ooooo#.
+.#ooo#x.
+..#o#...
+...#....
 ```
 
 Paving and two drains, and nothing else. Every tile of this pen is bought out of the fourteen
@@ -859,21 +868,22 @@ that wants one of those tiles is a ring you cannot build.
 ## 4. Lock Gate — 13 pieces, 22
 
 ```
-....#....
-~~~~o~~~~
-#ooooooo#
-#ooxoooo#
-#oooPoo#.
-.#oooo#..
-..#oo#...
-...##....
+.~###...
+.~ooo#..
+.~oooo#.
+.~oxooo#
+#oooPoo#
+.~oooo#.
+.~ooo#..
+.~oo#...
+.~##....
 ```
 
-The canal crosses the whole world with the lock standing open in the middle of it. One piece
-in the gate shuts the only way north and buys the entire canal as a free wall — Otter Ford's
-lesson, on a third of the board.
+The canal runs the whole depth of the world with the lock standing open in the middle of it.
+One piece in the gate shuts the only way west and buys the entire canal as a free wall — Otter
+Ford's lesson, on a third of the board.
 
-The other twelve close three sides, and the drain under the gate is in the middle of whatever
+The other twelve close three sides, and the drain inside the gate is in the middle of whatever
 they close, so it is taken in and paid for rather than walled round. 27 tiles less the drain,
 which is 22, against a block worth 14.
 
@@ -901,19 +911,21 @@ paid for. 27 tiles for thirteen pieces.
 ## 6. Gutter Lane — 14 pieces, 26
 
 ```
-..######~
-.#oooooo~
-.#oPoooo~
-..#ooooo~
-..x#oooo~
-....#ooo~
-....x#oo~
-......##.
+........
+.##.....
+#oo#x...
+#oPo#...
+#oooo#x.
+#ooooo#.
+#oooooo#
+#oooooo#
+~~~~~~~.
 ```
 
-The canal walls the whole east side and two drains are sunk out where a wall wants to stand.
-Neither is worth five points: the wall comes off the canal, runs down the diagonal tight past
-the upper drain and pinches in round the lower one, and both stay outside for a tile apiece.
+The canal walls the whole foot of the lane and two drains are sunk out where a wall wants to
+stand. Neither is worth five points: the wall comes off the canal, runs out on the diagonal
+tight past the upper drain and pinches in round the lower one, and both stay outside for a
+tile apiece.
 
 Sour Ground made that choice once and Sulphur Rill made it twice. This makes it twice with
 nowhere to put the mistake — a block that keeps clear of both drains is worth 15.
@@ -921,14 +933,15 @@ nowhere to put the mistake — a block that keeps clear of both drains is worth 
 ## 7. Foundry Corner — 9 pieces, 27
 
 ```
-~~~~~~~~~
-~ooooooo#
-~ooooooo#
-~ooPooo#.
-~oooxo#..
-~oooo#...
-~ooo#.x..
-.###.....
+~~~~~~~.
+~oooooo#
+~oooooo#
+~ooPooo#
+~oooxo#.
+~oooo#..
+~ooo#.x.
+~oo#....
+~##.....
 ```
 
 Two canals meeting at a corner, which Puddle Corner and Willow Corner both asked before — and
@@ -1244,17 +1257,18 @@ rather than being wasted: it seals that corner, so the fencing stops one piece s
 ## 9. Visitor Crater — 20 pieces, 49
 
 ```
-...##~......
-..#ooo#.a...
-.#oaoo#x~#..
-#oooooo~oo#.
-#oooPo~ooo~.
-.#ooo#oVo~..
-..#o#xoooo#.
-...~ooooo#..
-....#ooo#...
-.....#a~....
-......#.....
+...##......
+..#oo#.....
+.#oooo#....
+#oaoooo~...
+#oooPo#o#..
+~oooo#xoo#.
+.##o~ooooa#
+..x~oVooo~.
+.a~ooooo#..
+..#oo~o#...
+...#~.#....
+...........
 ```
 
 The boss, and the reaches' own rule: **the visitor will not be housed worse than the pig**. Both
@@ -1279,8 +1293,8 @@ answer holds 22 tiles on each side of the line, with a stardrop in each half and
 visitor's half swallows: 27 for the pig, 22 for the visitor, 49 between them, off a best pair of
 blocks worth 27.
 
-The third stardrop lies out past the east rim where no wall on this board can reach it, and the
-second meteor stands up on the north rim exactly where a tidy wall would want to go.
+The third stardrop lies out past the west rim where no wall on this board can reach it, and the
+second meteor stands up on the west rim exactly where a tidy wall would want to go.
 
 It asks for 21 of the 24 stars below it before it opens.
 
@@ -1464,26 +1478,27 @@ it pinches down to a single tile: 21 tiles and that crystal, which is 26.
 ## 6. Rimstone Corner — 9 pieces, 46
 
 ```
-............
-~~~~~~~~~~~.
-.#aooooooo~.
-..#ooooooo~.
-...#oooPoo~.
-....#oaooo~.
-.....#oooo~.
-......#ooo~.
-.......#oo~.
-........#o~.
-.........#~.
+.~.........
+.~#........
+.~a#.......
+.~oo#......
+.~ooo#.....
+.~oooo#....
+.~oooao#...
+.~ooPooo#..
+.~ooooooo#.
+.~oooooooo#
+.~~~~~~~~~~
+...........
 ```
 
-The river takes the length of the roof of the cave and the length of the east wall — in along the
-north, round the corner, and down the far side — so two sides of the pen are handed over and there
+The river takes the length of the west wall of the cave and the length of its floor — down the
+west, round the corner, and out along the south — so two sides of the pen are handed over and there
 are nine pieces to draw the other two. It runs a tile inside the rim, so the strip beyond it is a
 far bank: no pen can reach it, the way no pen reaches the far shore of the Dew Ponds.
 
 Nine laid as a right angle in the corner hold 25. The same nine laid corner to corner, one long
-diagonal from the west wall down to the south-east that cuts the entire bend off in a single line,
+diagonal from the north wall down to the south-east that cuts the entire bend off in a single line,
 hold 36 tiles and both crystals: 46. That is the smallest budget in the caverns paying out the
 second biggest score in them, which is the corner question with nothing whatever in the way of it —
 Foundry Corner asked it on a canal bend with the same nine pieces and could only reach round 27, and
@@ -1550,16 +1565,17 @@ anywhere.
 ## 9. The Roost — 20 pieces, 45
 
 ```
-......###..
-.....#Toa#.
-...~~~~aoo#
-..~~o#Uooo#
-.~~ooo#ooo#
-~~ooooo#o#.
-.#ooooPo#..
-..#oaox#...
-...#oo#....
-....##.....
+.....~....
+....~~#...
+...~~oo#..
+..~~oooo#.
+..~ooooao#
+.#~#ooooo#
+#T~U#oPx#.
+#oaoo#o#..
+#aoooo#...
+.#ooo#....
+..###.....
 ```
 
 The boss, and the sixth rule the game has: **the roost hangs together and the pig hangs apart**.
@@ -1576,15 +1592,15 @@ the pens are two and *which animal is in which* is the whole of it — so the ch
 little boxes so that nothing can possibly be sharing, is turned down flat, because a pup boxed on
 its own is a roost split.
 
-The river comes in off the west wall low down and climbs north-east across the cave, and the bat and
-its pup hang either side of the tip of it: the water runs between them. Joining them means reaching
+The river comes in off the north wall halfway along it and runs south-west across the cave, and the
+bat and its pup hang either side of the tip of it: the water runs between them. Joining them means reaching
 round that tip — and reaching round the tip is what hands the pig the whole staircase as the wall of
 its own pen. So the one wall the budget cannot afford to leave out does both jobs, and finding it is
 finding the field.
 
 The best pair of blocks holds 22 between them. The answer hangs the roost in a pocket of 14 tiles off
-the east end of the river with two crystals in it, and gives the pig 21 tiles of the wide floor
-south-west of the water with the third crystal and a boulder it cannot get out of swallowing: 45.
+the south end of the river with two crystals in it, and gives the pig 21 tiles of the wide floor
+north-east of the water with the third crystal and a boulder it cannot get out of swallowing: 45.
 
 It asks for 21 of the 24 stars below it before it opens.
 
@@ -1770,28 +1786,29 @@ apples, which is 38.
 ## 6. The Big Top — 11 pieces, 51
 
 ```
-............
-~~~~~~~~~~..
-#ooooooooo~.
-#ooooooooo~.
-.#oooaoooo~.
-..#oPooooo~.
-...#oooxxo~.
-....#ooooo~.
-.....#oaoo~.
-......#ooo~.
-.......###~.
+.~##.......
+.~oo#......
+.~ooo#.....
+.~oooo#....
+.~oooPo#...
+.~ooaooo#..
+.~ooooooo#.
+.~ooooxoao#
+.~ooooxooo#
+.~oooooooo#
+..~~~~~~~~~
+...........
 ```
 
-The crowd runs along the front of the big top, turns at the corner and goes down the far side, so
+The crowd runs down the side of the big top, turns at the corner and goes along the far end, so
 two of the four walls are handed over before a piece is laid. The corner question the way Rimstone
 Corner asked it, and the hardest corner in the game — with eleven pieces, the smallest budget at
 the fair, to draw the other two sides.
 
 What makes it hard is where the guy ropes are pegged. A right-angled block in this corner is a
-rectangle hung under the crowd, and the pair of ropes lies inside every rectangle worth drawing, so
+rectangle hung off the crowd, and the pair of ropes lies inside every rectangle worth drawing, so
 the tidy pen has to swallow them and pay their ten: 25, where the same block on clear ground would
-be 35. The eleven laid corner to corner instead — one long diagonal from the west side down to the
+be 35. The eleven laid corner to corner instead — one long diagonal from the north side down to the
 south-east, cutting the whole bend off in a single line — hold 51 tiles, both apples and the same
 pair of ropes, which comes back to 51. The biggest pen in the world for the smallest budget in it,
 which is what two free sides are worth.

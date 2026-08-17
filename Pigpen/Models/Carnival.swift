@@ -219,9 +219,9 @@ extension PuzzleLevel {
             """
     )
 
-    /// The big top takes the length of the north of the fair and the length of the east side — the
-    /// crowd runs along the front of it, turns at the corner and goes down the far side — and both
-    /// of those are free wall for anybody standing in the sawdust under them. Two sides handed
+    /// The big top takes the length of the west of the fair and the length of its foot — the
+    /// crowd runs down the side of it, turns at the corner and goes along the far end — and both
+    /// of those are free wall for anybody standing in the sawdust inside them. Two sides handed
     /// over, and eleven pieces to draw the other two.
     ///
     /// Which is the corner question with two free sides, the way Rimstone Corner asked it, and the
@@ -231,7 +231,7 @@ extension PuzzleLevel {
     /// drawing. So the tidy pen has to swallow the pair and pay their ten, and comes to 25 where
     /// the same block on clear ground would be 35 — the apples are dropped clear of it, and no
     /// wall will lie on one to sweep it up. The eleven pieces laid corner to corner
-    /// instead — one long diagonal from the west side down to the south-east, cutting the whole
+    /// instead — one long diagonal from the north side down to the south-east, cutting the whole
     /// bend off in a single line — hold 51 tiles, both apples and the same pair of ropes, which
     /// comes back to 51. The biggest pen in the world for the smallest budget in it, which is what
     /// two free sides are worth.
@@ -244,17 +244,18 @@ extension PuzzleLevel {
         maximumScore: 51,
         question: .corner,
         map: """
-            ............
-            ~~~~~~~~~~..
-            ..........~.
-            ..........~.
-            .....a....~.
-            ....P.....~.
-            .......xx.~.
-            ..........~.
-            .......a..~.
-            ..........~.
-            ..........~.
+            .~.........
+            .~.........
+            .~.........
+            .~.........
+            .~...P.....
+            .~..a......
+            .~.........
+            .~....x.a..
+            .~....x....
+            .~.........
+            ..~~~~~~~~~
+            ...........
             """
     )
 

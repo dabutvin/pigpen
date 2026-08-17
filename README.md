@@ -400,7 +400,7 @@ them as usual.
 
 Two of its fields ask questions nothing has asked since the meadow: Culvert Row puts its two
 banks at opposite ends of the street where The Narrows put them a stride apart, and Lock Gate
-stakes a drain under the ford Otter Ford handed over for a single piece. Foundry Corner is the
+stakes a drain beside the ford Otter Ford handed over for a single piece. Foundry Corner is the
 third `corner` field in the game and the first to stake anything on the diagonal itself —
 Puddle Corner and Willow Corner were both eight pieces on clean ground, and both asked 38%.
 
@@ -517,7 +517,7 @@ out for.
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
 Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
-in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
+in the game: the river takes the whole west wall of the cave and the whole of its floor, and nine pieces
 laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
 Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
 round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
@@ -582,8 +582,8 @@ world.
 | 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
 | 9 | The Center Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
 
-The Big Top is the corner question with the crowd along the front of the tent and down its far
-side, so two of the four walls are handed over: eleven pieces laid corner to corner hold 51 tiles,
+The Big Top is the corner question with the crowd down the side of the tent and along its far
+end, so two of the four walls are handed over: eleven pieces laid corner to corner hold 51 tiles,
 the biggest pen in the world for the smallest budget in it, where the same eleven laid as a right
 angle hold 25 — because the pair of guy ropes is pegged inside every rectangle worth drawing, and
 the tidy pen has to swallow them and pay their ten. The Rigging carries seven pegs in three runs —

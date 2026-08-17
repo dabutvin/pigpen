@@ -213,17 +213,17 @@ extension PuzzleLevel {
             """
     )
 
-    /// The river takes the length of the roof of the cave and the length of the east wall — it
-    /// comes in along the north, turns at the corner and runs down the far side, and both of those
-    /// are free wall for anybody standing in the rimstone under them. Two sides handed over, and
+    /// The river takes the length of the west wall of the cave and the length of its floor — it
+    /// comes in down the west, turns at the corner and runs out along the south, and both of those
+    /// are free wall for anybody standing in the rimstone inside them. Two sides handed over, and
     /// nine pieces to draw the other two. It runs a tile inside the rim rather than along it, so
     /// there is a far bank beyond it, and like every far bank in the game nothing can reach it.
     ///
     /// Which is the corner question with nothing else in the way of it, and the hardest corner in
     /// the game. Nine pieces laid as a right angle in the corner hold 25 and reach neither
-    /// crystal — both are pegged out west of the bend, where no rectangle hung off two straight
+    /// crystal — both are pegged out north of the bend, where no rectangle hung off two straight
     /// banks goes. The same nine laid corner
-    /// to corner — one long diagonal from the west wall down to the south-east, cutting the whole
+    /// to corner — one long diagonal from the north wall down to the south-east, cutting the whole
     /// bend off in a single line — hold 36 tiles and both crystals, which is 46. Foundry Corner
     /// asked this on a canal bend with the same nine pieces and could only reach round 27; two free
     /// sides instead of one is what takes those nine to 46, and every one of them has to be on the
@@ -237,17 +237,18 @@ extension PuzzleLevel {
         maximumScore: 46,
         question: .corner,
         map: """
-            ............
-            ~~~~~~~~~~~.
-            ..a.......~.
-            ..........~.
-            .......P..~.
-            ......a...~.
-            ..........~.
-            ..........~.
-            ..........~.
-            ..........~.
-            ..........~.
+            .~.........
+            .~.........
+            .~a........
+            .~.........
+            .~.........
+            .~.........
+            .~...a.....
+            .~..P......
+            .~.........
+            .~.........
+            .~~~~~~~~~~
+            ...........
             """
     )
 
@@ -340,15 +341,15 @@ extension PuzzleLevel {
     /// is the whole of it — and the cheap answer, three little boxes so that nothing can possibly
     /// be sharing, is turned down flat, because a pup boxed on its own is a roost split.
     ///
-    /// The river comes in off the west wall low down and climbs north-east across the cave, and
-    /// the bat and its pup are hung either side of the tip of it: the water runs between them.
+    /// The river comes in off the north wall halfway along it and runs south-west across the cave,
+    /// and the bat and its pup are hung either side of the tip of it: the water runs between them.
     /// Joining them means reaching round that tip, and reaching round the tip is what hands the
     /// pig the whole staircase as the wall of its own pen — so the one wall the budget cannot
     /// afford to leave out does both jobs, and finding it is finding the field.
     ///
     /// Twenty pieces. The best pair of blocks holds 23 between them. The answer hangs the roost in
-    /// a pocket of 14 tiles off the east end of the river with two crystals in it, and gives the
-    /// pig 21 tiles of the wide floor south-west of the water with the third crystal and a boulder
+    /// a pocket of 14 tiles off the south end of the river with two crystals in it, and gives the
+    /// pig 21 tiles of the wide floor north-east of the water with the third crystal and a boulder
     /// it cannot get out of swallowing, which comes to 45. It asks for most of the stars the eight
     /// fields below it hold before it will open at all.
     static let theRoost = gloamdeep(
@@ -360,16 +361,17 @@ extension PuzzleLevel {
         maximumScore: 45,
         question: .roost,
         map: """
-            ...........
-            ......T.a..
-            ...~~~~a...
-            ..~~..U....
-            .~~........
-            ~~.........
-            ......P....
-            ....a.x....
-            ...........
-            ...........
+            .....~....
+            ....~~....
+            ...~~.....
+            ..~~......
+            ..~....a..
+            ..~.......
+            .T~U..Px..
+            ..a.......
+            .a........
+            ..........
+            ..........
             """
     )
 }
