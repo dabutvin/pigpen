@@ -427,7 +427,7 @@ way from Dust Shore to Starwell Ring.
 | 1 | Dust Shore | 12 | — | 21 | 31 | 32% |
 | 2 | Fallwater Basin | 13 | — | 24 | 36 | 33% |
 | 3 | Broken Chain | 15 | — | 24 | 38 | 36% |
-| 4 | Swept Flat | 18 | — | 20 | 32 | 37% |
+| 4 | Swept Flat | 18 | 3 meteors | 20 | 32 | 37% |
 | 5 | Stardrop Hollow | 13 | 2 stardrops | 23 | 39 | 41% |
 | 6 | Meteor Field | 15 | 2 meteors | 17 | 32 | 46% |
 | 7 | Starwell Ring | 12 | — | 14 | 32 | 56% |
@@ -436,9 +436,13 @@ way from Dust Shore to Starwell Ring.
 
 Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
 pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing
-at. Swept Flat is the second field in the game with no water on it at all, after Basalt Flats,
-and eighteen pieces on eleven tiles of bare dust is the largest budget anything has ever been
-given with nothing to lean on.
+at. Swept Flat is the third field in the game with no water on it at all, after Basalt Flats and
+Cobble Yard, and eighteen pieces on eleven tiles of bare dust is the largest budget anything has
+ever been given with nothing to lean on. The three meteors lying on it lean back: a meteor takes
+no fencing and shuts nothing in, so all they do is rule places out — one on the wall of the
+diamond a player centres on the pig, one inside it, and one that refuses the same diamond a row
+further south. The shape is the whole answer on Basalt Flats and Cobble Yard; here half of it is
+working out where the shape will fit.
 
 Its boss, Visitor Crater, adds the reaches' rule, and it is the first one to weigh two pens
 against each other: **the visitor will not be housed worse than the pig**. Both of them held, in
