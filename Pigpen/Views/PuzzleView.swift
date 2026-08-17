@@ -36,6 +36,15 @@ struct PuzzleView: View {
     /// a themed world passes its own so the thicket sits in leaf litter rather than mowing.
     private let day: GamePalette.Pasture
     private let dusk: GamePalette.Pasture
+    /// Which world this board is a stop on, and how far up its trail — and nothing at all
+    /// for a board that is not on a trail.
+    ///
+    /// It is what counting goes by. A trail stop is counted as a level, since the whole
+    /// point of the numbers is which puzzle players get stuck on; a daily is counted as a
+    /// day, by the screen above this one, because its board is generated and its id would
+    /// mean nothing on a chart. A preview, a screenshot run and the practice pen pass
+    /// nothing and are counted as nothing, which is what they are.
+    private let trail: (world: String, stop: Int)?
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -61,6 +70,13 @@ struct PuzzleView: View {
     /// What a press just got back off a tile — what a treat is worth, or the noise the animal
     /// standing there makes — rising off that tile so it is found out without reading anything.
     @State private var callout: FieldCallout?
+    /// How many times the gate has been opened on this board. Counted rather than shown:
+    /// how many goes a level takes before it gives is the closest thing the game has to a
+    /// reading of how hard it actually is, as against how hard it was meant to be.
+    @State private var attempts = 0
+    /// Whether the pen has held at any point on this board, so that leaving is counted as
+    /// giving up only when there was nothing to give up on.
+    @State private var hasHeld = false
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -77,6 +93,7 @@ struct PuzzleView: View {
         dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
+        trail: (world: String, stop: Int)? = nil,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
@@ -89,6 +106,7 @@ struct PuzzleView: View {
             dusk: dusk,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
+            trail: trail,
             onPenned: onPenned,
             onLeave: onLeave
         )
@@ -105,6 +123,7 @@ struct PuzzleView: View {
         dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
+        trail: (world: String, stop: Int)? = nil,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
@@ -116,6 +135,7 @@ struct PuzzleView: View {
         self.dusk = dusk
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
+        self.trail = trail
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
         _clock = State(initialValue: clock)
@@ -203,8 +223,21 @@ struct PuzzleView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
         }
-        .onAppear { clock?.start() }
-        .onDisappear { onLeave?(game, clock) }
+        .onAppear {
+            clock?.start()
+            if let trail {
+                Analytics.record(.levelOpened(level, world: trail.world, stop: trail.stop))
+            }
+        }
+        .onDisappear {
+            onLeave?(game, clock)
+            // A board walked away from without ever holding, and the goes they had at it
+            // first. The pair is the difference between a puzzle that beat somebody and
+            // one they took a look at and thought better of.
+            if trail != nil, !hasHeld {
+                Analytics.record(.levelLeftUnheld(level, attempts: attempts))
+            }
+        }
         .task(id: game.phase) { await reactToPhase() }
     }
 
@@ -247,6 +280,7 @@ struct PuzzleView: View {
                 }
 
                 Button {
+                    attempts += 1
                     game.openTheGate()
                 } label: {
                     Text("Release \(quarry)")
@@ -308,44 +342,31 @@ struct PuzzleView: View {
         }
     }
 
-    /// What the field is holding, set against the most it has held, the stars that best is
-    /// worth, and the way back to it. A pen counts from the moment it closes, so the fencing
-    /// can be pulled about, seen to fall short, and put back the way it was without the pig
-    /// ever leaving its tile. Undo walks back a press at a time; this goes straight to the
-    /// best, however long ago it was, which is why it wears the trophy rather than an arrow.
+    /// What the field is holding, set against the most it has held, and the way back to it.
+    /// A pen counts from the moment it closes, so the fencing can be pulled about, seen to
+    /// fall short, and put back the way it was without the pig ever leaving its tile. Undo
+    /// walks back a press at a time; this goes straight to the best, however long ago it was,
+    /// which is why it wears the trophy rather than an arrow.
     ///
+    /// Only the score, never the stars: stars are what the gate being opened pays out, so
+    /// they are kept for the verdict card and the player has to release the pig to see them.
     /// On a level gone back to, the best is the one already won there rather than one closed
-    /// this go, so the board opens with the tally up: what there is to beat, and the stars
-    /// it took, before a single piece is laid.
+    /// this go, so the board still opens with the tally up — what there is to beat, before a
+    /// single piece is laid.
     @ViewBuilder
     private var bestPenTally: some View {
         if game.bestScore > 0 {
             HStack(spacing: 10) {
-                HStack(spacing: 7) {
-                    // The stars are the best pen's, not the field's: they say what the score
-                    // beside them was worth, and go rainbow when nothing on the map beats it.
-                    StarRow(
-                        stars: game.bestStars,
-                        size: 12,
-                        hasTheBestPen: game.bestVerdict?.isAsGoodAsItGets == true
-                    )
+                Text(tallySummary)
+                    .font(.footnote.weight(.heavy))
+                    // Written straight onto the grass, so it is painted rather than printed.
+                    .foregroundStyle(GamePalette.cream)
                     .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
-
-                    Text(tallySummary)
-                        .font(.footnote.weight(.heavy))
-                        // Written straight onto the grass, so it is painted rather than printed.
-                        .foregroundStyle(GamePalette.cream)
-                        .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
-                        .contentTransition(.numericText())
-                        // Sits on one line beside the button rather than pushing it off the
-                        // screen when the type is large.
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                }
-                // One thing to hear rather than two, since the stars are only worth
-                // anything read out beside the score they were given for.
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel(tallySaid)
+                    .contentTransition(.numericText())
+                    // Sits on one line beside the button rather than pushing it off the
+                    // screen when the type is large.
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
 
                 if game.canRestoreBestPen {
                     Button { putBestPenBack() } label: {
@@ -372,16 +393,6 @@ struct PuzzleView: View {
         return holding >= game.bestScore
             ? "Your best yet: \(scored(holding))"
             : "Holding \(holding), best \(game.bestScore)"
-    }
-
-    /// The tally spoken: the same words, with the stars beside them said rather than shown,
-    /// since a row of glyphs reads out as nothing at all.
-    private var tallySaid: String {
-        var said = "\(tallySummary), \(counted(game.bestStars, "star"))"
-        if game.bestVerdict?.isAsGoodAsItGets == true {
-            said += " — the best pen there is"
-        }
-        return said
     }
 
     /// One of the small painted boards that work the fencing already down. A button with
@@ -745,6 +756,9 @@ struct PuzzleView: View {
                 showEveryone()
             }
         case .escaped(let escapes):
+            if trail != nil {
+                Analytics.record(.levelEscaped(level, attempt: attempts))
+            }
             // Bail if the phase changed under us (clearing the field, fetching them back):
             // otherwise the walk keeps stepping after sendHome and leaves a deer painted
             // on the grass outside the board.
@@ -752,26 +766,44 @@ struct PuzzleView: View {
             guard !Task.isCancelled else { return }
             reveal()
             Haptics.buzz(.error)
-        case .refused:
+        case .refused(_, let refusal):
+            // Which rule was broken rather than only that one was: a briefing nobody takes
+            // in reads on the charts as the same refusal over and over on the same board.
+            if trail != nil {
+                Analytics.record(.levelRefused(level, refusal: refusal, attempt: attempts))
+            }
             // Nothing walks anywhere — everything is where it was fenced. The card says what
             // the board wanted instead, and no clock is stopped and no score is told, since
             // the field is not won.
             guard !Task.isCancelled else { return }
             reveal()
             Haptics.buzz(.error)
-        case .penned:
+        case .penned(let pen):
             // The clock stops on the pen holding rather than on the card coming up, so the
             // lap of honour is not charged to the player.
             clock?.stop()
             let took = clock?.elapsed() ?? 0
             if clock != nil { heldIn = took }
+            let verdict = game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false)
+            hasHeld = true
+            // Counted before the celebrating for the same reason it is told to whoever is
+            // keeping score before it: a player who leaves the moment the pen holds has
+            // still held it.
+            if trail != nil {
+                Analytics.record(
+                    .levelHeld(
+                        level,
+                        verdict: verdict,
+                        score: level.tally(for: pen).score,
+                        pieces: game.fences.count,
+                        attempts: attempts,
+                        seconds: clock == nil ? nil : took
+                    )
+                )
+            }
             // Told to whoever is keeping score before any of the celebrating, so a player
             // who leaves the moment the pen holds still keeps the stars for it.
-            onPenned?(
-                game.verdict ?? PenVerdict(stars: 1, isAsGoodAsItGets: false),
-                took,
-                game.fences
-            )
+            onPenned?(verdict, took, game.fences)
             // Whatever a cancelled escape walk left behind, the board about to be
             // celebrated on has every animal home and in plain view: a mark left past the
             // rim would otherwise stand outside the pen, and one left faded out would run

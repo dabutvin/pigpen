@@ -27,6 +27,10 @@ struct TutorialView: View {
         }
     }
 
+    /// Whether the walkthrough was seen through to the end, so that backing out of it is
+    /// counted as backing out rather than as finishing.
+    @State private var reachedTheMeadow = false
+
     var body: some View {
         ZStack {
             MeadowBackdrop()
@@ -74,6 +78,19 @@ struct TutorialView: View {
         .keepsSwipeFromPopping()
         .task(id: game.phase) { await reactToPhase() }
         .animation(.easeInOut(duration: 0.25), value: lesson.step)
+        .onAppear { Analytics.record(.tutorialOpened) }
+        .onDisappear {
+            // Which lesson they were on when they walked out is the whole value of this:
+            // the walkthrough loses people at a particular step or it does not lose them
+            // at all, and this is the only way to tell which.
+            guard !reachedTheMeadow else { return }
+            Analytics.record(
+                .tutorialLeftEarly(
+                    lesson: lesson.step.rawValue,
+                    of: TutorialLesson.Step.allCases.count - 1
+                )
+            )
+        }
     }
 
     // MARK: - Coach
@@ -93,6 +110,8 @@ struct TutorialView: View {
                 Button {
                     if lesson.step == .finished {
                         Haptics.tap(.medium)
+                        reachedTheMeadow = true
+                        Analytics.record(.tutorialFinished)
                         dismiss()
                     } else if lesson.continueTapped() {
                         Haptics.tap(.light)

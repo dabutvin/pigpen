@@ -15,6 +15,10 @@ settings:
     DEVELOPMENT_TEAM: "${TEAM_ID}"
     CODE_SIGN_STYLE: Automatic
     INFOPLIST_FILE: Pigpen/Resources/Info.plist
+    # Where the counting is sent. Empty by default, and empty means the game counts
+    # nothing and sends nothing — a fork, a checkout and a screenshot run all build and
+    # play exactly as they did. The release workflow passes the real one in.
+    TELEMETRYDECK_APP_ID: ""
 
 targets:
   Pigpen:
@@ -24,6 +28,7 @@ targets:
       - Pigpen
     resources:
       - path: Pigpen/Resources/Assets.xcassets
+      - path: Pigpen/Resources/PrivacyInfo.xcprivacy
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pigpen.app
@@ -41,6 +46,7 @@ targets:
         CFBundleName: Pigpen
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        TelemetryDeckAppID: "$(TELEMETRYDECK_APP_ID)"
         UILaunchScreen:
           UIColorName: ""
         ITSAppUsesNonExemptEncryption: false

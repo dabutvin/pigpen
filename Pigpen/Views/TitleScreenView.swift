@@ -154,9 +154,11 @@ struct TitleScreenView: View {
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
             DailyArchiveView(today: today, progress: daily)
+                .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
         .sheet(isPresented: $showsSettings) {
             SettingsView(progress: progress, daily: daily, reminder: reminder)
+                .onAppear { Analytics.record(.settingsOpened) }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
@@ -169,10 +171,21 @@ struct TitleScreenView: View {
                     // never put up twice — the phone's own prompt follows from here, and
                     // that one a phone only ever shows once anyway.
                     reminder.markOffered()
-                    Task { await reminder.turnOn(today: today, progress: daily) }
+                    Task {
+                        // Counted on what `turnOn` gives back rather than on the tap, so the
+                        // phone's answer is counted beside the player's. A yes the phone then
+                        // refuses is the one outcome this whole sheet exists to avoid, and
+                        // the only way to find out it is happening is to count it.
+                        let allowed = await reminder.turnOn(today: today, progress: daily)
+                        Analytics.record(.reminderAnswered(taken: true, allowed: allowed))
+                    }
                 },
-                onDecline: { reminder.markOffered() }
+                onDecline: {
+                    reminder.markOffered()
+                    Analytics.record(.reminderAnswered(taken: false))
+                }
             )
+            .onAppear { Analytics.record(.reminderOffered) }
             // Half the screen: an offer, made while the title screen is still visible
             // behind it, rather than a wall the player has to get past to carry on.
             .presentationDetents([.medium, .large])
@@ -555,6 +568,7 @@ struct TitleScreenView: View {
     /// Opens today's board, or — once a wall has been submitted — offers to put that wall
     /// back before the field comes up empty.
     private func openToday() {
+        Analytics.record(.dailyOpened(isToday: true))
         if daily.submittedFences(on: today) != nil {
             isOfferingSubmittedDaily = true
         } else {
