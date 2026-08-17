@@ -157,7 +157,7 @@ struct CutSceneView: View {
                 Spacer(minLength: 0)
 
                 Button {
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    Haptics.tap(.light)
                     onFinish()
                 } label: {
                     HStack(spacing: 5) {

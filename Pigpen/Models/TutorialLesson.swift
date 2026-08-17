@@ -26,6 +26,11 @@ final class TutorialLesson {
         case finished
     }
 
+    /// What the walkthrough is remembered under, beside the films. It is written down the
+    /// same way one is because it is owed the same way one is: once, to somebody who has
+    /// never played, whether they sit through it or walk out of it.
+    static let seenKey = "tutorial"
+
     private(set) var step: Step = .welcome
     let game: PuzzleGame
 

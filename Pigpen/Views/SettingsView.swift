@@ -1,8 +1,9 @@
 import SwiftUI
 import UIKit
 
-/// What is behind the gear on the title screen: which version of the game this is, how far
-/// the player has got, and the one button that hands it all back.
+/// What is behind the gear on the title screen: which version of the game this is, whether
+/// the phone is allowed to buzz, how far the player has got, and the one button that hands
+/// it all back.
 ///
 /// Nothing in here is part of playing, so it stays out of the way on a sheet rather than
 /// taking a screen of its own — and the button that throws away every star a player owns
@@ -15,6 +16,9 @@ struct SettingsView: View {
     /// The book of days goes with the meadow's stars: a player asking for the game back as
     /// they found it means all of it, dailies included.
     let daily: DailyProgress
+    /// The switch the whole game feels through. The shared one by default, since a toggle
+    /// wired to anything else would move a switch nothing is listening to.
+    @Bindable var haptics: Haptics = .shared
 
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
@@ -42,6 +46,7 @@ struct SettingsView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         about
+                        feel
                         gameData
                     }
                     .padding(.horizontal, 20)
@@ -107,6 +112,34 @@ struct SettingsView: View {
         }
     }
 
+    /// The buzzing, and the switch that stops it.
+    ///
+    /// Turning it on gives the tap it is promising straight away, so the switch answers in
+    /// the thing it governs rather than in words. Turning it off says nothing, which is the
+    /// whole point of turning it off.
+    private var feel: some View {
+        card {
+            Text("Feel")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Toggle(isOn: $haptics.isOn) {
+                Text("Haptics")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+            }
+            .tint(GamePalette.clover)
+            .onChange(of: haptics.isOn) { _, _ in
+                haptics.tap(.medium)
+            }
+
+            Text("The little buzz as fencing goes in, a pen holds, or the pig gets away.")
+                .font(.caption2)
+                .foregroundStyle(GamePalette.post.opacity(0.55))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
     /// Everything the game has kept, and the way to be rid of it.
     private var gameData: some View {
         card {
@@ -120,7 +153,7 @@ struct SettingsView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             Button {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                haptics.tap(.medium)
                 isAsking = true
             } label: {
                 Label("Clear all game data", systemImage: "trash.fill")
@@ -194,8 +227,15 @@ struct SettingsView: View {
         progress.eraseEverything()
         daily.eraseEverything()
         hasCleared = true
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        haptics.buzz(.success)
     }
+}
+
+/// A switch held in memory, so that flicking the toggle in a preview is not a change to the
+/// setting on the machine the preview is running on.
+@MainActor
+private func previewHaptics(isOn: Bool = true) -> Haptics {
+    Haptics(store: RememberedHaptics(isOn: isOn), engine: RecordedHaptics())
 }
 
 #Preview("Part way through") {
@@ -203,7 +243,8 @@ struct SettingsView: View {
         .sheet(isPresented: .constant(true)) {
             SettingsView(
                 progress: .partWayThrough(),
-                daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22))
+                daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+                haptics: previewHaptics()
             )
             .presentationDetents([.medium, .large])
         }
@@ -212,6 +253,15 @@ struct SettingsView: View {
 #Preview("Nothing saved") {
     SettingsView(
         progress: WorldProgress(store: RememberedProgress()),
-        daily: DailyProgress(store: RememberedDailyRecords())
+        daily: DailyProgress(store: RememberedDailyRecords()),
+        haptics: previewHaptics()
+    )
+}
+
+#Preview("Haptics off") {
+    SettingsView(
+        progress: .partWayThrough(),
+        daily: DailyProgress(store: RememberedDailyRecords()),
+        haptics: previewHaptics(isOn: false)
     )
 }

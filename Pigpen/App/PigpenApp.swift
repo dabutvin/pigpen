@@ -5,8 +5,8 @@ import SwiftUI
 struct PigpenApp: App {
     /// CI launches the app with `-puzzle`, `-orchard`, `-sour`, `-boss`, `-truffles`,
     /// `-embers`, `-pies`, `-map`, `-universe`, `-woods-map`, `-peak-map`, `-city-map`,
-    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-settings` or one of the film
-    /// arguments so the pull request screenshots can show
+    /// `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh`, `-settings` or one of
+    /// the film arguments so the pull request screenshots can show
     /// the boards, the universe map, each world's trail, the practice pen, the daily
     /// puzzle and its archive, the settings sheet and every shot of every cut scene
     /// rather than only the title screen.
@@ -156,6 +156,15 @@ struct PigpenApp: App {
                         today: Self.photographed,
                         showsSettings: true
                     )
+                } else if launch.contains("-title-fresh") {
+                    // The title screen with nothing won on it. It takes an argument of its
+                    // own now rather than being what a bare launch gives you, because a bare
+                    // launch on a device that has never been played opens the walkthrough
+                    // over the top of it — which is the point of the walkthrough, and no use
+                    // as a photograph of the title screen. The world is held in memory and
+                    // its tutorial already spent, so the shot is the empty title screen
+                    // however much the runner played before it.
+                    TitleScreenView(progress: .beforeTheFirstStar())
                 } else if launch.contains("-title") {
                     // Today complete as well as the fortnight behind it, since what there is to
                     // see on the daily's row is the stars and the run of days that a day
