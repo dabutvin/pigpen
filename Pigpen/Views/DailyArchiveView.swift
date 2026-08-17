@@ -296,6 +296,9 @@ struct DailyArchiveView: View {
     private func open(_ date: DailyDate) {
         guard DailyAlmanac.isOpen(date, today: today) else { return }
         Haptics.tap(.medium)
+        // A day out of the archive rather than this morning's, which is the difference
+        // between somebody catching up and somebody browsing.
+        Analytics.record(.dailyOpened(isToday: date == today))
         // A day already submitted offers its wall back rather than opening straight onto
         // an empty field — the same *Put it back* the board itself offers mid-session.
         if progress.submittedFences(on: date) != nil {

@@ -33,6 +33,9 @@ struct PigpenApp: App {
     /// something on a clock is a screenshot of whenever the runner happened to get round to
     /// it. Each film argument stops one of them on one of its shots, so the same frame
     /// comes out of every run.
+    ///
+    /// A new argument added here goes in `photographArguments` below as well, or the run
+    /// that spends it is counted as somebody playing.
     private let launch = ProcessInfo.processInfo.arguments
 
     /// The square of the calendar the daily screens are photographed on. A day well into a
@@ -62,6 +65,29 @@ struct PigpenApp: App {
         ("-held-world", .theMeadowHeld, 10.4),
         ("-held-beyond", .theMeadowHeld, 13.4)
     ]
+
+    /// Every argument above, and every screen argument beside them: the whole list of ways
+    /// into the app that are not the front door.
+    ///
+    /// It is here rather than anywhere else because this is where they are all spent, and
+    /// it exists so that counting can tell a camera from a player. A run that opens
+    /// straight onto Stag Mere and photographs it is not somebody who beat Stag Mere.
+    static let photographArguments: Set<String> = Set(
+        stills.map { $0.argument } + [
+            "-puzzle", "-beaten", "-orchard", "-sour", "-boss", "-truffles", "-embers", "-pies",
+            "-map", "-universe", "-woods-map", "-peak-map", "-city-map",
+            "-tutorial", "-daily", "-archive", "-title", "-title-fresh", "-settings",
+            "-reminder"
+        ]
+    )
+
+    static func isPhotographing(_ launch: [String] = ProcessInfo.processInfo.arguments) -> Bool {
+        !photographArguments.isDisjoint(with: launch)
+    }
+
+    /// Whether the game has been put down — the cue to send whatever has been counted so
+    /// far, since a player who backgrounds the app may never bring it up again.
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -206,6 +232,17 @@ struct PigpenApp: App {
                     TitleScreenView()
                 }
             }
+            .task {
+                guard !Self.isPhotographing(launch) else { return }
+                Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // Anything counted since the last batch goes the moment the game is put down.
+            // A phone in a pocket is where most sessions end, and a batch still in hand
+            // when the system reclaims the app is a batch nobody ever sees.
+            guard phase != .active else { return }
+            Analytics.flush()
         }
     }
 }

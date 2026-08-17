@@ -81,7 +81,7 @@ struct CutSceneView: View {
             // A still is a still: nothing counts down and nobody is handed on.
             guard still == nil else { return }
             if await scene.waitOut() {
-                onFinish()
+                finish(watched: true)
             }
         }
         .task {
@@ -95,6 +95,15 @@ struct CutSceneView: View {
 
     /// Whether the way out is on screen, and so whether it can be pressed.
     private var offersTheWayOut: Bool { still != nil || offersSkip }
+
+    /// The one way out, however it was reached. Counting happens here rather than in
+    /// `onFinish` because this is the only place that knows which of the two it was — and
+    /// that is the whole question about a film. One everybody skips is one that should be
+    /// shorter, and a film nobody skips is worth the money it cost to draw.
+    private func finish(watched: Bool) {
+        Analytics.record(.filmPlayed(scene.name.rawValue, watched: watched))
+        onFinish()
+    }
 
     /// The shots whose line is the point of the whole film rather than a note under the
     /// picture, and so is set big and in the middle.
@@ -158,7 +167,7 @@ struct CutSceneView: View {
 
                 Button {
                     Haptics.tap(.light)
-                    onFinish()
+                    finish(watched: false)
                 } label: {
                     HStack(spacing: 5) {
                         Text("Skip")
