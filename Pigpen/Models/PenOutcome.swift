@@ -121,7 +121,13 @@ extension PuzzleLevel {
         // The carnival asks for two pens with one of them inside the other, which is two things
         // at once as well: the pig may not be standing in with the ringmaster, and her ground
         // has to close the whole way round him. A pen beside his is a pen, not a ring.
-        if question == .ring, let pigGround = ground[.pig] {
+        //
+        // The cove asks the same of the crab, and the difference is what he is standing in: a
+        // broken ring of tidewater walls him on every side but its break, so the ground that has
+        // to close round him is really closing round the whole pool — the flood walked below
+        // crosses water as freely as it crosses mud, which is exactly what makes surrounding the
+        // crab and surrounding his pool the same question.
+        if question == .ring || question == .moat, let pigGround = ground[.pig] {
             for animal in animals where animal.kind != .pig {
                 if pigGround.contains(animal.tile) {
                     return .refused(pen: held, refusal: .together(animal.kind))

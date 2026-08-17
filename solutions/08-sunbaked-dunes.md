@@ -249,7 +249,8 @@ over.
 The scarp: one great barchan hooked into the north-west so its back runs nearly the whole width of
 the north and its western horn stands on the rim of the board. Two sides of a pen handed over, and
 eleven pieces — the smallest budget in the world — to draw the rest. The corner question with two
-free sides, the way Rimstone Corner and The Big Top asked it, and the hardest corner in the game.
+free sides, the way Rimstone Corner and The Big Top asked it, and the hardest corner in the game
+until the cove's Barnacle Corner took the title.
 
 The right-angled answer hangs a rectangle under the back and pays for its own east wall: 20 tiles,
 stopping three columns short of the eastern horn because eleven pieces will not reach it and turn the
@@ -337,7 +338,8 @@ and the rest wall the open sand east of the notch as the scorpion's own yard wit
 it — 14 tiles and that melon, which is 19. A fair answer, and one nobody has to be taught. The same
 sixteen laid as above — out from the pig up the west of the flats, along under the great back in the
 north and down round the far side of the notch — hold 45 tiles and the melon in the north-east, which
-is 50: the biggest pen any boss holds, and at 62% the widest gap any board in the game leaves.
+is 50: the biggest pen any boss holds, and at 62% the widest gap any board in the game left until
+the cove's crab asked for his moat.
 
 The melon left lying in the lane is the board saying what the rule costs. It sits in the clear ground
 between the two pens, so this is the only pen in the game that walks past five points it can see and

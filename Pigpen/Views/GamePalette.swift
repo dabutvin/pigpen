@@ -97,6 +97,9 @@ enum GamePalette {
         /// Desert: baked hardpan with wind ripples combed across it, the odd cactus standing up
         /// out of it, and nothing overhead but glare.
         case sand
+        /// Seashore: wet strand the tide has only just let go of, with rock pools standing in
+        /// it and wrack thrown down in lines.
+        case shingle
     }
 }
 
@@ -445,5 +448,46 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.12, green: 0.18, blue: 0.17),
         isNight: true,
         cover: .sand
+    )
+
+    /// The ninth world's daylight: sea light, which is the desert's glare with the heat taken
+    /// out of it. Everything here has just been under water and half of it still is, so the sky
+    /// is a washed pale blue, the ground is dark with wet rather than bright with sun, and the
+    /// horizon is the one line in the game that is actually the sea. The world reads cool by
+    /// being damp, where the dunes read hot by being pale.
+    static let coveDay = Self(
+        skyTop: Color(red: 0.45, green: 0.68, blue: 0.80),
+        skyHorizon: Color(red: 0.85, green: 0.92, blue: 0.91),
+        disc: Color(red: 1.00, green: 0.98, blue: 0.90),
+        discHalo: Color(red: 0.95, green: 0.97, blue: 0.88),
+        cloud: Color(red: 0.96, green: 0.97, blue: 0.96),
+        farHill: Color(red: 0.42, green: 0.62, blue: 0.66),
+        ground: Color(red: 0.72, green: 0.66, blue: 0.52),
+        foreground: Color(red: 0.60, green: 0.54, blue: 0.42),
+        blade: Color(red: 0.46, green: 0.42, blue: 0.32),
+        canopy: Color(red: 0.36, green: 0.55, blue: 0.46),
+        canopyShade: Color(red: 0.22, green: 0.38, blue: 0.34),
+        isNight: false,
+        cover: .shingle
+    )
+
+    /// The cove after dark, under a sea fog coming in with the tide: the sky never goes as
+    /// black as the desert's because the water underneath it holds what light there is and
+    /// hands it back, so the night here is a deep green-grey with a pale line where the sea
+    /// still shows, and the wet sand keeps a sheen the dry worlds lose at dusk.
+    static let coveDusk = Self(
+        skyTop: Color(red: 0.05, green: 0.10, blue: 0.16),
+        skyHorizon: Color(red: 0.18, green: 0.30, blue: 0.36),
+        disc: Color(red: 0.94, green: 0.96, blue: 0.94),
+        discHalo: Color(red: 0.62, green: 0.78, blue: 0.80),
+        cloud: Color(red: 0.13, green: 0.20, blue: 0.25),
+        farHill: Color(red: 0.10, green: 0.18, blue: 0.22),
+        ground: Color(red: 0.22, green: 0.26, blue: 0.28),
+        foreground: Color(red: 0.16, green: 0.19, blue: 0.21),
+        blade: Color(red: 0.11, green: 0.14, blue: 0.16),
+        canopy: Color(red: 0.16, green: 0.30, blue: 0.27),
+        canopyShade: Color(red: 0.10, green: 0.20, blue: 0.19),
+        isNight: true,
+        cover: .shingle
     )
 }

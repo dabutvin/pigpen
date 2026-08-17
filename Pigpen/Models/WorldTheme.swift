@@ -263,4 +263,28 @@ extension WorldTheme {
         accent: Color(red: 0.93, green: 0.77, blue: 0.43),
         accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20)
     )
+
+    /// Tidepool Cove, the ninth world: down off the last dune to where the sea comes in, onto
+    /// wet sand the tide has only just let go of. The windfall is a pearl the tide left lying in
+    /// its shell and the hazard a jellyfish stranded where it washed up — each worth exactly what
+    /// its meadow twin was, a pearl five tiles to shut in, a jellyfish five to shut in with and
+    /// no fencing at all, since nothing drives a post through a sting.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for eight worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let tidepoolCove = WorldTheme(
+        id: "tidepool-cove",
+        name: "Tidepool Cove",
+        blurb: "Where the tide keeps rearranging the walls.",
+        day: .coveDay,
+        dusk: .coveDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🐚", bonusScale: 0.58, bonusName: "pearl",
+            hazardGlyph: "🪼", hazardScale: 0.60, hazardName: "jellyfish"
+        ),
+        field: .tidepoolCove,
+        boss: BossMark(glyph: "🦀", name: "the crab"),
+        accent: Color(red: 0.37, green: 0.74, blue: 0.72),
+        accentDeep: Color(red: 0.16, green: 0.44, blue: 0.46)
+    )
 }

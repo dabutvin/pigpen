@@ -18,6 +18,10 @@
 /// The dunes stand a scorpion on the sand, and he is the first one it matters how *near* to. Every
 /// other animal in the game is either in the pig's pen or out of it; a scorpion stings through a
 /// fence, so a wall with the pig on one side of it and him on the other is no wall at all.
+///
+/// The cove stands a crab in the heart of a broken ring of tidewater, and he is the first one
+/// whose home matters as much as he does: the pool walls him in on every side but its break,
+/// and what the board asks is that the pig's own ground close the whole way round the pool.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -29,6 +33,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case pup = "U"
     case ringmaster = "M"
     case scorpion = "S"
+    case crab = "C"
 
     /// What the field draws it as.
     var glyph: String {
@@ -42,6 +47,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .bat, .pup: "🦇"
         case .ringmaster: "🤹"
         case .scorpion: "🦂"
+        case .crab: "🦀"
         }
     }
 
@@ -63,6 +69,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .pup: "Peep!"
         case .ringmaster: "Ta-da!"
         case .scorpion: "Tik-tik!"
+        case .crab: "Click!"
         }
     }
 
@@ -79,6 +86,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .pup: "pup"
         case .ringmaster: "ringmaster"
         case .scorpion: "scorpion"
+        case .crab: "crab"
         }
     }
 }
