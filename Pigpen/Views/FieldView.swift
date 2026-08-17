@@ -18,27 +18,31 @@ struct FenceStroke {
     let isFirst: Bool
 }
 
-/// What a tap on a treat just said, rising off that tile: five more for an apple, five
-/// fewer for a skull. A skull takes no fencing, so this is how a finger finds out the cost
-/// without planting a post.
-struct WorthCallout: Equatable, Identifiable {
+/// What a tile just said back, rising off it and fading out: what a treat is worth — five
+/// more for an apple, five fewer for a skull — or the noise an animal makes when a finger
+/// lands on it. Neither takes fencing, so this is what a press on one gets instead of a post.
+struct FieldCallout: Equatable, Identifiable {
     let id: UUID
     let tile: GridPoint
-    let treat: Treat
+    /// The words that rise off the tile.
+    let said: String
 
-    init(tile: GridPoint, treat: Treat) {
+    init(tile: GridPoint, said: String) {
         self.id = UUID()
         self.tile = tile
-        self.treat = treat
+        self.said = said
     }
 }
 
 /// An animal as the field draws it: what it is, the tile it is standing on this instant,
-/// and how solid it is — one that has walked off the map fades out where it left.
+/// how solid it is — one that has walked off the map fades out where it left — and whether
+/// it is mid-hop, which is what a tap on it gets.
 struct AnimalMark: Equatable, Identifiable {
     let kind: Animal
     var tile: GridPoint
     var opacity: Double
+    /// How far into a hop it is, 0 standing and 1 at the top of it.
+    var hop: Double = 0
 
     var id: Animal { kind }
 }
@@ -68,10 +72,10 @@ struct FieldView: View {
     /// The lap of honour under way, if a pen has just held. While one is on, it says where
     /// the animals are rather than the marks doing so, and it throws the confetti.
     var celebration: Celebration?
-    /// What a tap on a treat just said, if anything — drawn rising off that tile.
-    var worthCallout: WorthCallout? = nil
+    /// What a press just got back off a tile, if anything — drawn rising off that tile.
+    var callout: FieldCallout? = nil
     /// Told when a callout has finished rising, so the field can put it away.
-    var onWorthCalloutFinished: ((WorthCallout.ID) -> Void)? = nil
+    var onCalloutFinished: ((FieldCallout.ID) -> Void)? = nil
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -130,7 +134,7 @@ struct FieldView: View {
 
                 confetti(board: board)
                 herd(board: board)
-                worthSaid(board: board)
+                saidBack(board: board)
             }
             .contentShape(Rectangle())
             .gesture(
@@ -143,7 +147,7 @@ struct FieldView: View {
                         onStrokeEnd()
                     }
             )
-            .onChange(of: worthCallout?.id) { _, id in
+            .onChange(of: callout?.id) { _, id in
                 guard id != nil else {
                     calloutFlight = 0
                     return
@@ -152,11 +156,11 @@ struct FieldView: View {
                 let duration = reduceMotion ? 0.01 : 0.95
                 withAnimation(.easeOut(duration: duration)) { calloutFlight = 1 }
             }
-            .task(id: worthCallout?.id) {
-                guard let callout = worthCallout else { return }
+            .task(id: callout?.id) {
+                guard let said = callout else { return }
                 let hold = reduceMotion ? 700 : 1_100
                 try? await Task.sleep(for: .milliseconds(hold))
-                onWorthCalloutFinished?(callout.id)
+                onCalloutFinished?(said.id)
             }
         }
         .aspectRatio(CGFloat(level.columnCount) / CGFloat(level.rowCount), contentMode: .fit)
@@ -234,27 +238,38 @@ struct FieldView: View {
         return Text(animal.kind.glyph)
             .font(.system(size: board.cell * 0.78))
             .scaleEffect(x: CGFloat(pose.stretch), y: CGFloat(pose.squash), anchor: .bottom)
+            // The hop a tap on it gets: a stretch upwards on the way, on top of whatever
+            // pose it is already holding, so an animal answering a finger during its own
+            // lap of honour bobs rather than snapping back to standing.
+            .scaleEffect(
+                x: CGFloat(1 - 0.06 * animal.hop),
+                y: CGFloat(1 + 0.1 * animal.hop),
+                anchor: .bottom
+            )
             .rotationEffect(.degrees(pose.lean))
             // Standing on the ground rather than floating over it, and further off it the
             // higher the celebration lifts it.
             .shadow(
                 color: .black.opacity(0.3),
-                radius: board.cell * (0.04 + 0.15 * pose.lift),
-                y: board.cell * (0.03 + 0.26 * pose.lift)
+                radius: board.cell * (0.04 + 0.15 * (pose.lift + animal.hop * 0.5)),
+                y: board.cell * (0.03 + 0.26 * (pose.lift + animal.hop * 0.5))
             )
             .opacity(animal.opacity)
             .position(board.center(atRow: pose.row, column: pose.column, lift: pose.lift))
+            // Off the ground and back down, applied after the tile it stands on has been
+            // settled, so a hop never moves it to another square.
+            .offset(y: -board.cell * 0.3 * CGFloat(animal.hop))
             .allowsHitTesting(false)
     }
 
-    /// What a tap on a treat just said, rising off that tile and fading out. Written onto
+    /// What a press just got back off a tile, rising off it and fading out. Written onto
     /// the grass the way the best-pen tally is — cream with a shadow — so it is painted
     /// rather than printed on a plaque of its own.
     @ViewBuilder
-    private func worthSaid(board: BoardGeometry) -> some View {
-        if let callout = worthCallout {
+    private func saidBack(board: BoardGeometry) -> some View {
+        if let callout {
             let center = board.center(of: callout.tile)
-            Text(callout.treat.pointsSaid)
+            Text(callout.said)
                 .font(.system(size: max(14, board.cell * 0.36), weight: .heavy))
                 .foregroundStyle(GamePalette.cream)
                 .shadow(color: .black.opacity(0.55), radius: 3, y: 1)

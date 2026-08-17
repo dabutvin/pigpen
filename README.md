@@ -45,6 +45,20 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   holds whatever ground
   it shuts in, whether that ground is in one piece or two — but an animal left loose loses
   the field however well the other one is held.
+- **A boss says what it asks, and keeps saying it.** The rule stands on a painted board under
+  the field, signed with the animal it is about, for as long as the puzzle is up: *Hold the pig
+  and the deer, both. One pen round the pair or a pen apiece — whichever holds more.* The
+  briefing film says it once before the board opens; this says it every time you look down.
+  A player who tapped past the film, or who comes back a week later to better a two-star pen,
+  is never building against a rule they have to remember. It says what the board will accept
+  and nothing about where the fencing goes. Every other level leaves that strip of grass empty,
+  because the ground says everything there is to say about it.
+- **The animals answer.** Nothing takes a fence where an animal is standing, so a tap on one
+  used to be turned down the way a spent budget is. Now it hops where it stands and calls back
+  — *Oink!*, *Snort!*, *Ta-da!* — off its own tile, the way a tap on an apple says what the
+  apple is worth. It is the one thing on the board that can answer for itself, and answering
+  is all it does: tapping an animal never moves it, fences it or scores it. Ask for reduced
+  motion and it calls back without the hop.
 - **A pen that closes colours itself in.** The moment the last gap is filled, the ground the
   fencing holds washes gold, so you can see the pen you have made before you commit to it.
   Releasing the pig is still yours to do — the wash only says the pig has nowhere to go.
@@ -981,6 +995,11 @@ and a field never asks one.
   plus a star toll. **No two worlds may add the same rule** — otherwise every world climbs to
   the same finale with a different animal painted on it, which is what the first three did.
 - The boss stops for a briefing film. Nothing else does.
+- **A new boss rule needs a line of orders.** `BossOrders.swift` turns a boss question into the
+  sentence the board keeps under the field, named for whatever animal that world stands there —
+  so a world reusing `berth` with a wasp says the same thing about a wasp. The switch there is
+  exhaustive, so a new question will not compile without one, and `BossOrdersTests` pins that
+  every built world's boss has a line and that no two worlds say the same thing.
 
 A world may repeat a type, and it need not use them all. What it may not do is ship a field
 with no type at all.
@@ -1215,6 +1234,7 @@ Pigpen/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
+│   ├── BossOrders.swift         # The rule a boss adds, in the one line the board keeps on screen
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # The meadow's films, as clocks: which shot is up when, and for how long
 │   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens, briefs and closes on
