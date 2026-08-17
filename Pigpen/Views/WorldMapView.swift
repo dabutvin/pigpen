@@ -106,13 +106,13 @@ struct WorldMapView: View {
             // No clock on the meadow: a level there is worth going back to and taking
             // apart, and a clock over that would only ask the player to hurry.
             PuzzleView(
-                level: world[index].level,
+                game: board(at: index),
                 treatSkin: theme.treats,
                 skin: theme.field,
                 day: theme.day,
                 dusk: theme.dusk
-            ) { verdict, _, _ in
-                progress.record(verdict, for: world[index].id)
+            ) { verdict, _, fences in
+                progress.record(verdict, fences: fences, for: world[index].id)
             }
         }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
@@ -121,6 +121,23 @@ struct WorldMapView: View {
         .fullScreenCover(item: $farewellFilm, onDismiss: { leaveForTheUniverse() }) { film in
             WorldFilmView(film: film) { endFarewell(film) }
         }
+    }
+
+    /// The board a stop opens on: bare mud, with the best pen ever won there remembered
+    /// behind it when there is one.
+    ///
+    /// A trail stop is not picked up where it was left the way a daily is — the fencing
+    /// goes back in the shed every time, since taking a level apart from nothing is the
+    /// whole of playing it again. What does come back is the mark to beat: the tally is up
+    /// from the off with the score and the stars already won there, and *Put it back* can
+    /// stand the whole wall again for a player who only wanted another look at it.
+    private func board(at index: Int) -> PuzzleGame {
+        let node = world[index]
+        let game = PuzzleGame(level: node.level)
+        if let fences = progress.submittedFences(for: node.id) {
+            game.rememberSubmittedPen(fences)
+        }
+        return game
     }
 
     // MARK: - The world

@@ -352,7 +352,7 @@ extension PuzzleLevel {
     ///
     /// It is the direct inversion of the game's oldest boss lesson. Stag Mere taught that two pens
     /// can share a wall — one boundary doing two jobs — and the search has priced a shared wall at
-    /// half ever since; every boss from Boar Hollow to The Centre Ring is built on that discount.
+    /// half ever since; every boss from Boar Hollow to The Center Ring is built on that discount.
     /// This one takes it away. The pig may not be standing in with him, and no piece of fence may
     /// have her ground on one side of it and his on the other, so the ground between the two pens
     /// has to be given up unclaimed and one budget has to pay for two whole walls.
