@@ -369,17 +369,19 @@ goes after the second gives up more ground on the way down than five points can 
 ## 3. Hazel Copse — 12 pieces, 30
 
 ```
-..........
-..........
-~~~~~~~~..
-#ooooooo#.
-#ooaPoooo#
-.#oooooo#.
-..#oooo#..
-...####...
+..~##...
+..~oo#..
+..~ooo#.
+..~oaoo#
+..~oPoo#
+..~oooo#
+..~oooo#
+..~ooo#.
+...#o#..
+....#...
 ```
 
-A brook bars the north, so the ground under it is cheap to wall, and the pen closes round the
+A brook bars the west, so the ground beside it is cheap to wall, and the pen closes round the
 truffle it was going to hold anyway — the first windfall that costs nothing to take.
 
 ## 4. Fairy Ring — 13 pieces, 36
