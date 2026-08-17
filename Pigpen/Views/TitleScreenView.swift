@@ -290,16 +290,20 @@ struct TitleScreenView: View {
                 MenuRow(
                     icon: "play.fill",
                     title: "Play",
-                    detail: progress.isTheWorldHeld
-                        ? "A universe of worlds to fence"
-                        : "\(world.name) · \(world.count) puzzles",
+                    detail: playDetail,
                     tint: GamePalette.pen
                 ) {
-                    chevron
+                    HStack(spacing: 8) {
+                        if completion.percent > 0 {
+                            CompletionBadge(completion: completion)
+                        }
+                        chevron
+                    }
                 }
             }
             .buttonStyle(MenuRowButtonStyle())
             .modifier(Breathing(active: !reduceMotion))
+            .accessibilityLabel(playSpoken)
 
             dailyRow
 
@@ -323,6 +327,37 @@ struct TitleScreenView: View {
         }
         .opacity(arrived ? 1 : 0)
         .offset(y: arrived ? 0 : 26)
+    }
+
+    /// What Play has to say for itself under its own name: the world it walks into while the
+    /// meadow is still being held, and the whole universe once it is.
+    private var playDetail: String {
+        progress.isTheWorldHeld
+            ? "A universe of worlds to fence"
+            : "\(world.name) · \(world.count) puzzles"
+    }
+
+    /// Play read out in full, since the percent it wears sits in the row as a badge VoiceOver
+    /// would otherwise read as a bare number.
+    private var playSpoken: String {
+        var said = "Play. \(playDetail)."
+        guard completion.percent > 0 else { return said }
+        said += " \(completion.percent) per cent of the game held."
+        if completion.isEverything {
+            said += " Every star and every rainbow there is."
+        }
+        return said
+    }
+
+    /// How far through the whole game the player is.
+    ///
+    /// Worked out from the stars and the rainbows this screen already holds rather than from a
+    /// second reading of the store: level ids are unique across worlds, so the store a world is
+    /// handed holds every world's stars — `WorldProgress` only narrows them to its own trail when
+    /// it counts them. That keeps the previews and the screenshot runs honest too, since the
+    /// number then comes from whatever progress the screen was handed rather than from the device.
+    private var completion: GameCompletion {
+        Universe.all.completion(stars: progress.bestStars, bestPens: progress.bestPens)
     }
 
     /// The chevron on the right of a row that only opens something. The daily wears its stars
@@ -565,6 +600,40 @@ private enum PlayDestination: Hashable {
     case universe
 }
 
+/// How much of the whole game is in, worn on the right-hand end of Play the way the daily wears
+/// its stars — every world, every level, every star and every rainbow, in one number.
+///
+/// It goes rainbow at a hundred, and only there. Three stars on every level in the game stops at
+/// 75, so the badge sitting gold at 99 is the game saying there is a map somewhere still holding
+/// its best pen back — which is the whole reason the number is on the button rather than buried
+/// in the settings sheet.
+private struct CompletionBadge: View {
+    let completion: GameCompletion
+
+    var body: some View {
+        Text("\(completion.percent)%")
+            .font(.system(size: 13, weight: .black, design: .rounded))
+            .monospacedDigit()
+            .contentTransition(.numericText())
+            .foregroundStyle(GamePalette.post)
+            .padding(.vertical, 4)
+            .padding(.horizontal, 9)
+            .background {
+                Capsule()
+                    .fill(.white.opacity(0.45))
+                    .overlay {
+                        if completion.isEverything {
+                            RainbowWash()
+                                .mask { Capsule() }
+                                .opacity(0.8)
+                        }
+                    }
+            }
+            .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1))
+            .accessibilityHidden(true)
+    }
+}
+
 /// One board on the title screen's list of ways to play: a round token on the left with the
 /// row's mark in it, the row's name and a line under it, and whatever the row keeps on its
 /// right-hand end — a chevron for the ones that only open a screen, the day's stars for the
@@ -667,6 +736,12 @@ private struct MenuRowButtonStyle: ButtonStyle {
 #Preview("Settings up") {
     NavigationStack {
         TitleScreenView(progress: .partWayThrough(), showsSettings: true)
+    }
+}
+
+#Preview("Nothing left to take") {
+    NavigationStack {
+        TitleScreenView(progress: .everythingHeld())
     }
 }
 
