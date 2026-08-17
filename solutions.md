@@ -1813,18 +1813,18 @@ south-east, cutting the whole bend off in a single line — hold 51 tiles, both 
 pair of ropes, which comes back to 51. The biggest pen in the world for the smallest budget in it,
 which is what two free sides are worth.
 
-## 7. The Rigging — 18 pieces, 42
+## 7. The Rigging — 18 pieces, 44
 
 ```
 ............
 .~~~...x.x..
 .~~~...x.x..
 .~~~.x.x.a..
-#ooo#x##....
-#oooP#oo#...
-#oooooooo#..
-.#ooooooo#a.
-..~~~ooooo#.
+....#x###...
+...#P#ooo#..
+..#ooooooo#.
+.#ooooooooa#
+..~~~oooooo#
 ..~~~ooooa#.
 .....#ooo#..
 ......###...
@@ -1842,12 +1842,17 @@ swallowing the pair of ropes nearest the pig on the way: 31 tiles less their ten
 the whole budget spent on it.
 
 The answer keeps clear of every peg on the board instead. It takes the wide ground south and east
-and comes round the apple lying down there rather than over it: 37 tiles and that apple, which is
-42. No piece will lie on an apple any more than on a rope, so the wall cannot run through it and
-cannot pretend it is not there — it comes inside and pays for itself, or the pen stops short. The
-run of three and the pair beside it are left standing out in the north: five pegs, twenty-five
-points to shut in, and the ground behind them is not worth that. At 50% it leaves the widest gap
-of any ordinary field at the fair.
+and comes round the apples lying out there rather than over them: 34 tiles and two of the three,
+which is 44. No piece will lie on an apple any more than on a rope, so a wall cannot run through
+one and cannot pretend it is not there — it comes inside and pays for itself, or the pen stops
+short.
+
+The widest pen the rigging leaves holds 37 tiles and reaches only the apple in the south, which is
+42, and it is the pen this walkthrough used to give. Handing three of those tiles back buys the
+room to come round the apple out east as well, and a second apple for three tiles of ground is the
+two points in it. The run of three and the pair beside it are left standing out in the north with
+the third apple behind them: five pegs, twenty-five points to shut in, and the ground back there is
+not worth that. At 52% it leaves the widest gap of any ordinary field at the fair.
 
 ## 8. The Midway — 19 pieces, 49
 

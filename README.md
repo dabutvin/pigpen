@@ -578,7 +578,7 @@ world.
 | 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 20 | 34 | 41% |
 | 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 22 | 38 | 42% |
 | 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
-| 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 42 | 50% |
+| 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 44 | 52% |
 | 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
 | 9 | The Center Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
 
@@ -587,7 +587,7 @@ end, so two of the four walls are handed over: eleven pieces laid corner to corn
 the biggest pen in the world for the smallest budget in it, where the same eleven laid as a right
 angle hold 25 — because the pair of guy ropes is pegged inside every rectangle worth drawing, and
 the tidy pen has to swallow them and pay their ten. The Rigging carries seven pegs in three runs —
-more rope than any other field at the fair, and the only line of three in the game — and at 50% it
+more rope than any other field at the fair, and the only line of three in the game — and at 52% it
 leaves the widest gap of any ordinary field at the fair.
 
 Its boss, The Center Ring, adds the carnival's rule, and it is the first rule in the game about
