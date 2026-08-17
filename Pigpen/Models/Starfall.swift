@@ -127,17 +127,29 @@ extension PuzzleLevel {
             """
     )
 
-    /// A stretch of the reaches nothing has ever landed on: no wells, no stardrops, no meteors,
-    /// eleven tiles of dust in every direction and eighteen pieces. Every tile of this pen is
-    /// bought, and there is no half measure available on a board this size — a well left in the
-    /// far corner is a well eighteen pieces can walk out and lean on, so the sky has to have
-    /// missed this field completely for the question to be the one it is asking.
+    /// A stretch of the reaches the water never found: not one well on it, eleven tiles of dust
+    /// in every direction and eighteen pieces. Every tile of this pen is bought, and there is no
+    /// half measure available on a board this size — a well left in the far corner is a well
+    /// eighteen pieces can walk out and lean on, so the sky has to have missed this field with
+    /// its water for the question to be the one it is asking.
     ///
-    /// It is Basalt Flats and Cobble Yard with more room and more pieces than either of them
+    /// What it did not miss it with is stone. Three meteors are sunk in the dust out here, and
+    /// not one of them hands over so much as a tile of wall: a stone that came in from that far
+    /// out takes no fencing and shuts nothing in. All a meteor does on this field is stand where
+    /// a wall might otherwise have gone.
+    ///
+    /// So it is Basalt Flats and Cobble Yard with more room and more pieces than either of them
     /// had, and the answer is the same answer it always was, worth more here than it has ever
     /// been worth: the best block eighteen pieces can square off holds 20 tiles, and the same
     /// eighteen run round as a diamond hold 32. A diagonal wall shuts two tiles per piece where
-    /// a straight one shuts one, and out here there is nothing else to know.
+    /// a straight one shuts one.
+    ///
+    /// What the stones add is Cobble Yard's other half — not what shape to run, but where to put
+    /// it. The diamond a player draws first is the one centred on the pig, and this board refuses
+    /// it twice over: the northern meteor lies on the line its wall wants, where no piece can be
+    /// laid, and the eastern one lies inside it, worth five against. Carried two columns west and
+    /// a row north the same diamond holds the same 32 tiles with all three stones outside it —
+    /// and the one out in the south-west is what stops it being carried a row south instead.
     static let sweptFlat = starfall(
         id: "swept-flat",
         name: "Swept Flat",
@@ -148,14 +160,14 @@ extension PuzzleLevel {
         question: .bare,
         map: """
             ...........
+            ......x....
             ...........
             ...........
             ...........
-            ...........
-            ......P....
-            ...........
+            ......P..x.
             ...........
             ...........
+            ..x........
             ...........
             ...........
             """

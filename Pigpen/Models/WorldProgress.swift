@@ -356,4 +356,33 @@ extension WorldProgress {
             )
         )
     }
+
+    /// Every level of every built world at three stars with its rainbow beside it — the whole
+    /// game, finished. Previews and screenshots use it to show what a game with nothing left in
+    /// it looks like, which is the one standing a real device takes a very long time to reach.
+    static func everythingHeld(
+        world: WorldMap = .mudlarkMeadow,
+        universe: Universe = .all
+    ) -> WorldProgress {
+        var stars: [String: Int] = [:]
+        var bestPens: Set<String> = []
+        var scenes: Set<String> = []
+
+        for stop in universe.worlds {
+            guard let game = stop.game else { continue }
+            for node in game.map.nodes {
+                stars[node.id] = 3
+                bestPens.insert(node.id)
+            }
+            // Somebody who has held every pen in a world has been shown every film it keeps.
+            for spec in [game.opening, game.farewell].compactMap({ $0 }) + Array(game.briefings.values) {
+                scenes.insert(spec.key)
+            }
+        }
+
+        return WorldProgress(
+            world: world,
+            store: RememberedProgress(stars: stars, bestPens: bestPens, scenesPlayed: scenes)
+        )
+    }
 }

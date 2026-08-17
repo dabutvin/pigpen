@@ -45,6 +45,27 @@ enum Animal: Character, CaseIterable, Sendable {
         }
     }
 
+    /// What it says back when a finger lands on it.
+    ///
+    /// Nothing on the board takes a fence where an animal is standing, so a tap on one used to
+    /// be turned down the way a spent budget is — a shake of the rack and nothing learned. An
+    /// animal is the one thing on the field that can answer for itself, so it does: a noise, a
+    /// hop, and the tile it was standing on all along.
+    var call: String {
+        switch self {
+        case .pig: "Oink!"
+        case .deer: "Snort!"
+        case .boar: "Grunt!"
+        case .wyrm: "Rumble!"
+        case .rat: "Squeak!"
+        case .visitor: "Bleep!"
+        case .bat: "Screech!"
+        case .pup: "Peep!"
+        case .ringmaster: "Ta-da!"
+        case .scorpion: "Tik-tik!"
+        }
+    }
+
     /// What the game calls it out loud.
     var name: String {
         switch self {

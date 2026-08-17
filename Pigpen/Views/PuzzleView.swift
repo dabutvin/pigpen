@@ -58,9 +58,9 @@ struct PuzzleView: View {
     @State private var budgetShake: CGFloat = 0
     /// Whether the press in progress has already been turned down once.
     @State private var refusedThisPress = false
-    /// What a tap on a treat just said — five more for an apple, five fewer for a skull —
-    /// rising off that tile so the cost is found out without reading anything.
-    @State private var worthCallout: WorthCallout?
+    /// What a press just got back off a tile — what a treat is worth, or the noise the animal
+    /// standing there makes — rising off that tile so it is found out without reading anything.
+    @State private var callout: FieldCallout?
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -164,9 +164,9 @@ struct PuzzleView: View {
                     isAsGoodAsItGets: game.isPenAsGoodAsItGets,
                     animals: marks,
                     celebration: celebration,
-                    worthCallout: worthCallout,
-                    onWorthCalloutFinished: { id in
-                        if worthCallout?.id == id { worthCallout = nil }
+                    callout: callout,
+                    onCalloutFinished: { id in
+                        if callout?.id == id { callout = nil }
                     },
                     treatSkin: treatSkin,
                     skin: skin,
@@ -225,6 +225,8 @@ struct PuzzleView: View {
     /// a pen has closed.
     private var buildingControls: some View {
         VStack(spacing: 10) {
+            bossOrders
+
             bestPenTally
 
             HStack(spacing: 10) {
@@ -261,6 +263,47 @@ struct PuzzleView: View {
         }
         .animation(.easeInOut(duration: 0.25), value: game.bestScore)
         .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
+    }
+
+    /// The rule this world's boss adds, on a small painted board between the field and the
+    /// buttons — the strip of grass every other level leaves empty.
+    ///
+    /// A boss is the one field in a world whose rule the ground cannot show: water walls a pen
+    /// and an apple says what it is worth, but nothing on the board says the deer has to be
+    /// held too. The briefing says it once before the field opens; this says it for as long as
+    /// the field is up, so a player who tapped past that film, or who came back a week later to
+    /// better a two-star pen, is never building against a rule they have to remember. Every
+    /// other level shows nothing here, because there is nothing to add.
+    @ViewBuilder
+    private var bossOrders: some View {
+        if let orders = level.orders {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(level.bossGlyphs)
+                    .font(.subheadline)
+
+                Text(orders)
+                    .font(.caption.weight(.heavy))
+                    .foregroundStyle(GamePalette.post.opacity(0.82))
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Spacer(minLength: 0)
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 11)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                GamePalette.cream.opacity(0.95),
+                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
+            }
+            .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("What this field asks. \(orders)")
+        }
     }
 
     /// What the field is holding, set against the most it has held, and the way back to it.
@@ -587,7 +630,12 @@ struct PuzzleView: View {
                 // apple that is the whole lesson in one tap: the ground is not refusing the
                 // player, it is telling them there are five points here to shut in.
                 if let treat = level.treat(at: stroke.tile) {
-                    sayWorth(of: treat, at: stroke.tile)
+                    say(treat.pointsSaid, at: stroke.tile)
+                } else if let animal = level.animals.first(where: { $0.tile == stroke.tile }) {
+                    // Nor does an animal, and an animal can answer for itself: it hops where
+                    // it stands and calls back, rather than the rack shaking at a player who
+                    // has done nothing wrong but tap the pig.
+                    greet(animal.kind, at: stroke.tile)
                 } else {
                     refuse()
                 }
@@ -621,14 +669,35 @@ struct PuzzleView: View {
         Haptics.buzz(.warning)
     }
 
-    /// Floats what a treat is worth off the tile a finger just found it on, once per
-    /// press: a drag that crosses two treats should not stack the same five points twice.
-    private func sayWorth(of treat: Treat, at tile: GridPoint) {
+    /// Floats a word off the tile a finger just landed on, once per press: a drag that
+    /// crosses two treats should not stack the same five points twice, and one that crosses
+    /// the pig and the deer should not have them both shouting at once.
+    private func say(_ words: String, at tile: GridPoint) {
         guard !refusedThisPress else { return }
         refusedThisPress = true
-        worthCallout = WorthCallout(tile: tile, treat: treat)
+        callout = FieldCallout(tile: tile, said: words)
         Haptics.tap(.soft)
-        UIAccessibility.post(notification: .announcement, argument: treat.pointsSaid)
+        UIAccessibility.post(notification: .announcement, argument: words)
+    }
+
+    /// What a press on an animal gets: its own noise off its own tile, and a hop where it
+    /// stands. It is the one thing on the board that can answer a finger, and answering is
+    /// all it does — an animal is never moved, fenced or scored by being tapped.
+    private func greet(_ kind: Animal, at tile: GridPoint) {
+        let alreadyAnswered = refusedThisPress
+        say(kind.call, at: tile)
+        guard !alreadyAnswered, !reduceMotion else { return }
+        hop(kind)
+    }
+
+    /// Takes one animal off the ground and puts it back down: up fast, and down on a looser
+    /// spring, which is the shape of a hop rather than a bounce.
+    private func hop(_ kind: Animal) {
+        guard let index = marks.firstIndex(where: { $0.kind == kind }) else { return }
+        withAnimation(.spring(response: 0.2, dampingFraction: 0.55)) { marks[index].hop = 1 }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.6).delay(0.16)) {
+            marks[index].hop = 0
+        }
     }
 
     /// Plays out whatever the game just decided: the walk to freedom, or the lap of honour
