@@ -14,6 +14,11 @@ protocol ProgressStore {
     /// maximum: a level can be worth three and still have something left to beat.
     func loadBestPens() -> Set<String>
     func save(bestPens: Set<String>)
+    /// The fencing that was down when the best pen of each level was released, by level id,
+    /// each wall written as `"row,column"` tiles. Kept so a level gone back to opens with
+    /// the best it has ever given up on show, and *Put it back* something to offer.
+    func loadSubmittedPens() -> [String: [String]]
+    func save(submittedPens: [String: [String]])
     /// Which films have been played already, by name. Worth keeping even where the stars
     /// nearly say it on their own: a player who watches one, backs out without penning
     /// anything and comes back has still seen it.
@@ -28,6 +33,7 @@ protocol ProgressStore {
 struct StoredProgress: ProgressStore {
     private static let key = "pigpen.best-stars"
     private static let bestPensKey = "pigpen.best-pens"
+    private static let submittedPensKey = "pigpen.submitted-pens"
     private static let scenesKey = "pigpen.scenes-played"
     /// What the opening was kept under before there was more than one film. Read so that
     /// somebody already playing is not sat back down in front of it.
@@ -54,6 +60,14 @@ struct StoredProgress: ProgressStore {
         defaults.set(Array(bestPens), forKey: Self.bestPensKey)
     }
 
+    func loadSubmittedPens() -> [String: [String]] {
+        defaults.dictionary(forKey: Self.submittedPensKey) as? [String: [String]] ?? [:]
+    }
+
+    func save(submittedPens: [String: [String]]) {
+        defaults.set(submittedPens, forKey: Self.submittedPensKey)
+    }
+
     func loadPlayedScenes() -> Set<String> {
         var played = Set(defaults.stringArray(forKey: Self.scenesKey) ?? [])
         if defaults.bool(forKey: Self.oldOpeningKey) {
@@ -71,6 +85,7 @@ struct StoredProgress: ProgressStore {
     func erase() {
         defaults.removeObject(forKey: Self.key)
         defaults.removeObject(forKey: Self.bestPensKey)
+        defaults.removeObject(forKey: Self.submittedPensKey)
         defaults.removeObject(forKey: Self.scenesKey)
         defaults.removeObject(forKey: Self.oldOpeningKey)
     }
@@ -80,11 +95,18 @@ struct StoredProgress: ProgressStore {
 final class RememberedProgress: ProgressStore {
     private var stars: [String: Int]
     private var bestPens: Set<String>
+    private var submittedPens: [String: [String]]
     private var scenes: Set<String>
 
-    init(stars: [String: Int] = [:], bestPens: Set<String> = [], scenesPlayed: Set<String> = []) {
+    init(
+        stars: [String: Int] = [:],
+        bestPens: Set<String> = [],
+        submittedPens: [String: [String]] = [:],
+        scenesPlayed: Set<String> = []
+    ) {
         self.stars = stars
         self.bestPens = bestPens
+        self.submittedPens = submittedPens
         self.scenes = scenesPlayed
     }
 
@@ -96,6 +118,10 @@ final class RememberedProgress: ProgressStore {
 
     func save(bestPens: Set<String>) { self.bestPens = bestPens }
 
+    func loadSubmittedPens() -> [String: [String]] { submittedPens }
+
+    func save(submittedPens: [String: [String]]) { self.submittedPens = submittedPens }
+
     func loadPlayedScenes() -> Set<String> { scenes }
 
     func markScenePlayed(_ scene: String) { scenes.insert(scene) }
@@ -103,6 +129,7 @@ final class RememberedProgress: ProgressStore {
     func erase() {
         stars = [:]
         bestPens = []
+        submittedPens = [:]
         scenes = []
     }
 }
@@ -128,6 +155,10 @@ final class WorldProgress {
     /// it has given its maximum up: a worse pen afterwards no more takes the rainbow off
     /// a signpost than it takes the stars off one.
     private(set) var bestPens: Set<String>
+    /// The fencing that held the best pen each level has given up, by level id. Kept beside
+    /// the stars so a level played again opens on what it has already been made to hold
+    /// rather than on a blank tally.
+    private(set) var submittedPens: [String: [String]]
     /// Which films have been played already.
     private(set) var playedScenes: Set<String>
     @ObservationIgnored private let store: any ProgressStore
@@ -137,6 +168,7 @@ final class WorldProgress {
         self.store = store
         self.bestStars = store.loadStars()
         self.bestPens = store.loadBestPens()
+        self.submittedPens = store.loadSubmittedPens()
         self.playedScenes = store.loadPlayedScenes()
     }
 
@@ -157,6 +189,15 @@ final class WorldProgress {
 
     func hasTheBestPen(at index: Int) -> Bool {
         world.nodes.indices.contains(index) && hasTheBestPen(for: world[index].id)
+    }
+
+    /// The fencing that held the best pen a level has ever given up, and nothing for one
+    /// nobody has held a pig in yet. A level opened again lays this behind the board as its
+    /// best so far, so the tally starts where the player left off rather than at nothing.
+    func submittedFences(for levelID: String) -> Set<GridPoint>? {
+        guard let tiles = submittedPens[levelID], !tiles.isEmpty else { return nil }
+        let fences = Set(tiles.compactMap(GridPoint.init(stored:)))
+        return fences.isEmpty ? nil : fences
     }
 
     func isCleared(_ index: Int) -> Bool { stars(at: index) > 0 }
@@ -205,18 +246,56 @@ final class WorldProgress {
         world.nodes.reduce(0) { $0 + stars(for: $1.id) }
     }
 
-    /// Records how a level went: its stars, and the rainbow if the pen was the best that
-    /// map has in it. Both are kept at the best they have ever been.
+    /// Records how a level went: its stars, the rainbow if the pen was the best that map
+    /// has in it, and the fencing that held it. All three are kept at the best they have
+    /// ever been, so a worse go later costs nothing.
+    ///
+    /// - Parameter fences: The wall that was standing when the animals were released. Hand
+    ///   nothing in for a caller with no wall to file — the stars stand on their own.
     ///
     /// Returns whether this opened the next level up — the pig's cue to walk on.
     @discardableResult
-    func record(_ verdict: PenVerdict, for levelID: String) -> Bool {
-        if verdict.isAsGoodAsItGets, verdict.stars > 0, world.index(of: levelID) != nil,
-           !bestPens.contains(levelID) {
+    func record(
+        _ verdict: PenVerdict,
+        fences: Set<GridPoint> = [],
+        for levelID: String
+    ) -> Bool {
+        guard world.index(of: levelID) != nil else { return false }
+
+        if verdict.isAsGoodAsItGets, verdict.stars > 0, !bestPens.contains(levelID) {
             bestPens.insert(levelID)
             store.save(bestPens: bestPens)
         }
+
+        if verdict.stars > 0, isWorthKeeping(fences, for: levelID) {
+            submittedPens[levelID] = fences.map(\.stored).sorted()
+            store.save(submittedPens: submittedPens)
+        }
+
         return record(stars: verdict.stars, for: levelID)
+    }
+
+    /// Whether a newly released wall beats the one on file: a better score, or the same
+    /// score held with pieces to spare — the same bargain `PuzzleGame` keeps its running
+    /// best on. An empty wall is never kept; the first wall that arrives is kept outright.
+    private func isWorthKeeping(_ fences: Set<GridPoint>, for levelID: String) -> Bool {
+        guard !fences.isEmpty else { return false }
+        guard let kept = submittedFences(for: levelID) else { return true }
+        guard let index = world.index(of: levelID) else { return false }
+
+        let level = world[index].level
+        guard case .penned(let pen) = level.release(fences: fences),
+              case .penned(let held) = level.release(fences: kept)
+        else {
+            // A wall that will not close on the map as it now stands still replaces one
+            // that uses more pieces, so a level whose ground has been redrawn under a
+            // player's old wall is never stuck with it.
+            return fences.count < kept.count
+        }
+
+        let scored = level.tally(for: pen).score
+        let standing = level.tally(for: held).score
+        return scored == standing ? fences.count < kept.count : scored > standing
     }
 
     /// Records how a level went, keeping the best rating it has ever been given.
@@ -317,6 +396,7 @@ final class WorldProgress {
     func reload() {
         bestStars = store.loadStars()
         bestPens = store.loadBestPens()
+        submittedPens = store.loadSubmittedPens()
         playedScenes = store.loadPlayedScenes()
     }
 
@@ -329,6 +409,7 @@ final class WorldProgress {
     func eraseEverything() {
         bestStars = [:]
         bestPens = []
+        submittedPens = [:]
         playedScenes = []
         store.erase()
     }

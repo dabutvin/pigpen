@@ -263,25 +263,44 @@ struct PuzzleView: View {
         .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
     }
 
-    /// What the field is holding, set against the most it has held, and the way back to it.
-    /// A pen counts from the moment it closes, so the fencing can be pulled about, seen to
-    /// fall short, and put back the way it was without the pig ever leaving its tile.
-    /// Undo walks back a press at a time; this goes straight to the best, however long ago
-    /// it was, which is why it wears the trophy rather than an arrow.
+    /// What the field is holding, set against the most it has held, the stars that best is
+    /// worth, and the way back to it. A pen counts from the moment it closes, so the fencing
+    /// can be pulled about, seen to fall short, and put back the way it was without the pig
+    /// ever leaving its tile. Undo walks back a press at a time; this goes straight to the
+    /// best, however long ago it was, which is why it wears the trophy rather than an arrow.
+    ///
+    /// On a level gone back to, the best is the one already won there rather than one closed
+    /// this go, so the board opens with the tally up: what there is to beat, and the stars
+    /// it took, before a single piece is laid.
     @ViewBuilder
     private var bestPenTally: some View {
         if game.bestScore > 0 {
             HStack(spacing: 10) {
-                Text(tallySummary)
-                    .font(.footnote.weight(.heavy))
-                    // Written straight onto the grass, so it is painted rather than printed.
-                    .foregroundStyle(GamePalette.cream)
+                HStack(spacing: 7) {
+                    // The stars are the best pen's, not the field's: they say what the score
+                    // beside them was worth, and go rainbow when nothing on the map beats it.
+                    StarRow(
+                        stars: game.bestStars,
+                        size: 12,
+                        hasTheBestPen: game.bestVerdict?.isAsGoodAsItGets == true
+                    )
                     .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
-                    .contentTransition(.numericText())
-                    // Sits on one line beside the button rather than pushing it off the
-                    // screen when the type is large.
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+
+                    Text(tallySummary)
+                        .font(.footnote.weight(.heavy))
+                        // Written straight onto the grass, so it is painted rather than printed.
+                        .foregroundStyle(GamePalette.cream)
+                        .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
+                        .contentTransition(.numericText())
+                        // Sits on one line beside the button rather than pushing it off the
+                        // screen when the type is large.
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                }
+                // One thing to hear rather than two, since the stars are only worth
+                // anything read out beside the score they were given for.
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(tallySaid)
 
                 if game.canRestoreBestPen {
                     Button { putBestPenBack() } label: {
@@ -299,7 +318,7 @@ struct PuzzleView: View {
         }
     }
 
-    /// Reads out the best pen of the session, and what the fencing holds now when that is
+    /// Reads out the best pen being kept, and what the fencing holds now when that is
     /// something other than the best.
     private var tallySummary: String {
         guard let holding = game.penTally?.score else {
@@ -308,6 +327,16 @@ struct PuzzleView: View {
         return holding >= game.bestScore
             ? "Your best yet: \(scored(holding))"
             : "Holding \(holding), best \(game.bestScore)"
+    }
+
+    /// The tally spoken: the same words, with the stars beside them said rather than shown,
+    /// since a row of glyphs reads out as nothing at all.
+    private var tallySaid: String {
+        var said = "\(tallySummary), \(counted(game.bestStars, "star"))"
+        if game.bestVerdict?.isAsGoodAsItGets == true {
+            said += " — the best pen there is"
+        }
+        return said
     }
 
     /// One of the small painted boards that work the fencing already down. A button with
@@ -808,6 +837,12 @@ private struct StopwatchFace: View {
 #Preview("Part way through") {
     NavigationStack {
         PuzzleView(game: .partWayThrough())
+    }
+}
+
+#Preview("A level already held") {
+    NavigationStack {
+        PuzzleView(game: .pickedBackUp())
     }
 }
 
