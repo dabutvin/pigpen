@@ -90,6 +90,22 @@ struct Universe: Sendable {
             return running + game.map.nodes.reduce(0) { $0 + min(max(stars[$1.id] ?? 0, 0), 3) }
         }
     }
+
+    /// Every puzzle there is across the whole universe, counted the same way its stars are:
+    /// the built worlds only.
+    var puzzleTotal: Int {
+        worlds.reduce(0) { $0 + ($1.game?.map.count ?? 0) }
+    }
+
+    /// How many of those puzzles have been penned at all. A pen is a pen however few stars it
+    /// was worth, which is what makes this the count of puzzles complete rather than of puzzles
+    /// mastered.
+    func clearedCount(stars: [String: Int]) -> Int {
+        worlds.reduce(0) { running, world in
+            guard let game = world.game else { return running }
+            return running + game.map.nodes.filter { (stars[$0.id] ?? 0) > 0 }.count
+        }
+    }
 }
 
 extension Universe {

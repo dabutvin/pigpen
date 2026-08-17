@@ -297,7 +297,9 @@ struct SettingsView: View {
                 .font(.caption2)
                 .foregroundStyle(GamePalette.post.opacity(0.55))
         }
-        .animation(.easeInOut(duration: 0.25), value: progress.totalStars)
+        // The number on the card rather than the meadow's own, which stops moving the moment
+        // the meadow is held and would leave the card changing without animating.
+        .animation(.easeInOut(duration: 0.25), value: tally.stars)
         .animation(.easeInOut(duration: 0.25), value: daily.completedCount)
     }
 
@@ -336,12 +338,38 @@ struct SettingsView: View {
         guard hasSomethingToClear else {
             return "Nothing saved yet — \(world.name) is as it comes."
         }
-        let meadow = """
-            \(progress.totalStars) of \(world.starTotal) stars, \
-            \(progress.clearedCount) of \(world.count) puzzles complete.
+        let counts = """
+            \(tally.stars) of \(tally.starTotal) stars, \
+            \(tally.cleared) of \(tally.puzzles) puzzles complete.
             """
-        guard daily.completedCount > 0 else { return meadow }
-        return meadow + " \(counted(daily.completedCount, "daily puzzle")) as well."
+        guard daily.completedCount > 0 else { return counts }
+        return counts + " \(counted(daily.completedCount, "daily puzzle")) as well."
+    }
+
+    /// What the card counts, over whatever the player is actually playing: the meadow alone
+    /// while the meadow is still being held, and every built world once it is held and the
+    /// game has moved out onto the universe map.
+    ///
+    /// The same widening the title screen's badge does, for the same reason. A player out in
+    /// the dunes being told "27 of 27 stars, 9 of 9 puzzles complete" is being given the score
+    /// of a world they left behind — and it reads as a finished game on the very card that is
+    /// there to say how much there is to lose.
+    private var tally: SavedTally {
+        guard progress.isTheWorldHeld else {
+            return SavedTally(
+                stars: progress.totalStars,
+                starTotal: world.starTotal,
+                cleared: progress.clearedCount,
+                puzzles: world.count
+            )
+        }
+        let universe = Universe.all
+        return SavedTally(
+            stars: universe.totalStars(stars: progress.bestStars),
+            starTotal: universe.starTotal,
+            cleared: universe.clearedCount(stars: progress.bestStars),
+            puzzles: universe.puzzleTotal
+        )
     }
 
     private func counted(_ number: Int, _ noun: String) -> String {
@@ -415,6 +443,15 @@ struct SettingsView: View {
     }
 }
 
+/// The four numbers the game-data card counts itself in, whichever ground it is counting over:
+/// stars won of stars there are, puzzles penned of puzzles there are.
+private struct SavedTally: Equatable {
+    let stars: Int
+    let starTotal: Int
+    let cleared: Int
+    let puzzles: Int
+}
+
 /// A switch held in memory, so that flicking the toggle in a preview is not a change to the
 /// setting on the machine the preview is running on.
 @MainActor
@@ -434,6 +471,22 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         .sheet(isPresented: .constant(true)) {
             SettingsView(
                 progress: .partWayThrough(),
+                daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+                reminder: .reminding(),
+                haptics: previewHaptics(),
+                analytics: previewAnalytics()
+            )
+            .presentationDetents([.medium, .large])
+        }
+}
+
+/// The meadow behind us, which is where the card stops counting the one world and starts
+/// counting the game.
+#Preview("Out past the meadow") {
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            SettingsView(
+                progress: .theMeadowHeld(),
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
                 reminder: .reminding(),
                 haptics: previewHaptics(),
