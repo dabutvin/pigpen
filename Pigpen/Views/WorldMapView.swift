@@ -309,7 +309,7 @@ struct WorldMapView: View {
     /// so the map never cuts to a puzzle the pig is not standing at.
     private func visit(_ index: Int) {
         guard progress.isUnlocked(index), !walking else { return }
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        Haptics.tap(.medium)
 
         Task {
             await walk(to: Double(index), secondsPerStop: 0.3)
@@ -407,7 +407,7 @@ struct WorldMapView: View {
     /// The signpost the pig has just walked up to takes a bow.
     private func celebrate(_ index: Int) {
         guard progress.isUnlocked(index), !progress.isCleared(index) else { return }
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        Haptics.buzz(.success)
 
         guard !reduceMotion else { return }
         withAnimation(.spring(duration: 0.45, bounce: 0.55)) { unveiled = index }

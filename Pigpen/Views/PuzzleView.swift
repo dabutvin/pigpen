@@ -392,7 +392,7 @@ struct PuzzleView: View {
     ) -> some View {
         Button {
             action()
-            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            Haptics.tap(.soft)
         } label: {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
@@ -670,10 +670,10 @@ struct PuzzleView: View {
                 }
                 return
             }
-            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            Haptics.tap(.rigid)
         case .clearing:
             guard game.clearFence(on: stroke.tile) else { return }
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            Haptics.tap(.light)
         }
     }
 
@@ -686,7 +686,7 @@ struct PuzzleView: View {
         if let heldIn {
             clock?.setElapsed(heldIn)
         }
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        Haptics.tap(.soft)
     }
 
     /// Says no to a tile the map or the budget will not take, once per press: a finger
@@ -695,7 +695,7 @@ struct PuzzleView: View {
         guard !refusedThisPress else { return }
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
-        UINotificationFeedbackGenerator().notificationOccurred(.warning)
+        Haptics.buzz(.warning)
     }
 
     /// Floats a word off the tile a finger just landed on, once per press: a drag that
@@ -705,7 +705,7 @@ struct PuzzleView: View {
         guard !refusedThisPress else { return }
         refusedThisPress = true
         callout = FieldCallout(tile: tile, said: words)
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        Haptics.tap(.soft)
         UIAccessibility.post(notification: .announcement, argument: words)
     }
 
@@ -749,14 +749,14 @@ struct PuzzleView: View {
             guard await walk(escapes) else { return }
             guard !Task.isCancelled else { return }
             reveal()
-            UINotificationFeedbackGenerator().notificationOccurred(.error)
+            Haptics.buzz(.error)
         case .refused:
             // Nothing walks anywhere — everything is where it was fenced. The card says what
             // the board wanted instead, and no clock is stopped and no score is told, since
             // the field is not won.
             guard !Task.isCancelled else { return }
             reveal()
-            UINotificationFeedbackGenerator().notificationOccurred(.error)
+            Haptics.buzz(.error)
         case .penned:
             // The clock stops on the pen holding rather than on the card coming up, so the
             // lap of honour is not charged to the player.
@@ -791,7 +791,7 @@ struct PuzzleView: View {
         guard !reduceMotion else {
             guard await Task.pausing(for: .milliseconds(350)) else { return }
             reveal()
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            Haptics.buzz(.success)
             return
         }
 
@@ -800,7 +800,7 @@ struct PuzzleView: View {
 
         guard await cheer.waitOut() else { return }
         reveal()
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        Haptics.buzz(.success)
 
         await cheer.waitForTheConfetti()
         celebration = nil

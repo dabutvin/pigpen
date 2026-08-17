@@ -195,7 +195,7 @@ struct TitleScreenView: View {
             Spacer(minLength: 0)
 
             Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                Haptics.tap(.light)
                 showsSettings = true
             } label: {
                 Image(systemName: "gearshape.fill")
@@ -308,7 +308,7 @@ struct TitleScreenView: View {
     private var playBlock: some View {
         VStack(spacing: 9) {
             Button {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                Haptics.tap(.medium)
                 play()
             } label: {
                 MenuRow(
@@ -400,7 +400,7 @@ struct TitleScreenView: View {
         let stars = daily.stars(on: today)
         let streak = daily.streak(upTo: today)
         return Button {
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            Haptics.tap(.medium)
             openToday()
         } label: {
             MenuRow(
@@ -485,7 +485,7 @@ struct TitleScreenView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            Haptics.tap(.light)
             action()
         } label: {
             MenuRow(icon: icon, title: title, detail: detail, tint: GamePalette.cream) {

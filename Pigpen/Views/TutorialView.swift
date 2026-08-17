@@ -92,10 +92,10 @@ struct TutorialView: View {
             if lesson.showsContinue {
                 Button {
                     if lesson.step == .finished {
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        Haptics.tap(.medium)
                         dismiss()
                     } else if lesson.continueTapped() {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        Haptics.tap(.light)
                     }
                 } label: {
                     Text(lesson.step == .finished ? "To the meadow" : "Continue")
@@ -158,14 +158,14 @@ struct TutorialView: View {
             refuse()
             return
         }
-        UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+        Haptics.tap(.rigid)
     }
 
     private func refuse() {
         guard !refusedThisPress else { return }
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
-        UINotificationFeedbackGenerator().notificationOccurred(.warning)
+        Haptics.buzz(.warning)
     }
 
     private func reactToPhase() async {
@@ -178,14 +178,14 @@ struct TutorialView: View {
             // The scripted pen holds, so this path is only a safety net if the field is
             // somehow opened early — walk the pig out and leave the coach where it is.
             guard await walk(escapes.first?.route ?? []) else { return }
-            UINotificationFeedbackGenerator().notificationOccurred(.error)
+            Haptics.buzz(.error)
         case .penned:
             lesson.reconsider()
             await celebrate()
         case .refused:
             // The practice pen has one animal and no rule to break, so this cannot happen
             // here; the switch is whole so that a new rule cannot pass through unnoticed.
-            UINotificationFeedbackGenerator().notificationOccurred(.error)
+            Haptics.buzz(.error)
         }
     }
 
@@ -194,7 +194,7 @@ struct TutorialView: View {
     private func celebrate() async {
         guard !reduceMotion else {
             guard await Task.pausing(for: .milliseconds(350)) else { return }
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            Haptics.buzz(.success)
             return
         }
 
@@ -202,7 +202,7 @@ struct TutorialView: View {
         celebration = cheer
 
         guard await cheer.waitOut() else { return }
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        Haptics.buzz(.success)
 
         await cheer.waitForTheConfetti()
         celebration = nil
