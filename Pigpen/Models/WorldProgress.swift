@@ -358,6 +358,19 @@ final class WorldProgress {
         !hasPlayed(.opening) && totalStars == 0
     }
 
+    /// Whether the walkthrough is still owed. It is owed on exactly the terms a world's
+    /// opening is — once, to a game with nothing won and no walkthrough behind it — so it
+    /// is asked for through the same door, and a player already up the meadow when the
+    /// title screen learned to open it is left alone.
+    var isTheTutorialDue: Bool {
+        isOpeningDue(key: TutorialLesson.seenKey)
+    }
+
+    /// Remembers that the walkthrough has been put in front of somebody. Written down as it
+    /// goes up rather than as it finishes, the same as a film: a player who backs out of it
+    /// has had their showing, and must not be sent straight back into it.
+    func markTutorialSeen() { markPlayed(sceneKey: TutorialLesson.seenKey) }
+
     /// The film owed before a level opens, if the world keeps one for it and it has not been
     /// played. Only a boss has one, since it is the only map in a world that changes the rules
     /// rather than the ground.
@@ -416,6 +429,20 @@ final class WorldProgress {
 }
 
 extension WorldProgress {
+    /// A world with nothing taken out of it and the walkthrough already spent: the title
+    /// screen as a new player finds it once the practice pen that opens itself on a first
+    /// run has had its showing.
+    ///
+    /// Held in memory, so a preview or a screenshot of the empty title screen is the empty
+    /// title screen however far up the meadow the device it is drawn on happens to be — and
+    /// so that the walkthrough does not push itself over the top of the photograph.
+    static func beforeTheFirstStar(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
+        WorldProgress(
+            world: world,
+            store: RememberedProgress(scenesPlayed: [TutorialLesson.seenKey])
+        )
+    }
+
     /// A world a couple of levels in, so previews and the screenshots CI takes show a
     /// trail with stars on it, a level waiting to be played, and some still shut.
     ///

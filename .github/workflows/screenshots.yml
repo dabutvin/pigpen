@@ -95,7 +95,7 @@ jobs:
           # the same board rather than two rolls of the dice. `-universe`, `-map`,
           # `-woods-map`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`, `-orchard`,
           # `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`, `-archive`,
-          # `-title` and `-settings` are launch
+          # `-title`, `-title-fresh` and `-settings` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive and the
           # settings sheet can be captured without tapping through the title screen.
@@ -123,7 +123,7 @@ jobs:
             echo "Captured: $light, $dark"
           }
 
-          capture 1 title
+          capture 1 title -title-fresh
           capture 3 tutorial -tutorial
           capture 5 universe -universe
           capture 7 map -map
