@@ -550,6 +550,7 @@ struct FieldView: View {
         case .sawdust: drawSawdust(in: &context, rect: rect, scatter: &scatter)
         case .hardpan: drawHardpan(in: &context, rect: rect, scatter: &scatter)
         case .strand: drawStrand(in: &context, rect: rect, scatter: &scatter)
+        case .sastrugi: drawSastrugi(in: &context, rect: rect, scatter: &scatter)
         }
     }
 
@@ -858,6 +859,52 @@ struct FieldView: View {
         }
     }
 
+    /// Sastrugi: snow the wind has been at. What reads at tile size is the combing — long
+    /// parallel waves pulled the same way on every tile, because they are one wind's work
+    /// rather than a tile's worth each — each wave a lit crest with a blue trough under it,
+    /// and the odd facet catching the sun whole.
+    private func drawSastrugi(in context: inout GraphicsContext, rect: CGRect, scatter: inout Scatter) {
+        for _ in 0..<2 {
+            let down = rect.minY + rect.height * CGFloat(scatter.next(in: 0.15...0.85))
+            var wave = Path()
+            wave.move(to: CGPoint(x: rect.minX + rect.width * 0.06, y: down))
+            wave.addQuadCurve(
+                to: CGPoint(
+                    x: rect.maxX - rect.width * 0.06,
+                    y: down + rect.height * CGFloat(scatter.next(in: -0.06...0.06))
+                ),
+                control: CGPoint(
+                    x: rect.midX,
+                    y: down - rect.height * CGFloat(scatter.next(in: 0.05...0.12))
+                )
+            )
+            // The trough first and the crest a hair above it: snow is drawn by its shadow.
+            context.stroke(
+                wave,
+                with: .color(skin.grit.opacity(scatter.next(in: 0.2...0.34))),
+                style: StrokeStyle(lineWidth: max(1, rect.width * 0.045), lineCap: .round)
+            )
+            context.stroke(
+                wave.applying(CGAffineTransform(translationX: 0, y: -max(1, rect.width * 0.035))),
+                with: .color(.white.opacity(scatter.next(in: 0.3...0.5))),
+                style: StrokeStyle(lineWidth: max(1, rect.width * 0.04), lineCap: .round)
+            )
+        }
+
+        if scatter.next() < 0.4 {
+            let size = rect.width * CGFloat(scatter.next(in: 0.03...0.05))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: rect.minX + rect.width * CGFloat(scatter.next(in: 0.15...0.8)),
+                    y: rect.minY + rect.height * CGFloat(scatter.next(in: 0.15...0.8)),
+                    width: size,
+                    height: size
+                )),
+                with: .color(.white.opacity(scatter.next(in: 0.5...0.8)))
+            )
+        }
+    }
+
     /// What is going on on the surface, which is not the same thing twice: light breaking on
     /// open water in the meadow, rings on a standing pool in the wood, steam off a mountain
     /// tarn, a slick on a canal, the light still in the well a star made, one river running,
@@ -874,6 +921,7 @@ struct FieldView: View {
         case .crowd: drawCrowd(in: &context, board: board)
         case .dune: drawDune(in: &context, board: board)
         case .rockPool: drawRockPool(in: &context, board: board)
+        case .pressureRidge: drawPressureRidge(in: &context, board: board)
         }
     }
 
@@ -1225,6 +1273,58 @@ struct FieldView: View {
         }
     }
 
+    /// The pressure ridge: not water to look at at all, but ice crushed upward where two floes
+    /// met. Each tile carries a few blades of broken ice standing proud of the board — lit down
+    /// the sunward face, deep blue down the lee — over the band of rubble the crush left at
+    /// their feet, which is what makes a ridge read as a wall the way a dune reads as a bank.
+    private func drawPressureRidge(in context: inout GraphicsContext, board: BoardGeometry) {
+        for tile in waterTiles {
+            let rect = board.rect(for: tile)
+            var noise = scatter(on: tile)
+
+            // The rubble at the foot: broken shadow across the bottom of the tile.
+            context.fill(
+                Path(CGRect(
+                    x: rect.minX + board.cell * 0.06,
+                    y: rect.maxY - board.cell * 0.2,
+                    width: board.cell * 0.88,
+                    height: board.cell * 0.14
+                )),
+                with: .color(skin.waterDeep.opacity(0.4))
+            )
+
+            // The blades, the middle one tallest: each a shard with its sunward face lit and
+            // its lee face in the blue of the deep ice.
+            for (index, along) in [0.24, 0.52, 0.78].enumerated() {
+                let x = rect.minX + board.cell * CGFloat(along)
+                    + board.cell * CGFloat(noise.next(in: -0.04...0.04))
+                let height = board.cell * CGFloat(
+                    index == 1 ? noise.next(in: 0.62...0.78) : noise.next(in: 0.4...0.56)
+                )
+                let half = board.cell * CGFloat(noise.next(in: 0.12...0.17))
+                let foot = rect.maxY - board.cell * 0.12
+                let peak = CGPoint(
+                    x: x + board.cell * CGFloat(noise.next(in: -0.05...0.05)),
+                    y: foot - height
+                )
+
+                var lee = Path()
+                lee.move(to: CGPoint(x: x - half, y: foot))
+                lee.addLine(to: peak)
+                lee.addLine(to: CGPoint(x: x + half, y: foot))
+                lee.closeSubpath()
+                context.fill(lee, with: .color(skin.waterDeep.opacity(0.85)))
+
+                var lit = Path()
+                lit.move(to: CGPoint(x: x - half, y: foot))
+                lit.addLine(to: peak)
+                lit.addLine(to: CGPoint(x: x + half * 0.1, y: foot))
+                lit.closeSubpath()
+                context.fill(lit, with: .color(skin.waterLight.opacity(0.9)))
+            }
+        }
+    }
+
     /// The lines between the tiles, ruled over the ground and stopped at the water. A lake
     /// is one sheet of it; squaring it off would only make the map look like a spreadsheet.
     private func drawGridLines(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
@@ -1408,6 +1508,7 @@ struct FieldView: View {
             case .bunting: drawBunting(in: &context, plot: plot)
             case .driftFence: drawDriftFence(in: &context, plot: plot)
             case .groynes: drawGroynes(in: &context, plot: plot)
+            case .snowFence: drawSnowFence(in: &context, plot: plot)
             }
         }
     }
@@ -1872,6 +1973,63 @@ struct FieldView: View {
             style: StrokeStyle(lineWidth: max(1, plot.width * 0.045), lineCap: .round)
         )
     }
+
+    /// The tundra's: a snow fence. Two posts driven through the snow into the ice and slats
+    /// nailed across them with the gaps left in on purpose — a fence out here is put up to
+    /// drop the wind rather than to stop it — with the drift it has already caught banked up
+    /// its foot and a cap of last night's snow on either post.
+    private func drawSnowFence(in context: inout GraphicsContext, plot: CGRect) {
+        var posts = Path()
+        var lit = Path()
+        let width = plot.width * 0.11
+        let foot = plot.minY + plot.height * 0.92
+        for post in [0.24, 0.76] {
+            let x = plot.minX + plot.width * CGFloat(post)
+            let top = plot.minY + plot.height * 0.14
+            posts.addRect(CGRect(x: x - width / 2, y: top, width: width, height: foot - top))
+            lit.addRect(CGRect(x: x - width / 2, y: top, width: width * 0.36, height: foot - top))
+        }
+        context.fill(posts, with: .color(skin.post))
+        context.fill(lit, with: .color(.white.opacity(0.18)))
+
+        // The slats, with their gaps left in.
+        var slats = Path()
+        for slat in [0.24, 0.42, 0.6] {
+            let y = plot.minY + plot.height * CGFloat(slat)
+            slats.addRect(CGRect(
+                x: plot.minX + plot.width * 0.08,
+                y: y,
+                width: plot.width * 0.84,
+                height: plot.height * 0.07
+            ))
+        }
+        context.fill(slats, with: .color(skin.picket))
+
+        // The drift the fence was put up to catch, banked over the feet of everything.
+        var drift = Path()
+        drift.move(to: CGPoint(x: plot.minX, y: foot))
+        drift.addQuadCurve(
+            to: CGPoint(x: plot.maxX, y: foot - plot.height * 0.08),
+            control: CGPoint(x: plot.midX, y: foot - plot.height * 0.28)
+        )
+        drift.addLine(to: CGPoint(x: plot.maxX, y: plot.maxY))
+        drift.addLine(to: CGPoint(x: plot.minX, y: plot.maxY))
+        drift.closeSubpath()
+        context.fill(drift, with: .color(.white.opacity(0.8)))
+
+        // Last night's snow, sitting where it landed.
+        var caps = Path()
+        for post in [0.24, 0.76] {
+            let x = plot.minX + plot.width * CGFloat(post)
+            caps.addEllipse(in: CGRect(
+                x: x - width * 0.72,
+                y: plot.minY + plot.height * 0.1,
+                width: width * 1.44,
+                height: plot.height * 0.08
+            ))
+        }
+        context.fill(caps, with: .color(.white.opacity(0.9)))
+    }
 }
 
 #Preview("Building") {
@@ -1891,17 +2049,18 @@ struct FieldView: View {
     .padding()
 }
 
-/// The same field in every world there is: one board, one line of fencing, nine grounds. The
-/// board underneath is River Bend in all nine, so anything that changes between them is the
+/// The same field in every world there is: one board, one line of fencing, ten grounds. The
+/// board underneath is River Bend in all ten, so anything that changes between them is the
 /// skin and nothing else — which is the quickest way to see whether a world reads as its own
 /// place or only as the meadow tinted a different colour.
-#Preview("Eight grounds") {
+#Preview("Ten grounds") {
     let level = PuzzleLevel.riverBend
     let fences = Set((3...9).map { GridPoint(row: $0, column: 0) })
         .union((1...5).map { GridPoint(row: 10, column: $0) })
     let grounds: [FieldSkin] = [
         .meadow, .thornwood, .emberpeak, .cogsworth,
-        .starfall, .gloamdeep, .lanternCarnival, .sunbakedDunes
+        .starfall, .gloamdeep, .lanternCarnival, .sunbakedDunes,
+        .tidepoolCove, .frostwhiskerTundra
     ]
 
     return ScrollView {

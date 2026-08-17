@@ -32,7 +32,6 @@ tile is bought.
 ## 1. Ebbtide Pool — 13 pieces, 17
 
 ```
-=== final_t1.map budget=13 rule=herd
 ...........
 ..~~.~~....
 ..~.a.~....
@@ -59,32 +58,6 @@ maximum in the game and the world's first lesson priced exactly.
 ## 2. Twin Pools — 12 pieces, 30
 
 ```
-=== final_t2.map budget=14 rule=herd
-...........
-.~~~~~~~~..
-.~oooooo~..
-.~~~~o~~~..
-#oxooooxo#.
-#ooooooooo#
-#ooooPooo#.
-.#oooooo#..
-..#oooo#...
-...#ao#.a..
-....##.....
-```
-
-Two small pools set corner to corner with their breaks turned in towards each other, and the pig on
-the open sand between them. The span question: neither ring walls anything on its own, and no
-rectangle reaches round both — squaring off tucks one corner against each across the middle for 17.
-
-The twelve pieces run instead as one long diagonal band from the north-east corner of the board
-down between the two rings, leaning on the outside of one going down and the other coming back:
-30 tiles. The hearts go unbought, and the pools' pearls are already gone — the tide dropped both
-on the line of the map, where nothing can be penned.
-
-## 3. The High Strand — 19 pieces, 36
-
-```
 .....##....
 ..~~~oo#...
 ..~o~ooo#..
@@ -98,39 +71,16 @@ on the line of the map, where nothing can be penned.
 ...a.....a.
 ```
 
-The ground above the tideline: no pool anywhere, and the biggest budget in the world laid across
-bare strand. It is The Hardpan and The Blind Grike again, and the answer is the answer it always
-was: the best block nineteen pieces square off is a four by five holding 20, and the same nineteen
-run round as a diamond hold 36. On ground with nothing on it there is nothing else to know, which
-is why this is the one field in the cove a player has met before.
+Two small pools set corner to corner with their breaks turned in towards each other, and the pig on
+the open sand between them. The span question: neither ring walls anything on its own, and no
+rectangle reaches round both — squaring off tucks one corner against each across the middle for 17.
 
-## 4. The Oyster Bed — 14 pieces, 42
+The twelve pieces run instead as one long diagonal band from the north-east corner of the board
+down between the two rings, leaning on the outside of one going down and the other coming back:
+30 tiles. The hearts go unbought, and the pools' pearls are already gone — the tide dropped both
+on the line of the map, where nothing can be penned.
 
-```
-=== final_t4.map budget=13 rule=herd
-.....#.....
-.~~~~o~~~~.
-.~aoooooo~.
-.~~~~o~~~~.
-#ooooooooo#
-#oooooooo#.
-.#oooooo#..
-..#ooPo#...
-...#oo#....
-....##..a..
-...........
-```
-
-One pool with its break turned east and two pearls seeded in its heart, a third loose on the sand,
-and the pig in the far corner. The detour question asked through the break: the heart's only door
-faces away from everything, so the pen that wants the pearls comes the whole way round the pool
-and in at the east side.
-
-The block leans the west rim and takes the loose pearl for 23. The lozenge holds 27 tiles and all
-three pearls, which is 42 — ground given up for ground, which is what a detour is, and the first
-heart in the world worth buying.
-
-## 5. The Runnel — 13 pieces, 43
+## 3. The High Strand — 19 pieces, 36
 
 ```
 ....##......
@@ -146,6 +96,53 @@ heart in the world worth buying.
 .a........a.
 ```
 
+The ground above the tideline: no pool anywhere, and the biggest budget in the world laid across
+bare strand. It is The Hardpan and The Blind Grike again, and the answer is the answer it always
+was: the best block nineteen pieces square off is a four by five holding 20, and the same nineteen
+run round as a diamond hold 36. On ground with nothing on it there is nothing else to know, which
+is why this is the one field in the cove a player has met before.
+
+## 4. The Oyster Bed — 14 pieces, 42
+
+```
+...........
+...........
+...........
+..~~~~#....
+..~aaoo#...
+..~oo~oo#..
+..~~~~ooo#.
+.#oooooo#..
+#Pooooa#...
+.#oooo#....
+..####.....
+```
+
+One pool with its break turned east and two pearls seeded in its heart, a third loose on the sand,
+and the pig in the far corner. The detour question asked through the break: the heart's only door
+faces away from everything, so the pen that wants the pearls comes the whole way round the pool
+and in at the east side.
+
+The block leans the west rim and takes the loose pearl for 23. The lozenge holds 27 tiles and all
+three pearls, which is 42 — ground given up for ground, which is what a detour is, and the first
+heart in the world worth buying.
+
+## 5. The Runnel — 13 pieces, 43
+
+```
+.....#.....
+.~~~~o~~~~.
+.~aoooooo~.
+.~~~~o~~~~.
+#ooooooooo#
+#oooooooo#.
+.#oooooo#..
+..#ooPo#...
+...#oo#....
+....##..a..
+...........
+```
+
 Two pools reaching in from either side with their breaks facing each other across a dry channel
 one tile wide, and the channel's head standing on the rim. Every way into the north of the board
 funnels through that one tile, so one piece there buys the channel, the western heart and the
@@ -158,18 +155,17 @@ to the tide: one break leads to treasure and one to swept sand, and the wall is 
 ## 6. The Long Pool — 14 pieces, 39
 
 ```
-=== final_t6.map budget=14 rule=herd
 ...........
-...........
-...........
-..~~~~#....
-..~aaoo#...
-..~oo~oo#..
-..~~~~ooo#.
+.~~~~~~~~..
+.~oooooo~..
+.~~~~o~~~..
+#oxooooxo#.
+#ooooooooo#
+#ooooPooo#.
 .#oooooo#..
-#Pooooa#...
-.#oooo#....
-..####.....
+..#oooo#...
+...#ao#.a..
+....##.....
 ```
 
 One pool the width of the strand with its break mid-lip, two jellyfish stranded under its south
@@ -184,7 +180,6 @@ the price of the bank either way, so the winning pen is the one that buys the mo
 ## 7. Barnacle Corner — 10 pieces, 47
 
 ```
-=== final_t7.map budget=10 rule=herd
 ~~~~~.~~~~~
 ~.a.....a.~
 ~~~~~~~~~~~
@@ -211,7 +206,6 @@ with no door anybody can use, which is the loudest tease in the world.
 ## 8. Low Water — 16 pieces, 58
 
 ```
-=== final_t8.map budget=16 rule=herd
 .....#......
 ..~~~o#.....
 ..~a~oo#....
@@ -263,5 +257,6 @@ pens, which is no ring. The square moat with the plug is the obvious pen and wor
 it reaches not one of the three pearls.
 
 The same twenty-two pieces swung out as a diamond hold 37 tiles and all three — one lying off each
-face of the square's reach, which is exactly where a diamond's points go. At 67% it is the widest
-gap any board in the game leaves. It asks for 21 of the 24 stars below it before it opens.
+face of the square's reach, which is exactly where a diamond's points go. At 67% it was the widest
+gap any board in the game left until the tundra's Haulout asked 69. It asks for 21 of the 24 stars
+below it before it opens.

@@ -210,8 +210,9 @@ thicket floors at 23% and opens at 25%, so the second world starts around where 
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
 the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
 Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
-opens at 34%; Lantern Carnival floors and opens at 37%; and Sunbaked Dunes floors at 38% and opens
-at 39%, the highest floor any world has stood on. Bosses are held to each other rather than to the
+opens at 34%; Lantern Carnival floors and opens at 37%; Sunbaked Dunes floors at 38% and opens
+at 39%; Tidepool Cove floors at 40% and opens at 41%; and Frostwhisker Tundra floors at 41% and
+opens at 42%, the highest floor any world has stood on. Bosses are held to each other rather than to the
 floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
@@ -231,8 +232,8 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand or wet
-  strand — what the
+  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand, wet
+  strand or wind-combed snow — what the
   windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
@@ -252,6 +253,7 @@ carries the same game into every one of them.
   | Lantern Carnival | trodden ground under sawdust | **a crowd**, not water at all | painted poles and bunting |
   | Sunbaked Dunes | baked hardpan, cracked into plates | **a dune**, sand too steep to climb | a drift fence half buried |
   | Tidepool Cove | wet strand the tide just let go of | a tidepool, ringed with foam | groynes, weeded to the waterline |
+  | Frostwhisker Tundra | snow over sea ice, combed into sastrugi | **a pressure ridge**, ice crushed upward | a snow fence, banked in its own drift |
 
   The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
   a pen exactly as a mere does, because the board cannot tell the difference between a river and
@@ -276,9 +278,9 @@ carries the same game into every one of them.
   dailies, which come and go with the calendar.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival**, **Sunbaked Dunes** and
-**Tidepool Cove** to play, then Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
-silhouettes.
+City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival**, **Sunbaked Dunes**,
+**Tidepool Cove** and **Frostwhisker Tundra** to play, then Mirebog Fen and Cloudspire Heights
+waiting as silhouettes.
 Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
 the skin its board is painted in — since the map, the unlocking and the films are already there.
 
@@ -455,7 +457,8 @@ way from Dust Shore to Starwell Ring.
 | 8 | Wide Reaches | 20 | 1 stardrop | 45 | 69 | 34% |
 | 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
 
-Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
+Starwell Ring asks 56%, which was the widest gap any field in the game left until the tundra's
+Whiskers asked 58 — six wells, twelve
 pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing
 at. Swept Flat is the third field in the game with no water on it at all, after Basalt Flats and
 Cobble Yard, and eighteen pieces on eleven tiles of bare dust is the largest budget anything has
@@ -744,10 +747,75 @@ he strolls out of his pool into the pig's own ground, which is held and held tog
 answer; plug the break and box the pig beside the pool and both are held in two tidy pens, which
 is no ring. The square moat with its plug is the obvious answer and worth 17 of 52; the same
 twenty-two pieces swung out as a diamond hold 37 tiles and all three pearls — one lying off each
-face of the square's reach, exactly where a diamond's points go — and at 67% that is the widest
-gap any board in the game leaves. It charges the same 21 of the 24 stars below it that every boss
+face of the square's reach, exactly where a diamond's points go — and at 67% that was the widest
+gap any board in the game left until the tundra's bull seal asked 69. It charges the same 21 of the 24 stars below it that every boss
 charges, and stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions/09-tidepool-cove.md`](solutions/09-tidepool-cove.md).
+
+### Frostwhisker Tundra
+
+The tenth world, and the coldest. North along the shore the sea itself gives up and goes white,
+so the trail runs over wind-combed snow under the palest light in the game, the windfall is a
+**fish** flipped up onto the ice and the hazard a **berg** calved into the snow — each worth
+exactly what its meadow twin was, a fish five tiles to shut in, a berg five to shut in with and
+no fencing at all, since nothing drives a post through blue ice.
+
+What the water is up here is **a pressure ridge**: ice crushed upward where two floes met, too
+sheer to climb and no ground to build on, so it stops a pig and a fence exactly as a river does.
+And the world's own idea is the shape of it — **every ridge runs on the slant.** A straight chain
+of single tiles on the diagonal, at least three long, corner touching corner and never two
+abreast: each blade seals the ground it corner-touches, so the chain is a diagonal wall laid for
+free. `FrostwhiskerTests` pins it — one direction per chain, and both slants somewhere on the
+trail, because the wind out here has no favourite.
+
+Which is a different kind of gift from any world below. A crescent handed over three walls and a
+mouth; a ring handed over a finished pen; a ridge hands over a wall that is already *the best
+shape a wall can be* — the diagonal every world since the meadow has been teaching — and nothing
+else. There is no heart to fall for and no mouth to plug. The question every field here asks is
+not whether to lean on the ridge but *how*: which end, which side, and what shape of bought wall
+finishes what the ice began. And because a diagonal is exactly the thing a rectangle cannot
+follow, the tundra is the first world where the free wall itself is a standing argument against
+squaring anything off — which is why it floors at 41%, the highest in the game.
+
+One field has no ice on it anywhere, the way The High Strand has no pool: The Whiteout, where
+the weather has come down and every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | The Corrie | 13 | two ridges leaning together, 3 fish, 2 bergs | 22 | 38 | 42% |
+| 2 | Twin Spurs | 13 | two ridges in opposite quarters, 2 fish | 23 | 41 | 43% |
+| 3 | The Whiteout | 19 | no ice at all, 2 fish on the line, 2 bergs | 20 | 36 | 44% |
+| 4 | The Seam | 12 | two ridges on one slant, a seam between, 2 fish | 19 | 36 | 47% |
+| 5 | Whaleback Ridge | 11 | one ridge seven tiles long, a school of 3 fish | 22 | 42 | 47% |
+| 6 | Fish Cache | 12 | one ridge, 3 fish hung wide of it | 20 | 39 | 48% |
+| 7 | The Whiskers | 10 | three ridges, all arcs of one ring, 2 fish | 21 | 51 | 58% |
+| 8 | The Great Floe | 14 | two long ridges, 2 fish | 34 | 60 | 43% |
+| 9 | The Haulout | 17 | the bull seal, three ridges, 1 fish, 1 berg | 13 | 42 | 69% |
+
+The Whiskers is the constellation question at the widest spacing the game has asked it: three
+scattered ridges are all arcs of one diamond ring drawn at five paces round the pig, and the
+budget is exactly the ten mud tiles of that ring the ice did not build. See the whole shape and
+the whole shape is affordable; see anything less and it is not. The only affordable block is the
+bottom half-diamond between the south ridges at 21, the ring holds 41 tiles and both fish for
+51, and at 58% it is the widest gap any field outside a boss leaves anywhere in the game —
+Starwell Ring, the old title holder, asked 56. The Great Floe holds 50 tiles on the broadest
+board in the tundra, which is the biggest pen in the world and still shy of the game's giants,
+because the ice's budgets are the winter's, and the winter does not hand out ground.
+
+Its boss, The Haulout, adds the tundra's rule, and it is the first rule about *where a pen is*
+rather than who is in it. **The bull seal will not share a pen with the pig, and the pen he is
+given has to lie against the water: he keeps a breathing hole.** Every two-pen boss so far asked
+who goes where; this one hands the seal a corner with no ice anywhere near it, and the tidy box
+where he already lies — the answer that wins the thicket — comes back refused: held, and held
+dry, which for a seal is no holding at all. His pen has to be walked up the board to the tail of
+the great ridge, where the ice broke and the sea shows through, and every piece it takes is a
+piece the pig's pen does not get. The tidy answer that satisfies it boxes the pig on her own
+tile and walls the seal his yard of ice against the ridge's tail, which is 13 of 42; the same
+seventeen pieces run down the great ridge's whole west flank instead, with a two-piece yard for
+the seal against the same tail, hold 42 tiles, the fish and the berg — and at 69% that is the
+widest gap any board in the game leaves. It charges the same 21 of the 24 stars below it that
+every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions/10-frostwhisker-tundra.md`](solutions/10-frostwhisker-tundra.md).
 
 ## The Daily Puzzle
 
@@ -1211,9 +1279,10 @@ than the last time the universe asked it.
 | `ring` | Two pens, one inside the other: the pig's ground has to close round him | The water between them |
 | `berth` | Two pens with clear ground between them: no piece of wall may serve both | The water between them |
 | `moat` | A ring round the crab's whole pool, with the crab shut into its heart | The pool walls him — you wall the pool |
+| `hole` | Two pens, and the seal's must lie against the water | The water — it is where his pen has to go |
 
-`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth` and `moat` are the
-**boss rules**, and a field never asks one.
+`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat` and `hole` are
+the **boss rules**, and a field never asks one.
 
 #### The shape of a world
 
@@ -1482,6 +1551,8 @@ Pigpen/
 │   ├── Gloamdeep.swift          # Gloamdeep Caverns: its nine levels and the trail down through them
 │   ├── Carnival.swift           # Lantern Carnival: its nine levels and the trail round them
 │   ├── Dunes.swift              # Sunbaked Dunes: its nine levels and the trail out over them
+│   ├── Tidepool.swift           # Tidepool Cove: its nine levels and the trail along them
+│   ├── Frostwhisker.swift       # Frostwhisker Tundra: its nine levels and the trail out onto the ice
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── GameCompletion.swift     # The whole game as one percent: every star and every rainbow in every world

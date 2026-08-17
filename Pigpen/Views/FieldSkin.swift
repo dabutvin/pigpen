@@ -13,7 +13,7 @@ import SwiftUI
 /// still the ground a fence goes into and water is still the wall a pen never pays for,
 /// whatever either is called here — but the mud on Emberpeak is ash with cinder in it, the
 /// water in Cogsworth is a canal with a slick on it, and the fencing at the carnival is
-/// bunting strung between two poles. One board, one solver, nine grounds.
+/// bunting strung between two poles. One board, one solver, ten grounds.
 ///
 /// Unlike the trail's palette, a skin does not follow the player's screen from daylight to
 /// dusk. The board has always kept one set of colours whatever the appearance, because the
@@ -69,6 +69,9 @@ struct FieldSkin: Sendable {
         /// Wet strand: sand the tide has only just let go of, with wrack and shell grit left
         /// lying in lines where the water turned back.
         case strand
+        /// Sastrugi: snow over sea ice, combed by the wind into long parallel waves with a lit
+        /// crest and a blue trough apiece.
+        case sastrugi
     }
 
     /// What the water of a world does. Water is a wall the pen never pays for, so it is worth
@@ -94,6 +97,9 @@ struct FieldSkin: Sendable {
         /// A tidepool: seawater the tide left behind, ringed with foam where it settled and
         /// still catching the sky.
         case rockPool
+        /// Not water to look at at all: a pressure ridge, ice crushed upward where two floes
+        /// met, in jagged blades with the light caught on their broken edges.
+        case pressureRidge
     }
 
     /// What a piece of fencing is on this world's ground. Every one of them is the same
@@ -118,6 +124,9 @@ struct FieldSkin: Sendable {
         case driftFence
         /// Groynes: sea-blackened timbers driven into the strand, weeded to the waterline.
         case groynes
+        /// A snow fence: slats wired to two driven posts, with the drift already banked up
+        /// against them.
+        case snowFence
     }
 }
 
@@ -305,5 +314,28 @@ extension FieldSkin {
         rail: Color(red: 0.42, green: 0.36, blue: 0.28),
         picket: Color(red: 0.55, green: 0.50, blue: 0.42),
         fencing: .groynes
+    )
+
+    /// The tundra's: snow over sea ice, combed into sastrugi and blue in every trough, and
+    /// where every other world has water this one has a pressure ridge — ice crushed upward
+    /// where two floes met, too sheer to climb and no ground to build on, which walls a pen
+    /// exactly as a river does and stands *up* out of the board rather than lying in it. The
+    /// fencing is a snow fence: slats wired to driven posts, half buried in their own drift,
+    /// because that is the only fence anybody builds where the ground is frozen.
+    static let frostwhiskerTundra = Self(
+        ground: Color(red: 0.82, green: 0.87, blue: 0.92),
+        groundLit: Color(red: 0.90, green: 0.94, blue: 0.97),
+        groundShade: Color(red: 0.70, green: 0.77, blue: 0.86),
+        grit: Color(red: 0.55, green: 0.65, blue: 0.78),
+        grain: .sastrugi,
+        water: Color(red: 0.62, green: 0.78, blue: 0.88),
+        waterDeep: Color(red: 0.36, green: 0.54, blue: 0.72),
+        waterLight: Color(red: 0.97, green: 0.99, blue: 1.00),
+        shore: Color(red: 0.74, green: 0.82, blue: 0.90),
+        surface: .pressureRidge,
+        post: Color(red: 0.24, green: 0.20, blue: 0.16),
+        rail: Color(red: 0.48, green: 0.40, blue: 0.30),
+        picket: Color(red: 0.63, green: 0.55, blue: 0.44),
+        fencing: .snowFence
     )
 }

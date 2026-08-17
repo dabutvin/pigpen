@@ -82,6 +82,7 @@ private struct Paddock {
         case .sawdust: drawSawdust(in: &context)
         case .sand: drawSand(in: &context)
         case .shingle: drawShingleStrand(in: &context)
+        case .snowfield: drawSnowfield(in: &context)
         }
     }
 
@@ -96,6 +97,11 @@ private struct Paddock {
             // so the dunes get a drift of grains going by where every other world gets flies —
             // by day as well as after dark, because the wind does not keep their hours.
             drawBlownSand(in: &context)
+        case .snowfield:
+            // Nothing hatches out over the ice either, and what the tundra's weather carries is
+            // snow: coming down through everything, by day as well as after dark, because the
+            // sky out here has never once stopped.
+            drawFallingSnow(in: &context)
         default:
             if colors.isNight {
                 drawFireflies(in: &context)
@@ -519,6 +525,79 @@ private struct Paddock {
         )
     }
 
+    /// Snow over sea ice: the ground of a world the wind owns, drawn with what the wind did to
+    /// it. Long combed waves of sastrugi all pulled the same way, each a lit crest over a blue
+    /// trough; and the odd patch of harder, bluer ice showing through where the snow has been
+    /// scoured off whole.
+    private func drawSnowfield(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_113)
+
+        // The scoured patches: old ice showing through in flat blue bars.
+        for _ in 0..<5 {
+            let centre = CGPoint(x: x(scatter.next(in: -0.1...1.1)), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.16...0.38))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.09,
+                    width: spread, height: spread * 0.18
+                )),
+                with: .color(
+                    Color(red: 0.42, green: 0.58, blue: 0.76)
+                        .opacity(colors.isNight ? 0.2 : 0.16)
+                )
+            )
+        }
+
+        // The sastrugi: every wave bowed the same way, because they are one wind's work and
+        // not many — a blue trough with its lit crest a hair above it.
+        for _ in 0..<18 {
+            let down = y(scatter.next(in: -0.02...1.02))
+            let drift = y(scatter.next(in: -0.04...0.04))
+            var wave = Path()
+            wave.move(to: CGPoint(x: -x(0.05), y: down))
+            wave.addCurve(
+                to: CGPoint(x: size.width + x(0.05), y: down + drift),
+                control1: CGPoint(x: x(0.34), y: down - y(scatter.next(in: 0.01...0.04))),
+                control2: CGPoint(x: x(0.66), y: down - y(scatter.next(in: 0.01...0.04)))
+            )
+            let width = max(0.7, y(scatter.next(in: 0.004...0.010)))
+            context.translateBy(x: 0, y: width)
+            context.stroke(
+                wave,
+                with: .color(
+                    Color(red: 0.30, green: 0.42, blue: 0.60)
+                        .opacity(colors.isNight ? 0.26 : 0.18)
+                ),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width)
+            context.stroke(
+                wave,
+                with: .color(.white.opacity(colors.isNight ? 0.08 : 0.3)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+
+        // And after dark, the aurora's green lying faintly along the snow from one side, the
+        // way the cove's standing wet holds the sky: light on the ground that the ground did
+        // not make.
+        if colors.isNight {
+            let glow = CGPoint(x: x(-0.1), y: y(0.25))
+            context.fill(
+                circle(at: glow, radius: x(0.7)),
+                with: .radialGradient(
+                    Gradient(colors: [
+                        Color(red: 0.30, green: 0.78, blue: 0.62).opacity(0.12),
+                        Color(red: 0.30, green: 0.78, blue: 0.62).opacity(0)
+                    ]),
+                    center: glow,
+                    startRadius: 0,
+                    endRadius: x(0.7)
+                )
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -555,6 +634,7 @@ private struct Paddock {
         case .sawdust: 16
         case .sand: 9
         case .shingle: 12
+        case .snowfield: 11
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -628,6 +708,17 @@ private struct Paddock {
                     case ..<0.66: drawShell(in: &context, at: spot, scale: scale, scatter: &scatter)
                     default: drawStone(in: &context, at: spot, scale: scale)
                     }
+                case .snowfield:
+                    // The ice is dressed with what the wind and the sea have left on it: a
+                    // blade of pressure ice at a size a player can stand next to — the same
+                    // ridge every board out here is walled with, so the first one on a field
+                    // is already familiar — a bergy bit calved and stranded, and a tussock of
+                    // frozen grass that has somehow kept its feet.
+                    switch roll {
+                    case ..<0.4: drawIceBlade(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.74: drawBergyBit(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    }
                 case .sawdust:
                     // A field with a fair on it is still a field, so the grass is here — but
                     // it is trodden grass with the fair's own leavings in it: pegs driven in
@@ -658,6 +749,7 @@ private struct Paddock {
         case .sawdust: 28
         case .sand: 14
         case .shingle: 16
+        case .snowfield: 15
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -707,6 +799,23 @@ private struct Paddock {
                     )
                 } else {
                     drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.8)))
+                }
+            case .snowfield:
+                // Rubble ice along the front of the tundra rather than long grass: bergy bits
+                // and broken blades where the pressure has been, with the odd frozen tussock
+                // in among them.
+                if roll < 0.5 {
+                    drawBergyBit(
+                        in: &context, at: foot,
+                        scale: CGFloat(scatter.next(in: 0.9...1.7)), scatter: &scatter
+                    )
+                } else if roll < 0.8 {
+                    drawIceBlade(
+                        in: &context, at: foot,
+                        scale: CGFloat(scatter.next(in: 1.0...1.8)), scatter: &scatter
+                    )
+                } else {
+                    drawTuft(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.6)), scatter: &scatter)
                 }
             case .sawdust where roll < 0.3:
                 // The front of the fair is where the ropes are pegged out, so the verge is
@@ -817,6 +926,37 @@ private struct Paddock {
                     lineWidth: max(0.6, y(0.0018) * CGFloat(0.6 + nearness)),
                     lineCap: .round
                 )
+            )
+        }
+    }
+
+    /// What the tundra has instead of fireflies: snow, coming down through everything.
+    ///
+    /// Each flake falls its own slow fall with a sideways sway the wind lends it, and wraps
+    /// round to the top when it lands, so the snow never stops and never piles. A flake near
+    /// the front of the shot falls faster and shows bigger than one further off, the same
+    /// trick the blown sand plays sideways — and unlike the sand it is on by day too, because
+    /// the weather out here does not keep hours.
+    private func drawFallingSnow(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 5_417)
+        for _ in 0..<26 {
+            let across = scatter.next()
+            let nearness = scatter.next(in: 0.3...1.0)
+            let start = scatter.next()
+            // How far into its own fall this flake is, in 0...1, wrapping round for the next.
+            let along = (start + elapsed * (0.028 + 0.05 * nearness))
+                .truncatingRemainder(dividingBy: 1)
+            let flake = CGPoint(
+                x: x(across) + x(0.016) * CGFloat(sin(elapsed * 0.7 + start * 11)),
+                y: y(-0.04) + (size.height + y(0.08)) * CGFloat(along)
+            )
+            let radius = max(0.6, x(0.0035) * CGFloat(nearness))
+            // Full mid-fall and nothing at either edge, so a flake fades in under the top of
+            // the screen and out above the ground instead of popping either way.
+            let lit = (colors.isNight ? 0.5 : 0.78) * sin(along * .pi)
+            context.fill(
+                circle(at: flake, radius: radius),
+                with: .color(.white.opacity(lit))
             )
         }
     }
@@ -1279,6 +1419,95 @@ private struct Paddock {
         )
     }
 
+    /// A blade of pressure ice at trailside size: one shard stood up out of the snow, lit
+    /// down its sunward edge and blue down its lee — the same wall every board out here is
+    /// built with, so the first ridge a player meets on a field is one they have already
+    /// stood beside.
+    private func drawIceBlade(
+        in context: inout GraphicsContext,
+        at foot: CGPoint,
+        scale: CGFloat,
+        scatter: inout Scatter
+    ) {
+        let tall = x(0.034) * scale
+        let half = tall * CGFloat(scatter.next(in: 0.22...0.3))
+        let lean = tall * CGFloat(scatter.next(in: -0.12...0.12))
+        let peak = CGPoint(x: foot.x + lean, y: foot.y - tall)
+
+        // The shadow it throws on the snow, blue like every shadow out here.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - half * 1.3, y: foot.y - tall * 0.06,
+                width: half * 2.6, height: tall * 0.16
+            )),
+            with: .color(
+                Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.24)
+            )
+        )
+
+        var lee = Path()
+        lee.move(to: CGPoint(x: foot.x - half, y: foot.y))
+        lee.addLine(to: peak)
+        lee.addLine(to: CGPoint(x: foot.x + half, y: foot.y))
+        lee.closeSubpath()
+        context.fill(
+            lee,
+            with: .color(
+                Color(red: 0.40, green: 0.56, blue: 0.76).opacity(colors.isNight ? 0.6 : 0.85)
+            )
+        )
+
+        var lit = Path()
+        lit.move(to: CGPoint(x: foot.x - half, y: foot.y))
+        lit.addLine(to: peak)
+        lit.addLine(to: CGPoint(x: foot.x - half * 0.15, y: foot.y))
+        lit.closeSubpath()
+        context.fill(lit, with: .color(.white.opacity(colors.isNight ? 0.4 : 0.85)))
+    }
+
+    /// A bergy bit: a knuckle of glacier ice calved, drifted and stranded, drawn as a lump
+    /// with a lit top and a blue waterline shadow round its foot.
+    private func drawBergyBit(
+        in context: inout GraphicsContext,
+        at foot: CGPoint,
+        scale: CGFloat,
+        scatter: inout Scatter
+    ) {
+        let wide = x(0.022) * scale
+        let tall = wide * CGFloat(scatter.next(in: 0.55...0.75))
+        let berg = CGRect(x: foot.x - wide / 2, y: foot.y - tall, width: wide, height: tall)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - wide * 0.62, y: foot.y - tall * 0.1,
+                width: wide * 1.24, height: tall * 0.26
+            )),
+            with: .color(
+                Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.24)
+            )
+        )
+        context.fill(
+            Path(roundedRect: berg, cornerRadius: wide * 0.24),
+            with: .color(
+                Color(red: 0.72, green: 0.84, blue: 0.94).opacity(colors.isNight ? 0.55 : 0.95)
+            )
+        )
+        // The lit top, and the old blue showing at the foot where the snow has not stuck.
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: berg.minX + wide * 0.08, y: berg.minY, width: wide * 0.84, height: tall * 0.4
+            ), cornerRadius: wide * 0.2),
+            with: .color(.white.opacity(colors.isNight ? 0.3 : 0.7))
+        )
+        context.fill(
+            Path(roundedRect: CGRect(
+                x: berg.minX + wide * 0.1, y: berg.maxY - tall * 0.24,
+                width: wide * 0.8, height: tall * 0.18
+            ), cornerRadius: wide * 0.1),
+            with: .color(Color(red: 0.36, green: 0.56, blue: 0.78).opacity(0.5))
+        )
+    }
+
     /// A cactus: a trunk with an arm each side of it, and the shadow it is throwing pulled out
     /// long and blue across the sand.
     ///
@@ -1420,6 +1649,10 @@ private struct Paddock {
         // A shore under sea light: the haze off the water softens the edges by day, and after
         // dark the fog comes in with the tide and closes them properly.
         case .shingle: colors.isNight ? 0.5 : 0.22
+        // Snow throws the light back from everywhere at once, so the tundra by day is the
+        // openest ground since the desert — and after dark the aurora keeps the edges from
+        // ever going as black as the desert's do.
+        case .snowfield: colors.isNight ? 0.46 : 0.18
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),

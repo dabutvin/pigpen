@@ -504,6 +504,7 @@ extension Refusal {
         case .shutIn: "shutIn"
         case .beside: "beside"
         case .tooClose: "tooClose"
+        case .landlocked: "landlocked"
         }
     }
 }

@@ -26,6 +26,9 @@ enum Refusal: Equatable, Sendable {
     /// held, and one fence piece has the pig on one side of it and something that stings on
     /// the other.
     case tooClose(Animal)
+    /// An animal that has to be penned against the water is standing in a pen that touches
+    /// none: held, and held dry, which for a seal is no holding at all.
+    case landlocked(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -154,6 +157,25 @@ extension PuzzleLevel {
             }
         }
 
+        // The tundra asks for two pens and is particular about one of them: the bull seal will
+        // not stand in with the pig, and the ground he is given has to lie against the water,
+        // because a seal hauls out beside his breathing hole and nowhere else. The pressure
+        // ridges he lives among are ice rather than water as far as he is concerned — what the
+        // rule wants is one tile of his run beside one tile of open water, which on his own
+        // board means beside a ridge, since a ridge is where the ice broke and the sea shows
+        // through.
+        if question == .hole, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                guard let theirs = ground[animal.kind] else { continue }
+                if !touchesWater(theirs) {
+                    return .refused(pen: held, refusal: .landlocked(animal.kind))
+                }
+            }
+        }
+
         // And a board that will not have one animal better housed than the other asks two
         // things at once: two pens rather than one, and the same ground in each of them.
         if question == .even, let pigGround = ground[.pig] {
@@ -187,6 +209,14 @@ extension PuzzleLevel {
         fences.contains { piece in
             let beside = Direction.allCases.map(piece.stepped)
             return beside.contains(where: mine.contains) && beside.contains(where: theirs.contains)
+        }
+    }
+
+    /// Whether any tile of a run of ground lies orthogonally beside water — which is what a
+    /// breathing hole is: one step from where the seal lies to where the sea shows through.
+    private func touchesWater(_ ground: Set<GridPoint>) -> Bool {
+        ground.contains { tile in
+            Direction.allCases.contains { terrain(at: tile.stepped($0)) == .water }
         }
     }
 
