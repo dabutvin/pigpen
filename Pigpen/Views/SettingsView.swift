@@ -16,6 +16,14 @@ struct SettingsView: View {
     /// The book of days goes with the meadow's stars: a player asking for the game back as
     /// they found it means all of it, dailies included.
     let daily: DailyProgress
+    /// The daily reminder. Here rather than only on the sheet that offers it, because a
+    /// player who waved that offer away has to be able to find it afterwards, and one who
+    /// took it has to be able to move the hour or stop it.
+    ///
+    /// Handed in rather than made here, and made nowhere else either: the title screen owns
+    /// the one reminder the game has, so this card and the fortnight it lays down are always
+    /// talking about the same switch.
+    let reminder: DailyReminder
     /// The switch the whole game feels through. The shared one by default, since a toggle
     /// wired to anything else would move a switch nothing is listening to.
     @Bindable var haptics: Haptics = .shared
@@ -50,6 +58,7 @@ struct SettingsView: View {
                     VStack(spacing: 14) {
                         about
                         feel
+                        reminders
                         counting
                         gameData
                     }
@@ -59,6 +68,10 @@ struct SettingsView: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
         }
+        // Permission is granted and taken away in the system settings, which is a place
+        // this screen cannot see into. Reading it on the way in is what lets the card admit
+        // that the phone has stopped passing the reminders on.
+        .task { await reminder.readTheStanding() }
         .alert("Clear all game data?", isPresented: $isAsking) {
             Button("Cancel", role: .cancel) {}
             Button("Clear everything", role: .destructive) { clearEverything() }
@@ -114,6 +127,78 @@ struct SettingsView: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(GamePalette.post.opacity(0.7))
         }
+    }
+
+    /// The daily reminder: whether the game says anything when a new board goes up, and at
+    /// what hour.
+    ///
+    /// The switch is the player's wish and the line under it is the phone's answer, and the
+    /// two come apart the moment somebody turns this game's notifications off in the system
+    /// settings. When they do, the card says so and hands over the only door that can put
+    /// it right, rather than sitting on a switch that is on and silent.
+    private var reminders: some View {
+        card {
+            Text("Daily puzzle reminder")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Toggle(isOn: wantsReminding) {
+                Text("Remind me when a new board goes up")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+            }
+            .tint(GamePalette.clover)
+
+            if reminder.isOn, !reminder.isBeingRefused {
+                DatePicker(
+                    selection: hour,
+                    displayedComponents: .hourAndMinute
+                ) {
+                    Text("At")
+                        .font(.subheadline.weight(.heavy))
+                        .foregroundStyle(GamePalette.post)
+                }
+                .tint(GamePalette.rail)
+
+                Text(planned)
+                    .font(.caption2)
+                    .foregroundStyle(GamePalette.post.opacity(0.55))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            if reminder.isBeingRefused {
+                refusal
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: reminder.isOn)
+        .animation(.easeInOut(duration: 0.25), value: reminder.isBeingRefused)
+    }
+
+    /// What to say when the player wants reminding and the phone will not pass it on. There
+    /// is nothing the game can do about it from in here, so it says which door to go
+    /// through and opens it.
+    private var refusal: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(
+                "Notifications for Pigpen are turned off on this phone, so nothing will come through.",
+                systemImage: "exclamationmark.triangle.fill"
+            )
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(GamePalette.barn)
+            .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                Haptics.tap(.light)
+                openTheSystemSettings()
+            } label: {
+                Label("Open iPhone Settings", systemImage: "arrow.up.forward.app.fill")
+                    .font(.caption.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 4))
+        }
+        .padding(.top, 2)
     }
 
     /// The buzzing, and the switch that stops it.
@@ -263,6 +348,47 @@ struct SettingsView: View {
         "\(number) \(noun)\(number == 1 ? "" : "s")"
     }
 
+    /// What the reminder is going to do, under the hour it is set to. The fortnight is said
+    /// out loud because it is the one surprising thing about it: the game lays down every
+    /// morning it can see ahead at once, so it goes on reminding through a fortnight the
+    /// player never opens it.
+    private var planned: String {
+        "A reminder at \(reminder.time.face), on any morning you have not already held the day."
+    }
+
+    // MARK: - The switch
+
+    /// The player's wish, read out of the reminder and written back through it. Turning it
+    /// on is a conversation with the phone rather than a flag, so the switch may come back
+    /// off — which is exactly what should happen when the phone says no.
+    private var wantsReminding: Binding<Bool> {
+        Binding(
+            get: { reminder.isOn && !reminder.isBeingRefused },
+            set: { wanted in
+                Haptics.tap(.light)
+                Task {
+                    if wanted {
+                        await reminder.turnOn(progress: daily)
+                    } else {
+                        await reminder.turnOff()
+                    }
+                }
+            }
+        )
+    }
+
+    /// The hour, as the picker wants it: a moment on today's date with the right o'clock on
+    /// it. Only the hour and the minute are read back out, since the day is the picker's
+    /// scaffolding rather than anything the reminder keeps.
+    private var hour: Binding<Date> {
+        Binding(
+            get: { reminder.time.on(Date()) },
+            set: { moved in
+                Task { await reminder.change(to: ReminderTime(of: moved), progress: daily) }
+            }
+        )
+    }
+
     // MARK: - Actions
 
     private func clearEverything() {
@@ -276,6 +402,16 @@ struct SettingsView: View {
         analytics.eraseEverything()
         hasCleared = true
         haptics.buzz(.success)
+        // The reminder is a preference rather than progress, so it survives — but what it had
+        // planned does not. Every day is unheld again, so every morning is worth reminding
+        // about again, and the fortnight has to be laid down knowing that.
+        Task { await reminder.replan(progress: daily) }
+    }
+
+    /// The one door out of the game, for the phone that has stopped passing reminders on.
+    private func openTheSystemSettings() {
+        guard let door = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(door)
     }
 }
 
@@ -299,6 +435,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
             SettingsView(
                 progress: .partWayThrough(),
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+                reminder: .reminding(),
                 haptics: previewHaptics(),
                 analytics: previewAnalytics()
             )
@@ -310,6 +447,17 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
     SettingsView(
         progress: WorldProgress(store: RememberedProgress()),
         daily: DailyProgress(store: RememberedDailyRecords()),
+        reminder: .neverAsked(),
+        haptics: previewHaptics(),
+        analytics: previewAnalytics()
+    )
+}
+
+#Preview("The phone is refusing") {
+    SettingsView(
+        progress: .partWayThrough(),
+        daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+        reminder: .refused(),
         haptics: previewHaptics(),
         analytics: previewAnalytics()
     )
@@ -319,6 +467,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
     SettingsView(
         progress: .partWayThrough(),
         daily: DailyProgress(store: RememberedDailyRecords()),
+        reminder: .reminding(),
         haptics: previewHaptics(isOn: false),
         analytics: previewAnalytics()
     )

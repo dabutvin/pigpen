@@ -5,11 +5,12 @@ import SwiftUI
 struct PigpenApp: App {
     /// CI launches the app with `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`,
     /// `-truffles`, `-embers`, `-pies`, `-map`, `-universe`, `-woods-map`, `-peak-map`,
-    /// `-city-map`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh`, `-settings`
+    /// `-city-map`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh`,
+    /// `-settings`, `-reminder`
     /// or one of the film arguments so the pull request screenshots can show
     /// the boards, the universe map, each world's trail, the practice pen, the daily
-    /// puzzle and its archive, the settings sheet and every shot of every cut scene
-    /// rather than only the title screen.
+    /// puzzle and its archive, the settings sheet, the offer of a daily reminder and every
+    /// shot of every cut scene rather than only the title screen.
     ///
     /// The daily screens are opened on a fixed square of the calendar rather than on
     /// whatever day the runner is having, so the archive shows the same month of finished
@@ -75,7 +76,8 @@ struct PigpenApp: App {
         stills.map { $0.argument } + [
             "-puzzle", "-beaten", "-orchard", "-sour", "-boss", "-truffles", "-embers", "-pies",
             "-map", "-universe", "-woods-map", "-peak-map", "-city-map",
-            "-tutorial", "-daily", "-archive", "-title", "-title-fresh", "-settings"
+            "-tutorial", "-daily", "-archive", "-title", "-title-fresh", "-settings",
+            "-reminder"
         ]
     )
 
@@ -179,12 +181,31 @@ struct PigpenApp: App {
                 } else if launch.contains("-settings") {
                     // With a fortnight of days complete as well, so the card behind the gear
                     // has the dailies to say something about and the clear button has all
-                    // of it to clear.
+                    // of it to clear. The reminder is switched on and held in memory, so the
+                    // reminder card is photographed with its hour showing and nothing is
+                    // left standing on the machine that took the picture.
                     TitleScreenView(
                         progress: .partWayThrough(),
                         daily: .partWayThroughTheMonth(today: Self.photographed),
+                        reminder: .reminding(),
                         today: Self.photographed,
                         showsSettings: true
+                    )
+                } else if launch.contains("-reminder") {
+                    // The game's own offer of a daily reminder, over a fortnight of days with
+                    // today held — which is the state it really appears in, since it is only
+                    // ever put up to somebody with a run of days to lose. Its reminder is
+                    // held in memory too: a screenshot runner must never be asked for
+                    // permission by the phone.
+                    TitleScreenView(
+                        progress: .partWayThrough(),
+                        daily: .partWayThroughTheMonth(
+                            today: Self.photographed,
+                            includingToday: true
+                        ),
+                        reminder: .neverAsked(),
+                        today: Self.photographed,
+                        showsReminderPrompt: true
                     )
                 } else if launch.contains("-title-fresh") {
                     // The title screen with nothing won on it. It takes an argument of its
