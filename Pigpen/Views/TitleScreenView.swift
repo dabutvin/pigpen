@@ -185,8 +185,8 @@ struct TitleScreenView: View {
 
     // MARK: - The bar across the top
 
-    /// How much of the meadow has been taken, and a gear well away from Play. What is
-    /// behind the gear — the version, and a button that throws away every star — is
+    /// How much of whatever Play opens has been taken, and a gear well away from Play. What
+    /// is behind the gear — the version, and a button that throws away every star — is
     /// nothing a player needs while they are playing.
     private var topBar: some View {
         HStack(spacing: 10) {
@@ -222,7 +222,7 @@ struct TitleScreenView: View {
                 .foregroundStyle(GamePalette.pen)
                 .shadow(color: GamePalette.post.opacity(0.25), radius: 0.5, y: 0.5)
 
-            Text("\(progress.totalStars) of \(world.starTotal)")
+            Text("\(tally.won) of \(tally.total)")
                 .font(.subheadline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
                 .contentTransition(.numericText())
@@ -233,7 +233,27 @@ struct TitleScreenView: View {
         .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.18), lineWidth: 1))
         .shadow(color: .black.opacity(0.25), radius: 4, y: 3)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(progress.totalStars) of \(world.starTotal) stars")
+        .accessibilityLabel(starsSpoken)
+    }
+
+    /// What the badge counts, which is whatever Play opens. While the meadow is still being
+    /// held it is the meadow's own stars, the same pair the trail wears in its corner. Once the
+    /// meadow is held Play opens the universe instead, and a badge still stuck on the meadow
+    /// would sit full at 27 of 27 for the whole rest of the game — saying there is nothing left
+    /// to take on the very screen a player crosses to go and take it. So it widens to every star
+    /// in every built world, and carries on meaning something all the way out.
+    private var tally: (won: Int, total: Int) {
+        guard progress.isTheWorldHeld else { return (progress.totalStars, world.starTotal) }
+        let universe = Universe.all
+        return (universe.totalStars(stars: progress.bestStars), universe.starTotal)
+    }
+
+    /// The tally read out, with the ground it covers said aloud — the badge shows the widening
+    /// by its numbers alone, which is nothing VoiceOver can point at.
+    private var starsSpoken: String {
+        let counted = tally
+        let ground = progress.isTheWorldHeld ? "across every world" : "in \(world.name)"
+        return "\(counted.won) of \(counted.total) stars \(ground)"
     }
 
     // MARK: - The name
@@ -768,6 +788,12 @@ private struct MenuRowButtonStyle: ButtonStyle {
 #Preview("Settings up") {
     NavigationStack {
         TitleScreenView(progress: .partWayThrough(), showsSettings: true)
+    }
+}
+
+#Preview("The meadow behind us") {
+    NavigationStack {
+        TitleScreenView(progress: .theMeadowHeld())
     }
 }
 

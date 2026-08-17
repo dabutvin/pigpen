@@ -72,6 +72,24 @@ struct Universe: Sendable {
         }
         return max(count - 1, 0)
     }
+
+    /// Every star there is across the whole universe, for a player who takes all of them.
+    ///
+    /// Only the worlds that are built count, the same rule the completion badge plays by: a
+    /// silhouette has no levels in it to take, so counting it would leave the tally forever
+    /// short — and would move the number the day another world was drawn on the map.
+    var starTotal: Int {
+        worlds.reduce(0) { $0 + ($1.game?.map.starTotal ?? 0) }
+    }
+
+    /// How many of those stars the given ratings hold. Level ids are unique across worlds, so
+    /// one dictionary holds every world between them.
+    func totalStars(stars: [String: Int]) -> Int {
+        worlds.reduce(0) { running, world in
+            guard let game = world.game else { return running }
+            return running + game.map.nodes.reduce(0) { $0 + min(max(stars[$1.id] ?? 0, 0), 3) }
+        }
+    }
 }
 
 extension Universe {
