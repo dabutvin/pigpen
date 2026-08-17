@@ -368,9 +368,15 @@ struct SettingsView: View {
                 Haptics.tap(.light)
                 Task {
                     if wanted {
-                        await reminder.turnOn(progress: daily)
+                        // The phone's answer travels with the player's, the same way it does
+                        // on the offer sheet: a switch that comes straight back off is a
+                        // refusal, and a refusal counted as an opt-out would read as somebody
+                        // changing their mind.
+                        let allowed = await reminder.turnOn(progress: daily)
+                        Analytics.record(.reminderSwitched(on: true, allowed: allowed))
                     } else {
                         await reminder.turnOff()
+                        Analytics.record(.reminderSwitched(on: false))
                     }
                 }
             }
@@ -384,7 +390,13 @@ struct SettingsView: View {
         Binding(
             get: { reminder.time.on(Date()) },
             set: { moved in
-                Task { await reminder.change(to: ReminderTime(of: moved), progress: daily) }
+                let wanted = ReminderTime(of: moved)
+                // Counted only when the hour actually moves. A picker being dragged emits a
+                // set on every step it passes through, and an hour reported forty times on
+                // the way from nine to seven is forty rows saying nothing.
+                guard wanted != reminder.time else { return }
+                Analytics.record(.reminderHourChanged(to: wanted))
+                Task { await reminder.change(to: wanted, progress: daily) }
             }
         )
     }
