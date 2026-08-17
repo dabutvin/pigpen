@@ -424,6 +424,49 @@ extension AnalyticsSignal {
 
     static let dailyArchiveOpened = AnalyticsSignal("Daily.archiveOpened")
 
+    // MARK: The morning reminder
+
+    /// The game's own offer of a reminder, put up once to somebody who has held a day and so
+    /// has a run to lose. The denominator under everything below it.
+    static let reminderOffered = AnalyticsSignal("Reminder.offered")
+
+    /// What the offer got back.
+    ///
+    /// `allowed` is the phone's answer rather than the player's, and it is the whole reason
+    /// this is one signal with two fields instead of two signals. A game gets one go at the
+    /// system prompt, and the question worth answering is not *how many said yes* but *how
+    /// many said yes and were let through* — the two coming apart is the failure this sheet
+    /// exists to prevent, and nothing else on the phone will report it.
+    static func reminderAnswered(taken: Bool, allowed: Bool? = nil) -> AnalyticsSignal {
+        var parameters = ["taken": String(taken)]
+        if let allowed {
+            parameters["allowed"] = String(allowed)
+        }
+        return AnalyticsSignal("Reminder.answered", parameters, value: taken ? 1 : 0)
+    }
+
+    /// The switch behind the gear, moved after the fact — which is a different question from
+    /// the offer, and the one that says whether a reminder somebody accepted is one they
+    /// went on wanting.
+    static func reminderSwitched(on: Bool, allowed: Bool? = nil) -> AnalyticsSignal {
+        var parameters = ["on": String(on)]
+        if let allowed {
+            parameters["allowed"] = String(allowed)
+        }
+        return AnalyticsSignal("Reminder.switched", parameters, value: on ? 1 : 0)
+    }
+
+    /// The hour moved off the one the game picked. Charted as the hour alone, since what is
+    /// worth knowing is whether nine in the morning was the right guess — and the hour a
+    /// stranger wants their puzzle at says nothing about who they are.
+    static func reminderHourChanged(to time: ReminderTime) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Reminder.hourChanged",
+            ["hour": String(time.hour)],
+            value: Double(time.hour)
+        )
+    }
+
     // MARK: The films
 
     /// A cut scene, watched through or tapped past. Which of the two is the whole question:

@@ -974,7 +974,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Seventeen signals, all of them written out in one place —
+**What goes out.** Twenty-one signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -989,12 +989,20 @@ is filling in Apple's privacy questionnaire.
 | `Level.leftUnheld` | A board walked away from, and the goes they had at it first |
 | `World.held` | Every pen in a world held |
 | `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
+| `Reminder.offered` / `.answered` | The morning reminder offered, and taken or waved away — with the phone's answer beside the player's |
+| `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
 
-The four questions this is here to answer: where the walkthrough loses people, which level
-is the wall, whether the dailies bring anybody back, and whether the films are worth what
-they cost to draw.
+The questions this is here to answer: where the walkthrough loses people, which level is
+the wall, whether the dailies bring anybody back, whether the films are worth what they
+cost to draw, and how many players who accept a morning reminder are then let through by
+their phone.
+
+That last pair is why `Reminder.answered` carries the phone's answer as well as the
+player's. A game gets exactly one go at the system permission prompt, so the number worth
+watching is not how many say yes — it is how many say yes and are refused anyway. Nothing
+else on the phone will tell you that is happening.
 
 **What does not go out.** No name, no account, no email, no advertising identifier, no
 IDFV, no location, and nothing a player typed — there is nowhere in the shape of a signal
@@ -1021,6 +1029,14 @@ which costs a few rows on a chart and nothing at all to the player. Debug and si
 builds are marked as test signals, so they land on TelemetryDeck's test screen rather than
 beside real players, and the screenshot runs — which open straight onto a board with one of
 the app's own launch arguments — are not counted at all.
+
+**A camera is not a player.** Which arguments mean *this is CI, not somebody playing* used
+to be a list kept by hand, and it drifted twice in three merges: a new screen argument
+landed and nothing told counting to ignore it, so a fortnight of CI would have charted as
+somebody very good at the meadow. The arguments now live only as cases of
+`PigpenApp.Photograph`. `photographArguments` is derived from them and the switch that
+opens them is exhaustive, so an argument cannot exist without the compiler asking what it
+opens and counting already knowing to ignore it. There is nowhere left to say it twice.
 
 **Turning it on.** Set the `TELEMETRYDECK_APP_ID` secret (see
 [Required Secrets](#required-secrets)). Without it the plist key is empty, `TelemetryDeckSink`
