@@ -721,6 +721,45 @@ The almanac is generated rather than authored — `Tools/generate_dailies.py` wr
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
 pen its map does not hold. See [The daily almanac](#the-daily-almanac).
 
+### A knock each morning
+
+A run of days is broken by forgetting far more often than by a board nobody could hold, so
+the game is allowed to knock once a morning to say the new one is up — and allowed to only
+because the player said it could.
+
+- **It asks in its own words first.** A phone shows its permission sheet once and never
+  again, so a game that raises it cold spends that one chance on somebody who has not yet
+  found out what a daily puzzle is. Pigpen's own offer goes up instead, on the game's own
+  boards, and only after a day has actually been held — at which point there is a run of
+  days to lose and the offer can say what it is. *Not now* asks the phone nothing, schedules
+  nothing, and is never put up a second time.
+- **It is a switch behind the gear like any other.** Whether it knocks and what hour it
+  knocks at, so a player who waved the offer away can find it afterwards and one who took it
+  can move it to the evening or stop it. The switch is the player's wish and the phone's
+  permission is a separate thing: turn Pigpen's notifications off in the system settings and
+  the card says so plainly and hands over the one door that can put it right, rather than
+  sitting on a switch that is on and silent.
+- **Nothing is fetched and nothing runs in the background.** The almanac is already in the
+  player's pocket, so the game knows what every morning of the fortnight ahead is going to
+  be and simply lays down a knock for each of them. Coming back to the title screen lays the
+  whole fortnight down again, which is how a day held at ten past eight loses its knock
+  before nine — and how a phone left shut for a week still gets knocked at every morning of
+  it.
+- **A knock says what sort of morning it is.** The week is a climb, so Monday's says mostly
+  water and free walls everywhere and Sunday's says the worst of the week — the same thing
+  the bands the almanac is generated against are saying, in a line rather than a number. It
+  never gives a board away.
+- **The run of days rides on the next knock only.** A knock that says *6 days in a row so
+  far* is one that can be sure of it: the number is written onto today's or tomorrow's
+  knock and no further, because the run either survives to the next board or it does not,
+  and a knock four days out cannot know which.
+
+The knock is a preference rather than progress, so clearing all game data leaves it standing
+— but every day is unheld again afterwards, so the fortnight is laid down knowing it.
+`DailyReminderTests` pins which mornings get knocked at and what each one says, and the
+phone's own notification centre sits behind a protocol so a test, a preview or the
+screenshot runner can never raise a real prompt or leave a real knock standing.
+
 The name on the title screen plants itself a letter at a time, each one dropping in and
 settling like a fence post going into the ground, over a pasture — drifting clouds by day,
 fireflies at dusk — with a pig trotting up and down a run of fence. The whole backdrop is
@@ -732,9 +771,9 @@ complete, the stars it gave up, the time it took and how many days in a row you 
 this year, and **Tutorial** opens a practice pen off the world map and walks through
 tapping a post, dragging a run, building against water, shutting the pen until the ground
 washes gold, and releasing the pig. A gear in the corner opens settings, which holds the
-version number and one red button: clearing all game data throws away every star and every
-day completed, and shuts the trail back to its first level, so it asks before it does
-anything.
+version number, the switch for the daily knock and its hour, and one red button: clearing
+all game data throws away every star and every day completed, and shuts the trail back to
+its first level, so it asks before it does anything.
 
 A puzzle is a patch of the same meadow rather than a grid on a slab of colour: mown grass,
 wildflowers and a stone or two behind a plot of mud with the water lying in it as one lake,
@@ -1261,7 +1300,9 @@ Pigpen/
 │   ├── DailyDate.swift          # A square of the calendar: its weekday, its month, its name
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
-│   └── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyReminder.swift      # The knock each morning: whether, at what hour, and what it says
+│   └── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -1272,7 +1313,8 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── SettingsView.swift       # Behind the gear: the version, and clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, the daily knock, and clearing all game data
+│   ├── ReminderPromptView.swift # The game's own offer of a daily knock, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain

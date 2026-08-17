@@ -95,10 +95,13 @@ jobs:
           # the same board rather than two rolls of the dice. `-universe`, `-map`,
           # `-woods-map`, `-peak-map`, `-city-map`, `-puzzle`, `-orchard`, `-sour`,
           # `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`, `-archive`,
-          # `-title` and `-settings` are launch
+          # `-title`, `-settings` and `-reminder` are launch
           # arguments the app understands, so the universe map, every world's trail,
-          # the boards, the practice pen, the daily puzzle and its archive and the
-          # settings sheet can be captured without tapping through the title screen.
+          # the boards, the practice pen, the daily puzzle and its archive, the
+          # settings sheet and the offer of a daily knock can be captured without
+          # tapping through the title screen. The reminder screens are handed a
+          # reminder held in memory, so nothing on the runner is ever asked for
+          # permission to post a notification.
           # The daily screens open on a fixed square of the calendar with a stopped
           # clock, since a running one photographs as whenever the runner got round to it.
           capture() {
@@ -140,7 +143,8 @@ jobs:
           capture 29 settings -settings
           capture 31 daily -daily
           capture 33 archive -archive
-          capture 35 title_held -title
+          capture 35 reminder -reminder
+          capture 37 title_held -title
 
           # A cut scene is lit by the shot rather than by the phone, so both
           # appearances of one were the same picture twice and only one of them is
@@ -173,20 +177,20 @@ jobs:
           # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
           # so these come out the same on every run rather than wherever a film happened to
           # have got to.
-          scene 37 opening_first_light -opening
-          scene 39 opening_gate -opening-gate
-          scene 41 opening_pig -opening-pig
-          scene 43 opening_away -opening-away
-          scene 45 opening_pen -opening-pen
-          scene 47 opening_fence -opening-fence
-          scene 49 mere_water -mere
-          scene 51 mere_stag -mere-stag
-          scene 53 mere_both -mere-both
-          scene 55 held_penned -held-penned
-          scene 57 held_stag -held-stag
-          scene 59 held_meadow -held-meadow
-          scene 61 held_world -held-world
-          scene 63 held_beyond -held-beyond
+          scene 39 opening_first_light -opening
+          scene 41 opening_gate -opening-gate
+          scene 43 opening_pig -opening-pig
+          scene 45 opening_away -opening-away
+          scene 47 opening_pen -opening-pen
+          scene 49 opening_fence -opening-fence
+          scene 51 mere_water -mere
+          scene 53 mere_stag -mere-stag
+          scene 55 mere_both -mere-both
+          scene 57 held_penned -held-penned
+          scene 59 held_stag -held-stag
+          scene 61 held_meadow -held-meadow
+          scene 63 held_world -held-world
+          scene 65 held_beyond -held-beyond
 
           xcrun simctl status_bar "$UDID" clear
 

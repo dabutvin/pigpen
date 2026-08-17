@@ -39,6 +39,13 @@ struct TitleScreenView: View {
     /// The same book of days the archive and today's board are handed, so the card below
     /// shows the stars that were just won without having to be told about them.
     @State private var daily: DailyProgress
+    /// The knock at the gate. It lives here because this is the screen every road out of a
+    /// puzzle comes back to, and so the one place that reliably gets to lay the fortnight
+    /// of knocks down again against a book of days that has just changed.
+    @State private var reminder: DailyReminder
+    /// Whether the game's own offer of a knock is up. Raised once, after a day has been
+    /// held — never on the way in, when the player has nothing yet to be reminded about.
+    @State private var isOfferingReminders = false
     /// Which square of the calendar the game is standing on. Read once when the screen
     /// arrives rather than on every redraw, so the card cannot change under a finger — and
     /// read again every time the screen comes back, which is what carries a player over
@@ -55,17 +62,24 @@ struct TitleScreenView: View {
     ///     calendar.
     ///   - showsSettings: Opens with the settings sheet already up, which is how CI
     ///     photographs it without tapping through the title screen.
+    ///   - showsReminderPrompt: Opens with the game's offer of a daily knock already up,
+    ///     for the same reason — and handed in rather than waited for, since the offer's own
+    ///     rule is that it only appears to somebody who has held a day and never been asked.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
+        reminder: DailyReminder = DailyReminder(),
         today: DailyDate? = nil,
-        showsSettings: Bool = false
+        showsSettings: Bool = false,
+        showsReminderPrompt: Bool = false
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
+        _reminder = State(initialValue: reminder)
         _today = State(initialValue: today ?? .today())
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
+        _isOfferingReminders = State(initialValue: showsReminderPrompt)
     }
 
     private var world: WorldMap { progress.world }
@@ -138,9 +152,27 @@ struct TitleScreenView: View {
             DailyArchiveView(today: today, progress: daily)
         }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress, daily: daily)
+            SettingsView(progress: progress, daily: daily, reminder: reminder)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $isOfferingReminders) {
+            ReminderPromptView(
+                streak: daily.streak(upTo: today),
+                time: reminder.time,
+                onAccept: {
+                    // The offer is marked as made whichever way it goes, so the sheet is
+                    // never put up twice — the phone's own prompt follows from here, and
+                    // that one a phone only ever shows once anyway.
+                    reminder.markOffered()
+                    Task { await reminder.turnOn(today: today, progress: daily) }
+                },
+                onDecline: { reminder.markOffered() }
+            )
+            // Half the screen: an offer, made while the title screen is still visible
+            // behind it, rather than a wall the player has to get past to carry on.
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         // The meadow is pushed as the film comes down rather than from inside it, so the
         // two never fight over the screen.
@@ -156,7 +188,38 @@ struct TitleScreenView: View {
             // yesterday's, already held.
             if !dayWasGiven { today = .today() }
             raiseTheCurtain()
+            Task { await keepTheKnocksTrue() }
         }
+    }
+
+    // MARK: - The knock at the gate
+
+    /// Every road out of a puzzle comes back through here, so this is where the fortnight
+    /// of knocks is laid down again: what is worth knocking about has just changed, and a
+    /// day held at ten past eight must not be knocked about at nine.
+    ///
+    /// The phone is asked where it stands first, because permission is granted and taken
+    /// away in the system settings — somewhere neither this screen nor the game behind it
+    /// can see into.
+    private func keepTheKnocksTrue() async {
+        await reminder.readTheStanding()
+        await reminder.replan(today: today, progress: daily)
+        offerTheKnockIfItIsDue()
+    }
+
+    /// Whether to put the game's own offer up, and the whole of when it is allowed to
+    /// appear: the player has held a daily puzzle, so there is a run of days to lose, and
+    /// neither the game nor the phone has asked them about it before.
+    ///
+    /// Never on the way in. A phone shows its permission sheet once and never again, and
+    /// spending that on somebody who has not yet found out what a daily puzzle is spends it
+    /// for nothing.
+    private func offerTheKnockIfItIsDue() {
+        guard reminder.isDueAnOffer,
+              daily.completedCount > 0,
+              !showsSettings, playDestination == nil, !isDailyOpen, !isArchiveOpen
+        else { return }
+        isOfferingReminders = true
     }
 
     // MARK: - The bar across the top
@@ -750,7 +813,23 @@ private struct MenuRowButtonStyle: ButtonStyle {
         TitleScreenView(
             progress: .partWayThrough(),
             daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+            reminder: .knocking(),
             today: DailyDate(year: 2026, month: 4, day: 22)
+        )
+    }
+}
+
+#Preview("The knock offered") {
+    NavigationStack {
+        TitleScreenView(
+            progress: .partWayThrough(),
+            daily: .partWayThroughTheMonth(
+                today: DailyDate(year: 2026, month: 4, day: 22),
+                includingToday: true
+            ),
+            reminder: .neverAsked(),
+            today: DailyDate(year: 2026, month: 4, day: 22),
+            showsReminderPrompt: true
         )
     }
 }
