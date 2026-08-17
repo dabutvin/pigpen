@@ -13,7 +13,7 @@ import SwiftUI
 /// still the ground a fence goes into and water is still the wall a pen never pays for,
 /// whatever either is called here — but the mud on Emberpeak is ash with cinder in it, the
 /// water in Cogsworth is a canal with a slick on it, and the fencing at the carnival is
-/// bunting strung between two poles. One board, one solver, eight grounds.
+/// bunting strung between two poles. One board, one solver, nine grounds.
 ///
 /// Unlike the trail's palette, a skin does not follow the player's screen from daylight to
 /// dusk. The board has always kept one set of colours whatever the appearance, because the
@@ -66,6 +66,9 @@ struct FieldSkin: Sendable {
         case sawdust
         /// Hardpan: baked clay dried until it cracked, in plates with the light on their lips.
         case hardpan
+        /// Wet strand: sand the tide has only just let go of, with wrack and shell grit left
+        /// lying in lines where the water turned back.
+        case strand
     }
 
     /// What the water of a world does. Water is a wall the pen never pays for, so it is worth
@@ -88,6 +91,9 @@ struct FieldSkin: Sendable {
         /// Not water either: a dune, combed by the wind, lit along the crest and dropping away
         /// down the slipface under it.
         case dune
+        /// A tidepool: seawater the tide left behind, ringed with foam where it settled and
+        /// still catching the sky.
+        case rockPool
     }
 
     /// What a piece of fencing is on this world's ground. Every one of them is the same
@@ -110,6 +116,8 @@ struct FieldSkin: Sendable {
         case bunting
         /// A drift fence: bleached palings wired together and half buried in what they caught.
         case driftFence
+        /// Groynes: sea-blackened timbers driven into the strand, weeded to the waterline.
+        case groynes
     }
 }
 
@@ -276,5 +284,26 @@ extension FieldSkin {
         rail: Color(red: 0.58, green: 0.47, blue: 0.34),
         picket: Color(red: 0.88, green: 0.82, blue: 0.70),
         fencing: .driftFence
+    )
+
+    /// The cove's: wet strand rather than dry ground — sand the tide has only just let go of,
+    /// dark with the water still in it — and the water a tidepool, ringed with foam and holding
+    /// more sky than anything else on the board. The fencing is groynes: sea-blackened timbers
+    /// driven in deep, because anything lighter goes with the tide.
+    static let tidepoolCove = Self(
+        ground: Color(red: 0.62, green: 0.56, blue: 0.45),
+        groundLit: Color(red: 0.70, green: 0.64, blue: 0.52),
+        groundShade: Color(red: 0.52, green: 0.46, blue: 0.36),
+        grit: Color(red: 0.38, green: 0.34, blue: 0.27),
+        grain: .strand,
+        water: Color(red: 0.22, green: 0.58, blue: 0.62),
+        waterDeep: Color(red: 0.12, green: 0.40, blue: 0.48),
+        waterLight: Color(red: 0.85, green: 0.97, blue: 0.96),
+        shore: Color(red: 0.80, green: 0.74, blue: 0.58),
+        surface: .rockPool,
+        post: Color(red: 0.20, green: 0.17, blue: 0.14),
+        rail: Color(red: 0.42, green: 0.36, blue: 0.28),
+        picket: Color(red: 0.55, green: 0.50, blue: 0.42),
+        fencing: .groynes
     )
 }

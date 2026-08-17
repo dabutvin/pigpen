@@ -60,6 +60,9 @@ extension PuzzleLevel {
         case .berth:
             return "Hold the pig and the \(boss.name), both, and leave clear ground between "
                 + "them: a sting goes straight through a fence, so no wall may do for two."
+        case .moat:
+            return "The \(boss.name) keeps his pool and will not leave it. Close the pig's "
+                + "ground the whole way round the pool — break, \(boss.name) and all."
         case .shore, .basin, .span, .gap, .corner, .constellation, .detour, .obstruction, .bare:
             // The game's own question, asked on new ground. There is nothing to say about it
             // that the ground does not say itself.

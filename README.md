@@ -230,7 +230,8 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust or rippled sand — what the
+  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand or wet
+  strand — what the
   windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
@@ -248,6 +249,8 @@ carries the same game into every one of them.
   | Starfall Reaches | dust, pitted where things landed | a well a star went into, still lit | posts with a light strung between |
   | Gloamdeep Caverns | flowstone in ribs | one river, running | pit props |
   | Lantern Carnival | trodden ground under sawdust | **a crowd**, not water at all | painted poles and bunting |
+  | Sunbaked Dunes | baked hardpan, cracked into plates | **a dune**, sand too steep to climb | a drift fence half buried |
+  | Tidepool Cove | wet strand the tide just let go of | a tidepool, ringed with foam | groynes, weeded to the waterline |
 
   The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
   a pen exactly as a mere does, because the board cannot tell the difference between a river and
@@ -272,8 +275,8 @@ carries the same game into every one of them.
   dailies, which come and go with the calendar.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival** and **Sunbaked Dunes** to
-play, then Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
+City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival**, **Sunbaked Dunes** and
+**Tidepool Cove** to play, then Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
 silhouettes.
 Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
 the skin its board is painted in — since the map, the unlocking and the films are already there.
@@ -653,8 +656,8 @@ is the north wall and its western horn stands on the rim: two sides handed over,
 budget in the world to draw the rest. The right-angled answer hangs a rectangle under the back and
 pays for its own east wall for 20, where the same eleven pieces run out as a chevron — from the
 western rim, across the whole mouth of the crescent, back up to a point in the south — hold 41
-tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it is the
-hardest corner in the game. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
+tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it was the
+hardest corner in the game until the cove's Barnacle Corner took the title. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
 holds 59 tiles on the broadest board out here, which is the second biggest pen in the game: five
 behind Wide Reaches, one ahead of the Great Gallery.
 
@@ -676,10 +679,74 @@ stands on one tile, and the rest wall the open sand east of the notch as the sco
 which is 19. The same sixteen run out from the pig up the west of the flats, along under the great
 back in the north and down round the far side of the notch hold 45 tiles and the melon in the
 north-east, which is 50 — the biggest pen any boss holds, and at 62% the widest gap any board in the
-game leaves. The melon in the lane between the two pens is the board saying what the rule costs: the
+game left until the cove's crab asked for his moat. The melon in the lane between the two pens is the board saying what the rule costs: the
 pen that wins this field is the only pen in the game that walks past five points it can see and
 leaves them lying there. It charges the same 21 of the 24 stars below it that every boss charges, and
 stops for the same briefing on the way in. Every pen is drawn out in [`solutions.md`](solutions.md).
+
+### Tidepool Cove
+
+The ninth world, and the first wet one since the meadow. The sand runs out into a sea that has
+only just turned back, so the trail runs over wet strand under sea light, the windfall is a
+**pearl** the tide left lying in its shell and the hazard a **jellyfish** stranded where it washed
+up — each worth exactly what its meadow twin was, a pearl five tiles to shut in, a jellyfish five
+to shut in with and no fencing at all, since nothing drives a post through a sting.
+
+What the water is down here is **a tidepool**: seawater the tide left standing, too deep to wade
+and no ground to build on, so it stops a pig and a fence exactly as a river does. And the world's
+own idea is the shape of it — **every pool is a broken ring.** A box of tidewater one tile thick
+round a heart of dry sand, with exactly one tile of the lip missing where the tide got out — never
+a corner, since nothing on a board walks diagonally and a missing corner would be no way in.
+`TidepoolTests` pins it.
+
+Which out-offers even the dunes. A crescent handed over three walls and a mouth; a broken ring
+hands over a pen that is *finished* but for its break, and one piece on the break shuts the heart.
+It is the cheapest pen the game has ever offered — and it is the trap the whole world is built on,
+because a heart is small, the ring is where the tide put it, and half of what the tide holds out
+it keeps. Ebbtide Pool says it on the first board: the one pearl on show sits in a heart whose
+break opens onto the rim of the map, where nothing can ever be penned, and the two out in the open
+lie on the rim itself. The cove's first lesson is that a gift on show is not a gift; its running
+lesson is what the ones that are real actually cost.
+
+One field has no pool on it anywhere, the way The Hardpan has no sand: The High Strand, the ground
+above the tideline, where every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Ebbtide Pool | 13 | one pool, 3 pearls, 2 jellyfish | 10 | 17 | 41% |
+| 2 | Twin Pools | 12 | two pools, 2 pearls on the line | 17 | 30 | 43% |
+| 3 | The High Strand | 19 | no pool at all, 2 pearls on the line | 20 | 36 | 44% |
+| 4 | The Oyster Bed | 14 | one pool, 2 pearls seeded in its heart, 1 loose | 23 | 42 | 45% |
+| 5 | The Runnel | 13 | two pools either side of a channel, 2 pearls | 23 | 43 | 46% |
+| 6 | The Long Pool | 14 | one long pool, 2 pearls, 2 jellyfish | 21 | 39 | 46% |
+| 7 | Barnacle Corner | 10 | two great pools, 3 pearls | 22 | 47 | 53% |
+| 8 | Low Water | 16 | two pools, 3 pearls, a jellyfish | 31 | 58 | 46% |
+| 9 | The Crab Pool | 22 | the crab, his pool, 3 pearls | 17 | 52 | 67% |
+
+Barnacle Corner is the corner question with two free sides, the way Rimstone Corner, The Big Top
+and Scarp Corner asked it — one great pool along the whole north of the board and a second down
+the east — and at 53% it is the hardest corner anywhere in the game. The right-angled answer tucks
+under the north pool and pays its own east and south walls for 22, where the same ten pieces run
+as a chevron from lip to flank hold 42 tiles and let themselves in at the east pool's break for
+the pearl on the way, which is 47. Low Water holds 48 tiles on the broadest board in the cove,
+which is the biggest pen in the world and nothing beside the game's real giants — the cove's
+budgets are the tide's, and the tide does not hand out ground.
+
+Its boss, The Crab Pool, adds the cove's rule, and it is the carnival's ring asked of a pool
+rather than a man. **The crab keeps his pool, and the pig's ground has to close the whole way
+round it — break, crab and all.** The Center Ring taught that a pen can stand inside another pen;
+this one hands the inner pen over already built — the crab sits in the heart of a broken ring,
+walled by the tide on every side but the break — and asks for the moat round the outside. One
+piece on the break shuts him in, the cheapest boss pen the game has ever handed out, and every
+other piece goes on a ring that no way off the map may miss. Run the ring and forget the plug and
+he strolls out of his pool into the pig's own ground, which is held and held together and no
+answer; plug the break and box the pig beside the pool and both are held in two tidy pens, which
+is no ring. The square moat with its plug is the obvious answer and worth 17 of 52; the same
+twenty-two pieces swung out as a diamond hold 37 tiles and all three pearls — one lying off each
+face of the square's reach, exactly where a diamond's points go — and at 67% that is the widest
+gap any board in the game leaves. It charges the same 21 of the 24 stars below it that every boss
+charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions.md`](solutions.md).
 
 ## The Daily Puzzle
 
@@ -1019,9 +1086,10 @@ than the last time the universe asked it.
 | `roost` | Three animals: two that will not be split, and a third they will not share with | The water between them |
 | `ring` | Two pens, one inside the other: the pig's ground has to close round him | The water between them |
 | `berth` | Two pens with clear ground between them: no piece of wall may serve both | The water between them |
+| `moat` | A ring round the crab's whole pool, with the crab shut into its heart | The pool walls him — you wall the pool |
 
-`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring` and `berth` are the **boss rules**,
-and a field never asks one.
+`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth` and `moat` are the
+**boss rules**, and a field never asks one.
 
 #### The shape of a world
 

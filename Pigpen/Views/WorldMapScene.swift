@@ -52,6 +52,7 @@ private struct Meadow {
         case .flowstone: drawCaveMouth(in: &context)
         case .sawdust: drawBigTop(in: &context)
         case .sand: drawRockArch(in: &context)
+        case .shingle: drawWreck(in: &context)
         }
     }
 
@@ -69,6 +70,7 @@ private struct Meadow {
         case .flowstone: drawSinterTerraces(in: &context)
         case .sawdust: drawTroddenGround(in: &context)
         case .sand: drawRippledSand(in: &context)
+        case .shingle: drawTideLines(in: &context)
         }
     }
 
@@ -347,6 +349,7 @@ private struct Meadow {
         case .sawdust: 2
         // One cloud, a long way off, doing nobody any good.
         case .sand: 1
+        case .shingle: 2
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -453,6 +456,8 @@ private struct Meadow {
             drawFairSkyline(in: &context)
         } else if colors.cover == .sand {
             drawDuneHorizon(in: &context)
+        } else if colors.cover == .shingle {
+            drawSeaHorizon(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -844,6 +849,9 @@ private struct Meadow {
         case cactus
         case sandMound
         case bones
+        case strandPool
+        case shell
+        case driftwood
     }
 
     private struct Place {
@@ -953,6 +961,17 @@ private struct Meadow {
             case ..<0.86: .rock
             default: .bones
             }
+        case .shingle:
+            // Nothing was built on the strand and nothing grows there: what stands on it is
+            // what the last tide set down — a rock pool, which is the shape every board out
+            // here is made of, a shell washed up whole, a weeded rock, and a length of
+            // driftwood the sea has finished with.
+            switch roll {
+            case ..<0.34: .strandPool
+            case ..<0.60: .shell
+            case ..<0.84: .rock
+            default: .driftwood
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -984,6 +1003,9 @@ private struct Meadow {
         case .cactus: drawCactus(in: &context, at: place.at, scale: place.size)
         case .sandMound: drawSandMound(in: &context, at: place.at, scale: place.size)
         case .bones: drawBones(in: &context, at: place.at, scale: place.size)
+        case .strandPool: drawStrandPool(in: &context, at: place.at, scale: place.size)
+        case .shell: drawShell(in: &context, at: place.at, scale: place.size)
+        case .driftwood: drawDriftwood(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -2248,6 +2270,302 @@ private struct Meadow {
         )
         drift.closeSubpath()
         context.fill(drift, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.12 : 0.44)))
+    }
+
+    /// The wreck at the foot of the cove trail: the ribs of an old boat, beached past the reach
+    /// of the ordinary tide and half swallowed by the sand anyway.
+    ///
+    /// The dunes' arch was the first landmark that was nowhere to go, and this is the second —
+    /// but where the arch was never anything else, the wreck used to be somewhere to go, which
+    /// is the cove's whole story about the sea: it rearranges whatever it is given.
+    private func drawWreck(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 96
+        let tall: CGFloat = 44
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.52, y: centre.y - tall * 0.08,
+                width: wide * 1.04, height: tall * 0.3
+            )),
+            with: .color(.black.opacity(colors.isNight ? 0.24 : 0.18))
+        )
+
+        let timber = Color(red: 0.32, green: 0.26, blue: 0.21)
+        let worn = Color(red: 0.52, green: 0.45, blue: 0.38)
+
+        // The hull, keeled over and open to the sky: one long sweep of gunwale with the bow
+        // still standing and the stern gone into the sand.
+        var hull = Path()
+        hull.move(to: CGPoint(x: centre.x - wide * 0.5, y: centre.y))
+        hull.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.34, y: centre.y - tall * 0.34),
+            control: CGPoint(x: centre.x - wide * 0.06, y: centre.y - tall * 0.62)
+        )
+        hull.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.5, y: centre.y - tall * 0.9),
+            control: CGPoint(x: centre.x + wide * 0.46, y: centre.y - tall * 0.5)
+        )
+        hull.addLine(to: CGPoint(x: centre.x + wide * 0.42, y: centre.y))
+        hull.closeSubpath()
+        context.fill(
+            hull,
+            with: .linearGradient(
+                Gradient(colors: [worn, timber]),
+                startPoint: CGPoint(x: centre.x, y: centre.y - tall),
+                endPoint: CGPoint(x: centre.x, y: centre.y)
+            )
+        )
+        context.stroke(hull, with: .color(timber.opacity(0.9)), lineWidth: 2)
+
+        // The ribs standing proud where the planking has gone, which is what says wreck
+        // rather than boat.
+        var ribs = Path()
+        for along in [0.2, 0.42, 0.64] {
+            let x = centre.x - wide * 0.5 + wide * CGFloat(along)
+            ribs.move(to: CGPoint(x: x, y: centre.y - tall * 0.02))
+            ribs.addQuadCurve(
+                to: CGPoint(x: x + wide * 0.05, y: centre.y - tall * 0.66),
+                control: CGPoint(x: x - wide * 0.06, y: centre.y - tall * 0.4)
+            )
+        }
+        context.stroke(
+            ribs,
+            with: .color(worn.opacity(colors.isNight ? 0.6 : 0.9)),
+            style: StrokeStyle(lineWidth: 3.4, lineCap: .round)
+        )
+
+        // The sand drifted up the stern, and a pool the tide keeps in the shadow of the bow.
+        var bank = Path()
+        bank.move(to: CGPoint(x: centre.x - wide * 0.62, y: centre.y + 1))
+        bank.addQuadCurve(
+            to: CGPoint(x: centre.x - wide * 0.1, y: centre.y + 1),
+            control: CGPoint(x: centre.x - wide * 0.38, y: centre.y - tall * 0.18)
+        )
+        bank.closeSubpath()
+        context.fill(bank, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.1 : 0.34)))
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x + wide * 0.2, y: centre.y + tall * 0.1,
+                width: wide * 0.3, height: tall * 0.14
+            )),
+            with: .color(Color(red: 0.22, green: 0.52, blue: 0.55).opacity(colors.isNight ? 0.5 : 0.7))
+        )
+    }
+
+    /// The floor of the cove: wet sand with the tide's own lines across it, every one bowed the
+    /// same way because they are one sea's edges remembered at different heights, and pans of
+    /// standing water still holding the sky.
+    ///
+    /// Nobody laid this out, the way nobody laid out the dunes' combing — but where the desert's
+    /// lines were cut by something that kept going, these were left by something that means to
+    /// come back, which is why they get the sky's own light lying in among them.
+    private func drawTideLines(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 5_419)
+
+        // Pans of standing water, flat and full of sky.
+        for _ in 0..<7 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next(in: -0.1...1.1)) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 60...180))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.08,
+                    width: spread, height: spread * 0.16
+                )),
+                with: .color(
+                    Color(red: 0.55, green: 0.75, blue: 0.76)
+                        .opacity(colors.isNight ? 0.26 : 0.45)
+                )
+            )
+        }
+
+        // The tide lines themselves: a pale foam edge over a damp shadow, bowed seawards.
+        for _ in 0..<24 {
+            let down = horizon + CGFloat(scatter.next(in: -0.02...1.02)) * (size.height - horizon)
+            var line = Path()
+            line.move(to: CGPoint(x: -20, y: down))
+            line.addCurve(
+                to: CGPoint(x: size.width + 20, y: down + CGFloat(scatter.next(in: -24...24))),
+                control1: CGPoint(x: size.width * 0.3, y: down - CGFloat(scatter.next(in: 6...22))),
+                control2: CGPoint(x: size.width * 0.7, y: down - CGFloat(scatter.next(in: 6...22)))
+            )
+            let width = CGFloat(scatter.next(in: 1.4...3.6))
+            context.translateBy(x: 0, y: width)
+            context.stroke(
+                line,
+                with: .color(Color(red: 0.20, green: 0.30, blue: 0.32).opacity(colors.isNight ? 0.24 : 0.16)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+            context.translateBy(x: 0, y: -width)
+            context.stroke(
+                line,
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.07 : 0.26)),
+                style: StrokeStyle(lineWidth: width, lineCap: .round)
+            )
+        }
+    }
+
+    /// The sea out along the horizon, which is what the cove's sky comes down to: a band of
+    /// open water with the light lying on it in streaks, and one low headland standing out
+    /// into it a long way off.
+    ///
+    /// Every world before this closed its horizon with more of its own ground — trees, roofs,
+    /// rock, sand going back until it ran out. This is the first one closed by the thing the
+    /// whole world is about: the water that keeps coming back for it.
+    private func drawSeaHorizon(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 4_177)
+        let base = horizon + 26
+
+        // The sea itself: one band from rim to rim, darkest at the skyline.
+        var sea = Path()
+        sea.move(to: CGPoint(x: -20, y: base - 34))
+        sea.addLine(to: CGPoint(x: size.width + 20, y: base - 36))
+        sea.addLine(to: CGPoint(x: size.width + 20, y: base + 26))
+        sea.addLine(to: CGPoint(x: -20, y: base + 30))
+        sea.closeSubpath()
+        context.fill(
+            sea,
+            with: .linearGradient(
+                Gradient(colors: [
+                    Color(red: 0.14, green: 0.38, blue: 0.44),
+                    Color(red: 0.28, green: 0.56, blue: 0.58)
+                ]),
+                startPoint: CGPoint(x: size.width / 2, y: base - 36),
+                endPoint: CGPoint(x: size.width / 2, y: base + 30)
+            )
+        )
+
+        // The light on it, in flat streaks that get shorter as they get further away.
+        var streaks = Path()
+        for _ in 0..<10 {
+            let down = base - 30 + CGFloat(scatter.next()) * 52
+            let nearness = (down - (base - 30)) / 52
+            let span = CGFloat(scatter.next(in: 18...56)) * (0.5 + nearness)
+            let x = CGFloat(scatter.next()) * size.width
+            streaks.move(to: CGPoint(x: x, y: down))
+            streaks.addLine(to: CGPoint(x: x + span, y: down))
+        }
+        context.stroke(
+            streaks,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.14 : 0.4)),
+            style: StrokeStyle(lineWidth: 2, lineCap: .round)
+        )
+
+        // The headland, low and far, with the sea going on behind it.
+        var headland = Path()
+        headland.move(to: CGPoint(x: size.width * 0.68, y: base - 34))
+        headland.addQuadCurve(
+            to: CGPoint(x: size.width * 0.9, y: base - 34),
+            control: CGPoint(x: size.width * 0.79, y: base - 52)
+        )
+        headland.closeSubpath()
+        context.fill(headland, with: .color(colors.farHill.opacity(0.85)))
+    }
+
+    /// A rock pool at trailside size: a broken ring of tidewater round a heart of dry sand —
+    /// the same shape every board in this world is built from, so the first ring a player
+    /// meets on a field is one they have already stood beside on the way there.
+    private func drawStrandPool(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 46 * scale
+        let tall = wide * 0.5
+        let ring = CGRect(x: foot.x - wide / 2, y: foot.y - tall, width: wide, height: tall)
+        let water = Color(red: 0.20, green: 0.50, blue: 0.54)
+
+        context.stroke(
+            Path(ellipseIn: ring),
+            with: .color(water.opacity(colors.isNight ? 0.6 : 0.85)),
+            lineWidth: wide * 0.14
+        )
+        context.fill(
+            Path(ellipseIn: ring.insetBy(dx: wide * 0.26, dy: tall * 0.26)),
+            with: .color(colors.foreground)
+        )
+
+        // The break in the lip, and the sky caught on the far side of the water.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: ring.midX + wide * 0.3, y: ring.maxY - tall * 0.22,
+                width: wide * 0.16, height: tall * 0.2
+            )),
+            with: .color(colors.foreground)
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: ring.midX - wide * 0.2, y: ring.minY - tall * 0.02,
+                width: wide * 0.28, height: tall * 0.14
+            )),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.22 : 0.55))
+        )
+    }
+
+    /// A shell washed up whole, drawn pale against the wet sand with its whorl showing.
+    private func drawShell(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 15 * scale
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - wide * 0.55, y: foot.y - wide * 0.08,
+                width: wide * 1.1, height: wide * 0.2
+            )),
+            with: .color(.black.opacity(colors.isNight ? 0.2 : 0.15))
+        )
+        let body = Path(ellipseIn: CGRect(
+            x: foot.x - wide / 2, y: foot.y - wide * 0.7, width: wide, height: wide * 0.7
+        ))
+        context.fill(body, with: .color(GamePalette.cream.opacity(colors.isNight ? 0.5 : 0.9)))
+        context.stroke(
+            body,
+            with: .color(Color(red: 0.6, green: 0.48, blue: 0.4).opacity(0.6)),
+            lineWidth: 1.2
+        )
+        var whorl = Path()
+        for inset in [0.24, 0.46] {
+            whorl.addEllipse(in: CGRect(
+                x: foot.x - wide / 2 + wide * CGFloat(inset),
+                y: foot.y - wide * 0.7 + wide * 0.7 * CGFloat(inset),
+                width: wide * (1 - CGFloat(inset) * 1.6),
+                height: wide * 0.7 * (1 - CGFloat(inset))
+            ))
+        }
+        context.stroke(
+            whorl,
+            with: .color(Color(red: 0.6, green: 0.48, blue: 0.4).opacity(0.35)),
+            lineWidth: 1
+        )
+    }
+
+    /// A length of driftwood the sea has finished with: one bleached bough with a stub of
+    /// branch, half sunk in the sand it was thrown onto.
+    private func drawDriftwood(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 34 * scale
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - wide * 0.5, y: foot.y - wide * 0.03,
+                width: wide, height: wide * 0.12
+            )),
+            with: .color(.black.opacity(colors.isNight ? 0.2 : 0.15))
+        )
+        var bough = Path()
+        bough.move(to: CGPoint(x: foot.x - wide * 0.5, y: foot.y))
+        bough.addQuadCurve(
+            to: CGPoint(x: foot.x + wide * 0.5, y: foot.y - wide * 0.08),
+            control: CGPoint(x: foot.x, y: foot.y - wide * 0.18)
+        )
+        context.stroke(
+            bough,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.4 : 0.8)),
+            style: StrokeStyle(lineWidth: max(2, wide * 0.1), lineCap: .round)
+        )
+        var stub = Path()
+        stub.move(to: CGPoint(x: foot.x + wide * 0.12, y: foot.y - wide * 0.12))
+        stub.addLine(to: CGPoint(x: foot.x + wide * 0.24, y: foot.y - wide * 0.3))
+        context.stroke(
+            stub,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.36 : 0.7)),
+            style: StrokeStyle(lineWidth: max(1.4, wide * 0.06), lineCap: .round)
+        )
     }
 
     // MARK: - Small helpers

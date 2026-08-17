@@ -1082,6 +1082,135 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk down onto the cove. Six stills, the way the dunes' opening is six:
+    /// the pearl and the jellyfish have a still apiece, and so does the water — because the shape
+    /// of it is the whole world, and a player who does not know a pool is a broken ring will
+    /// read the first board as a lake with a leak in it.
+    static func tidepoolOpening(start: Date = .now) -> Self {
+        Self(
+            key: "tidepool-opening",
+            title: "Tidepool Cove",
+            light: .coveDay,
+            shots: [
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🐚", "🪨", "🦀"],
+                    caption: "Tidepool Cove. The sea only just left.",
+                    seconds: 2.6
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐚", "🌊"],
+                    caption: "Your pig came down off the dunes at low tide.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["🌊", "🪨"],
+                    caption: "Every pool is a broken ring. One break in the lip.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🐚",
+                    strewn: ["🌊", "🪨"],
+                    caption: "Pearls in the shells. Five each.",
+                    seconds: 2.2
+                ),
+                Shot(
+                    motif: "🪼",
+                    strewn: ["🐚", "🌊"],
+                    caption: "A jellyfish takes no fence. Walls go round.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌊", "🐚"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the cove's last field, the way `theScorpionPit` goes before the dunes'.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced eight worlds. What they
+    /// are owed is the one thing this board does that no board in the game has done — the
+    /// carnival asked for a ring round a man, and this one asks for a ring round a whole pool,
+    /// with the crab shut into his own heart on the way.
+    static func theCrabPool(start: Date = .now) -> Self {
+        Self(
+            key: "the-crab-pool-briefing",
+            title: "The Crab Pool",
+            light: .coveDay,
+            shots: [
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🐚"],
+                    caption: "The Crab Pool. He keeps it, break and all.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦀", "🌊"],
+                    caption: "Shut his break, and never stand in with him.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦀", "🐚"],
+                    caption: "Close your ground the whole way round the pool.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the cove holds. It says what became of the crab and — like the
+    /// eight send-offs before it — points on past this world to the next one waiting, which is
+    /// ice where this one was tidewater.
+    static func tidepoolHeld(start: Date = .now) -> Self {
+        Self(
+            key: "tidepool-held",
+            title: "Tidepool Cove held",
+            light: .coveDusk,
+            shots: [
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🐚"],
+                    caption: "The crab has his pool, and a ring round the lot.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🐚",
+                    strewn: ["🌊", "🪼", "🌊"],
+                    caption: "Every pearl the tide let go of, fenced and held.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🐚", "🪨"],
+                    caption: "The tide comes back in over the lot of it.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🐚", "❄️"],
+                    caption: "North along the water, the sea is turning white.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -1091,7 +1220,8 @@ extension StorybookScene {
             .starfallOpening(), .visitorCrater(), .starfallHeld(),
             .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
             .lanternOpening(), .theCenterRing(), .lanternHeld(),
-            .duneOpening(), .theScorpionPit(), .duneHeld()
+            .duneOpening(), .theScorpionPit(), .duneHeld(),
+            .tidepoolOpening(), .theCrabPool(), .tidepoolHeld()
         ]
     }
 }

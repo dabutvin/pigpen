@@ -5,9 +5,9 @@
 nothing left to beat. It cannot be derived with a sum — it is a search — so it is
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
-rat's, `V` a visitor's, `T` a bat's, `U` its pup's, `M` the ringmaster's and `S` the
-scorpion's) and a budget and it prints the best pen, an example of it, and star thresholds
-in the proportions the shipped levels use.
+rat's, `V` a visitor's, `T` a bat's, `U` its pup's, `M` the ringmaster's, `S` the
+scorpion's and `C` the crab's) and a budget and it prints the best pen, an example of it,
+and star thresholds in the proportions the shipped levels use.
 
     Tools/level_search.py --budget 12 <<'MAP'
     .........
@@ -27,11 +27,13 @@ five against for the skull — which is what makes a treat a fork rather than a 
 tax: the pen can never simply ignore one it is standing next to.
 
 A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
-pup, a ringmaster, or a scorpion — is held by ground in two pieces just as happily as by one,
+pup, a ringmaster, a scorpion, or a crab — is held by ground in two pieces just as happily as by one,
 since what has to hold is each animal rather than the pen: the search grows out from every
 animal at once and the ground it ends up with is connected to one or another of them, so a wall
 shared between two enclosures is paid for once, like any other. `--rule berth` is the one board
-that will not have that discount, and says so.
+that will not have that discount, and says so. `--rule moat` is the carnival's ring asked
+of a pool rather than a man: the pig's ground has to close round the crab's whole pool,
+break and all, with the crab never standing in it.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -60,7 +62,7 @@ SKULL = "x"
 STAKED = (APPLE, SKULL)
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
 
@@ -201,12 +203,18 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
     if rule == "berth" and "S" not in starts:
         raise SystemExit("--rule berth wants a scorpion on the board")
 
+    # The animal the pig has to go round: the carnival's ringmaster, or the cove's crab —
+    # the same question aimed at whoever keeps the middle.
+    ringed = "C" if rule == "moat" else "M"
+    if rule == "moat" and "C" not in starts:
+        raise SystemExit("--rule moat wants a crab on the board")
+
     rays = []
-    if rule == "ring":
-        if "M" not in starts:
+    if rule in ("ring", "moat"):
+        if ringed not in starts:
             raise SystemExit("--rule ring wants a ringmaster on the board")
         for down, across in ((-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)):
-            mask, row, column = 0, *starts["M"]
+            mask, row, column = 0, *starts[ringed]
             while True:
                 row, column = row + down, column + across
                 if not (0 <= row < rows and 0 <= column < columns):
@@ -279,7 +287,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         before a single piece was laid, and the one thing this rule asks is that the pig go
         round him. Water is a wall to an animal and no wall at all to this question.
         """
-        reached = bit(starts["M"])
+        reached = bit(starts[ringed])
         while True:
             wider = (reached | spilling(reached)) & ~mine
             if wider & rim:
@@ -296,7 +304,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         that holds the pair together is refused, and so is the tidy pair of pens side by side.
         """
         mine = run_of(starts["P"], pen)
-        if mine & bit(starts["M"]):
+        if mine & bit(starts[ringed]):
             return False
         return encircled(mine)
 
@@ -321,7 +329,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         """Whether a pen that holds is one this board will actually accept."""
         if rule == "berth":
             return berth_holds(pen)
-        if rule == "ring":
+        if rule in ("ring", "moat"):
             return ring_holds(pen)
         if rule == "roost":
             return roost_holds(pen)
@@ -450,7 +458,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         """
         buckets = {}
         for pen in grown:
-            theirs = run_of(starts["M"], pen)
+            theirs = run_of(starts[ringed], pen)
             if theirs & bit(starts["P"]):
                 continue
             mine = pen & ~theirs
@@ -510,7 +518,7 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             keeping = divided(grown, cost)
         if rule == "roost":
             keeping = hanging(grown, cost)
-        if rule == "ring":
+        if rule in ("ring", "moat"):
             keeping = circling(grown, cost)
         if rule == "berth":
             keeping = spaced(grown, cost)
@@ -647,6 +655,7 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
     pennable = {tile for tile in mud if not on_rim(tile, rows, columns)}
     others = [tile for animal, tile in starts.items() if animal != "P"]
     staked = set(others) if rule == "exclude" else set()
+    ringed = starts.get("C" if rule == "moat" else "M")
     if rule == "exclude":
         # Only the pig is being held, and no block may swallow the one left outside.
         pennable = pennable - set(others)
@@ -655,14 +664,15 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
         # One pen holds the pair, so squaring the map off is one rectangle rather than two:
         # the block a player picks is the one with both animals standing in it.
         each = [blocks_around(pennable, starts["P"], rows, columns)]
-    elif rule == "ring":
-        # One block round the pig and one round the ringmaster, the same as any two-animal
-        # board. What squaring off cannot do here is make a ring out of nothing: the only
-        # rectangle that comes out with a hole in it is one laid over a crowd, so the boards
-        # that have an obvious answer at all are the ones with the crowd standing round him.
+    elif rule in ("ring", "moat"):
+        # One block round the pig and one round whoever keeps the middle, the same as any
+        # two-animal board. What squaring off cannot do here is make a ring out of nothing:
+        # the only rectangle that comes out with a hole in it is one laid over a crowd or a
+        # pool, so the boards that have an obvious answer at all are the ones with something
+        # already standing partway round him.
         each = [
             blocks_around(pennable, starts["P"], rows, columns),
-            blocks_around(pennable, starts["M"], rows, columns),
+            blocks_around(pennable, ringed, rows, columns),
         ]
     elif rule == "roost":
         # Two blocks rather than three: one round the pig, and one that has to have both the
@@ -714,11 +724,11 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
                 continue
         # And the carnival wants one block standing inside the other: the pig clear of the
         # ringmaster, and his ground with no way off the board that does not cross hers.
-        if rule == "ring":
+        if rule in ("ring", "moat"):
             mine = run_of_ground(pen, starts["P"])
-            if starts["M"] in mine:
+            if ringed in mine:
                 continue
-            if not shut_inside(starts["M"], mine, rows, columns):
+            if not shut_inside(ringed, mine, rows, columns):
                 continue
         # And the dunes want the two blocks standing well apart: not merely two blocks rather
         # than one, but two with clear ground between them, since a piece laid where the pig is
@@ -768,13 +778,14 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
              "hold them in two pens with the same ground in each, hold the roost in one "
              "pen with the pig in another, hold the ringmaster in the middle of the "
-             "pig's own ring, or hold the two in pens that share no wall",
+             "pig's own ring, hold the two in pens that share no wall, or close the "
+             "pig's ground round the crab's whole pool",
     )
     parser.add_argument(
         "--plan",

@@ -215,4 +215,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Tidepool Cove: the ninth world, wrapped in storybook films the way the eight below it
+    /// are. The send-off points on out across the ice the tide is starting to carry in, the way
+    /// the dunes' points past the last dune to the sea, and The Crab Pool stops for a briefing
+    /// because it stands a second animal on the board and asks for a ring round the pool he
+    /// lives in — the same courtesy every boss pays.
+    static let tidepoolCove = GameWorld(
+        theme: .tidepoolCove,
+        map: .tidepoolCove,
+        opening: WorldFilmSpec(key: "tidepool-opening") { .storybook(.tidepoolOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "tidepool-held") { .storybook(.tidepoolHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theCrabPool.id: WorldFilmSpec(key: "the-crab-pool-briefing") {
+                .storybook(.theCrabPool(start: $0))
+            }
+        ]
+    )
 }

@@ -549,6 +549,7 @@ struct FieldView: View {
         case .ribs: drawRibs(in: &context, rect: rect, scatter: &scatter)
         case .sawdust: drawSawdust(in: &context, rect: rect, scatter: &scatter)
         case .hardpan: drawHardpan(in: &context, rect: rect, scatter: &scatter)
+        case .strand: drawStrand(in: &context, rect: rect, scatter: &scatter)
         }
     }
 
@@ -801,6 +802,62 @@ struct FieldView: View {
         }
     }
 
+    /// Wet strand: sand the sea has only just let go of. What reads at tile size is what the
+    /// water left as it went — a wrack line, a curl of weed and shell grit lying along it, and
+    /// the wet sheen the dry worlds never have, drawn as a pale glaze pulled the same way on
+    /// every tile because it is one tide's leaving rather than a tile's worth each.
+    private func drawStrand(in context: inout GraphicsContext, rect: CGRect, scatter: inout Scatter) {
+        // The sheen: one soft streak of standing wet, lying along the tide's own direction.
+        let down = rect.minY + rect.height * CGFloat(scatter.next(in: 0.25...0.75))
+        var sheen = Path()
+        sheen.move(to: CGPoint(x: rect.minX + rect.width * 0.08, y: down))
+        sheen.addQuadCurve(
+            to: CGPoint(x: rect.maxX - rect.width * 0.08, y: down),
+            control: CGPoint(
+                x: rect.midX,
+                y: down - rect.height * CGFloat(scatter.next(in: 0.04...0.10))
+            )
+        )
+        context.stroke(
+            sheen,
+            with: .color(.white.opacity(scatter.next(in: 0.06...0.12))),
+            style: StrokeStyle(lineWidth: max(1, rect.width * 0.10), lineCap: .round)
+        )
+
+        // The wrack: a short dark curl of weed, and the shell grit the same wave dropped.
+        if scatter.next() < 0.55 {
+            let foot = CGPoint(
+                x: rect.minX + rect.width * CGFloat(scatter.next(in: 0.2...0.8)),
+                y: rect.minY + rect.height * CGFloat(scatter.next(in: 0.2...0.8))
+            )
+            let span = rect.width * CGFloat(scatter.next(in: 0.18...0.3))
+            var weed = Path()
+            weed.move(to: CGPoint(x: foot.x - span / 2, y: foot.y))
+            weed.addQuadCurve(
+                to: CGPoint(x: foot.x + span / 2, y: foot.y - span * 0.14),
+                control: CGPoint(x: foot.x, y: foot.y + span * 0.3)
+            )
+            context.stroke(
+                weed,
+                with: .color(skin.grit.opacity(scatter.next(in: 0.4...0.6))),
+                style: StrokeStyle(lineWidth: max(1, rect.width * 0.06), lineCap: .round)
+            )
+        }
+        for _ in 0..<2 {
+            let size = rect.width * CGFloat(scatter.next(in: 0.04...0.07))
+            let grit = CGRect(
+                x: rect.minX + rect.width * CGFloat(scatter.next(in: 0.1...0.85)),
+                y: rect.minY + rect.height * CGFloat(scatter.next(in: 0.1...0.85)),
+                width: size,
+                height: size * 0.8
+            )
+            context.fill(
+                Path(ellipseIn: grit),
+                with: .color(.white.opacity(scatter.next(in: 0.18...0.34)))
+            )
+        }
+    }
+
     /// What is going on on the surface, which is not the same thing twice: light breaking on
     /// open water in the meadow, rings on a standing pool in the wood, steam off a mountain
     /// tarn, a slick on a canal, the light still in the well a star made, one river running,
@@ -816,6 +873,7 @@ struct FieldView: View {
         case .flow: drawFlow(in: &context, board: board)
         case .crowd: drawCrowd(in: &context, board: board)
         case .dune: drawDune(in: &context, board: board)
+        case .rockPool: drawRockPool(in: &context, board: board)
         }
     }
 
@@ -1108,6 +1166,65 @@ struct FieldView: View {
         }
     }
 
+    /// The tidepool: seawater the tide left standing, and the one water in the game that is
+    /// mostly sky. What makes a pool read as the sea's leaving rather than a pond is its lip —
+    /// a line of foam settled round the whole shore of it, thickest where the water lies
+    /// stillest — and the glints where the sky catches it, drawn long and flat because the
+    /// water is shallow and lying dead still.
+    private func drawRockPool(in context: inout GraphicsContext, board: BoardGeometry) {
+        let pool = waterTiles
+        for tile in pool {
+            let rect = board.rect(for: tile)
+            var noise = scatter(on: tile)
+
+            // The sky lying in the pool: one long flat glint per tile that carries one.
+            if noise.next() < 0.6 {
+                let y = rect.minY + board.cell * CGFloat(noise.next(in: 0.3...0.7))
+                let span = board.cell * CGFloat(noise.next(in: 0.3...0.55))
+                let x = rect.minX + board.cell * 0.08
+                    + CGFloat(noise.next()) * (board.cell * 0.84 - span)
+                var glint = Path()
+                glint.move(to: CGPoint(x: x, y: y))
+                glint.addLine(to: CGPoint(x: x + span, y: y))
+                context.stroke(
+                    glint,
+                    with: .color(skin.waterLight.opacity(0.5)),
+                    style: StrokeStyle(lineWidth: max(1, board.cell * 0.045), lineCap: .round)
+                )
+            }
+
+            // The foam, laid along every edge of the pool that meets the sand: a beaded line
+            // just inside the shore, which is where the tide set it down as it drew back.
+            for direction in Direction.allCases {
+                let step = tile.stepped(direction)
+                guard !pool.contains(step), level.contains(step) else { continue }
+                var beads = Path()
+                for along in stride(from: 0.14, through: 0.86, by: 0.24) {
+                    let bead = board.cell * CGFloat(noise.next(in: 0.03...0.06))
+                    let centre: CGPoint
+                    switch direction {
+                    case .up: centre = CGPoint(
+                        x: rect.minX + board.cell * CGFloat(along), y: rect.minY + board.cell * 0.1
+                    )
+                    case .down: centre = CGPoint(
+                        x: rect.minX + board.cell * CGFloat(along), y: rect.maxY - board.cell * 0.1
+                    )
+                    case .left: centre = CGPoint(
+                        x: rect.minX + board.cell * 0.1, y: rect.minY + board.cell * CGFloat(along)
+                    )
+                    case .right: centre = CGPoint(
+                        x: rect.maxX - board.cell * 0.1, y: rect.minY + board.cell * CGFloat(along)
+                    )
+                    }
+                    beads.addEllipse(in: CGRect(
+                        x: centre.x - bead, y: centre.y - bead, width: bead * 2, height: bead * 2
+                    ))
+                }
+                context.fill(beads, with: .color(skin.waterLight.opacity(0.55)))
+            }
+        }
+    }
+
     /// The lines between the tiles, ruled over the ground and stopped at the water. A lake
     /// is one sheet of it; squaring it off would only make the map look like a spreadsheet.
     private func drawGridLines(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
@@ -1290,6 +1407,7 @@ struct FieldView: View {
             case .props: drawProps(in: &context, plot: plot)
             case .bunting: drawBunting(in: &context, plot: plot)
             case .driftFence: drawDriftFence(in: &context, plot: plot)
+            case .groynes: drawGroynes(in: &context, plot: plot)
             }
         }
     }
@@ -1688,6 +1806,72 @@ struct FieldView: View {
             style: StrokeStyle(lineWidth: max(1, plot.width * 0.03), lineCap: .round)
         )
     }
+
+    /// The cove's: groynes. Three sea-blackened timbers driven in deep and braced with a
+    /// walings plank, the way anything is built that means to argue with the tide — and the
+    /// tide has already had its say, in a dark waterline across all three and the weed hung
+    /// below it.
+    private func drawGroynes(in context: inout GraphicsContext, plot: CGRect) {
+        var timbers = Path()
+        var lit = Path()
+        let width = plot.width * 0.16
+        let foot = plot.minY + plot.height * 0.93
+        for (index, timber) in [0.2, 0.5, 0.8].enumerated() {
+            let x = plot.minX + plot.width * timber
+            // Worn to different heights: the sea takes the top off whatever it is given.
+            let top = plot.minY + plot.height * (index == 1 ? 0.10 : 0.18)
+            timbers.addRect(CGRect(x: x - width / 2, y: top, width: width, height: foot - top))
+            lit.addRect(CGRect(x: x - width / 2, y: top, width: width * 0.34, height: foot - top))
+        }
+        context.fill(timbers, with: .color(skin.picket))
+        context.fill(lit, with: .color(.white.opacity(0.14)))
+
+        // The waling across the three, bolted rather than nailed.
+        let waling = plot.minY + plot.height * 0.38
+        context.stroke(
+            Path { path in
+                path.move(to: CGPoint(x: plot.minX + plot.width * 0.06, y: waling))
+                path.addLine(to: CGPoint(x: plot.maxX - plot.width * 0.06, y: waling))
+            },
+            with: .color(skin.rail),
+            style: StrokeStyle(lineWidth: plot.width * 0.12, lineCap: .round)
+        )
+        var bolts = Path()
+        for timber in [0.2, 0.5, 0.8] {
+            let x = plot.minX + plot.width * timber
+            let bolt = plot.width * 0.035
+            bolts.addEllipse(in: CGRect(
+                x: x - bolt, y: waling - bolt, width: bolt * 2, height: bolt * 2
+            ))
+        }
+        context.fill(bolts, with: .color(.black.opacity(0.4)))
+
+        // The waterline the last tide left, and the weed hanging under it.
+        let line = plot.minY + plot.height * 0.62
+        context.fill(
+            Path(CGRect(
+                x: plot.minX + plot.width * 0.08,
+                y: line,
+                width: plot.width * 0.84,
+                height: plot.height * 0.05
+            )),
+            with: .color(.black.opacity(0.28))
+        )
+        var weed = Path()
+        for hang in [0.26, 0.56, 0.8] {
+            let x = plot.minX + plot.width * CGFloat(hang)
+            weed.move(to: CGPoint(x: x, y: line + plot.height * 0.04))
+            weed.addQuadCurve(
+                to: CGPoint(x: x + plot.width * 0.03, y: line + plot.height * 0.22),
+                control: CGPoint(x: x - plot.width * 0.05, y: line + plot.height * 0.14)
+            )
+        }
+        context.stroke(
+            weed,
+            with: .color(Color(red: 0.24, green: 0.36, blue: 0.28).opacity(0.8)),
+            style: StrokeStyle(lineWidth: max(1, plot.width * 0.045), lineCap: .round)
+        )
+    }
 }
 
 #Preview("Building") {
@@ -1707,8 +1891,8 @@ struct FieldView: View {
     .padding()
 }
 
-/// The same field in every world there is: one board, one line of fencing, eight grounds. The
-/// board underneath is River Bend in all eight, so anything that changes between them is the
+/// The same field in every world there is: one board, one line of fencing, nine grounds. The
+/// board underneath is River Bend in all nine, so anything that changes between them is the
 /// skin and nothing else — which is the quickest way to see whether a world reads as its own
 /// place or only as the meadow tinted a different colour.
 #Preview("Eight grounds") {
