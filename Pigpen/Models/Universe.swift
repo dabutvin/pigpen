@@ -93,9 +93,9 @@ struct Universe: Sendable {
 }
 
 extension Universe {
-    /// The map the game ships: the meadow, the thicket, the mountain, the city, the reaches, the
-    /// caverns, the carnival, the dunes, the cove and the tundra to play, and two more worlds
-    /// standing out past them as silhouettes — a boss apiece, waiting to be built.
+    /// The map the game ships: the meadow, the thicket, the mountain, the city, the reaches,
+    /// the caverns, the carnival, the dunes, the cove, the tundra and the fen to play, and one
+    /// more world standing out past them as a silhouette — a boss, waiting to be built.
     static let all = Universe(worlds: [
         UniverseWorld(theme: .meadow, game: .mudlarkMeadow),
         UniverseWorld(theme: .thornwood, game: .thornwoodThicket),
@@ -107,11 +107,7 @@ extension Universe {
         UniverseWorld(theme: .sunbakedDunes, game: .sunbakedDunes),
         UniverseWorld(theme: .tidepoolCove, game: .tidepoolCove),
         UniverseWorld(theme: .frostwhiskerTundra, game: .frostwhiskerTundra),
-        UniverseWorld(theme: silhouette(
-            id: "mirebog-fen", name: "Mirebog Fen", blurb: "Half water, half mud, all trouble.",
-            boss: "🐊", bossName: "the old croc",
-            accent: Color(red: 0.47, green: 0.56, blue: 0.35), deep: Color(red: 0.24, green: 0.32, blue: 0.18)
-        ), game: nil),
+        UniverseWorld(theme: .mirebogFen, game: .mirebogFen),
         UniverseWorld(theme: silhouette(
             id: "cloudspire-heights", name: "Cloudspire Heights", blurb: "Fields in the sky, and a long way down.",
             boss: "🦅", bossName: "the eagle",

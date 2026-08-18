@@ -248,5 +248,6 @@ of ice against the great ridge's tail, where the sea shows through: 13 of 42.
 
 The same seventeen pieces run down the great ridge's whole west flank instead — the longest free
 wall in the world doing the holding — with a two-piece yard for the seal against the same tail,
-and hold 42 tiles, the fish and the berg, which is 42. At 69% it is the widest gap any board in
-the game leaves. It asks for 21 of the 24 stars below it before it opens.
+and hold 42 tiles, the fish and the berg, which is 42. At 69% it was the widest gap any board in
+the game left until the fen's Wallow asked 72. It asks for 21 of the 24 stars below it before it
+opens.

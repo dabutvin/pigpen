@@ -25,11 +25,12 @@ SOURCES = [
     ROOT / "Pigpen/Models/Dunes.swift",
     ROOT / "Pigpen/Models/Tidepool.swift",
     ROOT / "Pigpen/Models/Frostwhisker.swift",
+    ROOT / "Pigpen/Models/Mirebog.swift",
 ]
 
 # The questions that name a rule of their own. Every other question is an ordinary board,
 # which the search calls `herd` whether there is a second animal on it or not.
-BOSSLY = ("apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "herd")
+BOSSLY = ("apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow", "herd")
 
 CALL = re.compile(
     r"static let (?P<name>\w+) = \w+\(\n(?P<body>.*?)\n    \)\n",
