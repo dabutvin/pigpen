@@ -13,7 +13,7 @@ import SwiftUI
 /// still the ground a fence goes into and water is still the wall a pen never pays for,
 /// whatever either is called here — but the mud on Emberpeak is ash with cinder in it, the
 /// water in Cogsworth is a canal with a slick on it, and the fencing at the carnival is
-/// bunting strung between two poles. One board, one solver, ten grounds.
+/// bunting strung between two poles. One board, one solver, eleven grounds.
 ///
 /// Unlike the trail's palette, a skin does not follow the player's screen from daylight to
 /// dusk. The board has always kept one set of colours whatever the appearance, because the
@@ -72,6 +72,9 @@ struct FieldSkin: Sendable {
         /// Sastrugi: snow over sea ice, combed by the wind into long parallel waves with a lit
         /// crest and a blue trough apiece.
         case sastrugi
+        /// Peat: ground that has never dried out, with sedge coming up through it in tussocks
+        /// and a wet sheen standing in the low places.
+        case peat
     }
 
     /// What the water of a world does. Water is a wall the pen never pays for, so it is worth
@@ -100,6 +103,9 @@ struct FieldSkin: Sendable {
         /// Not water to look at at all: a pressure ridge, ice crushed upward where two floes
         /// met, in jagged blades with the light caught on their broken edges.
         case pressureRidge
+        /// A fen channel: still water skinned over with duckweed, dark where something has
+        /// pushed through the green and closed it again.
+        case duckweed
     }
 
     /// What a piece of fencing is on this world's ground. Every one of them is the same
@@ -127,6 +133,9 @@ struct FieldSkin: Sendable {
         /// A snow fence: slats wired to two driven posts, with the drift already banked up
         /// against them.
         case snowFence
+        /// Bog oak: posts pulled black out of the peat and driven back into it, with one
+        /// rail across and the rushes already up around their feet.
+        case bogOak
     }
 }
 
@@ -337,5 +346,28 @@ extension FieldSkin {
         rail: Color(red: 0.48, green: 0.40, blue: 0.30),
         picket: Color(red: 0.63, green: 0.55, blue: 0.44),
         fencing: .snowFence
+    )
+
+    /// The fen's: peat rather than mud — ground that has never once dried, with sedge coming
+    /// up through it — and the water a channel skinned over with duckweed, greener than the
+    /// ground it runs through, which is the one water in the game that looks more solid than
+    /// the land. The fencing is bog oak: posts pulled black out of the peat and driven back
+    /// into it, because out here the ground has already eaten every lighter fence anybody
+    /// tried.
+    static let mirebogFen = Self(
+        ground: Color(red: 0.40, green: 0.36, blue: 0.24),
+        groundLit: Color(red: 0.48, green: 0.44, blue: 0.30),
+        groundShade: Color(red: 0.31, green: 0.28, blue: 0.18),
+        grit: Color(red: 0.58, green: 0.58, blue: 0.34),
+        grain: .peat,
+        water: Color(red: 0.33, green: 0.47, blue: 0.25),
+        waterDeep: Color(red: 0.16, green: 0.28, blue: 0.16),
+        waterLight: Color(red: 0.68, green: 0.82, blue: 0.44),
+        shore: Color(red: 0.52, green: 0.50, blue: 0.32),
+        surface: .duckweed,
+        post: Color(red: 0.13, green: 0.11, blue: 0.09),
+        rail: Color(red: 0.35, green: 0.30, blue: 0.22),
+        picket: Color(red: 0.28, green: 0.25, blue: 0.20),
+        fencing: .bogOak
     )
 }

@@ -44,6 +44,7 @@ TRAILS = [
     ("Sunbaked Dunes", "Dunes.swift", "sunbakedDunes"),
     ("Tidepool Cove", "Tidepool.swift", "tidepoolCove"),
     ("Frostwhisker Tundra", "Frostwhisker.swift", "frostwhiskerTundra"),
+    ("Mirebog Fen", "Mirebog.swift", "mirebogFen"),
 ]
 # The meadow sorts only the stretch with nothing lying on the ground. Its last three change
 # what is on the ground rather than what the wall has to do, and are ordered by what they

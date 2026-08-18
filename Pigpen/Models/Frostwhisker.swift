@@ -322,8 +322,9 @@ extension PuzzleLevel {
     /// whole west flank of the great ridge — the longest free wall in the world doing the
     /// holding — with a two-piece yard for the seal tucked against the same tail, and that is
     /// 42 tiles, one fish and one berg, which is 42: the widest gap any boss in the game
-    /// leaves, at 69. And the one answer nine worlds have drilled — one great pen round the
-    /// pair — holds 51 tiles and is sent back whole, because the seal will not share.
+    /// left, at 69, until the fen's croc asked 72. And the one answer nine worlds have
+    /// drilled — one great pen round the pair — holds 51 tiles and is sent back whole,
+    /// because the seal will not share.
     ///
     /// It asks for 21 of the 24 stars below it before it opens, the way every boss since the
     /// thicket has.

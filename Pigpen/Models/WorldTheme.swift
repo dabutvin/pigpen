@@ -311,4 +311,28 @@ extension WorldTheme {
         accent: Color(red: 0.69, green: 0.84, blue: 0.93),
         accentDeep: Color(red: 0.36, green: 0.56, blue: 0.71)
     )
+
+    /// Mirebog Fen, the eleventh world: south off the ice into ground that never chose
+    /// between land and water. The windfall is a bilberry ripened over the peat and the
+    /// hazard a snag — bog oak drowned black and hard as iron — each worth exactly what its
+    /// meadow twin was, a bilberry five tiles to shut in, a snag five to shut in with and no
+    /// fencing at all, since nothing drives a post into wood the bog already ate.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for ten worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let mirebogFen = WorldTheme(
+        id: "mirebog-fen",
+        name: "Mirebog Fen",
+        blurb: "Half water, half mud, all trouble.",
+        day: .fenDay,
+        dusk: .fenDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🫐", bonusScale: 0.56, bonusName: "bilberry",
+            hazardGlyph: "🪵", hazardScale: 0.58, hazardName: "snag"
+        ),
+        field: .mirebogFen,
+        boss: BossMark(glyph: "🐊", name: "the old croc"),
+        accent: Color(red: 0.47, green: 0.56, blue: 0.35),
+        accentDeep: Color(red: 0.24, green: 0.32, blue: 0.18)
+    )
 }

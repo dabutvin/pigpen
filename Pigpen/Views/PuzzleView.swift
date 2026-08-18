@@ -469,6 +469,7 @@ struct PuzzleView: View {
         case .beside(let animal): "The \(animal.name) has no ring round him"
         case .tooClose(let animal): "The \(animal.name) is near enough to reach"
         case .landlocked(let animal): "The \(animal.name) is high and dry"
+        case .parched(let animal): "The \(animal.name) has half a wallow"
         }
     }
 
@@ -490,6 +491,8 @@ struct PuzzleView: View {
             "Both of them are held, but one wall does for both pens — and a \(animal.name) stings straight through a fence. Leave clear ground between them."
         case .landlocked(let animal):
             "Both of them are held, but the \(animal.name)'s pen never touches the water. He keeps a breathing hole, so his ground has to lie against it."
+        case .parched(let animal):
+            "Both of them are held, but no channel is wholly the \(animal.name)'s. Every bank of one channel has to be his own ground — half a wallow is nobody's."
         }
     }
 

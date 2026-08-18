@@ -83,6 +83,7 @@ private struct Paddock {
         case .sand: drawSand(in: &context)
         case .shingle: drawShingleStrand(in: &context)
         case .snowfield: drawSnowfield(in: &context)
+        case .marsh: drawMarsh(in: &context)
         }
     }
 
@@ -102,6 +103,14 @@ private struct Paddock {
             // snow: coming down through everything, by day as well as after dark, because the
             // sky out here has never once stopped.
             drawFallingSnow(in: &context)
+        case .marsh:
+            // The fen's weather comes up rather than down: mist off the channels, lying low
+            // and drifting slowly through the reeds, by day as well as after dark — and the
+            // fireflies are out here too once it is, because a marsh is where they live.
+            drawMarshMist(in: &context)
+            if colors.isNight {
+                drawFireflies(in: &context)
+            }
         default:
             if colors.isNight {
                 drawFireflies(in: &context)
@@ -598,6 +607,51 @@ private struct Paddock {
         }
     }
 
+    /// Peat and standing water in equal measure: the ground of a world that never chose. Dark
+    /// wet blotches where the water table shows through, paler hags of drier peat between
+    /// them, and the whole of it flat as only a fen is flat.
+    private func drawMarsh(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 7_121)
+
+        // The wet: pools of standing water lying in the low ground, each with a sky-light
+        // sheen on its middle.
+        for _ in 0..<8 {
+            let centre = CGPoint(x: x(scatter.next(in: -0.05...1.05)), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.10...0.26))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.11,
+                    width: spread, height: spread * 0.22
+                )),
+                with: .color(
+                    Color(red: 0.10, green: 0.16, blue: 0.12).opacity(colors.isNight ? 0.5 : 0.4)
+                )
+            )
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.3, y: centre.y - spread * 0.05,
+                    width: spread * 0.6, height: spread * 0.1
+                )),
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.06 : 0.12))
+            )
+        }
+
+        // The dry: hags of paler peat standing an inch proud of the wet.
+        for _ in 0..<7 {
+            let centre = CGPoint(x: x(scatter.next(in: -0.05...1.05)), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.10...0.22))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.08,
+                    width: spread, height: spread * 0.16
+                )),
+                with: .color(
+                    Color(red: 0.42, green: 0.40, blue: 0.24).opacity(colors.isNight ? 0.12 : 0.22)
+                )
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -635,6 +689,7 @@ private struct Paddock {
         case .sand: 9
         case .shingle: 12
         case .snowfield: 11
+        case .marsh: 16
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -719,6 +774,16 @@ private struct Paddock {
                     case ..<0.74: drawBergyBit(in: &context, at: spot, scale: scale, scatter: &scatter)
                     default: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     }
+                case .marsh:
+                    // The fen is dressed with what grows where the ground never dries: reeds
+                    // in standing clumps, a dead snag the bog got the roots of — the board's
+                    // own hazard, met before the first field asks about it — and ordinary
+                    // grass on whatever passes for high ground.
+                    switch roll {
+                    case ..<0.44: drawReedClump(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.72: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    default: drawDeadSnag(in: &context, at: spot, scale: scale)
+                    }
                 case .sawdust:
                     // A field with a fair on it is still a field, so the grass is here — but
                     // it is trodden grass with the fair's own leavings in it: pegs driven in
@@ -750,6 +815,7 @@ private struct Paddock {
         case .sand: 14
         case .shingle: 16
         case .snowfield: 15
+        case .marsh: 30
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -816,6 +882,17 @@ private struct Paddock {
                     )
                 } else {
                     drawTuft(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.6)), scatter: &scatter)
+                }
+            case .marsh:
+                // A reed bed runs along the front of the fen: the tallest growth in the game's
+                // verges, because the front of the screen is where the water table is.
+                if roll < 0.7 {
+                    drawReedClump(
+                        in: &context, at: foot,
+                        scale: CGFloat(scatter.next(in: 1.1...1.9)), scatter: &scatter
+                    )
+                } else {
+                    drawTuft(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)), scatter: &scatter)
                 }
             case .sawdust where roll < 0.3:
                 // The front of the fair is where the ropes are pegged out, so the verge is
@@ -956,6 +1033,37 @@ private struct Paddock {
             let lit = (colors.isNight ? 0.5 : 0.78) * sin(along * .pi)
             context.fill(
                 circle(at: flake, radius: radius),
+                with: .color(.white.opacity(lit))
+            )
+        }
+    }
+
+    /// What the fen has instead of falling weather: mist, coming up off the channels and
+    /// drifting low through everything.
+    ///
+    /// Each wisp is a long soft streak sliding slowly across, the whole drift one air, so
+    /// they all go the same way — and each fades in at one edge and out at the other so
+    /// nothing ever pops into being in plain sight. On by day as well as after dark, because
+    /// the water the mist comes off does not keep hours; the night only thickens it.
+    private func drawMarshMist(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_733)
+        for _ in 0..<9 {
+            let down = y(scatter.next(in: 0.1...0.98))
+            let nearness = Double(down / max(size.height, 1))
+            let start = scatter.next()
+            let along = (start + elapsed * (0.010 + 0.016 * nearness))
+                .truncatingRemainder(dividingBy: 1)
+            let centre = CGPoint(
+                x: x(-0.25) + (size.width + x(0.5)) * CGFloat(along),
+                y: down + y(0.008) * CGFloat(sin(elapsed * 0.4 + start * 9))
+            )
+            let spread = x(scatter.next(in: 0.16...0.34)) * CGFloat(0.7 + nearness)
+            let lit = (colors.isNight ? 0.16 : 0.10) * sin(along * .pi)
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread, y: centre.y - spread * 0.14,
+                    width: spread * 2, height: spread * 0.28
+                )),
                 with: .color(.white.opacity(lit))
             )
         }
@@ -1508,6 +1616,90 @@ private struct Paddock {
         )
     }
 
+    /// A clump of reeds: tall straight stems with a seed head apiece, swaying from the tips
+    /// the way the grass does but higher, because a reed is a blade that found water.
+    private func drawReedClump(
+        in context: inout GraphicsContext,
+        at foot: CGPoint,
+        scale: CGFloat,
+        scatter: inout Scatter
+    ) {
+        let tall = x(0.05) * scale
+        let breeze = gust(at: foot)
+        var stems = Path()
+        var heads = Path()
+        for lean in [-0.4, -0.1, 0.25, 0.55] {
+            let height = tall * CGFloat(scatter.next(in: 0.75...1.0))
+            let tip = CGPoint(
+                x: foot.x + height * CGFloat(lean) * 0.4 + breeze * height * 0.16,
+                y: foot.y - height
+            )
+            stems.move(to: foot)
+            stems.addQuadCurve(
+                to: tip,
+                control: CGPoint(x: foot.x + height * CGFloat(lean) * 0.15, y: foot.y - height * 0.55)
+            )
+            let head = x(0.006) * scale
+            heads.addEllipse(in: CGRect(
+                x: tip.x - head / 2, y: tip.y - head * 2.2, width: head, height: head * 2.4
+            ))
+        }
+        let stem = colors.isNight
+            ? Color(red: 0.16, green: 0.24, blue: 0.15)
+            : Color(red: 0.35, green: 0.44, blue: 0.20)
+        context.stroke(
+            stems,
+            with: .color(stem),
+            style: StrokeStyle(lineWidth: max(1, x(0.0035) * scale), lineCap: .round)
+        )
+        context.fill(
+            heads,
+            with: .color(
+                Color(red: 0.48, green: 0.38, blue: 0.24).opacity(colors.isNight ? 0.6 : 0.9)
+            )
+        )
+    }
+
+    /// A dead snag: a tree the bog got the roots of, silvered where the bark has gone, with
+    /// two bare arms and no leaf on either — the world's hazard at trailside size, met before
+    /// the first field asks about one.
+    private func drawDeadSnag(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = x(0.045) * scale
+        let silver = colors.isNight
+            ? Color(red: 0.35, green: 0.37, blue: 0.34)
+            : Color(red: 0.62, green: 0.62, blue: 0.56)
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - tall * 0.3, y: foot.y - tall * 0.04,
+                width: tall * 0.6, height: tall * 0.12
+            )),
+            with: .color(.black.opacity(colors.isNight ? 0.24 : 0.16))
+        )
+
+        var trunk = Path()
+        trunk.move(to: CGPoint(x: foot.x, y: foot.y))
+        trunk.addQuadCurve(
+            to: CGPoint(x: foot.x + tall * 0.08, y: foot.y - tall),
+            control: CGPoint(x: foot.x - tall * 0.06, y: foot.y - tall * 0.5)
+        )
+        var arms = Path()
+        arms.move(to: CGPoint(x: foot.x + tall * 0.02, y: foot.y - tall * 0.55))
+        arms.addLine(to: CGPoint(x: foot.x - tall * 0.3, y: foot.y - tall * 0.8))
+        arms.move(to: CGPoint(x: foot.x + tall * 0.05, y: foot.y - tall * 0.72))
+        arms.addLine(to: CGPoint(x: foot.x + tall * 0.32, y: foot.y - tall * 0.92))
+        context.stroke(
+            trunk,
+            with: .color(silver),
+            style: StrokeStyle(lineWidth: max(1.2, x(0.006) * scale), lineCap: .round)
+        )
+        context.stroke(
+            arms,
+            with: .color(silver.opacity(0.9)),
+            style: StrokeStyle(lineWidth: max(1, x(0.0038) * scale), lineCap: .round)
+        )
+    }
+
     /// A cactus: a trunk with an arm each side of it, and the shadow it is throwing pulled out
     /// long and blue across the sand.
     ///
@@ -1653,6 +1845,9 @@ private struct Paddock {
         // openest ground since the desert — and after dark the aurora keeps the edges from
         // ever going as black as the desert's do.
         case .snowfield: colors.isNight ? 0.46 : 0.18
+        // Fen haze closes the edges in by day nearly as hard as woods do, and after dark the
+        // mist does the closing itself.
+        case .marsh: colors.isNight ? 0.52 : 0.3
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),

@@ -211,8 +211,9 @@ world's middle sat; Emberpeak floors at 28% and opens there too, which is above 
 the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
 Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
 opens at 34%; Lantern Carnival floors and opens at 37%; Sunbaked Dunes floors at 38% and opens
-at 39%; Tidepool Cove floors at 40% and opens at 41%; and Frostwhisker Tundra floors at 41% and
-opens at 42%, the highest floor any world has stood on. Bosses are held to each other rather than to the
+at 39%; Tidepool Cove floors at 40% and opens at 41%; Frostwhisker Tundra floors at 41% and
+opens at 42%; and Mirebog Fen floors at 42% and opens at 43%, the highest floor any world has
+stood on. Bosses are held to each other rather than to the
 floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
@@ -233,7 +234,7 @@ carries the same game into every one of them.
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
   floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand, wet
-  strand or wind-combed snow — what the
+  strand, wind-combed snow or standing peat — what the
   windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
@@ -254,6 +255,7 @@ carries the same game into every one of them.
   | Sunbaked Dunes | baked hardpan, cracked into plates | **a dune**, sand too steep to climb | a drift fence half buried |
   | Tidepool Cove | wet strand the tide just let go of | a tidepool, ringed with foam | groynes, weeded to the waterline |
   | Frostwhisker Tundra | snow over sea ice, combed into sastrugi | **a pressure ridge**, ice crushed upward | a snow fence, banked in its own drift |
+  | Mirebog Fen | peat with sedge coming up through it | a channel skinned with duckweed | bog oak, pulled black out of the peat |
 
   The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
   a pen exactly as a mere does, because the board cannot tell the difference between a river and
@@ -279,8 +281,8 @@ carries the same game into every one of them.
 
 Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
 City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival**, **Sunbaked Dunes**,
-**Tidepool Cove** and **Frostwhisker Tundra** to play, then Mirebog Fen and Cloudspire Heights
-waiting as silhouettes.
+**Tidepool Cove**, **Frostwhisker Tundra** and **Mirebog Fen** to play, then Cloudspire Heights
+waiting as the last silhouette.
 Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
 the skin its board is painted in — since the map, the unlocking and the films are already there.
 
@@ -812,10 +814,77 @@ the great ridge, where the ice broke and the sea shows through, and every piece 
 piece the pig's pen does not get. The tidy answer that satisfies it boxes the pig on her own
 tile and walls the seal his yard of ice against the ridge's tail, which is 13 of 42; the same
 seventeen pieces run down the great ridge's whole west flank instead, with a two-piece yard for
-the seal against the same tail, hold 42 tiles, the fish and the berg — and at 69% that is the
-widest gap any board in the game leaves. It charges the same 21 of the 24 stars below it that
+the seal against the same tail, hold 42 tiles, the fish and the berg — and at 69% that was the
+widest gap any board in the game left until the fen's croc asked 72. It charges the same 21 of the 24 stars below it that
 every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions/10-frostwhisker-tundra.md`](solutions/10-frostwhisker-tundra.md).
+
+### Mirebog Fen
+
+The eleventh world, and the wettest. South off the ice the ground gives up choosing between land
+and water, so the trail runs through reeds and mist under the heaviest light in the game, the
+windfall is a **bilberry** ripened over the peat and the hazard a **snag** — bog oak drowned
+black and hard as iron — each worth exactly what its meadow twin was, a bilberry five tiles to
+shut in, a snag five to shut in with and no fencing at all, since nothing drives a post into
+wood the bog already ate.
+
+What the water is down here is **a channel**: fen water moving too slowly to see, too deep to
+wade and no ground to build on, so it stops a pig and a fence exactly as a river does. And the
+world's own idea is the shape of it — **every channel closes on itself.** The water splits,
+rejoins, and rings its own ground: every body on every board holds a loop, and none of it ever
+runs two tiles deep. `MirebogTests` pins both halves — a cycle in every body, never a
+two-by-two of water anywhere.
+
+Which hands over free walls the way every wet world has, jogged so a rectangle cannot follow
+them — and keeps something back no world has kept before: **the bars.** The ground a loop rings
+is ground nothing can ever walk to, so a bilberry parked on a bar is the loudest tease since
+the cove's rim pearls: in plain sight, five points, and nobody's. Four of them ride the bars
+across the trail, and `MirebogTests` checks nobody quietly moves one somewhere a pen could
+cash it. The fen keeps what it rings — and unlike the strand and the ice it always pays
+something too: every board's best pen wins at least one bilberry, which no world before this
+one could promise.
+
+One field has no channel on it anywhere, the way The Whiteout has no ice: The Turbary, the
+cut-over peat, where every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | The Eel Trap | 11 | two staircase braids in an arch, 2 bilberries, a snag | 21 | 37 | 43% |
+| 2 | The Two Carrs | 10 | two braids far apart, 2 bilberries, 1 on a bar | 26 | 47 | 44% |
+| 3 | The Turbary | 21 | no channel at all, 1 bilberry, 2 on the corners | 27 | 50 | 46% |
+| 4 | The Sluice | 11 | two braids nearly meeting, 2 bilberries, 1 on a bar, a snag | 20 | 38 | 47% |
+| 5 | Bittern Bank | 11 | one braid snaking the width, 2 bilberries, a snag | 17 | 33 | 48% |
+| 6 | Bilberry Hags | 11 | two pool-braids, 3 bilberries hung wide, a snag | 17 | 34 | 50% |
+| 7 | Heron Corner | 11 | two braids walling two sides, 3 bilberries, a snag | 16 | 35 | 54% |
+| 8 | The Great Slough | 13 | two braids at full stretch, 3 bilberries, a snag | 30 | 54 | 44% |
+| 9 | The Wallow | 19 | the old croc, four braids, 3 bilberries, 2 snags | 13 | 48 | 72% |
+
+Heron Corner is the corner question the way Rimstone Corner, Scarp Corner and Barnacle Corner
+asked it — a loop-braid stacked up the whole west side and the bottom channel running east,
+their banks meeting at the south-west — and at 54% it is the hardest field in the fen. The
+right-angled answer ignores the gift and boxes the pig on the open peat for 16; the same eleven
+pieces throw one long diagonal from the high ground down to the east pool and hold 35. It asks
+the same scatter of berries as Bilberry Hags one field earlier, on purpose: the hags' question
+is whether the berries are worth bowing for, and the corner's is what the walls are worth — the
+same ground, asked two different things. The Great Slough holds 49 tiles on the broadest board
+in the fen, which is the biggest pen in the world and one more than the boss's.
+
+Its boss, The Wallow, adds the fen's rule, and it is the tundra's clause grown greedy. **The old
+croc will not share a pen with the pig, and the pen he is given has to hold every bank of one
+whole channel — a croc keeps a wallow rather than visits one, and half a wallow is nobody's.**
+The seal wanted a pen that touched the water; the croc wants a pen that owns it. His channel is
+the only one on the board whose banks can all be walked — its three sisters are backed against
+the rims — and he lies in the one-tile causeway beside it, water on both hands. Box him there
+with two pieces and both animals are held, and the board sends it back: his pen laps one bank
+and not the rest, which is no wallow at all. Pen the pair together in one sweep of the east fen
+— 49 tiles, more ground than the winning answer — and that comes back too, because the croc is
+not company. The tidy answer boxes the pig on her own tile and rings his channel tight, leaning
+the sister braids for walls, and the snag staked on the ring's south line makes even that
+answer pay: 13 of 48. The same nineteen pieces swing the ring wide instead and take the whole
+east fen into the croc's ground, both live bilberries and both snags — and at 72% that is the
+widest gap any board in the game leaves. It charges the same 21 of the 24 stars below it that
+every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions/11-mirebog-fen.md`](solutions/11-mirebog-fen.md).
 
 ## The Daily Puzzle
 
@@ -1280,9 +1349,10 @@ than the last time the universe asked it.
 | `berth` | Two pens with clear ground between them: no piece of wall may serve both | The water between them |
 | `moat` | A ring round the crab's whole pool, with the crab shut into its heart | The pool walls him — you wall the pool |
 | `hole` | Two pens, and the seal's must lie against the water | The water — it is where his pen has to go |
+| `wallow` | Two pens, and the croc's must hold every bank of one whole channel | The sister channels — their banks wall his ring |
 
-`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat` and `hole` are
-the **boss rules**, and a field never asks one.
+`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat`, `hole` and
+`wallow` are the **boss rules**, and a field never asks one.
 
 #### The shape of a world
 
@@ -1553,6 +1623,7 @@ Pigpen/
 │   ├── Dunes.swift              # Sunbaked Dunes: its nine levels and the trail out over them
 │   ├── Tidepool.swift           # Tidepool Cove: its nine levels and the trail along them
 │   ├── Frostwhisker.swift       # Frostwhisker Tundra: its nine levels and the trail out onto the ice
+│   ├── Mirebog.swift            # Mirebog Fen: its nine levels and the trail in through the reeds
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── GameCompletion.swift     # The whole game as one percent: every star and every rainbow in every world

@@ -29,6 +29,10 @@ enum Refusal: Equatable, Sendable {
     /// An animal that has to be penned against the water is standing in a pen that touches
     /// none: held, and held dry, which for a seal is no holding at all.
     case landlocked(Animal)
+    /// An animal that has to be given a whole channel is standing in a pen that holds a bank
+    /// or two of one and not the rest: held, and short a wallow, which for a croc is no
+    /// holding at all.
+    case parched(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -176,6 +180,23 @@ extension PuzzleLevel {
             }
         }
 
+        // The fen asks for two pens and is greedier about one of them than any board before
+        // it: the old croc will not stand in with the pig, and the pen he is given has to
+        // hold every bank of one whole body of water — a croc keeps a wallow rather than
+        // visits one, so a run of ground that laps a channel here and there has not given
+        // him anything he would call his.
+        if question == .wallow, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                guard let theirs = ground[animal.kind] else { continue }
+                if !ownsAWallow(theirs) {
+                    return .refused(pen: held, refusal: .parched(animal.kind))
+                }
+            }
+        }
+
         // And a board that will not have one animal better housed than the other asks two
         // things at once: two pens rather than one, and the same ground in each of them.
         if question == .even, let pigGround = ground[.pig] {
@@ -218,6 +239,41 @@ extension PuzzleLevel {
         ground.contains { tile in
             Direction.allCases.contains { terrain(at: tile.stepped($0)) == .water }
         }
+    }
+
+    /// Whether one whole body of water lies against a run of ground — every wet tile of it
+    /// orthogonally beside a tile of the run — which is what owning a wallow is. A body is
+    /// gathered the way the ground itself is: tile by orthogonal tile.
+    private func ownsAWallow(_ ground: Set<GridPoint>) -> Bool {
+        var banks: Set<GridPoint> = []
+        for tile in ground {
+            for direction in Direction.allCases {
+                banks.insert(tile.stepped(direction))
+            }
+        }
+
+        var left: Set<GridPoint> = []
+        for row in 0..<rowCount {
+            for column in 0..<columnCount {
+                let tile = GridPoint(row: row, column: column)
+                if terrain(at: tile) == .water { left.insert(tile) }
+            }
+        }
+
+        while let seed = left.first {
+            var body: Set<GridPoint> = [seed]
+            var queue = [seed]
+            left.remove(seed)
+            while let tile = queue.popLast() {
+                for direction in Direction.allCases where left.contains(tile.stepped(direction)) {
+                    left.remove(tile.stepped(direction))
+                    body.insert(tile.stepped(direction))
+                    queue.append(tile.stepped(direction))
+                }
+            }
+            if body.isSubset(of: banks) { return true }
+        }
+        return false
     }
 
     /// Whether every way off the board from a tile crosses the given ground.

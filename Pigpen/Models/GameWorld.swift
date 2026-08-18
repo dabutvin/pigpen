@@ -249,4 +249,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Mirebog Fen: the eleventh world, wrapped in storybook films the way the ten below it
+    /// are. The send-off points up out of the reeds to fields hanging in the sky, the way the
+    /// tundra's points south along the shore to the mud, and The Wallow stops for a briefing
+    /// because it stands a second animal on the board and owes him a whole channel — the same
+    /// courtesy every boss pays.
+    static let mirebogFen = GameWorld(
+        theme: .mirebogFen,
+        map: .mirebogFen,
+        opening: WorldFilmSpec(key: "mirebog-opening") { .storybook(.mirebogOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "mirebog-held") { .storybook(.mirebogHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theWallow.id: WorldFilmSpec(key: "the-wallow-briefing") {
+                .storybook(.theWallow(start: $0))
+            }
+        ]
+    )
 }

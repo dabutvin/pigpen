@@ -28,7 +28,8 @@ five against for the skull — which is what makes a treat a fork rather than a 
 tax: the pen can never simply ignore one it is standing next to.
 
 A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
-pup, a ringmaster, a scorpion, a crab, or a bull seal — is held by ground in two pieces just as happily as by one,
+pup, a ringmaster, a scorpion, a crab, a bull seal, or an old croc — is held by ground in
+two pieces just as happily as by one,
 since what has to hold is each animal rather than the pen: the search grows out from every
 animal at once and the ground it ends up with is connected to one or another of them, so a wall
 shared between two enclosures is paid for once, like any other. `--rule berth` is the one board
@@ -37,6 +38,10 @@ of a pool rather than a man: the pig's ground has to close round the crab's whol
 break and all, with the crab never standing in it. `--rule hole` is the thicket's two-pens
 rule with the tundra's own clause on it: the seal is never in with the pig, and his ground
 has to lie against the water, because he keeps a breathing hole.
+
+`--rule wallow` is the fen's boss: the pig and the old croc held apart, and the croc's pen
+owed one whole channel — every wet tile of one body of water lying against his own ground,
+because a croc keeps a wallow rather than visits one, and half a wallow is nobody's.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -65,7 +70,7 @@ SKULL = "x"
 STAKED = (APPLE, SKULL)
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C", "L")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C", "L", "G")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
 
@@ -213,6 +218,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         raise SystemExit("--rule moat wants a crab on the board")
     if rule == "hole" and "L" not in starts:
         raise SystemExit("--rule hole wants a seal on the board")
+    if rule == "wallow" and "G" not in starts:
+        raise SystemExit("--rule wallow wants a croc on the board")
 
     # The ground lying against the water, for the board whose seal must keep a breathing hole.
     lapped = 0
@@ -223,6 +230,28 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             if 0 <= neighbour[0] < rows and 0 <= neighbour[1] < columns and neighbour not in mud:
                 lapped |= bit(tile)
                 break
+
+    # Every body of water on the board, each as its own mask, for the boss who must be
+    # penned with the whole of one.
+    wet = {
+        (row, column)
+        for row in range(rows)
+        for column in range(columns)
+        if (row, column) not in mud
+    }
+    bodies = []
+    while wet:
+        seed = wet.pop()
+        body, queue = bit(seed), [seed]
+        while queue:
+            row, column = queue.pop()
+            for down, across in NEIGHBOURS:
+                step = (row + down, column + across)
+                if step in wet:
+                    wet.remove(step)
+                    body |= bit(step)
+                    queue.append(step)
+        bodies.append(body)
 
     rays = []
     if rule in ("ring", "moat"):
@@ -342,6 +371,15 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
+        if rule == "wallow":
+            # The thicket's rule first — a croc is not company — and then the fen's own:
+            # somewhere on the board there has to be one whole channel every bank of which
+            # is the croc's own ground, because a croc keeps a wallow rather than visits
+            # one, and half a wallow is nobody's.
+            if run_of(starts["P"], pen) & bit(starts["G"]):
+                return False
+            reach_of_croc = spilling(run_of(starts["G"], pen))
+            return any(body & reach_of_croc == body for body in bodies)
         if rule == "hole":
             # The thicket's rule first — a seal is not company — and then the tundra's own:
             # somewhere in the seal's ground there has to be a tile lying against the water,
@@ -478,6 +516,33 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 lapping += 1
         return keeping
 
+    def wading(grown, cost):
+        """Which pens are worth widening on a board whose croc must own a whole wallow.
+
+        A pen the pig can already walk out of into the croc is impossible rather than
+        slow, so those go, as in every two-pen rule. The rest have `circling`'s problem
+        knee-deep: a pen that means to own every bank of a channel only gets there on the
+        last tile of the way round it, and costs more than a blob of the same ground every
+        step before that — so the pens are sorted into how many wet tiles the croc's
+        ground already laps, and each rung keeps its own share of the beam.
+        """
+        buckets = {}
+        for pen in grown:
+            his = run_of(starts["G"], pen)
+            if his & bit(starts["P"]):
+                continue
+            reach_of_croc = spilling(his)
+            lapping = (reach_of_croc & ~ground & everywhere).bit_count()
+            shut = any(body & reach_of_croc == body for body in bodies)
+            buckets.setdefault((lapping, shut), []).append(pen)
+
+        keeping = set()
+        share = max(beam // 8, 1)
+        for penned in buckets.values():
+            penned.sort(key=lambda pen: cost[pen])
+            keeping.update(penned[:share])
+        return keeping
+
     def circling(grown, cost):
         """Which pens are worth widening on a board that wants one pen inside another.
 
@@ -566,6 +631,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
             keeping = circling(grown, cost)
         if rule == "hole":
             keeping = breathing(grown, cost)
+        if rule == "wallow":
+            keeping = wading(grown, cost)
         if rule == "berth":
             keeping = spaced(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
@@ -679,6 +746,40 @@ def nudged_over_treats(pen, mud, treats, rows, columns):
         pen |= staked
 
 
+def bodies_of_water(mud, rows, columns):
+    """Every body of water on the board, each as its own set of tiles."""
+    wet = {
+        (row, column)
+        for row in range(rows)
+        for column in range(columns)
+        if (row, column) not in mud
+    }
+    bodies = []
+    while wet:
+        seed = wet.pop()
+        body, queue = {seed}, [seed]
+        while queue:
+            row, column = queue.pop()
+            for down, across in NEIGHBOURS:
+                step = (row + down, column + across)
+                if step in wet:
+                    wet.remove(step)
+                    body.add(step)
+                    queue.append(step)
+        bodies.append(body)
+    return bodies
+
+
+def owns_a_wallow(his, bodies):
+    """Whether one whole body of water lies against this run of ground — every wet tile of
+    it beside a tile of his — which is what owning a wallow is."""
+    banks = set()
+    for row, column in his:
+        for down, across in NEIGHBOURS:
+            banks.add((row + down, column + across))
+    return any(body <= banks for body in bodies)
+
+
 def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
     """The best pen a player gets by squaring the map off, as (score, tiles).
 
@@ -747,7 +848,7 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
             continue
         # A board that keeps two apart is not squared off by a pair of blocks that touch,
         # since ground the pig can walk from one into the other is one pen, not two.
-        if rule in ("apart", "even", "hole") and others:
+        if rule in ("apart", "even", "hole", "wallow") and others:
             if others[0] in run_of_ground(pen, starts["P"]):
                 continue
         # And a board that wants the same ground in each is not squared off by a big block
@@ -784,6 +885,13 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
             if starts["S"] in mine:
                 continue
             if wall_between(mine, run_of_ground(pen, starts["S"]), mud, pen):
+                continue
+        # And the fen will not have the croc short-changed: his block only counts if one
+        # whole channel lies against his ground, every wet tile of it.
+        if rule == "wallow" and others:
+            if not owns_a_wallow(
+                run_of_ground(pen, others[0]), bodies_of_water(mud, rows, columns)
+            ):
                 continue
         # And the tundra will not have the seal penned dry: a block pair only counts if some
         # tile of his block lies against the water, where his breathing hole is.
@@ -836,15 +944,16 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
              "hold them in two pens with the same ground in each, hold the roost in one "
              "pen with the pig in another, hold the ringmaster in the middle of the "
              "pig's own ring, hold the two in pens that share no wall, close the "
-             "pig's ground round the crab's whole pool, or hold the pair apart with "
-             "the seal's ground lying against the water",
+             "pig's ground round the crab's whole pool, hold the pair apart with "
+             "the seal's ground lying against the water, or hold the pair apart with "
+             "one whole channel's every bank held as the croc's own ground",
     )
     parser.add_argument(
         "--plan",

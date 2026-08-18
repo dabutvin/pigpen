@@ -551,6 +551,7 @@ struct FieldView: View {
         case .hardpan: drawHardpan(in: &context, rect: rect, scatter: &scatter)
         case .strand: drawStrand(in: &context, rect: rect, scatter: &scatter)
         case .sastrugi: drawSastrugi(in: &context, rect: rect, scatter: &scatter)
+        case .peat: drawPeat(in: &context, rect: rect, scatter: &scatter)
         }
     }
 
@@ -905,6 +906,51 @@ struct FieldView: View {
         }
     }
 
+    /// Peat: ground that has never dried out. What reads at tile size is the sedge coming up
+    /// through it — a tussock of pale blades leaning whichever way the last flood left them —
+    /// and the wet sheen standing in the low places, because on this ground the water is never
+    /// further away than that.
+    private func drawPeat(in context: inout GraphicsContext, rect: CGRect, scatter: inout Scatter) {
+        // The sheen: a low pool of standing wet, darker-edged than the dry worlds' glazes.
+        if scatter.next() < 0.5 {
+            let spread = rect.width * CGFloat(scatter.next(in: 0.18...0.32))
+            let pool = CGRect(
+                x: rect.minX + rect.width * CGFloat(scatter.next(in: 0.1...0.6)),
+                y: rect.minY + rect.height * CGFloat(scatter.next(in: 0.2...0.7)),
+                width: spread,
+                height: spread * 0.45
+            )
+            context.fill(
+                Path(ellipseIn: pool),
+                with: .color(skin.groundShade.opacity(scatter.next(in: 0.4...0.6)))
+            )
+            context.fill(
+                Path(ellipseIn: pool.insetBy(dx: spread * 0.12, dy: spread * 0.08)),
+                with: .color(.white.opacity(scatter.next(in: 0.05...0.10)))
+            )
+        }
+
+        // The sedge: one tussock of a few blades, fanned from a common foot.
+        let foot = CGPoint(
+            x: rect.minX + rect.width * CGFloat(scatter.next(in: 0.2...0.8)),
+            y: rect.minY + rect.height * CGFloat(scatter.next(in: 0.35...0.9))
+        )
+        var blades = Path()
+        for lean in [-0.5, -0.15, 0.2, 0.55] {
+            let tall = rect.height * CGFloat(scatter.next(in: 0.16...0.26))
+            blades.move(to: foot)
+            blades.addQuadCurve(
+                to: CGPoint(x: foot.x + tall * CGFloat(lean), y: foot.y - tall),
+                control: CGPoint(x: foot.x + tall * CGFloat(lean) * 0.2, y: foot.y - tall * 0.6)
+            )
+        }
+        context.stroke(
+            blades,
+            with: .color(skin.grit.opacity(scatter.next(in: 0.4...0.6))),
+            style: StrokeStyle(lineWidth: max(1, rect.width * 0.035), lineCap: .round)
+        )
+    }
+
     /// What is going on on the surface, which is not the same thing twice: light breaking on
     /// open water in the meadow, rings on a standing pool in the wood, steam off a mountain
     /// tarn, a slick on a canal, the light still in the well a star made, one river running,
@@ -922,6 +968,7 @@ struct FieldView: View {
         case .dune: drawDune(in: &context, board: board)
         case .rockPool: drawRockPool(in: &context, board: board)
         case .pressureRidge: drawPressureRidge(in: &context, board: board)
+        case .duckweed: drawDuckweed(in: &context, board: board)
         }
     }
 
@@ -1325,6 +1372,53 @@ struct FieldView: View {
         }
     }
 
+    /// The duckweed: still channel water skinned over green, which is the one water in the
+    /// game that looks more solid than the ground beside it. What says water anyway is where
+    /// the skin is broken — a dark lane where something pushed through and the weed has not
+    /// quite closed behind it — and the odd paler fleck where the weed lies thickest.
+    private func drawDuckweed(in context: inout GraphicsContext, board: BoardGeometry) {
+        for tile in waterTiles {
+            let rect = board.rect(for: tile)
+            var noise = scatter(on: tile)
+
+            // The flecks: the weed lying thicker in drifts.
+            for _ in 0..<3 {
+                let size = board.cell * CGFloat(noise.next(in: 0.05...0.10))
+                context.fill(
+                    Path(ellipseIn: CGRect(
+                        x: rect.minX + board.cell * CGFloat(noise.next(in: 0.08...0.82)),
+                        y: rect.minY + board.cell * CGFloat(noise.next(in: 0.08...0.82)),
+                        width: size,
+                        height: size * 0.7
+                    )),
+                    with: .color(skin.waterLight.opacity(noise.next(in: 0.25...0.45)))
+                )
+            }
+
+            // The broken lane: a dark wandering line where the skin was pushed apart.
+            if noise.next() < 0.45 {
+                let down = rect.minY + board.cell * CGFloat(noise.next(in: 0.25...0.75))
+                var lane = Path()
+                lane.move(to: CGPoint(x: rect.minX + board.cell * 0.1, y: down))
+                lane.addQuadCurve(
+                    to: CGPoint(
+                        x: rect.maxX - board.cell * 0.1,
+                        y: down + board.cell * CGFloat(noise.next(in: -0.1...0.1))
+                    ),
+                    control: CGPoint(
+                        x: rect.midX,
+                        y: down + board.cell * CGFloat(noise.next(in: -0.16...0.16))
+                    )
+                )
+                context.stroke(
+                    lane,
+                    with: .color(skin.waterDeep.opacity(0.75)),
+                    style: StrokeStyle(lineWidth: max(1, board.cell * 0.06), lineCap: .round)
+                )
+            }
+        }
+    }
+
     /// The lines between the tiles, ruled over the ground and stopped at the water. A lake
     /// is one sheet of it; squaring it off would only make the map look like a spreadsheet.
     private func drawGridLines(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
@@ -1509,6 +1603,7 @@ struct FieldView: View {
             case .driftFence: drawDriftFence(in: &context, plot: plot)
             case .groynes: drawGroynes(in: &context, plot: plot)
             case .snowFence: drawSnowFence(in: &context, plot: plot)
+            case .bogOak: drawBogOak(in: &context, plot: plot)
             }
         }
     }
@@ -2030,6 +2125,67 @@ struct FieldView: View {
         }
         context.fill(caps, with: .color(.white.opacity(0.9)))
     }
+
+    /// The fen's: bog oak. Two posts pulled black out of the peat and driven straight back
+    /// into it — wood the bog ate a thousand years ago and made harder than iron — with one
+    /// rail across, a lean the soft ground has already given the pair, and the rushes coming
+    /// up round their feet.
+    private func drawBogOak(in context: inout GraphicsContext, plot: CGRect) {
+        var posts = Path()
+        var lit = Path()
+        let width = plot.width * 0.14
+        let foot = plot.minY + plot.height * 0.94
+        // The soft ground gives every pair a lean, and no two the same way.
+        for (index, post) in [0.26, 0.74].enumerated() {
+            let x = plot.minX + plot.width * CGFloat(post)
+            let top = plot.minY + plot.height * (index == 0 ? 0.16 : 0.12)
+            let tilt = plot.width * (index == 0 ? 0.03 : -0.04)
+            var timber = Path()
+            timber.move(to: CGPoint(x: x - width / 2, y: foot))
+            timber.addLine(to: CGPoint(x: x - width / 2 + tilt, y: top))
+            timber.addLine(to: CGPoint(x: x + width / 2 + tilt, y: top))
+            timber.addLine(to: CGPoint(x: x + width / 2, y: foot))
+            timber.closeSubpath()
+            posts.addPath(timber)
+            var shine = Path()
+            shine.move(to: CGPoint(x: x - width / 2, y: foot))
+            shine.addLine(to: CGPoint(x: x - width / 2 + tilt, y: top))
+            shine.addLine(to: CGPoint(x: x - width / 6 + tilt, y: top))
+            shine.addLine(to: CGPoint(x: x - width / 6, y: foot))
+            shine.closeSubpath()
+            lit.addPath(shine)
+        }
+        context.fill(posts, with: .color(skin.post))
+        context.fill(lit, with: .color(.white.opacity(0.12)))
+
+        // The one rail, pegged rather than nailed: bog oak takes no nail.
+        let rail = plot.minY + plot.height * 0.4
+        context.stroke(
+            Path { path in
+                path.move(to: CGPoint(x: plot.minX + plot.width * 0.06, y: rail + plot.height * 0.02))
+                path.addLine(to: CGPoint(x: plot.maxX - plot.width * 0.06, y: rail - plot.height * 0.02))
+            },
+            with: .color(skin.rail),
+            style: StrokeStyle(lineWidth: plot.width * 0.1, lineCap: .round)
+        )
+
+        // The rushes already up around the feet: the fen closing over one more thing.
+        var rushes = Path()
+        for reed in [0.14, 0.36, 0.62, 0.88] {
+            let x = plot.minX + plot.width * CGFloat(reed)
+            let tall = plot.height * (0.2 + 0.1 * CGFloat(reed))
+            rushes.move(to: CGPoint(x: x, y: foot + plot.height * 0.02))
+            rushes.addQuadCurve(
+                to: CGPoint(x: x + plot.width * 0.05, y: foot - tall),
+                control: CGPoint(x: x - plot.width * 0.03, y: foot - tall * 0.5)
+            )
+        }
+        context.stroke(
+            rushes,
+            with: .color(Color(red: 0.45, green: 0.48, blue: 0.24).opacity(0.85)),
+            style: StrokeStyle(lineWidth: max(1, plot.width * 0.045), lineCap: .round)
+        )
+    }
 }
 
 #Preview("Building") {
@@ -2049,18 +2205,18 @@ struct FieldView: View {
     .padding()
 }
 
-/// The same field in every world there is: one board, one line of fencing, ten grounds. The
-/// board underneath is River Bend in all ten, so anything that changes between them is the
+/// The same field in every world there is: one board, one line of fencing, eleven grounds. The
+/// board underneath is River Bend in all eleven, so anything that changes between them is the
 /// skin and nothing else — which is the quickest way to see whether a world reads as its own
 /// place or only as the meadow tinted a different colour.
-#Preview("Ten grounds") {
+#Preview("Eleven grounds") {
     let level = PuzzleLevel.riverBend
     let fences = Set((3...9).map { GridPoint(row: $0, column: 0) })
         .union((1...5).map { GridPoint(row: 10, column: $0) })
     let grounds: [FieldSkin] = [
         .meadow, .thornwood, .emberpeak, .cogsworth,
         .starfall, .gloamdeep, .lanternCarnival, .sunbakedDunes,
-        .tidepoolCove, .frostwhiskerTundra
+        .tidepoolCove, .frostwhiskerTundra, .mirebogFen
     ]
 
     return ScrollView {
