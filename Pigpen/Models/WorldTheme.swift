@@ -335,4 +335,31 @@ extension WorldTheme {
         accent: Color(red: 0.47, green: 0.56, blue: 0.35),
         accentDeep: Color(red: 0.24, green: 0.32, blue: 0.18)
     )
+
+    /// Cloudspire Heights, the twelfth world and the last one: up out of the fen's mists and
+    /// on climbing until the ground gives out, onto fields that float between the spires with
+    /// open sky where every other world kept its water. The windfall is a balloon that slipped
+    /// a child's fist at the carnival five worlds back and has been climbing ever since, and
+    /// the hazard a whirlwind worrying at the turf — each worth exactly what its meadow twin
+    /// was, a balloon five tiles to shut in, a whirlwind five to shut in with and no fencing
+    /// at all, since a balloon is tethered by nothing but its string and no post stands up in
+    /// a whirlwind.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for eleven worlds, so
+    /// the planet a player has been walking towards is the planet they arrive at.
+    static let cloudspireHeights = WorldTheme(
+        id: "cloudspire-heights",
+        name: "Cloudspire Heights",
+        blurb: "Fields in the sky, and a long way down.",
+        day: .spireDay,
+        dusk: .spireDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🎈", bonusScale: 0.58, bonusName: "balloon",
+            hazardGlyph: "🌪️", hazardScale: 0.58, hazardName: "whirlwind"
+        ),
+        field: .cloudspireHeights,
+        boss: BossMark(glyph: "🦅", name: "the eagle"),
+        accent: Color(red: 0.73, green: 0.83, blue: 0.96),
+        accentDeep: Color(red: 0.44, green: 0.58, blue: 0.79)
+    )
 }

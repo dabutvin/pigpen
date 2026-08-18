@@ -84,6 +84,7 @@ private struct Paddock {
         case .shingle: drawShingleStrand(in: &context)
         case .snowfield: drawSnowfield(in: &context)
         case .marsh: drawMarsh(in: &context)
+        case .cloudtop: drawCloudtopTurf(in: &context)
         }
     }
 
@@ -111,6 +112,12 @@ private struct Paddock {
             if colors.isNight {
                 drawFireflies(in: &context)
             }
+        case .cloudtop:
+            // The heights' weather goes past rather than up or down: torn-off wisps of the
+            // cloud sea streaming across on the wind that never stops, by day as well as
+            // after dark. No fireflies up here — nothing that flies on purpose comes this
+            // high, which is rather the point of the twelfth world.
+            drawBlownCloud(in: &context)
         default:
             if colors.isNight {
                 drawFireflies(in: &context)
@@ -652,6 +659,48 @@ private struct Paddock {
         }
     }
 
+    /// High turf on the top of a spire: grass combed flat one way by a wind that has never
+    /// once let up, in pale strokes all bowed the same direction, with the rock showing
+    /// through in scoured bars wherever the turf gave up trying.
+    private func drawCloudtopTurf(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 8_009)
+
+        // The bared rock: flat pale bars where the wind has worn the grass off.
+        for _ in 0..<6 {
+            let centre = CGPoint(x: x(scatter.next(in: -0.08...1.08)), y: y(scatter.next()))
+            let spread = x(scatter.next(in: 0.12...0.3))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.08,
+                    width: spread, height: spread * 0.16
+                )),
+                with: .color(
+                    Color(red: 0.62, green: 0.63, blue: 0.58)
+                        .opacity(colors.isNight ? 0.14 : 0.2)
+                )
+            )
+        }
+
+        // The combing: long shallow strokes of bent grass, every one bowed the same way,
+        // because they are one wind's work and not many.
+        for _ in 0..<16 {
+            let down = y(scatter.next(in: -0.02...1.02))
+            let start = x(scatter.next(in: -0.1...0.9))
+            let run = x(scatter.next(in: 0.1...0.24))
+            var stroke = Path()
+            stroke.move(to: CGPoint(x: start, y: down))
+            stroke.addQuadCurve(
+                to: CGPoint(x: start + run, y: down - y(scatter.next(in: 0.004...0.012))),
+                control: CGPoint(x: start + run * 0.5, y: down + y(0.008))
+            )
+            context.stroke(
+                stroke,
+                with: .color(.white.opacity(colors.isNight ? 0.05 : 0.14)),
+                style: StrokeStyle(lineWidth: max(0.7, y(0.004)), lineCap: .round)
+            )
+        }
+    }
+
     /// A band across the whole width with a gently curved top and bottom edge.
     private func band(from top: CGFloat, to bottom: CGFloat, wobble: Double) -> Path {
         let sway = y(0.012)
@@ -690,6 +739,7 @@ private struct Paddock {
         case .shingle: 12
         case .snowfield: 11
         case .marsh: 16
+        case .cloudtop: 12
         }
         for clearing in clearings {
             for _ in 0..<count {
@@ -784,6 +834,17 @@ private struct Paddock {
                     case ..<0.72: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     default: drawDeadSnag(in: &context, at: spot, scale: scale)
                     }
+                case .cloudtop:
+                    // The high turf is dressed with what survives the wind: grass grown
+                    // short, mountain flowers keeping low, stone the weather has scoured —
+                    // and the odd whirlwind worrying its way across, the board's own hazard
+                    // met before the first field asks about it.
+                    switch roll {
+                    case ..<0.40: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.66: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
+                    case ..<0.86: drawStone(in: &context, at: spot, scale: scale)
+                    default: drawWindTwist(in: &context, at: spot, scale: scale)
+                    }
                 case .sawdust:
                     // A field with a fair on it is still a field, so the grass is here — but
                     // it is trodden grass with the fair's own leavings in it: pegs driven in
@@ -816,6 +877,7 @@ private struct Paddock {
         case .shingle: 16
         case .snowfield: 15
         case .marsh: 30
+        case .cloudtop: 17
         }
         for index in 0..<tufts {
             let foot = CGPoint(
@@ -894,6 +956,10 @@ private struct Paddock {
                 } else {
                     drawTuft(in: &context, at: foot, scale: CGFloat(scatter.next(in: 1.0...1.8)), scatter: &scatter)
                 }
+            case .cloudtop where roll < 0.35:
+                // A scoured verge: the front of a spire top is where the wind hits first,
+                // so it is as much bared stone as grass.
+                drawStone(in: &context, at: foot, scale: CGFloat(scatter.next(in: 0.9...1.6)))
             case .sawdust where roll < 0.3:
                 // The front of the fair is where the ropes are pegged out, so the verge is
                 // long grass with pegs standing in it.
@@ -1067,6 +1133,78 @@ private struct Paddock {
                 with: .color(.white.opacity(lit))
             )
         }
+    }
+
+    /// What the heights have instead of falling weather: cloud, going past sideways.
+    ///
+    /// Torn-off wisps of the sea below stream across on the one wind, faster than the fen's
+    /// mist because nothing up here slows anything down, each fading in off one edge and out
+    /// off the other so nothing pops into being in plain sight. On by day as well as after
+    /// dark, because the wind does not keep hours — the night only silvers it.
+    private func drawBlownCloud(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 8_753)
+        for _ in 0..<8 {
+            let down = y(scatter.next(in: 0.05...0.98))
+            let nearness = Double(down / max(size.height, 1))
+            let start = scatter.next()
+            let along = (start + elapsed * (0.028 + 0.042 * nearness))
+                .truncatingRemainder(dividingBy: 1)
+            let centre = CGPoint(
+                x: x(-0.3) + (size.width + x(0.6)) * CGFloat(along),
+                y: down + y(0.006) * CGFloat(sin(elapsed * 0.6 + start * 8))
+            )
+            let spread = x(scatter.next(in: 0.14...0.3)) * CGFloat(0.7 + nearness)
+            let lit = (colors.isNight ? 0.13 : 0.20) * sin(along * .pi)
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread, y: centre.y - spread * 0.12,
+                    width: spread * 2, height: spread * 0.24
+                )),
+                with: .color(.white.opacity(lit))
+            )
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.2,
+                    width: spread, height: spread * 0.2
+                )),
+                with: .color(.white.opacity(lit * 0.7))
+            )
+        }
+    }
+
+    /// A whirlwind out worrying the turf: a little pale twist standing up off the ground with
+    /// a skirt of whatever it has picked up. The board's own hazard, met out on the trail
+    /// before the first field stakes one.
+    private func drawWindTwist(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = y(0.036) * scale
+        let sway = x(0.004) * CGFloat(sin(elapsed * 1.7 + Double(foot.x)))
+
+        // The funnel: three loops, narrow at the foot and widening upward, leaning with
+        // the same wind as everything else.
+        var funnel = Path()
+        for (step, width) in [(0.0, 0.006), (0.35, 0.010), (0.7, 0.015)] {
+            let level = foot.y - tall * CGFloat(step)
+            let half = x(width) * scale
+            let drift = sway * CGFloat(step)
+            funnel.addEllipse(in: CGRect(
+                x: foot.x - half + drift, y: level - tall * 0.09,
+                width: half * 2, height: tall * 0.18
+            ))
+        }
+        context.stroke(
+            funnel,
+            with: .color(.white.opacity(colors.isNight ? 0.18 : 0.34)),
+            style: StrokeStyle(lineWidth: max(0.8, y(0.0022) * scale), lineCap: .round)
+        )
+
+        // The skirt: a smudge of lifted grit round the foot.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - x(0.008) * scale, y: foot.y - y(0.004),
+                width: x(0.016) * scale, height: y(0.008)
+            )),
+            with: .color(colors.blade.opacity(0.4))
+        )
     }
 
     /// A tuft of grass, leaning the way the breeze on the title screen leans. The blade is
@@ -1848,6 +1986,10 @@ private struct Paddock {
         // Fen haze closes the edges in by day nearly as hard as woods do, and after dark the
         // mist does the closing itself.
         case .marsh: colors.isNight ? 0.52 : 0.3
+        // Nothing closes in at all on a spire top by day — the air up here is the clearest
+        // in the game — and after dark the sky above the weather is the blackest, with only
+        // the moonlit cloud sea holding the edges short of the desert's dark.
+        case .cloudtop: colors.isNight ? 0.5 : 0.14
         }
         context.fill(
             Path(CGRect(origin: .zero, size: size)),

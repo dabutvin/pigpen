@@ -69,6 +69,9 @@ extension PuzzleLevel {
         case .wallow:
             return "Hold the pig and the \(boss.name), both, in two pens — never one — and give "
                 + "the \(boss.name) one whole channel: every bank of it is his."
+        case .stoop:
+            return "Hold the pig out of the \(boss.name)'s eye. He sees along his row and his "
+                + "column, and only a fence breaks his line of sight."
         case .shore, .basin, .span, .gap, .corner, .constellation, .detour, .obstruction, .bare:
             // The game's own question, asked on new ground. There is nothing to say about it
             // that the ground does not say itself.

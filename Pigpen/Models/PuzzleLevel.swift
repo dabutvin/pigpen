@@ -117,10 +117,15 @@ enum Question: String, Sendable, CaseIterable {
     /// a croc keeps a wallow rather than visits one, and half a wallow is nobody's. A boss,
     /// and nothing else.
     case wallow
+    /// One budget, one pen, and an eye on it: only the pig is held and the eagle is left
+    /// outside, his perch a hole the wall has to go round — and no tile of her pen may stand
+    /// in his line of sight, which runs four ways from his perch, straight along his row and
+    /// his column, over mud and sky alike. Only a fence breaks it. A boss, and nothing else.
+    case stoop
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .moat, .hole, .wallow] }
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .moat, .hole, .wallow, .stoop] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
@@ -263,8 +268,8 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
     /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M`, `S`, `C`,
-    /// `L` or `G` for a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the
-    /// ringmaster, a scorpion, a crab, a bull seal or an old croc.
+    /// `L`, `G` or `E` for a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the
+    /// ringmaster, a scorpion, a crab, a bull seal, an old croc or an eagle.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.
