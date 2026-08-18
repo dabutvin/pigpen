@@ -103,6 +103,9 @@ enum GamePalette {
         /// Tundra: snow over sea ice, combed into sastrugi by the wind, with pressure ridges
         /// standing up out of it and snow coming down through everything.
         case snowfield
+        /// Fen: peat and standing water in equal measure, reeds in beds, dead trees silvering
+        /// where the bog got their roots, and mist lying low over the lot of it.
+        case marsh
     }
 }
 
@@ -534,5 +537,47 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.09, green: 0.27, blue: 0.25),
         isNight: true,
         cover: .snowfield
+    )
+
+    /// The eleventh world's daylight, which never quite arrives: fen light, flat and green,
+    /// under a sky that is mostly the water's own breath. The tundra was the palest light in
+    /// the game; this is the heaviest — the horizon shortened by haze, the sun a smear behind
+    /// it, and everything below in the greens and browns of ground that has never once dried
+    /// out. The world reads wet by being dim, where the cove read cool by being damp.
+    static let fenDay = Self(
+        skyTop: Color(red: 0.56, green: 0.62, blue: 0.55),
+        skyHorizon: Color(red: 0.83, green: 0.84, blue: 0.72),
+        disc: Color(red: 0.97, green: 0.95, blue: 0.82),
+        discHalo: Color(red: 0.88, green: 0.88, blue: 0.72),
+        cloud: Color(red: 0.78, green: 0.80, blue: 0.72),
+        farHill: Color(red: 0.38, green: 0.46, blue: 0.33),
+        ground: Color(red: 0.36, green: 0.40, blue: 0.24),
+        foreground: Color(red: 0.27, green: 0.31, blue: 0.18),
+        blade: Color(red: 0.21, green: 0.25, blue: 0.14),
+        canopy: Color(red: 0.32, green: 0.44, blue: 0.26),
+        canopyShade: Color(red: 0.20, green: 0.30, blue: 0.17),
+        isNight: false,
+        cover: .marsh
+    )
+
+    /// The fen after dark, which is when it does its talking: the mist thickens off the
+    /// channels and holds what light there is just above the ground, so the night here is a
+    /// grey-green with its darkness overhead rather than round your feet — the one night in
+    /// the game that is lighter low down than up — and the odd pale glow stands in the reeds
+    /// where the marsh is making its own light.
+    static let fenDusk = Self(
+        skyTop: Color(red: 0.04, green: 0.06, blue: 0.09),
+        skyHorizon: Color(red: 0.22, green: 0.28, blue: 0.24),
+        disc: Color(red: 0.93, green: 0.95, blue: 0.90),
+        discHalo: Color(red: 0.68, green: 0.78, blue: 0.66),
+        cloud: Color(red: 0.14, green: 0.18, blue: 0.16),
+        farHill: Color(red: 0.10, green: 0.15, blue: 0.12),
+        ground: Color(red: 0.14, green: 0.19, blue: 0.14),
+        foreground: Color(red: 0.10, green: 0.14, blue: 0.10),
+        blade: Color(red: 0.07, green: 0.10, blue: 0.07),
+        canopy: Color(red: 0.18, green: 0.30, blue: 0.20),
+        canopyShade: Color(red: 0.11, green: 0.19, blue: 0.13),
+        isNight: true,
+        cover: .marsh
     )
 }

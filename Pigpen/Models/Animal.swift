@@ -27,6 +27,10 @@
 /// he is given rather than only about who shares it: two pens, the pig's and his, and his has
 /// to lie against the water — a seal penned on dry ice has no breathing hole, and the board
 /// will not have it.
+///
+/// The fen stands an old croc in the reeds, and he is greedier than the seal by a whole
+/// channel: his pen has to hold every bank of one body of water — a croc keeps a wallow
+/// rather than visits one, and half a wallow is nobody's.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -40,6 +44,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case scorpion = "S"
     case crab = "C"
     case seal = "L"
+    case croc = "G"
 
     /// What the field draws it as.
     var glyph: String {
@@ -55,6 +60,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .scorpion: "🦂"
         case .crab: "🦀"
         case .seal: "🦭"
+        case .croc: "🐊"
         }
     }
 
@@ -78,6 +84,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .scorpion: "Tik-tik!"
         case .crab: "Click!"
         case .seal: "Arf!"
+        case .croc: "Snap!"
         }
     }
 
@@ -96,6 +103,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .scorpion: "scorpion"
         case .crab: "crab"
         case .seal: "bull seal"
+        case .croc: "old croc"
         }
     }
 }

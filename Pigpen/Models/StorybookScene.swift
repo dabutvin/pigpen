@@ -1340,6 +1340,135 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk into the fen. Six stills, the way the tundra's opening is six:
+    /// the bilberry and the snag have a still apiece, and so does the water — because the
+    /// shape of it is the whole world, and a player who does not know a channel closes on
+    /// itself will read the first board as a river that lost its way.
+    static func mirebogOpening(start: Date = .now) -> Self {
+        Self(
+            key: "mirebog-opening",
+            title: "Mirebog Fen",
+            light: .fenDay,
+            shots: [
+                Shot(
+                    motif: "🌫️",
+                    strewn: ["🌿", "🐊", "🌿"],
+                    caption: "Mirebog Fen. Half water, half mud.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "Your pig came south off the ice into the reeds.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🌿",
+                    strewn: ["🌫️", "🌿"],
+                    caption: "The channels split and rejoin. Every one closes a ring.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🫐",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "Bilberries in the sedge. Five each.",
+                    seconds: 2.3
+                ),
+                Shot(
+                    motif: "🪵",
+                    strewn: ["🌿", "🫐"],
+                    caption: "A snag takes no fence. Walls go round.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌿", "🫐"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the fen's last field, the way `theHaulout` goes before the tundra's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced ten worlds. What
+    /// they are owed is the one thing this board does that no board in the game has done —
+    /// the tundra's seal wanted a pen that touched the water, and the croc wants a pen that
+    /// holds the whole of one channel, bank for bank.
+    static func theWallow(start: Date = .now) -> Self {
+        Self(
+            key: "the-wallow-briefing",
+            title: "The Wallow",
+            light: .fenDay,
+            shots: [
+                Shot(
+                    motif: "🐊",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "The Wallow. The old croc keeps one whole channel.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐊", "🌿"],
+                    caption: "Two pens, never one — and no half measures.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🐊", "🌿"],
+                    caption: "Every bank of one channel is his.",
+                    isCard: true,
+                    seconds: 2.4
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the fen holds. It says what became of the old croc and — like
+    /// the ten send-offs before it — points on past this world to the next one waiting,
+    /// which is sky where this one was water.
+    static func mirebogHeld(start: Date = .now) -> Self {
+        Self(
+            key: "mirebog-held",
+            title: "Mirebog Fen held",
+            light: .fenDusk,
+            shots: [
+                Shot(
+                    motif: "🐊",
+                    strewn: ["🌿", "🫐"],
+                    caption: "The old croc has his wallow, every bank of it.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🫐",
+                    strewn: ["🌿", "🪵", "🌿"],
+                    caption: "Every bilberry the fen let go of, fenced and held.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🌫️",
+                    strewn: ["🌿", "✨"],
+                    caption: "The mist comes up and the fen keeps its own.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🦅",
+                    strewn: ["☁️", "🌿", "☁️"],
+                    caption: "Up out of the reeds, the last fields hang in the sky.",
+                    isCard: true,
+                    seconds: 3.3
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -1351,7 +1480,8 @@ extension StorybookScene {
             .lanternOpening(), .theCenterRing(), .lanternHeld(),
             .duneOpening(), .theScorpionPit(), .duneHeld(),
             .tidepoolOpening(), .theCrabPool(), .tidepoolHeld(),
-            .frostwhiskerOpening(), .theHaulout(), .frostwhiskerHeld()
+            .frostwhiskerOpening(), .theHaulout(), .frostwhiskerHeld(),
+            .mirebogOpening(), .theWallow(), .mirebogHeld()
         ]
     }
 }

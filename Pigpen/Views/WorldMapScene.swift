@@ -54,6 +54,7 @@ private struct Meadow {
         case .sand: drawRockArch(in: &context)
         case .shingle: drawWreck(in: &context)
         case .snowfield: drawIgloo(in: &context)
+        case .marsh: drawStiltHut(in: &context)
         }
     }
 
@@ -73,6 +74,7 @@ private struct Meadow {
         case .sand: drawRippledSand(in: &context)
         case .shingle: drawTideLines(in: &context)
         case .snowfield: drawSnowdrifts(in: &context)
+        case .marsh: drawFenPools(in: &context)
         }
     }
 
@@ -354,6 +356,8 @@ private struct Meadow {
         case .shingle: 2
         // Snow weather: the sky is one low sheet rather than clouds a player could count.
         case .snowfield: 2
+        // Fen sky: half of it is the water's own breath, hanging low.
+        case .marsh: 3
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -464,6 +468,8 @@ private struct Meadow {
             drawSeaHorizon(in: &context)
         } else if colors.cover == .snowfield {
             drawBergLine(in: &context)
+        } else if colors.cover == .marsh {
+            drawFenTreeline(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -861,6 +867,9 @@ private struct Meadow {
         case iceBlade
         case bergyBit
         case snowDrift
+        case reedBed
+        case deadTree
+        case fenPool
     }
 
     private struct Place {
@@ -992,6 +1001,17 @@ private struct Meadow {
             case ..<0.86: .bergyBit
             default: .rock
             }
+        case .marsh:
+            // Nothing was built on the fen either — nothing anybody built has stayed up — and
+            // what stands on it is what the water grows and what it kills: reed beds, a pool
+            // ringed with rushes, a dead snag the bog got the roots of, and grass on whatever
+            // passes for high ground.
+            switch roll {
+            case ..<0.36: .reedBed
+            case ..<0.60: .fenPool
+            case ..<0.80: .deadTree
+            default: .bush
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -1029,6 +1049,9 @@ private struct Meadow {
         case .iceBlade: drawIceBlade(in: &context, at: place.at, scale: place.size)
         case .bergyBit: drawBergyBit(in: &context, at: place.at, scale: place.size)
         case .snowDrift: drawSnowDrift(in: &context, at: place.at, scale: place.size)
+        case .reedBed: drawReedBed(in: &context, at: place.at, scale: place.size)
+        case .deadTree: drawDeadTree(in: &context, at: place.at, scale: place.size)
+        case .fenPool: drawFenPool(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -2923,6 +2946,285 @@ private struct Meadow {
                 Color(red: 0.30, green: 0.42, blue: 0.60).opacity(colors.isNight ? 0.3 : 0.24)
             ),
             style: StrokeStyle(lineWidth: max(1.4, wide * 0.05), lineCap: .round)
+        )
+    }
+
+    /// The turf-cutter's hut at the foot of the fen trail: one room up on stilts, because the
+    /// only dry ground out here is the ground you bring with you. The ladder is drawn leaning
+    /// rather than fixed — whoever lives here takes it up at night — and after dark the one
+    /// window is lit, which makes it the second home in a row with somebody in it.
+    private func drawStiltHut(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 74
+        let tall: CGFloat = 58
+
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: centre.x - wide * 0.6, y: centre.y - tall * 0.06,
+                width: wide * 1.2, height: tall * 0.22
+            )),
+            with: .color(Color(red: 0.10, green: 0.16, blue: 0.12).opacity(colors.isNight ? 0.5 : 0.35))
+        )
+
+        let timber = Color(red: 0.30, green: 0.24, blue: 0.17)
+        let plank = Color(red: 0.46, green: 0.38, blue: 0.26)
+
+        // The stilts, each with its own slight lean, and the water sheen round their feet.
+        var stilts = Path()
+        for (index, leg) in [0.18, 0.42, 0.62, 0.84].enumerated() {
+            let x = centre.x - wide / 2 + wide * CGFloat(leg)
+            let tilt: CGFloat = index.isMultiple(of: 2) ? 2.5 : -2
+            stilts.move(to: CGPoint(x: x, y: centre.y))
+            stilts.addLine(to: CGPoint(x: x + tilt, y: centre.y - tall * 0.34))
+        }
+        context.stroke(stilts, with: .color(timber), style: StrokeStyle(lineWidth: 4, lineCap: .round))
+
+        // The one room, planked, under a rush-thatch roof with a brow over the door.
+        let floorLine = centre.y - tall * 0.34
+        let room = CGRect(x: centre.x - wide * 0.46, y: floorLine - tall * 0.4, width: wide * 0.92, height: tall * 0.4)
+        context.fill(Path(room), with: .color(plank))
+        var boards = Path()
+        for course in 1..<4 {
+            let y = room.minY + room.height * CGFloat(course) / 4
+            boards.move(to: CGPoint(x: room.minX, y: y))
+            boards.addLine(to: CGPoint(x: room.maxX, y: y))
+        }
+        context.stroke(boards, with: .color(timber.opacity(0.5)), lineWidth: 1.2)
+
+        var roof = Path()
+        roof.move(to: CGPoint(x: room.minX - wide * 0.1, y: room.minY))
+        roof.addLine(to: CGPoint(x: centre.x, y: room.minY - tall * 0.3))
+        roof.addLine(to: CGPoint(x: room.maxX + wide * 0.1, y: room.minY))
+        roof.closeSubpath()
+        context.fill(roof, with: .color(Color(red: 0.42, green: 0.40, blue: 0.22)))
+        context.stroke(roof, with: .color(Color(red: 0.28, green: 0.27, blue: 0.15)), lineWidth: 1.6)
+
+        // The window, and whoever is in there keeping a lamp on after dark.
+        let window = CGRect(
+            x: centre.x - wide * 0.09, y: room.minY + room.height * 0.24,
+            width: wide * 0.18, height: room.height * 0.45
+        )
+        context.fill(
+            Path(roundedRect: window, cornerRadius: 2),
+            with: .color(colors.isNight ? GamePalette.pen.opacity(0.9) : Color.black.opacity(0.45))
+        )
+        if colors.isNight {
+            context.fill(
+                circle(at: CGPoint(x: window.midX, y: window.midY), radius: wide * 0.2),
+                with: .color(GamePalette.pen.opacity(0.15))
+            )
+        }
+
+        // The ladder, leaned rather than fixed.
+        var ladder = Path()
+        ladder.move(to: CGPoint(x: centre.x + wide * 0.3, y: centre.y + tall * 0.02))
+        ladder.addLine(to: CGPoint(x: centre.x + wide * 0.16, y: floorLine))
+        ladder.move(to: CGPoint(x: centre.x + wide * 0.38, y: centre.y))
+        ladder.addLine(to: CGPoint(x: centre.x + wide * 0.24, y: floorLine - 2))
+        context.stroke(ladder, with: .color(timber), style: StrokeStyle(lineWidth: 2.6, lineCap: .round))
+        var rungs = Path()
+        for rung in stride(from: 0.15, through: 0.85, by: 0.175) {
+            let a = CGPoint(
+                x: centre.x + wide * 0.3 - wide * 0.14 * rung,
+                y: centre.y + tall * 0.02 - (centre.y + tall * 0.02 - floorLine) * rung
+            )
+            rungs.move(to: a)
+            rungs.addLine(to: CGPoint(x: a.x + wide * 0.08, y: a.y - 1))
+        }
+        context.stroke(rungs, with: .color(timber.opacity(0.85)), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+    }
+
+    /// The floor of the fen: standing water in pools and laces between hags of drier peat,
+    /// with the sky's little light lying on every pool. Nobody laid this out and nothing
+    /// keeps it — the water table draws it fresh whenever it likes.
+    private func drawFenPools(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 7_211)
+
+        for _ in 0..<12 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next(in: -0.1...1.1)) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 40...130))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.1,
+                    width: spread, height: spread * 0.2
+                )),
+                with: .color(
+                    Color(red: 0.10, green: 0.16, blue: 0.12).opacity(colors.isNight ? 0.5 : 0.38)
+                )
+            )
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.28, y: centre.y - spread * 0.045,
+                    width: spread * 0.56, height: spread * 0.09
+                )),
+                with: .color(GamePalette.cream.opacity(colors.isNight ? 0.05 : 0.1))
+            )
+        }
+
+        // The hags between, paler and an inch prouder.
+        for _ in 0..<9 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next(in: -0.1...1.1)) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 40...110))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.07,
+                    width: spread, height: spread * 0.14
+                )),
+                with: .color(
+                    Color(red: 0.42, green: 0.40, blue: 0.22).opacity(colors.isNight ? 0.1 : 0.2)
+                )
+            )
+        }
+    }
+
+    /// The fen's horizon: no hills, no sea, no skyline — reeds going back until the haze has
+    /// them, with dead snags standing up out of the beds and mist lying in a band along the
+    /// bottom of the sky. The flattest horizon in the game, because a fen is where the ground
+    /// gave up trying.
+    private func drawFenTreeline(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 6_421)
+        let base = horizon + 26
+
+        // The far reed beds: one soft band, darker than the sky and lighter than the ground.
+        var beds = Path()
+        beds.move(to: CGPoint(x: -20, y: base - 18))
+        beds.addQuadCurve(
+            to: CGPoint(x: size.width + 20, y: base - 22),
+            control: CGPoint(x: size.width * 0.5, y: base - 30)
+        )
+        beds.addLine(to: CGPoint(x: size.width + 20, y: base + 26))
+        beds.addLine(to: CGPoint(x: -20, y: base + 30))
+        beds.closeSubpath()
+        context.fill(beds, with: .color(colors.farHill.opacity(0.9)))
+
+        // Reed heads along the band's top edge, and the odd dead snag above them.
+        var heads = Path()
+        for _ in 0..<26 {
+            let x = CGFloat(scatter.next()) * size.width
+            let tall = CGFloat(scatter.next(in: 6...14))
+            heads.move(to: CGPoint(x: x, y: base - 18))
+            heads.addLine(to: CGPoint(x: x + CGFloat(scatter.next(in: -2...3)), y: base - 18 - tall))
+        }
+        context.stroke(
+            heads,
+            with: .color(colors.canopyShade.opacity(0.9)),
+            style: StrokeStyle(lineWidth: 1.4, lineCap: .round)
+        )
+        for _ in 0..<4 {
+            let x = CGFloat(scatter.next()) * size.width
+            let tall = CGFloat(scatter.next(in: 18...30))
+            var snag = Path()
+            snag.move(to: CGPoint(x: x, y: base - 16))
+            snag.addLine(to: CGPoint(x: x + 2, y: base - 16 - tall))
+            snag.move(to: CGPoint(x: x + 1, y: base - 16 - tall * 0.6))
+            snag.addLine(to: CGPoint(x: x - tall * 0.3, y: base - 16 - tall * 0.8))
+            context.stroke(
+                snag,
+                with: .color(colors.canopyShade),
+                style: StrokeStyle(lineWidth: 1.8, lineCap: .round)
+            )
+        }
+
+        // The mist, lying in a band across the foot of the sky — thicker after dark, when
+        // the fen does its talking.
+        context.fill(
+            Path(CGRect(x: -20, y: base - 12, width: size.width + 40, height: 18)),
+            with: .linearGradient(
+                Gradient(colors: [
+                    Color.white.opacity(0),
+                    Color.white.opacity(colors.isNight ? 0.16 : 0.12),
+                    Color.white.opacity(0)
+                ]),
+                startPoint: CGPoint(x: size.width / 2, y: base - 12),
+                endPoint: CGPoint(x: size.width / 2, y: base + 6)
+            )
+        )
+    }
+
+    /// A reed bed at trailside size: a stand of tall stems with seed heads, higher than any
+    /// grass on the map, because a reed is a blade that found water.
+    private func drawReedBed(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        var stems = Path()
+        var heads = Path()
+        let tall = 30 * scale
+        for (index, lean) in [-0.45, -0.2, 0.05, 0.3, 0.5].enumerated() {
+            let height = tall * (0.72 + 0.07 * CGFloat(index % 3))
+            let tip = CGPoint(x: foot.x + height * CGFloat(lean) * 0.4, y: foot.y - height)
+            stems.move(to: CGPoint(x: foot.x + CGFloat(index - 2) * 2, y: foot.y))
+            stems.addQuadCurve(
+                to: tip,
+                control: CGPoint(x: foot.x + height * CGFloat(lean) * 0.14, y: foot.y - height * 0.55)
+            )
+            heads.addEllipse(in: CGRect(x: tip.x - 1.4, y: tip.y - 6, width: 2.8, height: 7))
+        }
+        context.stroke(
+            stems,
+            with: .color(colors.canopyShade),
+            style: StrokeStyle(lineWidth: 1.6, lineCap: .round)
+        )
+        context.fill(
+            heads,
+            with: .color(Color(red: 0.48, green: 0.38, blue: 0.24).opacity(colors.isNight ? 0.6 : 0.9))
+        )
+    }
+
+    /// A dead snag standing in the fields: a tree the bog got the roots of, silvered bare,
+    /// with two arms and no leaf on either.
+    private func drawDeadTree(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = 34 * scale
+        let silver = colors.isNight
+            ? Color(red: 0.33, green: 0.35, blue: 0.32)
+            : Color(red: 0.60, green: 0.60, blue: 0.54)
+
+        shadow(in: &context, at: foot, width: tall * 0.5)
+        var trunk = Path()
+        trunk.move(to: foot)
+        trunk.addQuadCurve(
+            to: CGPoint(x: foot.x + tall * 0.08, y: foot.y - tall),
+            control: CGPoint(x: foot.x - tall * 0.06, y: foot.y - tall * 0.5)
+        )
+        var arms = Path()
+        arms.move(to: CGPoint(x: foot.x + tall * 0.02, y: foot.y - tall * 0.55))
+        arms.addLine(to: CGPoint(x: foot.x - tall * 0.3, y: foot.y - tall * 0.8))
+        arms.move(to: CGPoint(x: foot.x + tall * 0.05, y: foot.y - tall * 0.72))
+        arms.addLine(to: CGPoint(x: foot.x + tall * 0.3, y: foot.y - tall * 0.92))
+        context.stroke(trunk, with: .color(silver), style: StrokeStyle(lineWidth: 3, lineCap: .round))
+        context.stroke(arms, with: .color(silver.opacity(0.9)), style: StrokeStyle(lineWidth: 1.8, lineCap: .round))
+    }
+
+    /// A pool ringed with rushes: standing water at trailside size, with the sky's light on
+    /// its middle and the rushes leaning over their own reflection.
+    private func drawFenPool(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let wide = 42 * scale
+        let pool = CGRect(x: foot.x - wide / 2, y: foot.y - wide * 0.11, width: wide, height: wide * 0.22)
+        context.fill(
+            Path(ellipseIn: pool),
+            with: .color(Color(red: 0.10, green: 0.16, blue: 0.12).opacity(colors.isNight ? 0.6 : 0.5))
+        )
+        context.fill(
+            Path(ellipseIn: pool.insetBy(dx: wide * 0.14, dy: wide * 0.05)),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.08 : 0.14))
+        )
+        var rushes = Path()
+        for reed in [-0.42, -0.3, 0.34, 0.46] {
+            let x = foot.x + wide * CGFloat(reed)
+            let tall = wide * 0.3
+            rushes.move(to: CGPoint(x: x, y: foot.y + wide * 0.02))
+            rushes.addQuadCurve(
+                to: CGPoint(x: x + wide * 0.05, y: foot.y - tall),
+                control: CGPoint(x: x - wide * 0.03, y: foot.y - tall * 0.5)
+            )
+        }
+        context.stroke(
+            rushes,
+            with: .color(colors.canopyShade),
+            style: StrokeStyle(lineWidth: 1.6, lineCap: .round)
         )
     }
 
