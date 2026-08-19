@@ -303,7 +303,7 @@ struct TitleScreenView: View {
                 .foregroundStyle(GamePalette.pen)
                 .shadow(color: GamePalette.post.opacity(0.25), radius: 0.5, y: 0.5)
 
-            Text("\(tally.won) of \(tally.total)")
+            Text("\(tally)")
                 .font(.subheadline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
                 .contentTransition(.numericText())
@@ -318,23 +318,22 @@ struct TitleScreenView: View {
     }
 
     /// What the badge counts, which is whatever Play opens. While the meadow is still being
-    /// held it is the meadow's own stars, the same pair the trail wears in its corner. Once the
+    /// held it is the meadow's own stars, the same number the trail wears in its corner. Once the
     /// meadow is held Play opens the universe instead, and a badge still stuck on the meadow
-    /// would sit full at 27 of 27 for the whole rest of the game — saying there is nothing left
-    /// to take on the very screen a player crosses to go and take it. So it widens to every star
-    /// in every built world, and carries on meaning something all the way out.
-    private var tally: (won: Int, total: Int) {
-        guard progress.isTheWorldHeld else { return (progress.totalStars, world.starTotal) }
-        let universe = Universe.all
-        return (universe.totalStars(stars: progress.bestStars), universe.starTotal)
+    /// would sit at 27 for the whole rest of the game — going nowhere on the very screen a player
+    /// crosses to go and take more. So it widens to every star in every built world, and carries
+    /// on meaning something all the way out.
+    private var tally: Int {
+        guard progress.isTheWorldHeld else { return progress.totalStars }
+        return Universe.all.totalStars(stars: progress.bestStars)
     }
 
     /// The tally read out, with the ground it covers said aloud — the badge shows the widening
-    /// by its numbers alone, which is nothing VoiceOver can point at.
+    /// by its number alone, which is nothing VoiceOver can point at.
     private var starsSpoken: String {
         let counted = tally
         let ground = progress.isTheWorldHeld ? "across every world" : "in \(world.name)"
-        return "\(counted.won) of \(counted.total) stars \(ground)"
+        return "\(counted) star\(counted == 1 ? "" : "s") \(ground)"
     }
 
     // MARK: - The name
