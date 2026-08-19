@@ -165,9 +165,18 @@ extension PuzzleLevel {
     /// player has met before, and why it stands in the middle of the trail rather than at the start
     /// of it.
     ///
-    /// A melon lies at each end of the southern edge, and twenty-one pieces will not reach either.
-    /// On ground with no free wall on it five points is four pieces of fence, and four pieces of
-    /// diamond are eight tiles.
+    /// What bends it is two melons out on the eastern sand, one north and one south, and a pair of
+    /// cacti staked on the pig's own latitude — one inboard, one on the rim behind it. That pair is
+    /// the whole trick: a rectangle that wants a wall through that line has to swallow the inboard
+    /// cactus, and a rectangle nudged off a cactus walks onto the one behind it and then onto the
+    /// rim, where there is nothing left to bump out to. So the square answer is driven back to a
+    /// five by five holding 25 and reaches neither melon.
+    ///
+    /// The same twenty-one run round as a diamond pulled out of true to the east hold 40 tiles and
+    /// ONE melon, which is 45. The other is the one this board will not give up: on ground with no
+    /// free wall on it five points is four pieces of fence, and four pieces of diamond are eight
+    /// tiles — so the second melon costs more than it pays, and a player who works that out has
+    /// been taught the whole of what a bare field teaches.
     static let theHardpan = dunes(
         id: "the-hardpan",
         name: "The Hardpan",
@@ -179,15 +188,15 @@ extension PuzzleLevel {
         map: """
             ...........
             ...........
+            .........a.
             ...........
             ...........
-            ...........
-            .....P.....
-            ...........
+            .....P...xx
             ...........
             ...........
+            .........a.
             ...........
-            .a.......a.
+            ...........
             """
     )
 

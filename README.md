@@ -658,7 +658,7 @@ laid out across bare hardpan to buy it.
 | 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
 | 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
-| 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
+| 4 | The Hardpan | 21 | no dune at all, 2 melons east, 2 cacti on one latitude | 25 | 45 | 44% |
 | 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 29 | 50 | 42% |
 | 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 35 | 45% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
@@ -729,7 +729,7 @@ above the tideline, where every tile of the pen is bought.
 |---|---|---|---|---|---|---|
 | 1 | Ebbtide Pool | 13 | one pool, 3 pearls, 2 jellyfish | 10 | 17 | 41% |
 | 2 | Twin Pools | 12 | two pools, a pearl argued for by each | 22 | 39 | 43% |
-| 3 | The High Strand | 19 | no pool at all, 2 pearls on the line | 20 | 36 | 44% |
+| 3 | The High Strand | 19 | no pool at all, a pearl in each far corner, a wrack line of 3 | 20 | 36 | 44% |
 | 4 | The Oyster Bed | 14 | one pool, 2 pearls seeded in its heart, 1 loose | 23 | 42 | 45% |
 | 5 | The Runnel | 13 | two pools either side of a channel, 2 pearls | 23 | 43 | 46% |
 | 6 | The Long Pool | 14 | one long pool, 2 pearls, 2 jellyfish | 21 | 39 | 46% |

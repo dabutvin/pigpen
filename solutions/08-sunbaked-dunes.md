@@ -27,7 +27,7 @@ The Hardpan, where every tile is bought.
 | 1 | Slipface Hollow | 14 | 43 | 2 cacti | 33 | 20 |
 | 2 | The Long Slack | 14 | 28 | 1 melon | 33 | 19 |
 | 3 | The Blowout | 13 | 32 | nothing | 32 | 18 |
-| 4 | The Hardpan | 21 | 45 | nothing | 45 | 25 |
+| 4 | The Hardpan | 21 | 40 | 1 melon | 45 | 25 |
 | 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 29 |
 | 6 | Melon Ground | 17 | 35 | 2 melons, 2 cacti | 35 | 19 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |
@@ -134,34 +134,34 @@ fetches it is four pieces of shape.
 ## 4. The Hardpan — 21 pieces, 45
 
 ```
-.....##....
-....#oo#...
-...#oooo#..
-..#oooooo#.
-.#oooooooo#
-#ooooPoooo#
+.....####..
+....#oooo#.
+...#oooooa#
+..#ooooooo#
 .#ooooooo#.
-..#ooooo#..
-...#ooo#...
-....#o#....
-.a...#...a.
+#ooooPoo#xx
+.#ooooo#...
+..#ooo#....
+...#o#...a.
+....#......
+...........
 ```
 
-The ground the sand never reached: bare hardpan eleven tiles in every direction, no dune anywhere on
-it, and the biggest budget of any field in the world laid out across it. It is The Blind Grike again,
-and Basalt Flats and Cobble Yard and Swept Flat before it, and the answer is the answer it always
-was — the best block twenty-one pieces can square off is a five by five holding 25, and the same
-twenty-one run round as a diamond hold 45.
+The pan itself: baked clay with no dune anywhere on it, and the biggest budget in the world laid
+across it. It is The Blind Grike again, and Basalt Flats and Cobble Yard and Swept Flat before it
+— nothing free, and a diagonal wall shuts two tiles a piece where a straight one shuts one.
 
-A diagonal wall shuts two tiles per piece where a straight one shuts one, and on ground with nothing
-on it there is nothing else to know. Which is why the hardpan is the one field here a player has met
-before, and why it stands in the middle of the trail rather than at the start of it: a world whose
-whole idea is a free wall needs one board that withholds it, and it turns out to ask more than the
-ridge with a hole blown through it does.
+What bends it is two melons out on the eastern sand and a pair of cacti staked on the pig's own
+latitude, one inboard and one on the rim behind it. That pair is the whole trick: a rectangle that
+wants a wall through that line has to swallow the inboard cactus, and a rectangle nudged off a
+cactus walks onto the one behind it and then onto the rim, where there is nothing left to bump out
+to. So squaring off is driven back west to a five by five holding 25, and it reaches neither melon.
 
-A melon lies at each end of the southern edge, and twenty-one pieces will not reach either. On ground
+The same twenty-one pieces run round as a diamond pulled out of true to the east and hold 40 tiles
+and the northern melon: 45. The southern one is the melon this board will not give up — on ground
 with no free wall on it five points is four pieces of fence, and four pieces of diamond are eight
-tiles.
+tiles, so reaching the second costs more than it pays. Working that out is the whole of what a
+bare field has to teach.
 
 ## 5. Two Horns — 18 pieces, 50
 

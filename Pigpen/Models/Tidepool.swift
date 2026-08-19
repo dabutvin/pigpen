@@ -128,8 +128,18 @@ extension PuzzleLevel {
     /// there is nothing else to know — which is why the strand is the one field here a player
     /// has met before, and why it stands mid-trail rather than at the start of it.
     ///
-    /// A pearl lies at each end of the last wave's reach, on the very rim of the map, and
-    /// nothing reaches either: the tide keeps what it leaves on the line.
+    /// What bends it is a pearl in each far corner — one out to the north-east, one down to the
+    /// south-west — and a wrack line of three jellyfish laid on the diagonal between the pig and
+    /// the nearer of them, which is the last tide's leavings dropped in a row the way a tide
+    /// actually drops them. A rectangle reaching for that pearl has to cross the wrack and
+    /// swallow it, and a rectangle nudged off one jellyfish walks onto the next and then onto the
+    /// rim, so the square answer is driven back to a four by five holding 20 and reaches neither.
+    ///
+    /// The same nineteen run round as a diamond pulled out of true to the south-west hold 31
+    /// tiles and ONE pearl, which is 36. The other stays where the tide left it: on ground with
+    /// no free wall on it a pearl is four pieces of fence, and four pieces of diamond are more
+    /// than a pearl is worth — so the strand asks which one, not both, and that is the whole of
+    /// what a bare field has to teach.
     static let theHighStrand = tidepool(
         id: "the-high-strand",
         name: "The High Strand",
@@ -140,16 +150,16 @@ extension PuzzleLevel {
         question: .bare,
         map: """
             ............
-            ............
-            ............
-            ............
-            ............
+            ..........a.
+            ........x...
+            .........x..
+            ..........x.
             ......P.....
             ............
             ............
             ............
+            .a..........
             ............
-            .a........a.
             """
     )
 
