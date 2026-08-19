@@ -525,16 +525,19 @@ out for.
 | 3 | Stillwater Neck | 11 | 3 crystals, 1 boulder | 19 | 31 | 38% |
 | 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
 | 5 | Glowworm Reach | 11 | 3 crystals | 15 | 26 | 42% |
-| 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
+| 6 | Rimstone Corner | 9 | a scalloped dam, 2 crystals, 1 boulder | 23 | 44 | 47% |
 | 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 42 | 63 | 33% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
-Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
-in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
-laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
-Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
-round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
+Rimstone Corner is the corner question with two free sides handed over: the river takes the whole
+roof of the cave and the whole east wall. What makes it more than a right angle drawn twice is the
+shape of the second bank — the east dam is **scalloped**, stepping in a tile and back out the way
+rimstone actually forms, in terraces rather than in rulers, so no rectangle can lie along it — and
+a boulder down off the roof onto the ground the tidy answer wants. The right angle is driven east
+of the boulder and holds 18 tiles and one crystal for 23; the same nine laid corner to corner as a
+staircase, stepping round the boulder, hold 34 tiles and both crystals, which is 44. Foundry Corner
+asked it with the same nine and one free side rather than two, and could only reach round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
 dunes' Great Erg came in a tile above it.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
@@ -655,7 +658,7 @@ laid out across bare hardpan to buy it.
 | 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
 | 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
-| 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
+| 4 | The Hardpan | 21 | no dune at all, 2 melons east, 2 cacti on one latitude | 25 | 45 | 44% |
 | 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 29 | 50 | 42% |
 | 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 35 | 45% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
@@ -725,8 +728,8 @@ above the tideline, where every tile of the pen is bought.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Ebbtide Pool | 13 | one pool, 3 pearls, 2 jellyfish | 10 | 17 | 41% |
-| 2 | Twin Pools | 12 | two pools, 2 pearls on the line | 17 | 30 | 43% |
-| 3 | The High Strand | 19 | no pool at all, 2 pearls on the line | 20 | 36 | 44% |
+| 2 | Twin Pools | 12 | two pools, a pearl argued for by each | 22 | 39 | 43% |
+| 3 | The High Strand | 19 | no pool at all, a pearl in each far corner, a wrack line of 3 | 20 | 36 | 44% |
 | 4 | The Oyster Bed | 14 | one pool, 2 pearls seeded in its heart, 1 loose | 23 | 42 | 45% |
 | 5 | The Runnel | 13 | two pools either side of a channel, 2 pearls | 23 | 43 | 46% |
 | 6 | The Long Pool | 14 | one long pool, 2 pearls, 2 jellyfish | 21 | 39 | 46% |
@@ -791,7 +794,7 @@ the weather has come down and every tile of the pen is bought.
 |---|---|---|---|---|---|---|
 | 1 | The Corrie | 13 | two ridges leaning together, 3 fish, 2 bergs | 22 | 38 | 42% |
 | 2 | Twin Spurs | 13 | two ridges in opposite quarters, 2 fish | 23 | 41 | 43% |
-| 3 | The Whiteout | 19 | no ice at all, 2 fish on the line, 2 bergs | 20 | 36 | 44% |
+| 3 | The Whiteout | 19 | no ice at all, 3 fish (2 on the line), 4 bergs | 20 | 36 | 44% |
 | 4 | The Seam | 12 | two ridges on one slant, a seam between, 2 fish | 19 | 36 | 47% |
 | 5 | Whaleback Ridge | 11 | one ridge seven tiles long, a school of 3 fish | 22 | 42 | 47% |
 | 6 | Fish Cache | 12 | one ridge, 3 fish hung wide of it | 20 | 39 | 48% |
@@ -929,16 +932,20 @@ the one field back on the ground, where every tile of the pen is bought.
 | 4 | The Rope Bridge | 12 | an island, a causeway and a delta, 3 balloons, 3 whirlwinds | 24 | 47 | 48% |
 | 5 | The Cloudbank | 13 | one long bank of sky, 3 balloons, 4 whirlwinds | 26 | 51 | 49% |
 | 6 | The Lost Balloons | 11 | 4 balloons hung wide, 2 adrift for good, 2 whirlwinds | 20 | 41 | 51% |
-| 7 | Windward Corner | 10 | two free banks meeting, 1 balloon on the world's corner, 2 whirlwinds | 16 | 36 | 55% |
+| 7 | Windward Corner | 10 | two free banks meeting, 3 balloons (1 on the world's corner), 2 whirlwinds | 20 | 45 | 55% |
 | 8 | The Open Sky | 14 | the widest board, 2 balloons, 6 whirlwinds in two gust-lines | 30 | 56 | 46% |
 | 9 | The Eyrie | 10 | the eagle on his pinnacle, 6 balloons, 1 whirlwind | 15 | 65 | 76% |
 
 Windward Corner is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner
 asked it — sky two deep along the whole north and west, the field hung on the east and south
 rims — and at 55% it is the hardest ordinary field in the heights; in the whole game only The
-Whiskers asks more. The right angle boxes a strip and swallows a whirlwind for 16; the same
-ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
-ordinary field in the game — lean both banks at once and hold 46 tiles for 36. The Open Sky
+Whiskers asks more. Two balloons hang where the diagonal goes and the right angle does not —
+one straight out along the pig's row, one straight down her column, each with a whirlwind
+between her and it — and the third rides the very corner of the map, where nothing can ever be
+penned. The right angle boxes a strip, pays both whirlwinds and reaches one balloon for 20; the
+same ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
+ordinary field in the game — lean both banks at once, pay the same two whirlwinds and take both
+live balloons, holding 45 tiles for 45. The Open Sky
 holds 51 tiles on the broadest board in the heights, which is the biggest pen in the world
 and six more than the boss's.
 

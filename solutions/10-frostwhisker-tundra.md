@@ -21,7 +21,7 @@ bought.
 |---|---|---|---|---|---|---|
 | 1 | The Corrie | 13 | 43 | 1 fish, 2 bergs | 38 | 22 |
 | 2 | Twin Spurs | 13 | 36 | 1 fish | 41 | 23 |
-| 3 | The Whiteout | 19 | 36 | nothing | 36 | 20 |
+| 3 | The Whiteout | 19 | 31 | 1 fish | 36 | 20 |
 | 4 | The Seam | 12 | 26 | 2 fish | 36 | 19 |
 | 5 | Whaleback Ridge | 11 | 27 | 3 fish | 42 | 22 |
 | 6 | Fish Cache | 12 | 24 | 3 fish | 39 | 20 |
@@ -80,26 +80,34 @@ which is 41. The second fish rides the north rim, where the ice keeps it.
 ## 3. The Whiteout — 19 pieces, 36
 
 ```
-...a.......
-........x..
-....##.....
-...#oo#....
-..#oooo#...
-.#oooooo#..
-#ooooPooo#.
-.#ooooooo#.
-..#ooooo#..
-...#ooo#...
-..x.#o#....
-.....#.a...
+......a....
+...##......
+..#oo#.....
+.#oooo#....
+#oooooo#...
+#oooooo#...
+#ooooP#.x..
+#oooo#....a
+#ooo#x.....
+.#a#.x.....
+..#........
+.....x.....
 ```
 
 The weather down on the ground: no ridge anywhere, and the biggest budget in the world laid
-across bare snow. It is The High Strand and The Hardpan again, and the answer is the answer it
-always was: the best block nineteen pieces square off is a four by five holding 20, and the same
-nineteen run round as a diamond hold 36. The fish lie on the rims and the bergs off in the
-corners, and the diamond touches none of them — on ground with nothing on it there is nothing
-else to know.
+across bare snow. It is The High Strand and The Hardpan again — and what it adds to them is that
+the snow is not empty.
+
+Three bergs stand in a line up column five and out to the bottom rim, and a fourth shuts off the
+east. A block that tries to square off across that line has to swallow a berg, and a block nudged
+off a berg walks onto the next one and then onto the rim, where there is nothing left to bump out
+to — so every tidy answer is driven west, and the best of them holds 20 tiles and no fish at all.
+
+Two of the three fish are frozen in along the rims, in plain sight and out of reach for good: that
+is the whiteout's own joke, the catch you can see through the weather and never get to. The third
+is down on the ice within reach, and the nineteen pieces run round as a diamond pulled out of true
+to the south-west to take it — 31 tiles and the fish, which is 36. On ground with nothing free on
+it, the only question left is which way to lean, and the one fish that can be had is the answer.
 
 ## 4. The Seam — 12 pieces, 36
 

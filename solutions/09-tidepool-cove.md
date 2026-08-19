@@ -20,8 +20,8 @@ tile is bought.
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
 | 1 | Ebbtide Pool | 13 | 27 | 2 jellyfish | 17 | 10 |
-| 2 | Twin Pools | 12 | 30 | nothing | 30 | 17 |
-| 3 | The High Strand | 19 | 36 | nothing | 36 | 20 |
+| 2 | Twin Pools | 12 | 29 | 2 pearls | 39 | 22 |
+| 3 | The High Strand | 19 | 31 | 1 pearl | 36 | 20 |
 | 4 | The Oyster Bed | 14 | 27 | 3 pearls | 42 | 23 |
 | 5 | The Runnel | 13 | 38 | 1 pearl | 43 | 23 |
 | 6 | The Long Pool | 14 | 44 | 1 pearl, 2 jellyfish | 39 | 21 |
@@ -55,52 +55,69 @@ the same pair — a diamond wide enough to be worth drawing cannot come down bet
 points is cheaper than the ground the swerve would give up — which is 17, the smallest opening
 maximum in the game and the world's first lesson priced exactly.
 
-## 2. Twin Pools — 12 pieces, 30
+## 2. Twin Pools — 12 pieces, 39
 
 ```
-.....##....
-..~~~oo#...
-..~o~ooo#..
-..~o~oooo#.
-.#oooooooo#
-..#oPoooo#.
-...#oo~o~..
+.....###...
+..~~~ooo#..
+..~o~oooa#.
+..~o~ooooo#
+..#ooooooo#
+...#Poooo#.
 ....#o~o~..
-.....#~~~..
+.....#~a~..
+......~~~..
 ...........
-...a.....a.
+...........
 ```
 
 Two small pools set corner to corner with their breaks turned in towards each other, and the pig on
 the open sand between them. The span question: neither ring walls anything on its own, and no
-rectangle reaches round both — squaring off tucks one corner against each across the middle for 17.
+rectangle reaches round both.
+
+A pearl lies where each pool argues for the band. One is out on the open sand off the north-east
+shoulder of the first ring, far enough that only a long wall thrown between the pools ever comes
+near it; the other is in the heart of the second ring, which is bought by stepping in through the
+pool's own break. Squaring off can bend far enough to pick up one of them — 17 tiles and the pearl,
+which is 22 — and no rectangle on this board gets both.
 
 The twelve pieces run instead as one long diagonal band from the north-east corner of the board
-down between the two rings, leaning on the outside of one going down and the other coming back:
-30 tiles. The hearts go unbought, and the pools' pearls are already gone — the tide dropped both
-on the line of the map, where nothing can be penned.
+down between the two rings, leaning on the outside of one going down and the other coming back,
+and it collects both pearls on the way: 29 tiles and the pair, which is 39. The hearts of these
+pools were the cheapest ground on the board and the least of it; putting a pearl in one is what
+makes the cheap ground worth the walk.
 
 ## 3. The High Strand — 19 pieces, 36
 
 ```
-....##......
-...#oo#.....
-..#oooo#....
-.#oooooo#...
-#oooooooo#..
-.#ooooPoo#..
-..#ooooo#...
-...#ooo#....
-....#o#.....
-.....#......
-.a........a.
+............
+..........a.
+....#...x...
+...#o#...x..
+..#ooo#...x.
+.#ooooP#....
+#ooooooo#...
+#oooooo#....
+#ooooo#.....
+#aooo#......
+.####.......
 ```
 
-The ground above the tideline: no pool anywhere, and the biggest budget in the world laid across
-bare strand. It is The Hardpan and The Blind Grike again, and the answer is the answer it always
-was: the best block nineteen pieces square off is a four by five holding 20, and the same nineteen
-run round as a diamond hold 36. On ground with nothing on it there is nothing else to know, which
-is why this is the one field in the cove a player has met before.
+The ground above the tideline: dry strand twelve tiles across, no pool anywhere on it, and the
+biggest budget in the world laid out across it. It is The Hardpan again, and The Blind Grike and
+Swept Flat before it — nothing free, and the diamond is the answer it always was.
+
+What bends it is a pearl in each far corner, one out to the north-east and one down to the
+south-west, and a wrack line of three jellyfish laid on the diagonal between the pig and the
+nearer of them — the last tide's leavings dropped in a row, the way a tide actually drops them.
+A rectangle reaching for that pearl has to cross the wrack and swallow it, and a rectangle nudged
+off one jellyfish walks onto the next and then onto the rim. So squaring off is held to a four by
+five holding 20, and it reaches neither pearl.
+
+The same nineteen pieces run round as a diamond pulled out of true to the south-west and hold 31
+tiles and the pearl down there: 36. The north-eastern one stays where the tide left it, behind the
+wrack — on ground with no free wall on it a pearl is four pieces of fence, and four pieces of
+diamond are worth more than a pearl. The strand asks which one, not both.
 
 ## 4. The Oyster Bed — 14 pieces, 42
 
