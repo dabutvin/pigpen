@@ -1469,6 +1469,136 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk onto the heights. Six stills, the way every opening since the
+    /// tundra's is six: the balloon and the whirlwind have a still apiece, and so does the
+    /// sky — because the shape of it is the whole world, and a player who does not know the
+    /// blue between the fields is a drop rather than a lake will read the first board wrong.
+    static func cloudspireOpening(start: Date = .now) -> Self {
+        Self(
+            key: "cloudspire-opening",
+            title: "Cloudspire Heights",
+            light: .spireDay,
+            shots: [
+                Shot(
+                    motif: "☁️",
+                    strewn: ["🦅", "💨"],
+                    caption: "Cloudspire Heights. Fields in the sky.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["☁️", "💨"],
+                    caption: "Your pig climbed up out of the fen.",
+                    seconds: 2.4
+                ),
+                Shot(
+                    motif: "💨",
+                    strewn: ["☁️", "☁️"],
+                    caption: "Open sky between the fields. It walls a pen like water.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🎈",
+                    strewn: ["☁️", "💨"],
+                    caption: "Lost balloons from the carnival. Five each.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🌪️",
+                    strewn: ["☁️", "🎈"],
+                    caption: "No post stands in a whirlwind. Walls go round.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["☁️", "🎈"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the heights' last field, the way `theWallow` goes before the fen's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced eleven worlds.
+    /// What they are owed is the one thing this board does that no board in the game has
+    /// done — every boss so far cared where the pens were, and this one is the first to
+    /// care what can be *seen*, which turns a fence into a second tool.
+    static func theEyrie(start: Date = .now) -> Self {
+        Self(
+            key: "the-eyrie-briefing",
+            title: "The Eyrie",
+            light: .spireDay,
+            shots: [
+                Shot(
+                    motif: "🦅",
+                    strewn: ["☁️", "💨"],
+                    caption: "The Eyrie. The eagle sees along his row and his column.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦅", "☁️"],
+                    caption: "Pen her in his eye and the board sends it back.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦅", "☁️"],
+                    caption: "Only a fence breaks his line of sight.",
+                    isCard: true,
+                    seconds: 2.5
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the game holds. Eleven send-offs pointed on past their world to
+    /// the next one waiting; this is the twelfth, and there is nothing left to point at — so
+    /// it is the one farewell that points back the way the whole trail came, and puts the
+    /// game to bed with the pig in it.
+    static func cloudspireHeld(start: Date = .now) -> Self {
+        Self(
+            key: "cloudspire-held",
+            title: "Cloudspire Heights held",
+            light: .spireDusk,
+            shots: [
+                Shot(
+                    motif: "🦅",
+                    strewn: ["☁️", "⭐"],
+                    caption: "The eagle has his sky back, and nothing in his eye.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🎈",
+                    strewn: ["☁️", "⭐", "☁️"],
+                    caption: "Every balloon the wind gave up, fenced and held.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌌",
+                    strewn: ["⭐", "✨"],
+                    caption: "The stars come out over the top of the weather.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["⭐", "🌈", "⭐"],
+                    caption: "Twelve worlds, every one of them held. Good night, pig.",
+                    isCard: true,
+                    seconds: 3.5
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -1481,7 +1611,8 @@ extension StorybookScene {
             .duneOpening(), .theScorpionPit(), .duneHeld(),
             .tidepoolOpening(), .theCrabPool(), .tidepoolHeld(),
             .frostwhiskerOpening(), .theHaulout(), .frostwhiskerHeld(),
-            .mirebogOpening(), .theWallow(), .mirebogHeld()
+            .mirebogOpening(), .theWallow(), .mirebogHeld(),
+            .cloudspireOpening(), .theEyrie(), .cloudspireHeld()
         ]
     }
 }

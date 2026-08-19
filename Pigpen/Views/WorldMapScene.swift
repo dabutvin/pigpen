@@ -55,6 +55,7 @@ private struct Meadow {
         case .shingle: drawWreck(in: &context)
         case .snowfield: drawIgloo(in: &context)
         case .marsh: drawStiltHut(in: &context)
+        case .cloudtop: drawBridgeHead(in: &context)
         }
     }
 
@@ -75,6 +76,7 @@ private struct Meadow {
         case .shingle: drawTideLines(in: &context)
         case .snowfield: drawSnowdrifts(in: &context)
         case .marsh: drawFenPools(in: &context)
+        case .cloudtop: drawSkyShelves(in: &context)
         }
     }
 
@@ -358,6 +360,8 @@ private struct Meadow {
         case .snowfield: 2
         // Fen sky: half of it is the water's own breath, hanging low.
         case .marsh: 3
+        // Nearly all of this world's cloud is below it. What is left overhead is thin.
+        case .cloudtop: 1
         }
         for _ in 0..<clouds {
             let centre = CGPoint(
@@ -470,6 +474,8 @@ private struct Meadow {
             drawBergLine(in: &context)
         } else if colors.cover == .marsh {
             drawFenTreeline(in: &context)
+        } else if colors.cover == .cloudtop {
+            drawCloudSea(in: &context)
         } else {
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
@@ -870,6 +876,8 @@ private struct Meadow {
         case reedBed
         case deadTree
         case fenPool
+        case windSock
+        case balloonSnag
     }
 
     private struct Place {
@@ -1012,6 +1020,18 @@ private struct Meadow {
             case ..<0.80: .deadTree
             default: .bush
             }
+        case .cloudtop:
+            // What stands on a spire top is what the wind allows: low bushes holding on,
+            // scoured rock, mountain flowers keeping their heads down, a wind sock somebody
+            // rigged to see what the weather was doing — and the odd balloon that made it
+            // all the way up here only to snag on the last rock in the world.
+            switch roll {
+            case ..<0.26: .rock
+            case ..<0.5: .bush
+            case ..<0.7: .flowers
+            case ..<0.88: .windSock
+            default: .balloonSnag
+            }
         case .pasture:
             switch roll {
             case ..<0.34: .tree
@@ -1052,6 +1072,8 @@ private struct Meadow {
         case .reedBed: drawReedBed(in: &context, at: place.at, scale: place.size)
         case .deadTree: drawDeadTree(in: &context, at: place.at, scale: place.size)
         case .fenPool: drawFenPool(in: &context, at: place.at, scale: place.size)
+        case .windSock: drawWindSock(in: &context, at: place.at, scale: place.size)
+        case .balloonSnag: drawBalloonSnag(in: &context, at: place.at, scale: place.size)
         }
     }
 
@@ -3225,6 +3247,272 @@ private struct Meadow {
             rushes,
             with: .color(colors.canopyShade),
             style: StrokeStyle(lineWidth: 1.6, lineCap: .round)
+        )
+    }
+
+    /// The floor of the twelfth world: turf combed flat one way by the wind, in pale strokes
+    /// all bowed the same direction, and here and there a well of open sky where the field
+    /// simply is not — a hole with cloud drifting a long way down inside it, which is the
+    /// whole of what this world's boards are made of, met before the first one asks.
+    private func drawSkyShelves(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 8_231)
+
+        // The combing: one wind's work, every stroke the same way.
+        for _ in 0..<22 {
+            let down = horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            let start = CGFloat(scatter.next(in: -0.1...0.9)) * size.width
+            let run = CGFloat(scatter.next(in: 50...130))
+            var stroke = Path()
+            stroke.move(to: CGPoint(x: start, y: down))
+            stroke.addQuadCurve(
+                to: CGPoint(x: start + run, y: down - CGFloat(scatter.next(in: 2...7))),
+                control: CGPoint(x: start + run * 0.5, y: down + 5)
+            )
+            context.stroke(
+                stroke,
+                with: .color(.white.opacity(colors.isNight ? 0.05 : 0.13)),
+                style: StrokeStyle(lineWidth: CGFloat(scatter.next(in: 1.6...3.2)), lineCap: .round)
+            )
+        }
+
+        // The sky wells: holes in the world, each with its own thread of cloud inside.
+        for _ in 0..<7 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next(in: -0.05...1.05)) * size.width,
+                y: horizon + CGFloat(scatter.next()) * (size.height - horizon)
+            )
+            let spread = CGFloat(scatter.next(in: 44...110))
+            let well = CGRect(
+                x: centre.x - spread * 0.5, y: centre.y - spread * 0.1,
+                width: spread, height: spread * 0.2
+            )
+            context.fill(
+                Path(ellipseIn: well),
+                with: .color(
+                    Color(red: 0.38, green: 0.55, blue: 0.80).opacity(colors.isNight ? 0.45 : 0.5)
+                )
+            )
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.26, y: centre.y + spread * 0.01,
+                    width: spread * 0.52, height: spread * 0.06
+                )),
+                with: .color(.white.opacity(colors.isNight ? 0.10 : 0.24))
+            )
+        }
+    }
+
+    /// The heights' horizon: no hills and no land at all — the top of the weather, a sea of
+    /// sunlit cloud going back forever, with the tips of farther spires standing up out of
+    /// it. The only horizon in the game that is underneath the world it belongs to.
+    private func drawCloudSea(in context: inout GraphicsContext) {
+        var scatter = Scatter(seed: 8_641)
+        let base = horizon + 26
+
+        // The sea itself: one soft pale band, brighter than any far hill in the game.
+        var sea = Path()
+        sea.move(to: CGPoint(x: -20, y: base - 16))
+        sea.addQuadCurve(
+            to: CGPoint(x: size.width + 20, y: base - 20),
+            control: CGPoint(x: size.width * 0.5, y: base - 28)
+        )
+        sea.addLine(to: CGPoint(x: size.width + 20, y: base + 26))
+        sea.addLine(to: CGPoint(x: -20, y: base + 30))
+        sea.closeSubpath()
+        context.fill(sea, with: .color(.white.opacity(colors.isNight ? 0.16 : 0.55)))
+
+        // Swells in the cloud, the way a sea has them.
+        for _ in 0..<6 {
+            let centre = CGPoint(
+                x: CGFloat(scatter.next()) * size.width,
+                y: base - CGFloat(scatter.next(in: 2...14))
+            )
+            let spread = CGFloat(scatter.next(in: 40...90))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: centre.x - spread * 0.5, y: centre.y - spread * 0.09,
+                    width: spread, height: spread * 0.18
+                )),
+                with: .color(.white.opacity(colors.isNight ? 0.10 : 0.35))
+            )
+        }
+
+        // The far spires: two or three tips clear of the sea, each with its own scrap of
+        // turf on top — the rest of the world this world is made of.
+        for tip in [0.16, 0.55, 0.86] {
+            let x = CGFloat(tip) * size.width
+            let tall = CGFloat(scatter.next(in: 16...30))
+            var spire = Path()
+            spire.move(to: CGPoint(x: x - tall * 0.34, y: base - 12))
+            spire.addQuadCurve(
+                to: CGPoint(x: x, y: base - 12 - tall),
+                control: CGPoint(x: x - tall * 0.16, y: base - 12 - tall * 0.6)
+            )
+            spire.addQuadCurve(
+                to: CGPoint(x: x + tall * 0.3, y: base - 12),
+                control: CGPoint(x: x + tall * 0.14, y: base - 12 - tall * 0.6)
+            )
+            spire.closeSubpath()
+            context.fill(spire, with: .color(colors.farHill))
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: x - tall * 0.16, y: base - 13 - tall, width: tall * 0.32, height: tall * 0.14
+                )),
+                with: .color(colors.canopy.opacity(0.8))
+            )
+        }
+    }
+
+    /// The bridge head at the foot of the trail: two posts and the top of a rope bridge
+    /// coming up over the cliff edge from somewhere a long way below — the heights' answer
+    /// to the barn the pig came out of, because the way into this world is up.
+    private func drawBridgeHead(in context: inout GraphicsContext) {
+        let centre = landmarkStand
+        let wide: CGFloat = 70
+        let tall: CGFloat = 54
+
+        let timber = Color(red: 0.34, green: 0.27, blue: 0.19)
+        let rope = Color(red: 0.62, green: 0.52, blue: 0.36)
+
+        // The lip of the cliff the bridge comes up over: a bare edge, nothing past it.
+        var lip = Path()
+        lip.move(to: CGPoint(x: centre.x - wide * 0.7, y: centre.y + tall * 0.28))
+        lip.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.7, y: centre.y + tall * 0.3),
+            control: CGPoint(x: centre.x, y: centre.y + tall * 0.18)
+        )
+        context.stroke(
+            lip,
+            with: .color(Color(red: 0.55, green: 0.56, blue: 0.51).opacity(0.8)),
+            style: StrokeStyle(lineWidth: 3, lineCap: .round)
+        )
+
+        // The planks, coming up over the lip and onto the turf, foreshortened as they climb.
+        var planks = Path()
+        for step in 0..<5 {
+            let along = CGFloat(step) / 4
+            let y = centre.y + tall * (0.26 - 0.34 * along)
+            let half = wide * (0.30 - 0.07 * along)
+            planks.move(to: CGPoint(x: centre.x - half, y: y))
+            planks.addLine(to: CGPoint(x: centre.x + half, y: y + 2))
+        }
+        context.stroke(planks, with: .color(timber), style: StrokeStyle(lineWidth: 4.4, lineCap: .round))
+
+        // The rails, drawn as the two ropes the planks hang from.
+        var ropes = Path()
+        ropes.move(to: CGPoint(x: centre.x - wide * 0.3, y: centre.y + tall * 0.3))
+        ropes.addQuadCurve(
+            to: CGPoint(x: centre.x - wide * 0.24, y: centre.y - tall * 0.14),
+            control: CGPoint(x: centre.x - wide * 0.33, y: centre.y + tall * 0.02)
+        )
+        ropes.move(to: CGPoint(x: centre.x + wide * 0.3, y: centre.y + tall * 0.32))
+        ropes.addQuadCurve(
+            to: CGPoint(x: centre.x + wide * 0.24, y: centre.y - tall * 0.12),
+            control: CGPoint(x: centre.x + wide * 0.33, y: centre.y + tall * 0.04)
+        )
+        context.stroke(ropes, with: .color(rope), style: StrokeStyle(lineWidth: 2.4, lineCap: .round))
+
+        // The two posts the ropes are made fast to, standing on the world's own ground.
+        shadow(in: &context, at: CGPoint(x: centre.x, y: centre.y - tall * 0.08), width: wide * 0.8)
+        var posts = Path()
+        for side in [-0.26, 0.26] {
+            let x = centre.x + wide * CGFloat(side)
+            posts.move(to: CGPoint(x: x, y: centre.y - tall * 0.12))
+            posts.addLine(to: CGPoint(x: x, y: centre.y - tall * 0.58))
+        }
+        context.stroke(posts, with: .color(timber), style: StrokeStyle(lineWidth: 6, lineCap: .round))
+
+        // The streamer on the near post: the wind shown at the very front door of the world.
+        var streamer = Path()
+        let hoist = CGPoint(x: centre.x + wide * 0.26, y: centre.y - tall * 0.56)
+        streamer.move(to: hoist)
+        streamer.addQuadCurve(
+            to: CGPoint(x: hoist.x + wide * 0.24, y: hoist.y + 3),
+            control: CGPoint(x: hoist.x + wide * 0.12, y: hoist.y - 5)
+        )
+        streamer.addQuadCurve(
+            to: CGPoint(x: hoist.x + wide * 0.04, y: hoist.y + 5),
+            control: CGPoint(x: hoist.x + wide * 0.12, y: hoist.y + 7)
+        )
+        streamer.closeSubpath()
+        context.fill(streamer, with: .color(GamePalette.barn.opacity(0.9)))
+    }
+
+    /// A wind sock on its pole, standing full: somebody wanted to know what the wind was
+    /// doing, and the answer has been "blowing" ever since the pole went up.
+    private func drawWindSock(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = 30 * scale
+        shadow(in: &context, at: foot, width: tall * 0.4)
+
+        var pole = Path()
+        pole.move(to: foot)
+        pole.addLine(to: CGPoint(x: foot.x + tall * 0.04, y: foot.y - tall))
+        context.stroke(
+            pole,
+            with: .color(Color(red: 0.34, green: 0.27, blue: 0.19)),
+            style: StrokeStyle(lineWidth: 2.4, lineCap: .round)
+        )
+
+        // The sock, out flat the way everything up here points.
+        var sock = Path()
+        let mouth = CGPoint(x: foot.x + tall * 0.04, y: foot.y - tall)
+        sock.move(to: CGPoint(x: mouth.x, y: mouth.y - tall * 0.09))
+        sock.addLine(to: CGPoint(x: mouth.x + tall * 0.42, y: mouth.y - tall * 0.03))
+        sock.addLine(to: CGPoint(x: mouth.x + tall * 0.42, y: mouth.y + tall * 0.05))
+        sock.addLine(to: CGPoint(x: mouth.x, y: mouth.y + tall * 0.11))
+        sock.closeSubpath()
+        context.fill(sock, with: .color(GamePalette.barn.opacity(colors.isNight ? 0.6 : 0.85)))
+        context.fill(
+            Path(CGRect(
+                x: mouth.x + tall * 0.14, y: mouth.y - tall * 0.055,
+                width: tall * 0.12, height: tall * 0.14
+            )),
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.5 : 0.8))
+        )
+    }
+
+    /// A balloon that made it all the way up here and snagged on the last rock in the world:
+    /// the board's own windfall, met out on the trail before the first field stakes one.
+    private func drawBalloonSnag(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
+        let tall = 26 * scale
+
+        // The rock doing the snagging.
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: foot.x - tall * 0.18, y: foot.y - tall * 0.12,
+                width: tall * 0.36, height: tall * 0.2
+            )),
+            with: .color(Color(red: 0.55, green: 0.56, blue: 0.51).opacity(colors.isNight ? 0.6 : 0.9))
+        )
+
+        // The string, still trying to leave.
+        var string = Path()
+        string.move(to: CGPoint(x: foot.x + tall * 0.04, y: foot.y - tall * 0.08))
+        string.addQuadCurve(
+            to: CGPoint(x: foot.x + tall * 0.3, y: foot.y - tall * 0.78),
+            control: CGPoint(x: foot.x - tall * 0.08, y: foot.y - tall * 0.5)
+        )
+        context.stroke(
+            string,
+            with: .color(GamePalette.cream.opacity(colors.isNight ? 0.4 : 0.7)),
+            style: StrokeStyle(lineWidth: 1.2, lineCap: .round)
+        )
+
+        // The balloon, leaning downwind on its snagged string.
+        let head = CGPoint(x: foot.x + tall * 0.34, y: foot.y - tall * 0.9)
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: head.x - tall * 0.14, y: head.y - tall * 0.17,
+                width: tall * 0.28, height: tall * 0.34
+            )),
+            with: .color(GamePalette.barn.opacity(colors.isNight ? 0.65 : 0.9))
+        )
+        context.fill(
+            Path(ellipseIn: CGRect(
+                x: head.x - tall * 0.08, y: head.y - tall * 0.12,
+                width: tall * 0.08, height: tall * 0.1
+            )),
+            with: .color(.white.opacity(colors.isNight ? 0.25 : 0.5))
         )
     }
 

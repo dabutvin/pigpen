@@ -33,6 +33,9 @@ enum Refusal: Equatable, Sendable {
     /// or two of one and not the rest: held, and short a wallow, which for a croc is no
     /// holding at all.
     case parched(Animal)
+    /// The pen is shut, and some of its ground stands in the eagle's line of sight: held,
+    /// and held where he can see her, which is one stoop away from not being held at all.
+    case spotted(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -73,9 +76,52 @@ extension PuzzleLevel {
         }
     }
 
+    /// The spire's field: the crater's question first — only the pig is held, and the eagle
+    /// is never walked, his perch a hole in the wall's way — and then the spire's own. The
+    /// eagle sees four ways from his perch, straight along his row and his column, over mud
+    /// and open sky alike, and a pen with any of its ground in his eye is refused. Only a
+    /// fence breaks his line of sight — the pen's own wall where the wall faces him, or a
+    /// piece standing on its own with no pen anywhere near it, which is a thing no other
+    /// board in the game has a use for.
+    private func releaseStooping(fences: Set<GridPoint>) -> PenOutcome {
+        guard let pig = animals.first(where: { $0.kind == .pig }) else {
+            return .penned(pen: [])
+        }
+        switch walk(from: pig.tile, fences: fences) {
+        case .out(let route):
+            return .escaped(escapes: [Escape(animal: pig, route: route)])
+        case .stuck(let ground):
+            if let shut = animals.first(where: { $0.kind != .pig && ground.contains($0.tile) }) {
+                return .refused(pen: ground, refusal: .shutIn(shut.kind))
+            }
+            if let watcher = animals.first(where: { $0.kind != .pig }),
+               sees(from: watcher.tile, into: ground, fences: fences) {
+                return .refused(pen: ground, refusal: .spotted(watcher.kind))
+            }
+            return .penned(pen: ground)
+        }
+    }
+
+    /// Whether any tile of `ground` lies in the line of sight out of `perch`: four straight
+    /// rays, one per direction, walked until they leave the map or land on a fence. Sight
+    /// crosses water and mud alike — the sky between the spires hides nothing.
+    private func sees(from perch: GridPoint, into ground: Set<GridPoint>, fences: Set<GridPoint>) -> Bool {
+        for direction in Direction.allCases {
+            var tile = perch.stepped(direction)
+            while contains(tile), !fences.contains(tile) {
+                if ground.contains(tile) { return true }
+                tile = tile.stepped(direction)
+            }
+        }
+        return false
+    }
+
     func release(fences: Set<GridPoint>) -> PenOutcome {
         if question == .exclude {
             return releaseExcluding(fences: fences)
+        }
+        if question == .stoop {
+            return releaseStooping(fences: fences)
         }
 
         var escapes: [Escape] = []

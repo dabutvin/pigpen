@@ -506,6 +506,7 @@ extension Refusal {
         case .tooClose: "tooClose"
         case .landlocked: "landlocked"
         case .parched: "parched"
+        case .spotted: "spotted"
         }
     }
 }

@@ -106,6 +106,9 @@ enum GamePalette {
         /// Fen: peat and standing water in equal measure, reeds in beds, dead trees silvering
         /// where the bog got their roots, and mist lying low over the lot of it.
         case marsh
+        /// Heights: turf terraces on the tops of spires that stand up out of a sea of cloud,
+        /// with wind-bent pines holding on where they can and nothing below the edge but air.
+        case cloudtop
     }
 }
 
@@ -579,5 +582,48 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.11, green: 0.19, blue: 0.13),
         isNight: true,
         cover: .marsh
+    )
+
+    /// The twelfth world's daylight, and the clearest in the game: there is less sky left
+    /// overhead than anywhere else, so what there is goes a deeper blue than any world below,
+    /// and the light on the turf is thin and brilliant with no haze in it at all. The fen was
+    /// the heaviest light in the game; this is its opposite in every register — and the
+    /// horizon is not land or sea but the top of the weather, a floor of sunlit cloud with
+    /// the worlds underneath it out of sight.
+    static let spireDay = Self(
+        skyTop: Color(red: 0.30, green: 0.55, blue: 0.92),
+        skyHorizon: Color(red: 0.88, green: 0.93, blue: 0.98),
+        disc: Color(red: 1.00, green: 0.98, blue: 0.90),
+        discHalo: Color(red: 0.97, green: 0.96, blue: 0.86),
+        cloud: Color(red: 0.99, green: 0.99, blue: 1.00),
+        farHill: Color(red: 0.80, green: 0.86, blue: 0.94),
+        ground: Color(red: 0.62, green: 0.74, blue: 0.62),
+        foreground: Color(red: 0.50, green: 0.63, blue: 0.53),
+        blade: Color(red: 0.40, green: 0.53, blue: 0.45),
+        canopy: Color(red: 0.38, green: 0.54, blue: 0.50),
+        canopyShade: Color(red: 0.26, green: 0.40, blue: 0.40),
+        isNight: false,
+        cover: .cloudtop
+    )
+
+    /// The heights after dark, which is the blackest sky in the game for the best reason:
+    /// the weather is underneath you. Nothing hazes the stars up here, so the top of the sky
+    /// goes nearly out — past even the desert's — while the cloud sea below holds the
+    /// moonlight and gives it back, the way the cove's wet sand did. It is the one night in
+    /// the game where the brightest thing under the moon is the floor of the world.
+    static let spireDusk = Self(
+        skyTop: Color(red: 0.01, green: 0.02, blue: 0.07),
+        skyHorizon: Color(red: 0.16, green: 0.20, blue: 0.36),
+        disc: Color(red: 0.97, green: 0.98, blue: 1.00),
+        discHalo: Color(red: 0.80, green: 0.84, blue: 0.98),
+        cloud: Color(red: 0.30, green: 0.34, blue: 0.46),
+        farHill: Color(red: 0.26, green: 0.30, blue: 0.43),
+        ground: Color(red: 0.13, green: 0.17, blue: 0.24),
+        foreground: Color(red: 0.09, green: 0.12, blue: 0.18),
+        blade: Color(red: 0.06, green: 0.09, blue: 0.14),
+        canopy: Color(red: 0.14, green: 0.20, blue: 0.26),
+        canopyShade: Color(red: 0.08, green: 0.13, blue: 0.19),
+        isNight: true,
+        cover: .cloudtop
     )
 }

@@ -266,4 +266,21 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Cloudspire Heights: the twelfth world and the last, wrapped in storybook films the way
+    /// the eleven below it are. The send-off points nowhere, because there is nowhere left —
+    /// it puts the game to bed with the pig in it — and The Eyrie stops for a briefing
+    /// because it stands a second animal on the board and cares what he can see, which no
+    /// board before it has cared about: the same courtesy every boss pays.
+    static let cloudspireHeights = GameWorld(
+        theme: .cloudspireHeights,
+        map: .cloudspireHeights,
+        opening: WorldFilmSpec(key: "cloudspire-opening") { .storybook(.cloudspireOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "cloudspire-held") { .storybook(.cloudspireHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theEyrie.id: WorldFilmSpec(key: "the-eyrie-briefing") {
+                .storybook(.theEyrie(start: $0))
+            }
+        ]
+    )
 }

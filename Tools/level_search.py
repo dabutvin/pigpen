@@ -6,7 +6,8 @@ nothing left to beat. It cannot be derived with a sum — it is a search — so 
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
 rat's, `V` a visitor's, `T` a bat's, `U` its pup's, `M` the ringmaster's, `S` the
-scorpion's, `C` the crab's and `L` the bull seal's) and a budget and it prints the best pen,
+scorpion's, `C` the crab's, `L` the bull seal's, `G` the old croc's and `E` the eagle's) and
+a budget and it prints the best pen,
 an example of it,
 and star thresholds in the proportions the shipped levels use.
 
@@ -28,8 +29,8 @@ five against for the skull — which is what makes a treat a fork rather than a 
 tax: the pen can never simply ignore one it is standing next to.
 
 A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
-pup, a ringmaster, a scorpion, a crab, a bull seal, or an old croc — is held by ground in
-two pieces just as happily as by one,
+pup, a ringmaster, a scorpion, a crab, a bull seal, an old croc, or an eagle — is held by
+ground in two pieces just as happily as by one,
 since what has to hold is each animal rather than the pen: the search grows out from every
 animal at once and the ground it ends up with is connected to one or another of them, so a wall
 shared between two enclosures is paid for once, like any other. `--rule berth` is the one board
@@ -42,6 +43,14 @@ has to lie against the water, because he keeps a breathing hole.
 `--rule wallow` is the fen's boss: the pig and the old croc held apart, and the croc's pen
 owed one whole channel — every wet tile of one body of water lying against his own ground,
 because a croc keeps a wallow rather than visits one, and half a wallow is nobody's.
+
+`--rule stoop` is the spire's boss: the crater's rule with the eagle's own clause on it.
+Only the pig is held and the eagle is left outside, his perch a hole in the wall's way —
+and no tile of her pen may stand in his line of sight, which runs four ways from his
+perch, straight along his row and his column, over mud and sky alike. Only a fence breaks
+it: the pen's own wall where the wall faces him, or a piece planted on its own with no pen
+anywhere near it, which is a thing no other board in the game has a use for. `--prefence`
+stands such a piece before the search begins.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -70,7 +79,7 @@ SKULL = "x"
 STAKED = (APPLE, SKULL)
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C", "L", "G")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C", "L", "G", "E")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
 
@@ -137,7 +146,7 @@ def on_rim(tile, rows, columns):
     return tile[0] in (0, rows - 1) or tile[1] in (0, columns - 1)
 
 
-def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
+def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefences=()):
     """The best pen within budget, as (score, tiles).
 
     The pens are carried as bitmasks — one bit per tile of the board — rather than as sets
@@ -220,6 +229,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
         raise SystemExit("--rule hole wants a seal on the board")
     if rule == "wallow" and "G" not in starts:
         raise SystemExit("--rule wallow wants a croc on the board")
+    if rule == "stoop" and "E" not in starts:
+        raise SystemExit("--rule stoop wants an eagle on the board")
 
     # The ground lying against the water, for the board whose seal must keep a breathing hole.
     lapped = 0
@@ -266,6 +277,43 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
                 mask |= 1 << (row * columns + column)
             rays.append(mask)
 
+    # The four ways the eagle looks: straight along his row and his column, each ray
+    # ordered outward from where he perches, so the first fence met is the one that counts.
+    gazes = []
+    if rule == "stoop":
+        row, column = starts["E"]
+        for down, across in NEIGHBOURS:
+            gaze, r, c = [], row, column
+            while True:
+                r, c = r + down, c + across
+                if not (0 <= r < rows and 0 <= c < columns):
+                    break
+                gaze.append(1 << (r * columns + c))
+            gazes.append(gaze)
+
+    # Pieces already standing before the search begins — paid for out of a budget the
+    # caller has already docked — which block the eagle's gaze exactly as a wall does.
+    standing = 0
+    for tile in prefences:
+        standing |= bit(tile)
+
+    def unseen(pen):
+        """Whether no tile of the pen stands in the eagle's line of sight.
+
+        His gaze runs four ways from his perch, along his row and his column, over mud
+        and sky alike; only a fence breaks it — the pen's own wall where the wall faces
+        him, or a piece planted on its own with no pen anywhere near it, which no other
+        board in the game has a use for.
+        """
+        edge = spilling(pen) & ground & ~pen
+        for gaze in gazes:
+            for tile in gaze:
+                if tile & (edge | standing):
+                    break
+                if tile & pen:
+                    return False
+        return True
+
     for animal, start in starts.items():
         if not bit(start) & pennable:
             raise SystemExit(f"{animal!r} starts on the rim of the map, where no pen can hold it")
@@ -286,9 +334,9 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
     # Which animals the pen has to grow from, and which tile it may never cover.
     others = [tile for animal, tile in starts.items() if animal != "P"]
-    if rule == "exclude":
+    if rule in ("exclude", "stoop"):
         if len(others) != 1:
-            raise SystemExit("--rule exclude wants exactly one animal besides the pig")
+            raise SystemExit(f"--rule {rule} wants exactly one animal besides the pig")
         seeds = [starts["P"]]
         # The one left outside is a hole in the ground the wall can neither cover nor stand
         # on: no piece may be laid on an animal, so its tile is staked exactly like a skull.
@@ -371,6 +419,11 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd"):
 
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
+        if rule == "stoop":
+            # The crater's rule first — the eagle is left outside, his perch a hole in
+            # the ground — and then the spire's own: no tile of the pig's pen may stand
+            # in his line of sight.
+            return unseen(pen)
         if rule == "wallow":
             # The thicket's rule first — a croc is not company — and then the fen's own:
             # somewhere on the board there has to be one whole channel every bank of which
@@ -780,7 +833,30 @@ def owns_a_wallow(his, bodies):
     return any(body <= banks for body in bodies)
 
 
-def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
+def seen_from_the_perch(pen, mud, perch, rows, columns, prefences=()):
+    """Whether any tile of a pen stands in the eagle's line of sight.
+
+    The set-of-tiles twin of the search's own `unseen`, for squaring a spire board off:
+    four straight rays out of his perch, along his row and his column, crossing mud and
+    sky alike, and stopped only by a fence — the pen's own wall, or a piece standing on
+    its own.
+    """
+    edge = fences_around(pen, mud)
+    row, column = perch
+    for down, across in NEIGHBOURS:
+        r, c = row, column
+        while True:
+            r, c = r + down, c + across
+            if not (0 <= r < rows and 0 <= c < columns):
+                break
+            if (r, c) in edge or (r, c) in prefences:
+                break
+            if (r, c) in pen:
+                return True
+    return False
+
+
+def squared_off(mud, treats, starts, rows, columns, budget, rule="herd", prefences=()):
     """The best pen a player gets by squaring the map off, as (score, tiles).
 
     One block of ground per animal, leaning on whatever water happens to be there, and
@@ -801,9 +877,9 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
     """
     pennable = {tile for tile in mud if not on_rim(tile, rows, columns)}
     others = [tile for animal, tile in starts.items() if animal != "P"]
-    staked = set(others) if rule == "exclude" else set()
+    staked = set(others) if rule in ("exclude", "stoop") else set()
     ringed = starts.get("C" if rule == "moat" else "M")
-    if rule == "exclude":
+    if rule in ("exclude", "stoop"):
         # Only the pig is being held, and no block may swallow the one left outside.
         pennable = pennable - set(others)
         each = [blocks_around(pennable, starts["P"], rows, columns)]
@@ -893,6 +969,12 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd"):
                 run_of_ground(pen, others[0]), bodies_of_water(mud, rows, columns)
             ):
                 continue
+        # And the spire will not have the pig under the eagle's eye: a block only counts if
+        # no tile of it stands in his line of sight, since sight crosses the sky as freely
+        # as a rectangle's wall does not.
+        if rule == "stoop":
+            if seen_from_the_perch(pen, mud, starts["E"], rows, columns, prefences):
+                continue
         # And the tundra will not have the seal penned dry: a block pair only counts if some
         # tile of his block lies against the water, where his breathing hole is.
         if rule == "hole" and others:
@@ -944,7 +1026,7 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow", "stoop"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
@@ -952,8 +1034,17 @@ def main():
              "pen with the pig in another, hold the ringmaster in the middle of the "
              "pig's own ring, hold the two in pens that share no wall, close the "
              "pig's ground round the crab's whole pool, hold the pair apart with "
-             "the seal's ground lying against the water, or hold the pair apart with "
-             "one whole channel's every bank held as the croc's own ground",
+             "the seal's ground lying against the water, hold the pair apart with "
+             "one whole channel's every bank held as the croc's own ground, or hold "
+             "the pig nowhere the eagle can see her",
+    )
+    parser.add_argument(
+        "--prefence",
+        action="append",
+        metavar="ROW,COL",
+        help="A piece already standing on this mud tile before the search begins. It blocks "
+             "the eagle's gaze exactly as any fence does, and walls a pen for free, since it "
+             "is already paid for — dock --budget yourself for every piece named this way",
     )
     parser.add_argument(
         "--plan",
@@ -969,7 +1060,20 @@ def main():
     options = parser.parse_args()
 
     mud, treats, starts, rows, columns = parse(options.map.read())
-    points, pen = search(mud, treats, starts, rows, columns, options.budget, options.beam, options.rule)
+    prefences = set()
+    for spec in options.prefence or []:
+        tile = tuple(int(part) for part in spec.split(","))
+        if tile not in mud:
+            raise SystemExit(f"--prefence {spec} is not open mud")
+        if tile in treats or tile in starts.values():
+            raise SystemExit(f"--prefence {spec} is staked and takes no piece")
+        prefences.add(tile)
+        # A piece fills its tile the way water does: nothing walks it, nothing builds on
+        # it, and a pen lying against it is walled there for free — it is already paid for.
+        mud.discard(tile)
+    points, pen = search(
+        mud, treats, starts, rows, columns, options.budget, options.beam, options.rule, prefences
+    )
     if not pen:
         raise SystemExit("No pen holds within that budget")
 
@@ -979,7 +1083,9 @@ def main():
         print(draw(mud, treats, starts, rows, columns, pen, plan_only=True))
 
     if options.demand:
-        plain, block = squared_off(mud, treats, starts, rows, columns, options.budget, options.rule)
+        plain, block = squared_off(
+            mud, treats, starts, rows, columns, options.budget, options.rule, prefences
+        )
         print()
         print(draw(mud, treats, starts, rows, columns, block))
         if options.plan:

@@ -255,7 +255,7 @@ rule boxes the pig on her own tile and rings his channel tight, leaning the sist
 walls, and the snag staked on the ring's south line makes even that answer pay: 13 of 48.
 
 The same nineteen pieces swing the ring wide instead and take the whole east fen into the
-croc's ground — both live bilberries, both snags, and the causeway he lies in. At 72% it is
-the widest gap any board in the game leaves. The bilberry on his channel's own bar stays
+croc's ground — both live bilberries, both snags, and the causeway he lies in. At 72% it was
+the widest gap any board in the game left until the heights' Eyrie asked 76. The bilberry on his channel's own bar stays
 where it is, which on this board is the croc's pantry. It asks for 21 of the 24 stars below
 it before it opens.
