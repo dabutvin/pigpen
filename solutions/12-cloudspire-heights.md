@@ -29,7 +29,7 @@ every tile is bought.
 | 4 | The Rope Bridge | 12 | 37 | 2 balloons | 47 | 24 |
 | 5 | The Cloudbank | 13 | 41 | 2 balloons | 51 | 26 |
 | 6 | The Lost Balloons | 11 | 36 | 1 balloon | 41 | 20 |
-| 7 | Windward Corner | 10 | 46 | 2 whirlwinds | 36 | 16 |
+| 7 | Windward Corner | 10 | 45 | 2 balloons, 2 whirlwinds | 45 | 20 |
 | 8 | The Open Sky | 14 | 51 | 1 balloon | 56 | 30 |
 | 9 | The Eyrie | 10 | 45 | 5 balloons, 1 whirlwind | 65 | 15 |
 
@@ -192,18 +192,18 @@ balloon by the south bank hangs one detour too far and is refused on purpose —
 question answered both ways on the same board, and then twice more by a sky that does not
 answer at all.
 
-## 7. Windward Corner — 10 pieces, 36
+## 7. Windward Corner — 10 pieces, 45
 
 ```
 a~~~~~~~~~~
 ~~~~~~~~~o~
+~~~ooooooo#
 ~~oooooooo#
-~~oooooooo#
-~~ooPoxoo#.
+~~ooPoxoa#.
 ~~oooooo#..
 ~~ooxoo#...
 ~~oooo#....
-~~ooo#.....
+~~ooa#.....
 ~ooo#......
 ~~o#.......
 ~~#........
@@ -213,14 +213,19 @@ Sky two deep along the whole north and west, with a balloon riding the very corn
 where nothing can ever be penned, and the field hanging on the other two rims: a right angle of
 free bank, handed over.
 
-Which is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner asked it,
-and at 55% the hardest ordinary field in the heights — in the whole game only The Whiskers asks
-more. The right angle boxes a three-wide strip, swallows a whirlwind, and manages 16. The same
-ten pieces laid corner to corner as one grand diagonal — the largest single wall any ordinary
-field in the game has ever handed out — lean both banks at once and hold 46 tiles: both
-whirlwinds are inside it and paid for, and 46 less ten is 36. Two mud bumps hang off the banks
-inside the diagonal's reach and one row beyond every box the budget allows, which is the
-difference measured out in tiles.
+Which is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner asked it, and
+at 55% the hardest ordinary field in the heights — in the whole game only The Whiskers asks more.
+Two live balloons hang where a diagonal goes and a right angle does not: one straight out along
+the pig's row, one straight down her column, each with a whirlwind standing between her and it, so
+neither is had for nothing. The right angle boxes a strip, pays both whirlwinds and reaches one
+balloon: 25 tiles and one, less ten, which is 20. The same ten pieces laid corner to corner as one
+grand diagonal — the largest single wall any ordinary field in the game has ever handed out — lean
+both banks at once, pay the same two whirlwinds and take both live balloons: 45 tiles and the
+pair, less ten, which is 45.
+
+The corner balloon stays exactly where it always was, on the one tile of the world no pen will
+ever hold. A tease is worth having when the board also pays out; it is only scenery when nothing
+on the board can be won.
 
 ## 8. The Open Sky — 14 pieces, 56
 

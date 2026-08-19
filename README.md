@@ -728,7 +728,7 @@ above the tideline, where every tile of the pen is bought.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Ebbtide Pool | 13 | one pool, 3 pearls, 2 jellyfish | 10 | 17 | 41% |
-| 2 | Twin Pools | 12 | two pools, 2 pearls on the line | 17 | 30 | 43% |
+| 2 | Twin Pools | 12 | two pools, a pearl argued for by each | 22 | 39 | 43% |
 | 3 | The High Strand | 19 | no pool at all, 2 pearls on the line | 20 | 36 | 44% |
 | 4 | The Oyster Bed | 14 | one pool, 2 pearls seeded in its heart, 1 loose | 23 | 42 | 45% |
 | 5 | The Runnel | 13 | two pools either side of a channel, 2 pearls | 23 | 43 | 46% |
@@ -932,16 +932,20 @@ the one field back on the ground, where every tile of the pen is bought.
 | 4 | The Rope Bridge | 12 | an island, a causeway and a delta, 3 balloons, 3 whirlwinds | 24 | 47 | 48% |
 | 5 | The Cloudbank | 13 | one long bank of sky, 3 balloons, 4 whirlwinds | 26 | 51 | 49% |
 | 6 | The Lost Balloons | 11 | 4 balloons hung wide, 2 adrift for good, 2 whirlwinds | 20 | 41 | 51% |
-| 7 | Windward Corner | 10 | two free banks meeting, 1 balloon on the world's corner, 2 whirlwinds | 16 | 36 | 55% |
+| 7 | Windward Corner | 10 | two free banks meeting, 3 balloons (1 on the world's corner), 2 whirlwinds | 20 | 45 | 55% |
 | 8 | The Open Sky | 14 | the widest board, 2 balloons, 6 whirlwinds in two gust-lines | 30 | 56 | 46% |
 | 9 | The Eyrie | 10 | the eagle on his pinnacle, 6 balloons, 1 whirlwind | 15 | 65 | 76% |
 
 Windward Corner is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner
 asked it — sky two deep along the whole north and west, the field hung on the east and south
 rims — and at 55% it is the hardest ordinary field in the heights; in the whole game only The
-Whiskers asks more. The right angle boxes a strip and swallows a whirlwind for 16; the same
-ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
-ordinary field in the game — lean both banks at once and hold 46 tiles for 36. The Open Sky
+Whiskers asks more. Two balloons hang where the diagonal goes and the right angle does not —
+one straight out along the pig's row, one straight down her column, each with a whirlwind
+between her and it — and the third rides the very corner of the map, where nothing can ever be
+penned. The right angle boxes a strip, pays both whirlwinds and reaches one balloon for 20; the
+same ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
+ordinary field in the game — lean both banks at once, pay the same two whirlwinds and take both
+live balloons, holding 45 tiles for 45. The Open Sky
 holds 51 tiles on the broadest board in the heights, which is the biggest pen in the world
 and six more than the boss's.
 

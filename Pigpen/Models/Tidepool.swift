@@ -83,37 +83,38 @@ extension PuzzleLevel {
     /// turned in towards the other, and the pig on the open sand between them.
     ///
     /// The span question: neither pool is any use on its own — a ring three tiles wide walls
-    /// almost nothing — and no rectangle on this board reaches round both. Squaring off gets one
-    /// corner against each across the middle and holds 17. Twelve pieces run out as one long
-    /// diagonal band from the top of the board down between the two rings hold 30
-    /// tiles, leaning on the outside of one pool going down and the other coming back — because
-    /// two walls that face each other across open ground are a pen already drawn, if the wall
-    /// thrown between them steps on the diagonal.
+    /// almost nothing — and no rectangle on this board reaches round both. Squaring off bends far
+    /// enough to pick up one pearl and holds 17 tiles and it, which is 22. Twelve pieces run out
+    /// as one long diagonal band from the top of the board down between the two rings hold 29
+    /// tiles and BOTH pearls, which is 39 — leaning on the outside of one pool going down and the
+    /// other coming back, because two walls that face each other across open ground are a pen
+    /// already drawn, if the wall thrown between them steps on the diagonal.
     ///
-    /// The hearts go unbought on purpose: a tile apiece behind their breaks, they are the
-    /// cheapest ground on the board and the least of it, which is the world's lesson told twice
-    /// in miniature. The pools' pearls are already gone — the tide carried both down the strand
-    /// and dropped them on the line of the map, where nothing can be penned.
+    /// A pearl is laid where each pool argues for the band: one on the open sand off the
+    /// north-east shoulder of the first ring, which only the long wall reaches, and one in the
+    /// heart of the second, which is bought by stepping in through its own break. The hearts of
+    /// these pools were the cheapest ground on the board and the least of it; putting a pearl in
+    /// one is what makes the cheap ground worth the walk.
     static let twinPools = tidepool(
         id: "twin-pools",
         name: "Twin Pools",
         fenceBudget: 12,
-        twoStarScore: 17,
-        threeStarScore: 28,
-        maximumScore: 30,
+        twoStarScore: 22,
+        threeStarScore: 37,
+        maximumScore: 39,
         question: .span,
         map: """
             ...........
             ..~~~......
-            ..~.~......
+            ..~.~...a..
             ..~.~......
             ...........
             ....P......
             ......~.~..
-            ......~.~..
+            ......~a~..
             ......~~~..
             ...........
-            ...a.....a.
+            ...........
             """
     )
 

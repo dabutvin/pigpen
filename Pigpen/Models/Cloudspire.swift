@@ -237,29 +237,36 @@ extension PuzzleLevel {
     /// rims, a right angle of free bank meeting high in the quadrant.
     ///
     /// Which is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner
-    /// asked it, at full stretch: the right angle boxes a three-wide strip and swallows a
-    /// whirlwind for 16, where one grand diagonal — ten fences corner to corner, the largest
-    /// single wall on any ordinary field in the game — leans both banks at once, swallows
-    /// both whirlwinds, and holds 46 tiles for 36. At 55 it is the hardest ordinary field
-    /// in the heights, and in the game the Whiskers alone ask more.
+    /// asked it, at full stretch: the right angle boxes a strip, swallows both whirlwinds and
+    /// reaches one balloon for 20, where one grand diagonal — ten fences corner to corner, the
+    /// largest single wall on any ordinary field in the game — leans both banks at once,
+    /// swallows the same two whirlwinds and takes BOTH live balloons, holding 45 tiles for 45.
+    /// At 55 it is the hardest ordinary field in the heights, and in the game the Whiskers
+    /// alone ask more.
+    ///
+    /// The two live balloons are set one straight out along the pig's row and one straight down
+    /// her column, each with a whirlwind between her and it, so neither is had for nothing —
+    /// and the corner balloon stays exactly where it was, riding the tile no pen will ever
+    /// hold. A tease is worth having when the board also pays out; it is only scenery when
+    /// nothing on the board can be won.
     static let windwardCorner = cloudspire(
         id: "windward-corner",
         name: "Windward Corner",
         fenceBudget: 10,
-        twoStarScore: 16,
-        threeStarScore: 34,
-        maximumScore: 36,
+        twoStarScore: 20,
+        threeStarScore: 42,
+        maximumScore: 45,
         question: .corner,
         map: """
             a~~~~~~~~~~
             ~~~~~~~~~.~
+            ~~~........
             ~~.........
-            ~~.........
-            ~~..P.x....
+            ~~..P.x.a..
             ~~.........
             ~~..x......
             ~~.........
-            ~~.........
+            ~~..a......
             ~..........
             ~~.........
             ~~.........
