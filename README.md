@@ -525,16 +525,19 @@ out for.
 | 3 | Stillwater Neck | 11 | 3 crystals, 1 boulder | 19 | 31 | 38% |
 | 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
 | 5 | Glowworm Reach | 11 | 3 crystals | 15 | 26 | 42% |
-| 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
+| 6 | Rimstone Corner | 9 | a scalloped dam, 2 crystals, 1 boulder | 23 | 44 | 47% |
 | 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 42 | 63 | 33% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
-Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
-in the game: the river takes the whole roof of the cave and the whole east wall, and nine pieces
-laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
-Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
-round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
+Rimstone Corner is the corner question with two free sides handed over: the river takes the whole
+roof of the cave and the whole east wall. What makes it more than a right angle drawn twice is the
+shape of the second bank — the east dam is **scalloped**, stepping in a tile and back out the way
+rimstone actually forms, in terraces rather than in rulers, so no rectangle can lie along it — and
+a boulder down off the roof onto the ground the tidy answer wants. The right angle is driven east
+of the boulder and holds 18 tiles and one crystal for 23; the same nine laid corner to corner as a
+staircase, stepping round the boulder, hold 34 tiles and both crystals, which is 44. Foundry Corner
+asked it with the same nine and one free side rather than two, and could only reach round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
 dunes' Great Erg came in a tile above it.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
@@ -791,7 +794,7 @@ the weather has come down and every tile of the pen is bought.
 |---|---|---|---|---|---|---|
 | 1 | The Corrie | 13 | two ridges leaning together, 3 fish, 2 bergs | 22 | 38 | 42% |
 | 2 | Twin Spurs | 13 | two ridges in opposite quarters, 2 fish | 23 | 41 | 43% |
-| 3 | The Whiteout | 19 | no ice at all, 2 fish on the line, 2 bergs | 20 | 36 | 44% |
+| 3 | The Whiteout | 19 | no ice at all, 3 fish (2 on the line), 4 bergs | 20 | 36 | 44% |
 | 4 | The Seam | 12 | two ridges on one slant, a seam between, 2 fish | 19 | 36 | 47% |
 | 5 | Whaleback Ridge | 11 | one ridge seven tiles long, a school of 3 fish | 22 | 42 | 47% |
 | 6 | Fish Cache | 12 | one ridge, 3 fish hung wide of it | 20 | 39 | 48% |

@@ -29,7 +29,7 @@ There is a crystal on every board, because a crystal is the only light in the Gl
 | 3 | Stillwater Neck | 11 | 26 | 2 crystals, 1 boulder | 31 | 19 |
 | 4 | The Blind Grike | 19 | 36 | 2 crystals, 1 boulder | 41 | 25 |
 | 5 | Glowworm Reach | 11 | 21 | 1 crystal | 26 | 15 |
-| 6 | Rimstone Corner | 9 | 36 | 2 crystals | 46 | 25 |
+| 6 | Rimstone Corner | 9 | 34 | 2 crystals | 44 | 23 |
 | 7 | Boulder Chamber | 15 | 44 | 2 crystals, 2 boulders | 44 | 23 |
 | 8 | Great Gallery | 19 | 58 | 2 crystals, 1 boulder | 63 | 42 |
 | 9 | The Roost | 20 | 35 | 3 crystals, 1 boulder | 45 | 23 |
@@ -173,20 +173,20 @@ from the nearest ground worth holding, and four tiles of wall cost more than fiv
 against the west wall is a row below where the pen would otherwise stop, and the tongue that fetches
 it pinches down to a single tile: 21 tiles and that crystal, which is 26.
 
-## 6. Rimstone Corner — 9 pieces, 46
+## 6. Rimstone Corner — 9 pieces, 44
 
 ```
 ............
 ~~~~~~~~~~~.
-.#aooooooo~.
-..#ooooooo~.
-...#oooPoo~.
-....#oaooo~.
-.....#oooo~.
-......#ooo~.
-.......#oo~.
-........#o~.
-.........#~.
+#oaoooooo~~.
+.#ooooooo~~.
+..#ooooPoo~.
+...#ooaooo~.
+....##oooo~.
+.....x#oo~~.
+.......##.~.
+..........~.
+..........~.
 ```
 
 The river takes the length of the roof of the cave and the length of the east wall — in along the
@@ -194,12 +194,19 @@ north, round the corner, and down the far side — so two sides of the pen are h
 are nine pieces to draw the other two. It runs a tile inside the rim, so the strip beyond it is a
 far bank: no pen can reach it, the way no pen reaches the far shore of the Dew Ponds.
 
-Nine laid as a right angle in the corner hold 25. The same nine laid corner to corner, one long
-diagonal from the west wall down to the south-east that cuts the entire bend off in a single line,
-hold 36 tiles and both crystals: 46. That is the smallest budget in the caverns paying out the
-second biggest score in them, which is the corner question with nothing whatever in the way of it —
-Foundry Corner asked it on a canal bend with the same nine pieces and could only reach round 27, and
-every one of these nine has to be on the diagonal or the pen falls apart.
+What stops that being a right angle drawn twice is the shape of the second bank. The east dam is
+**scalloped** — it steps in a tile and back out again, which is how rimstone actually forms, in
+terraces rather than in rulers — and a bank with a jog in it is a bank no rectangle can lie along.
+A staircase follows it without losing a tile.
+
+The other half is the boulder, down off the roof onto exactly the ground the tidy answer wants.
+Nine pieces laid as a right angle are driven east of its line and hold 18 tiles and ONE crystal,
+which is 23; the other is pegged out west of the bend where no rectangle hung off two banks ever
+goes. The same nine laid corner to corner — one long staircase from the north-west down to the
+east dam, stepping around the boulder on the way past — hold 34 tiles and both crystals: 44. That
+is the smallest budget in the caverns paying out one of the biggest scores in them. Foundry Corner
+asked this on a canal bend with the same nine pieces and could only reach round 27; two free sides
+instead of one, and a bank that will not be hugged, is the difference.
 
 ## 7. Boulder Chamber — 15 pieces, 44
 
