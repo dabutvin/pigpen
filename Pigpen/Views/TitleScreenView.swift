@@ -726,7 +726,8 @@ private enum PlayDestination: Hashable {
 }
 
 /// How much of the whole game is in, worn on the right-hand end of Play the way the daily wears
-/// its stars — every world, every level, every star and every rainbow, in one number.
+/// its stars — every world, every level, every star and every rainbow, in one number, and the
+/// word for what that number counts so it is not left to be guessed at.
 ///
 /// It goes rainbow at a hundred, and only there. Three stars on every level in the game stops at
 /// 75, so the badge sitting gold at 99 is the game saying there is a map somewhere still holding
@@ -736,10 +737,14 @@ private struct CompletionBadge: View {
     let completion: GameCompletion
 
     var body: some View {
-        Text("\(completion.percent)%")
+        Text("\(completion.percent)% complete")
             .font(.system(size: 13, weight: .black, design: .rounded))
             .monospacedDigit()
             .contentTransition(.numericText())
+            // The badge says its piece whole or not at all: a capsule broken over two lines, or
+            // clipped to "56% comp…", is worse than the row's own text scaling down to make room.
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
             .foregroundStyle(GamePalette.post)
             .padding(.vertical, 4)
             .padding(.horizontal, 9)
