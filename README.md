@@ -1000,12 +1000,13 @@ A puzzle a day, on its own board, with a clock running on it.
   time back with the fencing. The time a day is remembered by is still the quickest shut
   that held. The meadow has no clock on it at all: a level up the trail is worth taking
   apart, and a clock over that would only ask you to hurry.
-- **The archive is a calendar.** Every day of the year is a little field with the day's
+- **The archive is a calendar.** Every day the book has is a little field with the day's
   number under it: bare mud for a day nobody has finished, washed gold for a day complete,
   drifting through the spectrum for one that gave up the best pen it had in it — which is
   what the real board does when such a pen closes — and grey ground under a padlock for a
   day still to come. The stars a day gave up sit under its square. It opens on the month
-  you are in and turns back as far as the first of January.
+  you are in and turns back as far as the first day the book has, however many years ago
+  that was — a daily does not expire when the year it belongs to does.
 - **Nothing here unlocks anything.** The meadow is a trail, where one stop opens the next.
   The archive is a calendar: a week missed is a week of squares nobody has washed gold
   rather than a wall, and the only thing shut is tomorrow — until it is today.
@@ -1076,8 +1077,8 @@ drawn in code from one clock and stops dead when the system asks for reduced mot
 stars taken so far sit in a badge in the top corner, well away from Play.
 
 Under Play is a board with **today's puzzle** on it — what day it is, and once it is
-complete, the stars it gave up, the time it took and how many days in a row you are on. Under that, **Archive** opens the calendar of every daily there has been
-this year, and **Tutorial** opens a practice pen off the world map and walks through
+complete, the stars it gave up, the time it took and how many days in a row you are on. Under that, **Archive** opens the calendar of every daily there has been,
+and **Tutorial** opens a practice pen off the world map and walks through
 tapping a post, dragging a run, building against water, shutting the pen until the ground
 washes gold, and releasing the pig.
 
@@ -1566,7 +1567,7 @@ It writes two files, both generated and both committed:
 
 Everything a day is made of comes out of a generator seeded from that date alone, so days are independent, the work spreads over as many cores as there are, and the same run of the tool produces the same year twice over. Running it takes the better part of an hour across four cores, which is the price of measuring what a puzzle asks rather than declaring it.
 
-To carry the book further, re-run the tool with the years wanted and commit what it writes. Nothing else has to change: the archive works out its own months from what is in the book, and a day past the end of it is told there is no puzzle rather than handed an empty field.
+To carry the book further, re-run the tool with the years wanted and commit what it writes. Nothing else has to change: the archive works out its own months from what is in the book — every month of it, from the first day the book has up to the month the player is standing in — and a day past the end of it is told there is no puzzle rather than handed an empty field.
 
 ### Build from phone (no laptop)
 
@@ -1728,7 +1729,7 @@ Pigpen/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
 │   ├── DailyCard.swift          # Today's puzzle on the title screen: the day, its stars, its clock
-│   ├── DailyArchiveView.swift   # The calendar of every daily there has been this year
+│   ├── DailyArchiveView.swift   # The calendar of every daily there has been
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps

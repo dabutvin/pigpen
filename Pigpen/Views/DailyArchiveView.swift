@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-/// Every daily puzzle there has been this year, a month at a time.
+/// Every daily puzzle there has been, a month at a time.
 ///
 /// The meadow is a trail: one stop opens the next, and where you are is where you have got
 /// to. The archive is a calendar instead — nothing here unlocks anything, and a week missed
@@ -175,8 +175,9 @@ struct DailyArchiveView: View {
     }
 
     /// Which month is on the page, and the way to the ones either side of it. The archive
-    /// runs from the start of the year up to the month you are standing in — there is
-    /// nothing worth turning to past that, since every day on the page would be shut.
+    /// runs from the first month the book has up to the month you are standing in, across
+    /// however many years that is — there is nothing worth turning to past that, since
+    /// every day on the page would be shut.
     /// The page itself also turns under a swipe; these arrows are the same turn, written
     /// down for anybody who would rather tap.
     private var monthBar: some View {
@@ -284,7 +285,7 @@ struct DailyArchiveView: View {
 
     /// What the calendar is for, said once at the bottom rather than on every square.
     private var footnote: some View {
-        Text("Every puzzle of the year is already here. A day opens when it comes round.")
+        Text("Every puzzle there has been is already here. A day opens when it comes round.")
             .font(.system(size: 11, weight: .semibold))
             .foregroundStyle(GamePalette.cream.opacity(0.75))
             .multilineTextAlignment(.center)
