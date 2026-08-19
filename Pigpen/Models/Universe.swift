@@ -2,9 +2,12 @@ import SwiftUI
 
 /// One world on the universe map: its look, and the playable world behind it once there is one.
 ///
-/// Not every world is built yet. The ones that are carry a `GameWorld` — a trail of puzzles to
-/// walk. The rest are silhouettes: a boss shape and a name, drawn on the map as somewhere to go
-/// next, so a player can see the whole journey ahead of them long before it is all there to play.
+/// For most of the game's life not every world was built: the ones that were carried a
+/// `GameWorld` — a trail of puzzles to walk — and the rest were silhouettes, a boss shape and
+/// a name drawn on the map as somewhere to go next, so a player could see the whole journey
+/// long before it was all there to play. Every world is built now, so `game` is never empty
+/// on the shipped map — but the map itself keeps the idea, because it is the idea a save from
+/// a silhouette era grew up inside.
 struct UniverseWorld: Identifiable, Sendable {
     let theme: WorldTheme
     /// The playable world, or nothing for one still being built.
@@ -31,8 +34,8 @@ enum WorldState: Sendable, Equatable {
 ///
 /// A world opens when the one before it is finished, so the journey is a chain: hold every pen
 /// in the meadow to reach the thicket, hold every pen in the thicket to reach the mountain, and
-/// so on out to the edge of what has been built. A silhouette cannot be finished, so it is as
-/// far as the chain reaches for now — which is exactly what "coming soon" should mean.
+/// so on out to the last stop there is. The chain used to end at a silhouette; it ends at the
+/// heights now, and past them is nothing but sky.
 struct Universe: Sendable {
     let worlds: [UniverseWorld]
 
@@ -93,9 +96,10 @@ struct Universe: Sendable {
 }
 
 extension Universe {
-    /// The map the game ships: the meadow, the thicket, the mountain, the city, the reaches, the
-    /// caverns, the carnival and the dunes to play, and four more worlds standing out past them as
-    /// silhouettes — a boss apiece, waiting to be built.
+    /// The map the game ships: the meadow, the thicket, the mountain, the city, the reaches,
+    /// the caverns, the carnival, the dunes, the cove, the tundra, the fen and the heights —
+    /// every world there is, built and playable, with nothing standing past them. The
+    /// journey a player once walked toward silhouettes is walked all the way to its end.
     static let all = Universe(worlds: [
         UniverseWorld(theme: .meadow, game: .mudlarkMeadow),
         UniverseWorld(theme: .thornwood, game: .thornwoodThicket),
@@ -105,50 +109,9 @@ extension Universe {
         UniverseWorld(theme: .gloamdeep, game: .gloamdeepCaverns),
         UniverseWorld(theme: .lanternCarnival, game: .lanternCarnival),
         UniverseWorld(theme: .sunbakedDunes, game: .sunbakedDunes),
-        UniverseWorld(theme: silhouette(
-            id: "tidepool-cove", name: "Tidepool Cove", blurb: "Where the tide keeps rearranging the walls.",
-            boss: "🦀", bossName: "the crab",
-            accent: Color(red: 0.37, green: 0.74, blue: 0.72), deep: Color(red: 0.16, green: 0.44, blue: 0.46)
-        ), game: nil),
-        UniverseWorld(theme: silhouette(
-            id: "frostwhisker-tundra", name: "Frostwhisker Tundra", blurb: "Ice, snow, and a pig that will not stay put.",
-            boss: "🦭", bossName: "the bull seal",
-            accent: Color(red: 0.69, green: 0.84, blue: 0.93), deep: Color(red: 0.36, green: 0.56, blue: 0.71)
-        ), game: nil),
-        UniverseWorld(theme: silhouette(
-            id: "mirebog-fen", name: "Mirebog Fen", blurb: "Half water, half mud, all trouble.",
-            boss: "🐊", bossName: "the old croc",
-            accent: Color(red: 0.47, green: 0.56, blue: 0.35), deep: Color(red: 0.24, green: 0.32, blue: 0.18)
-        ), game: nil),
-        UniverseWorld(theme: silhouette(
-            id: "cloudspire-heights", name: "Cloudspire Heights", blurb: "Fields in the sky, and a long way down.",
-            boss: "🦅", bossName: "the eagle",
-            accent: Color(red: 0.73, green: 0.83, blue: 0.96), deep: Color(red: 0.44, green: 0.58, blue: 0.79)
-        ), game: nil)
+        UniverseWorld(theme: .tidepoolCove, game: .tidepoolCove),
+        UniverseWorld(theme: .frostwhiskerTundra, game: .frostwhiskerTundra),
+        UniverseWorld(theme: .mirebogFen, game: .mirebogFen),
+        UniverseWorld(theme: .cloudspireHeights, game: .cloudspireHeights)
     ])
-
-    /// A theme for a world that is only a silhouette so far: it needs a name, a boss and a
-    /// colour for the map, and stand-in palettes it will only ever draw with once it is built.
-    private static func silhouette(
-        id: String,
-        name: String,
-        blurb: String,
-        boss: String,
-        bossName: String,
-        accent: Color,
-        deep: Color
-    ) -> WorldTheme {
-        WorldTheme(
-            id: id,
-            name: name,
-            blurb: blurb,
-            day: .day,
-            dusk: .dusk,
-            treats: WorldTheme.meadow.treats,
-            field: WorldTheme.meadow.field,
-            boss: BossMark(glyph: boss, name: bossName),
-            accent: accent,
-            accentDeep: deep
-        )
-    }
 }

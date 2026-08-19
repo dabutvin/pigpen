@@ -18,6 +18,27 @@
 /// The dunes stand a scorpion on the sand, and he is the first one it matters how *near* to. Every
 /// other animal in the game is either in the pig's pen or out of it; a scorpion stings through a
 /// fence, so a wall with the pig on one side of it and him on the other is no wall at all.
+///
+/// The cove stands a crab in the heart of a broken ring of tidewater, and he is the first one
+/// whose home matters as much as he does: the pool walls him in on every side but its break,
+/// and what the board asks is that the pig's own ground close the whole way round the pool.
+///
+/// The tundra stands a bull seal on the ice, and he is the first one particular about the pen
+/// he is given rather than only about who shares it: two pens, the pig's and his, and his has
+/// to lie against the water — a seal penned on dry ice has no breathing hole, and the board
+/// will not have it.
+///
+/// The fen stands an old croc in the reeds, and he is greedier than the seal by a whole
+/// channel: his pen has to hold every bank of one body of water — a croc keeps a wallow
+/// rather than visits one, and half a wallow is nobody's.
+///
+/// The spire perches an eagle above everything, and he is the first one that matters at a
+/// distance. Like the wyrm he is never fenced and never held — his perch is a hole in the
+/// wall's way — but the wyrm only sat where the wall wanted to go. The eagle sees: four ways
+/// from his perch, straight along his row and his column, over mud and open sky alike, and
+/// no tile of the pig's pen may stand anywhere his eye reaches. Only a fence breaks his line
+/// of sight, which makes a fence two tools in one world — a wall, and an eyelid pulled down
+/// over somebody else's eye.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -29,6 +50,10 @@ enum Animal: Character, CaseIterable, Sendable {
     case pup = "U"
     case ringmaster = "M"
     case scorpion = "S"
+    case crab = "C"
+    case seal = "L"
+    case croc = "G"
+    case eagle = "E"
 
     /// What the field draws it as.
     var glyph: String {
@@ -42,6 +67,10 @@ enum Animal: Character, CaseIterable, Sendable {
         case .bat, .pup: "🦇"
         case .ringmaster: "🤹"
         case .scorpion: "🦂"
+        case .crab: "🦀"
+        case .seal: "🦭"
+        case .croc: "🐊"
+        case .eagle: "🦅"
         }
     }
 
@@ -63,6 +92,10 @@ enum Animal: Character, CaseIterable, Sendable {
         case .pup: "Peep!"
         case .ringmaster: "Ta-da!"
         case .scorpion: "Tik-tik!"
+        case .crab: "Click!"
+        case .seal: "Arf!"
+        case .croc: "Snap!"
+        case .eagle: "Kree!"
         }
     }
 
@@ -79,6 +112,10 @@ enum Animal: Character, CaseIterable, Sendable {
         case .pup: "pup"
         case .ringmaster: "ringmaster"
         case .scorpion: "scorpion"
+        case .crab: "crab"
+        case .seal: "bull seal"
+        case .croc: "old croc"
+        case .eagle: "eagle"
         }
     }
 }

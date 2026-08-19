@@ -165,9 +165,18 @@ extension PuzzleLevel {
     /// player has met before, and why it stands in the middle of the trail rather than at the start
     /// of it.
     ///
-    /// A melon lies at each end of the southern edge, and twenty-one pieces will not reach either.
-    /// On ground with no free wall on it five points is four pieces of fence, and four pieces of
-    /// diamond are eight tiles.
+    /// What bends it is two melons out on the eastern sand, one north and one south, and a pair of
+    /// cacti staked on the pig's own latitude — one inboard, one on the rim behind it. That pair is
+    /// the whole trick: a rectangle that wants a wall through that line has to swallow the inboard
+    /// cactus, and a rectangle nudged off a cactus walks onto the one behind it and then onto the
+    /// rim, where there is nothing left to bump out to. So the square answer is driven back to a
+    /// five by five holding 25 and reaches neither melon.
+    ///
+    /// The same twenty-one run round as a diamond pulled out of true to the east hold 40 tiles and
+    /// ONE melon, which is 45. The other is the one this board will not give up: on ground with no
+    /// free wall on it five points is four pieces of fence, and four pieces of diamond are eight
+    /// tiles — so the second melon costs more than it pays, and a player who works that out has
+    /// been taught the whole of what a bare field teaches.
     static let theHardpan = dunes(
         id: "the-hardpan",
         name: "The Hardpan",
@@ -179,15 +188,15 @@ extension PuzzleLevel {
         map: """
             ...........
             ...........
+            .........a.
             ...........
             ...........
-            ...........
-            .....P.....
-            ...........
+            .....P...xx
             ...........
             ...........
+            .........a.
             ...........
-            .a.......a.
+            ...........
             """
     )
 
@@ -273,7 +282,8 @@ extension PuzzleLevel {
     /// over, and eleven pieces — the smallest budget in the world — to draw the rest.
     ///
     /// Which is the corner question with two free sides, the way Rimstone Corner and The Big Top
-    /// asked it, and the hardest corner in the game. The right-angled answer is a rectangle hung
+    /// asked it, and the hardest corner in the game until the cove's Barnacle Corner took the
+    /// title. The right-angled answer is a rectangle hung
     /// under the back with its own east wall paid for: 20 tiles, stopping three columns short of the
     /// eastern horn, because eleven pieces will not reach it and turn the corner as well. The eleven
     /// run instead as one long chevron — out from the western rim, down across the whole mouth of the
@@ -378,7 +388,7 @@ extension PuzzleLevel {
     /// be taught. The same sixteen run out from the pig up the west of the flats, along under the
     /// great back in the north and down round the far side of the notch hold 45 tiles and the melon
     /// in the north-east, which is 50 — the biggest pen any boss holds, and at 62% the widest gap
-    /// any board in the game leaves.
+    /// any board in the game left until the cove's crab asked for his moat.
     ///
     /// The melon left lying in the lane is the board saying what the rule costs. In the answer it
     /// sits in the clear ground between the two pens, so this is the only pen in the game that walks

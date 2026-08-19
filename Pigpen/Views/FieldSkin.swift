@@ -13,7 +13,7 @@ import SwiftUI
 /// still the ground a fence goes into and water is still the wall a pen never pays for,
 /// whatever either is called here — but the mud on Emberpeak is ash with cinder in it, the
 /// water in Cogsworth is a canal with a slick on it, and the fencing at the carnival is
-/// bunting strung between two poles. One board, one solver, eight grounds.
+/// bunting strung between two poles. One board, one solver, twelve grounds.
 ///
 /// Unlike the trail's palette, a skin does not follow the player's screen from daylight to
 /// dusk. The board has always kept one set of colours whatever the appearance, because the
@@ -66,6 +66,18 @@ struct FieldSkin: Sendable {
         case sawdust
         /// Hardpan: baked clay dried until it cracked, in plates with the light on their lips.
         case hardpan
+        /// Wet strand: sand the tide has only just let go of, with wrack and shell grit left
+        /// lying in lines where the water turned back.
+        case strand
+        /// Sastrugi: snow over sea ice, combed by the wind into long parallel waves with a lit
+        /// crest and a blue trough apiece.
+        case sastrugi
+        /// Peat: ground that has never dried out, with sedge coming up through it in tussocks
+        /// and a wet sheen standing in the low places.
+        case peat
+        /// High turf: mountain grass grown short and dense, combed flat one way by the wind,
+        /// with bare rock showing pale at the worn places.
+        case turf
     }
 
     /// What the water of a world does. Water is a wall the pen never pays for, so it is worth
@@ -88,6 +100,19 @@ struct FieldSkin: Sendable {
         /// Not water either: a dune, combed by the wind, lit along the crest and dropping away
         /// down the slipface under it.
         case dune
+        /// A tidepool: seawater the tide left behind, ringed with foam where it settled and
+        /// still catching the sky.
+        case rockPool
+        /// Not water to look at at all: a pressure ridge, ice crushed upward where two floes
+        /// met, in jagged blades with the light caught on their broken edges.
+        case pressureRidge
+        /// A fen channel: still water skinned over with duckweed, dark where something has
+        /// pushed through the green and closed it again.
+        case duckweed
+        /// Not water in any sense at all: open sky between the fields, with cloud drifting
+        /// below the level of the turf. The one wall in the game a pig could fall off rather
+        /// than into.
+        case sky
     }
 
     /// What a piece of fencing is on this world's ground. Every one of them is the same
@@ -110,6 +135,17 @@ struct FieldSkin: Sendable {
         case bunting
         /// A drift fence: bleached palings wired together and half buried in what they caught.
         case driftFence
+        /// Groynes: sea-blackened timbers driven into the strand, weeded to the waterline.
+        case groynes
+        /// A snow fence: slats wired to two driven posts, with the drift already banked up
+        /// against them.
+        case snowFence
+        /// Bog oak: posts pulled black out of the peat and driven back into it, with one
+        /// rail across and the rushes already up around their feet.
+        case bogOak
+        /// Storm poles: posts guyed to the turf with rope against the wind, one rail between
+        /// them, and a streamer off the top showing which way it is blowing.
+        case stormPoles
     }
 }
 
@@ -276,5 +312,96 @@ extension FieldSkin {
         rail: Color(red: 0.58, green: 0.47, blue: 0.34),
         picket: Color(red: 0.88, green: 0.82, blue: 0.70),
         fencing: .driftFence
+    )
+
+    /// The cove's: wet strand rather than dry ground — sand the tide has only just let go of,
+    /// dark with the water still in it — and the water a tidepool, ringed with foam and holding
+    /// more sky than anything else on the board. The fencing is groynes: sea-blackened timbers
+    /// driven in deep, because anything lighter goes with the tide.
+    static let tidepoolCove = Self(
+        ground: Color(red: 0.62, green: 0.56, blue: 0.45),
+        groundLit: Color(red: 0.70, green: 0.64, blue: 0.52),
+        groundShade: Color(red: 0.52, green: 0.46, blue: 0.36),
+        grit: Color(red: 0.38, green: 0.34, blue: 0.27),
+        grain: .strand,
+        water: Color(red: 0.22, green: 0.58, blue: 0.62),
+        waterDeep: Color(red: 0.12, green: 0.40, blue: 0.48),
+        waterLight: Color(red: 0.85, green: 0.97, blue: 0.96),
+        shore: Color(red: 0.80, green: 0.74, blue: 0.58),
+        surface: .rockPool,
+        post: Color(red: 0.20, green: 0.17, blue: 0.14),
+        rail: Color(red: 0.42, green: 0.36, blue: 0.28),
+        picket: Color(red: 0.55, green: 0.50, blue: 0.42),
+        fencing: .groynes
+    )
+
+    /// The tundra's: snow over sea ice, combed into sastrugi and blue in every trough, and
+    /// where every other world has water this one has a pressure ridge — ice crushed upward
+    /// where two floes met, too sheer to climb and no ground to build on, which walls a pen
+    /// exactly as a river does and stands *up* out of the board rather than lying in it. The
+    /// fencing is a snow fence: slats wired to driven posts, half buried in their own drift,
+    /// because that is the only fence anybody builds where the ground is frozen.
+    static let frostwhiskerTundra = Self(
+        ground: Color(red: 0.82, green: 0.87, blue: 0.92),
+        groundLit: Color(red: 0.90, green: 0.94, blue: 0.97),
+        groundShade: Color(red: 0.70, green: 0.77, blue: 0.86),
+        grit: Color(red: 0.55, green: 0.65, blue: 0.78),
+        grain: .sastrugi,
+        water: Color(red: 0.62, green: 0.78, blue: 0.88),
+        waterDeep: Color(red: 0.36, green: 0.54, blue: 0.72),
+        waterLight: Color(red: 0.97, green: 0.99, blue: 1.00),
+        shore: Color(red: 0.74, green: 0.82, blue: 0.90),
+        surface: .pressureRidge,
+        post: Color(red: 0.24, green: 0.20, blue: 0.16),
+        rail: Color(red: 0.48, green: 0.40, blue: 0.30),
+        picket: Color(red: 0.63, green: 0.55, blue: 0.44),
+        fencing: .snowFence
+    )
+
+    /// The fen's: peat rather than mud — ground that has never once dried, with sedge coming
+    /// up through it — and the water a channel skinned over with duckweed, greener than the
+    /// ground it runs through, which is the one water in the game that looks more solid than
+    /// the land. The fencing is bog oak: posts pulled black out of the peat and driven back
+    /// into it, because out here the ground has already eaten every lighter fence anybody
+    /// tried.
+    static let mirebogFen = Self(
+        ground: Color(red: 0.40, green: 0.36, blue: 0.24),
+        groundLit: Color(red: 0.48, green: 0.44, blue: 0.30),
+        groundShade: Color(red: 0.31, green: 0.28, blue: 0.18),
+        grit: Color(red: 0.58, green: 0.58, blue: 0.34),
+        grain: .peat,
+        water: Color(red: 0.33, green: 0.47, blue: 0.25),
+        waterDeep: Color(red: 0.16, green: 0.28, blue: 0.16),
+        waterLight: Color(red: 0.68, green: 0.82, blue: 0.44),
+        shore: Color(red: 0.52, green: 0.50, blue: 0.32),
+        surface: .duckweed,
+        post: Color(red: 0.13, green: 0.11, blue: 0.09),
+        rail: Color(red: 0.35, green: 0.30, blue: 0.22),
+        picket: Color(red: 0.28, green: 0.25, blue: 0.20),
+        fencing: .bogOak
+    )
+
+    /// The heights': high turf combed flat by the wind, thin enough that the rock shows pale
+    /// at the worn places — and where every other world has water this one has nothing at
+    /// all: open sky between the fields, cloud drifting below the level of the turf, which
+    /// walls a pen exactly as a river does and is the only wall in the game a pig could fall
+    /// off rather than into. The fencing is storm poles: posts guyed to the turf with rope,
+    /// a streamer off the top of each showing which way the wind is going, because up here
+    /// the wind is the thing a fence has to survive.
+    static let cloudspireHeights = Self(
+        ground: Color(red: 0.55, green: 0.66, blue: 0.50),
+        groundLit: Color(red: 0.63, green: 0.74, blue: 0.58),
+        groundShade: Color(red: 0.44, green: 0.55, blue: 0.41),
+        grit: Color(red: 0.68, green: 0.70, blue: 0.64),
+        grain: .turf,
+        water: Color(red: 0.62, green: 0.76, blue: 0.92),
+        waterDeep: Color(red: 0.40, green: 0.58, blue: 0.84),
+        waterLight: Color(red: 0.98, green: 0.99, blue: 1.00),
+        shore: Color(red: 0.73, green: 0.73, blue: 0.66),
+        surface: .sky,
+        post: Color(red: 0.30, green: 0.24, blue: 0.18),
+        rail: Color(red: 0.56, green: 0.44, blue: 0.30),
+        picket: Color(red: 0.80, green: 0.72, blue: 0.58),
+        fencing: .stormPoles
     )
 }

@@ -219,22 +219,26 @@ extension PuzzleLevel {
     /// nine pieces to draw the other two. It runs a tile inside the rim rather than along it, so
     /// there is a far bank beyond it, and like every far bank in the game nothing can reach it.
     ///
-    /// Which is the corner question with nothing else in the way of it, and the hardest corner in
-    /// the game. Nine pieces laid as a right angle in the corner hold 25 and reach neither
-    /// crystal — both are pegged out north of the bend, where no rectangle hung off two straight
-    /// banks goes. The same nine laid corner
-    /// to corner — one long diagonal from the north wall down to the south-east, cutting the whole
-    /// bend off in a single line — hold 36 tiles and both crystals, which is 46. Foundry Corner
-    /// asked this on a canal bend with the same nine pieces and could only reach round 27; two free
-    /// sides instead of one is what takes those nine to 46, and every one of them has to be on the
-    /// diagonal or the pen falls apart.
+    /// The south dam is **scalloped** — it steps in a tile and back out again, the way rimstone
+    /// actually forms, in terraces rather than in rulers. That is the whole difference between
+    /// this corner and a plain one: a jogged bank is a bank no rectangle can lie along, and a
+    /// staircase follows it without losing a tile.
+    ///
+    /// And one boulder is down off the roof onto the ground the tidy answer wants, which is the
+    /// other half of it. Nine pieces laid as a right angle are driven south of the boulder's line
+    /// and hold 18 tiles and ONE crystal, which is 23 — the other is pegged out north of the bend
+    /// where no rectangle hung off two banks ever goes. The same nine laid corner to corner — one
+    /// long staircase from the north-west down to the south dam, stepping around the boulder on
+    /// its way — hold 34 tiles and both crystals, which is 44. Foundry Corner asked this on a
+    /// canal bend with the same nine pieces and could only reach round 27; two free sides instead
+    /// of one, and a bank that will not be hugged, is what takes those nine to 44.
     static let rimstoneCorner = gloamdeep(
         id: "rimstone-corner",
         name: "Rimstone Corner",
         fenceBudget: 9,
-        twoStarScore: 25,
-        threeStarScore: 43,
-        maximumScore: 46,
+        twoStarScore: 23,
+        threeStarScore: 41,
+        maximumScore: 44,
         question: .corner,
         map: """
             .~.........
@@ -242,11 +246,11 @@ extension PuzzleLevel {
             .~a........
             .~.........
             .~.........
-            .~.........
+            .~.....x...
             .~...a.....
             .~..P......
             .~.........
-            .~.........
+            .~~~...~...
             .~~~~~~~~~~
             ...........
             """

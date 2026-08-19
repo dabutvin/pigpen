@@ -26,6 +26,16 @@ enum Refusal: Equatable, Sendable {
     /// held, and one fence piece has the pig on one side of it and something that stings on
     /// the other.
     case tooClose(Animal)
+    /// An animal that has to be penned against the water is standing in a pen that touches
+    /// none: held, and held dry, which for a seal is no holding at all.
+    case landlocked(Animal)
+    /// An animal that has to be given a whole channel is standing in a pen that holds a bank
+    /// or two of one and not the rest: held, and short a wallow, which for a croc is no
+    /// holding at all.
+    case parched(Animal)
+    /// The pen is shut, and some of its ground stands in the eagle's line of sight: held,
+    /// and held where he can see her, which is one stoop away from not being held at all.
+    case spotted(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -66,9 +76,52 @@ extension PuzzleLevel {
         }
     }
 
+    /// The spire's field: the crater's question first — only the pig is held, and the eagle
+    /// is never walked, his perch a hole in the wall's way — and then the spire's own. The
+    /// eagle sees four ways from his perch, straight along his row and his column, over mud
+    /// and open sky alike, and a pen with any of its ground in his eye is refused. Only a
+    /// fence breaks his line of sight — the pen's own wall where the wall faces him, or a
+    /// piece standing on its own with no pen anywhere near it, which is a thing no other
+    /// board in the game has a use for.
+    private func releaseStooping(fences: Set<GridPoint>) -> PenOutcome {
+        guard let pig = animals.first(where: { $0.kind == .pig }) else {
+            return .penned(pen: [])
+        }
+        switch walk(from: pig.tile, fences: fences) {
+        case .out(let route):
+            return .escaped(escapes: [Escape(animal: pig, route: route)])
+        case .stuck(let ground):
+            if let shut = animals.first(where: { $0.kind != .pig && ground.contains($0.tile) }) {
+                return .refused(pen: ground, refusal: .shutIn(shut.kind))
+            }
+            if let watcher = animals.first(where: { $0.kind != .pig }),
+               sees(from: watcher.tile, into: ground, fences: fences) {
+                return .refused(pen: ground, refusal: .spotted(watcher.kind))
+            }
+            return .penned(pen: ground)
+        }
+    }
+
+    /// Whether any tile of `ground` lies in the line of sight out of `perch`: four straight
+    /// rays, one per direction, walked until they leave the map or land on a fence. Sight
+    /// crosses water and mud alike — the sky between the spires hides nothing.
+    private func sees(from perch: GridPoint, into ground: Set<GridPoint>, fences: Set<GridPoint>) -> Bool {
+        for direction in Direction.allCases {
+            var tile = perch.stepped(direction)
+            while contains(tile), !fences.contains(tile) {
+                if ground.contains(tile) { return true }
+                tile = tile.stepped(direction)
+            }
+        }
+        return false
+    }
+
     func release(fences: Set<GridPoint>) -> PenOutcome {
         if question == .exclude {
             return releaseExcluding(fences: fences)
+        }
+        if question == .stoop {
+            return releaseStooping(fences: fences)
         }
 
         var escapes: [Escape] = []
@@ -121,7 +174,13 @@ extension PuzzleLevel {
         // The carnival asks for two pens with one of them inside the other, which is two things
         // at once as well: the pig may not be standing in with the ringmaster, and her ground
         // has to close the whole way round him. A pen beside his is a pen, not a ring.
-        if question == .ring, let pigGround = ground[.pig] {
+        //
+        // The cove asks the same of the crab, and the difference is what he is standing in: a
+        // broken ring of tidewater walls him on every side but its break, so the ground that has
+        // to close round him is really closing round the whole pool — the flood walked below
+        // crosses water as freely as it crosses mud, which is exactly what makes surrounding the
+        // crab and surrounding his pool the same question.
+        if question == .ring || question == .moat, let pigGround = ground[.pig] {
             for animal in animals where animal.kind != .pig {
                 if pigGround.contains(animal.tile) {
                     return .refused(pen: held, refusal: .together(animal.kind))
@@ -144,6 +203,42 @@ extension PuzzleLevel {
                 guard let theirs = ground[animal.kind] else { continue }
                 if sharesAWall(pigGround, theirs, fences: fences) {
                     return .refused(pen: held, refusal: .tooClose(animal.kind))
+                }
+            }
+        }
+
+        // The tundra asks for two pens and is particular about one of them: the bull seal will
+        // not stand in with the pig, and the ground he is given has to lie against the water,
+        // because a seal hauls out beside his breathing hole and nowhere else. The pressure
+        // ridges he lives among are ice rather than water as far as he is concerned — what the
+        // rule wants is one tile of his run beside one tile of open water, which on his own
+        // board means beside a ridge, since a ridge is where the ice broke and the sea shows
+        // through.
+        if question == .hole, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                guard let theirs = ground[animal.kind] else { continue }
+                if !touchesWater(theirs) {
+                    return .refused(pen: held, refusal: .landlocked(animal.kind))
+                }
+            }
+        }
+
+        // The fen asks for two pens and is greedier about one of them than any board before
+        // it: the old croc will not stand in with the pig, and the pen he is given has to
+        // hold every bank of one whole body of water — a croc keeps a wallow rather than
+        // visits one, so a run of ground that laps a channel here and there has not given
+        // him anything he would call his.
+        if question == .wallow, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                guard let theirs = ground[animal.kind] else { continue }
+                if !ownsAWallow(theirs) {
+                    return .refused(pen: held, refusal: .parched(animal.kind))
                 }
             }
         }
@@ -182,6 +277,49 @@ extension PuzzleLevel {
             let beside = Direction.allCases.map(piece.stepped)
             return beside.contains(where: mine.contains) && beside.contains(where: theirs.contains)
         }
+    }
+
+    /// Whether any tile of a run of ground lies orthogonally beside water — which is what a
+    /// breathing hole is: one step from where the seal lies to where the sea shows through.
+    private func touchesWater(_ ground: Set<GridPoint>) -> Bool {
+        ground.contains { tile in
+            Direction.allCases.contains { terrain(at: tile.stepped($0)) == .water }
+        }
+    }
+
+    /// Whether one whole body of water lies against a run of ground — every wet tile of it
+    /// orthogonally beside a tile of the run — which is what owning a wallow is. A body is
+    /// gathered the way the ground itself is: tile by orthogonal tile.
+    private func ownsAWallow(_ ground: Set<GridPoint>) -> Bool {
+        var banks: Set<GridPoint> = []
+        for tile in ground {
+            for direction in Direction.allCases {
+                banks.insert(tile.stepped(direction))
+            }
+        }
+
+        var left: Set<GridPoint> = []
+        for row in 0..<rowCount {
+            for column in 0..<columnCount {
+                let tile = GridPoint(row: row, column: column)
+                if terrain(at: tile) == .water { left.insert(tile) }
+            }
+        }
+
+        while let seed = left.first {
+            var body: Set<GridPoint> = [seed]
+            var queue = [seed]
+            left.remove(seed)
+            while let tile = queue.popLast() {
+                for direction in Direction.allCases where left.contains(tile.stepped(direction)) {
+                    left.remove(tile.stepped(direction))
+                    body.insert(tile.stepped(direction))
+                    queue.append(tile.stepped(direction))
+                }
+            }
+            if body.isSubset(of: banks) { return true }
+        }
+        return false
     }
 
     /// Whether every way off the board from a tile crosses the given ground.

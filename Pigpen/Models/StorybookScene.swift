@@ -1082,6 +1082,523 @@ extension StorybookScene {
 }
 
 extension StorybookScene {
+    /// Before the first walk down onto the cove. Six stills, the way the dunes' opening is six:
+    /// the pearl and the jellyfish have a still apiece, and so does the water — because the shape
+    /// of it is the whole world, and a player who does not know a pool is a broken ring will
+    /// read the first board as a lake with a leak in it.
+    static func tidepoolOpening(start: Date = .now) -> Self {
+        Self(
+            key: "tidepool-opening",
+            title: "Tidepool Cove",
+            light: .coveDay,
+            shots: [
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🐚", "🪨", "🦀"],
+                    caption: "Tidepool Cove. The sea only just left.",
+                    seconds: 2.6
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐚", "🌊"],
+                    caption: "Your pig came down off the dunes at low tide.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["🌊", "🪨"],
+                    caption: "Every pool is a broken ring. One break in the lip.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🐚",
+                    strewn: ["🌊", "🪨"],
+                    caption: "Pearls in the shells. Five each.",
+                    seconds: 2.2
+                ),
+                Shot(
+                    motif: "🪼",
+                    strewn: ["🐚", "🌊"],
+                    caption: "A jellyfish takes no fence. Walls go round.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌊", "🐚"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the cove's last field, the way `theScorpionPit` goes before the dunes'.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced eight worlds. What they
+    /// are owed is the one thing this board does that no board in the game has done — the
+    /// carnival asked for a ring round a man, and this one asks for a ring round a whole pool,
+    /// with the crab shut into his own heart on the way.
+    static func theCrabPool(start: Date = .now) -> Self {
+        Self(
+            key: "the-crab-pool-briefing",
+            title: "The Crab Pool",
+            light: .coveDay,
+            shots: [
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🐚"],
+                    caption: "The Crab Pool. He keeps it, break and all.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦀", "🌊"],
+                    caption: "Shut his break, and never stand in with him.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦀", "🐚"],
+                    caption: "Close your ground the whole way round the pool.",
+                    isCard: true,
+                    seconds: 3.0
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the cove holds. It says what became of the crab and — like the
+    /// eight send-offs before it — points on past this world to the next one waiting, which is
+    /// ice where this one was tidewater.
+    static func tidepoolHeld(start: Date = .now) -> Self {
+        Self(
+            key: "tidepool-held",
+            title: "Tidepool Cove held",
+            light: .coveDusk,
+            shots: [
+                Shot(
+                    motif: "🦀",
+                    strewn: ["🌊", "🐚"],
+                    caption: "The crab has his pool, and a ring round the lot.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🐚",
+                    strewn: ["🌊", "🪼", "🌊"],
+                    caption: "Every pearl the tide let go of, fenced and held.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌊",
+                    strewn: ["🐚", "🪨"],
+                    caption: "The tide comes back in over the lot of it.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🐚", "❄️"],
+                    caption: "North along the water, the sea is turning white.",
+                    isCard: true,
+                    seconds: 3.2
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
+    /// Before the first walk out onto the tundra. Six stills, the way the cove's opening is
+    /// six: the fish and the berg have a still apiece, and so does the ice — because the shape
+    /// of it is the whole world, and a player who does not know a ridge runs on the slant will
+    /// read the first board as a scatter of ponds rather than as two walls already built.
+    static func frostwhiskerOpening(start: Date = .now) -> Self {
+        Self(
+            key: "frostwhisker-opening",
+            title: "Frostwhisker Tundra",
+            light: .frostDay,
+            shots: [
+                Shot(
+                    motif: "❄️",
+                    strewn: ["🧊", "🌨️", "🦭"],
+                    caption: "Frostwhisker Tundra. The sea went white.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["❄️", "🌨️"],
+                    caption: "Your pig came north from the cove onto the ice.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🏔️",
+                    strewn: ["❄️", "🧊"],
+                    caption: "The ice is crushed into ridges. They run on the slant.",
+                    seconds: 3.3
+                ),
+                Shot(
+                    motif: "🐟",
+                    strewn: ["❄️", "🧊"],
+                    caption: "Fish on the ice. Five each.",
+                    seconds: 2.2
+                ),
+                Shot(
+                    motif: "🧊",
+                    strewn: ["🐟", "❄️"],
+                    caption: "A berg takes no fence. Walls go round.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["❄️", "🐟"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the tundra's last field, the way `theCrabPool` goes before the cove's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced nine worlds. What
+    /// they are owed is the one thing this board does that no board in the game has done —
+    /// every two-pen boss so far asked who goes where, and this one is the first to be
+    /// particular about where the second pen *is*.
+    static func theHaulout(start: Date = .now) -> Self {
+        Self(
+            key: "the-haulout-briefing",
+            title: "The Haulout",
+            light: .frostDay,
+            shots: [
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🧊"],
+                    caption: "The Haulout. The bull seal keeps a breathing hole.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦭", "❄️"],
+                    caption: "Box him dry and the board sends it back.",
+                    seconds: 2.6
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦭", "🧊"],
+                    caption: "Two pens — and his must touch the water.",
+                    isCard: true,
+                    seconds: 2.6
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen on the tundra holds. It says what became of the bull seal and — like
+    /// the nine send-offs before it — points on past this world to the next one waiting, which
+    /// is mud and reeds where this one was ice.
+    static func frostwhiskerHeld(start: Date = .now) -> Self {
+        Self(
+            key: "frostwhisker-held",
+            title: "Frostwhisker Tundra held",
+            light: .frostDusk,
+            shots: [
+                Shot(
+                    motif: "🦭",
+                    strewn: ["❄️", "🧊"],
+                    caption: "The bull seal has his hole, and a pen against it.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🐟",
+                    strewn: ["❄️", "🧊", "❄️"],
+                    caption: "Every fish the ice flipped up, fenced and held.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🌌",
+                    strewn: ["❄️", "✨"],
+                    caption: "The aurora comes up green over the lot of it.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🐊",
+                    strewn: ["🌿", "🐟", "🌿"],
+                    caption: "South along the shore, the ice gives out into mud and reeds.",
+                    isCard: true,
+                    seconds: 3.6
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
+    /// Before the first walk into the fen. Six stills, the way the tundra's opening is six:
+    /// the bilberry and the snag have a still apiece, and so does the water — because the
+    /// shape of it is the whole world, and a player who does not know a channel closes on
+    /// itself will read the first board as a river that lost its way.
+    static func mirebogOpening(start: Date = .now) -> Self {
+        Self(
+            key: "mirebog-opening",
+            title: "Mirebog Fen",
+            light: .fenDay,
+            shots: [
+                Shot(
+                    motif: "🌫️",
+                    strewn: ["🌿", "🐊", "🌿"],
+                    caption: "Mirebog Fen. Half water, half mud.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "Your pig came south off the ice into the reeds.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🌿",
+                    strewn: ["🌫️", "🌿"],
+                    caption: "The channels split and rejoin. Every one closes a ring.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🫐",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "Bilberries in the sedge. Five each.",
+                    seconds: 2.3
+                ),
+                Shot(
+                    motif: "🪵",
+                    strewn: ["🌿", "🫐"],
+                    caption: "A snag takes no fence. Walls go round.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🌿", "🫐"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the fen's last field, the way `theHaulout` goes before the tundra's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced ten worlds. What
+    /// they are owed is the one thing this board does that no board in the game has done —
+    /// the tundra's seal wanted a pen that touched the water, and the croc wants a pen that
+    /// holds the whole of one channel, bank for bank.
+    static func theWallow(start: Date = .now) -> Self {
+        Self(
+            key: "the-wallow-briefing",
+            title: "The Wallow",
+            light: .fenDay,
+            shots: [
+                Shot(
+                    motif: "🐊",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "The Wallow. The old croc keeps one whole channel.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐊", "🌿"],
+                    caption: "Two pens, never one — and no half measures.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🐊", "🌿"],
+                    caption: "Every bank of one channel is his.",
+                    isCard: true,
+                    seconds: 2.4
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the fen holds. It says what became of the old croc and — like
+    /// the ten send-offs before it — points on past this world to the next one waiting,
+    /// which is sky where this one was water.
+    static func mirebogHeld(start: Date = .now) -> Self {
+        Self(
+            key: "mirebog-held",
+            title: "Mirebog Fen held",
+            light: .fenDusk,
+            shots: [
+                Shot(
+                    motif: "🐊",
+                    strewn: ["🌿", "🫐"],
+                    caption: "The old croc has his wallow, every bank of it.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🫐",
+                    strewn: ["🌿", "🪵", "🌿"],
+                    caption: "Every bilberry the fen let go of, fenced and held.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🌫️",
+                    strewn: ["🌿", "✨"],
+                    caption: "The mist comes up and the fen keeps its own.",
+                    seconds: 2.8
+                ),
+                Shot(
+                    motif: "🦅",
+                    strewn: ["☁️", "🌿", "☁️"],
+                    caption: "Up out of the reeds, the last fields hang in the sky.",
+                    isCard: true,
+                    seconds: 3.3
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
+    /// Before the first walk onto the heights. Six stills, the way every opening since the
+    /// tundra's is six: the balloon and the whirlwind have a still apiece, and so does the
+    /// sky — because the shape of it is the whole world, and a player who does not know the
+    /// blue between the fields is a drop rather than a lake will read the first board wrong.
+    static func cloudspireOpening(start: Date = .now) -> Self {
+        Self(
+            key: "cloudspire-opening",
+            title: "Cloudspire Heights",
+            light: .spireDay,
+            shots: [
+                Shot(
+                    motif: "☁️",
+                    strewn: ["🦅", "💨"],
+                    caption: "Cloudspire Heights. Fields in the sky.",
+                    seconds: 2.5
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["☁️", "💨"],
+                    caption: "Your pig climbed up out of the fen.",
+                    seconds: 2.4
+                ),
+                Shot(
+                    motif: "💨",
+                    strewn: ["☁️", "☁️"],
+                    caption: "Open sky between the fields. It walls a pen like water.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🎈",
+                    strewn: ["☁️", "💨"],
+                    caption: "Lost balloons from the carnival. Five each.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🌪️",
+                    strewn: ["☁️", "🎈"],
+                    caption: "No post stands in a whirlwind. Walls go round.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["☁️", "🎈"],
+                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    isCard: true,
+                    seconds: 2.9
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// Before the heights' last field, the way `theWallow` goes before the fen's.
+    ///
+    /// Short, and for the same reason: a player standing here has fenced eleven worlds.
+    /// What they are owed is the one thing this board does that no board in the game has
+    /// done — every boss so far cared where the pens were, and this one is the first to
+    /// care what can be *seen*, which turns a fence into a second tool.
+    static func theEyrie(start: Date = .now) -> Self {
+        Self(
+            key: "the-eyrie-briefing",
+            title: "The Eyrie",
+            light: .spireDay,
+            shots: [
+                Shot(
+                    motif: "🦅",
+                    strewn: ["☁️", "💨"],
+                    caption: "The Eyrie. The eagle sees along his row and his column.",
+                    seconds: 3.4
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦅", "☁️"],
+                    caption: "Pen her in his eye and the board sends it back.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🚧",
+                    strewn: ["🦅", "☁️"],
+                    caption: "Only a fence breaks his line of sight.",
+                    isCard: true,
+                    seconds: 2.5
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the game holds. Eleven send-offs pointed on past their world to
+    /// the next one waiting; this is the twelfth, and there is nothing left to point at — so
+    /// it is the one farewell that points back the way the whole trail came, and puts the
+    /// game to bed with the pig in it.
+    static func cloudspireHeld(start: Date = .now) -> Self {
+        Self(
+            key: "cloudspire-held",
+            title: "Cloudspire Heights held",
+            light: .spireDusk,
+            shots: [
+                Shot(
+                    motif: "🦅",
+                    strewn: ["☁️", "⭐"],
+                    caption: "The eagle has his sky back, and nothing in his eye.",
+                    seconds: 3.2
+                ),
+                Shot(
+                    motif: "🎈",
+                    strewn: ["☁️", "⭐", "☁️"],
+                    caption: "Every balloon the wind gave up, fenced and held.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🌌",
+                    strewn: ["⭐", "✨"],
+                    caption: "The stars come out over the top of the weather.",
+                    seconds: 2.9
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["⭐", "🌈", "⭐"],
+                    caption: "Twelve worlds, every one of them held. Good night, pig.",
+                    isCard: true,
+                    seconds: 3.5
+                )
+            ],
+            start: start
+        )
+    }
+}
+
+extension StorybookScene {
     /// Every storybook film the game has, for the tests to walk the way `CutScene.all` is.
     static var all: [StorybookScene] {
         [
@@ -1091,7 +1608,11 @@ extension StorybookScene {
             .starfallOpening(), .visitorCrater(), .starfallHeld(),
             .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
             .lanternOpening(), .theCenterRing(), .lanternHeld(),
-            .duneOpening(), .theScorpionPit(), .duneHeld()
+            .duneOpening(), .theScorpionPit(), .duneHeld(),
+            .tidepoolOpening(), .theCrabPool(), .tidepoolHeld(),
+            .frostwhiskerOpening(), .theHaulout(), .frostwhiskerHeld(),
+            .mirebogOpening(), .theWallow(), .mirebogHeld(),
+            .cloudspireOpening(), .theEyrie(), .cloudspireHeld()
         ]
     }
 }

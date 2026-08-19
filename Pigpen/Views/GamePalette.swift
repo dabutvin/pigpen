@@ -97,6 +97,18 @@ enum GamePalette {
         /// Desert: baked hardpan with wind ripples combed across it, the odd cactus standing up
         /// out of it, and nothing overhead but glare.
         case sand
+        /// Seashore: wet strand the tide has only just let go of, with rock pools standing in
+        /// it and wrack thrown down in lines.
+        case shingle
+        /// Tundra: snow over sea ice, combed into sastrugi by the wind, with pressure ridges
+        /// standing up out of it and snow coming down through everything.
+        case snowfield
+        /// Fen: peat and standing water in equal measure, reeds in beds, dead trees silvering
+        /// where the bog got their roots, and mist lying low over the lot of it.
+        case marsh
+        /// Heights: turf terraces on the tops of spires that stand up out of a sea of cloud,
+        /// with wind-bent pines holding on where they can and nothing below the edge but air.
+        case cloudtop
     }
 }
 
@@ -445,5 +457,173 @@ extension GamePalette.Pasture {
         canopyShade: Color(red: 0.12, green: 0.18, blue: 0.17),
         isNight: true,
         cover: .sand
+    )
+
+    /// The ninth world's daylight: sea light, which is the desert's glare with the heat taken
+    /// out of it. Everything here has just been under water and half of it still is, so the sky
+    /// is a washed pale blue, the ground is dark with wet rather than bright with sun, and the
+    /// horizon is the one line in the game that is actually the sea. The world reads cool by
+    /// being damp, where the dunes read hot by being pale.
+    static let coveDay = Self(
+        skyTop: Color(red: 0.45, green: 0.68, blue: 0.80),
+        skyHorizon: Color(red: 0.85, green: 0.92, blue: 0.91),
+        disc: Color(red: 1.00, green: 0.98, blue: 0.90),
+        discHalo: Color(red: 0.95, green: 0.97, blue: 0.88),
+        cloud: Color(red: 0.96, green: 0.97, blue: 0.96),
+        farHill: Color(red: 0.42, green: 0.62, blue: 0.66),
+        ground: Color(red: 0.72, green: 0.66, blue: 0.52),
+        foreground: Color(red: 0.60, green: 0.54, blue: 0.42),
+        blade: Color(red: 0.46, green: 0.42, blue: 0.32),
+        canopy: Color(red: 0.36, green: 0.55, blue: 0.46),
+        canopyShade: Color(red: 0.22, green: 0.38, blue: 0.34),
+        isNight: false,
+        cover: .shingle
+    )
+
+    /// The cove after dark, under a sea fog coming in with the tide: the sky never goes as
+    /// black as the desert's because the water underneath it holds what light there is and
+    /// hands it back, so the night here is a deep green-grey with a pale line where the sea
+    /// still shows, and the wet sand keeps a sheen the dry worlds lose at dusk.
+    static let coveDusk = Self(
+        skyTop: Color(red: 0.05, green: 0.10, blue: 0.16),
+        skyHorizon: Color(red: 0.18, green: 0.30, blue: 0.36),
+        disc: Color(red: 0.94, green: 0.96, blue: 0.94),
+        discHalo: Color(red: 0.62, green: 0.78, blue: 0.80),
+        cloud: Color(red: 0.13, green: 0.20, blue: 0.25),
+        farHill: Color(red: 0.10, green: 0.18, blue: 0.22),
+        ground: Color(red: 0.22, green: 0.26, blue: 0.28),
+        foreground: Color(red: 0.16, green: 0.19, blue: 0.21),
+        blade: Color(red: 0.11, green: 0.14, blue: 0.16),
+        canopy: Color(red: 0.16, green: 0.30, blue: 0.27),
+        canopyShade: Color(red: 0.10, green: 0.20, blue: 0.19),
+        isNight: true,
+        cover: .shingle
+    )
+
+    /// The tenth world's daylight, which is the palest light in the game and the flattest: a
+    /// low sun over sea ice, with nothing anywhere for it to warm. The cove read cool by being
+    /// damp; this one reads cold by being blue — snow takes the sky's colour into every shadow
+    /// it has, so the ground and the sky are two blues of the same weather, and the horizon is
+    /// the one line where they nearly stop being different at all.
+    static let frostDay = Self(
+        skyTop: Color(red: 0.51, green: 0.70, blue: 0.86),
+        skyHorizon: Color(red: 0.90, green: 0.94, blue: 0.96),
+        disc: Color(red: 1.00, green: 0.98, blue: 0.90),
+        discHalo: Color(red: 0.96, green: 0.94, blue: 0.82),
+        cloud: Color(red: 0.94, green: 0.96, blue: 0.98),
+        farHill: Color(red: 0.66, green: 0.78, blue: 0.87),
+        ground: Color(red: 0.85, green: 0.90, blue: 0.94),
+        foreground: Color(red: 0.73, green: 0.80, blue: 0.87),
+        blade: Color(red: 0.58, green: 0.68, blue: 0.78),
+        canopy: Color(red: 0.42, green: 0.56, blue: 0.60),
+        canopyShade: Color(red: 0.28, green: 0.41, blue: 0.47),
+        isNight: false,
+        cover: .snowfield
+    )
+
+    /// The tundra after dark, which is the one night in the game with its own light in it: the
+    /// aurora. The desert's night is black because there is nothing overhead; this one never
+    /// quite manages black because there is — a green hanging in the sky and lying faintly on
+    /// every ridge of the snow, so the canopy colours here are borrowed by the sky itself and
+    /// the ground keeps a blue glow the way the cove's sand keeps its sheen.
+    static let frostDusk = Self(
+        skyTop: Color(red: 0.03, green: 0.07, blue: 0.15),
+        skyHorizon: Color(red: 0.12, green: 0.28, blue: 0.32),
+        disc: Color(red: 0.96, green: 0.98, blue: 1.00),
+        discHalo: Color(red: 0.66, green: 0.86, blue: 0.86),
+        cloud: Color(red: 0.10, green: 0.17, blue: 0.24),
+        farHill: Color(red: 0.13, green: 0.21, blue: 0.30),
+        ground: Color(red: 0.16, green: 0.22, blue: 0.32),
+        foreground: Color(red: 0.11, green: 0.16, blue: 0.24),
+        blade: Color(red: 0.08, green: 0.12, blue: 0.19),
+        canopy: Color(red: 0.16, green: 0.42, blue: 0.36),
+        canopyShade: Color(red: 0.09, green: 0.27, blue: 0.25),
+        isNight: true,
+        cover: .snowfield
+    )
+
+    /// The eleventh world's daylight, which never quite arrives: fen light, flat and green,
+    /// under a sky that is mostly the water's own breath. The tundra was the palest light in
+    /// the game; this is the heaviest — the horizon shortened by haze, the sun a smear behind
+    /// it, and everything below in the greens and browns of ground that has never once dried
+    /// out. The world reads wet by being dim, where the cove read cool by being damp.
+    static let fenDay = Self(
+        skyTop: Color(red: 0.56, green: 0.62, blue: 0.55),
+        skyHorizon: Color(red: 0.83, green: 0.84, blue: 0.72),
+        disc: Color(red: 0.97, green: 0.95, blue: 0.82),
+        discHalo: Color(red: 0.88, green: 0.88, blue: 0.72),
+        cloud: Color(red: 0.78, green: 0.80, blue: 0.72),
+        farHill: Color(red: 0.38, green: 0.46, blue: 0.33),
+        ground: Color(red: 0.36, green: 0.40, blue: 0.24),
+        foreground: Color(red: 0.27, green: 0.31, blue: 0.18),
+        blade: Color(red: 0.21, green: 0.25, blue: 0.14),
+        canopy: Color(red: 0.32, green: 0.44, blue: 0.26),
+        canopyShade: Color(red: 0.20, green: 0.30, blue: 0.17),
+        isNight: false,
+        cover: .marsh
+    )
+
+    /// The fen after dark, which is when it does its talking: the mist thickens off the
+    /// channels and holds what light there is just above the ground, so the night here is a
+    /// grey-green with its darkness overhead rather than round your feet — the one night in
+    /// the game that is lighter low down than up — and the odd pale glow stands in the reeds
+    /// where the marsh is making its own light.
+    static let fenDusk = Self(
+        skyTop: Color(red: 0.04, green: 0.06, blue: 0.09),
+        skyHorizon: Color(red: 0.22, green: 0.28, blue: 0.24),
+        disc: Color(red: 0.93, green: 0.95, blue: 0.90),
+        discHalo: Color(red: 0.68, green: 0.78, blue: 0.66),
+        cloud: Color(red: 0.14, green: 0.18, blue: 0.16),
+        farHill: Color(red: 0.10, green: 0.15, blue: 0.12),
+        ground: Color(red: 0.14, green: 0.19, blue: 0.14),
+        foreground: Color(red: 0.10, green: 0.14, blue: 0.10),
+        blade: Color(red: 0.07, green: 0.10, blue: 0.07),
+        canopy: Color(red: 0.18, green: 0.30, blue: 0.20),
+        canopyShade: Color(red: 0.11, green: 0.19, blue: 0.13),
+        isNight: true,
+        cover: .marsh
+    )
+
+    /// The twelfth world's daylight, and the clearest in the game: there is less sky left
+    /// overhead than anywhere else, so what there is goes a deeper blue than any world below,
+    /// and the light on the turf is thin and brilliant with no haze in it at all. The fen was
+    /// the heaviest light in the game; this is its opposite in every register — and the
+    /// horizon is not land or sea but the top of the weather, a floor of sunlit cloud with
+    /// the worlds underneath it out of sight.
+    static let spireDay = Self(
+        skyTop: Color(red: 0.30, green: 0.55, blue: 0.92),
+        skyHorizon: Color(red: 0.88, green: 0.93, blue: 0.98),
+        disc: Color(red: 1.00, green: 0.98, blue: 0.90),
+        discHalo: Color(red: 0.97, green: 0.96, blue: 0.86),
+        cloud: Color(red: 0.99, green: 0.99, blue: 1.00),
+        farHill: Color(red: 0.80, green: 0.86, blue: 0.94),
+        ground: Color(red: 0.62, green: 0.74, blue: 0.62),
+        foreground: Color(red: 0.50, green: 0.63, blue: 0.53),
+        blade: Color(red: 0.40, green: 0.53, blue: 0.45),
+        canopy: Color(red: 0.38, green: 0.54, blue: 0.50),
+        canopyShade: Color(red: 0.26, green: 0.40, blue: 0.40),
+        isNight: false,
+        cover: .cloudtop
+    )
+
+    /// The heights after dark, which is the blackest sky in the game for the best reason:
+    /// the weather is underneath you. Nothing hazes the stars up here, so the top of the sky
+    /// goes nearly out — past even the desert's — while the cloud sea below holds the
+    /// moonlight and gives it back, the way the cove's wet sand did. It is the one night in
+    /// the game where the brightest thing under the moon is the floor of the world.
+    static let spireDusk = Self(
+        skyTop: Color(red: 0.01, green: 0.02, blue: 0.07),
+        skyHorizon: Color(red: 0.16, green: 0.20, blue: 0.36),
+        disc: Color(red: 0.97, green: 0.98, blue: 1.00),
+        discHalo: Color(red: 0.80, green: 0.84, blue: 0.98),
+        cloud: Color(red: 0.30, green: 0.34, blue: 0.46),
+        farHill: Color(red: 0.26, green: 0.30, blue: 0.43),
+        ground: Color(red: 0.13, green: 0.17, blue: 0.24),
+        foreground: Color(red: 0.09, green: 0.12, blue: 0.18),
+        blade: Color(red: 0.06, green: 0.09, blue: 0.14),
+        canopy: Color(red: 0.14, green: 0.20, blue: 0.26),
+        canopyShade: Color(red: 0.08, green: 0.13, blue: 0.19),
+        isNight: true,
+        cover: .cloudtop
     )
 }

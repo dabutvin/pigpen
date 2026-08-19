@@ -215,4 +215,72 @@ extension GameWorld {
             }
         ]
     )
+
+    /// Tidepool Cove: the ninth world, wrapped in storybook films the way the eight below it
+    /// are. The send-off points on out across the ice the tide is starting to carry in, the way
+    /// the dunes' points past the last dune to the sea, and The Crab Pool stops for a briefing
+    /// because it stands a second animal on the board and asks for a ring round the pool he
+    /// lives in — the same courtesy every boss pays.
+    static let tidepoolCove = GameWorld(
+        theme: .tidepoolCove,
+        map: .tidepoolCove,
+        opening: WorldFilmSpec(key: "tidepool-opening") { .storybook(.tidepoolOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "tidepool-held") { .storybook(.tidepoolHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theCrabPool.id: WorldFilmSpec(key: "the-crab-pool-briefing") {
+                .storybook(.theCrabPool(start: $0))
+            }
+        ]
+    )
+
+    /// Frostwhisker Tundra: the tenth world, wrapped in storybook films the way the nine below
+    /// it are. The send-off points on south along the shore to where the ice gives out into mud
+    /// and reeds, the way the cove's points north along the water to the ice, and The Haulout
+    /// stops for a briefing because it stands a second animal on the board and is particular
+    /// about the pen he gets — the same courtesy every boss pays.
+    static let frostwhiskerTundra = GameWorld(
+        theme: .frostwhiskerTundra,
+        map: .frostwhiskerTundra,
+        opening: WorldFilmSpec(key: "frostwhisker-opening") { .storybook(.frostwhiskerOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "frostwhisker-held") { .storybook(.frostwhiskerHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theHaulout.id: WorldFilmSpec(key: "the-haulout-briefing") {
+                .storybook(.theHaulout(start: $0))
+            }
+        ]
+    )
+
+    /// Mirebog Fen: the eleventh world, wrapped in storybook films the way the ten below it
+    /// are. The send-off points up out of the reeds to fields hanging in the sky, the way the
+    /// tundra's points south along the shore to the mud, and The Wallow stops for a briefing
+    /// because it stands a second animal on the board and owes him a whole channel — the same
+    /// courtesy every boss pays.
+    static let mirebogFen = GameWorld(
+        theme: .mirebogFen,
+        map: .mirebogFen,
+        opening: WorldFilmSpec(key: "mirebog-opening") { .storybook(.mirebogOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "mirebog-held") { .storybook(.mirebogHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theWallow.id: WorldFilmSpec(key: "the-wallow-briefing") {
+                .storybook(.theWallow(start: $0))
+            }
+        ]
+    )
+
+    /// Cloudspire Heights: the twelfth world and the last, wrapped in storybook films the way
+    /// the eleven below it are. The send-off points nowhere, because there is nowhere left —
+    /// it puts the game to bed with the pig in it — and The Eyrie stops for a briefing
+    /// because it stands a second animal on the board and cares what he can see, which no
+    /// board before it has cared about: the same courtesy every boss pays.
+    static let cloudspireHeights = GameWorld(
+        theme: .cloudspireHeights,
+        map: .cloudspireHeights,
+        opening: WorldFilmSpec(key: "cloudspire-opening") { .storybook(.cloudspireOpening(start: $0)) },
+        farewell: WorldFilmSpec(key: "cloudspire-held") { .storybook(.cloudspireHeld(start: $0)) },
+        briefings: [
+            PuzzleLevel.theEyrie.id: WorldFilmSpec(key: "the-eyrie-briefing") {
+                .storybook(.theEyrie(start: $0))
+            }
+        ]
+    )
 }

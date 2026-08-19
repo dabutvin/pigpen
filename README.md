@@ -210,8 +210,12 @@ thicket floors at 23% and opens at 25%, so the second world starts around where 
 world's middle sat; Emberpeak floors at 28% and opens there too, which is above anything
 the thicket asked before its fourth field; Cogsworth City floors and opens at 30%; Starfall
 Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
-opens at 34%; Lantern Carnival floors and opens at 37%; and Sunbaked Dunes floors at 38% and opens
-at 39%, the highest floor any world has stood on. Bosses are held to each other rather than to the
+opens at 34%; Lantern Carnival floors and opens at 37%; Sunbaked Dunes floors at 38% and opens
+at 39%; Tidepool Cove floors at 40% and opens at 41%; Frostwhisker Tundra floors at 41% and
+opens at 42%; Mirebog Fen floors at 42% and opens at 43%; and Cloudspire Heights floors at
+43% and opens at 44%, the highest floor any world has
+stood on — which is where the climb ends, because the heights are the last world there is.
+Bosses are held to each other rather than to the
 floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
@@ -231,7 +235,8 @@ carries the same game into every one of them.
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
-  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust or rippled sand — what the
+  floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand, wet
+  strand, wind-combed snow, standing peat or high turf above the weather — what the
   windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
@@ -249,6 +254,11 @@ carries the same game into every one of them.
   | Starfall Reaches | dust, pitted where things landed | a well a star went into, still lit | posts with a light strung between |
   | Gloamdeep Caverns | flowstone in ribs | one river, running | pit props |
   | Lantern Carnival | trodden ground under sawdust | **a crowd**, not water at all | painted poles and bunting |
+  | Sunbaked Dunes | baked hardpan, cracked into plates | **a dune**, sand too steep to climb | a drift fence half buried |
+  | Tidepool Cove | wet strand the tide just let go of | a tidepool, ringed with foam | groynes, weeded to the waterline |
+  | Frostwhisker Tundra | snow over sea ice, combed into sastrugi | **a pressure ridge**, ice crushed upward | a snow fence, banked in its own drift |
+  | Mirebog Fen | peat with sedge coming up through it | a channel skinned with duckweed | bog oak, pulled black out of the peat |
+  | Cloudspire Heights | high turf, combed flat by the wind | **open sky**, a long way down | storm poles, guyed against the wind |
 
   The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
   a pen exactly as a mere does, because the board cannot tell the difference between a river and
@@ -272,12 +282,14 @@ carries the same game into every one of them.
   game unfinishable and would move the number every time another one was drawn; nor are the
   dailies, which come and go with the calendar.
 
-Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival** and **Sunbaked Dunes** to
-play, then Tidepool Cove, Frostwhisker Tundra, Mirebog Fen and Cloudspire Heights waiting as
-silhouettes.
-Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
-the skin its board is painted in — since the map, the unlocking and the films are already there.
+Twelve worlds are drawn, and all twelve are there to play: **Mudlark Meadow**, **Thornwood
+Thicket**, **Emberpeak**, **Cogsworth City**, **Starfall Reaches**, **Gloamdeep Caverns**,
+**Lantern Carnival**, **Sunbaked Dunes**, **Tidepool Cove**, **Frostwhisker Tundra**,
+**Mirebog Fen** and **Cloudspire Heights** — the journey that spent most of the game's life
+ending at a silhouette now runs all the way out, and past the heights is nothing but sky.
+Adding a world is a matter of authoring its levels and its theme — its light, its treat skin
+and the skin its board is painted in — since the map, the unlocking and the films are already
+there.
 
 ### Thornwood Thicket
 
@@ -452,7 +464,8 @@ way from Dust Shore to Starwell Ring.
 | 8 | Wide Reaches | 20 | 1 stardrop | 45 | 69 | 34% |
 | 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
 
-Starwell Ring asks 56%, which is the widest gap any field in the game leaves — six wells, twelve
+Starwell Ring asks 56%, which was the widest gap any field in the game left until the tundra's
+Whiskers asked 58 — six wells, twelve
 pieces, and nothing on the board to say where the wall goes but the shape the drops are pointing
 at. Swept Flat is the third field in the game with no water on it at all, after Basalt Flats and
 Cobble Yard, and eighteen pieces on eleven tiles of bare dust is the largest budget anything has
@@ -512,16 +525,19 @@ out for.
 | 3 | Stillwater Neck | 11 | 3 crystals, 1 boulder | 19 | 31 | 38% |
 | 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
 | 5 | Glowworm Reach | 11 | 3 crystals | 15 | 26 | 42% |
-| 6 | Rimstone Corner | 9 | 2 crystals | 25 | 46 | 45% |
+| 6 | Rimstone Corner | 9 | a scalloped dam, 2 crystals, 1 boulder | 23 | 44 | 47% |
 | 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
 | 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 42 | 63 | 33% |
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
-Rimstone Corner is the corner question with nothing else in the way of it, and the hardest corner
-in the game: the river takes the whole west wall of the cave and the whole of its floor, and nine pieces
-laid corner to corner across the bend hold 46 where the same nine laid as a right angle hold 25.
-Foundry Corner asked it with the same nine and one free side rather than two, and could only reach
-round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
+Rimstone Corner is the corner question with two free sides handed over: the river takes the whole
+roof of the cave and the whole east wall. What makes it more than a right angle drawn twice is the
+shape of the second bank — the east dam is **scalloped**, stepping in a tile and back out the way
+rimstone actually forms, in terraces rather than in rulers, so no rectangle can lie along it — and
+a boulder down off the roof onto the ground the tidy answer wants. The right angle is driven east
+of the boulder and holds 18 tiles and one crystal for 23; the same nine laid corner to corner as a
+staircase, stepping round the boulder, hold 34 tiles and both crystals, which is 44. Foundry Corner
+asked it with the same nine and one free side rather than two, and could only reach round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
 dunes' Great Erg came in a tile above it.
 
 Its boss, The Roost, adds the caverns' rule, and it is the first board anywhere to stand three
@@ -642,7 +658,7 @@ laid out across bare hardpan to buy it.
 | 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
 | 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
-| 4 | The Hardpan | 21 | no sand at all, 2 melons | 25 | 45 | 44% |
+| 4 | The Hardpan | 21 | no dune at all, 2 melons east, 2 cacti on one latitude | 25 | 45 | 44% |
 | 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 29 | 50 | 42% |
 | 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 35 | 45% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
@@ -654,8 +670,8 @@ is the north wall and its western horn stands on the rim: two sides handed over,
 budget in the world to draw the rest. The right-angled answer hangs a rectangle under the back and
 pays for its own east wall for 20, where the same eleven pieces run out as a chevron — from the
 western rim, across the whole mouth of the crescent, back up to a point in the south — hold 41
-tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it is the
-hardest corner in the game. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
+tiles, which is nearly four tiles a piece and the best rate anywhere in the world. At 51% it was the
+hardest corner in the game until the cove's Barnacle Corner took the title. Melon Ground, at 48%, is the hardest detour in it. And The Great Erg
 holds 59 tiles on the broadest board out here, which is the second biggest pen in the game: five
 behind Wide Reaches, one ahead of the Great Gallery.
 
@@ -677,10 +693,279 @@ stands on one tile, and the rest wall the open sand east of the notch as the sco
 which is 19. The same sixteen run out from the pig up the west of the flats, along under the great
 back in the north and down round the far side of the notch hold 45 tiles and the melon in the
 north-east, which is 50 — the biggest pen any boss holds, and at 62% the widest gap any board in the
-game leaves. The melon in the lane between the two pens is the board saying what the rule costs: the
+game left until the cove's crab asked for his moat. The melon in the lane between the two pens is the board saying what the rule costs: the
 pen that wins this field is the only pen in the game that walks past five points it can see and
 leaves them lying there. It charges the same 21 of the 24 stars below it that every boss charges, and
 stops for the same briefing on the way in. Every pen is drawn out in [`solutions/08-sunbaked-dunes.md`](solutions/08-sunbaked-dunes.md).
+
+### Tidepool Cove
+
+The ninth world, and the first wet one since the meadow. The sand runs out into a sea that has
+only just turned back, so the trail runs over wet strand under sea light, the windfall is a
+**pearl** the tide left lying in its shell and the hazard a **jellyfish** stranded where it washed
+up — each worth exactly what its meadow twin was, a pearl five tiles to shut in, a jellyfish five
+to shut in with and no fencing at all, since nothing drives a post through a sting.
+
+What the water is down here is **a tidepool**: seawater the tide left standing, too deep to wade
+and no ground to build on, so it stops a pig and a fence exactly as a river does. And the world's
+own idea is the shape of it — **every pool is a broken ring.** A box of tidewater one tile thick
+round a heart of dry sand, with exactly one tile of the lip missing where the tide got out — never
+a corner, since nothing on a board walks diagonally and a missing corner would be no way in.
+`TidepoolTests` pins it.
+
+Which out-offers even the dunes. A crescent handed over three walls and a mouth; a broken ring
+hands over a pen that is *finished* but for its break, and one piece on the break shuts the heart.
+It is the cheapest pen the game has ever offered — and it is the trap the whole world is built on,
+because a heart is small, the ring is where the tide put it, and half of what the tide holds out
+it keeps. Ebbtide Pool says it on the first board: the one pearl on show sits in a heart whose
+break opens onto the rim of the map, where nothing can ever be penned, and the two out in the open
+lie on the rim itself. The cove's first lesson is that a gift on show is not a gift; its running
+lesson is what the ones that are real actually cost.
+
+One field has no pool on it anywhere, the way The Hardpan has no sand: The High Strand, the ground
+above the tideline, where every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | Ebbtide Pool | 13 | one pool, 3 pearls, 2 jellyfish | 10 | 17 | 41% |
+| 2 | Twin Pools | 12 | two pools, a pearl argued for by each | 22 | 39 | 43% |
+| 3 | The High Strand | 19 | no pool at all, a pearl in each far corner, a wrack line of 3 | 20 | 36 | 44% |
+| 4 | The Oyster Bed | 14 | one pool, 2 pearls seeded in its heart, 1 loose | 23 | 42 | 45% |
+| 5 | The Runnel | 13 | two pools either side of a channel, 2 pearls | 23 | 43 | 46% |
+| 6 | The Long Pool | 14 | one long pool, 2 pearls, 2 jellyfish | 21 | 39 | 46% |
+| 7 | Barnacle Corner | 10 | two great pools, 3 pearls | 22 | 47 | 53% |
+| 8 | Low Water | 16 | two pools, 3 pearls, a jellyfish | 31 | 58 | 46% |
+| 9 | The Crab Pool | 22 | the crab, his pool, 3 pearls | 17 | 52 | 67% |
+
+Barnacle Corner is the corner question with two free sides, the way Rimstone Corner, The Big Top
+and Scarp Corner asked it — one great pool along the whole north of the board and a second down
+the east — and at 53% it is the hardest corner anywhere in the game. The right-angled answer tucks
+under the north pool and pays its own east and south walls for 22, where the same ten pieces run
+as a chevron from lip to flank hold 42 tiles and let themselves in at the east pool's break for
+the pearl on the way, which is 47. Low Water holds 48 tiles on the broadest board in the cove,
+which is the biggest pen in the world and nothing beside the game's real giants — the cove's
+budgets are the tide's, and the tide does not hand out ground.
+
+Its boss, The Crab Pool, adds the cove's rule, and it is the carnival's ring asked of a pool
+rather than a man. **The crab keeps his pool, and the pig's ground has to close the whole way
+round it — break, crab and all.** The Center Ring taught that a pen can stand inside another pen;
+this one hands the inner pen over already built — the crab sits in the heart of a broken ring,
+walled by the tide on every side but the break — and asks for the moat round the outside. One
+piece on the break shuts him in, the cheapest boss pen the game has ever handed out, and every
+other piece goes on a ring that no way off the map may miss. Run the ring and forget the plug and
+he strolls out of his pool into the pig's own ground, which is held and held together and no
+answer; plug the break and box the pig beside the pool and both are held in two tidy pens, which
+is no ring. The square moat with its plug is the obvious answer and worth 17 of 52; the same
+twenty-two pieces swung out as a diamond hold 37 tiles and all three pearls — one lying off each
+face of the square's reach, exactly where a diamond's points go — and at 67% that was the widest
+gap any board in the game left until the tundra's bull seal asked 69. It charges the same 21 of the 24 stars below it that every boss
+charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions/09-tidepool-cove.md`](solutions/09-tidepool-cove.md).
+
+### Frostwhisker Tundra
+
+The tenth world, and the coldest. North along the shore the sea itself gives up and goes white,
+so the trail runs over wind-combed snow under the palest light in the game, the windfall is a
+**fish** flipped up onto the ice and the hazard a **berg** calved into the snow — each worth
+exactly what its meadow twin was, a fish five tiles to shut in, a berg five to shut in with and
+no fencing at all, since nothing drives a post through blue ice.
+
+What the water is up here is **a pressure ridge**: ice crushed upward where two floes met, too
+sheer to climb and no ground to build on, so it stops a pig and a fence exactly as a river does.
+And the world's own idea is the shape of it — **every ridge runs on the slant.** A straight chain
+of single tiles on the diagonal, at least three long, corner touching corner and never two
+abreast: each blade seals the ground it corner-touches, so the chain is a diagonal wall laid for
+free. `FrostwhiskerTests` pins it — one direction per chain, and both slants somewhere on the
+trail, because the wind out here has no favourite.
+
+Which is a different kind of gift from any world below. A crescent handed over three walls and a
+mouth; a ring handed over a finished pen; a ridge hands over a wall that is already *the best
+shape a wall can be* — the diagonal every world since the meadow has been teaching — and nothing
+else. There is no heart to fall for and no mouth to plug. The question every field here asks is
+not whether to lean on the ridge but *how*: which end, which side, and what shape of bought wall
+finishes what the ice began. And because a diagonal is exactly the thing a rectangle cannot
+follow, the tundra is the first world where the free wall itself is a standing argument against
+squaring anything off — which is why it floors at 41%, the highest in the game.
+
+One field has no ice on it anywhere, the way The High Strand has no pool: The Whiteout, where
+the weather has come down and every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | The Corrie | 13 | two ridges leaning together, 3 fish, 2 bergs | 22 | 38 | 42% |
+| 2 | Twin Spurs | 13 | two ridges in opposite quarters, 2 fish | 23 | 41 | 43% |
+| 3 | The Whiteout | 19 | no ice at all, 3 fish (2 on the line), 4 bergs | 20 | 36 | 44% |
+| 4 | The Seam | 12 | two ridges on one slant, a seam between, 2 fish | 19 | 36 | 47% |
+| 5 | Whaleback Ridge | 11 | one ridge seven tiles long, a school of 3 fish | 22 | 42 | 47% |
+| 6 | Fish Cache | 12 | one ridge, 3 fish hung wide of it | 20 | 39 | 48% |
+| 7 | The Whiskers | 10 | three ridges, all arcs of one ring, 2 fish | 21 | 51 | 58% |
+| 8 | The Great Floe | 14 | two long ridges, 2 fish | 34 | 60 | 43% |
+| 9 | The Haulout | 17 | the bull seal, three ridges, 1 fish, 1 berg | 13 | 42 | 69% |
+
+The Whiskers is the constellation question at the widest spacing the game has asked it: three
+scattered ridges are all arcs of one diamond ring drawn at five paces round the pig, and the
+budget is exactly the ten mud tiles of that ring the ice did not build. See the whole shape and
+the whole shape is affordable; see anything less and it is not. The only affordable block is the
+bottom half-diamond between the south ridges at 21, the ring holds 41 tiles and both fish for
+51, and at 58% it is the widest gap any field outside a boss leaves anywhere in the game —
+Starwell Ring, the old title holder, asked 56. The Great Floe holds 50 tiles on the broadest
+board in the tundra, which is the biggest pen in the world and still shy of the game's giants,
+because the ice's budgets are the winter's, and the winter does not hand out ground.
+
+Its boss, The Haulout, adds the tundra's rule, and it is the first rule about *where a pen is*
+rather than who is in it. **The bull seal will not share a pen with the pig, and the pen he is
+given has to lie against the water: he keeps a breathing hole.** Every two-pen boss so far asked
+who goes where; this one hands the seal a corner with no ice anywhere near it, and the tidy box
+where he already lies — the answer that wins the thicket — comes back refused: held, and held
+dry, which for a seal is no holding at all. His pen has to be walked up the board to the tail of
+the great ridge, where the ice broke and the sea shows through, and every piece it takes is a
+piece the pig's pen does not get. The tidy answer that satisfies it boxes the pig on her own
+tile and walls the seal his yard of ice against the ridge's tail, which is 13 of 42; the same
+seventeen pieces run down the great ridge's whole west flank instead, with a two-piece yard for
+the seal against the same tail, hold 42 tiles, the fish and the berg — and at 69% that was the
+widest gap any board in the game left until the fen's croc asked 72. It charges the same 21 of the 24 stars below it that
+every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions/10-frostwhisker-tundra.md`](solutions/10-frostwhisker-tundra.md).
+
+### Mirebog Fen
+
+The eleventh world, and the wettest. South off the ice the ground gives up choosing between land
+and water, so the trail runs through reeds and mist under the heaviest light in the game, the
+windfall is a **bilberry** ripened over the peat and the hazard a **snag** — bog oak drowned
+black and hard as iron — each worth exactly what its meadow twin was, a bilberry five tiles to
+shut in, a snag five to shut in with and no fencing at all, since nothing drives a post into
+wood the bog already ate.
+
+What the water is down here is **a channel**: fen water moving too slowly to see, too deep to
+wade and no ground to build on, so it stops a pig and a fence exactly as a river does. And the
+world's own idea is the shape of it — **every channel closes on itself.** The water splits,
+rejoins, and rings its own ground: every body on every board holds a loop, and none of it ever
+runs two tiles deep. `MirebogTests` pins both halves — a cycle in every body, never a
+two-by-two of water anywhere.
+
+Which hands over free walls the way every wet world has, jogged so a rectangle cannot follow
+them — and keeps something back no world has kept before: **the bars.** The ground a loop rings
+is ground nothing can ever walk to, so a bilberry parked on a bar is the loudest tease since
+the cove's rim pearls: in plain sight, five points, and nobody's. Four of them ride the bars
+across the trail, and `MirebogTests` checks nobody quietly moves one somewhere a pen could
+cash it. The fen keeps what it rings — and unlike the strand and the ice it always pays
+something too: every board's best pen wins at least one bilberry, which no world before this
+one could promise.
+
+One field has no channel on it anywhere, the way The Whiteout has no ice: The Turbary, the
+cut-over peat, where every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | The Eel Trap | 11 | two staircase braids in an arch, 2 bilberries, a snag | 21 | 37 | 43% |
+| 2 | The Two Carrs | 10 | two braids far apart, 2 bilberries, 1 on a bar | 26 | 47 | 44% |
+| 3 | The Turbary | 21 | no channel at all, 1 bilberry, 2 on the corners | 27 | 50 | 46% |
+| 4 | The Sluice | 11 | two braids nearly meeting, 2 bilberries, 1 on a bar, a snag | 20 | 38 | 47% |
+| 5 | Bittern Bank | 11 | one braid snaking the width, 2 bilberries, a snag | 17 | 33 | 48% |
+| 6 | Bilberry Hags | 11 | two pool-braids, 3 bilberries hung wide, a snag | 17 | 34 | 50% |
+| 7 | Heron Corner | 11 | two braids walling two sides, 3 bilberries, a snag | 16 | 35 | 54% |
+| 8 | The Great Slough | 13 | two braids at full stretch, 3 bilberries, a snag | 30 | 54 | 44% |
+| 9 | The Wallow | 19 | the old croc, four braids, 3 bilberries, 2 snags | 13 | 48 | 72% |
+
+Heron Corner is the corner question the way Rimstone Corner, Scarp Corner and Barnacle Corner
+asked it — a loop-braid stacked up the whole west side and the bottom channel running east,
+their banks meeting at the south-west — and at 54% it is the hardest field in the fen. The
+right-angled answer ignores the gift and boxes the pig on the open peat for 16; the same eleven
+pieces throw one long diagonal from the high ground down to the east pool and hold 35. It asks
+the same scatter of berries as Bilberry Hags one field earlier, on purpose: the hags' question
+is whether the berries are worth bowing for, and the corner's is what the walls are worth — the
+same ground, asked two different things. The Great Slough holds 49 tiles on the broadest board
+in the fen, which is the biggest pen in the world and one more than the boss's.
+
+Its boss, The Wallow, adds the fen's rule, and it is the tundra's clause grown greedy. **The old
+croc will not share a pen with the pig, and the pen he is given has to hold every bank of one
+whole channel — a croc keeps a wallow rather than visits one, and half a wallow is nobody's.**
+The seal wanted a pen that touched the water; the croc wants a pen that owns it. His channel is
+the only one on the board whose banks can all be walked — its three sisters are backed against
+the rims — and he lies in the one-tile causeway beside it, water on both hands. Box him there
+with two pieces and both animals are held, and the board sends it back: his pen laps one bank
+and not the rest, which is no wallow at all. Pen the pair together in one sweep of the east fen
+— 49 tiles, more ground than the winning answer — and that comes back too, because the croc is
+not company. The tidy answer boxes the pig on her own tile and rings his channel tight, leaning
+the sister braids for walls, and the snag staked on the ring's south line makes even that
+answer pay: 13 of 48. The same nineteen pieces swing the ring wide instead and take the whole
+east fen into the croc's ground, both live bilberries and both snags — and at 72% that was the
+widest gap any board in the game left until the heights' eagle asked 76. It charges the same 21
+of the 24 stars below it that
+every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
+[`solutions/11-mirebog-fen.md`](solutions/11-mirebog-fen.md).
+
+### Cloudspire Heights
+
+The twelfth world, and the last. Up out of the fen the ground gives out altogether, so the
+trail runs over turf terraces on the tops of spires that stand clear of the weather, under the
+clearest daylight and the blackest night in the game. The windfall is a **balloon** that
+slipped a child's fist at the carnival five worlds below and has been climbing ever since, and
+the hazard a **whirlwind** worrying at the turf — each worth exactly what its meadow twin was,
+a balloon five tiles to shut in, a whirlwind five to shut in with and no fencing at all, since
+a balloon is tethered by nothing but its string and no post stands in a wind that never stops
+turning.
+
+What the water is up here is **not water at all**: it is open sky between the fields, and a
+long way down. It stops a pig and a fence exactly as a river does, which is all the board ever
+asks of it. And the world's own idea is the shape of it — **one sky.** Every board's water is
+a single body, it laps all four rims of the map, and somewhere it is open enough to hold a
+two-by-two of nothing but air: no mere sitting inside its banks, no scatter of wells, no braid
+running thin. `CloudspireTests` pins all three clauses on every wet board — and checks that
+every world below still breaks at least one of them, which is what makes it a promise.
+
+Which hands over free walls the way every wet world has — and keeps something back the way
+the fen did: **the far fields.** A field the pig's ground never touches is a field nothing
+will ever walk to, so a balloon adrift on one is the fen's bar-berries said in this world's
+grammar: in plain sight, five points, and nobody's. Nine of them ride the far fields across
+the trail — one on every wet board — and `CloudspireTests` checks nobody quietly bridges one
+somewhere a pen could cash it.
+
+One field has no sky on it anywhere, the way The Turbary has no channel: The Long Way Down,
+the one field back on the ground, where every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | The Hollow Crown | 11 | a crown of sky round a hollow, 3 balloons, 3 whirlwinds | 24 | 43 | 44% |
+| 2 | The Two Pinnacles | 10 | two moated pinnacles, 3 balloons, 3 whirlwinds | 16 | 30 | 46% |
+| 3 | The Long Way Down | 21 | no sky at all, 2 balloons, 2 whirlwinds | 27 | 51 | 47% |
+| 4 | The Rope Bridge | 12 | an island, a causeway and a delta, 3 balloons, 3 whirlwinds | 24 | 47 | 48% |
+| 5 | The Cloudbank | 13 | one long bank of sky, 3 balloons, 4 whirlwinds | 26 | 51 | 49% |
+| 6 | The Lost Balloons | 11 | 4 balloons hung wide, 2 adrift for good, 2 whirlwinds | 20 | 41 | 51% |
+| 7 | Windward Corner | 10 | two free banks meeting, 3 balloons (1 on the world's corner), 2 whirlwinds | 20 | 45 | 55% |
+| 8 | The Open Sky | 14 | the widest board, 2 balloons, 6 whirlwinds in two gust-lines | 30 | 56 | 46% |
+| 9 | The Eyrie | 10 | the eagle on his pinnacle, 6 balloons, 1 whirlwind | 15 | 65 | 76% |
+
+Windward Corner is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner
+asked it — sky two deep along the whole north and west, the field hung on the east and south
+rims — and at 55% it is the hardest ordinary field in the heights; in the whole game only The
+Whiskers asks more. Two balloons hang where the diagonal goes and the right angle does not —
+one straight out along the pig's row, one straight down her column, each with a whirlwind
+between her and it — and the third rides the very corner of the map, where nothing can ever be
+penned. The right angle boxes a strip, pays both whirlwinds and reaches one balloon for 20; the
+same ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
+ordinary field in the game — lean both banks at once, pay the same two whirlwinds and take both
+live balloons, holding 45 tiles for 45. The Open Sky
+holds 51 tiles on the broadest board in the heights, which is the biggest pen in the world
+and six more than the boss's.
+
+Its boss, The Eyrie, adds the heights' rule, and it is the first rule in the game about
+seeing rather than standing. **Only the pig is held and the eagle is left outside, his perch
+a hole in the wall's way — and no tile of her pen may stand in his line of sight, which runs
+four ways from his perch, straight along his row and his column, over mud and sky alike. Only
+a fence breaks it.** His perch is a pinnacle ringed by sky, so no pen's own wall can ever
+stand beside him — but two stepping-stone islets sit squarely in his west and south rays, and
+a piece planted on either stands alone in the open sky, no pen anywhere near it, doing
+nothing but putting out an eye: no other board in the game has a use for such a piece. Lean
+the north approach on its free sky wall and the board sends the whole pen back, spotted. The
+tidy answer hides in the pocket out of both rays, three pieces for 15. The same ten pieces
+put out three eyes instead — one wall fenced across his north ray, lone pieces on both
+stepping stones — and take every tile the pig can walk to: 45 of them, five balloons, and the
+causeway whirlwind swallowed on the way east, which is 65. At 76% that is the widest gap any
+board in the game leaves, and the game saves it for last. It charges the same 21 of the 24
+stars below it that every boss charges, and stops for the same briefing on the way in. Every
+pen is drawn out in
+[`solutions/12-cloudspire-heights.md`](solutions/12-cloudspire-heights.md).
 
 ## The Daily Puzzle
 
@@ -1143,9 +1428,13 @@ than the last time the universe asked it.
 | `roost` | Three animals: two that will not be split, and a third they will not share with | The water between them |
 | `ring` | Two pens, one inside the other: the pig's ground has to close round him | The water between them |
 | `berth` | Two pens with clear ground between them: no piece of wall may serve both | The water between them |
+| `moat` | A ring round the crab's whole pool, with the crab shut into its heart | The pool walls him — you wall the pool |
+| `hole` | Two pens, and the seal's must lie against the water | The water — it is where his pen has to go |
+| `wallow` | Two pens, and the croc's must hold every bank of one whole channel | The sister channels — their banks wall his ring |
+| `stoop` | Hold the pig nowhere the eagle can see: he looks along his row and his column | Nothing — but a fence is a sightbreak as well as a wall |
 
-`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring` and `berth` are the **boss rules**,
-and a field never asks one.
+`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat`, `hole`,
+`wallow` and `stoop` are the **boss rules**, and a field never asks one.
 
 #### The shape of a world
 
@@ -1414,6 +1703,10 @@ Pigpen/
 │   ├── Gloamdeep.swift          # Gloamdeep Caverns: its nine levels and the trail down through them
 │   ├── Carnival.swift           # Lantern Carnival: its nine levels and the trail round them
 │   ├── Dunes.swift              # Sunbaked Dunes: its nine levels and the trail out over them
+│   ├── Tidepool.swift           # Tidepool Cove: its nine levels and the trail along them
+│   ├── Frostwhisker.swift       # Frostwhisker Tundra: its nine levels and the trail out onto the ice
+│   ├── Mirebog.swift            # Mirebog Fen: its nine levels and the trail in through the reeds
+│   ├── Cloudspire.swift         # Cloudspire Heights: its nine levels and the trail up above the weather
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── GameCompletion.swift     # The whole game as one percent: every star and every rainbow in every world

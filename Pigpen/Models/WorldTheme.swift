@@ -263,4 +263,103 @@ extension WorldTheme {
         accent: Color(red: 0.93, green: 0.77, blue: 0.43),
         accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20)
     )
+
+    /// Tidepool Cove, the ninth world: down off the last dune to where the sea comes in, onto
+    /// wet sand the tide has only just let go of. The windfall is a pearl the tide left lying in
+    /// its shell and the hazard a jellyfish stranded where it washed up — each worth exactly what
+    /// its meadow twin was, a pearl five tiles to shut in, a jellyfish five to shut in with and
+    /// no fencing at all, since nothing drives a post through a sting.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for eight worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let tidepoolCove = WorldTheme(
+        id: "tidepool-cove",
+        name: "Tidepool Cove",
+        blurb: "Where the tide keeps rearranging the walls.",
+        day: .coveDay,
+        dusk: .coveDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🐚", bonusScale: 0.58, bonusName: "pearl",
+            hazardGlyph: "🪼", hazardScale: 0.60, hazardName: "jellyfish"
+        ),
+        field: .tidepoolCove,
+        boss: BossMark(glyph: "🦀", name: "the crab"),
+        accent: Color(red: 0.37, green: 0.74, blue: 0.72),
+        accentDeep: Color(red: 0.16, green: 0.44, blue: 0.46)
+    )
+
+    /// Frostwhisker Tundra, the tenth world: north along the shore until the sea itself gives
+    /// up and goes white, onto snow lying over frozen ice. The windfall is a fish flipped up
+    /// onto the ice and the hazard a berg calved into the snow — each worth exactly what its
+    /// meadow twin was, a fish five tiles to shut in, a berg five to shut in with and no
+    /// fencing at all, since nothing drives a post through blue ice.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for nine worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let frostwhiskerTundra = WorldTheme(
+        id: "frostwhisker-tundra",
+        name: "Frostwhisker Tundra",
+        blurb: "Ice, snow, and a pig that will not stay put.",
+        day: .frostDay,
+        dusk: .frostDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🐟", bonusScale: 0.58, bonusName: "fish",
+            hazardGlyph: "🧊", hazardScale: 0.58, hazardName: "berg"
+        ),
+        field: .frostwhiskerTundra,
+        boss: BossMark(glyph: "🦭", name: "the bull seal"),
+        accent: Color(red: 0.69, green: 0.84, blue: 0.93),
+        accentDeep: Color(red: 0.36, green: 0.56, blue: 0.71)
+    )
+
+    /// Mirebog Fen, the eleventh world: south off the ice into ground that never chose
+    /// between land and water. The windfall is a bilberry ripened over the peat and the
+    /// hazard a snag — bog oak drowned black and hard as iron — each worth exactly what its
+    /// meadow twin was, a bilberry five tiles to shut in, a snag five to shut in with and no
+    /// fencing at all, since nothing drives a post into wood the bog already ate.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for ten worlds, so the
+    /// planet a player has been walking towards is the planet they arrive at.
+    static let mirebogFen = WorldTheme(
+        id: "mirebog-fen",
+        name: "Mirebog Fen",
+        blurb: "Half water, half mud, all trouble.",
+        day: .fenDay,
+        dusk: .fenDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🫐", bonusScale: 0.56, bonusName: "bilberry",
+            hazardGlyph: "🪵", hazardScale: 0.58, hazardName: "snag"
+        ),
+        field: .mirebogFen,
+        boss: BossMark(glyph: "🐊", name: "the old croc"),
+        accent: Color(red: 0.47, green: 0.56, blue: 0.35),
+        accentDeep: Color(red: 0.24, green: 0.32, blue: 0.18)
+    )
+
+    /// Cloudspire Heights, the twelfth world and the last one: up out of the fen's mists and
+    /// on climbing until the ground gives out, onto fields that float between the spires with
+    /// open sky where every other world kept its water. The windfall is a balloon that slipped
+    /// a child's fist at the carnival five worlds back and has been climbing ever since, and
+    /// the hazard a whirlwind worrying at the turf — each worth exactly what its meadow twin
+    /// was, a balloon five tiles to shut in, a whirlwind five to shut in with and no fencing
+    /// at all, since a balloon is tethered by nothing but its string and no post stands up in
+    /// a whirlwind.
+    ///
+    /// Its colours on the universe map are the ones its silhouette wore for eleven worlds, so
+    /// the planet a player has been walking towards is the planet they arrive at.
+    static let cloudspireHeights = WorldTheme(
+        id: "cloudspire-heights",
+        name: "Cloudspire Heights",
+        blurb: "Fields in the sky, and a long way down.",
+        day: .spireDay,
+        dusk: .spireDusk,
+        treats: TreatSkin(
+            bonusGlyph: "🎈", bonusScale: 0.58, bonusName: "balloon",
+            hazardGlyph: "🌪️", hazardScale: 0.58, hazardName: "whirlwind"
+        ),
+        field: .cloudspireHeights,
+        boss: BossMark(glyph: "🦅", name: "the eagle"),
+        accent: Color(red: 0.73, green: 0.83, blue: 0.96),
+        accentDeep: Color(red: 0.44, green: 0.58, blue: 0.79)
+    )
 }
