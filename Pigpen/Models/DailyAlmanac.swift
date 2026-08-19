@@ -77,26 +77,21 @@ enum DailyAlmanac {
         )
     }
 
-    /// The months the archive offers: from the first of January of the year the player is
-    /// in — or from the first day the almanac has, if the book starts later than that — up
-    /// to the month they are standing in. Nothing past today is worth turning to, since
-    /// every day on that page would be shut.
+    /// The months the archive offers: every one of them, from the first day the almanac has
+    /// up to the month the player is standing in. A daily puzzle does not expire on New
+    /// Year's Eve, so neither does the calendar that holds it — a player who comes to the
+    /// game in its second year can still turn back to the first day of the book.
     ///
-    /// The one exception is a player still on this build in a year the book never covered.
-    /// Turning back through a dozen empty months to reach the puzzles would be a poor way
-    /// to treat somebody who has kept the game that long, so they are given the last year
-    /// the book does have, all of it open.
+    /// The far end is the sooner of today and the last day the book has. Nothing past today
+    /// is worth turning to, since every day on that page would be shut; and nothing past
+    /// the end of the book is worth turning to either, since every day on that page would
+    /// be a gap. A player still on this build once the book has run out is left standing on
+    /// its last month of puzzles rather than on a page of empty squares.
     static func months(upTo today: DailyDate) -> [DailyMonth] {
         guard let first = firstDay, let last = lastDay else { return [DailyMonth(of: today)] }
 
-        let thisYear = last >= DailyDate(year: today.year, month: 1, day: 1)
-        let year = thisYear ? today.year : last.year
-        let end = thisYear ? DailyMonth(of: today) : DailyMonth(of: last)
-
-        var start = DailyMonth(year: year, month: 1)
-        if DailyMonth(of: first) > start {
-            start = DailyMonth(of: first)
-        }
+        let start = DailyMonth(of: first)
+        let end = min(DailyMonth(of: today), DailyMonth(of: last))
         return run(from: start, to: max(start, end))
     }
 

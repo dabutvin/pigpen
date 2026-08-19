@@ -7,8 +7,8 @@ import UIKit
 /// Play walks into Mudlark Meadow until that world is held; only once the meadow boss is beaten
 /// does it open the universe map. Under Play is the day's own board on a card of its own — what
 /// day it is, what that day asks, and once it has been held, the stars it gave up, the time it
-/// took and the run of days it is part of. Under that, the archive of every daily there has been
-/// this year, and the tutorial for anybody who wants the walkthrough before the meadow — which
+/// took and the run of days it is part of. Under that, the archive of every daily there has
+/// been, and the tutorial for anybody who wants the walkthrough before the meadow — which
 /// on a first run opens itself, so that a player meeting the game has been shown how to lay a
 /// fence before they are asked to.
 @MainActor
@@ -434,8 +434,8 @@ struct TitleScreenView: View {
             destinationRow(
                 icon: "calendar",
                 title: "Archive",
-                detail: "Every daily puzzle of the year",
-                hint: "Every daily puzzle of the year, a month at a time"
+                detail: "Every daily puzzle there has been",
+                hint: "Every daily puzzle there has been, a month at a time"
             ) {
                 isArchiveOpen = true
             }
