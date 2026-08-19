@@ -531,10 +531,10 @@ out for.
 | 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
 
 Rimstone Corner is the corner question with two free sides handed over: the river takes the whole
-roof of the cave and the whole east wall. What makes it more than a right angle drawn twice is the
-shape of the second bank — the east dam is **scalloped**, stepping in a tile and back out the way
+west wall of the cave and the whole floor. What makes it more than a right angle drawn twice is the
+shape of the second bank — the south dam is **scalloped**, stepping in a tile and back out the way
 rimstone actually forms, in terraces rather than in rulers, so no rectangle can lie along it — and
-a boulder down off the roof onto the ground the tidy answer wants. The right angle is driven east
+a boulder down off the roof onto the ground the tidy answer wants. The right angle is driven south
 of the boulder and holds 18 tiles and one crystal for 23; the same nine laid corner to corner as a
 staircase, stepping round the boulder, hold 34 tiles and both crystals, which is 44. Foundry Corner
 asked it with the same nine and one free side rather than two, and could only reach round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
