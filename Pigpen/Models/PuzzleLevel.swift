@@ -37,16 +37,17 @@ enum Treat: Character, CaseIterable, Sendable {
         }
     }
 
+    /// The worth with its sign on the front, short enough to stand on the tile itself:
+    /// `+5` for an apple, `-5` for a skull. What a pen stamps on a treat it has shut in.
+    var scoreSaid: String {
+        worth > 0 ? "+\(worth)" : "\(worth)"
+    }
+
     /// What tapping this treat says: five more for an apple, five fewer for a skull. No
     /// treat takes fencing, so a tap that would have planted a post lands on the worth
     /// instead — which is how a player finds out what the ground is carrying without
     /// reading the README.
-    var pointsSaid: String {
-        switch self {
-        case .apple: "+\(worth) points"
-        case .skull: "\(worth) points"
-        }
-    }
+    var pointsSaid: String { "\(scoreSaid) points" }
 }
 
 /// What a field asks of the player — the one question it is built around.

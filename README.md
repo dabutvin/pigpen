@@ -40,6 +40,12 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   cannot be declined: a wall that meets a treat has to swallow it or step in beside it.
   Tapping either says what it is worth — `+5 points`, `-5 points` — rather than shaking the
   fence rack like a spent budget.
+  A treat the wall closes over stops being a choice, and stops being drawn like one: it fades
+  back into the ground it is staked in and what it has just done to the score is stamped on
+  its tile instead — `+5`, `-5`. The treats still lying outside stay as bright as they were,
+  which is the whole of what the fading says. So a pen's arithmetic can be read off the board
+  itself — the ground it holds, and the handful of numbers standing on that ground — rather
+  than only off the tally underneath it.
 - **Escape.** Release the pig and it tries every route. If a single gap leads to the edge
   of the map, it walks out and the attempt fails.
 - **A pen that holds gets a lap of honour.** With nowhere to go, the pig runs two circuits

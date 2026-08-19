@@ -121,8 +121,9 @@ struct FieldView: View {
 
                 penWash(board: board)
 
-                // Above the wash, like the pig: an apple shut into a finished pen has to
-                // still read as an apple and not as a patch of the colour laid over it.
+                // Above the wash, like the pig: an apple outside the pen has to still read
+                // as an apple and not as a patch of the colour laid over it — and one
+                // inside it has to be legible as the number it has become.
                 Canvas { context, _ in
                     var field = context
                     field.clip(to: rim(board))
@@ -1634,15 +1635,28 @@ struct FieldView: View {
     /// against the mud, and neither is ever covered over: no treat takes fencing, so every
     /// one of them is on the board for as long as the board is, and a tap on one says what
     /// it is worth rather than planting a post.
+    ///
+    /// A treat the wall has closed over has stopped being a question, so it stops being
+    /// drawn like one: it falls back into the ground it is staked in and what it has just
+    /// done to the score is stamped on its tile instead — `+5` or `-5`. Which puts the pen's
+    /// arithmetic where the pen is rather than only in the tally underneath it: the ground
+    /// held, and the handful of numbers standing on that ground, added up in one look.
     private func drawTreats(in context: inout GraphicsContext, board: BoardGeometry) {
         for (tile, treat) in level.treats {
             let rect = board.rect(for: tile)
-            context.fill(
+            // Shut in and counted. The tally under the board is taken from exactly this
+            // ground, so a stamped tile and a counted tile are never two different things.
+            let counted = penGlow > 0 && penTiles.contains(tile)
+
+            var lying = context
+            lying.opacity = counted ? 0.3 : 1
+
+            lying.fill(
                 Path(ellipseIn: rect.insetBy(dx: board.cell * 0.15, dy: board.cell * 0.15)),
                 with: .color(.white.opacity(0.2))
             )
             // A shadow on the ground under it, so it lies on the mud rather than in it.
-            context.fill(
+            lying.fill(
                 Path(ellipseIn: CGRect(
                     x: rect.minX + board.cell * 0.24,
                     y: rect.maxY - board.cell * 0.28,
@@ -1651,8 +1665,33 @@ struct FieldView: View {
                 )),
                 with: .color(.black.opacity(0.16))
             )
-            context.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
+            lying.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
+
+            guard counted else { continue }
+            stamp(treat.scoreSaid, in: &context, board: board, tile: tile)
         }
+    }
+
+    /// What a treat inside the pen has added or taken away, written on the tile it is lying
+    /// on. Painted onto the ground the way everything else the field says out loud is —
+    /// cream, heavy, with the light behind it — so it reads over the pen's gold and over the
+    /// drifting rainbow of a pen there is nothing above alike.
+    private func stamp(
+        _ said: String,
+        in context: inout GraphicsContext,
+        board: BoardGeometry,
+        tile: GridPoint
+    ) {
+        var lettering = context
+        lettering.addFilter(
+            .shadow(color: .black.opacity(0.55), radius: board.cell * 0.06, y: board.cell * 0.03)
+        )
+        lettering.draw(
+            Text(said)
+                .font(.system(size: board.cell * 0.4, weight: .heavy, design: .rounded))
+                .foregroundStyle(GamePalette.cream),
+            at: board.center(of: tile)
+        )
     }
 
     /// A treat as it is drawn on a tile `cell` across, in whatever the world dresses it as.
@@ -2454,6 +2493,27 @@ struct FieldView: View {
         penGlow: 0.8,
         isAsGoodAsItGets: true,
         animals: .standing(on: level),
+        onStroke: { _ in },
+        onStrokeEnd: {}
+    )
+    .padding()
+}
+
+/// Sour Ground with an apple and a skull shut into the same pen, which is the board to look
+/// at for what a closed wall does to a treat: the two inside have fallen back into the ground
+/// with `+5` and `-5` stamped over them — they cancel, so the pen is worth exactly the ten
+/// tiles it holds — while the skull the wall stepped in beside is still lying out in the open
+/// at full strength, because it is still a question rather than an answer.
+#Preview("Counted where they lie") {
+    let game = PuzzleGame.applesAndSkulls()
+
+    return FieldView(
+        level: game.level,
+        fences: game.fences,
+        penTiles: game.penTiles,
+        penGlow: 0.8,
+        isAsGoodAsItGets: game.isPenAsGoodAsItGets,
+        animals: .standing(on: game.level),
         onStroke: { _ in },
         onStrokeEnd: {}
     )
