@@ -321,8 +321,8 @@ extension PuzzleLevel {
     /// it, 18 tiles less the snag and the pig's one, which is 13. The same nineteen pieces
     /// swing the ring wide instead, take the whole east fen into the croc's ground with both
     /// live bilberries and both snags, and that is 48 — at 72 the widest gap any board in the
-    /// game leaves. His channel's own bar keeps a bilberry no pen will ever hold, which on
-    /// this board is the croc's pantry.
+    /// game left until the heights' Eyrie asked 76. His channel's own bar keeps a bilberry no
+    /// pen will ever hold, which on this board is the croc's pantry.
     ///
     /// It asks for 21 of the 24 stars below it before it opens, the way every boss since the
     /// thicket has.

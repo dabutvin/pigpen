@@ -212,8 +212,10 @@ the thicket asked before its fourth field; Cogsworth City floors and opens at 30
 Reaches floors and opens at 32%, on the biggest boards in the game; Gloamdeep Caverns floors and
 opens at 34%; Lantern Carnival floors and opens at 37%; Sunbaked Dunes floors at 38% and opens
 at 39%; Tidepool Cove floors at 40% and opens at 41%; Frostwhisker Tundra floors at 41% and
-opens at 42%; and Mirebog Fen floors at 42% and opens at 43%, the highest floor any world has
-stood on. Bosses are held to each other rather than to the
+opens at 42%; Mirebog Fen floors at 42% and opens at 43%; and Cloudspire Heights floors at
+43% and opens at 44%, the highest floor any world has
+stood on — which is where the climb ends, because the heights are the last world there is.
+Bosses are held to each other rather than to the
 floor:
 a boss is one budget split between two animals, so the gap it leaves against a squared-off
 pen understates it, and what is asked there is only that no world's boss splits its budget
@@ -234,7 +236,7 @@ carries the same game into every one of them.
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
   dressing: the light the trail is drawn in, the ground it runs over — mown pasture, woodland
   floor, bare scree, paving, star dust, wet flowstone, trodden sawdust, rippled sand, wet
-  strand, wind-combed snow or standing peat — what the
+  strand, wind-combed snow, standing peat or high turf above the weather — what the
   windfall and the hazard look like on that ground,
   and the shape that waits at the end. The board underneath never knows the difference, which
   is why one solver authors every level in the game.
@@ -256,6 +258,7 @@ carries the same game into every one of them.
   | Tidepool Cove | wet strand the tide just let go of | a tidepool, ringed with foam | groynes, weeded to the waterline |
   | Frostwhisker Tundra | snow over sea ice, combed into sastrugi | **a pressure ridge**, ice crushed upward | a snow fence, banked in its own drift |
   | Mirebog Fen | peat with sedge coming up through it | a channel skinned with duckweed | bog oak, pulled black out of the peat |
+  | Cloudspire Heights | high turf, combed flat by the wind | **open sky**, a long way down | storm poles, guyed against the wind |
 
   The carnival is the one worth saying twice: its water is a crowd of people, and a crowd walls
   a pen exactly as a mere does, because the board cannot tell the difference between a river and
@@ -279,12 +282,14 @@ carries the same game into every one of them.
   game unfinishable and would move the number every time another one was drawn; nor are the
   dailies, which come and go with the calendar.
 
-Twelve worlds are drawn: **Mudlark Meadow**, **Thornwood Thicket**, **Emberpeak**, **Cogsworth
-City**, **Starfall Reaches**, **Gloamdeep Caverns**, **Lantern Carnival**, **Sunbaked Dunes**,
-**Tidepool Cove**, **Frostwhisker Tundra** and **Mirebog Fen** to play, then Cloudspire Heights
-waiting as the last silhouette.
-Adding one is a matter of authoring its levels and its theme — its light, its treat skin and
-the skin its board is painted in — since the map, the unlocking and the films are already there.
+Twelve worlds are drawn, and all twelve are there to play: **Mudlark Meadow**, **Thornwood
+Thicket**, **Emberpeak**, **Cogsworth City**, **Starfall Reaches**, **Gloamdeep Caverns**,
+**Lantern Carnival**, **Sunbaked Dunes**, **Tidepool Cove**, **Frostwhisker Tundra**,
+**Mirebog Fen** and **Cloudspire Heights** — the journey that spent most of the game's life
+ending at a silhouette now runs all the way out, and past the heights is nothing but sky.
+Adding a world is a matter of authoring its levels and its theme — its light, its treat skin
+and the skin its board is painted in — since the map, the unlocking and the films are already
+there.
 
 ### Thornwood Thicket
 
@@ -881,10 +886,79 @@ and not the rest, which is no wallow at all. Pen the pair together in one sweep 
 not company. The tidy answer boxes the pig on her own tile and rings his channel tight, leaning
 the sister braids for walls, and the snag staked on the ring's south line makes even that
 answer pay: 13 of 48. The same nineteen pieces swing the ring wide instead and take the whole
-east fen into the croc's ground, both live bilberries and both snags — and at 72% that is the
-widest gap any board in the game leaves. It charges the same 21 of the 24 stars below it that
+east fen into the croc's ground, both live bilberries and both snags — and at 72% that was the
+widest gap any board in the game left until the heights' eagle asked 76. It charges the same 21
+of the 24 stars below it that
 every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions/11-mirebog-fen.md`](solutions/11-mirebog-fen.md).
+
+### Cloudspire Heights
+
+The twelfth world, and the last. Up out of the fen the ground gives out altogether, so the
+trail runs over turf terraces on the tops of spires that stand clear of the weather, under the
+clearest daylight and the blackest night in the game. The windfall is a **balloon** that
+slipped a child's fist at the carnival five worlds below and has been climbing ever since, and
+the hazard a **whirlwind** worrying at the turf — each worth exactly what its meadow twin was,
+a balloon five tiles to shut in, a whirlwind five to shut in with and no fencing at all, since
+a balloon is tethered by nothing but its string and no post stands in a wind that never stops
+turning.
+
+What the water is up here is **not water at all**: it is open sky between the fields, and a
+long way down. It stops a pig and a fence exactly as a river does, which is all the board ever
+asks of it. And the world's own idea is the shape of it — **one sky.** Every board's water is
+a single body, it laps all four rims of the map, and somewhere it is open enough to hold a
+two-by-two of nothing but air: no mere sitting inside its banks, no scatter of wells, no braid
+running thin. `CloudspireTests` pins all three clauses on every wet board — and checks that
+every world below still breaks at least one of them, which is what makes it a promise.
+
+Which hands over free walls the way every wet world has — and keeps something back the way
+the fen did: **the far fields.** A field the pig's ground never touches is a field nothing
+will ever walk to, so a balloon adrift on one is the fen's bar-berries said in this world's
+grammar: in plain sight, five points, and nobody's. Nine of them ride the far fields across
+the trail — one on every wet board — and `CloudspireTests` checks nobody quietly bridges one
+somewhere a pen could cash it.
+
+One field has no sky on it anywhere, the way The Turbary has no channel: The Long Way Down,
+the one field back on the ground, where every tile of the pen is bought.
+
+| # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|---|
+| 1 | The Hollow Crown | 11 | a crown of sky round a hollow, 3 balloons, 3 whirlwinds | 24 | 43 | 44% |
+| 2 | The Two Pinnacles | 10 | two moated pinnacles, 3 balloons, 3 whirlwinds | 16 | 30 | 46% |
+| 3 | The Long Way Down | 21 | no sky at all, 2 balloons, 2 whirlwinds | 27 | 51 | 47% |
+| 4 | The Rope Bridge | 12 | an island, a causeway and a delta, 3 balloons, 3 whirlwinds | 24 | 47 | 48% |
+| 5 | The Cloudbank | 13 | one long bank of sky, 3 balloons, 4 whirlwinds | 26 | 51 | 49% |
+| 6 | The Lost Balloons | 11 | 4 balloons hung wide, 2 adrift for good, 2 whirlwinds | 20 | 41 | 51% |
+| 7 | Windward Corner | 10 | two free banks meeting, 1 balloon on the world's corner, 2 whirlwinds | 16 | 36 | 55% |
+| 8 | The Open Sky | 14 | the widest board, 2 balloons, 6 whirlwinds in two gust-lines | 30 | 56 | 46% |
+| 9 | The Eyrie | 10 | the eagle on his pinnacle, 6 balloons, 1 whirlwind | 15 | 65 | 76% |
+
+Windward Corner is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner
+asked it — sky two deep along the whole north and west, the field hung on the east and south
+rims — and at 55% it is the hardest ordinary field in the heights; in the whole game only The
+Whiskers asks more. The right angle boxes a strip and swallows a whirlwind for 16; the same
+ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
+ordinary field in the game — lean both banks at once and hold 46 tiles for 36. The Open Sky
+holds 51 tiles on the broadest board in the heights, which is the biggest pen in the world
+and six more than the boss's.
+
+Its boss, The Eyrie, adds the heights' rule, and it is the first rule in the game about
+seeing rather than standing. **Only the pig is held and the eagle is left outside, his perch
+a hole in the wall's way — and no tile of her pen may stand in his line of sight, which runs
+four ways from his perch, straight along his row and his column, over mud and sky alike. Only
+a fence breaks it.** His perch is a pinnacle ringed by sky, so no pen's own wall can ever
+stand beside him — but two stepping-stone islets sit squarely in his west and south rays, and
+a piece planted on either stands alone in the open sky, no pen anywhere near it, doing
+nothing but putting out an eye: no other board in the game has a use for such a piece. Lean
+the north approach on its free sky wall and the board sends the whole pen back, spotted. The
+tidy answer hides in the pocket out of both rays, three pieces for 15. The same ten pieces
+put out three eyes instead — one wall fenced across his north ray, lone pieces on both
+stepping stones — and take every tile the pig can walk to: 45 of them, five balloons, and the
+causeway whirlwind swallowed on the way east, which is 65. At 76% that is the widest gap any
+board in the game leaves, and the game saves it for last. It charges the same 21 of the 24
+stars below it that every boss charges, and stops for the same briefing on the way in. Every
+pen is drawn out in
+[`solutions/12-cloudspire-heights.md`](solutions/12-cloudspire-heights.md).
 
 ## The Daily Puzzle
 
@@ -1350,9 +1424,10 @@ than the last time the universe asked it.
 | `moat` | A ring round the crab's whole pool, with the crab shut into its heart | The pool walls him — you wall the pool |
 | `hole` | Two pens, and the seal's must lie against the water | The water — it is where his pen has to go |
 | `wallow` | Two pens, and the croc's must hold every bank of one whole channel | The sister channels — their banks wall his ring |
+| `stoop` | Hold the pig nowhere the eagle can see: he looks along his row and his column | Nothing — but a fence is a sightbreak as well as a wall |
 
-`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat`, `hole` and
-`wallow` are the **boss rules**, and a field never asks one.
+`herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat`, `hole`,
+`wallow` and `stoop` are the **boss rules**, and a field never asks one.
 
 #### The shape of a world
 
@@ -1624,6 +1699,7 @@ Pigpen/
 │   ├── Tidepool.swift           # Tidepool Cove: its nine levels and the trail along them
 │   ├── Frostwhisker.swift       # Frostwhisker Tundra: its nine levels and the trail out onto the ice
 │   ├── Mirebog.swift            # Mirebog Fen: its nine levels and the trail in through the reeds
+│   ├── Cloudspire.swift         # Cloudspire Heights: its nine levels and the trail up above the weather
 │   ├── Universe.swift           # Every world there is, and the chain that unlocks them one at a time
 │   ├── UniverseProgress.swift   # How far across the universe, read from the one shared star store
 │   ├── GameCompletion.swift     # The whole game as one percent: every star and every rainbow in every world

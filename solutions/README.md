@@ -34,6 +34,7 @@ table of best pens and all nine of its maps drawn out, boss last.
 | 9 | [Tidepool Cove](09-tidepool-cove.md) | pearl `a` | jellyfish `x` | The Crab Pool |
 | 10 | [Frostwhisker Tundra](10-frostwhisker-tundra.md) | fish `a` | berg `x` | The Haulout |
 | 11 | [Mirebog Fen](11-mirebog-fen.md) | bilberry `a` | snag `x` | The Wallow |
+| 12 | [Cloudspire Heights](12-cloudspire-heights.md) | balloon `a` | whirlwind `x` | The Eyrie |
 
 Every world is the meadow's game on new ground, so a treat is worth five tiles to shut in
 and a hazard five fewer wherever you meet it, whatever it is called locally. The six ideas
@@ -52,6 +53,7 @@ V  the visitor              T  a bat
 U  its pup                  M  the ringmaster
 S  the scorpion             C  the crab
 L  the bull seal            G  the old croc
+E  the eagle
 a  an apple                 x  a skull
 ~  water
 ```
