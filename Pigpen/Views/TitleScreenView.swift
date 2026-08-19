@@ -25,9 +25,13 @@ struct TitleScreenView: View {
     /// Whether the practice pen is up. Pushed by the row on the list, and by the screen
     /// itself the first time the game is opened.
     @State private var isTutorial = false
-    @State private var isDailyOpen = false
+    /// Which day's board is up, if one is. A day rather than a flag, because the two ways
+    /// in do not always name the same day: the row under Play opens today's, and a reminder
+    /// tapped after midnight is asking about the morning it was posted for.
+    @State private var playingDaily: DailyDate?
+    /// The day whose submitted wall is being offered back, while that offer is up.
+    @State private var offeringDaily: DailyDate?
     @State private var restoreSubmittedDaily = false
-    @State private var isOfferingSubmittedDaily = false
     @State private var isArchiveOpen = false
     @State private var showsSettings = false
     /// The meadow's opening film, over the title screen. It plays here rather than pushing
@@ -59,6 +63,10 @@ struct TitleScreenView: View {
     /// on a fixed square of the calendar, and must not have the screen quietly put it back
     /// to whatever day the runner is having.
     private let dayWasGiven: Bool
+    /// Where a tapped reminder leaves the morning it is asking for. The notification centre
+    /// has nowhere to push a board from, so it writes the day down and this screen — the
+    /// root of the stack, and so the one screen that is always there to be asked — opens it.
+    private let taps: TappedReminder
 
     /// - Parameters:
     ///   - today: The day the game is being played on, or nothing at all to ask the phone.
@@ -69,13 +77,17 @@ struct TitleScreenView: View {
     ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
     ///     for the same reason — and handed in rather than waited for, since the offer's own
     ///     rule is that it only appears to somebody who has held a day and never been asked.
+    ///   - taps: Where tapped reminders are written down. The shared one the phone writes
+    ///     into, save where a preview or a test wants a tap of its own without one having to
+    ///     arrive on the machine.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
         reminder: DailyReminder = DailyReminder(),
         today: DailyDate? = nil,
         showsSettings: Bool = false,
-        showsReminderPrompt: Bool = false
+        showsReminderPrompt: Bool = false,
+        taps: TappedReminder = .shared
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
@@ -84,6 +96,7 @@ struct TitleScreenView: View {
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
+        self.taps = taps
     }
 
     private var world: WorldMap { progress.world }
@@ -123,32 +136,39 @@ struct TitleScreenView: View {
         .navigationDestination(isPresented: $isTutorial) {
             TutorialView()
         }
-        .navigationDestination(isPresented: $isDailyOpen) {
+        .navigationDestination(item: $playingDaily) { date in
             DailyPuzzleView(
-                date: today,
+                date: date,
                 progress: daily,
                 restoreSubmitted: restoreSubmittedDaily
             )
         }
         .confirmationDialog(
-            today.fullTitle,
-            isPresented: $isOfferingSubmittedDaily,
+            offeringDaily?.fullTitle ?? "",
+            isPresented: Binding(
+                get: { offeringDaily != nil },
+                set: { if !$0 { offeringDaily = nil } }
+            ),
             titleVisibility: .visible
         ) {
             Button("Put it back") {
+                guard let offeringDaily else { return }
                 restoreSubmittedDaily = true
-                isDailyOpen = true
+                playingDaily = offeringDaily
+                self.offeringDaily = nil
             }
             Button("Play again") {
+                guard let offeringDaily else { return }
                 // Clear the field means clear the field: the board filed away when the day
                 // was left is the submitted wall itself, so it has to go or *Play again*
                 // opens on the very wall *Put it back* offers. The wall stays on the books
                 // — the trophy still has it once the new field is somewhere else.
-                daily.clearDraft(on: today)
+                daily.clearDraft(on: offeringDaily)
                 restoreSubmittedDaily = false
-                isDailyOpen = true
+                playingDaily = offeringDaily
+                self.offeringDaily = nil
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) { offeringDaily = nil }
         } message: {
             Text("Put the fencing back the way you submitted it, or clear the field and try again.")
         }
@@ -204,9 +224,18 @@ struct TitleScreenView: View {
             // A game left open overnight comes back to a new day's puzzle rather than to
             // yesterday's, already held.
             if !dayWasGiven { today = .today() }
+            // Before the curtain and before the reminders are laid down again: a tap made
+            // while the game was shut is already waiting by the time this screen arrives,
+            // and answering it here means the offer sheet below sees a board on its way up
+            // and keeps.
+            answerAnyTappedReminder()
             raiseTheCurtain()
             Task { await keepTheRemindersTrue() }
         }
+        // And a tap that arrives afterwards — the notification centre hands a cold launch's
+        // tap over a moment after the first screen is up, and hands a backgrounded game's
+        // over whenever the player gets round to it.
+        .onChange(of: taps.waiting) { _, _ in answerAnyTappedReminder() }
         // The push waits for the screen to be up rather than going out from inside
         // `onAppear`, which is a stack being asked to walk on before it has finished
         // standing its own root up.
@@ -259,9 +288,32 @@ struct TitleScreenView: View {
         // two screens fighting over the same moment. The offer keeps — it is made the
         // next time they come back here, which is on the way out of the walkthrough.
         guard !progress.isTheTutorialDue, !isTutorial,
-              !showsSettings, playDestination == nil, !isDailyOpen, !isArchiveOpen
+              !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
         else { return }
         isOfferingReminders = true
+    }
+
+    /// Opens the morning a tapped reminder is asking for.
+    ///
+    /// A reminder that puts the player down here, with the board still a tap away, has spent
+    /// its one interruption on nothing — so whatever else is up comes down and the day it
+    /// names goes up instead. A player who taps *Sunday's puzzle is up* has said where they
+    /// want to be, and a world map they left an hour ago is not an answer to it.
+    ///
+    /// The tap is taken rather than read, so one tap opens one board and coming back here
+    /// later does not open it again. A morning the almanac has nothing for, or one still to
+    /// come, is let go rather than opened onto an empty field — neither should ever have had
+    /// a reminder laid down for it, and a day cannot be played merely because something on
+    /// the lock screen said so.
+    private func answerAnyTappedReminder() {
+        guard let day = taps.take(), DailyAlmanac.isOpen(day, today: today) else { return }
+        Analytics.record(.reminderFollowed)
+        playDestination = nil
+        isTutorial = false
+        isArchiveOpen = false
+        showsSettings = false
+        isOfferingReminders = false
+        open(day)
     }
 
     // MARK: - The bar across the top
@@ -502,7 +554,7 @@ struct TitleScreenView: View {
         let streak = daily.streak(upTo: today)
         return Button {
             Haptics.tap(.medium)
-            openToday()
+            open(today)
         } label: {
             MenuRow(
                 icon: dailyIcon(stars: stars),
@@ -565,15 +617,19 @@ struct TitleScreenView: View {
         return streak > 1 ? "Today's puzzle · \(streak) days in a row" : "Today's puzzle"
     }
 
-    /// Opens today's board, or — once a wall has been submitted — offers to put that wall
+    /// Opens a day's board, or — once a wall has been submitted — offers to put that wall
     /// back before the field comes up empty.
-    private func openToday() {
-        Analytics.record(.dailyOpened(isToday: true))
-        if daily.submittedFences(on: today) != nil {
-            isOfferingSubmittedDaily = true
+    ///
+    /// It takes the day rather than assuming today's, since a tapped reminder can ask for
+    /// the morning behind this one: a reminder posted at nine and read after midnight is
+    /// about yesterday's board, and yesterday's board is what it should open.
+    private func open(_ date: DailyDate) {
+        Analytics.record(.dailyOpened(isToday: date == today))
+        if daily.submittedFences(on: date) != nil {
+            offeringDaily = date
         } else {
             restoreSubmittedDaily = false
-            isDailyOpen = true
+            playingDaily = date
         }
     }
 

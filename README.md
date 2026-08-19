@@ -1056,11 +1056,23 @@ because the player said it could.
   far* is one that can be sure of it: the number is written onto today's or tomorrow's
   reminder and no further, because the run either survives to the next board or it does not,
   and a reminder four days out cannot know which.
+- **Tapping it opens the board.** A reminder that puts the player down on the title screen
+  with the puzzle still a tap away has spent its one interruption on nothing: they were told
+  the day's board is up, they said yes, and the game answered by showing them the front
+  door. So the morning the reminder names is what opens, and whatever was up when the game
+  was last put down comes down to make room for it. The morning is the reminder's own name —
+  every one is filed as `pigpen.daily-reminder.2026-04-22`, so the day is read back out of
+  the identifier the tap hands over rather than carried a second time in the payload where
+  the two could disagree. A reminder read after midnight opens the morning it was posted for
+  rather than today's, which is the day it was talking about; one for a day the almanac has
+  nothing for, or a day still to come, opens nothing at all. A day already held on the way
+  past offers its wall back first, exactly as the row under Play and the archive do.
 
 The reminder is a preference rather than progress, so clearing all game data leaves it
 standing — but every day is unheld again afterwards, so the fortnight is laid down knowing
-it. `DailyReminderTests` pins which mornings get reminded about and what each one says, and
-the phone's own notification centre sits behind a protocol so a test, a preview or the
+it. `DailyReminderTests` pins which mornings get reminded about, what each one says, and
+that every one of them names its own morning in a form a tap can read back — and the
+phone's own notification centre sits behind a protocol so a test, a preview or the
 screenshot runner can never raise a real prompt or leave a real reminder standing.
 
 The name on the title screen plants itself a letter at a time, each one dropping in and
@@ -1276,6 +1288,7 @@ is filling in Apple's privacy questionnaire.
 | `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
 | `Reminder.offered` / `.answered` | The morning reminder offered, and taken or waved away — with the phone's answer beside the player's |
 | `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
+| `Reminder.followed` | A reminder tapped, and the morning's board it opened |
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
 
@@ -1681,7 +1694,8 @@ Local development needs none of this: `project.yml` keeps `CODE_SIGN_STYLE: Auto
 ```
 Pigpen/
 ├── App/
-│   └── PigpenApp.swift          # App entry point
+│   ├── PigpenApp.swift          # App entry point
+│   └── ReminderTapListener.swift # Hears a tapped reminder at launch and writes down the morning it asks for
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
@@ -1716,6 +1730,7 @@ Pigpen/
 │   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
 │   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
+│   ├── TappedReminder.swift     # Which morning a tapped reminder is asking for, until a screen is up to open it
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   └── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 ├── Views/

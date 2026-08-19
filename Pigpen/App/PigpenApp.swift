@@ -3,6 +3,11 @@ import SwiftUI
 
 @main
 struct PigpenApp: App {
+    /// The ear on the game's own reminders, installed at launch because a tap on one is
+    /// handed over before any screen is up to hear it. It writes the morning down; the
+    /// title screen opens it.
+    @UIApplicationDelegateAdaptor(ReminderTapListener.self) private var reminderTaps
+
     /// CI launches the app with one of the arguments in `Photograph` below, or one of the
     /// film arguments in `stills`, so the pull request screenshots can show the boards, the
     /// universe map, each world's trail, the practice pen, the daily puzzle and its archive,
