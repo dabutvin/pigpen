@@ -146,22 +146,23 @@ version; the woods space them two apart and the mountain three.
 ## 5. Otter Ford — 12 pieces, 24
 
 ```
-..........
-..........
-.....#....
-~~~~~o~~~~
-#oooooooo#
-.#ooPoooo#
-..#ooooo#.
-...#ooo#..
-....###...
+...~#....
+...~o#...
+...~oo#..
+...~ooo#.
+...~oPoo#
+..#ooooo#
+...~oooo#
+...~ooo#.
+...~oo#..
+...~##...
 ```
 
-One dry tile breaks the river, and it is the only way north. Fence the tile *above* it
+One dry tile breaks the river, and it is the only way west. Fence the tile *west of* it
 rather than the ford itself: one piece either way, but this way the ford stays inside the
 pen and the entire far bank of the river becomes a free wall. The remaining eleven pieces
 have only three sides left to close, which they do as an octagon pressed up against the
-south side of the river. 24 tiles.
+east side of the river. 24 tiles.
 
 ## 6. Puddle Corner — 8 pieces, 26
 

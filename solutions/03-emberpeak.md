@@ -26,15 +26,16 @@ to Crater Pools rather than for six stops and then sorting by what it scatters.
 ## 1. Cinder Slope — 9 pieces, 25
 
 ```
-..........
-..........
-..~~~~~~~~
-..~oooooo#
-..~oPoooo#
-..~oooooo#
-..~oooo##.
-..~ooo#x..
-...###....
+.........
+.........
+..~~~~~~.
+..~ooooo#
+..~oPooo#
+..~ooooo#
+..~oooo#.
+..~ooo#x.
+..~ooo#..
+..~###...
 ```
 
 The melt channel walls the west and the top, and the two sides left over are yours. Nine
@@ -73,20 +74,21 @@ nothing free on it, five points is a lot to pay for a tile.
 ## 3. Ashfall Terrace — 13 pieces, 31
 
 ```
-..........
-.~~~~~~~..
-#ooooooo#.
-#oPooooao#
-#oooxooo#.
-.#ooooo#..
-..#ooo#...
-...#o#....
-....#.....
+..###....
+.~ooo#...
+.~oPoo#..
+.~ooooo#.
+.~ooxooo#
+.~ooooo#.
+.~oooo#..
+.~oao#...
+..#o#....
+...#.....
 ```
 
-The tarn along the top is the only free wall on the terrace, and the chestnut is out east
+The tarn down the west is the only free wall on the terrace, and the chestnut is out south
 where no tidy pen would ever go. The pen that wins is neither tidy nor cheap: it runs out
-far enough east to take the chestnut in, then tapers away south in a long wedge.
+far enough south to take the chestnut in, then tapers away east in a long wedge.
 
 The ember it swallows on the way is the point of the field. Walling round it would cut the
 pen in two — it is in the middle of the ground, not out at the edge of it — so the pen takes
@@ -96,22 +98,23 @@ worth 21.
 ## 4. Chestnut Scree — 12 pieces, 32
 
 ```
-..........
-~~~~~~~~~~
-#oooooooo#
-#ooPoooa#.
-#oooooo#..
-.#ooxo#...
-..#ao#....
-...##.....
-..........
+.~###....
+.~ooo#...
+.~oooo#..
+.~oPooa#.
+.~oooxo#.
+.~oooo#..
+.~ooo#...
+.~oa#....
+.~o#.....
+.~#......
 ```
 
-Fern Gully's lesson on ground with something staked in it. The tarn bars the whole top, so
-the ground under it is cheap to wall, and the chestnuts are strung out south where the
+Fern Gully's lesson on ground with something staked in it. The tarn bars the whole west, so
+the ground beside it is cheap to wall, and the chestnuts are strung out south where the
 walling is dear.
 
-A block under the tarn holds one chestnut and 16 tiles of ground for 21. The tongue that
+A block beside the tarn holds one chestnut and 16 tiles of ground for 21. The tongue that
 reaches down for the second gives up the corners to do it and swallows the ember on the way
 — 27 tiles, two chestnuts, one ember, 32. Five points for a chestnut is worth four tiles of
 detour, and it is worth the ember as well.
@@ -119,24 +122,25 @@ detour, and it is worth the ember as well.
 ## 5. Sulphur Rill — 13 pieces, 24
 
 ```
-.....####~
-....#oooo~
-...#Poooo~
-..#oooooo~
-..x#ooooo~
-....#o#oo~
-.....#x#o~
-........#~
-.........~
+.........
+.........
+...#x....
+..#o#....
+.#Poo#...
+#ooooo#..
+#oooo#x..
+#ooooo#..
+#oooooo#.
+~~~~~~~~~
 ```
 
-The rill down the east edge is the free wall, and the two embers are the field. There is no
+The rill along the foot is the free wall, and the two embers are the field. There is no
 block worth having here: every rectangle big enough to be worth the budget wants a wall over
 one ember or the other, and an ember takes no fencing at all. Squaring off clear of both is
 worth 15.
 
-The pen that wins keeps out of the way of both instead. Its west wall runs down the diagonal
-tight past the upper ember, and it pinches right in round the lower one — that notch two
+The pen that wins keeps out of the way of both instead. Its wall runs out on the diagonal
+tight past the upper ember, and it pinches right in round the lower one — that notch three
 rows from the bottom is a wall built round a tile rather than over it — so it holds 24
 without paying either of them a thing.
 

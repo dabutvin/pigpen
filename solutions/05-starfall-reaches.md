@@ -248,17 +248,18 @@ rather than being wasted: it seals that corner, so the fencing stops one piece s
 ## 9. Visitor Crater — 20 pieces, 49
 
 ```
-...##~......
-..#ooo#.a...
-.#oaoo#x~#..
-#oooooo~oo#.
-#oooPo~ooo~.
-.#ooo#oVo~..
-..#o#xoooo#.
-...~ooooo#..
-....#ooo#...
-.....#a~....
-......#.....
+...##......
+..#oo#.....
+.#oooo#....
+#oaoooo~...
+#oooPo#o#..
+~oooo#xoo#.
+.##o~ooooa#
+..x~oVooo~.
+.a~ooooo#..
+..#oo~o#...
+...#~.#....
+...........
 ```
 
 The boss, and the reaches' own rule: **the visitor will not be housed worse than the pig**. Both
@@ -283,8 +284,8 @@ answer holds 22 tiles on each side of the line, with a stardrop in each half and
 visitor's half swallows: 27 for the pig, 22 for the visitor, 49 between them, off a best pair of
 blocks worth 27.
 
-The third stardrop lies out past the east rim where no wall on this board can reach it, and the
-second meteor stands up on the north rim exactly where a tidy wall would want to go.
+The third stardrop lies out past the west rim where no wall on this board can reach it, and the
+second meteor stands up on the west rim exactly where a tidy wall would want to go.
 
 It asks for 21 of the 24 stars below it before it opens.
 

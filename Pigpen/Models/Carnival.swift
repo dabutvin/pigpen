@@ -219,9 +219,9 @@ extension PuzzleLevel {
             """
     )
 
-    /// The big top takes the length of the north of the fair and the length of the east side — the
-    /// crowd runs along the front of it, turns at the corner and goes down the far side — and both
-    /// of those are free wall for anybody standing in the sawdust under them. Two sides handed
+    /// The big top takes the length of the west of the fair and the length of its foot — the
+    /// crowd runs down the side of it, turns at the corner and goes along the far end — and both
+    /// of those are free wall for anybody standing in the sawdust inside them. Two sides handed
     /// over, and eleven pieces to draw the other two.
     ///
     /// Which is the corner question with two free sides, the way Rimstone Corner asked it, and the
@@ -231,7 +231,7 @@ extension PuzzleLevel {
     /// drawing. So the tidy pen has to swallow the pair and pay their ten, and comes to 25 where
     /// the same block on clear ground would be 35 — the apples are dropped clear of it, and no
     /// wall will lie on one to sweep it up. The eleven pieces laid corner to corner
-    /// instead — one long diagonal from the west side down to the south-east, cutting the whole
+    /// instead — one long diagonal from the north side down to the south-east, cutting the whole
     /// bend off in a single line — hold 51 tiles, both apples and the same pair of ropes, which
     /// comes back to 51. The biggest pen in the world for the smallest budget in it, which is what
     /// two free sides are worth.
@@ -244,17 +244,18 @@ extension PuzzleLevel {
         maximumScore: 51,
         question: .corner,
         map: """
-            ............
-            ~~~~~~~~~~..
-            ..........~.
-            ..........~.
-            .....a....~.
-            ....P.....~.
-            .......xx.~.
-            ..........~.
-            .......a..~.
-            ..........~.
-            ..........~.
+            .~.........
+            .~.........
+            .~.........
+            .~.........
+            .~...P.....
+            .~..a......
+            .~.........
+            .~....x.a..
+            .~....x....
+            .~.........
+            ..~~~~~~~~~
+            ...........
             """
     )
 
@@ -270,21 +271,23 @@ extension PuzzleLevel {
     /// into one of them, so squaring off means retreating down the west and swallowing the pair
     /// of ropes nearest the pig on the way: 31 tiles less their ten, which is 21. The same
     /// eighteen pieces fitted round the rigging instead keep clear of every peg on the board and
-    /// hold 37 tiles with the apple in the south-east inside them, which comes to 42.
+    /// hold 34 tiles with two of the three apples inside them, which comes to 44.
     ///
-    /// That apple is the other half of the field. No piece will lie on one any more than on a
-    /// rope, so the wall cannot run through it and cannot pretend it is not there: it comes
-    /// inside and pays for itself, or the pen stops short of it. The pen that wins comes round
-    /// and takes it, and the run of three and the pair beside it are left standing out in the
-    /// north, because the ground behind them is not worth the twenty-five points they would cost
-    /// to shut in.
+    /// The apples are the other half of the field. No piece will lie on one any more than on a
+    /// rope, so a wall cannot run through one and cannot pretend it is not there: it comes
+    /// inside and pays for itself, or the pen stops short of it. The widest pen the rigging
+    /// leaves holds 37 tiles and reaches only the apple in the south, which is 42; the pen that
+    /// wins gives three of those tiles back to come round the apple out east as well, and two
+    /// apples for three tiles is the two points in it. The run of three and the pair beside it
+    /// are left standing out in the north with the third apple behind them, because the ground
+    /// back there is not worth the twenty-five points the pegs would cost to shut in.
     static let theRigging = carnival(
         id: "the-rigging",
         name: "The Rigging",
         fenceBudget: 18,
         twoStarScore: 18,
-        threeStarScore: 39,
-        maximumScore: 42,
+        threeStarScore: 41,
+        maximumScore: 44,
         question: .obstruction,
         map: """
             ............

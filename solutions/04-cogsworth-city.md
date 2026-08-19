@@ -33,39 +33,41 @@ Gasworks Cut to Foundry Corner.
 ## 1. Gasworks Cut — 9 pieces, 26
 
 ```
-.........
-~~~~~~~~~
-#ooooooo~
-#oPooooo~
-.#oooooo~
-..#oooo#.
-...#oo#..
-....##...
+.~##....
+.~oo#...
+.~oPo#..
+.~oooo#.
+.~ooooo#
+.~ooooo#
+.~oooo#.
+.~ooo#..
+.~~~~...
 ```
 
-The cut runs the width of the world along the top and turns down the far end of it, which is
-two walls handed over. Nine pieces squared off under them hold a block of 18, and that is
+The cut runs the depth of the world down the west and turns east along the foot of it, which
+is two walls handed over. Nine pieces squared off beside them hold a block of 18, and that is
 worth two stars.
 
-The third comes from giving up the square corner: the wall goes down the west for two tiles
+The third comes from giving up the square corner: the wall runs along the north for two tiles
 and then steps away south-east, and the ground it picks up on the diagonal is worth more than
-the ground it gives up at the bottom. 26 tiles, and every one the yard has in it.
+the ground it gives up at the far end. 26 tiles, and every one the yard has in it.
 
 ## 2. Pieman's Row — 12 pieces, 24
 
 ```
-~#.......
-~o#......
-~oP#...a.
-~ooo#....
-~oooo#...
-~ooooo#..
-.#oooa#..
-..####...
+~~~~~~..
+#ooooo#.
+.#Poooo#
+..#oooo#
+...#ooo#
+....#oa#
+.....##.
+..a.....
+........
 ```
 
-Two pies on the row and one canal down the west. A block against the canal holds sixteen tiles
-and neither pie — both lie below where a rectangle stops, and no piece will lie on one to sweep
+Two pies on the row and one canal along the north. A block under the canal holds sixteen tiles
+and neither pie — both lie past where a rectangle stops, and no piece will lie on one to sweep
 it up on the way past — which is 16 and two stars.
 
 The pen that wins goes out for the near pie and puts nineteen tiles round it, by running the
@@ -75,14 +77,15 @@ bending out to it costs more than the five it pays, which is the whole of what a
 ## 3. Cobble Yard — 14 pieces, 18
 
 ```
-.....#...
-....#o#..
-..x#ooo#.
-..#ooooo#
-.#ooPoo#.
-..#ooo#..
-...#o#x..
-....#....
+........
+....#...
+..x#o#..
+..#ooo#.
+.#ooPoo#
+#ooooo#.
+.#ooo#x.
+..#o#...
+...#....
 ```
 
 Paving and two drains, and nothing else. Every tile of this pen is bought out of the fourteen
@@ -96,21 +99,22 @@ that wants one of those tiles is a ring you cannot build.
 ## 4. Lock Gate — 13 pieces, 22
 
 ```
-....#....
-~~~~o~~~~
-#ooooooo#
-#ooxoooo#
-#oooPoo#.
-.#oooo#..
-..#oo#...
-...##....
+.~###...
+.~ooo#..
+.~oooo#.
+.~oxooo#
+#oooPoo#
+.~oooo#.
+.~ooo#..
+.~oo#...
+.~##....
 ```
 
-The canal crosses the whole world with the lock standing open in the middle of it. One piece
-in the gate shuts the only way north and buys the entire canal as a free wall — Otter Ford's
-lesson, on a third of the board.
+The canal runs the whole depth of the world with the lock standing open in the middle of it.
+One piece in the gate shuts the only way west and buys the entire canal as a free wall — Otter
+Ford's lesson, on a third of the board.
 
-The other twelve close three sides, and the drain under the gate is in the middle of whatever
+The other twelve close three sides, and the drain inside the gate is in the middle of whatever
 they close, so it is taken in and paid for rather than walled round. 27 tiles less the drain,
 which is 22, against a block worth 14.
 
@@ -138,19 +142,21 @@ paid for. 27 tiles for thirteen pieces.
 ## 6. Gutter Lane — 14 pieces, 26
 
 ```
-..######~
-.#oooooo~
-.#oPoooo~
-..#ooooo~
-..x#oooo~
-....#ooo~
-....x#oo~
-......##.
+........
+.##.....
+#oo#x...
+#oPo#...
+#oooo#x.
+#ooooo#.
+#oooooo#
+#oooooo#
+~~~~~~~.
 ```
 
-The canal walls the whole east side and two drains are sunk out where a wall wants to stand.
-Neither is worth five points: the wall comes off the canal, runs down the diagonal tight past
-the upper drain and pinches in round the lower one, and both stay outside for a tile apiece.
+The canal walls the whole foot of the lane and two drains are sunk out where a wall wants to
+stand. Neither is worth five points: the wall comes off the canal, runs out on the diagonal
+tight past the upper drain and pinches in round the lower one, and both stay outside for a
+tile apiece.
 
 Sour Ground made that choice once and Sulphur Rill made it twice. This makes it twice with
 nowhere to put the mistake — a block that keeps clear of both drains is worth 15.
@@ -158,14 +164,15 @@ nowhere to put the mistake — a block that keeps clear of both drains is worth 
 ## 7. Foundry Corner — 9 pieces, 27
 
 ```
-~~~~~~~~~
-~ooooooo#
-~ooooooo#
-~ooPooo#.
-~oooxo#..
-~oooo#...
-~ooo#.x..
-.###.....
+~~~~~~~.
+~oooooo#
+~oooooo#
+~ooPooo#
+~oooxo#.
+~oooo#..
+~ooo#.x.
+~oo#....
+~##.....
 ```
 
 Two canals meeting at a corner, which Puddle Corner and Willow Corner both asked before — and

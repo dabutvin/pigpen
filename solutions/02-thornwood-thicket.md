@@ -9,23 +9,24 @@ did: there is no field here whose third star the obvious block will win.
 ## 1. Bramble Brook — 9 pieces, 27
 
 ```
-..........
-..........
-~~~~~~~~..
-#oooooo~..
-#ooPooo~..
-#oooooo~..
-.#ooooo~..
-..#oooo~..
-...####...
+..~###...
+..~ooo#..
+..~oooo#.
+..~oPooo#
+..~ooooo#
+..~ooooo#
+..~ooooo#
+..~~~~~~.
+.........
+.........
 ```
 
-The brook walls the north and the east, and the two sides left over are yours. Squared off
+The brook walls the west and the south, and the two sides left over are yours. Squared off
 against them the nine pieces hold a block of 20, which is the answer the meadow trained you
 to give and is worth two stars here.
 
-The third comes from spending the same nine on a staircase instead. Each step down the
-south-west trades a tile of wall for a tile of ground the block was paying to keep out, and
+The third comes from spending the same nine on a staircase instead. Each step out to the
+north-east trades a tile of wall for a tile of ground the block was paying to keep out, and
 the diagonal ends up holding 27 — every tile the brook can be made to keep.
 
 ## 2. Foxglove Dell — 7 pieces, 29
@@ -54,17 +55,19 @@ goes after the second gives up more ground on the way down than five points can 
 ## 3. Hazel Copse — 12 pieces, 30
 
 ```
-..........
-..........
-~~~~~~~~..
-#ooooooo#.
-#ooaPoooo#
-.#oooooo#.
-..#oooo#..
-...####...
+..~##...
+..~oo#..
+..~ooo#.
+..~oaoo#
+..~oPoo#
+..~oooo#
+..~oooo#
+..~ooo#.
+...#o#..
+....#...
 ```
 
-A brook bars the north, so the ground under it is cheap to wall, and the pen closes round the
+A brook bars the west, so the ground beside it is cheap to wall, and the pen closes round the
 truffle it was going to hold anyway — the first windfall that costs nothing to take.
 
 ## 4. Fairy Ring — 13 pieces, 36

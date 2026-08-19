@@ -104,24 +104,25 @@ corner bilberries sit on the very rim of the map, where nothing can ever be penn
 ## 4. The Sluice — 11 pieces, 38
 
 ```
-~~~~###.....
-~..~aoo#....
-~~~~oooo#...
-...~~oooo#x.
-....~~oPoo#.
-....#oooooo#
-.....~~ooao#
-......~~ooo#
-.......~~~~~
-.........~a~
-.........~~~
+~~~........
+~.~........
+~.~........
+~~~~.......
+#ao~~#.....
+#ooo~o~....
+#ooooo~~...
+.#ooPoo~~..
+..#ooooo~..
+...#ooao~~~
+...x#ooo~a~
+.....###~~~
 ```
 
 Two braids nearly meeting, and one mud tile between their ends. One piece there is the whole
-west wall: it fuses the braids into a single barrier from the north rim to the south-east
+north wall: it fuses the braids into a single barrier from the north rim to the south-east
 pool, and the rest of the budget caps the long diagonal strip behind it with a staircase. Both
 live bilberries ride the strip's two ends: 28 tiles and the pair, which is 38. The snag is
-staked where the block's east fence wants to stand, so the block huddles mid-strip at 20; the
+staked where the block's south fence wants to stand, so the block huddles mid-strip at 20; the
 third bilberry sits in the south-east pool's eye, pure tease.
 
 ## 5. Bittern Bank — 11 pieces, 33

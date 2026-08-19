@@ -33,7 +33,7 @@ what holds the world at 37% and above, the highest floor in the game.
 | 4 | Ticket Line | 15 | 34 | 2 toffee apples, 2 guy ropes | 34 | 20 |
 | 5 | The Toffee Stand | 17 | 33 | 1 toffee apple | 38 | 22 |
 | 6 | The Big Top | 11 | 51 | 2 toffee apples, 2 guy ropes | 51 | 25 |
-| 7 | The Rigging | 18 | 37 | 1 toffee apple | 42 | 21 |
+| 7 | The Rigging | 18 | 34 | 2 toffee apples | 44 | 21 |
 | 8 | The Midway | 19 | 49 | 2 toffee apples, 2 guy ropes | 49 | 30 |
 | 9 | The Center Ring | 22 | 35 | 1 toffee apple | 40 | 17 |
 
@@ -178,44 +178,45 @@ apples, which is 38.
 ## 6. The Big Top — 11 pieces, 51
 
 ```
-............
-~~~~~~~~~~..
-#ooooooooo~.
-#ooooooooo~.
-.#oooaoooo~.
-..#oPooooo~.
-...#oooxxo~.
-....#ooooo~.
-.....#oaoo~.
-......#ooo~.
-.......###~.
+.~##.......
+.~oo#......
+.~ooo#.....
+.~oooo#....
+.~oooPo#...
+.~ooaooo#..
+.~ooooooo#.
+.~ooooxoao#
+.~ooooxooo#
+.~oooooooo#
+..~~~~~~~~~
+...........
 ```
 
-The crowd runs along the front of the big top, turns at the corner and goes down the far side, so
+The crowd runs down the side of the big top, turns at the corner and goes along the far end, so
 two of the four walls are handed over before a piece is laid. The corner question the way Rimstone
 Corner asked it, and the hardest corner in the game — with eleven pieces, the smallest budget at
 the fair, to draw the other two sides.
 
 What makes it hard is where the guy ropes are pegged. A right-angled block in this corner is a
-rectangle hung under the crowd, and the pair of ropes lies inside every rectangle worth drawing, so
+rectangle hung off the crowd, and the pair of ropes lies inside every rectangle worth drawing, so
 the tidy pen has to swallow them and pay their ten: 25, where the same block on clear ground would
-be 35. The eleven laid corner to corner instead — one long diagonal from the west side down to the
+be 35. The eleven laid corner to corner instead — one long diagonal from the north side down to the
 south-east, cutting the whole bend off in a single line — hold 51 tiles, both apples and the same
 pair of ropes, which comes back to 51. The biggest pen in the world for the smallest budget in it,
 which is what two free sides are worth.
 
-## 7. The Rigging — 18 pieces, 42
+## 7. The Rigging — 18 pieces, 44
 
 ```
 ............
 .~~~...x.x..
 .~~~...x.x..
 .~~~.x.x.a..
-#ooo#x##....
-#oooP#oo#...
-#oooooooo#..
-.#ooooooo#a.
-..~~~ooooo#.
+....#x###...
+...#P#ooo#..
+..#ooooooo#.
+.#ooooooooa#
+..~~~oooooo#
 ..~~~ooooa#.
 .....#ooo#..
 ......###...
@@ -233,12 +234,17 @@ swallowing the pair of ropes nearest the pig on the way: 31 tiles less their ten
 the whole budget spent on it.
 
 The answer keeps clear of every peg on the board instead. It takes the wide ground south and east
-and comes round the apple lying down there rather than over it: 37 tiles and that apple, which is
-42. No piece will lie on an apple any more than on a rope, so the wall cannot run through it and
-cannot pretend it is not there — it comes inside and pays for itself, or the pen stops short. The
-run of three and the pair beside it are left standing out in the north: five pegs, twenty-five
-points to shut in, and the ground behind them is not worth that. At 50% it leaves the widest gap
-of any ordinary field at the fair.
+and comes round the apples lying out there rather than over them: 34 tiles and two of the three,
+which is 44. No piece will lie on an apple any more than on a rope, so a wall cannot run through
+one and cannot pretend it is not there — it comes inside and pays for itself, or the pen stops
+short.
+
+The widest pen the rigging leaves holds 37 tiles and reaches only the apple in the south, which is
+42, and it is the pen this walkthrough used to give. Handing three of those tiles back buys the
+room to come round the apple out east as well, and a second apple for three tiles of ground is the
+two points in it. The run of three and the pair beside it are left standing out in the north with
+the third apple behind them: five pegs, twenty-five points to shut in, and the ground back there is
+not worth that. At 52% it leaves the widest gap of any ordinary field at the fair.
 
 ## 8. The Midway — 19 pieces, 49
 

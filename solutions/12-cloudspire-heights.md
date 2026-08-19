@@ -90,51 +90,53 @@ the second lesson in the world, and the first one it charges for.
 ## 3. The Long Way Down — 21 pieces, 51
 
 ```
-......#.....
-.....#o#....
-....#ooo#...
-..x#ooooo#..
-.##ooooooo#.
-#aooooooPo#.
-.#ooooooo#..
-..#ooooo#...
-...#oao#x...
-....#o#.....
-.....#......
+.....#.....
+....#a#....
+...x#oo#...
+...#oooo#..
+..#oooooo#.
+.#ooooooao#
+#oooooooo#.
+.#oooooo#..
+..#ooPo#x..
+...#oo#....
+....##.....
+...........
 ```
 
-The one field back on the ground: no sky anywhere, the pig pushed east, and the biggest budget
+The one field back on the ground: no sky anywhere, the pig pushed south, and the biggest budget
 in the world laid across bare turf. It is The Turbary and The Whiteout again, with two balloons
 to bend the answer and two whirlwinds staked exactly on the natural diamond's rim.
 
 The block is a fat rectangle that nudges out over the near balloon and has to swallow a
 whirlwind doing it: 27. The same twenty-one pieces run round as a long diamond bent to keep
 both whirlwinds outside and both balloons in — 41 tiles and the pair, which is 51. The long
-walk west for the far balloon is the whole field.
+walk north for the far balloon is the whole field.
 
 ## 4. The Rope Bridge — 12 pieces, 47
 
 ```
-~~~~~~~~~~~~
-~~~ooo~~~~~~
-~~~oooo~~~~~
-~~~oPoo~~~~~
-~~~oooo~~~~~
-~~~~o~~~~~~~
-~~~~o~~~~~~~
-.x#ooooooo~.
-.#ooo#oooo~a
-#oao#x#oao~.
-.###.x.###~.
+~~~~~~~..#.
+~~~~~~~x#o#
+~~~~~~~#oa#
+~oooo~~ooo#
+~ooPooooo#.
+~oooo~~o#xx
+~~ooo~~oo#.
+~~~~~~~ooo#
+~~~~~~~ooa#
+~~~~~~~ooo#
+~~~~~~~~~~~
+~~~~~~~.a..
 ```
 
-The pig's island floats in open sky and one two-tile causeway is the only way down to the delta
-below. The gap question, asked as a rope bridge: one piece at the neck seals the island for
+The pig's island floats in open sky and one two-tile causeway is the only way over to the delta
+beyond. The gap question, asked as a rope bridge: one piece at the neck seals the island for
 almost nothing.
 
 That is the cheap answer and the block takes it — island, neck and one row of the delta, 24. The
 best pen crosses instead and fans out over the whole delta, notching round the whirlwind tower
-that kills every rectangle's deep south wall and round the one that breaks the shallow line, and
+that kills every rectangle's deep east wall and round the one that breaks the shallow line, and
 takes both live balloons: 37 tiles and the pair, which is 47. The third balloon glitters on a
 dead strip across the last fjord, one tile of sky too far.
 

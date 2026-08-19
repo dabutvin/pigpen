@@ -90,20 +90,21 @@ makes the cheap ground worth the walk.
 ## 3. The High Strand — 19 pieces, 36
 
 ```
-............
-..........a.
-....#...x...
-...#o#...x..
-..#ooo#...x.
-.#ooooP#....
-#ooooooo#...
-#oooooo#....
-#ooooo#.....
-#aooo#......
-.####.......
+......####.
+.....#oooa#
+....#ooooo#
+...#oooooo#
+..#ooooooo#
+...#ooooo#.
+....#Poo#..
+.....#o#...
+..x...#....
+...x.......
+.a..x......
+...........
 ```
 
-The ground above the tideline: dry strand twelve tiles across, no pool anywhere on it, and the
+The ground above the tideline: dry strand twelve tiles deep, no pool anywhere on it, and the
 biggest budget in the world laid out across it. It is The Hardpan again, and The Blind Grike and
 Swept Flat before it — nothing free, and the diamond is the answer it always was.
 
@@ -114,8 +115,8 @@ A rectangle reaching for that pearl has to cross the wrack and swallow it, and a
 off one jellyfish walks onto the next and then onto the rim. So squaring off is held to a four by
 five holding 20, and it reaches neither pearl.
 
-The same nineteen pieces run round as a diamond pulled out of true to the south-west and hold 31
-tiles and the pearl down there: 36. The north-eastern one stays where the tide left it, behind the
+The same nineteen pieces run round as a diamond pulled out of true to the north-east and hold 31
+tiles and the pearl up there: 36. The south-western one stays where the tide left it, behind the
 wrack — on ground with no free wall on it a pearl is four pieces of fence, and four pieces of
 diamond are worth more than a pearl. The strand asks which one, not both.
 

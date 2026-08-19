@@ -153,9 +153,14 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefen
     of coordinates, which is the same search written so that it finishes in a second rather
     than half a minute. Growing a pen by every tile it could take is then one machine word
     of arithmetic per pen instead of a walk over its tiles and their neighbours, and the
-    walls are counted with a popcount. Nothing about which pens are kept changes, and the
-    shipped levels come out at exactly the numbers they came out at before, which is what
-    `PuzzleLevelTests` is there to say.
+    walls are counted with a popcount.
+
+    It is a beam and not an exhaustive walk, so what comes back is the best pen it kept
+    rather than the best pen there is: widen what it keeps and a board can come back worth
+    more than it was worth before. The Rigging shipped at 42 for exactly that reason and is
+    worth 44. Which is why a level's number is never taken on this tool's word alone — the
+    pen itself is written into the world's suite and replayed through the game's own rules,
+    and that plan is what the number is pinned to.
     """
 
     def bit(tile):
@@ -676,6 +681,23 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefen
         thriftiest = sorted(grown, key=lambda pen: cost[pen] - held[pen])[: beam // 2]
         keeping = set(cheapest)
         keeping.update(thriftiest)
+
+        # And a share for each price the wall comes at, which is what a board with a lot
+        # staked on it needs. Where the hazards are thick the pen that wins is dear the whole
+        # way there — it has to stand a clear tile off every one it does not shut in, and it
+        # pays wall for the standing off — so a beam sorted on price alone fills with blobs
+        # and the answer is gone long before it closes. Sorting inside a price rather than
+        # across the lot keeps those shapes alive against cheaper ones they would never
+        # outrun, which is the trick `circling` plays with its rays. The Rigging is the board
+        # that wants it: seven pegs in three runs, and a pen worth 44 that no width of beam
+        # kept on price alone will find.
+        dearest = {}
+        for pen in grown:
+            dearest.setdefault(cost[pen], []).append(pen)
+        share = max(beam // 8, 1)
+        for penned in dearest.values():
+            penned.sort(key=lambda pen: -held[pen])
+            keeping.update(penned[:share])
         if rule == "even":
             keeping = divided(grown, cost)
         if rule == "roost":

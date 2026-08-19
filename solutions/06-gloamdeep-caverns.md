@@ -176,34 +176,35 @@ it pinches down to a single tile: 21 tiles and that crystal, which is 26.
 ## 6. Rimstone Corner — 9 pieces, 44
 
 ```
-............
-~~~~~~~~~~~.
-#oaoooooo~~.
-.#ooooooo~~.
-..#ooooPoo~.
-...#ooaooo~.
-....##oooo~.
-.....x#oo~~.
-.......##.~.
-..........~.
-..........~.
+.~#........
+.~o#.......
+.~ao#......
+.~ooo#.....
+.~oooo#....
+.~oooo#x...
+.~oooao#...
+.~ooPooo#..
+.~oooooo#..
+.~~~ooo~...
+.~~~~~~~~~~
+...........
 ```
 
-The river takes the length of the roof of the cave and the length of the east wall — in along the
-north, round the corner, and down the far side — so two sides of the pen are handed over and there
+The river takes the length of the west wall of the cave and the length of its floor — down the
+west, round the corner, and out along the south — so two sides of the pen are handed over and there
 are nine pieces to draw the other two. It runs a tile inside the rim, so the strip beyond it is a
 far bank: no pen can reach it, the way no pen reaches the far shore of the Dew Ponds.
 
-What stops that being a right angle drawn twice is the shape of the second bank. The east dam is
+What stops that being a right angle drawn twice is the shape of the second bank. The south dam is
 **scalloped** — it steps in a tile and back out again, which is how rimstone actually forms, in
 terraces rather than in rulers — and a bank with a jog in it is a bank no rectangle can lie along.
 A staircase follows it without losing a tile.
 
 The other half is the boulder, down off the roof onto exactly the ground the tidy answer wants.
-Nine pieces laid as a right angle are driven east of its line and hold 18 tiles and ONE crystal,
-which is 23; the other is pegged out west of the bend where no rectangle hung off two banks ever
+Nine pieces laid as a right angle are driven south of its line and hold 18 tiles and ONE crystal,
+which is 23; the other is pegged out north of the bend where no rectangle hung off two banks ever
 goes. The same nine laid corner to corner — one long staircase from the north-west down to the
-east dam, stepping around the boulder on the way past — hold 34 tiles and both crystals: 44. That
+south dam, stepping around the boulder on the way past — hold 34 tiles and both crystals: 44. That
 is the smallest budget in the caverns paying out one of the biggest scores in them. Foundry Corner
 asked this on a canal bend with the same nine pieces and could only reach round 27; two free sides
 instead of one, and a bank that will not be hugged, is the difference.
@@ -269,16 +270,17 @@ anywhere.
 ## 9. The Roost — 20 pieces, 45
 
 ```
-......###..
-.....#Toa#.
-...~~~~aoo#
-..~~o#Uooo#
-.~~ooo#ooo#
-~~ooooo#o#.
-.#ooooPo#..
-..#oaox#...
-...#oo#....
-....##.....
+.....~....
+....~~#...
+...~~oo#..
+..~~oooo#.
+..~ooooao#
+.#~#ooooo#
+#T~U#oPx#.
+#oaoo#o#..
+#aoooo#...
+.#ooo#....
+..###.....
 ```
 
 The boss, and the sixth rule the game has: **the roost hangs together and the pig hangs apart**.
@@ -295,15 +297,15 @@ the pens are two and *which animal is in which* is the whole of it — so the ch
 little boxes so that nothing can possibly be sharing, is turned down flat, because a pup boxed on
 its own is a roost split.
 
-The river comes in off the west wall low down and climbs north-east across the cave, and the bat and
-its pup hang either side of the tip of it: the water runs between them. Joining them means reaching
+The river comes in off the north wall halfway along it and runs south-west across the cave, and the
+bat and its pup hang either side of the tip of it: the water runs between them. Joining them means reaching
 round that tip — and reaching round the tip is what hands the pig the whole staircase as the wall of
 its own pen. So the one wall the budget cannot afford to leave out does both jobs, and finding it is
 finding the field.
 
 The best pair of blocks holds 22 between them. The answer hangs the roost in a pocket of 14 tiles off
-the east end of the river with two crystals in it, and gives the pig 21 tiles of the wide floor
-south-west of the water with the third crystal and a boulder it cannot get out of swallowing: 45.
+the south end of the river with two crystals in it, and gives the pig 21 tiles of the wide floor
+north-east of the water with the third crystal and a boulder it cannot get out of swallowing: 45.
 
 It asks for 21 of the 24 stars below it before it opens.
 
