@@ -798,10 +798,17 @@ private struct MenuRow<Trailing: View>: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(GamePalette.post.opacity(0.62))
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    // The same floor the title above it keeps. A line under a badge as wide as
+                    // "56% complete" has further to come down than 0.8 allowed, and the tail of
+                    // a sentence is worth more than the last tenth of its size.
+                    .minimumScaleFactor(0.7)
             }
-
-            Spacer(minLength: 8)
+            // The words take the slack themselves rather than leaving it to a Spacer. A Spacer
+            // here is every bit as hungry as the text beside it, so the two split what is going
+            // and the line came out clipped to "A universe of wo…" with the gap it wanted still
+            // sitting empty to its right. Widening the column instead hands that gap to the
+            // words, and only what they cannot use goes to holding the trailing end out.
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             trailing()
         }
