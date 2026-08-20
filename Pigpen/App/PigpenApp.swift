@@ -91,6 +91,7 @@ struct PigpenApp: App {
         case pies = "-pies"
         case map = "-map"
         case universe = "-universe"
+        case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
         case peakMap = "-peak-map"
         case cityMap = "-city-map"
@@ -136,6 +137,10 @@ struct PigpenApp: App {
             .task {
                 guard !Self.isPhotographing(launch) else { return }
                 Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
+                // Reconcile the full game with the App Store and then listen for anything it
+                // pushes afterwards — a family member's approval, a refund, a buy made on
+                // another device. The cache has already gated the first frame; this corrects it.
+                FullGame.shared.watch()
             }
         }
         .onChange(of: scenePhase) { _, phase in
@@ -202,6 +207,11 @@ struct PigpenApp: App {
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.
             UniverseMapView(progress: .partWayThrough())
+        case .universeLocked:
+            // The same map as a player sees it before they pay: the meadow held and free,
+            // and every world past it for sale — each in colour with a gold lock, the
+            // thicket beckoning at the head of them. Tapping any one opens the offer.
+            UniverseMapView(progress: .partWayThrough(forSale: true))
         case .woodsMap:
             WorldMapView(
                 world: .thornwoodThicket,
@@ -248,7 +258,10 @@ struct PigpenApp: App {
                 daily: .partWayThroughTheMonth(today: Self.photographed),
                 reminder: .reminding(),
                 today: Self.photographed,
-                showsSettings: true
+                showsSettings: true,
+                // Locked with a price to show, so the settings shot carries the upgrade card
+                // as a player who has not bought it sees it, and nothing bought on the runner.
+                fullGame: .locked()
             )
         case .reminder:
             // The game's own offer of a daily reminder, over a fortnight of days with

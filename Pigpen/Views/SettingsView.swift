@@ -35,11 +35,17 @@ struct SettingsView: View {
     /// The switch everything the game counts goes through, on the same terms as the
     /// buzzing: the shared one, so the toggle moves the thing it names.
     @Bindable var analytics: Analytics = .shared
+    /// Whether the full game has been bought. The card it draws is the third door to the
+    /// offer — beside the locked worlds on the map and the shut days in the archive — and
+    /// the one place a player who already owns it can be told so.
+    var fullGame: FullGame = .shared
 
     /// Whether the projection room is up: every film in the game, one after another.
     @State private var isWatchingFilms = false
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
+    /// Whether the offer of the full game is up, raised by the card's own button.
+    @State private var isOffering = false
     /// Remembered so that the card says something after it empties, rather than simply
     /// reading as though the player had never played.
     @State private var hasCleared = false
@@ -64,6 +70,7 @@ struct SettingsView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         about
+                        fullGameCard
                         help
                         films
                         feel
@@ -85,6 +92,11 @@ struct SettingsView: View {
         // between black bars with nothing else on the glass, and a reel of them is no different.
         .fullScreenCover(isPresented: $isWatchingFilms) {
             FilmReelView(reel: reel)
+        }
+        .sheet(isPresented: $isOffering) {
+            FullGameOffer(fullGame: fullGame, source: .settings)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         .alert("Clear all game data?", isPresented: $isAsking) {
             Button("Cancel", role: .cancel) {}
@@ -141,6 +153,69 @@ struct SettingsView: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(GamePalette.post.opacity(0.7))
         }
+    }
+
+    /// The third door to the full game, and the only one a player who already owns it ever
+    /// sees: a card that offers the upgrade while it is locked, and thanks the player who has
+    /// bought it once it is theirs — so somebody who paid is never shown a button asking them
+    /// to pay again.
+    ///
+    /// While locked it opens the same offer sheet the map and the archive raise, restore and
+    /// all, rather than keeping a second buy button of its own that could drift from theirs.
+    @ViewBuilder
+    private var fullGameCard: some View {
+        if fullGame.isUnlocked {
+            card {
+                HStack(spacing: 10) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 20, weight: .black))
+                        .foregroundStyle(GamePalette.clover)
+                    Text("The full game")
+                        .font(.headline.weight(.heavy))
+                        .foregroundStyle(GamePalette.post)
+                }
+
+                Text("Every world and every day is yours. Thank you for buying Pigpen.")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(GamePalette.post.opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } else {
+            card {
+                Text("The full game")
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+
+                Text(
+                    """
+                    The meadow and today's board are free. Unlock the rest of the worlds and \
+                    the whole archive — once, for good.
+                    """
+                )
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(GamePalette.post.opacity(0.7))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Button {
+                    haptics.tap(.medium)
+                    Analytics.record(.offerShown(from: FullGameOfferSource.settings.rawValue))
+                    isOffering = true
+                } label: {
+                    Label(unlockTitle, systemImage: "lock.open.fill")
+                        .font(.subheadline.weight(.heavy))
+                        .foregroundStyle(GamePalette.post)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 5))
+                .padding(.top, 4)
+            }
+        }
+    }
+
+    /// The card's button, with the price on it when the store has handed one over.
+    private var unlockTitle: String {
+        if let price = fullGame.price { return "Unlock the full game · \(price)" }
+        return "Unlock the full game"
     }
 
     /// The way out of the game to a person.
@@ -585,7 +660,23 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
                 reminder: .reminding(),
                 haptics: previewHaptics(),
-                analytics: previewAnalytics()
+                analytics: previewAnalytics(),
+                fullGame: .locked()
+            )
+            .presentationDetents([.medium, .large])
+        }
+}
+
+#Preview("The full game bought") {
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            SettingsView(
+                progress: .partWayThrough(),
+                daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+                reminder: .reminding(),
+                haptics: previewHaptics(),
+                analytics: previewAnalytics(),
+                fullGame: .unlocked()
             )
             .presentationDetents([.medium, .large])
         }

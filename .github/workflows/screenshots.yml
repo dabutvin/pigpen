@@ -147,6 +147,11 @@ jobs:
           capture 37 reminder -reminder
           capture 39 title_held -title
 
+          # The universe map as a player sees it before they pay: every world past the
+          # free meadow for sale, in colour under a gold lock. Numbered high so it sits
+          # at the end of the gallery rather than renumbering every shot above it.
+          capture 69 universe_locked -universe-locked
+
           # A cut scene is lit by the shot rather than by the phone, so both
           # appearances of one were the same picture twice and only one of them is
           # taken now — about forty-five seconds off this step. The phone is put into

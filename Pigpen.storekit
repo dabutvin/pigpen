@@ -1,0 +1,35 @@
+{
+  "identifier" : "5C1D9E30-7B4A-4C2E-9F10-9A2B7C6D5E01",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "A1B2C3D4-E5F6-4708-9A0B-1C2D3E4F5061",
+      "localizations" : [
+        {
+          "description" : "Open every world on the universe map past the meadow, and every day in the archive past today. A one-time purchase, yours for good.",
+          "displayName" : "The Full Game",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.pigpen.app.fullgame",
+      "referenceName" : "Full Game",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "0000000000",
+    "_developerTeamID" : "0000000000",
+    "_lastSynchronizedDate" : 0
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

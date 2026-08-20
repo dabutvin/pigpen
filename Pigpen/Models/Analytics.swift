@@ -507,6 +507,29 @@ extension AnalyticsSignal {
     static func pageOpened(_ page: String) -> AnalyticsSignal {
         AnalyticsSignal("Settings.pageOpened", ["page": page])
     }
+
+    // MARK: The full game
+
+    /// The offer of the full game put in front of somebody. `from` is where it was raised —
+    /// the map, the archive, or the settings sheet — which is the whole point of counting it:
+    /// which wall a player actually hits is what says where the free game runs out for them.
+    static func offerShown(from source: String) -> AnalyticsSignal {
+        AnalyticsSignal("Store.offerShown", ["from": source])
+    }
+
+    /// How a purchase went. `outcome` is one of the endings `PurchaseOutcome` names — bought,
+    /// backed out of, waiting on an approval, or gone wrong — and the funnel from `offerShown`
+    /// to a purchase that unlocked is the one number that says whether the wall is priced right.
+    static func purchaseFinished(outcome: String) -> AnalyticsSignal {
+        AnalyticsSignal("Store.purchase", ["outcome": outcome], value: outcome == "unlocked" ? 1 : 0)
+    }
+
+    /// A restore, and whether it found anything. A restore that finds nothing is a player who
+    /// pressed it expecting to have bought the game and had not — worth telling apart from one
+    /// who came back to a new phone and got their purchase back.
+    static func restoreFinished(restored: Bool) -> AnalyticsSignal {
+        AnalyticsSignal("Store.restore", ["restored": String(restored)], value: restored ? 1 : 0)
+    }
 }
 
 extension Refusal {

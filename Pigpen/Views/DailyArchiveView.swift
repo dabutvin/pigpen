@@ -15,6 +15,11 @@ struct DailyArchiveView: View {
     /// and the screenshots CI takes open on a month with a known shape to it.
     let today: DailyDate
 
+    /// Whether the full game has been bought. The calendar opens for nothing — every day
+    /// is drawn, every month turns — but only today's board plays for free; tapping any
+    /// other day raises the offer instead of the board.
+    var fullGame: FullGame = .shared
+
     @State private var progress: DailyProgress
     @State private var month: DailyMonth
     /// The day whose board is on screen. Emptying it pops back to the calendar.
@@ -24,9 +29,17 @@ struct DailyArchiveView: View {
     /// A completed day the player has tapped, waiting on whether to put the submitted
     /// wall back or clear the field and go again.
     @State private var offering: DailyDate?
+    /// Whether the offer of the full game is up, raised by tapping a day the free game does
+    /// not open — any day but today.
+    @State private var isOffering = false
 
-    init(today: DailyDate = .today(), progress: DailyProgress = DailyProgress()) {
+    init(
+        today: DailyDate = .today(),
+        progress: DailyProgress = DailyProgress(),
+        fullGame: FullGame = .shared
+    ) {
         self.today = today
+        self.fullGame = fullGame
         _progress = State(initialValue: progress)
         // The last page the archive offers rather than today's month outright: for anybody
         // playing inside the years the book covers those are the same thing, and for
@@ -112,6 +125,11 @@ struct DailyArchiveView: View {
             }
         } message: {
             Text("Put the fencing back the way you submitted it, or clear the field and try again.")
+        }
+        .sheet(isPresented: $isOffering) {
+            FullGameOffer(fullGame: fullGame, source: .archive)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         .onAppear { progress.reload() }
         .onChange(of: month) { _, _ in
@@ -296,6 +314,15 @@ struct DailyArchiveView: View {
 
     private func open(_ date: DailyDate) {
         guard DailyAlmanac.isOpen(date, today: today) else { return }
+        // Today's board is the free one; any other day out of the archive is the full game.
+        // The calendar was walkable the whole way here — this is the one tap that meets the
+        // wall, on the very day the player reached for.
+        if date != today, !fullGame.isUnlocked {
+            Haptics.tap(.medium)
+            Analytics.record(.offerShown(from: FullGameOfferSource.archive.rawValue))
+            isOffering = true
+            return
+        }
         Haptics.tap(.medium)
         // A day out of the archive rather than this morning's, which is the difference
         // between somebody catching up and somebody browsing.
@@ -315,7 +342,18 @@ struct DailyArchiveView: View {
     NavigationStack {
         DailyArchiveView(
             today: DailyDate(year: 2026, month: 4, day: 22),
-            progress: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22))
+            progress: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+            fullGame: .unlocked()
+        )
+    }
+}
+
+#Preview("Behind the wall") {
+    NavigationStack {
+        DailyArchiveView(
+            today: DailyDate(year: 2026, month: 4, day: 22),
+            progress: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
+            fullGame: .locked()
         )
     }
 }
