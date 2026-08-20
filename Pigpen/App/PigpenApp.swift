@@ -136,6 +136,10 @@ struct PigpenApp: App {
             .task {
                 guard !Self.isPhotographing(launch) else { return }
                 Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
+                // Reconcile the full game with the App Store and then listen for anything it
+                // pushes afterwards — a family member's approval, a refund, a buy made on
+                // another device. The cache has already gated the first frame; this corrects it.
+                FullGame.shared.watch()
             }
         }
         .onChange(of: scenePhase) { _, phase in
@@ -248,7 +252,10 @@ struct PigpenApp: App {
                 daily: .partWayThroughTheMonth(today: Self.photographed),
                 reminder: .reminding(),
                 today: Self.photographed,
-                showsSettings: true
+                showsSettings: true,
+                // Locked with a price to show, so the settings shot carries the upgrade card
+                // as a player who has not bought it sees it, and nothing bought on the runner.
+                fullGame: .locked()
             )
         case .reminder:
             // The game's own offer of a daily reminder, over a fortnight of days with

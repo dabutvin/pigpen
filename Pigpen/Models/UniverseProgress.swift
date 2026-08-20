@@ -12,13 +12,22 @@ import Observation
 final class UniverseProgress {
     let universe: Universe
     @ObservationIgnored private let store: any ProgressStore
+    /// Whether the full game has been bought. The map reads it to tell a world shut for want
+    /// of stars from one shut for want of the purchase: the meadow is free, and everything
+    /// past it stands behind the wall until this opens.
+    let fullGame: FullGame
     /// Every best star rating in every world, by level id. Held here so the map redraws the
     /// instant it changes and re-read from the store each time the map comes back.
     private(set) var stars: [String: Int]
 
-    init(universe: Universe = .all, store: any ProgressStore = StoredProgress()) {
+    init(
+        universe: Universe = .all,
+        store: any ProgressStore = StoredProgress(),
+        fullGame: FullGame = .shared
+    ) {
         self.universe = universe
         self.store = store
+        self.fullGame = fullGame
         self.stars = store.loadStars()
     }
 
@@ -31,6 +40,24 @@ final class UniverseProgress {
     func isUnlocked(_ index: Int) -> Bool { universe.isUnlocked(index, stars: stars) }
 
     func isCleared(_ index: Int) -> Bool { universe.isCleared(index, stars: stars) }
+
+    /// Whether a world is shut only for want of the full game: reachable by progress, past the
+    /// free meadow, and the game not yet bought. This is the wall standing exactly where the
+    /// free game ends — the meadow open behind it, the rest of the map for sale ahead.
+    ///
+    /// It is kept apart from `WorldState`, which stays a reading of stars alone: a world can
+    /// be `.playable` by progress and for sale at the same time, and the map draws the second
+    /// over the first. Once the full game is bought, this is false everywhere and the map is
+    /// nothing but the star chain again.
+    func isForSale(_ index: Int) -> Bool {
+        guard !fullGame.isUnlocked, index > 0 else { return false }
+        return universe.isUnlocked(index, stars: stars)
+    }
+
+    /// Whether entering a world means being shown the offer rather than dropping into its
+    /// trail. The map asks this on a tap: a world for sale opens the wall, everything else
+    /// opens the world.
+    func isBehindTheWall(_ index: Int) -> Bool { isForSale(index) }
 
     /// The furthest world open to the player, which is where the map settles when it opens.
     var frontier: Int { universe.frontier(stars: stars) }
@@ -67,11 +94,23 @@ extension UniverseProgress {
     /// A universe with the first world held, so previews and screenshots show the map with the
     /// meadow cleared and its rainbow, the thicket open and beckoning, and the worlds past it
     /// still dark silhouettes waiting their turn.
-    static func partWayThrough(universe: Universe = .all) -> UniverseProgress {
+    ///
+    /// The full game is bought by default, so the map shows its worlds as the star chain the
+    /// screenshots have always shown rather than as a run of price tags. `forSale` stands the
+    /// same progress up unbought, so the wall — the thicket for sale, the rest still shut — can
+    /// be drawn and photographed too.
+    static func partWayThrough(
+        universe: Universe = .all,
+        forSale: Bool = false
+    ) -> UniverseProgress {
         var stars: [String: Int] = [:]
         for node in universe.game(at: 0)?.map.nodes ?? [] {
             stars[node.id] = 3
         }
-        return UniverseProgress(universe: universe, store: RememberedProgress(stars: stars))
+        return UniverseProgress(
+            universe: universe,
+            store: RememberedProgress(stars: stars),
+            fullGame: forSale ? .locked() : .unlocked()
+        )
     }
 }

@@ -51,6 +51,10 @@ struct TitleScreenView: View {
     /// puzzle comes back to, and so the one place that reliably gets to lay the fortnight
     /// of reminders down again against a book of days that has just changed.
     @State private var reminder: DailyReminder
+    /// Whether the full game has been bought. Held here so the settings sheet and the
+    /// archive this screen opens are both looking at the same switch the map is — handed in
+    /// so a preview or a screenshot can stand the game up owned or for sale.
+    private let fullGame: FullGame
     /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
     /// held — never on the way in, when the player has nothing yet to be reminded about.
     @State private var isOfferingReminders = false
@@ -87,7 +91,8 @@ struct TitleScreenView: View {
         today: DailyDate? = nil,
         showsSettings: Bool = false,
         showsReminderPrompt: Bool = false,
-        taps: TappedReminder = .shared
+        taps: TappedReminder = .shared,
+        fullGame: FullGame = .shared
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
@@ -97,6 +102,7 @@ struct TitleScreenView: View {
         _showsSettings = State(initialValue: showsSettings)
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
         self.taps = taps
+        self.fullGame = fullGame
     }
 
     private var world: WorldMap { progress.world }
@@ -173,11 +179,11 @@ struct TitleScreenView: View {
             Text("Put the fencing back the way you submitted it, or clear the field and try again.")
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
-            DailyArchiveView(today: today, progress: daily)
+            DailyArchiveView(today: today, progress: daily, fullGame: fullGame)
                 .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress, daily: daily, reminder: reminder)
+            SettingsView(progress: progress, daily: daily, reminder: reminder, fullGame: fullGame)
                 .onAppear { Analytics.record(.settingsOpened) }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)

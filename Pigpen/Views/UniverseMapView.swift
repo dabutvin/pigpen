@@ -28,6 +28,9 @@ struct UniverseMapView: View {
     /// Whether the map has already settled on the frontier once, so coming back from a world
     /// does not haul the view off it.
     @State private var settled = false
+    /// Whether the offer of the full game is up, raised by tapping a world that is behind the
+    /// wall rather than shut for want of stars.
+    @State private var isOffering = false
 
     init(progress: UniverseProgress = UniverseProgress()) {
         _progress = State(initialValue: progress)
@@ -65,6 +68,11 @@ struct UniverseMapView: View {
         }
         .fullScreenCover(item: $openingFilm, onDismiss: { openPendingWorld() }) { film in
             WorldFilmView(film: film) { endOpening(film) }
+        }
+        .sheet(isPresented: $isOffering) {
+            FullGameOffer(fullGame: progress.fullGame, source: .map)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         .onAppear {
             progress.reload()
@@ -134,6 +142,7 @@ struct UniverseMapView: View {
                         boss: world.boss,
                         state: progress.state(of: index),
                         subtitle: subtitle(for: index),
+                        forSale: progress.isForSale(index),
                         celebrating: unveiled == index
                     )
                 }
@@ -144,14 +153,17 @@ struct UniverseMapView: View {
         }
     }
 
-    /// A line under a world's name: how much of it is held, or what is keeping it shut.
+    /// A line under a world's name: how much of it is held, or what is keeping it shut. A
+    /// world behind the wall says so over whatever its stars would — it is not locked for
+    /// want of play, it is waiting on the full game.
     private func subtitle(for index: Int) -> String {
+        if progress.isForSale(index) { return "Unlock the full game" }
         switch progress.state(of: index) {
-        case .cleared: "Every pen held"
+        case .cleared: return "Every pen held"
         case .playable:
-            progress.isCleared(index) ? "Every pen held" : "\(heldCount(index)) of \(worldCount(index)) held"
-        case .comingSoon: "Coming soon"
-        case .locked: "Locked"
+            return progress.isCleared(index) ? "Every pen held" : "\(heldCount(index)) of \(worldCount(index)) held"
+        case .comingSoon: return "Coming soon"
+        case .locked: return "Locked"
         }
     }
 
@@ -246,6 +258,14 @@ struct UniverseMapView: View {
 
     private func enter(_ index: Int) {
         guard progress.isUnlocked(index) else { return }
+        // A world behind the wall opens the offer rather than its trail: this is the upgrade
+        // reached from the universe map, raised on the very world the player was about to play.
+        if progress.isBehindTheWall(index) {
+            Haptics.tap(.medium)
+            Analytics.record(.offerShown(from: FullGameOfferSource.map.rawValue))
+            isOffering = true
+            return
+        }
         guard let game = progress.universe.game(at: index) else {
             // A silhouette: nothing to drop into yet, but say it was heard.
             Haptics.tap(.rigid)
@@ -344,12 +364,19 @@ private struct WorldPlanet: View {
     let boss: BossMark
     let state: WorldState
     let subtitle: String
+    /// Whether the world is behind the wall: reachable, but waiting on the full game. Drawn
+    /// in full colour rather than as a silhouette — the point of a world for sale is to want
+    /// it — with a lock on it and its name plated in gold.
+    var forSale = false
     var celebrating = false
 
+    /// A world for sale shows itself as the open, in-colour thing it is about to become,
+    /// rather than as one of the dark silhouettes past the frontier.
     private var isOpen: Bool {
+        if forSale { return true }
         switch state {
-        case .cleared, .playable: true
-        case .comingSoon, .locked: false
+        case .cleared, .playable: return true
+        case .comingSoon, .locked: return false
         }
     }
 
@@ -366,7 +393,7 @@ private struct WorldPlanet: View {
 
     private var planet: some View {
         ZStack {
-            if state == .playable, !reduceMotion {
+            if state == .playable || forSale, !reduceMotion {
                 beckoning
             }
 
@@ -407,13 +434,19 @@ private struct WorldPlanet: View {
     @ViewBuilder
     private var bossMark: some View {
         let glyph = Text(boss.glyph).font(.system(size: 34))
-        switch state {
-        case .cleared, .playable:
+        // A world for sale is drawn as the open thing it is about to become — its boss in
+        // full colour behind the lock — so the wall entices rather than reads as dead.
+        if forSale {
             glyph.shadow(color: .black.opacity(0.4), radius: 3, y: 2)
-        case .comingSoon:
-            glyph.colorMultiply(theme.accentDeep).opacity(0.85)
-        case .locked:
-            glyph.colorMultiply(.black).opacity(0.72)
+        } else {
+            switch state {
+            case .cleared, .playable:
+                glyph.shadow(color: .black.opacity(0.4), radius: 3, y: 2)
+            case .comingSoon:
+                glyph.colorMultiply(theme.accentDeep).opacity(0.85)
+            case .locked:
+                glyph.colorMultiply(.black).opacity(0.72)
+            }
         }
     }
 
@@ -435,11 +468,14 @@ private struct WorldPlanet: View {
     @ViewBuilder
     private var badge: some View {
         let mark: (name: String, tint: Color)? = {
+            // The wall wears a gold lock — a world you can have, not one you cannot reach —
+            // which is the one badge that stands over whatever the state would otherwise show.
+            if forSale { return ("lock.fill", GamePalette.pen) }
             switch state {
-            case .cleared: ("checkmark.seal.fill", GamePalette.pen)
-            case .playable: nil
-            case .comingSoon: ("hourglass", GamePalette.cream)
-            case .locked: ("lock.fill", GamePalette.cream)
+            case .cleared: return ("checkmark.seal.fill", GamePalette.pen)
+            case .playable: return nil
+            case .comingSoon: return ("hourglass", GamePalette.cream)
+            case .locked: return ("lock.fill", GamePalette.cream)
             }
         }()
 
@@ -454,11 +490,12 @@ private struct WorldPlanet: View {
     }
 
     private var ringColor: Color {
+        if forSale { return GamePalette.pen }
         switch state {
-        case .cleared: GamePalette.pen
-        case .playable: GamePalette.cream
-        case .comingSoon: .white.opacity(0.35)
-        case .locked: .white.opacity(0.2)
+        case .cleared: return GamePalette.pen
+        case .playable: return GamePalette.cream
+        case .comingSoon: return .white.opacity(0.35)
+        case .locked: return .white.opacity(0.2)
         }
     }
 
@@ -481,11 +518,15 @@ private struct WorldPlanet: View {
 
     private var spokenLabel: String {
         let standing: String
-        switch state {
-        case .cleared: standing = "held"
-        case .playable: standing = "open, \(subtitle)"
-        case .comingSoon: standing = "coming soon"
-        case .locked: standing = "locked"
+        if forSale {
+            standing = "unlock the full game to play it"
+        } else {
+            switch state {
+            case .cleared: standing = "held"
+            case .playable: standing = "open, \(subtitle)"
+            case .comingSoon: standing = "coming soon"
+            case .locked: standing = "locked"
+            }
         }
         return "\(theme.name), \(boss.name). \(standing)."
     }
@@ -567,5 +608,11 @@ private struct CosmicBackdrop: View {
 #Preview {
     NavigationStack {
         UniverseMapView(progress: .partWayThrough())
+    }
+}
+
+#Preview("Behind the wall") {
+    NavigationStack {
+        UniverseMapView(progress: .partWayThrough(forSale: true))
     }
 }
