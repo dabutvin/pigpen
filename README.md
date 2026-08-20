@@ -1387,26 +1387,42 @@ xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=y
 
 ## The pages on the web
 
-Two pages stand outside the game, and the store will not take an app without them: somewhere
-a player can go when something is wrong, and somewhere they can read what the game keeps
-about them. Apple asks for both as URLs on the listing, and a review that cannot reach either
-one — a link that 404s, a policy that is a paragraph of boilerplate about a company that does
-not exist — is a rejection under *Guideline 5.1.1* or a review flagged as incomplete.
+Two pages stand outside the game and the store will not take an app without them: somewhere a
+player can go when something is wrong, and somewhere they can read what the game keeps about
+them. Apple asks for both as URLs on the listing, and a review that cannot reach either one —
+a link that 404s, a policy that is a paragraph of boilerplate about a company that does not
+exist — is a rejection under *Guideline 5.1.1* or a review flagged as incomplete.
 
-**What they are.** Four files in `site/`, and nothing else: no framework, no build step, no
-generator, nothing to install. Upload the folder to whatever serves pigpen.app and it is
-published; there is no state anywhere else to keep in step with it.
+A third stands in front of them: the game's own page, for somebody who has heard the name and
+wants to know what it is. It is what the domain answers with, and the two the store asks for
+hang off it.
+
+**What they are.** A handful of files in `site/`, and nothing else: no framework, no build
+step, no generator, nothing to install. Upload the folder to whatever serves pigpen.app and it
+is published; there is no state anywhere else to keep in step with it.
 
 | File | Serves | Is |
 |---|---|---|
-| `index.html` | `pigpen.app` | The support page: the common questions the settings sheet raises, and the address that reaches a person |
+| `index.html` | `pigpen.app` | The front page, for somebody who has not played it: what the game is, what is in it, and what is not — no ads, nothing to buy, no account, no tracking |
+| `support.html` | `pigpen.app/support.html` | The support page: the common questions the settings sheet raises, and the address that reaches a person |
 | `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
 | `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
 | `404.html` | Whatever the host points at it | Somewhere to land other than the host's own grey page |
+| `img/` | `pigpen.app/img/…` | The two shots on the front page — the same frames as the ones at the top of this README, and replaced the same way |
+
+The front page is the marketing URL and the other two are the ones on the app's information
+page, which is why neither of them is the root: somebody arriving at pigpen.app from a link
+has not necessarily played the game, and somebody arriving from behind the gear certainly has.
+All three reach the other two, so nobody lands on the wrong one and has to go back.
 
 Every link between the pages is relative, so nothing has to be rewritten for a different host,
 a staging domain or a subfolder — except in `404.html`, which asks for `/pigpen.css` from the
 root because a host can serve it from any depth.
+
+**The App Store button.** While the app is unreleased the front page carries a *Coming to the
+App Store* chip rather than a link, since a dead button on the page that vouches for the app
+is worse than no button. The line above it in `index.html` is the anchor to put in its place,
+with the Apple ID out of App Store Connect.
 
 **Publishing.** Whatever the host wants: drag `site/` onto Netlify or Cloudflare Pages, `rsync`
 it to a box, or sync it to a bucket. Nothing here is particular to any of them.
@@ -1437,17 +1453,19 @@ page and prints the address in plain text underneath for a phone with no signal,
 opens the policy from directly under the words that say what is counted. Both go out through
 `Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks
 that both addresses are real HTTPS URLs on the host, that a file exists in `site/` for every
-page a button opens, that the pages hand over the same email address the game prints, and that
-the two link to each other — so a typo fails the build rather than a submission.
+page a button opens, that every page hands over the same email address the game prints, and
+that all three reach each other — so a typo fails the build rather than a submission.
 
 ### Before a submission
 
 The pages are most of it, and the rest is the listing agreeing with them:
 
-- [ ] `site/` is uploaded, and both URLs open in a browser, on a phone, over HTTPS.
+- [ ] `site/` is uploaded, and all three URLs open in a browser, on a phone, over HTTPS.
 - [ ] App Store Connect → App Information: **Privacy Policy URL** `https://pigpen.app/privacy.html`.
-- [ ] App Store Connect → App Information: **Support URL** `https://pigpen.app`, and a
-      **Marketing URL** if you want one — it is optional and an empty one is better than a dead one.
+- [ ] App Store Connect → App Information: **Support URL** `https://pigpen.app/support.html`
+      and **Marketing URL** `https://pigpen.app`.
+- [ ] The front page says *Coming to the App Store*. Once the app is live, swap the chip for
+      the App Store link — it is one line, marked in `index.html`.
 - [ ] App Store Connect → App Information → Contact: `support@pigpen.app`, and the same address
       in the App Review Information contact, where a reviewer will actually use it. The mailbox
       exists and somebody reads it.
@@ -1888,10 +1906,12 @@ Pigpen/
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
 site/                            # Uploaded to pigpen.app as it stands; no build step
-├── index.html                   # The support page, at the address the store listing gives
+├── index.html                   # The front page: what the game is, and what is not in it
+├── support.html                 # The support page, at the address the store listing gives
 ├── privacy.html                 # The privacy policy, at the address beside it
 ├── pigpen.css                   # The cream and post-brown the pages share
-└── 404.html                     # Somewhere to land that is not the host's grey page
+├── 404.html                     # Somewhere to land that is not the host's grey page
+└── img/                         # The two shots the front page stands on
 docs/                            # The shots at the top of this README
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs

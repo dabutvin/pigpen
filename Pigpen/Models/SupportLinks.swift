@@ -10,16 +10,18 @@ import Foundation
 /// what the buttons point at is a real address rather than a typo that fails silently at
 /// the moment a player presses it.
 ///
-/// The pages themselves are the static HTML in `site/`, uploaded to pigpen.app by hand —
-/// three files and no build step, so the host can be anything that serves a folder. The same
-/// three strings go in App Store Connect: the support URL, the privacy policy URL, and the
-/// support email address on the app's information page.
+/// The pages themselves are the static HTML in `site/`, uploaded to pigpen.app by hand — no
+/// build step, so the host can be anything that serves a folder. The front page there is the
+/// game's own, for somebody who has not played it; these two are for somebody who has, which
+/// is why neither of them is the root. The same strings go in App Store Connect: the support
+/// URL, the privacy policy URL, the marketing URL, and the support address on the app's
+/// information page.
 enum SupportLinks {
     /// Where the pages are served from. Changing this line moves every button in the game.
     static let host = "https://pigpen.app"
 
     /// Help, common questions, and the way to write to a person.
-    static let support = URL(string: host)!
+    static let support = URL(string: "\(host)/support.html")!
 
     /// What the game keeps, what it counts, and what it never asks for.
     static let privacy = URL(string: "\(host)/privacy.html")!

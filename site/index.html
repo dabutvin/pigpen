@@ -3,111 +3,126 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pigpen — Support</title>
-<meta name="description" content="Help and contact for Pigpen, an iOS puzzle game about trapping a pig.">
+<title>Pigpen — a puzzle game about trapping a pig</title>
+<meta name="description" content="You get a grid, a pig, and a strict number of fence pieces. Pen the pig in — and pen in as much mud as you can while you are at it. 108 puzzles, a new one every morning, no ads and nothing to buy.">
+<meta property="og:title" content="Pigpen">
+<meta property="og:description" content="A puzzle game about trapping a pig. A grid, a pig, and a strict number of fence pieces.">
+<meta property="og:image" content="https://pigpen.app/img/title-screen.png">
+<meta property="og:url" content="https://pigpen.app/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="pigpen.css">
 </head>
 <body>
 <div class="sheet">
 
-<header>
-  <h1>Pigpen</h1>
-  <p>A puzzle game about trapping a pig. You get a grid, a pig, and a strict number of fence pieces.</p>
-</header>
-
 <nav>
-  <a href="#help">Help</a>
-  <a href="#contact">Contact</a>
+  <a href="support.html">Support</a>
   <a href="privacy.html">Privacy</a>
+  <a href="https://github.com/dabutvin/pigpen">Source</a>
 </nav>
 
-<div class="card" id="contact">
-  <h2>Get in touch</h2>
-  <p>
-    Something broken, something confusing, or an idea for the game — write, and you will get
-    a person rather than a form. Say which iPhone you are on and which version of Pigpen you
-    are running; the version number is behind the gear on the title screen, at the top of the
-    settings sheet.
+<header class="hero">
+  <h1>Pigpen</h1>
+  <p class="pitch">
+    A grid, a pig, and a strict number of fence pieces. Pen the pig in — and pen in as much
+    mud as you can while you are at it.
   </p>
-  <p><a class="mail" href="mailto:support@pigpen.app">support@pigpen.app</a></p>
-  <p class="stamp">Replies usually come within a few days.</p>
+  <!-- Once the app is live, this becomes the App Store link:
+       <a class="mail" href="https://apps.apple.com/app/idXXXXXXXXXX">Get it on the App Store</a> -->
+  <p><span class="chip">Coming to the App Store</span></p>
+  <p class="stamp">iPhone · iOS 17 and later</p>
+</header>
+
+<div class="shots">
+  <img src="img/title-screen.png" width="640" height="1391"
+       alt="The Pigpen title screen: PIGPEN in wooden letters over green hills, a pig peeking over a fence, and buttons for Play, Daily, Archive and Tutorial.">
+  <img src="img/board.png" width="640" height="1391" loading="lazy"
+       alt="Windfall Orchard with its pen closed: a rainbow-washed pen of mud holding the pig and two apples, hemmed in by fencing and a lake.">
+</div>
+
+<p class="caption">
+  Windfall Orchard, held — twelve pieces round 27 tiles and two apples, which is the best pen
+  that map has in it, and why the ground has gone rainbow.
+</p>
+
+<div class="card">
+  <h2>How it goes</h2>
   <p>
-    If you would rather write it in the open, the game is developed on GitHub and bug reports
-    are welcome there:
-    <a href="https://github.com/dabutvin/pigpen/issues">github.com/dabutvin/pigpen/issues</a>.
+    Tap a tile to wall it off, or press and drag to lay a whole run at once. The pig walks up,
+    down, left and right, never diagonally, and when you let it go it tries every route it has.
+    One gap that reaches the edge of the map and it walks out.
+  </p>
+  <p>
+    Holding the pig is only half of it. A pen is scored on the ground it shuts in, so the
+    question is never <em>can I trap it</em> but <em>how much mud can I trap it with</em> — and
+    your budget of fence pieces is the same either way. Water walls a pen for free. An apple
+    inside is worth five tiles, a skull costs five, and neither takes a fence, so a wall that
+    meets one has to swallow it or step in beside it.
   </p>
 </div>
 
-<div class="card" id="help">
-  <h2>Common questions</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Twelve worlds</h3>
+    <p>
+      A meadow, a thicket, a mountain, a clockwork city, the stars, a cavern, a carnival, dunes,
+      a cove, tundra, a fen and the heights above the weather. Nine puzzles each — 108 in all,
+      every one of them solvable with the pieces it gives you.
+    </p>
+  </div>
+  <div class="card">
+    <h3>A boss at the end of every world</h3>
+    <p>
+      The last field of a world stands a second animal on it and changes a rule: pen them
+      together, pen them apart, pen them evenly. A deer in the meadow, a boar in the thicket, a
+      wyrm on the mountain, a rat king in the city.
+    </p>
+  </div>
+  <div class="card">
+    <h3>A new puzzle every morning</h3>
+    <p>
+      One board a day, the same board for everybody, with a clock on it and a run of days behind
+      it. Two years of them are written already. The archive keeps every morning you have held.
+    </p>
+  </div>
+  <div class="card">
+    <h3>A story, told in films</h3>
+    <p>
+      Every world opens on one, briefs you before its boss, and sends you off when its last pen
+      holds. Skip any of them; watch the whole reel end to end whenever you like.
+    </p>
+  </div>
+</div>
 
-  <h3>How do I play?</h3>
+<div class="card plain">
+  <h2>What is not in it</h2>
+  <ul class="nots">
+    <li><strong>No advertising.</strong> Not a banner, not an interstitial, not a rewarded video.</li>
+    <li><strong>Nothing to buy.</strong> No purchases, no subscription, no currency, no lives to wait for. Every world is in the app you downloaded.</li>
+    <li><strong>No account.</strong> Nothing to sign in to, nothing to sign up for. Your stars live on your phone.</li>
+    <li><strong>No tracking.</strong> An anonymous count of which puzzles get played, so a level nobody can beat can be found — and a switch in the settings that stops even that. No name, no advertising identifier, nothing that says who you are. <a href="privacy.html">The whole of it is written out here</a>.</li>
+    <li><strong>No connection needed.</strong> It is a game about a pig in a field. It plays on a plane.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>Questions, bugs, ideas</h2>
   <p>
-    Tap a tile to lay a fence on it; press and drag to lay a whole run at once, and start a
-    drag on a fence to tear out everything you drag over. Shut the pig in with the pieces the
-    level gives you, and shut in as much mud as you can while you are at it. Water walls the
-    pen for free. When you let the pig go it tries every route, and a single gap to the edge
-    of the map is an escape.
+    The <a href="support.html">support page</a> has the common ones on it, and there is an
+    address behind it that reaches a person:
+    <a href="mailto:support@pigpen.app">support@pigpen.app</a>.
   </p>
-
-  <h3>I am stuck on a level.</h3>
   <p>
-    Every level in the game has been solved with the pieces it gives you. Undo walks back a
-    press at a time, and clearing the field is a press like any other — one undo brings the
-    whole thing back. A pen that holds is worth more the more ground it takes, so a first pass
-    that merely holds is a fine place to start.
-  </p>
-
-  <h3>How do I turn the daily reminder on or off, or move the hour?</h3>
-  <p>
-    Behind the gear on the title screen, under <em>Daily puzzle reminder</em>. If the switch
-    is on and nothing comes through, notifications for Pigpen have been turned off for the
-    whole app in iPhone Settings; the card says so and gives you the button that opens that
-    door.
-  </p>
-
-  <h3>How do I stop the game counting anything?</h3>
-  <p>
-    Behind the gear, under <em>Privacy</em>: turn <em>Anonymous usage</em> off and nothing more
-    is sent. What is counted, and what is not, is written out in full in the
-    <a href="privacy.html">privacy policy</a>.
-  </p>
-
-  <h3>How do I start over?</h3>
-  <p>
-    Behind the gear, under <em>Game data</em>: <em>Clear all game data</em> forgets every star,
-    every level you have opened and every daily puzzle you have held. You are asked first, and
-    it cannot be undone. The button greys out when there is nothing saved to clear.
-  </p>
-
-  <h3>Can I watch the cut scenes again?</h3>
-  <p>
-    Yes — behind the gear, under <em>Cut scenes</em>: every film in the game end to end, in the
-    order the journey meets them, including worlds you have not reached yet.
-  </p>
-
-  <h3>Does my progress follow me to another phone?</h3>
-  <p>
-    No. Everything the game remembers is kept on the phone you played it on. There is no
-    account to make and nothing to sign in to.
-  </p>
-
-  <h3>Is there anything to buy?</h3>
-  <p>
-    No. There are no purchases in the game, no subscription, and no advertising. Every world
-    is built and every one of them is in the app you downloaded.
-  </p>
-
-  <h3>Is it suitable for children?</h3>
-  <p>
-    Yes. It is a game about a pig getting into and out of mud: no violence, no chat, no links
-    out to anywhere except this page and the privacy policy, and nothing to spend money on.
+    The game is built in the open, so a bug can be reported where it will be fixed:
+    <a href="https://github.com/dabutvin/pigpen/issues">github.com/dabutvin/pigpen/issues</a>.
   </p>
 </div>
 
 <footer>
   <p>
-    Pigpen · <a href="privacy.html">Privacy policy</a> ·
+    Pigpen · <a href="support.html">Support</a> ·
+    <a href="privacy.html">Privacy policy</a> ·
     <a href="https://github.com/dabutvin/pigpen">Source on GitHub</a>
   </p>
 </footer>
