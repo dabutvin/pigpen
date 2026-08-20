@@ -509,7 +509,11 @@ struct TitleScreenView: View {
     /// meadow is still being held, and the whole universe once it is.
     private var playDetail: String {
         progress.isTheWorldHeld
-            ? "A universe of worlds to fence"
+            // Short enough to stand beside the badge. Once the meadow is held the row carries
+            // "56% complete" as well, and that leaves the line under Play about a hundred points
+            // to say its piece in — which the longer "...to fence" could only meet by shrinking
+            // to a size the rest of the list is not written at.
+            ? "A universe of worlds"
             : "\(world.name) · \(world.count) puzzles"
     }
 
@@ -854,10 +858,11 @@ private struct MenuRow<Trailing: View>: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(GamePalette.post.opacity(0.62))
                     .lineLimit(1)
-                    // The same floor the title above it keeps. A line under a badge as wide as
-                    // "56% complete" has further to come down than 0.8 allowed, and the tail of
-                    // a sentence is worth more than the last tenth of its size.
-                    .minimumScaleFactor(0.7)
+                    // Lower than the title's floor, because this is the line that runs long and
+                    // the one a badge crowds. A sentence a size or two down still reads; one cut
+                    // off mid-word does not, and there is no width at which cutting is the
+                    // better of the two.
+                    .minimumScaleFactor(0.6)
             }
             // The words take the slack themselves rather than leaving it to a Spacer. A Spacer
             // here is every bit as hungry as the text beside it, so the two split what is going
