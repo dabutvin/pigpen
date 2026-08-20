@@ -1393,43 +1393,64 @@ about them. Apple asks for both as URLs on the listing, and a review that cannot
 one — a link that 404s, a policy that is a paragraph of boilerplate about a company that does
 not exist — is a rejection under *Guideline 5.1.1* or a review flagged as incomplete.
 
-**Where they live.** `docs/`, served as a static site by GitHub Pages, which is the whole of
-the hosting: no server, no build step, no bill. `docs/index.html` is the support page,
-`docs/privacy.html` the policy, `docs/pigpen.css` the cream and post-brown they share so they
-read as the game rather than as a legal notice. `docs/CNAME` puts them on `pigpen.app`, and
-`docs/.nojekyll` keeps Pages from running the site through Jekyll on the way out.
+**What they are.** Four files in `site/`, and nothing else: no framework, no build step, no
+generator, nothing to install. Upload the folder to whatever serves pigpen.app and it is
+published; there is no state anywhere else to keep in step with it.
 
-**Turning it on**, once, in the repository settings:
+| File | Serves | Is |
+|---|---|---|
+| `index.html` | `pigpen.app` | The support page: the common questions the settings sheet raises, and the address that reaches a person |
+| `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
+| `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
+| `404.html` | Whatever the host points at it | Somewhere to land other than the host's own grey page |
 
-1. Settings → Pages → Source: *Deploy from a branch*, branch `main`, folder `/docs`.
-2. Settings → Pages → Custom domain: `pigpen.app`, then tick *Enforce HTTPS* once the
-   certificate has been issued — which takes a few minutes and cannot be hurried.
-3. At the domain's registrar, point the apex at GitHub Pages: `A` records to `185.199.108.153`,
-   `185.199.109.153`, `185.199.110.153` and `185.199.111.153`, and a `CNAME` on `www` to
-   `dabutvin.github.io`.
-4. Open both pages in a browser before either address is typed into App Store Connect. Until
-   DNS has propagated the pages are up at `https://dabutvin.github.io/pigpen/` regardless, and
-   that address will do for a submission if the domain is not ready.
+Every link between the pages is relative, so nothing has to be rewritten for a different host,
+a staging domain or a subfolder — except in `404.html`, which asks for `/pigpen.css` from the
+root because a host can serve it from any depth.
+
+**Publishing.** Whatever the host wants: drag `site/` onto Netlify or Cloudflare Pages, `rsync`
+it to a box, or sync it to a bucket. Nothing here is particular to any of them.
+
+```bash
+rsync -av --delete site/ user@host:/var/www/pigpen.app/     # a server of your own
+# or
+aws s3 sync site/ s3://pigpen.app/ --delete                 # a bucket behind a CDN
+```
+
+Two things the host has to be set up for, whichever it is:
+
+- **HTTPS**, with the certificate valid. Apple's reviewer opens these on a phone, and iOS is
+  loud about a bad one.
+- **`pigpen.app` and `www.pigpen.app` both answering**, one redirecting to the other. A store
+  listing that points at the half that is not configured is a dead link.
+
+Read them locally before they go up:
+
+```bash
+python3 -m http.server -d site 8000     # then open http://localhost:8000
+```
 
 **Where the game points at them.** `SupportLinks` in `Pigpen/Models/SupportLinks.swift` holds
-the host and the two addresses, and nothing else in the app types a URL — moving the pages is
-that one line. Behind the gear, *Help* opens the support page and prints the address in plain
-text underneath for a phone with no signal, and *Privacy* opens the policy from directly under
-the words that say what is counted. Both go out through `Analytics.pageOpened`, which counts
-which page and nothing else. `SupportLinksTests` checks that both addresses are real HTTPS
-URLs on the host, that the host matches `docs/CNAME`, and that a file actually exists in
-`docs/` for every page a button opens — so a typo fails the build rather than a submission.
+the host and the two addresses, and nothing else in the app types a URL — moving the pages, or
+putting them on a different domain, is that one line. Behind the gear, *Help* opens the support
+page and prints the address in plain text underneath for a phone with no signal, and *Privacy*
+opens the policy from directly under the words that say what is counted. Both go out through
+`Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks
+that both addresses are real HTTPS URLs on the host, that a file exists in `site/` for every
+page a button opens, that the pages hand over the same email address the game prints, and that
+the two link to each other — so a typo fails the build rather than a submission.
 
 ### Before a submission
 
 The pages are most of it, and the rest is the listing agreeing with them:
 
-- [ ] Both URLs open in a browser, on a phone, not signed in to GitHub.
+- [ ] `site/` is uploaded, and both URLs open in a browser, on a phone, over HTTPS.
 - [ ] App Store Connect → App Information: **Privacy Policy URL** `https://pigpen.app/privacy.html`.
 - [ ] App Store Connect → App Information: **Support URL** `https://pigpen.app`, and a
       **Marketing URL** if you want one — it is optional and an empty one is better than a dead one.
 - [ ] App Store Connect → App Information → Contact: `support@pigpen.app`, and the same address
-      in the App Review Information contact, where a reviewer will actually use it.
+      in the App Review Information contact, where a reviewer will actually use it. The mailbox
+      exists and somebody reads it.
 - [ ] The privacy questionnaire agrees with `PrivacyInfo.xcprivacy` and with the policy:
       *Product Interaction* and *User ID*, both **not linked to the user**, both **not used for
       tracking**, purpose analytics. Nothing else is collected, so nothing else is declared.
@@ -1866,12 +1887,12 @@ Pigpen/
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
-docs/
-├── index.html                   # The support page, served by GitHub Pages at pigpen.app
-├── privacy.html                 # The privacy policy, at the address the store listing gives
-├── pigpen.css                   # The cream and post-brown the two pages share
-├── CNAME                        # The domain Pages answers on
-└── *.png                        # The shots at the top of this README
+site/                            # Uploaded to pigpen.app as it stands; no build step
+├── index.html                   # The support page, at the address the store listing gives
+├── privacy.html                 # The privacy policy, at the address beside it
+├── pigpen.css                   # The cream and post-brown the pages share
+└── 404.html                     # Somewhere to land that is not the host's grey page
+docs/                            # The shots at the top of this README
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks

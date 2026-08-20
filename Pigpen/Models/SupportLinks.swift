@@ -10,8 +10,10 @@ import Foundation
 /// what the buttons point at is a real address rather than a typo that fails silently at
 /// the moment a player presses it.
 ///
-/// The same three strings go in App Store Connect: the support URL, the privacy policy URL,
-/// and the support email address on the app's information page.
+/// The pages themselves are the static HTML in `site/`, uploaded to pigpen.app by hand —
+/// three files and no build step, so the host can be anything that serves a folder. The same
+/// three strings go in App Store Connect: the support URL, the privacy policy URL, and the
+/// support email address on the app's information page.
 enum SupportLinks {
     /// Where the pages are served from. Changing this line moves every button in the game.
     static let host = "https://pigpen.app"
