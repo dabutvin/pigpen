@@ -1106,8 +1106,9 @@ one star anywhere in the world is the game saying they can already lay a fence. 
 opening film is owed separately and still plays on the first **Play**, so the walkthrough
 teaches the fencing and the film says what the fencing is for.
 
-A gear in the corner opens settings, which holds the version number, a switch for the
-buzzing, a switch for the daily reminder and one red button. **Haptics** turns off every buzz
+A gear in the corner opens settings, which holds the version number, every film in the game,
+a switch for the buzzing, a switch for the daily reminder and one red button. **Watch every
+cut scene** plays the lot end to end — see [the cut scenes](#the-cut-scenes). **Haptics** turns off every buzz
 in the game — the tap as a piece of fencing goes into the ground, the verdict when the gate
 is opened — for a phone on a table or a battery being nursed; it is on as the game comes, it
 is remembered, and flicking it on gives the tap it is promising straight away. **The daily
@@ -1160,11 +1161,13 @@ reason to go to it.
 
 ### The cut scenes
 
-Nine films so far — the meadow's three, painted shot by shot, and three apiece for the thicket
-and the mountain in storybook stills — each played once and each with a **Skip** in the corner
+Thirty-six films — the meadow's three, painted shot by shot, and three apiece for the eleven
+worlds past it in storybook stills — each played once and each with a **Skip** in the corner
 from a beat in.
 Skipping counts as having seen one. Every world plays the same three: an opening before its
-first field, a briefing before its boss, and a send-off once every pen in it is held.
+first field, a briefing before its boss, and a send-off once every pen in it is held. All of
+them are behind the gear as well, end to end, for a player who wants the story again — see
+[watching them again](#watching-them-again).
 
 #### The opening
 
@@ -1250,6 +1253,32 @@ kind of film came up. A boss you have already held is never briefed — the same
 as its own flag, and what keeps a film written after a world has shipped from stopping the
 player who finished it first.
 
+#### Watching them again
+
+A film plays once, where it means something. That is right the first time through and no use
+at all afterwards: a player who reached for **Skip** and wished they had not, or who wants the
+story told to them end to end, has had no way back to any of it.
+
+**Watch every cut scene**, behind the gear, is that way back. It is the whole reel in the
+order the journey meets them — the meadow's opening, its briefing, its send-off, then the
+thicket's three, and so on out to the heights — with the world and the running order
+(*Emberpeak · Briefing*, *8 of 36*) in the corner opposite the **Skip**.
+
+The one thing that changes in there is what **Skip** means. Where the game plays a film, Skip
+is the way out of it and back to whatever was waiting; on the reel there is nothing waiting
+but the next film, so Skip is what moves the reel on — the whole story leafed through at
+whatever pace the player wants, a press at a time. The cross in the other corner is the way
+out of the reel itself, so leaving and moving on are two different buttons.
+
+Nothing in there touches what the game remembers. A film watched on the reel is not a film the
+world has played, so a player who leafs ahead is still shown the opening when they reach the
+world it belongs to, and none of it goes on the charts:
+[`Film.reelOpened`](#counting) counts the door being opened and nothing after it, since a
+player rattling down three dozen films is not answering the question `Film.played` asks.
+[`FilmReel`](Pigpen/Models/FilmReel.swift) is the running order — the films still rolled up as
+their specs, so asking what is on the reel does not start three dozen clocks — and
+`FilmReelView` is the projection room that plays them.
+
 #### How they are built
 
 Like the pasture behind the title and the lap of honour on a pen that holds, a film is a
@@ -1297,6 +1326,7 @@ is filling in Apple's privacy questionnaire.
 | `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
 | `Reminder.followed` | A reminder tapped, and the morning's board it opened |
 | `Film.played` | A cut scene, and whether it was watched or skipped |
+| `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
@@ -1711,6 +1741,7 @@ Pigpen/
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # The meadow's films, as clocks: which shot is up when, and for how long
 │   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens, briefs and closes on
+│   ├── FilmReel.swift           # Every film in the game in one running order, for watching them back to back
 │   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
@@ -1750,7 +1781,8 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── SettingsView.swift       # Behind the gear: the version, the haptics switch, the daily reminder, the counting switch, clearing all game data
+│   ├── FilmReelView.swift       # The projection room: every film end to end, Skip moving on to the next
+│   ├── SettingsView.swift       # Behind the gear: the version, every cut scene end to end, the haptics switch, the daily reminder, the counting switch, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off

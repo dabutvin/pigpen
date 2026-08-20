@@ -32,7 +32,7 @@ struct StorybookSceneView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let bar = proxy.size.height * 0.072
+            let bar = proxy.size.height * FilmBars.fraction
 
             ZStack {
                 Color.black
@@ -215,11 +215,14 @@ struct StorybookSceneView: View {
 @MainActor
 struct WorldFilmView: View {
     let film: WorldFilm
+    /// Whether this playing counts on the charts. True where the game plays a film at the
+    /// moment it means something, and false down a reel of them in the projection room.
+    var counted: Bool = true
     let onFinish: () -> Void
 
     var body: some View {
         switch film {
-        case .painted(let scene): CutSceneView(scene, onFinish: onFinish)
+        case .painted(let scene): CutSceneView(scene, counted: counted, onFinish: onFinish)
         case .storybook(let scene): StorybookSceneView(scene, onFinish: onFinish)
         }
     }
