@@ -24,6 +24,9 @@ struct SettingsView: View {
     /// the one reminder the game has, so this card and the fortnight it lays down are always
     /// talking about the same switch.
     let reminder: DailyReminder
+    /// Every film in the game, in the order the journey meets them. Handed in rather than
+    /// reached for inside the card so a preview can put a short reel behind the button.
+    var reel: FilmReel = .everything
     /// The switch the whole game feels through. The shared one by default, since a toggle
     /// wired to anything else would move a switch nothing is listening to.
     @Bindable var haptics: Haptics = .shared
@@ -31,6 +34,8 @@ struct SettingsView: View {
     /// buzzing: the shared one, so the toggle moves the thing it names.
     @Bindable var analytics: Analytics = .shared
 
+    /// Whether the projection room is up: every film in the game, one after another.
+    @State private var isWatchingFilms = false
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
     /// Remembered so that the card says something after it empties, rather than simply
@@ -57,6 +62,7 @@ struct SettingsView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         about
+                        films
                         feel
                         reminders
                         counting
@@ -72,6 +78,11 @@ struct SettingsView: View {
         // this screen cannot see into. Reading it on the way in is what lets the card admit
         // that the phone has stopped passing the reminders on.
         .task { await reminder.readTheStanding() }
+        // Over the whole screen rather than on another card of this sheet: a film is shown
+        // between black bars with nothing else on the glass, and a reel of them is no different.
+        .fullScreenCover(isPresented: $isWatchingFilms) {
+            FilmReelView(reel: reel)
+        }
         .alert("Clear all game data?", isPresented: $isAsking) {
             Button("Cancel", role: .cancel) {}
             Button("Clear everything", role: .destructive) { clearEverything() }
@@ -267,6 +278,53 @@ struct SettingsView: View {
         }
     }
 
+    /// Every film in the game, and the way back to them.
+    ///
+    /// A film plays once, where it means something, and a player who skipped one or wants the
+    /// story told to them again has had no way back to any of it. This is that way back: the
+    /// whole reel end to end, in the order the journey meets them, with Skip moving on to the
+    /// next film rather than out of the lot.
+    ///
+    /// It is the whole game's films rather than the ones a player has earned, and the line under
+    /// the button says so plainly, since somebody a world in is being offered eleven worlds of
+    /// story they have not reached. Watching them here changes nothing the game remembers: every
+    /// film still plays where it belongs, to the player who has got there.
+    private var films: some View {
+        card {
+            Text("Cut scenes")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Text(
+                """
+                Every film in the game, one after another: the opening, the boss briefing \
+                and the send-off of every world there is. Skip moves on to the next one.
+                """
+            )
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(GamePalette.post.opacity(0.7))
+            .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                haptics.tap(.medium)
+                Analytics.record(.reelOpened)
+                isWatchingFilms = true
+            } label: {
+                Label("Watch every cut scene", systemImage: "film.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .padding(.top, 4)
+
+            Text(runningOrder)
+                .font(.caption2)
+                .foregroundStyle(GamePalette.post.opacity(0.55))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
     /// Everything the game has kept, and the way to be rid of it.
     private var gameData: some View {
         card {
@@ -327,6 +385,17 @@ struct SettingsView: View {
         let marketing = info?["CFBundleShortVersionString"] as? String ?? "0.1.0"
         let build = info?["CFBundleVersion"] as? String ?? "1"
         return "Version \(marketing) (\(build))"
+    }
+
+    /// What is on the reel and how long it takes, said before the button is pressed rather than
+    /// found out eight minutes in — and the warning that goes with it, since the reel holds the
+    /// story of worlds a player may be nowhere near.
+    private var runningOrder: String {
+        let minutes = max(1, Int((reel.runtime / 60).rounded()))
+        return """
+            \(counted(reel.count, "film")), about \(counted(minutes, "minute")) in all — \
+            including the worlds you have not reached yet.
+            """
     }
 
     private var saved: String {

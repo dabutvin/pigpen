@@ -2,6 +2,15 @@ import Foundation
 import SwiftUI
 import UIKit
 
+/// How deep the black bars a film is shown between are, as a fraction of the screen's height.
+///
+/// Shared by both kinds of film and by anything laid over one, so the Skip in the corner of a
+/// painted film, the Skip in the corner of a storybook one and the billing on a reel of them all
+/// sit at the same height on the glass.
+enum FilmBars {
+    static let fraction: CGFloat = 0.072
+}
+
 /// Any of the game's films, played between black bars with a line of type over each shot
 /// and a way out of the whole thing in the corner.
 ///
@@ -17,6 +26,11 @@ struct CutSceneView: View {
     /// the screenshot runs. The clock is stopped there rather than started, so the same
     /// frame comes out every time — and a still hands nobody on to anywhere.
     private let still: TimeInterval?
+    /// Whether this playing of the film is one the charts should hear about. A film met where
+    /// the game plays it is; the same film leafed through in the projection room behind the
+    /// gear is not, since a player rattling down a reel of three dozen skips most of them by
+    /// definition and would drown out the one question the counting is here to answer.
+    private let counted: Bool
 
     /// Held rather than taken fresh each time the screen is drawn, so the clock starts when
     /// the film goes up and not again on every frame of it.
@@ -25,10 +39,11 @@ struct CutSceneView: View {
     /// than on a button.
     @State private var offersSkip = false
 
-    init(_ scene: CutScene, onFinish: @escaping () -> Void) {
+    init(_ scene: CutScene, counted: Bool = true, onFinish: @escaping () -> Void) {
         _scene = State(initialValue: scene)
         self.onFinish = onFinish
         self.still = nil
+        self.counted = counted
     }
 
     /// A still of a film `seconds` in.
@@ -36,6 +51,7 @@ struct CutSceneView: View {
         _scene = State(initialValue: scene)
         self.onFinish = {}
         self.still = seconds
+        self.counted = false
     }
 
     var body: some View {
@@ -43,7 +59,7 @@ struct CutSceneView: View {
             // The bars, the type and the way out are all set as a fraction of the screen
             // for the same reason the shots are: an opening that composes itself on one
             // phone should do it on the small one and on a tablet as well.
-            let bar = proxy.size.height * 0.072
+            let bar = proxy.size.height * FilmBars.fraction
 
             ZStack {
                 // Under everything, so a shot that does not reach a corner leaves black
@@ -101,7 +117,9 @@ struct CutSceneView: View {
     /// that is the whole question about a film. One everybody skips is one that should be
     /// shorter, and a film nobody skips is worth the money it cost to draw.
     private func finish(watched: Bool) {
-        Analytics.record(.filmPlayed(scene.name.rawValue, watched: watched))
+        if counted {
+            Analytics.record(.filmPlayed(scene.name.rawValue, watched: watched))
+        }
         onFinish()
     }
 

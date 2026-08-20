@@ -480,6 +480,12 @@ extension AnalyticsSignal {
         AnalyticsSignal("Film.played", ["film": name, "watched": String(watched)])
     }
 
+    /// The projection room opened from behind the gear: every film in the game, end to end.
+    /// Counted on the way in and nowhere else — what a player does once they are in there is
+    /// leafing rather than watching, and would say nothing about whether a film is worth its
+    /// length.
+    static let reelOpened = AnalyticsSignal("Film.reelOpened")
+
     // MARK: Settings
 
     static let settingsOpened = AnalyticsSignal("Settings.opened")
