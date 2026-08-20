@@ -1108,7 +1108,8 @@ teaches the fencing and the film says what the fencing is for.
 
 A gear in the corner opens settings, which holds the version number, every film in the game,
 a switch for the buzzing, a switch for the daily reminder and one red button. **Watch every
-cut scene** plays the lot end to end — see [the cut scenes](#the-cut-scenes). **Haptics** turns off every buzz
+cut scene** plays the lot end to end, a tap for the next and a swipe back for the one before
+— see [the cut scenes](#the-cut-scenes). **Haptics** turns off every buzz
 in the game — the tap as a piece of fencing goes into the ground, the verdict when the gate
 is opened — for a phone on a table or a battery being nursed; it is on as the game comes, it
 is remembered, and flicking it on gives the tap it is promising straight away. **The daily
@@ -1269,6 +1270,25 @@ is the way out of it and back to whatever was waiting; on the reel there is noth
 but the next film, so Skip is what moves the reel on — the whole story leafed through at
 whatever pace the player wants, a press at a time. The cross in the other corner is the way
 out of the reel itself, so leaving and moving on are two different buttons.
+
+The whole glass works it as well: **a tap anywhere moves on**, **a swipe back takes the film
+before**, and a swipe on does what a tap does. Where the game plays a film that would be
+wrong — an opening worth watching should not be lost to a thumb resting on the screen, which
+is why those have a button and nothing else — but a player who came in here to leaf through
+three dozen films is doing it deliberately, and asking them to find a corner button
+thirty-six times is asking too much. The films themselves are untouched: the glass belongs to
+the reel, and it is a sheet of nothing over a picture painted by the very same views that
+play it in the game.
+
+A swipe has to travel, and has to be going sideways rather than down, so a finger dragged
+idly across a shot does not take the shot away. A swipe back off the first film rewinds it
+rather than doing nothing, since nothing is the one answer a gesture must never give — a
+player who swipes and sees no change cannot tell a reel with nothing behind it from a screen
+that never felt the swipe. Every raising of the curtain is a take of its own, which is what
+lets the same film come up twice running with its clock started again rather than the first
+showing still running underneath. Both moves are on the billing as VoiceOver actions —
+*Next cut scene*, *Previous cut scene* — since a gesture nobody can make is a gesture that
+locks the reel forwards.
 
 Nothing in there touches what the game remembers. A film watched on the reel is not a film the
 world has played, so a player who leafs ahead is still shown the opening when they reach the
@@ -1895,7 +1915,7 @@ Pigpen/
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
-│   ├── FilmReelView.swift       # The projection room: every film end to end, Skip moving on to the next
+│   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
 │   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held

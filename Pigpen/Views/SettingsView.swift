@@ -432,7 +432,8 @@ struct SettingsView: View {
             Text(
                 """
                 Every film in the game, one after another: the opening, the boss briefing \
-                and the send-off of every world there is. Skip moves on to the next one.
+                and the send-off of every world there is. Tap to move on, swipe back for the \
+                one before.
                 """
             )
             .font(.footnote.weight(.semibold))
