@@ -1403,7 +1403,7 @@ is published; there is no state anywhere else to keep in step with it.
 
 | File | Serves | Is |
 |---|---|---|
-| `index.html` | `pigpen.app` | The front page, for somebody who has not played it: what the game is, what is in it, and what is not — no ads, nothing to buy, no account, no tracking |
+| `index.html` | `pigpen.app` | The front page, for somebody who has not played it: what the game is, how a pen is scored, and what is in it |
 | `support.html` | `pigpen.app/support.html` | The support page: the common questions the settings sheet raises, and the address that reaches a person |
 | `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
 | `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
