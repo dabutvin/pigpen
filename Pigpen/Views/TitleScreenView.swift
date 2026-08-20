@@ -509,11 +509,11 @@ struct TitleScreenView: View {
     /// meadow is still being held, and the whole universe once it is.
     private var playDetail: String {
         progress.isTheWorldHeld
-            // Short enough to stand beside the badge. Once the meadow is held the row carries
-            // "56% complete" as well, and that leaves the line under Play about a hundred points
-            // to say its piece in — which the longer "...to fence" could only meet by shrinking
-            // to a size the rest of the list is not written at.
-            ? "A universe of worlds"
+            // Short enough to stand beside the badge on the narrowest phone the game runs on.
+            // Once the meadow is held the row carries "56% complete" as well, and between that,
+            // the token and the chevron the line is left about ninety points on a 375-point
+            // screen — so it is written to that width rather than shrunk down to it.
+            ? "Worlds to fence"
             : "\(world.name) · \(world.count) puzzles"
     }
 
