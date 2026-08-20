@@ -1472,16 +1472,20 @@ The pages are most of it, and the rest is the listing agreeing with them:
 - [ ] The privacy questionnaire agrees with `PrivacyInfo.xcprivacy` and with the policy:
       *Product Interaction* and *User ID*, both **not linked to the user**, both **not used for
       tracking**, purpose analytics. Nothing else is collected, so nothing else is declared.
-- [ ] Age rating filled in. There is no user content, no chat, no purchases and no advertising
-      in the game, which is what makes it a 4+.
+- [ ] Age rating filled in. There is no user content, no chat and no advertising in the game,
+      which is what makes it a 4+.
 - [ ] `MARKETING_VERSION` in `project.yml` is the version being submitted, and the release tag
       matches it — a tag sets the version it ships under.
 - [ ] Every button in the app does something. The one that greys out — *Clear all game data* on
       a phone with nothing saved — says why in the line above it, which is what keeps a disabled
       control from reading as a broken one.
-- [ ] Review notes: say that the game needs no account and no sign-in, that every world is in
-      the build, and that nothing is behind a purchase. A reviewer who does not have to guess
-      does not have to ask.
+- [ ] Review notes: say that the game needs no account and no sign-in, and that every world is
+      in the build. A reviewer who does not have to guess does not have to ask.
+- [ ] Once there is anything to buy, the listing has more to say than this list does: the
+      products are submitted alongside the build, the review notes have to tell a reviewer how
+      to reach them, and both pages want reading again for anything they promise about money.
+      The pages say nothing about it as it stands, which is the right thing for them to say
+      until there is something true to put there.
 
 ## Tech Stack
 
