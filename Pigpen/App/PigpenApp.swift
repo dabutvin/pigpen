@@ -91,6 +91,7 @@ struct PigpenApp: App {
         case pies = "-pies"
         case map = "-map"
         case universe = "-universe"
+        case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
         case peakMap = "-peak-map"
         case cityMap = "-city-map"
@@ -206,6 +207,11 @@ struct PigpenApp: App {
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.
             UniverseMapView(progress: .partWayThrough())
+        case .universeLocked:
+            // The same map as a player sees it before they pay: the meadow held and free,
+            // and every world past it for sale — each in colour with a gold lock, the
+            // thicket beckoning at the head of them. Tapping any one opens the offer.
+            UniverseMapView(progress: .partWayThrough(forSale: true))
         case .woodsMap:
             WorldMapView(
                 world: .thornwoodThicket,
