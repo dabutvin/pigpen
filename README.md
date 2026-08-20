@@ -1307,7 +1307,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Twenty-one signals, all of them written out in one place —
+**What goes out.** Twenty-five signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1328,6 +1328,7 @@ is filling in Apple's privacy questionnaire.
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
+| `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
 the wall, whether the dailies bring anybody back, whether the films are worth what they
@@ -1383,6 +1384,65 @@ send somewhere overrides it on the command line:
 ```bash
 xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=your-app-id
 ```
+
+## The pages on the web
+
+Two pages stand outside the game, and the store will not take an app without them: somewhere
+a player can go when something is wrong, and somewhere they can read what the game keeps
+about them. Apple asks for both as URLs on the listing, and a review that cannot reach either
+one — a link that 404s, a policy that is a paragraph of boilerplate about a company that does
+not exist — is a rejection under *Guideline 5.1.1* or a review flagged as incomplete.
+
+**Where they live.** `docs/`, served as a static site by GitHub Pages, which is the whole of
+the hosting: no server, no build step, no bill. `docs/index.html` is the support page,
+`docs/privacy.html` the policy, `docs/pigpen.css` the cream and post-brown they share so they
+read as the game rather than as a legal notice. `docs/CNAME` puts them on `pigpen.app`, and
+`docs/.nojekyll` keeps Pages from running the site through Jekyll on the way out.
+
+**Turning it on**, once, in the repository settings:
+
+1. Settings → Pages → Source: *Deploy from a branch*, branch `main`, folder `/docs`.
+2. Settings → Pages → Custom domain: `pigpen.app`, then tick *Enforce HTTPS* once the
+   certificate has been issued — which takes a few minutes and cannot be hurried.
+3. At the domain's registrar, point the apex at GitHub Pages: `A` records to `185.199.108.153`,
+   `185.199.109.153`, `185.199.110.153` and `185.199.111.153`, and a `CNAME` on `www` to
+   `dabutvin.github.io`.
+4. Open both pages in a browser before either address is typed into App Store Connect. Until
+   DNS has propagated the pages are up at `https://dabutvin.github.io/pigpen/` regardless, and
+   that address will do for a submission if the domain is not ready.
+
+**Where the game points at them.** `SupportLinks` in `Pigpen/Models/SupportLinks.swift` holds
+the host and the two addresses, and nothing else in the app types a URL — moving the pages is
+that one line. Behind the gear, *Help* opens the support page and prints the address in plain
+text underneath for a phone with no signal, and *Privacy* opens the policy from directly under
+the words that say what is counted. Both go out through `Analytics.pageOpened`, which counts
+which page and nothing else. `SupportLinksTests` checks that both addresses are real HTTPS
+URLs on the host, that the host matches `docs/CNAME`, and that a file actually exists in
+`docs/` for every page a button opens — so a typo fails the build rather than a submission.
+
+### Before a submission
+
+The pages are most of it, and the rest is the listing agreeing with them:
+
+- [ ] Both URLs open in a browser, on a phone, not signed in to GitHub.
+- [ ] App Store Connect → App Information: **Privacy Policy URL** `https://pigpen.app/privacy.html`.
+- [ ] App Store Connect → App Information: **Support URL** `https://pigpen.app`, and a
+      **Marketing URL** if you want one — it is optional and an empty one is better than a dead one.
+- [ ] App Store Connect → App Information → Contact: `support@pigpen.app`, and the same address
+      in the App Review Information contact, where a reviewer will actually use it.
+- [ ] The privacy questionnaire agrees with `PrivacyInfo.xcprivacy` and with the policy:
+      *Product Interaction* and *User ID*, both **not linked to the user**, both **not used for
+      tracking**, purpose analytics. Nothing else is collected, so nothing else is declared.
+- [ ] Age rating filled in. There is no user content, no chat, no purchases and no advertising
+      in the game, which is what makes it a 4+.
+- [ ] `MARKETING_VERSION` in `project.yml` is the version being submitted, and the release tag
+      matches it — a tag sets the version it ships under.
+- [ ] Every button in the app does something. The one that greys out — *Clear all game data* on
+      a phone with nothing saved — says why in the line above it, which is what keeps a disabled
+      control from reading as a broken one.
+- [ ] Review notes: say that the game needs no account and no sign-in, that every world is in
+      the build, and that nothing is behind a purchase. A reviewer who does not have to guess
+      does not have to ask.
 
 ## Tech Stack
 
@@ -1770,7 +1830,8 @@ Pigpen/
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 │   ├── TappedReminder.swift     # Which morning a tapped reminder is asking for, until a screen is up to open it
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
-│   └── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
+│   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
+│   └── SupportLinks.swift       # The support page, the privacy policy and the address behind them, in one place
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -1782,7 +1843,7 @@ Pigpen/
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
 │   ├── FilmReelView.swift       # The projection room: every film end to end, Skip moving on to the next
-│   ├── SettingsView.swift       # Behind the gear: the version, every cut scene end to end, the haptics switch, the daily reminder, the counting switch, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
@@ -1805,6 +1866,12 @@ Pigpen/
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
+docs/
+├── index.html                   # The support page, served by GitHub Pages at pigpen.app
+├── privacy.html                 # The privacy policy, at the address the store listing gives
+├── pigpen.css                   # The cream and post-brown the two pages share
+├── CNAME                        # The domain Pages answers on
+└── *.png                        # The shots at the top of this README
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks

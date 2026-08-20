@@ -500,6 +500,13 @@ extension AnalyticsSignal {
     static func analyticsSwitched(on: Bool) -> AnalyticsSignal {
         AnalyticsSignal("Settings.analyticsSwitched", ["on": String(on)])
     }
+
+    /// A player leaving the game for one of the two pages every app has to keep: the support
+    /// page, or the privacy policy. Which of the two is the whole of it — a support page
+    /// opened often is a game asking a question it should be answering itself.
+    static func pageOpened(_ page: String) -> AnalyticsSignal {
+        AnalyticsSignal("Settings.pageOpened", ["page": page])
+    }
 }
 
 extension Refusal {

@@ -11,6 +11,8 @@ import UIKit
 @MainActor
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    /// The way out to the two pages the game keeps on the web.
+    @Environment(\.openURL) private var openURL
 
     let progress: WorldProgress
     /// The book of days goes with the meadow's stars: a player asking for the game back as
@@ -62,6 +64,7 @@ struct SettingsView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         about
+                        help
                         films
                         feel
                         reminders
@@ -137,6 +140,48 @@ struct SettingsView: View {
             Text(version)
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(GamePalette.post.opacity(0.7))
+        }
+    }
+
+    /// The way out of the game to a person.
+    ///
+    /// A player who has hit something broken has, until now, had nowhere to say so from
+    /// inside the game — and a reviewer looking for the support page has had nowhere to find
+    /// it either. The button opens the page; the address underneath it is there in plain text
+    /// for the phone that is not on a network, or the player who would rather write from
+    /// their own mail app than be handed one.
+    private var help: some View {
+        card {
+            Text("Help")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Text(
+                """
+                Something broken, something confusing, or an idea for the game — the support \
+                page has the common questions on it, and an address that reaches a person.
+                """
+            )
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(GamePalette.post.opacity(0.7))
+            .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                open(SupportLinks.support, as: "support")
+            } label: {
+                Label("Support and contact", systemImage: "lifepreserver.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .padding(.top, 4)
+
+            Text("Or write to \(SupportLinks.email).")
+                .font(.caption2)
+                .foregroundStyle(GamePalette.post.opacity(0.55))
+                .textSelection(.enabled)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -275,6 +320,20 @@ struct SettingsView: View {
             .font(.caption2)
             .foregroundStyle(GamePalette.post.opacity(0.55))
             .fixedSize(horizontal: false, vertical: true)
+
+            // The words above are the whole of what the game counts, and the policy says the
+            // same thing at length. The button is here rather than only on the store listing
+            // because this card is where somebody wondering about it is standing.
+            Button {
+                open(SupportLinks.privacy, as: "privacy")
+            } label: {
+                Label("Privacy policy", systemImage: "hand.raised.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .padding(.top, 4)
         }
     }
 
@@ -487,6 +546,14 @@ struct SettingsView: View {
         // planned does not. Every day is unheld again, so every morning is worth reminding
         // about again, and the fortnight has to be laid down knowing that.
         Task { await reminder.replan(progress: daily) }
+    }
+
+    /// Out to one of the game's own pages on the web. Counted by which page rather than by
+    /// the address, so the signal survives the day the pages move.
+    private func open(_ page: URL, as name: String) {
+        haptics.tap(.light)
+        Analytics.record(.pageOpened(name))
+        openURL(page)
     }
 
     /// The one door out of the game, for the phone that has stopped passing reminders on.
