@@ -1398,8 +1398,8 @@ wants to know what it is. It is what the domain answers with, and the two the st
 hang off it.
 
 **What they are.** A handful of files in `site/`, and nothing else: no framework, no build
-step, no generator, nothing to install. Upload the folder to whatever serves pigpen.app and it
-is published; there is no state anywhere else to keep in step with it.
+step, no generator, nothing to install. The folder is what pigpen.app serves, as it stands;
+there is no state anywhere else to keep in step with it.
 
 | File | Serves | Is |
 |---|---|---|
@@ -1424,23 +1424,31 @@ App Store* chip rather than a link, since a dead button on the page that vouches
 is worse than no button. The line above it in `index.html` is the anchor to put in its place,
 with the Apple ID out of App Store Connect.
 
-**Publishing.** Whatever the host wants: drag `site/` onto Netlify or Cloudflare Pages, `rsync`
-it to a box, or sync it to a bucket. Nothing here is particular to any of them.
+**Publishing.** Netlify does it. The `pigpenapp` project builds from this repository with
+`site/` as its publish directory, so a merge to `main` is a deploy — nothing to upload,
+nothing to remember, about a minute from merge to live. There is no build command and nothing
+to install: the folder is served as it stands, which is the whole reason it is written as
+plain files.
 
-```bash
-rsync -av --delete site/ user@host:/var/www/pigpen.app/     # a server of your own
-# or
-aws s3 sync site/ s3://pigpen.app/ --delete                 # a bucket behind a CDN
-```
+A pull request that touches the site gets a deploy preview of its own at
+`deploy-preview-<number>--pigpenapp.netlify.app`, and three `pigpenapp` checks appear beside
+the two from GitHub Actions. Those three report *neutral* when they have nothing to say about
+redirects, headers or changed pages, which is a pass rather than a failure. `404.html` is
+picked up by name, so a mistyped address lands on the game's own page rather than Netlify's.
 
-Two things the host has to be set up for, whichever it is:
+The certificate is Netlify's and renews itself, which matters because Apple's reviewer opens
+these on a phone and iOS is loud about a bad one. What still wants checking by hand is that
+**`pigpen.app` and `www.pigpen.app` both answer**, one redirecting to the other: a store
+listing pointing at the half nobody configured is a dead link.
 
-- **HTTPS**, with the certificate valid. Apple's reviewer opens these on a phone, and iOS is
-  loud about a bad one.
-- **`pigpen.app` and `www.pigpen.app` both answering**, one redirecting to the other. A store
-  listing that points at the half that is not configured is a dead link.
+**The one setting a diff cannot show you.** The publish directory lives in the Netlify project
+rather than in a `netlify.toml` here. Point it at the repository root instead of `site/` and
+every address the app opens becomes a 404 while every file in the repository is still exactly
+where it should be — so it is worth knowing that the setting exists and is not under review
+with the rest of this. A `netlify.toml` at the root with `publish = "site"` would pin it down
+if that ever seems worth doing.
 
-Read them locally before they go up:
+Read a page before it goes anywhere:
 
 ```bash
 python3 -m http.server -d site 8000     # then open http://localhost:8000
@@ -1460,7 +1468,8 @@ that all three reach each other — so a typo fails the build rather than a subm
 
 The pages are most of it, and the rest is the listing agreeing with them:
 
-- [ ] `site/` is uploaded, and all three URLs open in a browser, on a phone, over HTTPS.
+- [ ] The page changes are merged and deployed, and all three URLs open in a browser, on a
+      phone, over HTTPS — the apex and `www` alike.
 - [ ] App Store Connect → App Information: **Privacy Policy URL** `https://pigpen.app/privacy.html`.
 - [ ] App Store Connect → App Information: **Support URL** `https://pigpen.app/support.html`
       and **Marketing URL** `https://pigpen.app`.
@@ -1726,10 +1735,10 @@ To carry the book further, re-run the tool with the years wanted and commit what
 
 ```
 PR to main ──► ci.yml (build) + screenshots.yml (screenshot comment)
-     │
+     │         └─ Netlify ──► deploy preview of site/
      ▼
 merge to main ──► testflight.yml ──► TestFlight (build number = UTC timestamp)
-     │
+     │         └─ Netlify ──► pigpen.app
      ▼
 tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 ```
@@ -1741,6 +1750,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
+| Netlify `pigpenapp` | PR, push to main | Publish `site/` — a deploy preview per pull request, pigpen.app on merge. Configured in the Netlify project rather than in this repository, so it is the one row here with nothing behind it to read |
 
 Notes on the details:
 
@@ -1750,7 +1760,7 @@ Notes on the details:
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
-- **Doc-only changes.** Pushes and pull requests that only touch `*.md`, `LICENSE` or `.gitignore` skip all three of CI, screenshots and TestFlight.
+- **Doc-only changes.** Pushes and pull requests that only touch `*.md`, `LICENSE` or `.gitignore` skip all three of CI, screenshots and TestFlight. `site/` is not on that list, so a change to the website alone still builds the app, photographs it and ships a TestFlight build — which is harmless and slow. Adding `site/**` to the three `paths-ignore` lists would stop it, at the cost of a website change no longer being covered by the test that checks the pages the app opens still exist.
 
 ### Cutting a release
 
@@ -1909,7 +1919,7 @@ Pigpen/
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
-site/                            # Uploaded to pigpen.app as it stands; no build step
+site/                            # Served at pigpen.app by Netlify on every merge; no build step
 ├── index.html                   # The front page: what the game is, and what is not in it
 ├── support.html                 # The support page, at the address the store listing gives
 ├── privacy.html                 # The privacy policy, at the address beside it
