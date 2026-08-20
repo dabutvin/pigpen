@@ -143,14 +143,26 @@ struct UniverseMapView: View {
                         state: progress.state(of: index),
                         subtitle: subtitle(for: index),
                         forSale: progress.isForSale(index),
+                        beckons: beckons(for: index),
                         celebrating: unveiled == index
                     )
                 }
                 .buttonStyle(SignpostButtonStyle())
-                .disabled(!progress.isUnlocked(index))
+                // A world for sale is tappable even where progress has not reached it — the tap
+                // is what raises the offer. Only worlds that are neither open nor for sale are
+                // dead to the touch.
+                .disabled(!progress.isUnlocked(index) && !progress.isForSale(index))
                 .id(index)
             }
         }
+    }
+
+    /// Which world pulses its ring: the frontier alone, whether that is the next world to play
+    /// or — before a player pays — the thicket at the head of everything for sale. One world
+    /// moving on a map where all the rest past the meadow are for sale, rather than eleven.
+    private func beckons(for index: Int) -> Bool {
+        guard index == progress.frontier else { return false }
+        return progress.isForSale(index) || progress.state(of: index) == .playable
     }
 
     /// A line under a world's name: how much of it is held, or what is keeping it shut. A
@@ -257,15 +269,17 @@ struct UniverseMapView: View {
     // MARK: - Entering a world
 
     private func enter(_ index: Int) {
-        guard progress.isUnlocked(index) else { return }
-        // A world behind the wall opens the offer rather than its trail: this is the upgrade
-        // reached from the universe map, raised on the very world the player was about to play.
+        // A world behind the wall opens the offer rather than its trail — checked before the
+        // progress gate, since a world for sale is one the player has not yet earned their way
+        // to and would otherwise be turned away from. This is the upgrade reached from the
+        // universe map, raised on the very world the player reached for.
         if progress.isBehindTheWall(index) {
             Haptics.tap(.medium)
             Analytics.record(.offerShown(from: FullGameOfferSource.map.rawValue))
             isOffering = true
             return
         }
+        guard progress.isUnlocked(index) else { return }
         guard let game = progress.universe.game(at: index) else {
             // A silhouette: nothing to drop into yet, but say it was heard.
             Haptics.tap(.rigid)
@@ -364,10 +378,13 @@ private struct WorldPlanet: View {
     let boss: BossMark
     let state: WorldState
     let subtitle: String
-    /// Whether the world is behind the wall: reachable, but waiting on the full game. Drawn
-    /// in full colour rather than as a silhouette — the point of a world for sale is to want
-    /// it — with a lock on it and its name plated in gold.
+    /// Whether the world is behind the wall: waiting on the full game. Drawn in full colour
+    /// rather than as a silhouette — the point of a world for sale is to want it — with a lock
+    /// on it and its name plated in gold.
     var forSale = false
+    /// Whether this world pulses its ring to draw the eye. Handed in rather than worked out
+    /// from the state, so the map can single out one world on a map full of worlds for sale.
+    var beckons = false
     var celebrating = false
 
     /// A world for sale shows itself as the open, in-colour thing it is about to become,
@@ -388,12 +405,14 @@ private struct WorldPlanet: View {
         .scaleEffect(celebrating ? 1.16 : 1)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(spokenLabel)
-        .accessibilityAddTraits(state == .locked ? [] : .isButton)
+        // A world for sale is a button however locked its state reads, since tapping it is what
+        // opens the offer; only a world with nothing behind the tap goes without the trait.
+        .accessibilityAddTraits(state == .locked && !forSale ? [] : .isButton)
     }
 
     private var planet: some View {
         ZStack {
-            if state == .playable || forSale, !reduceMotion {
+            if beckons, !reduceMotion {
                 beckoning
             }
 

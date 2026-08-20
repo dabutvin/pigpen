@@ -41,17 +41,19 @@ final class UniverseProgress {
 
     func isCleared(_ index: Int) -> Bool { universe.isCleared(index, stars: stars) }
 
-    /// Whether a world is shut only for want of the full game: reachable by progress, past the
-    /// free meadow, and the game not yet bought. This is the wall standing exactly where the
-    /// free game ends — the meadow open behind it, the rest of the map for sale ahead.
+    /// Whether a world is shown for sale rather than played: any world past the free meadow,
+    /// while the full game is not yet bought. Every one of them, not only the next — so the
+    /// whole universe is a shop window before a player pays, each world in colour and each tap
+    /// on one an offer, rather than a single wall at the thicket with silhouettes behind it.
     ///
-    /// It is kept apart from `WorldState`, which stays a reading of stars alone: a world can
-    /// be `.playable` by progress and for sale at the same time, and the map draws the second
-    /// over the first. Once the full game is bought, this is false everywhere and the map is
-    /// nothing but the star chain again.
+    /// It is kept apart from `WorldState`, which stays a reading of stars alone: a world can be
+    /// `.playable` or `.locked` by progress and for sale at the same time, and the map draws the
+    /// second over the first. Once the full game is bought, this is false everywhere and the map
+    /// is nothing but the star chain again — the worlds ahead going back to silhouettes the
+    /// player earns their way to.
     func isForSale(_ index: Int) -> Bool {
-        guard !fullGame.isUnlocked, index > 0 else { return false }
-        return universe.isUnlocked(index, stars: stars)
+        guard !fullGame.isUnlocked else { return false }
+        return universe.worlds.indices.contains(index) && index > 0
     }
 
     /// Whether entering a world means being shown the offer rather than dropping into its
