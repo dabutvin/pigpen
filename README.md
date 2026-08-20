@@ -1307,7 +1307,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Twenty-one signals, all of them written out in one place —
+**What goes out.** Twenty-five signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1328,6 +1328,7 @@ is filling in Apple's privacy questionnaire.
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
+| `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
 the wall, whether the dailies bring anybody back, whether the films are worth what they
@@ -1383,6 +1384,104 @@ send somewhere overrides it on the command line:
 ```bash
 xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=your-app-id
 ```
+
+## The pages on the web
+
+Two pages stand outside the game and the store will not take an app without them: somewhere a
+player can go when something is wrong, and somewhere they can read what the game keeps about
+them. Apple asks for both as URLs on the listing, and a review that cannot reach either one —
+a link that 404s, a policy that is a paragraph of boilerplate about a company that does not
+exist — is a rejection under *Guideline 5.1.1* or a review flagged as incomplete.
+
+A third stands in front of them: the game's own page, for somebody who has heard the name and
+wants to know what it is. It is what the domain answers with, and the two the store asks for
+hang off it.
+
+**What they are.** A handful of files in `site/`, and nothing else: no framework, no build
+step, no generator, nothing to install. Upload the folder to whatever serves pigpen.app and it
+is published; there is no state anywhere else to keep in step with it.
+
+| File | Serves | Is |
+|---|---|---|
+| `index.html` | `pigpen.app` | The front page, for somebody who has not played it: what the game is, how a pen is scored, and what is in it |
+| `support.html` | `pigpen.app/support.html` | The support page: the common questions the settings sheet raises, and the address that reaches a person |
+| `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
+| `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
+| `404.html` | Whatever the host points at it | Somewhere to land other than the host's own grey page |
+| `img/` | `pigpen.app/img/…` | The two shots on the front page — the same frames as the ones at the top of this README, and replaced the same way |
+
+The front page is the marketing URL and the other two are the ones on the app's information
+page, which is why neither of them is the root: somebody arriving at pigpen.app from a link
+has not necessarily played the game, and somebody arriving from behind the gear certainly has.
+All three reach the other two, so nobody lands on the wrong one and has to go back.
+
+Every link between the pages is relative, so nothing has to be rewritten for a different host,
+a staging domain or a subfolder — except in `404.html`, which asks for `/pigpen.css` from the
+root because a host can serve it from any depth.
+
+**The App Store button.** While the app is unreleased the front page carries a *Coming to the
+App Store* chip rather than a link, since a dead button on the page that vouches for the app
+is worse than no button. The line above it in `index.html` is the anchor to put in its place,
+with the Apple ID out of App Store Connect.
+
+**Publishing.** Whatever the host wants: drag `site/` onto Netlify or Cloudflare Pages, `rsync`
+it to a box, or sync it to a bucket. Nothing here is particular to any of them.
+
+```bash
+rsync -av --delete site/ user@host:/var/www/pigpen.app/     # a server of your own
+# or
+aws s3 sync site/ s3://pigpen.app/ --delete                 # a bucket behind a CDN
+```
+
+Two things the host has to be set up for, whichever it is:
+
+- **HTTPS**, with the certificate valid. Apple's reviewer opens these on a phone, and iOS is
+  loud about a bad one.
+- **`pigpen.app` and `www.pigpen.app` both answering**, one redirecting to the other. A store
+  listing that points at the half that is not configured is a dead link.
+
+Read them locally before they go up:
+
+```bash
+python3 -m http.server -d site 8000     # then open http://localhost:8000
+```
+
+**Where the game points at them.** `SupportLinks` in `Pigpen/Models/SupportLinks.swift` holds
+the host and the two addresses, and nothing else in the app types a URL — moving the pages, or
+putting them on a different domain, is that one line. Behind the gear, *Help* opens the support
+page and prints the address in plain text underneath for a phone with no signal, and *Privacy*
+opens the policy from directly under the words that say what is counted. Both go out through
+`Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks
+that both addresses are real HTTPS URLs on the host, that a file exists in `site/` for every
+page a button opens, that every page hands over the same email address the game prints, and
+that all three reach each other — so a typo fails the build rather than a submission.
+
+### Before a submission
+
+The pages are most of it, and the rest is the listing agreeing with them:
+
+- [ ] `site/` is uploaded, and all three URLs open in a browser, on a phone, over HTTPS.
+- [ ] App Store Connect → App Information: **Privacy Policy URL** `https://pigpen.app/privacy.html`.
+- [ ] App Store Connect → App Information: **Support URL** `https://pigpen.app/support.html`
+      and **Marketing URL** `https://pigpen.app`.
+- [ ] The front page says *Coming to the App Store*. Once the app is live, swap the chip for
+      the App Store link — it is one line, marked in `index.html`.
+- [ ] App Store Connect → App Information → Contact: `support@pigpen.app`, and the same address
+      in the App Review Information contact, where a reviewer will actually use it. The mailbox
+      exists and somebody reads it.
+- [ ] The privacy questionnaire agrees with `PrivacyInfo.xcprivacy` and with the policy:
+      *Product Interaction* and *User ID*, both **not linked to the user**, both **not used for
+      tracking**, purpose analytics. Nothing else is collected, so nothing else is declared.
+- [ ] Age rating filled in. There is no user content, no chat, no purchases and no advertising
+      in the game, which is what makes it a 4+.
+- [ ] `MARKETING_VERSION` in `project.yml` is the version being submitted, and the release tag
+      matches it — a tag sets the version it ships under.
+- [ ] Every button in the app does something. The one that greys out — *Clear all game data* on
+      a phone with nothing saved — says why in the line above it, which is what keeps a disabled
+      control from reading as a broken one.
+- [ ] Review notes: say that the game needs no account and no sign-in, that every world is in
+      the build, and that nothing is behind a purchase. A reviewer who does not have to guess
+      does not have to ask.
 
 ## Tech Stack
 
@@ -1770,7 +1869,8 @@ Pigpen/
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 │   ├── TappedReminder.swift     # Which morning a tapped reminder is asking for, until a screen is up to open it
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
-│   └── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
+│   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
+│   └── SupportLinks.swift       # The support page, the privacy policy and the address behind them, in one place
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -1782,7 +1882,7 @@ Pigpen/
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
 │   ├── FilmReelView.swift       # The projection room: every film end to end, Skip moving on to the next
-│   ├── SettingsView.swift       # Behind the gear: the version, every cut scene end to end, the haptics switch, the daily reminder, the counting switch, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
@@ -1805,6 +1905,14 @@ Pigpen/
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
+site/                            # Uploaded to pigpen.app as it stands; no build step
+├── index.html                   # The front page: what the game is, and what is not in it
+├── support.html                 # The support page, at the address the store listing gives
+├── privacy.html                 # The privacy policy, at the address beside it
+├── pigpen.css                   # The cream and post-brown the pages share
+├── 404.html                     # Somewhere to land that is not the host's grey page
+└── img/                         # The two shots the front page stands on
+docs/                            # The shots at the top of this README
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks
