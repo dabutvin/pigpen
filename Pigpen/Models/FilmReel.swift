@@ -70,6 +70,22 @@ struct FilmReel: Sendable {
         billings.indices.contains(index) ? billings[index] : nil
     }
 
+    /// Where the reel goes when a film ends, is skipped, or is tapped past: the next film, or
+    /// nothing at all, which is the reel run out and the projection room done.
+    func onward(from index: Int) -> Int? {
+        billings.indices.contains(index + 1) ? index + 1 : nil
+    }
+
+    /// Where a step back lands: the film before this one, or this one over again at the head of
+    /// the reel.
+    ///
+    /// A swipe back off the first film rewinds it rather than doing nothing. Nothing is the one
+    /// answer a gesture must never give — a player who swipes and sees no change cannot tell a
+    /// reel that has no more to go back to from a screen that did not feel the swipe at all.
+    func backward(from index: Int) -> Int {
+        max(min(index, count - 1) - 1, 0)
+    }
+
     /// How long the whole reel runs, films only — the beat a player spends deciding to skip one
     /// is their own business. Read off the films rather than kept alongside them, so a script
     /// that grows a shot moves the number on the button by itself.
