@@ -456,6 +456,11 @@ extension AnalyticsSignal {
         return AnalyticsSignal("Reminder.switched", parameters, value: on ? 1 : 0)
     }
 
+    /// A reminder tapped, and the board it opened. Everything above counts who agreed to be
+    /// reminded; this is the only signal that counts who came back because they were, which
+    /// is the only question a morning's interruption has to answer for itself.
+    static let reminderFollowed = AnalyticsSignal("Reminder.followed")
+
     /// The hour moved off the one the game picked. Charted as the hour alone, since what is
     /// worth knowing is whether nine in the morning was the right guess — and the hour a
     /// stranger wants their puzzle at says nothing about who they are.
