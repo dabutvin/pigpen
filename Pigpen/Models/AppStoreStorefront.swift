@@ -1,11 +1,12 @@
 import StoreKit
 
-/// The one place in Pigpen that talks to StoreKit.
+/// Where Pigpen sells the one thing it sells.
 ///
 /// Everything else asks `FullGame` whether the game is unlocked; `FullGame` asks a
 /// `Storefront`; and this is the storefront wired to the real App Store. Kept behind that
 /// seam so the rest of the game — the map, the archive, the offer sheet, and every test over
-/// them — never imports StoreKit and never needs a network to run.
+/// them — never imports StoreKit and never needs a network to run. The only other file that
+/// imports it is `AppStoreReviews`, which asks what the player thought of what they bought.
 ///
 /// The full game is one non-consumable product. Ownership is read from `currentEntitlements`,
 /// which is Apple's own record of what the Apple ID has bought: it survives a reinstall and

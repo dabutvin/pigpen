@@ -72,6 +72,7 @@ struct SettingsView: View {
                         about
                         fullGameCard
                         help
+                        rate
                         films
                         feel
                         reminders
@@ -257,6 +258,52 @@ struct SettingsView: View {
                 .foregroundStyle(GamePalette.post.opacity(0.55))
                 .textSelection(.enabled)
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    /// The way to the listing, for a player who wants to say something about the game.
+    ///
+    /// The game's other way of asking is Apple's own prompt, and it is deliberately rare: it
+    /// goes up on a high point at most once a version and never inside four months, Apple
+    /// allows three a year whatever the game wants, and whether it appears at all is Apple's to
+    /// decide. None of that is any use to somebody who has decided on their own that they have
+    /// something to say. This button is, and it always opens.
+    ///
+    /// It is not drawn until there is a listing to open. The Apple ID is minted the day the app
+    /// is created in App Store Connect and cannot be guessed before then, and a button that
+    /// opens nothing is worse than no button — the same call the front page makes with its
+    /// *Coming to the App Store* chip, in the same state, for the same reason.
+    @ViewBuilder
+    private var rate: some View {
+        if let listing = AppStoreListing.reviewPage {
+            card {
+                Text("Rate Pigpen")
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+
+                Text(
+                    """
+                    If the game has been worth your time, a rating on the App Store is the \
+                    single most useful thing you can do for it.
+                    """
+                )
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(GamePalette.post.opacity(0.7))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Button {
+                    haptics.tap(.light)
+                    Analytics.record(.ratingPageOpened)
+                    openURL(listing)
+                } label: {
+                    Label("Rate it on the App Store", systemImage: "star.fill")
+                        .font(.subheadline.weight(.heavy))
+                        .foregroundStyle(GamePalette.cream)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+                .padding(.top, 4)
+            }
         }
     }
 
@@ -514,13 +561,11 @@ struct SettingsView: View {
     // MARK: - Words
 
     /// What is running. The build number is a timestamp on anything that came from
-    /// TestFlight, so it says which build a player is actually holding.
-    private var version: String {
-        let info = Bundle.main.infoDictionary
-        let marketing = info?["CFBundleShortVersionString"] as? String ?? "0.1.0"
-        let build = info?["CFBundleVersion"] as? String ?? "1"
-        return "Version \(marketing) (\(build))"
-    }
+    /// TestFlight, so it says which build a player is actually holding. Read through
+    /// `AppRelease` rather than out of the bundle here, because the rating prompt reads the
+    /// same version to know whether this player has already been asked about this build, and
+    /// two files reading the same two keys is one place too many for them to disagree.
+    private var version: String { AppRelease.full }
 
     /// What is on the reel and how long it takes, said before the button is pressed rather than
     /// found out eight minutes in — and the warning that goes with it, since the reel holds the
