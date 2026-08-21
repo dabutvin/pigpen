@@ -162,12 +162,14 @@ struct StorybookSceneView: View {
     /// along the bottom like a subtitle.
     @ViewBuilder
     private func caption(_ frame: StorybookScene.Frame, clear bar: CGFloat) -> some View {
-        let words = Text(frame.shot.caption)
+        // A sentence at a time under the held motif, the same as a painted shot.
+        let line = frame.caption
+        let words = Text(line.sentence)
             .multilineTextAlignment(.center)
             .foregroundStyle(GamePalette.cream)
             .shadow(color: .black.opacity(0.7), radius: 5, y: 2)
             .padding(.horizontal, 32)
-            .opacity(frame.captionOpacity)
+            .opacity(line.opacity)
 
         if frame.shot.isCard {
             words.font(.system(size: max(26, bar * 0.52), weight: .black, design: .rounded))

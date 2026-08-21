@@ -153,12 +153,15 @@ struct CutSceneView: View {
     /// story read out to them.
     @ViewBuilder
     private func caption(_ frame: CutScene.Frame, clear bar: CGFloat) -> some View {
-        let words = Text(frame.shot.caption)
+        // The line is read out a sentence at a time under the held picture, so what is shown is
+        // whichever sentence is up now, at however far up it is.
+        let line = frame.caption
+        let words = Text(line.sentence)
             .multilineTextAlignment(.center)
             .foregroundStyle(GamePalette.cream)
             .shadow(color: .black.opacity(0.7), radius: 5, y: 2)
             .padding(.horizontal, 32)
-            .opacity(frame.captionOpacity)
+            .opacity(line.opacity)
 
         if Self.cards.contains(frame.shot.picture) {
             // The line a film hands the game over on is set in the middle of the frame as
@@ -1302,26 +1305,26 @@ private struct Film {
     }
 }
 
-#Preview("Opening · home pen") { CutSceneView(.opening(), still: 2.0) }
+#Preview("Opening · home pen") { CutSceneView(.opening(), still: 1.8) }
 
-#Preview("Opening · the gate") { CutSceneView(.opening(), still: 6.0) }
+#Preview("Opening · the gate") { CutSceneView(.opening(), still: 13.3) }
 
-#Preview("Opening · welcome") { CutSceneView(.opening(), still: 10.7) }
+#Preview("Opening · welcome") { CutSceneView(.opening(), still: 20.1) }
 
-#Preview("Opening · apples and skulls") { CutSceneView(.opening(), still: 16.1) }
+#Preview("Opening · apples and skulls") { CutSceneView(.opening(), still: 29.1) }
 
-#Preview("Opening · close the fence") { CutSceneView(.opening(), still: 20.7) }
+#Preview("Opening · close the fence") { CutSceneView(.opening(), still: 38.3) }
 
-#Preview("Stag Mere · promising land") { CutSceneView(.stagMere(), still: 2.1) }
+#Preview("Stag Mere · promising land") { CutSceneView(.stagMere(), still: 2.2) }
 
-#Preview("Stag Mere · the resident") { CutSceneView(.stagMere(), still: 6.1) }
+#Preview("Stag Mere · the resident") { CutSceneView(.stagMere(), still: 8.9) }
 
-#Preview("Stag Mere · one or two") { CutSceneView(.stagMere(), still: 10.5) }
+#Preview("Stag Mere · one or two") { CutSceneView(.stagMere(), still: 15.7) }
 
 #Preview("Meadow held · finished pen") { CutSceneView(.theMeadowHeld(), still: 1.8) }
 
-#Preview("Meadow held · forest edge") { CutSceneView(.theMeadowHeld(), still: 5.2) }
+#Preview("Meadow held · forest edge") { CutSceneView(.theMeadowHeld(), still: 10.8) }
 
-#Preview("Meadow held · into the forest") { CutSceneView(.theMeadowHeld(), still: 8.6) }
+#Preview("Meadow held · into the forest") { CutSceneView(.theMeadowHeld(), still: 15.9) }
 
 #Preview("Played through") { CutSceneView(.opening()) {} }
