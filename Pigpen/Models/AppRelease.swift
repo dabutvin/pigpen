@@ -8,8 +8,8 @@ import Foundation
 /// line apart in two files is one place too many for a string that has to mean the same thing
 /// in both.
 enum AppRelease {
-    /// The version a player would name — `0.1.0` — rather than the build behind it.
-    static var marketing: String { string("CFBundleShortVersionString") ?? "0.1.0" }
+    /// The version a player would name — `1.0.0` — rather than the build behind it.
+    static var marketing: String { string("CFBundleShortVersionString") ?? "1.0.0" }
 
     /// The build. A timestamp on anything that came out of the release workflow, so it says
     /// which build a player is actually holding rather than only which version.
