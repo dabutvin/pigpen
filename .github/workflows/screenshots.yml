@@ -183,20 +183,17 @@ jobs:
           # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
           # so these come out the same on every run rather than wherever a film happened to
           # have got to.
-          scene 41 opening_first_light -opening
+          scene 41 opening_home_pen -opening
           scene 43 opening_gate -opening-gate
-          scene 45 opening_pig -opening-pig
-          scene 47 opening_away -opening-away
-          scene 49 opening_pen -opening-pen
-          scene 51 opening_fence -opening-fence
-          scene 53 mere_water -mere
-          scene 55 mere_stag -mere-stag
-          scene 57 mere_both -mere-both
-          scene 59 held_penned -held-penned
-          scene 61 held_stag -held-stag
-          scene 63 held_meadow -held-meadow
-          scene 65 held_world -held-world
-          scene 67 held_beyond -held-beyond
+          scene 45 opening_welcome -opening-welcome
+          scene 47 opening_treats -opening-treats
+          scene 49 opening_close -opening-close
+          scene 51 mere_land -mere
+          scene 53 mere_resident -mere-resident
+          scene 55 mere_both -mere-both
+          scene 57 held_penned -held-penned
+          scene 59 held_forest -held-forest
+          scene 61 held_away -held-away
 
           xcrun simctl status_bar "$UDID" clear
 
