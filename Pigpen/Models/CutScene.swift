@@ -54,14 +54,21 @@ struct CutScene: Equatable, Sendable {
         self.start = start
     }
 
-    /// One shot of a film: what it shows, what it says over it, and how long it is held.
+    /// One shot of a film: what it shows, and what it says over it.
     struct Shot: Equatable, Sendable, Identifiable {
         let picture: Picture
         let caption: String
-        /// How long the shot is on screen.
-        let seconds: TimeInterval
 
         var id: Picture { picture }
+
+        /// How long the shot is on screen. Derived from its line rather than set by hand, so
+        /// every sentence is held at one reading pace: the picture waits a beat after the cut,
+        /// then the line is read out a sentence at a time, each fading up, holding long enough
+        /// to be read on its own, and fading down before the next.
+        var seconds: TimeInterval {
+            CutScene.captionDelay
+                + CutScene.sentences(of: caption).map(CutScene.sentenceWindow).reduce(0, +)
+        }
     }
 
     /// What a shot shows. A script only says which picture is up and for how long; how each
@@ -125,6 +132,89 @@ struct CutScene: Equatable, Sendable {
     /// rather than as one picture quietly replacing another.
     static let flash: TimeInterval = 0.16
 
+    // MARK: - Reading pace
+
+    /// The pace a line is read out at when it runs to more than one sentence. A shot's line is
+    /// shown a sentence at a time under the same held picture — each landing on its own, so each
+    /// has to be readable on its own, which is slower than a single caption glanced at whole.
+    ///
+    /// This is the one knob for how fast the words go by; turn it up and every film takes longer
+    /// and reads easier. Roughly thirteen characters a second.
+    static let secondsPerCaptionCharacter: TimeInterval = 0.077
+    /// The least a sentence is ever held fully up, however short. Without it "Cozy." is gone
+    /// before it lands: a one-word line paced only by its length never gets a beat to be read in.
+    static let minSentenceHold: TimeInterval = 1.8
+
+    /// A caption split into the sentences it is read out one at a time as. A line of a single
+    /// sentence is a reel of one, and behaves exactly as a whole caption used to.
+    ///
+    /// A sentence ends on a full stop, question mark or exclamation — carrying any closing quote
+    /// with it, so *… as "lush." That was generous.* reads as two lines and not three — and a
+    /// stop with no space after it (there are none in the scripts, but a decimal would be one)
+    /// is left inside its sentence rather than splitting it.
+    static func sentences(of caption: String) -> [String] {
+        let terminators: Set<Character> = [".", "!", "?"]
+        let closers: Set<Character> = ["\"", "'", ")", "”", "’"]
+        let chars = Array(caption)
+        var lines: [String] = []
+        var current = ""
+        var i = 0
+        while i < chars.count {
+            let c = chars[i]
+            current.append(c)
+            i += 1
+            guard terminators.contains(c) else { continue }
+            while i < chars.count, closers.contains(chars[i]) {
+                current.append(chars[i])
+                i += 1
+            }
+            // A stop ends a sentence only when the next thing is a space or the end of the line.
+            if i >= chars.count || chars[i] == " " {
+                let line = current.trimmingCharacters(in: .whitespaces)
+                if !line.isEmpty { lines.append(line) }
+                current = ""
+                while i < chars.count, chars[i] == " " { i += 1 }
+            }
+        }
+        let tail = current.trimmingCharacters(in: .whitespaces)
+        if !tail.isEmpty { lines.append(tail) }
+        return lines.isEmpty ? [caption] : lines
+    }
+
+    /// How long a sentence is held fully up, before the fades either side of it: its length at
+    /// the reading pace, floored so even a one-word line gets a beat.
+    static func sentenceHold(of sentence: String) -> TimeInterval {
+        max(minSentenceHold, Double(sentence.count) * secondsPerCaptionCharacter)
+    }
+
+    /// How long a sentence owns the caption area for, all told: a fade up, its hold, and a fade
+    /// down before the next one takes its place. Summed over a line's sentences (after the
+    /// opening beat) this is how long a shot runs.
+    static func sentenceWindow(_ sentence: String) -> TimeInterval {
+        captionFade + sentenceHold(of: sentence) + captionFade
+    }
+
+    /// Which sentence of a line is showing `seconds` into a shot, and how far up it is: the
+    /// shared caption clock a painted shot and a storybook still both read off. After the
+    /// opening beat each sentence waits its turn, fades up over `captionFade`, holds, and fades
+    /// down before the next — so only one sentence is ever up, and the last fades out with the
+    /// shot rather than being left over the cut.
+    static func caption(of line: String, secondsIn seconds: TimeInterval) -> (sentence: String, opacity: Double) {
+        let reel = sentences(of: line)
+        guard !reel.isEmpty else { return ("", 0) }
+        var t = seconds - captionDelay
+        for (index, sentence) in reel.enumerated() {
+            let window = sentenceWindow(sentence)
+            if t < window || index == reel.count - 1 {
+                let arriving = t / captionFade
+                let leaving = (window - t) / captionFade
+                return (sentence, min(max(min(arriving, leaving), 0), 1))
+            }
+            t -= window
+        }
+        return (reel[0], 0)
+    }
+
     /// What is on screen at one moment: which shot it is, where it comes in the film, and
     /// how long it has been up — which is what the caption and the cut flash are timed off.
     struct Frame: Equatable, Sendable {
@@ -139,12 +229,13 @@ struct CutScene: Equatable, Sendable {
             return min(max(seconds / shot.seconds, 0), 1)
         }
 
-        /// The caption comes up a beat after the cut, holds, and goes back out with the
-        /// shot, so no line of type is ever left over a picture it does not belong to.
-        var captionOpacity: Double {
-            let arriving = (seconds - CutScene.captionDelay) / CutScene.captionFade
-            let leaving = (shot.seconds - seconds) / CutScene.captionFade
-            return min(max(min(arriving, leaving), 0), 1)
+        /// The sentence of the shot's line showing right now, and how far up it is. The line is
+        /// read out a sentence at a time: after the opening beat each one waits its turn, fades
+        /// up, holds long enough to read, and fades down before the next — so a picture never
+        /// carries more than one sentence at once, and none is left over the cut. Before the
+        /// beat is up it is the first sentence at nothing.
+        var caption: (sentence: String, opacity: Double) {
+            CutScene.caption(of: shot.caption, secondsIn: seconds)
         }
 
         /// How much light is still on the cut.
@@ -208,28 +299,23 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .homePen,
-                    caption: "Pig had a home. Cozy. Rustic. Extremely limited square footage.",
-                    seconds: 4.0
+                    caption: "Pig had a home. Cozy. Rustic. Extremely limited square footage."
                 ),
                 Shot(
                     picture: .theOpenGate,
-                    caption: "Then someone left the gate open. Pig decided to explore the market.",
-                    seconds: 4.0
+                    caption: "Then someone left the gate open. Pig decided to explore the market."
                 ),
                 Shot(
                     picture: .welcomeMeadow,
-                    caption: "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can.",
-                    seconds: 5.4
+                    caption: "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can."
                 ),
                 Shot(
                     picture: .applesAndSkulls,
-                    caption: "More space means a better score. Apples improve the property. Skulls hurt the resale value.",
-                    seconds: 5.4
+                    caption: "More space means a better score. Apples improve the property. Skulls hurt the resale value."
                 ),
                 Shot(
                     picture: .closeTheFence,
-                    caption: "And close the fence. Pig has no respect for property lines.",
-                    seconds: 3.8
+                    caption: "And close the fence. Pig has no respect for property lines."
                 )
             ],
             start: start
@@ -251,18 +337,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .promisingLand,
-                    caption: "Pig found a promising piece of land. There was just one complication.",
-                    seconds: 4.2
+                    caption: "Pig found a promising piece of land. There was just one complication."
                 ),
                 Shot(
                     picture: .theResident,
-                    caption: "The current resident. Apparently this was not a vacant lot.",
-                    seconds: 3.8
+                    caption: "The current resident. Apparently this was not a vacant lot."
                 ),
                 Shot(
                     picture: .oneOrTwo,
-                    caption: "Fence in both Pig and the deer. One pen or two, whatever makes the floor plan work.",
-                    seconds: 5.0
+                    caption: "Fence in both Pig and the deer. One pen or two, whatever makes the floor plan work."
                 )
             ],
             start: start
@@ -281,18 +364,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .finishedPen,
-                    caption: "Mudlark Meadow had space. Good views. Plenty of apples.",
-                    seconds: 3.6
+                    caption: "Mudlark Meadow had space. Good views. Plenty of apples."
                 ),
                 Shot(
                     picture: .forestEdge,
-                    caption: "By all accounts, Pig should have been satisfied.",
-                    seconds: 3.2
+                    caption: "By all accounts, Pig should have been satisfied."
                 ),
                 Shot(
                     picture: .intoTheForest,
-                    caption: "Unfortunately, he'd started checking other listings.",
-                    seconds: 3.6
+                    caption: "Unfortunately, he'd started checking other listings."
                 )
             ],
             start: start

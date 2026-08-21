@@ -35,7 +35,7 @@ struct StorybookScene: Sendable {
         self.start = start
     }
 
-    /// One still: the motif held over the backdrop, the line over it, and how long it holds.
+    /// One still: the motif held over the backdrop, and the line over it.
     struct Shot: Equatable, Sendable, Identifiable {
         /// The big glyph the still is built around.
         let motif: String
@@ -45,7 +45,6 @@ struct StorybookScene: Sendable {
         /// Whether the line is the point of the still and set big in the middle, the way the
         /// meadow's hand-off shots are, rather than tucked along the bottom.
         let isCard: Bool
-        let seconds: TimeInterval
 
         var id: String { motif + caption }
 
@@ -53,14 +52,19 @@ struct StorybookScene: Sendable {
             motif: String,
             strewn: [String] = [],
             caption: String,
-            isCard: Bool = false,
-            seconds: TimeInterval
+            isCard: Bool = false
         ) {
             self.motif = motif
             self.strewn = strewn
             self.caption = caption
             self.isCard = isCard
-            self.seconds = seconds
+        }
+
+        /// How long the still is on screen — derived from its line at the shared reading pace,
+        /// the same as a painted shot, so a storybook line is read out a sentence at a time too.
+        var seconds: TimeInterval {
+            CutScene.captionDelay
+                + CutScene.sentences(of: caption).map(CutScene.sentenceWindow).reduce(0, +)
         }
     }
 
@@ -82,10 +86,8 @@ struct StorybookScene: Sendable {
             return min(max(seconds / shot.seconds, 0), 1)
         }
 
-        var captionOpacity: Double {
-            let arriving = (seconds - CutScene.captionDelay) / CutScene.captionFade
-            let leaving = (shot.seconds - seconds) / CutScene.captionFade
-            return min(max(min(arriving, leaving), 0), 1)
+        var caption: (sentence: String, opacity: Double) {
+            CutScene.caption(of: shot.caption, secondsIn: seconds)
         }
 
         var flash: Double {
@@ -150,21 +152,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌲", "🍂"],
-                    caption: "Thornwood Thicket. Secluded. Wooded. Very private.",
-                    seconds: 3.4
+                    caption: "Thornwood Thicket. Secluded. Wooded. Very private."
                 ),
                 Shot(
                     motif: "🍄",
                     strewn: ["🥀", "🌿"],
-                    caption: "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal.",
-                    seconds: 5.0
+                    caption: "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌲", "🍄"],
                     caption: "Pig was beginning to see himself as a country-estate sort of pig.",
-                    isCard: true,
-                    seconds: 4.2
+                    isCard: true
                 )
             ],
             start: start
@@ -181,21 +180,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐗",
                     strewn: ["🌲", "🍄"],
-                    caption: "Then Pig met the neighbor.",
-                    seconds: 2.2
+                    caption: "Then Pig met the neighbor."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🐗", "🌲"],
-                    caption: "They agreed immediately on one thing: separate units.",
-                    seconds: 3.6
+                    caption: "They agreed immediately on one thing: separate units."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🐗", "🍄"],
                     caption: "Fence in Pig and the boar separately. Shared walls are not permitted.",
-                    isCard: true,
-                    seconds: 4.4
+                    isCard: true
                 )
             ],
             start: start
@@ -213,21 +209,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🐗", "🌲"],
-                    caption: "Private. Peaceful. Spacious. Almost perfect.",
-                    seconds: 3.1
+                    caption: "Private. Peaceful. Spacious. Almost perfect."
                 ),
                 Shot(
                     motif: "🌋",
                     strewn: ["🌲", "✨"],
-                    caption: "Then Pig spotted a listing with spectacular mountain views.",
-                    seconds: 3.9
+                    caption: "Then Pig spotted a listing with spectacular mountain views."
                 ),
                 Shot(
                     motif: "🌋",
                     strewn: ["🌲", "🔥"],
                     caption: "The description did not mention the volcano.",
-                    isCard: true,
-                    seconds: 3.1
+                    isCard: true
                 )
             ],
             start: start
@@ -249,21 +242,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌋", "🪨"],
-                    caption: "Welcome to Emberpeak. Dramatic views. Naturally heated.",
-                    seconds: 3.7
+                    caption: "Welcome to Emberpeak. Dramatic views. Naturally heated."
                 ),
                 Shot(
                     motif: "🌰",
                     strewn: ["🔥", "🪨"],
-                    caption: "Chestnuts are a nice perk. Open flames are a maintenance concern.",
-                    seconds: 4.2
+                    caption: "Chestnuts are a nice perk. Open flames are a maintenance concern."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌋", "🌫️"],
                     caption: "Pig was willing to overlook a few issues for the right property.",
-                    isCard: true,
-                    seconds: 4.2
+                    isCard: true
                 )
             ],
             start: start
@@ -280,21 +270,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐉",
                     strewn: ["🌋", "🔥"],
-                    caption: "The seller had disclosed some local wildlife. They had undersold it.",
-                    seconds: 4.3
+                    caption: "The seller had disclosed some local wildlife. They had undersold it."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🐉", "🪨"],
-                    caption: "This neighbor will not be joining the homeowners association.",
-                    seconds: 4.0
+                    caption: "This neighbor will not be joining the homeowners association."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🐉", "🌋"],
                     caption: "Fence in Pig. Keep the wyrm out. Very, very out.",
-                    isCard: true,
-                    seconds: 3.3
+                    isCard: true
                 )
             ],
             start: start
@@ -311,21 +298,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌋", "🔥"],
-                    caption: "The views were excellent. The heating bill was unbeatable.",
-                    seconds: 3.8
+                    caption: "The views were excellent. The heating bill was unbeatable."
                 ),
                 Shot(
                     motif: "🏙️",
                     strewn: ["🌋", "✨"],
-                    caption: "Still, Pig wondered if city living might be more fun.",
-                    seconds: 3.6
+                    caption: "Still, Pig wondered if city living might be more fun."
                 ),
                 Shot(
                     motif: "🏙️",
                     strewn: ["✨", "🌫️"],
                     caption: "At least cities had building codes. Probably.",
-                    isCard: true,
-                    seconds: 3.2
+                    isCard: true
                 )
             ],
             start: start
@@ -347,21 +331,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🏙️", "🧱"],
-                    caption: "Cogsworth City. Walkable. Vibrant. Close to everything.",
-                    seconds: 3.7
+                    caption: "Cogsworth City. Walkable. Vibrant. Close to everything."
                 ),
                 Shot(
                     motif: "🥧",
                     strewn: ["🕳️", "🧱"],
-                    caption: "Fresh pie nearby adds value. Mystery drains do not.",
-                    seconds: 3.5
+                    caption: "Fresh pie nearby adds value. Mystery drains do not."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🏙️", "🪟"],
                     caption: "Pig could get used to city living.",
-                    isCard: true,
-                    seconds: 2.6
+                    isCard: true
                 )
             ],
             start: start
@@ -378,21 +359,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐀",
                     strewn: ["🏙️", "🕳️"],
-                    caption: "The apartment came with a roommate.",
-                    seconds: 2.7
+                    caption: "The apartment came with a roommate."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🐀", "🧱"],
-                    caption: "The rat was not leaving. The rat had never considered leaving.",
-                    seconds: 4.0
+                    caption: "The rat was not leaving. The rat had never considered leaving."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🐀", "🏙️"],
                     caption: "Fence them in together. Sometimes real estate is about compromise.",
-                    isCard: true,
-                    seconds: 4.2
+                    isCard: true
                 )
             ],
             start: start
@@ -409,21 +387,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🐀", "🏙️"],
-                    caption: "Great food. Excellent location. Minor rodent situation.",
-                    seconds: 3.7
+                    caption: "Great food. Excellent location. Minor rodent situation."
                 ),
                 Shot(
                     motif: "🌟",
                     strewn: ["🏙️", "✨"],
-                    caption: "Pig began wondering how far he'd have to go for truly quiet neighbors.",
-                    seconds: 4.4
+                    caption: "Pig began wondering how far he'd have to go for truly quiet neighbors."
                 ),
                 Shot(
                     motif: "🌌",
                     strewn: ["✨", "🌟"],
                     caption: "Quite far, apparently.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -445,21 +420,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌌", "✨"],
-                    caption: "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes.",
-                    seconds: 4.2
+                    caption: "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes."
                 ),
                 Shot(
                     motif: "🌟",
                     strewn: ["☄️", "🌑"],
-                    caption: "Stars add a little sparkle. Meteor damage is not covered.",
-                    seconds: 3.8
+                    caption: "Stars add a little sparkle. Meteor damage is not covered."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌌", "✨"],
                     caption: "Finally. No neighbors.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -476,21 +448,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🛸",
                     strewn: ["🌌", "🌟"],
-                    caption: "There were neighbors.",
-                    seconds: 2.2
+                    caption: "There were neighbors."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🛸", "✨"],
-                    caption: "Fortunately, both parties valued personal space. And fairness.",
-                    seconds: 4.0
+                    caption: "Fortunately, both parties valued personal space. And fairness."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🛸", "🌌"],
                     caption: "Build two separate pens. They must be exactly the same size. Equal square footage. No exceptions.",
-                    isCard: true,
-                    seconds: 5.8
+                    isCard: true
                 )
             ],
             start: start
@@ -508,21 +477,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🛸", "🌟"],
-                    caption: "Remote. Spacious. Peaceful. Mostly.",
-                    seconds: 2.7
+                    caption: "Remote. Spacious. Peaceful. Mostly."
                 ),
                 Shot(
                     motif: "🕳️",
                     strewn: ["🌌", "✨"],
-                    caption: "Then Pig found something listed below market.",
-                    seconds: 3.2
+                    caption: "Then Pig found something listed below market."
                 ),
                 Shot(
                     motif: "🕳️",
                     strewn: ["🌑", "✨"],
                     caption: "Very far below market.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -544,21 +510,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🕳️", "💎"],
-                    caption: "Gloamdeep Caverns. Quiet. Private. No upstairs neighbors.",
-                    seconds: 3.8
+                    caption: "Gloamdeep Caverns. Quiet. Private. No upstairs neighbors."
                 ),
                 Shot(
                     motif: "💎",
                     strewn: ["🪨", "💧"],
-                    caption: "Excellent mineral rights. Some structural concerns.",
-                    seconds: 3.5
+                    caption: "Excellent mineral rights. Some structural concerns."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🕳️", "🪨"],
                     caption: "Natural light was admittedly limited.",
-                    isCard: true,
-                    seconds: 2.8
+                    isCard: true
                 )
             ],
             start: start
@@ -575,21 +538,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🦇",
                     strewn: ["🕳️", "💎"],
-                    caption: "The property was already occupied. Twice.",
-                    seconds: 3.0
+                    caption: "The property was already occupied. Twice."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦇", "🪨"],
-                    caption: "The bats were happy to share. Pig was not.",
-                    seconds: 3.0
+                    caption: "The bats were happy to share. Pig was not."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦇", "💎"],
                     caption: "Pig gets his own pen. Both bats share the other. Everyone gets the arrangement they deserve.",
-                    isCard: true,
-                    seconds: 5.5
+                    isCard: true
                 )
             ],
             start: start
@@ -607,21 +567,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🦇", "💎"],
-                    caption: "Affordable. Quiet. Extremely dark.",
-                    seconds: 2.6
+                    caption: "Affordable. Quiet. Extremely dark."
                 ),
                 Shot(
                     motif: "🎪",
                     strewn: ["💎", "✨"],
-                    caption: "Then Pig saw somewhere with better lighting.",
-                    seconds: 3.1
+                    caption: "Then Pig saw somewhere with better lighting."
                 ),
                 Shot(
                     motif: "🎪",
                     strewn: ["🍭", "✨"],
                     caption: "Much, much better lighting.",
-                    isCard: true,
-                    seconds: 2.3
+                    isCard: true
                 )
             ],
             start: start
@@ -643,21 +600,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🎪", "🍭"],
-                    caption: "Lantern Carnival. Colorful. Exciting. Amenities everywhere.",
-                    seconds: 3.9
+                    caption: "Lantern Carnival. Colorful. Exciting. Amenities everywhere."
                 ),
                 Shot(
                     motif: "🍭",
                     strewn: ["🪢", "🎡"],
-                    caption: "Lollipops sweeten the deal. Knots mean there are strings attached.",
-                    seconds: 4.2
+                    caption: "Lollipops sweeten the deal. Knots mean there are strings attached."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🎪", "🎡"],
                     caption: "It was certainly more lively than the cave.",
-                    isCard: true,
-                    seconds: 3.1
+                    isCard: true
                 )
             ],
             start: start
@@ -674,21 +628,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🤹",
                     strewn: ["🎪", "👥"],
-                    caption: "Then Pig met management.",
-                    seconds: 2.2
+                    caption: "Then Pig met management."
                 ),
                 Shot(
                     motif: "🤹",
                     strewn: ["🎪", "🍭"],
-                    caption: "The ringmaster stays in the center ring. He also requires a generous setback.",
-                    seconds: 4.8
+                    caption: "The ringmaster stays in the center ring. He also requires a generous setback."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🤹", "🎪"],
                     caption: "Fence in Pig, the ringmaster, and his ring. But don't let your fence touch the ring. Apparently it's in the lease.",
-                    isCard: true,
-                    seconds: 6.6
+                    isCard: true
                 )
             ],
             start: start
@@ -705,21 +656,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🎪", "🍭"],
-                    caption: "Food. Entertainment. Nightlife. Constant nightlife.",
-                    seconds: 3.5
+                    caption: "Food. Entertainment. Nightlife. Constant nightlife."
                 ),
                 Shot(
                     motif: "🏜️",
                     strewn: ["🎪", "✨"],
-                    caption: "Pig decided he wanted somewhere peaceful.",
-                    seconds: 3.0
+                    caption: "Pig decided he wanted somewhere peaceful."
                 ),
                 Shot(
                     motif: "🏜️",
                     strewn: ["🌵", "☀️"],
                     caption: "He may have overcorrected.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -741,21 +689,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🏜️", "☀️"],
-                    caption: "Sunbaked Dunes. Quiet. Open. Miles from the nearest neighbor.",
-                    seconds: 4.0
+                    caption: "Sunbaked Dunes. Quiet. Open. Miles from the nearest neighbor."
                 ),
                 Shot(
                     motif: "🍈",
                     strewn: ["🌵", "🏜️"],
-                    caption: "Melons are a welcome amenity. Cacti lower the walkability score.",
-                    seconds: 4.2
+                    caption: "Melons are a welcome amenity. Cacti lower the walkability score."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🏜️", "🦴"],
                     caption: "The lot was enormous. Shade was sold separately.",
-                    isCard: true,
-                    seconds: 3.3
+                    isCard: true
                 )
             ],
             start: start
@@ -772,21 +717,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🦂",
                     strewn: ["🏜️", "🌵"],
-                    caption: "Pig finally met the nearest neighbor.",
-                    seconds: 2.8
+                    caption: "Pig finally met the nearest neighbor."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦂", "🏜️"],
-                    caption: "Both parties requested a little distance.",
-                    seconds: 3.0
+                    caption: "Both parties requested a little distance."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦂", "🌵"],
                     caption: "Build separate pens. And don't let them share a fence. Good fences make good neighbors. Better gaps make better ones.",
-                    isCard: true,
-                    seconds: 6.8
+                    isCard: true
                 )
             ],
             start: start
@@ -803,21 +745,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🦂", "🏜️"],
-                    caption: "Tons of space. Very low humidity.",
-                    seconds: 2.6
+                    caption: "Tons of space. Very low humidity."
                 ),
                 Shot(
                     motif: "🌊",
                     strewn: ["🏜️", "☀️"],
-                    caption: "Pig suddenly understood the appeal of waterfront property.",
-                    seconds: 3.8
+                    caption: "Pig suddenly understood the appeal of waterfront property."
                 ),
                 Shot(
                     motif: "🌊",
                     strewn: ["🐚", "🌊"],
                     caption: "What could go wrong?",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -839,21 +778,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌊", "🐚"],
-                    caption: "Tidepool Cove. Ocean views. Fresh air. Prime waterfront.",
-                    seconds: 3.7
+                    caption: "Tidepool Cove. Ocean views. Fresh air. Prime waterfront."
                 ),
                 Shot(
                     motif: "🐚",
                     strewn: ["🪼", "🌊"],
-                    caption: "Seashells add coastal charm. Jellyfish complicate the inspection.",
-                    seconds: 4.2
+                    caption: "Seashells add coastal charm. Jellyfish complicate the inspection."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌊", "🐚"],
                     caption: "Pig was ready to put in an offer.",
-                    isCard: true,
-                    seconds: 2.6
+                    isCard: true
                 )
             ],
             start: start
@@ -870,21 +806,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🦀",
                     strewn: ["🌊", "🐚"],
-                    caption: "Then Pig discovered a small easement issue.",
-                    seconds: 3.1
+                    caption: "Then Pig discovered a small easement issue."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦀", "🌊"],
-                    caption: "The crab already had property inside the property. Naturally.",
-                    seconds: 4.0
+                    caption: "The crab already had property inside the property. Naturally."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦀", "🐚"],
                     caption: "Put the crab in its own pen. Then put that pen inside Pig's. And keep the fences apart. It's less a floor plan and more a legal arrangement.",
-                    isCard: true,
-                    seconds: 7.9
+                    isCard: true
                 )
             ],
             start: start
@@ -902,21 +835,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🦀", "🐚"],
-                    caption: "Beautiful views. Excellent beach access. Complicated title history.",
-                    seconds: 4.3
+                    caption: "Beautiful views. Excellent beach access. Complicated title history."
                 ),
                 Shot(
                     motif: "❄️",
                     strewn: ["🌊", "🐚"],
-                    caption: "Pig wondered if somewhere cooler might be nice.",
-                    seconds: 3.3
+                    caption: "Pig wondered if somewhere cooler might be nice."
                 ),
                 Shot(
                     motif: "❄️",
                     strewn: ["🧊", "❄️"],
                     caption: "Again, he overcorrected.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -938,21 +868,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["❄️", "🌨️"],
-                    caption: "Frostwhisker Tundra. Quiet. Scenic. Excellent natural refrigeration.",
-                    seconds: 4.3
+                    caption: "Frostwhisker Tundra. Quiet. Scenic. Excellent natural refrigeration."
                 ),
                 Shot(
                     motif: "🐟",
                     strewn: ["🧊", "❄️"],
-                    caption: "Fish are highly desirable. More ice is not.",
-                    seconds: 3.1
+                    caption: "Fish are highly desirable. More ice is not."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["❄️", "🧊"],
                     caption: "Pig had wanted cooler. Technically, he'd succeeded.",
-                    isCard: true,
-                    seconds: 3.5
+                    isCard: true
                 )
             ],
             start: start
@@ -969,21 +896,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🦭",
                     strewn: ["❄️", "🌊"],
-                    caption: "The waterfront came with a resident.",
-                    seconds: 2.7
+                    caption: "The waterfront came with a resident."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦭", "❄️"],
-                    caption: "The seal wanted its own place. With water access. Non-negotiable.",
-                    seconds: 4.2
+                    caption: "The seal wanted its own place. With water access. Non-negotiable."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦭", "🌊"],
                     caption: "Build separate pens. The seal's pen must border the water. Location, location, location.",
-                    isCard: true,
-                    seconds: 5.4
+                    isCard: true
                 )
             ],
             start: start
@@ -1000,21 +924,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🦭", "❄️"],
-                    caption: "Quiet. Beautiful. Very cool. Far too cool.",
-                    seconds: 3.0
+                    caption: "Quiet. Beautiful. Very cool. Far too cool."
                 ),
                 Shot(
                     motif: "🌿",
                     strewn: ["❄️", "🌫️"],
-                    caption: "Pig decided to try somewhere with less ice.",
-                    seconds: 3.1
+                    caption: "Pig decided to try somewhere with less ice."
                 ),
                 Shot(
                     motif: "🌿",
                     strewn: ["🐊", "🌿"],
                     caption: "Much less.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
@@ -1036,21 +957,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌿", "🌫️"],
-                    caption: "Mirebog Fen. Waterfront property in every direction.",
-                    seconds: 3.5
+                    caption: "Mirebog Fen. Waterfront property in every direction."
                 ),
                 Shot(
                     motif: "🫐",
                     strewn: ["🪵", "🌿"],
-                    caption: "Blueberries are a pleasant surprise. Logs are a tripping hazard.",
-                    seconds: 4.2
+                    caption: "Blueberries are a pleasant surprise. Logs are a tripping hazard."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌿", "🌫️"],
                     caption: "The listing described it as \"lush.\" That was generous.",
-                    isCard: true,
-                    seconds: 3.6
+                    isCard: true
                 )
             ],
             start: start
@@ -1067,21 +985,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐊",
                     strewn: ["🌿", "🌊"],
-                    caption: "There was also a pool. And a pool owner.",
-                    seconds: 2.9
+                    caption: "There was also a pool. And a pool owner."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🐊", "🌿"],
-                    caption: "The crocodile wanted the entire thing. Pig had no objections.",
-                    seconds: 4.0
+                    caption: "The crocodile wanted the entire thing. Pig had no objections."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🐊", "🌿"],
                     caption: "Build separate pens. The crocodile's pen must surround the whole body of water. And don't put the fence right on the shoreline. Even crocodiles have setback requirements.",
-                    isCard: true,
-                    seconds: 9.4
+                    isCard: true
                 )
             ],
             start: start
@@ -1098,21 +1013,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🐊", "🌿"],
-                    caption: "Very green. Very wet.",
-                    seconds: 2.2
+                    caption: "Very green. Very wet."
                 ),
                 Shot(
                     motif: "☁️",
                     strewn: ["🌿", "🌫️"],
-                    caption: "Pig decided his next home should be as far from water as possible.",
-                    seconds: 4.2
+                    caption: "Pig decided his next home should be as far from water as possible."
                 ),
                 Shot(
                     motif: "☁️",
                     strewn: ["🦅", "☁️"],
                     caption: "There was really only one direction left.",
-                    isCard: true,
-                    seconds: 3.0
+                    isCard: true
                 )
             ],
             start: start
@@ -1134,21 +1046,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["☁️", "💨"],
-                    caption: "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk.",
-                    seconds: 4.5
+                    caption: "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk."
                 ),
                 Shot(
                     motif: "🎈",
                     strewn: ["🌪️", "☁️"],
-                    caption: "Balloons add charm. Twisters affect the insurance premium.",
-                    seconds: 3.8
+                    caption: "Balloons add charm. Twisters affect the insurance premium."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["☁️", "🎈"],
                     caption: "Pig's property search had officially left the ground.",
-                    isCard: true,
-                    seconds: 3.6
+                    isCard: true
                 )
             ],
             start: start
@@ -1165,21 +1074,18 @@ extension StorybookScene {
                 Shot(
                     motif: "🦅",
                     strewn: ["☁️", "💨"],
-                    caption: "Unfortunately, the neighborhood had very strict oversight.",
-                    seconds: 3.8
+                    caption: "Unfortunately, the neighborhood had very strict oversight."
                 ),
                 Shot(
                     motif: "🦅",
                     strewn: ["☁️", "🐷"],
-                    caption: "The eagle sees everything directly above, below, and beside it. Everything.",
-                    seconds: 4.7
+                    caption: "The eagle sees everything directly above, below, and beside it. Everything."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦅", "☁️"],
                     caption: "Fence in Pig. Keep every piece of fence out of the eagle's line of sight. The homeowners association is watching.",
-                    isCard: true,
-                    seconds: 6.6
+                    isCard: true
                 )
             ],
             start: start
@@ -1197,45 +1103,38 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["☁️", "🌈"],
-                    caption: "And that was it. Pig had toured every market imaginable.",
-                    seconds: 3.7
+                    caption: "And that was it. Pig had toured every market imaginable."
                 ),
                 Shot(
                     motif: "🦌",
                     strewn: ["🐗", "🐉", "🛸"],
-                    caption: "He'd met some interesting neighbors. Very interesting neighbors.",
-                    seconds: 4.2
+                    caption: "He'd met some interesting neighbors. Very interesting neighbors."
                 ),
                 Shot(
                     motif: "🏡",
                     strewn: ["🚧", "🐷"],
-                    caption: "After all that, Pig finally knew exactly what he wanted.",
-                    seconds: 3.7
+                    caption: "After all that, Pig finally knew exactly what he wanted."
                 ),
                 Shot(
                     motif: "🌈",
                     strewn: ["🐷", "🍎"],
-                    caption: "More space. Good snacks. No surprises. The perfect pen.",
-                    seconds: 3.7
+                    caption: "More space. Good snacks. No surprises. The perfect pen."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌈", "🦌"],
-                    caption: "There was just one problem.",
-                    seconds: 2.3
+                    caption: "There was just one problem."
                 ),
                 Shot(
                     motif: "🦅",
                     strewn: ["🐊", "🦂", "🦀"],
-                    caption: "Apparently the listing had excellent word of mouth.",
-                    seconds: 3.5
+                    caption: "Apparently the listing had excellent word of mouth."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌈", "🦌", "🐗"],
                     caption: "Open house was a mistake.",
-                    isCard: true,
-                    seconds: 2.2
+                    isCard: true
                 )
             ],
             start: start
