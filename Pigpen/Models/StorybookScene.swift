@@ -45,6 +45,13 @@ struct StorybookScene: Sendable {
         /// Whether the line is the point of the still and set big in the middle, the way the
         /// meadow's hand-off shots are, rather than tucked along the bottom.
         let isCard: Bool
+        /// Glyphs ringed around the motif rather than strewn behind it, popping in one at a time
+        /// as the shot runs. The game's last film gathers every world's boss round the pig this
+        /// way, so the whole cast is on screen at once rather than a few scattered behind it.
+        let crowd: [String]
+        /// A painted meadow picture to draw in place of the emoji motif, for a still that wants
+        /// the hand-drawn art rather than a glyph. The finale reaches back to `.homePen` with it.
+        let painting: CutScene.Picture?
 
         var id: String { motif + caption }
 
@@ -52,26 +59,32 @@ struct StorybookScene: Sendable {
             motif: String,
             strewn: [String] = [],
             caption: String,
-            isCard: Bool = false
+            isCard: Bool = false,
+            crowd: [String] = [],
+            painting: CutScene.Picture? = nil
         ) {
             self.motif = motif
             self.strewn = strewn
             self.caption = caption
             self.isCard = isCard
-        }
-
-        /// How long the still is on screen — derived from its line at the shared reading pace,
-        /// the same as a painted shot, so a storybook line is read out a sentence at a time too.
-        var seconds: TimeInterval {
-            CutScene.captionDelay
-                + CutScene.sentences(of: caption).map(CutScene.sentenceWindow).reduce(0, +)
+            self.crowd = crowd
+            self.painting = painting
         }
     }
 
     // MARK: - Timing
 
-    /// How long the whole film runs.
-    var runtime: TimeInterval { shots.reduce(0) { $0 + $1.seconds } }
+    /// How long the whole film runs, with the first and last stills carrying the film's slower
+    /// framing sentences, the same as a painted film.
+    var runtime: TimeInterval {
+        shots.indices.reduce(0) { total, index in
+            total + CutScene.shotSeconds(
+                of: shots[index].caption,
+                slowFirst: index == 0,
+                slowLast: index == shots.count - 1
+            )
+        }
+    }
 
     /// What is on screen one moment in: which still, where it comes, and how long it has held —
     /// which is what the caption and the cut flash are timed off. The same shape as a
@@ -80,14 +93,21 @@ struct StorybookScene: Sendable {
         let index: Int
         let shot: Shot
         let seconds: TimeInterval
+        let slowFirst: Bool
+        let slowLast: Bool
+
+        var shotSeconds: TimeInterval {
+            CutScene.shotSeconds(of: shot.caption, slowFirst: slowFirst, slowLast: slowLast)
+        }
 
         var progress: Double {
-            guard shot.seconds > 0 else { return 1 }
-            return min(max(seconds / shot.seconds, 0), 1)
+            let length = shotSeconds
+            guard length > 0 else { return 1 }
+            return min(max(seconds / length, 0), 1)
         }
 
         var caption: (sentence: String, opacity: Double) {
-            CutScene.caption(of: shot.caption, secondsIn: seconds)
+            CutScene.caption(of: shot.caption, secondsIn: seconds, slowFirst: slowFirst, slowLast: slowLast)
         }
 
         var flash: Double {
@@ -97,16 +117,22 @@ struct StorybookScene: Sendable {
 
     /// The still on screen `elapsed` seconds in, or nothing once the film has run out.
     func frame(secondsIn elapsed: TimeInterval) -> Frame? {
+        let lastIndex = shots.count - 1
         guard elapsed > 0 else {
-            return shots.first.map { Frame(index: 0, shot: $0, seconds: 0) }
+            return shots.first.map {
+                Frame(index: 0, shot: $0, seconds: 0, slowFirst: true, slowLast: lastIndex == 0)
+            }
         }
 
         var left = elapsed
         for (index, shot) in shots.enumerated() {
-            if left < shot.seconds {
-                return Frame(index: index, shot: shot, seconds: left)
+            let slowFirst = index == 0
+            let slowLast = index == lastIndex
+            let length = CutScene.shotSeconds(of: shot.caption, slowFirst: slowFirst, slowLast: slowLast)
+            if left < length {
+                return Frame(index: index, shot: shot, seconds: left, slowFirst: slowFirst, slowLast: slowLast)
             }
-            left -= shot.seconds
+            left -= length
         }
         return nil
     }
@@ -1095,7 +1121,9 @@ extension StorybookScene {
     /// The last film in the game. Pig has toured every market, meets every neighbour again, and comes
     /// home to build the one perfect pen — right before the open house goes very wrong.
     static func cloudspireHeld(start: Date = .now) -> Self {
-        Self(
+        // Every world's boss, in the order the pig met them, gathered round him at the end.
+        let bosses = ["🦌", "🐗", "🐉", "🐀", "🛸", "🦇", "🤹", "🦂", "🦀", "🦭", "🐊", "🦅"]
+        return Self(
             key: "cloudspire-held",
             title: "Cloudspire Heights held",
             light: .spireDusk,
@@ -1106,14 +1134,17 @@ extension StorybookScene {
                     caption: "And that was it. Pig had toured every market imaginable."
                 ),
                 Shot(
-                    motif: "🦌",
-                    strewn: ["🐗", "🐉", "🛸"],
-                    caption: "He'd met some interesting neighbors. Very interesting neighbors."
+                    motif: "🐷",
+                    strewn: ["☁️"],
+                    caption: "He'd met some interesting neighbors. Very interesting neighbors.",
+                    crowd: bosses
                 ),
+                // Back to the very first shot of the very first film: the poky farm pen, painted
+                // exactly as the opening painted it, so the ending returns to where it began.
                 Shot(
-                    motif: "🏡",
-                    strewn: ["🚧", "🐷"],
-                    caption: "After all that, Pig finally knew exactly what he wanted."
+                    motif: "🐷",
+                    caption: "After all that, Pig finally knew exactly what he wanted.",
+                    painting: .homePen
                 ),
                 Shot(
                     motif: "🌈",
@@ -1122,19 +1153,22 @@ extension StorybookScene {
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["🌈", "🦌"],
-                    caption: "There was just one problem."
-                ),
-                Shot(
-                    motif: "🦅",
-                    strewn: ["🐊", "🦂", "🦀"],
-                    caption: "Apparently the listing had excellent word of mouth."
+                    strewn: ["🌈"],
+                    caption: "There was just one problem.",
+                    crowd: bosses
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["🌈", "🦌", "🐗"],
+                    strewn: ["☁️"],
+                    caption: "Apparently the listing had excellent word of mouth.",
+                    crowd: bosses
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["☁️"],
                     caption: "Open house was a mistake.",
-                    isCard: true
+                    isCard: true,
+                    crowd: bosses
                 )
             ],
             start: start
