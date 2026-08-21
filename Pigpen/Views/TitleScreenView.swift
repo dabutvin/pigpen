@@ -58,6 +58,11 @@ struct TitleScreenView: View {
     /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
     /// held — never on the way in, when the player has nothing yet to be reminded about.
     @State private var isOfferingReminders = false
+    /// When the game asks what a player thinks of it. It lives here for the same reason the
+    /// reminder does: every road out of a puzzle comes back through this screen, so this is
+    /// where a player is standing the moment after they have done something worth asking about
+    /// — and the one place the ask can be made over nothing at all.
+    private let rating: RatingPrompt
     /// Which square of the calendar the game is standing on. Read once when the screen
     /// arrives rather than on every redraw, so the card cannot change under a finger — and
     /// read again every time the screen comes back, which is what carries a player over
@@ -84,6 +89,10 @@ struct TitleScreenView: View {
     ///   - taps: Where tapped reminders are written down. The shared one the phone writes
     ///     into, save where a preview or a test wants a tap of its own without one having to
     ///     arrive on the machine.
+    ///   - rating: When the game may ask what the player thinks of it. Handed in by the
+    ///     screenshot runs, which open onto a player with a world held and a fortnight of days
+    ///     behind them — exactly the standing the prompt watches for — and must never put
+    ///     Apple's own prompt in the photograph.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
@@ -92,7 +101,8 @@ struct TitleScreenView: View {
         showsSettings: Bool = false,
         showsReminderPrompt: Bool = false,
         taps: TappedReminder = .shared,
-        fullGame: FullGame = .shared
+        fullGame: FullGame = .shared,
+        rating: RatingPrompt = .shared
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
@@ -103,6 +113,7 @@ struct TitleScreenView: View {
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
         self.taps = taps
         self.fullGame = fullGame
+        self.rating = rating
     }
 
     private var world: WorldMap { progress.world }
@@ -236,7 +247,13 @@ struct TitleScreenView: View {
             // and keeps.
             answerAnyTappedReminder()
             raiseTheCurtain()
-            Task { await keepTheRemindersTrue() }
+            // One after the other rather than side by side: the reminder's offer is the rarer
+            // of the two and gets first refusal on the moment, and the rating prompt below
+            // stands down for the visit if it went up.
+            Task {
+                await keepTheRemindersTrue()
+                askForARatingIfItIsDue()
+            }
         }
         // And a tap that arrives afterwards — the notification centre hands a cold launch's
         // tap over a moment after the first screen is up, and hands a backgrounded game's
@@ -320,6 +337,31 @@ struct TitleScreenView: View {
         showsSettings = false
         isOfferingReminders = false
         open(day)
+    }
+
+    // MARK: - Being rated
+
+    /// Puts what the player has to show for themselves in front of the rating prompt, which
+    /// decides whether any of it is worth asking about — see `RatingPrompt`, which holds the
+    /// whole of that decision and every reason for it.
+    ///
+    /// What this screen owns is the *where*: the title screen, at rest, with the board finished
+    /// and the map behind them. Apple's prompt cannot be taken back down and cannot be aimed,
+    /// so it must never arrive over something a player is in the middle of — and it must never
+    /// arrive over the one sheet that offers the morning reminder, which is a question the game
+    /// gets asked once ever and this one is not.
+    ///
+    /// A visit with anything up is left alone entirely rather than merely kept quiet: the
+    /// prompt writes down what it has looked at, so looking now would spend the moment on a
+    /// screen that could not have shown anything.
+    private func askForARatingIfItIsDue() {
+        guard !isOfferingReminders, !progress.isTheTutorialDue, !isTutorial, !showsOpening,
+              !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
+        else { return }
+
+        let moment = rating.look(at: .read(from: progress, daily: daily, today: today))
+        guard let moment else { return }
+        Analytics.record(.ratingAsked(at: moment))
     }
 
     // MARK: - The bar across the top

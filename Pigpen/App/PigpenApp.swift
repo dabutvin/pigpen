@@ -32,7 +32,11 @@ struct PigpenApp: App {
     /// stag stands on the far shore of the mere and the best pen holds both animals in two
     /// enclosures at once. Settings opens over a world part-way through as well, and one
     /// held in memory: the clear button then has something to clear, and nothing saved on
-    /// the device to take with it.
+    /// the device to take with it. Every shot of the title screen is handed a rating prompt
+    /// held in memory for the same reason turned the other way round: these open onto a
+    /// player with a world held and a fortnight of days behind them, which is the very
+    /// standing the prompt watches for, and Apple's prompt cannot be asked to keep out of a
+    /// photograph once it is up.
     ///
     /// The films are shot a moment at a time rather than played, since a screenshot of
     /// something on a clock is a screenshot of whenever the runner happened to get round to
@@ -258,7 +262,8 @@ struct PigpenApp: App {
                 showsSettings: true,
                 // Locked with a price to show, so the settings shot carries the upgrade card
                 // as a player who has not bought it sees it, and nothing bought on the runner.
-                fullGame: .locked()
+                fullGame: .locked(),
+                rating: .neverAsked()
             )
         case .reminder:
             // The game's own offer of a daily reminder, over a fortnight of days with
@@ -274,7 +279,8 @@ struct PigpenApp: App {
                 ),
                 reminder: .neverAsked(),
                 today: Self.photographed,
-                showsReminderPrompt: true
+                showsReminderPrompt: true,
+                rating: .neverAsked()
             )
         case .titleFresh:
             // The title screen with nothing won on it. It takes an argument of its
@@ -284,7 +290,7 @@ struct PigpenApp: App {
             // as a photograph of the title screen. The world is held in memory and
             // its tutorial already spent, so the shot is the empty title screen
             // however much the runner played before it.
-            TitleScreenView(progress: .beforeTheFirstStar())
+            TitleScreenView(progress: .beforeTheFirstStar(), rating: .neverAsked())
         case .title:
             // Today complete as well as the fortnight behind it, since what there is to
             // see on the daily's row is the stars and the run of days that a day
@@ -295,7 +301,8 @@ struct PigpenApp: App {
                     today: Self.photographed,
                     includingToday: true
                 ),
-                today: Self.photographed
+                today: Self.photographed,
+                rating: .neverAsked()
             )
         }
     }

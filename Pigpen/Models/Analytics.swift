@@ -530,6 +530,24 @@ extension AnalyticsSignal {
     static func restoreFinished(restored: Bool) -> AnalyticsSignal {
         AnalyticsSignal("Store.restore", ["restored": String(restored)], value: restored ? 1 : 0)
     }
+
+    // MARK: Being rated
+
+    /// Apple's own rating prompt asked for, and the high point it was asked for on. Whether
+    /// the player saw anything is Apple's to decide and nothing on the phone will say — so
+    /// this counts the asking, which is the only half the game knows.
+    ///
+    /// The moment is the whole point of counting it. The game may ask three times a year at
+    /// the outside, so which of the three high points is doing the asking says where players
+    /// actually arrive at one — and a moment that never appears here is a bar set too high.
+    static func ratingAsked(at moment: RatingMoment) -> AnalyticsSignal {
+        AnalyticsSignal("Rating.asked", ["moment": moment.rawValue])
+    }
+
+    /// The listing opened from behind the gear. A different question from the prompt above:
+    /// that one is the game asking, and this is a player who went looking for the box to type
+    /// in — which is the only door that always opens, however spent the prompt's allowance is.
+    static let ratingPageOpened = AnalyticsSignal("Rating.pageOpened")
 }
 
 extension Refusal {

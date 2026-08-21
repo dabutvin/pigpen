@@ -1318,7 +1318,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Twenty-five signals, all of them written out in one place —
+**What goes out.** Thirty signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1340,11 +1340,15 @@ is filling in Apple's privacy questionnaire.
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
 | `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
+| `Store.offerShown` / `.purchase` / `.restore` | The offer of the full game, which wall raised it, and how the buying went |
+| `Rating.asked` | Apple's own rating prompt asked for, and which high point asked for it |
+| `Rating.pageOpened` | The listing opened from behind the gear by a player who went looking for it |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
 the wall, whether the dailies bring anybody back, whether the films are worth what they
-cost to draw, and how many players who accept a morning reminder are then let through by
-their phone.
+cost to draw, which of the three high points a rating actually gets asked for on — a
+moment that never appears there is a bar set too high — and how many players who accept a
+morning reminder are then let through by their phone.
 
 That last pair is why `Reminder.answered` carries the phone's answer as well as the
 player's. A game gets exactly one go at the system permission prompt, so the number worth
@@ -1395,6 +1399,68 @@ send somewhere overrides it on the command line:
 ```bash
 xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=your-app-id
 ```
+
+## Being rated
+
+An app with four ratings on its listing is one nobody can tell apart from an abandoned one, and
+a puzzle game whose players never say anything about it is a puzzle game nobody finds. So the
+game is allowed to ask what a player thinks of it. Once in a while, at the top of something, and
+never in its own words.
+
+- **Apple's prompt, and only Apple's.** *Guideline 5.6.1* says to use the provided API and that
+  custom review prompts are disallowed, so there is no `RatingPromptView` beside
+  `ReminderPromptView`. That is the exact opposite of the shape the morning reminder takes, and
+  for a good reason: the reminder asks in its own words first because the phone's permission
+  sheet is one-shot forever and raising it cold spends that one chance on somebody with nothing
+  yet to be reminded about. The rating prompt may not be dressed up at all, and it is shown
+  three times a year at the outside whatever the game does about it.
+- **On a high point.** Three of them, and each is something a player would recognise as having
+  just done rather than a count of launches or an hour on a clock: **a world held**, every pen
+  in it taken; **the best pen a map has in it**, once there are three of those rainbows, since
+  the first can come three minutes in on a map that gives one up easily; and **a week of daily
+  boards in a row**. A game that asks somebody who is losing what they think of it gets the
+  answer it asked for.
+- **On the moment, not the standing.** The game writes down the three marks every time it
+  looks, so a rise is a rise once. Somebody who held the meadow last month is not asked again
+  every time they come back to the title screen; somebody who held it on the way to this screen
+  is. A rise it has looked at and let go — during the quiet spell below, say — is a rise that
+  has had its chance, rather than one left standing to be cashed in the day the spell is up.
+- **Never on the way in.** A phone the game has never looked at has no marks written down at
+  all, so the first look writes them and asks nothing. That is what keeps a reinstall on a phone
+  that already has a world held, or an update from a version that kept none of this, from being
+  asked before the game has drawn twice.
+- **Never twice about one version, and never inside four months.** Apple allows three a year and
+  counts them itself; this is the game keeping well inside that rather than spending the
+  allowance on somebody who has already said their piece. The asking is written down *before*
+  the prompt is raised, because the phone may well show nothing — the allowance is spent, or
+  Apple simply decides not to — and says nothing either way. A game that waited to hear back
+  before writing anything down would ask again on the next high point, and the one after that,
+  on the strength of never having seen a thing.
+- **Never over anything.** It happens on the title screen at rest, with the board finished and
+  the map behind them — never over a puzzle, a film, the archive or the settings sheet, and
+  never over the one sheet that offers the morning reminder, which is a question the game gets
+  asked once ever and this one is not. A visit with any of that up is left alone entirely rather
+  than merely kept quiet, since looking at all would spend the moment on a screen that could not
+  have shown anything.
+- **And a door that always opens.** None of the above is any use to a player who has decided on
+  their own that they have something to say, so behind the gear there is a **Rate Pigpen** card
+  that goes straight to the listing with the review sheet open on it. It is not drawn until
+  there is a listing to open: the Apple ID is minted the day the app is created in App Store
+  Connect and cannot be guessed before then, and a button that opens nothing is worse than no
+  button — the same call the front page makes with its *Coming to the App Store* chip, in the
+  same state, for the same reason. Filling in `AppStoreListing.id` in
+  `Pigpen/Models/AppStoreReviews.swift` is what puts the card on the sheet.
+
+Having been asked is not game data: *Clear all game data* leaves the record standing, the same
+way it leaves the reminder's hour and the counting switch alone. A player who has been asked has
+been asked, and one who cleared their stars did not ask to be asked again.
+
+`RatingPromptTests` pins every one of those rules — which rises count, which are too small, what
+happens when two rise at once, and that a clock wound backwards leaves the game quiet rather
+than opening the gate. Apple's own prompt sits behind `ReviewRequester` throughout, so no test,
+preview or screenshot run can raise one on the machine it is running on; the title screen's
+shots are handed a prompt held in memory for that reason, since they open onto exactly the
+standing it watches for and a prompt cannot be asked to keep out of a photograph once it is up.
 
 ## The pages on the web
 
@@ -1466,10 +1532,13 @@ python3 -m http.server -d site 8000     # then open http://localhost:8000
 ```
 
 **Where the game points at them.** `SupportLinks` in `Pigpen/Models/SupportLinks.swift` holds
-the host and the two addresses, and nothing else in the app types a URL — moving the pages, or
-putting them on a different domain, is that one line. Behind the gear, *Help* opens the support
-page and prints the address in plain text underneath for a phone with no signal, and *Privacy*
-opens the policy from directly under the words that say what is counted. Both go out through
+the host and the two addresses, and nothing else in the app types one of these — moving the
+pages, or putting them on a different domain, is that one line. The game's own page on the App
+Store is the one address that is not here, since it belongs to Apple rather than to this
+repository: that one lives in `AppStoreListing`, waiting on the Apple ID it cannot be written
+without. Behind the gear, *Help* opens the support page and prints the address in plain text
+underneath for a phone with no signal, and *Privacy* opens the policy from directly under the
+words that say what is counted. Both go out through
 `Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks
 that both addresses are real HTTPS URLs on the host, that a file exists in `site/` for every
 page a button opens, that every page hands over the same email address the game prints, and
@@ -1486,6 +1555,11 @@ The pages are most of it, and the rest is the listing agreeing with them:
       and **Marketing URL** `https://pigpen.app`.
 - [ ] The front page says *Coming to the App Store*. Once the app is live, swap the chip for
       the App Store link — it is one line, marked in `index.html`.
+- [ ] Once App Store Connect has minted the Apple ID, put it in `AppStoreListing.id` in
+      `Pigpen/Models/AppStoreReviews.swift`. That one line is what puts the **Rate Pigpen**
+      card behind the gear; until it is filled in the card is not drawn, so there is no dead
+      button in the build either way. Apple's own rating prompt needs nothing of the sort —
+      it knows which app is asking — so it works from the first build and is not on this list.
 - [ ] App Store Connect → App Information → Contact: `support@pigpen.app`, and the same address
       in the App Review Information contact, where a reviewer will actually use it. The mailbox
       exists and somebody reads it.
@@ -1893,6 +1967,11 @@ Pigpen/
 │   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 │   ├── TappedReminder.swift     # Which morning a tapped reminder is asking for, until a screen is up to open it
+│   ├── FullGame.swift           # Whether the full game has been bought, and the one purchase that buys it
+│   ├── AppStoreStorefront.swift # The App Store on the other end of that purchase, in the one file that sells
+│   ├── RatingPrompt.swift       # When the game asks what a player thinks of it, and how rarely it may
+│   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
+│   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 │   └── SupportLinks.swift       # The support page, the privacy policy and the address behind them, in one place
@@ -1907,7 +1986,8 @@ Pigpen/
 │   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
 │   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
 │   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
-│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
+│   ├── FullGameOffer.swift      # The offer of the full game: what it opens, the price, the buy and the restore
+│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
