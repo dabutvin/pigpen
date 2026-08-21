@@ -18,28 +18,27 @@ struct CutScene: Equatable, Sendable {
     /// Named rather than left anonymous because the game has to remember which ones a
     /// player has already sat through — none of them is worth showing twice.
     ///
-    /// Between them they are the whole of the meadow's story: a gate left open on unfenced
-    /// country, the one field of that country which already belongs to something, and the
-    /// meadow made to hold — with another gate standing open somewhere else by the last
-    /// frame, which is what there is to go on for.
+    /// Between them they are the whole of the meadow's story, told in an estate agent's
+    /// voice: a pig who outgrew a poky farm pen and went looking for property, the meadow
+    /// he found and the resident he had to share it with, and the pig — housed at last, and
+    /// already reading other listings.
     ///
     /// The first of them carries the rules as well as the story, since a player who has
     /// watched it should know what a good pen is before they are handed a rack of fencing:
-    /// the pig is out, it would rather stay out, open country is no place for a pig, and the
-    /// answer is the biggest pen the fencing will reach round — shut, or it is no pen at all.
-    /// Big because the pig wants running about, not because big scores well; the score is
-    /// how the game keeps count of a pig with room to stretch its legs.
+    /// build the biggest pen the fencing will reach round, more space is a better score,
+    /// apples improve the property and skulls hurt its resale value — and close the fence,
+    /// because the pig has no respect for property lines.
     enum Name: String, Sendable, CaseIterable {
-        /// Before the first walk up the meadow: a pig, the open gate it came through, nine
-        /// fields of country with nothing in them to stop it, and the rule the whole game is
-        /// scored on — the biggest pen you can lay, so long as it is shut.
+        /// Before the first walk up the meadow: a pig who has outgrown his farm pen, the
+        /// open gate he leaves through, and the rules the whole game is scored on — biggest
+        /// pen wins, apples help, skulls hurt, and it only counts if the fence is shut.
         case opening
-        /// Before the meadow's last puzzle, which is the first with two animals on it —
-        /// because the last field of the meadow is the stag's, and fencing it has to leave
-        /// the stag its water rather than wall it off.
+        /// Before the meadow's last puzzle, which is the first with two animals on it: the
+        /// promising piece of land already has a resident, so the pig and the deer both have
+        /// to be fenced — one pen or two, whatever makes the floor plan work.
         case stagMere
-        /// After it, once every pen in the meadow is held: what all that fencing was for,
-        /// and the open gate somewhere else that is the reason to go on.
+        /// After it, once every pen in the meadow is held: the pig housed and comfortable,
+        /// and the dark forest at the meadow's edge that he has already started eyeing.
         case theMeadowHeld
     }
 
@@ -70,47 +69,44 @@ struct CutScene: Equatable, Sendable {
     enum Picture: Hashable, Sendable {
         // MARK: The opening
 
-        /// The meadow, wide, with the sun coming up over the far hills.
-        case firstLight
-        /// The barn, and the one gap in the fence that nobody shut.
+        /// The pig in a poky farm pen by the barn, stepping up to the fence and looking
+        /// thoroughly unimpressed with the square footage.
+        case homePen
+        /// The barn, and the one gap in the fence that nobody shut — the pig already through
+        /// it and off to explore the market.
         case theOpenGate
-        /// The pig, head on and filling the frame — the one the whole game is about.
-        case thePig
-        /// Gone, at a gallop, with the field streaking past it: what chasing it looks like,
-        /// and why the game is a fence rather than a chase.
-        case away
-        /// The pen a player is being asked for, marked out round the pig in dashes and
-        /// pushing out as far as the meadow will give it: the scoring rule, drawn rather
-        /// than written, since every tile a pen holds is a point — and every tile is
-        /// somewhere a shut-in pig can still run.
-        case theBiggestPen
-        /// The meadow again, with a run of fencing laid out along the front of it — shut,
-        /// which is the other half of the rule.
-        case fenceItIn
+        /// The meadow, with fence pieces popping up around the pig: the property, and the
+        /// rack of fencing a player is handed to build on it.
+        case welcomeMeadow
+        /// A shut pen round the pig with an apple inside it and a skull outside: the scoring
+        /// rule drawn rather than written — space scores, apples improve it, skulls hurt it.
+        case applesAndSkulls
+        /// One panel gone from the pen and the pig walking straight out through the gap: the
+        /// other half of the rule, and the pig's contempt for property lines.
+        case closeTheFence
 
         // MARK: Stag Mere
 
-        /// The mere, with an animal on either side of it.
-        case theMere
-        /// The stag, head on: the second thing the game ever asks anybody to hold, and the
-        /// one animal in the meadow that was there before the farm was.
-        case theStag
-        /// Both of them, with the pen each would take drawn round them in dashes.
-        case bothOrNeither
+        /// The meadow, with a deer walking into frame behind the pig: a promising piece of
+        /// land, and the one complication on it.
+        case promisingLand
+        /// The pig and the deer looking at each other across the grass: the current
+        /// resident, and the discovery that this was not a vacant lot.
+        case theResident
+        /// Both animals with a single pen outline round them that splits into two: fence in
+        /// both of them, one pen or two, whatever makes the floor plan work.
+        case oneOrTwo
 
         // MARK: The meadow held
 
-        /// Both animals shut in, on ground washed gold.
-        case bothPenned
-        /// The stag alone in the meadow, and the trail out of it: it was let go, and it is
-        /// staying on the water it always had.
-        case theStagStays
-        /// The whole meadow at once: the trail, its stops, the barn and the mere.
-        case theWholeMeadow
-        /// The meadow from further out than that — a world, with a stag stood on it.
-        case theMeadowFromOut
-        /// And another one out past it, coming alight: the next gate standing open.
-        case somewhereElse
+        /// The pig stood comfortable in the finished meadow pen: space, good views, plenty
+        /// of apples.
+        case finishedPen
+        /// The pig turned toward a dark forest at the edge of the meadow — the thing he
+        /// should have been satisfied without.
+        case forestEdge
+        /// The pig walking off toward the forest: he has started checking other listings.
+        case intoTheForest
     }
 
     // MARK: - Timing
@@ -195,44 +191,46 @@ struct CutScene: Equatable, Sendable {
 extension CutScene {
     /// Before the first walk up the meadow.
     ///
-    /// Six shots, and between them the reason the game is nine puzzles rather than one and
-    /// the rule every one of them is scored on: the meadow with no fence anywhere in it,
-    /// the gate somebody left open, the pig and what it wants, the pig at a gallop with the
-    /// line that says chasing it is not going to work, the pen a player is being asked for
-    /// pushing out as far as it will go, and the fencing that shuts it.
+    /// Five shots, and between them the reason the pig left home and the rule every puzzle
+    /// in the game is scored on, all told in an estate agent's patter: the poky farm pen the
+    /// pig outgrew, the gate somebody left open, the meadow with a rack of fencing to build
+    /// on, the shut pen with an apple improving it and a skull hurting it, and the pig
+    /// walking straight back out through a gap in the fence.
     ///
-    /// The last two shots are the briefing the game never otherwise gives. A player who
-    /// watches the film knows what got out, why the job is the meadow rather than the
-    /// animal, and — before a single piece is in the ground — that a pen is worth what it
-    /// holds and worth nothing at all with a gap left in it.
-    ///
-    /// *Room to run* is why, and it is the half a scoring rule cannot say on its own. The
-    /// pig wants to be free and open country is not safe for it, so the biggest pen there
-    /// is becomes the kindest answer available rather than a high score with an animal in
-    /// it: as close to loose as a pig can safely get, and what the meadow's last film hands
-    /// back, nine fields wide and shut.
+    /// The last three shots are the briefing the game never otherwise gives. A player who
+    /// watches the film knows the property is theirs to build on, that space scores and
+    /// apples help and skulls hurt — and, before a single piece is in the ground, that a pen
+    /// is worth nothing at all with a gap left in it, because the pig has no respect for
+    /// property lines.
     static func opening(start: Date = .now) -> Self {
         Self(
             name: .opening,
             shots: [
                 Shot(
-                    picture: .firstLight,
-                    caption: "Mudlark Meadow, first light. Not a fence in it.",
-                    seconds: 3.0
-                ),
-                Shot(picture: .theOpenGate, caption: "Somebody left the gate open.", seconds: 2.3),
-                Shot(picture: .thePig, caption: "One pig, out, and it wants to be free.", seconds: 2.6),
-                Shot(
-                    picture: .away,
-                    caption: "Open country is not safe, and you will not catch it.",
-                    seconds: 3.3
+                    picture: .homePen,
+                    caption: "Pig had a home. Cozy. Rustic. Extremely limited square footage.",
+                    seconds: 4.0
                 ),
                 Shot(
-                    picture: .theBiggestPen,
-                    caption: "Give it the biggest pen you can. Room to run.",
-                    seconds: 2.9
+                    picture: .theOpenGate,
+                    caption: "Then someone left the gate open. Pig decided to explore the market.",
+                    seconds: 4.0
                 ),
-                Shot(picture: .fenceItIn, caption: "Fence it in. One gap, and it is gone.", seconds: 2.6)
+                Shot(
+                    picture: .welcomeMeadow,
+                    caption: "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can.",
+                    seconds: 5.4
+                ),
+                Shot(
+                    picture: .applesAndSkulls,
+                    caption: "More space means a better score. Apples improve the property. Skulls hurt the resale value.",
+                    seconds: 5.4
+                ),
+                Shot(
+                    picture: .closeTheFence,
+                    caption: "And close the fence. Pig has no respect for property lines.",
+                    seconds: 3.8
+                )
             ],
             start: start
         )
@@ -242,27 +240,29 @@ extension CutScene {
     ///
     /// Short on purpose. A player who has fenced eight fields does not need teaching how to
     /// fence a ninth — they need telling the one thing about this map that is different,
-    /// which is that there are two animals on it and one budget for the pair. Three shots
-    /// and under nine seconds: the water, whose water it is, and the rule that follows.
+    /// which is that there are two animals on it. Three shots: the promising piece of land,
+    /// the resident already on it, and the rule that follows.
     ///
-    /// The middle shot is the story half of the briefing. The rule reads as arithmetic on
-    /// its own — two animals, one budget — and as something worth doing once the far shore
-    /// belongs to somebody: the last field of the meadow is not empty ground, so fencing it
-    /// means making room for what already lives there rather than walling it out.
+    /// The rule is still the estate agent's: this was not a vacant lot, so fence in both the
+    /// pig and the deer — one pen or two, whatever makes the floor plan work.
     static func stagMere(start: Date = .now) -> Self {
         Self(
             name: .stagMere,
             shots: [
-                Shot(picture: .theMere, caption: "Stag Mere. Water straight down the middle.", seconds: 2.7),
                 Shot(
-                    picture: .theStag,
-                    caption: "The stag had that shore before the barn did.",
-                    seconds: 2.9
+                    picture: .promisingLand,
+                    caption: "Pig found a promising piece of land. There was just one complication.",
+                    seconds: 4.2
                 ),
                 Shot(
-                    picture: .bothOrNeither,
-                    caption: "Twenty pieces. Both of them held, or neither counts.",
-                    seconds: 3.3
+                    picture: .theResident,
+                    caption: "The current resident. Apparently this was not a vacant lot.",
+                    seconds: 3.8
+                ),
+                Shot(
+                    picture: .oneOrTwo,
+                    caption: "Fence in both Pig and the deer. One pen or two, whatever makes the floor plan work.",
+                    seconds: 5.0
                 )
             ],
             start: start
@@ -271,37 +271,28 @@ extension CutScene {
 
     /// After the last pen in the meadow holds.
     ///
-    /// The one that closes the world out, and the one that has to pay off the opening: both
-    /// animals held a shore apiece, the stag left on the water that was always its own, the
-    /// nine fields fenced and the pig free to be loose in all of them, a meadow nothing gets
-    /// out of any more — and then, out past it, another gate standing open somewhere else.
-    ///
-    /// That last line is the opening's second shot said again from further away, which is
-    /// what makes the next world a reason to go on rather than simply more country.
+    /// The one that closes the world out. The pig is housed at last — space, good views,
+    /// plenty of apples — and by every account should have been satisfied. He is already
+    /// turned toward the dark forest at the meadow's edge, because he has started checking
+    /// other listings, which is what makes the next world a reason to go on.
     static func theMeadowHeld(start: Date = .now) -> Self {
         Self(
             name: .theMeadowHeld,
             shots: [
-                Shot(picture: .bothPenned, caption: "Both of them held, a shore apiece.", seconds: 2.5),
                 Shot(
-                    picture: .theStagStays,
-                    caption: "The stag stays. It had this meadow before you did.",
-                    seconds: 3.1
+                    picture: .finishedPen,
+                    caption: "Mudlark Meadow had space. Good views. Plenty of apples.",
+                    seconds: 3.6
                 ),
                 Shot(
-                    picture: .theWholeMeadow,
-                    caption: "Nine fields fenced, and the pig loose in all of them.",
+                    picture: .forestEdge,
+                    caption: "By all accounts, Pig should have been satisfied.",
                     seconds: 3.2
                 ),
                 Shot(
-                    picture: .theMeadowFromOut,
-                    caption: "Nothing gets out of Mudlark Meadow now.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    picture: .somewhereElse,
-                    caption: "Somewhere else, a gate is standing open.",
-                    seconds: 3.0
+                    picture: .intoTheForest,
+                    caption: "Unfortunately, he'd started checking other listings.",
+                    seconds: 3.6
                 )
             ],
             start: start

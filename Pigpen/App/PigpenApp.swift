@@ -52,20 +52,17 @@ struct PigpenApp: App {
     /// middle of the shot it belongs to, so a script edit that walks a still off its shot
     /// fails there rather than in a screenshot nobody looks at twice.
     static let stills: [(argument: String, scene: CutScene.Name, seconds: TimeInterval)] = [
-        ("-opening", .opening, 1.6),
-        ("-opening-gate", .opening, 4.4),
-        ("-opening-pig", .opening, 6.8),
-        ("-opening-away", .opening, 9.7),
-        ("-opening-pen", .opening, 12.8),
-        ("-opening-fence", .opening, 15.6),
-        ("-mere", .stagMere, 1.4),
-        ("-mere-stag", .stagMere, 4.1),
-        ("-mere-both", .stagMere, 7.2),
-        ("-held-penned", .theMeadowHeld, 1.4),
-        ("-held-stag", .theMeadowHeld, 4.0),
-        ("-held-meadow", .theMeadowHeld, 7.2),
-        ("-held-world", .theMeadowHeld, 10.4),
-        ("-held-beyond", .theMeadowHeld, 13.4)
+        ("-opening", .opening, 2.0),
+        ("-opening-gate", .opening, 6.0),
+        ("-opening-welcome", .opening, 10.7),
+        ("-opening-treats", .opening, 16.1),
+        ("-opening-close", .opening, 20.7),
+        ("-mere", .stagMere, 2.1),
+        ("-mere-resident", .stagMere, 6.1),
+        ("-mere-both", .stagMere, 10.5),
+        ("-held-penned", .theMeadowHeld, 1.8),
+        ("-held-forest", .theMeadowHeld, 5.2),
+        ("-held-away", .theMeadowHeld, 8.6)
     ]
 
     /// Every screen the camera can be opened straight onto, named by the argument that opens
