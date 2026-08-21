@@ -21,6 +21,11 @@ extension RatingStanding {
     ///
     /// Level ids are unique across worlds and both stores are game-wide, so one `WorldProgress`
     /// answers for every world on the map rather than only the one whose trail is up.
+    ///
+    /// On the main actor because both of those stores are: the standing is read where the title
+    /// screen stands, rather than being handed off somewhere the stars could be moving
+    /// underneath it.
+    @MainActor
     static func read(
         from progress: WorldProgress,
         daily: DailyProgress,
