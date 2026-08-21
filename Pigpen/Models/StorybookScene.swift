@@ -139,9 +139,8 @@ struct StorybookScene: Sendable {
 // MARK: - The thicket's films
 
 extension StorybookScene {
-    /// Before the first walk into Thornwood Thicket. It carries the one thing the woods
-    /// change — a truffle to shut in, a bramble to keep out — and then says the rule is the
-    /// meadow's rule: the biggest pen you can, shut.
+    /// Before the first walk into Thornwood Thicket: a secluded, wooded, very private listing, its
+    /// mushrooms a charming amenity and its wilted flowers a blow to the curb appeal.
     static func thornwoodOpening(start: Date = .now) -> Self {
         Self(
             key: "thornwood-opening",
@@ -149,92 +148,30 @@ extension StorybookScene {
             light: .forestDay,
             shots: [
                 Shot(
-                    motif: "🌲",
-                    strewn: ["🌲", "🌲", "🍂"],
-                    caption: "Thornwood Thicket. The trees close right over.",
-                    seconds: 3.0
-                ),
-                Shot(
                     motif: "🐷",
-                    strewn: ["🌿", "🍂"],
-                    caption: "Your pig made the tree line before you did.",
-                    seconds: 3.0
+                    strewn: ["🌲", "🍂"],
+                    caption: "Thornwood Thicket. Secluded. Wooded. Very private.",
+                    seconds: 3.4
                 ),
                 Shot(
                     motif: "🍄",
-                    strewn: ["🌿", "🍂", "🌿"],
-                    caption: "Truffles take no fence. Shut them in — five apiece.",
-                    seconds: 3.4
+                    strewn: ["🥀", "🌿"],
+                    caption: "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal.",
+                    seconds: 5.0
                 ),
                 Shot(
-                    motif: "🥀",
-                    strewn: ["🌿", "🍂"],
-                    caption: "Brambles in the dark. Leave those on the outside.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🌲", "🌲"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
-                    isCard: true,
-                    seconds: 3.0
-                )
-            ],
-            start: start
-        )
-    }
-
-    /// After the last pen in the thicket holds. It says what became of the boar, that every
-    /// clearing is fenced, and — like the meadow's send-off — points past the trees to the
-    /// next world coming alight.
-    static func thornwoodHeld(start: Date = .now) -> Self {
-        Self(
-            key: "thornwood-held",
-            title: "Thornwood Thicket held",
-            light: .forestDusk,
-            shots: [
-                Shot(
-                    motif: "🐗",
+                    motif: "🐷",
                     strewn: ["🌲", "🍄"],
-                    caption: "The boar kept to its hollow. You kept the pig to its pens.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "🌲",
-                    strewn: ["🍄", "✨", "🍄"],
-                    caption: "Every clearing in the Thornwood, fenced and held.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🌍",
-                    strewn: ["✨", "⭐️"],
-                    caption: "Nothing gets out of the Thornwood now.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🌋",
-                    strewn: ["✨", "⭐️", "✨"],
-                    caption: "Past the trees, a mountain is smoking.",
+                    caption: "Pig was beginning to see himself as a country-estate sort of pig.",
                     isCard: true,
-                    seconds: 3.0
+                    seconds: 4.2
                 )
             ],
             start: start
         )
     }
 
-    /// Before the thicket's last clearing, the way `CutScene.stagMere` goes before the meadow's.
-    ///
-    /// Short on purpose, and for the same reason: a player standing at this signpost has fenced
-    /// eight fields of woods and does not need teaching how to fence a ninth. What they are owed
-    /// is the one thing this board does that no other board in the thicket does — there is a
-    /// second animal on it and a single budget for the pair — and that is three stills and under
-    /// nine seconds. The middle one is the story half, the same as the mere's: the far bank is
-    /// not empty ground, so the pen there is making room for what already lives in the hollow
-    /// rather than walling it out.
-    ///
-    /// It is lit for daylight where the thicket's send-off is lit after dark, because a briefing
-    /// wants reading rather than admiring.
+    /// The thicket's boss briefing: Pig meets the neighbour, and both agree on separate units.
     static func boarHollow(start: Date = .now) -> Self {
         Self(
             key: "boar-hollow-briefing",
@@ -242,23 +179,55 @@ extension StorybookScene {
             light: .forestDay,
             shots: [
                 Shot(
-                    motif: "🌊",
-                    strewn: ["🌲", "🍂", "🌿"],
-                    caption: "Boar Hollow. A pool across the wood.",
-                    seconds: 2.7
-                ),
-                Shot(
                     motif: "🐗",
                     strewn: ["🌲", "🍄"],
-                    caption: "The boar was here first. It shares with nobody.",
-                    seconds: 3.0
+                    caption: "Then Pig met the neighbor.",
+                    seconds: 2.2
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐗", "🌲"],
+                    caption: "They agreed immediately on one thing: separate units.",
+                    seconds: 3.6
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🌲", "🌲", "🍄"],
-                    caption: "Twenty pieces. Both held, in two pens — never one.",
+                    strewn: ["🐗", "🍄"],
+                    caption: "Fence in Pig and the boar separately. Shared walls are not permitted.",
                     isCard: true,
-                    seconds: 3.2
+                    seconds: 4.4
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the thicket holds: private and almost perfect, until a listing with
+    /// spectacular mountain views tempts the pig on.
+    static func thornwoodHeld(start: Date = .now) -> Self {
+        Self(
+            key: "thornwood-held",
+            title: "Thornwood Thicket held",
+            light: .forestDusk,
+            shots: [
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐗", "🌲"],
+                    caption: "Private. Peaceful. Spacious. Almost perfect.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🌋",
+                    strewn: ["🌲", "✨"],
+                    caption: "Then Pig spotted a listing with spectacular mountain views.",
+                    seconds: 3.9
+                ),
+                Shot(
+                    motif: "🌋",
+                    strewn: ["🌲", "🔥"],
+                    caption: "The description did not mention the volcano.",
+                    isCard: true,
+                    seconds: 3.1
                 )
             ],
             start: start
@@ -269,10 +238,8 @@ extension StorybookScene {
 // MARK: - The mountain's films
 
 extension StorybookScene {
-    /// Before the first walk up Emberpeak. It carries the two things the mountain changes —
-    /// a chestnut to shut in, an ember to keep out — says out loud that the ember takes no
-    /// fencing, since every field up here has one on it, and then hands the game back on the
-    /// rule it has always been.
+    /// Before the first walk up Emberpeak: dramatic views and natural heating, its chestnuts a perk
+    /// and its open flames a maintenance concern.
     static func emberpeakOpening(start: Date = .now) -> Self {
         Self(
             key: "emberpeak-opening",
@@ -280,91 +247,30 @@ extension StorybookScene {
             light: .emberDay,
             shots: [
                 Shot(
-                    motif: "🌋",
-                    strewn: ["🪨", "🌫️", "🪨"],
-                    caption: "Emberpeak. It has been smoking since the barn was built.",
-                    seconds: 3.6
-                ),
-                Shot(
                     motif: "🐷",
-                    strewn: ["🪨", "🌫️"],
-                    caption: "Your pig went up past the last of the trees.",
-                    seconds: 3.0
+                    strewn: ["🌋", "🪨"],
+                    caption: "Welcome to Emberpeak. Dramatic views. Naturally heated.",
+                    seconds: 3.7
                 ),
                 Shot(
                     motif: "🌰",
-                    strewn: ["🪨", "🌫️", "🪨"],
-                    caption: "Chestnuts take no fence. Five apiece, shut in.",
-                    seconds: 3.4
+                    strewn: ["🔥", "🪨"],
+                    caption: "Chestnuts are a nice perk. Open flames are a maintenance concern.",
+                    seconds: 4.2
                 ),
                 Shot(
-                    motif: "🔥",
-                    strewn: ["🪨", "🌫️"],
-                    caption: "Embers take no fence. Build around them, or pay the five.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🌋", "🪨"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    motif: "🐷",
+                    strewn: ["🌋", "🌫️"],
+                    caption: "Pig was willing to overlook a few issues for the right property.",
                     isCard: true,
-                    seconds: 3.0
+                    seconds: 4.2
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen on the mountain holds. It says what became of the wyrm, that the
-    /// whole peak is fenced, and — like the meadow's send-off and the thicket's — points on
-    /// past this world to the next one waiting.
-    static func emberpeakHeld(start: Date = .now) -> Self {
-        Self(
-            key: "emberpeak-held",
-            title: "Emberpeak held",
-            light: .emberDusk,
-            shots: [
-                Shot(
-                    motif: "🐉",
-                    strewn: ["🌋", "🌰"],
-                    caption: "The wyrm kept to its crater. You kept the pig to its pens.",
-                    seconds: 3.5
-                ),
-                Shot(
-                    motif: "🌋",
-                    strewn: ["🔥", "✨", "🔥"],
-                    caption: "Every shelf on Emberpeak, fenced and held.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🌍",
-                    strewn: ["✨", "⭐️"],
-                    caption: "Nothing gets off this mountain now.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🏙️",
-                    strewn: ["✨", "⭐️", "✨"],
-                    caption: "Below the ash, a city is lighting its lamps.",
-                    isCard: true,
-                    seconds: 3.2
-                )
-            ],
-            start: start
-        )
-    }
-
-    /// Before the mountain's last field, the way `boarHollow` goes before the thicket's and
-    /// `CutScene.stagMere` before the meadow's.
-    ///
-    /// Short, and for the same reason: a player standing at this signpost has fenced eight
-    /// fields of scree and is owed the one thing this board does that no other board up here
-    /// does — a second animal on it and a single budget for the pair. The middle still is the
-    /// story half: the crater floor is not spare ground, it is somewhere something already
-    /// lives, and the pen down there is making room for it rather than shutting it out.
-    ///
-    /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
-    /// reading rather than admiring.
+    /// The mountain's boss briefing: the seller undersold the local wildlife, and the wyrm stays out.
     static func wyrmCaldera(start: Date = .now) -> Self {
         Self(
             key: "wyrm-caldera-briefing",
@@ -372,21 +278,52 @@ extension StorybookScene {
             light: .emberDay,
             shots: [
                 Shot(
-                    motif: "🌊",
-                    strewn: ["🌋", "🪨", "🌫️"],
-                    caption: "Wyrm Caldera. A lake in the summit.",
-                    seconds: 2.7
-                ),
-                Shot(
                     motif: "🐉",
                     strewn: ["🌋", "🔥"],
-                    caption: "Do not fence the wyrm. Nobody is holding that.",
-                    seconds: 3.0
+                    caption: "The seller had disclosed some local wildlife. They had undersold it.",
+                    seconds: 4.3
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐉", "🪨"],
+                    caption: "This neighbor will not be joining the homeowners association.",
+                    seconds: 4.0
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🌋", "🪨", "🌰"],
-                    caption: "Twenty pieces for the pig. Leave the wyrm outside.",
+                    strewn: ["🐉", "🌋"],
+                    caption: "Fence in Pig. Keep the wyrm out. Very, very out.",
+                    isCard: true,
+                    seconds: 3.3
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen on the mountain holds: unbeatable heating, and a city lighting up below.
+    static func emberpeakHeld(start: Date = .now) -> Self {
+        Self(
+            key: "emberpeak-held",
+            title: "Emberpeak held",
+            light: .emberDusk,
+            shots: [
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🌋", "🔥"],
+                    caption: "The views were excellent. The heating bill was unbeatable.",
+                    seconds: 3.8
+                ),
+                Shot(
+                    motif: "🏙️",
+                    strewn: ["🌋", "✨"],
+                    caption: "Still, Pig wondered if city living might be more fun.",
+                    seconds: 3.6
+                ),
+                Shot(
+                    motif: "🏙️",
+                    strewn: ["✨", "🌫️"],
+                    caption: "At least cities had building codes. Probably.",
                     isCard: true,
                     seconds: 3.2
                 )
@@ -399,10 +336,8 @@ extension StorybookScene {
 // MARK: - The city's films
 
 extension StorybookScene {
-    /// Before the first walk into Cogsworth City. It carries the two things the city changes
-    /// — a pie to shut in, a drain to build around — says out loud that the water down here
-    /// is cut one tile wide rather than lying about in ponds, and then hands the game back on
-    /// the rule it has always been.
+    /// Before the first walk into Cogsworth City: walkable, vibrant, close to everything, with fresh
+    /// pie nearby and mystery drains underfoot.
     static func cogsworthOpening(start: Date = .now) -> Self {
         Self(
             key: "cogsworth-opening",
@@ -410,90 +345,30 @@ extension StorybookScene {
             light: .cityDay,
             shots: [
                 Shot(
-                    motif: "🏙️",
-                    strewn: ["🧱", "💨", "🧱"],
-                    caption: "Cogsworth City. Everything in it was built by somebody.",
-                    seconds: 3.6
-                ),
-                Shot(
                     motif: "🐷",
-                    strewn: ["🧱", "💨"],
-                    caption: "Your pig came in under the gate and kept going.",
-                    seconds: 3.0
+                    strewn: ["🏙️", "🧱"],
+                    caption: "Cogsworth City. Walkable. Vibrant. Close to everything.",
+                    seconds: 3.7
                 ),
                 Shot(
                     motif: "🥧",
-                    strewn: ["🧱", "🪟", "🧱"],
-                    caption: "Pies take no fence. Five apiece, shut in.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "🕳️",
-                    strewn: ["🧱", "💨"],
-                    caption: "Drains take no fence. Build around them, or pay the five.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🏙️", "🧱"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
-                    isCard: true,
-                    seconds: 3.0
-                )
-            ],
-            start: start
-        )
-    }
-
-    /// After the last pen in the city holds. It says what became of the rat king, that every
-    /// yard is fenced, and — like the three send-offs before it — points on past this world
-    /// to the next one waiting.
-    static func cogsworthHeld(start: Date = .now) -> Self {
-        Self(
-            key: "cogsworth-held",
-            title: "Cogsworth City held",
-            light: .cityDusk,
-            shots: [
-                Shot(
-                    motif: "🐀",
-                    strewn: ["🏙️", "🥧"],
-                    caption: "You fenced the rat king in with your own pig.",
+                    strewn: ["🕳️", "🧱"],
+                    caption: "Fresh pie nearby adds value. Mystery drains do not.",
                     seconds: 3.5
                 ),
                 Shot(
-                    motif: "🏙️",
-                    strewn: ["🪔", "✨", "🪔"],
-                    caption: "Every yard in Cogsworth, fenced and held.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🌍",
-                    strewn: ["✨", "⭐️"],
-                    caption: "Nothing gets out of this city now.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🛸",
-                    strewn: ["✨", "⭐️", "✨"],
-                    caption: "Above the rooftops, something came down out of the stars.",
+                    motif: "🐷",
+                    strewn: ["🏙️", "🪟"],
+                    caption: "Pig could get used to city living.",
                     isCard: true,
-                    seconds: 3.4
+                    seconds: 2.6
                 )
             ],
             start: start
         )
     }
 
-    /// Before the city's last field, the way `wyrmCaldera` goes before the mountain's.
-    ///
-    /// Short, and for the same reason: a player standing at this signpost has fenced eight
-    /// yards of paving and is owed the one thing this board does that no other board down
-    /// here does — the city's own rule, which is the woods' rule turned round. The middle
-    /// still is the story half: the rat king is not something to shut out or to pen off on
-    /// its own, since a yard of its own is exactly what it is after.
-    ///
-    /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
-    /// reading rather than admiring.
+    /// The city's boss briefing: the apartment came with a roommate who was never leaving.
     static func ratKingWharf(start: Date = .now) -> Self {
         Self(
             key: "rat-king-wharf-briefing",
@@ -501,23 +376,54 @@ extension StorybookScene {
             light: .cityDay,
             shots: [
                 Shot(
-                    motif: "🏙️",
-                    strewn: ["🧱", "💨", "🕳️"],
-                    caption: "Rat King Wharf. The last yard in the city.",
+                    motif: "🐀",
+                    strewn: ["🏙️", "🕳️"],
+                    caption: "The apartment came with a roommate.",
                     seconds: 2.7
                 ),
                 Shot(
-                    motif: "🐀",
-                    strewn: ["🏙️", "🕳️"],
-                    caption: "Pen the rat king apart and it keeps that yard.",
-                    seconds: 3.0
+                    motif: "🐷",
+                    strewn: ["🐀", "🧱"],
+                    caption: "The rat was not leaving. The rat had never considered leaving.",
+                    seconds: 4.0
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🏙️", "🧱", "🥧"],
-                    caption: "Nineteen pieces. Both held, in one pen — never two.",
+                    strewn: ["🐀", "🏙️"],
+                    caption: "Fence them in together. Sometimes real estate is about compromise.",
                     isCard: true,
-                    seconds: 3.2
+                    seconds: 4.2
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the city holds: great food, a minor rodent situation, and a star overhead.
+    static func cogsworthHeld(start: Date = .now) -> Self {
+        Self(
+            key: "cogsworth-held",
+            title: "Cogsworth City held",
+            light: .cityDusk,
+            shots: [
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🐀", "🏙️"],
+                    caption: "Great food. Excellent location. Minor rodent situation.",
+                    seconds: 3.7
+                ),
+                Shot(
+                    motif: "🌟",
+                    strewn: ["🏙️", "✨"],
+                    caption: "Pig began wondering how far he'd have to go for truly quiet neighbors.",
+                    seconds: 4.4
+                ),
+                Shot(
+                    motif: "🌌",
+                    strewn: ["✨", "🌟"],
+                    caption: "Quite far, apparently.",
+                    isCard: true,
+                    seconds: 2.2
                 )
             ],
             start: start
@@ -528,17 +434,8 @@ extension StorybookScene {
 // MARK: - The reaches' films
 
 extension StorybookScene {
-    /// Before the first walk out into Starfall Reaches. It carries the two things the reaches
-    /// change — a stardrop to shut in, a meteor to build around — and then hands the game back
-    /// on the rule it has always been.
-    ///
-    /// It is the one opening with six stills in it rather than five, and the extra one is the
-    /// water: every drop out here stands on its own, a single well where a star went in, and
-    /// that is a thing about the ground a player cannot be left to work out from the ground.
-    /// The woods, the mountain and the city all changed their water too and each of them let
-    /// the board say so, because a pool and a tarn and a canal all still read as water lying
-    /// about. Water broken into single tiles reads as decoration until somebody says it is a
-    /// wall.
+    /// Before the first walk out into Starfall Reaches: no traffic, no crowds, unbelievable lot sizes,
+    /// with a little sparkle from the stars and no cover for meteor damage.
     static func starfallOpening(start: Date = .now) -> Self {
         Self(
             key: "starfall-opening",
@@ -546,96 +443,30 @@ extension StorybookScene {
             light: .starDay,
             shots: [
                 Shot(
-                    motif: "🌌",
-                    strewn: ["✨", "🌑", "✨"],
-                    caption: "Starfall Reaches. The sky keeps landing in it.",
-                    seconds: 2.9
-                ),
-                Shot(
                     motif: "🐷",
-                    strewn: ["✨", "🌑"],
-                    caption: "Your pig went up off the rooftops.",
-                    seconds: 2.5
-                ),
-                Shot(
-                    motif: "💧",
-                    strewn: ["✨", "🌑", "✨"],
-                    caption: "Every star that lands leaves one well.",
-                    seconds: 2.9
+                    strewn: ["🌌", "✨"],
+                    caption: "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes.",
+                    seconds: 4.2
                 ),
                 Shot(
                     motif: "🌟",
-                    strewn: ["✨", "🌑"],
-                    caption: "Stardrops take no fence. Five each.",
-                    seconds: 2.7
+                    strewn: ["☄️", "🌑"],
+                    caption: "Stars add a little sparkle. Meteor damage is not covered.",
+                    seconds: 3.8
                 ),
                 Shot(
-                    motif: "☄️",
-                    strewn: ["✨", "🌑"],
-                    caption: "Meteors take no fence. Build round them.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🚧",
+                    motif: "🐷",
                     strewn: ["🌌", "✨"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    caption: "Finally. No neighbors.",
                     isCard: true,
-                    seconds: 3.0
+                    seconds: 2.2
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen in the reaches holds. It says what became of the visitor, that the
-    /// whole of the reaches is fenced, and — like the four send-offs before it — points on
-    /// past this world to the next one waiting.
-    static func starfallHeld(start: Date = .now) -> Self {
-        Self(
-            key: "starfall-held",
-            title: "Starfall Reaches held",
-            light: .starDusk,
-            shots: [
-                Shot(
-                    motif: "🛸",
-                    strewn: ["🌟", "☄️"],
-                    caption: "The visitor got a pen to match your own.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "🌌",
-                    strewn: ["✨", "🌟", "✨"],
-                    caption: "Every well in the reaches, fenced and held.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🌍",
-                    strewn: ["✨", "⭐️"],
-                    caption: "Nothing gets off these reaches now.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🦇",
-                    strewn: ["✨", "⭐️", "✨"],
-                    caption: "Under the dust, a cavern is breathing out.",
-                    isCard: true,
-                    seconds: 3.4
-                )
-            ],
-            start: start
-        )
-    }
-
-    /// Before the reaches' last field, the way `ratKingWharf` goes before the city's.
-    ///
-    /// Short, and for the same reason: a player standing at this signpost has fenced eight
-    /// stretches of dust and is owed the one thing this board does that no other board up here
-    /// does — the reaches' own rule, which is the first one that asks for two pens *and* says
-    /// how much ground each of them holds. The middle still is the story half: the visitor is
-    /// not something to shut out and not something to share with either.
-    ///
-    /// It is lit for daylight where the send-off is lit after dark, because a briefing wants
-    /// reading rather than admiring.
+    /// The reaches' boss briefing: there were neighbours after all, and both sides valued fairness.
     static func visitorCrater(start: Date = .now) -> Self {
         Self(
             key: "visitor-crater-briefing",
@@ -643,23 +474,55 @@ extension StorybookScene {
             light: .starDay,
             shots: [
                 Shot(
-                    motif: "🌠",
-                    strewn: ["✨", "🌑", "☄️"],
-                    caption: "Visitor Crater. The newest ground there is.",
-                    seconds: 2.7
-                ),
-                Shot(
                     motif: "🛸",
                     strewn: ["🌌", "🌟"],
-                    caption: "The visitor wants as much ground as the pig.",
-                    seconds: 3.0
+                    caption: "There were neighbors.",
+                    seconds: 2.2
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🛸", "✨"],
+                    caption: "Fortunately, both parties valued personal space. And fairness.",
+                    seconds: 4.0
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🌌", "✨", "🌟"],
-                    caption: "Twenty pieces. Two pens, and neither one bigger.",
+                    strewn: ["🛸", "🌌"],
+                    caption: "Build two separate pens. They must be exactly the same size. Equal square footage. No exceptions.",
                     isCard: true,
+                    seconds: 5.8
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the reaches holds: remote and mostly peaceful, and something listed well
+    /// below market.
+    static func starfallHeld(start: Date = .now) -> Self {
+        Self(
+            key: "starfall-held",
+            title: "Starfall Reaches held",
+            light: .starDusk,
+            shots: [
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🛸", "🌟"],
+                    caption: "Remote. Spacious. Peaceful. Mostly.",
+                    seconds: 2.7
+                ),
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["🌌", "✨"],
+                    caption: "Then Pig found something listed below market.",
                     seconds: 3.2
+                ),
+                Shot(
+                    motif: "🕳️",
+                    strewn: ["🌑", "✨"],
+                    caption: "Very far below market.",
+                    isCard: true,
+                    seconds: 2.2
                 )
             ],
             start: start
@@ -670,16 +533,8 @@ extension StorybookScene {
 // MARK: - The caverns' films
 
 extension StorybookScene {
-    /// Before the first walk down into Gloamdeep Caverns. It carries the two things the caverns
-    /// change — a crystal to shut in, a boulder to build around — and hands the game back on the
-    /// rule it has always been.
-    ///
-    /// It has six stills, the way the reaches' opening does, and the extra one is the water
-    /// again: down here every board has exactly one river on it and that river always comes in
-    /// off the edge of the cave. The reaches had to say their water was single drops because
-    /// drops read as decoration. The caverns have to say the opposite — that there is only ever
-    /// one of it — because a player who has just come off boards scattered with wells will look
-    /// for a second body of water on every board of this world and never find one.
+    /// Before the first walk down into Gloamdeep Caverns: quiet, private, no upstairs neighbours, with
+    /// excellent mineral rights and some structural concerns.
     static func gloamdeepOpening(start: Date = .now) -> Self {
         Self(
             key: "gloamdeep-opening",
@@ -687,96 +542,30 @@ extension StorybookScene {
             light: .gloamDay,
             shots: [
                 Shot(
-                    motif: "🕳️",
-                    strewn: ["💎", "🪨", "💧"],
-                    caption: "Gloamdeep Caverns. Under it all, in the dark.",
-                    seconds: 2.9
+                    motif: "🐷",
+                    strewn: ["🕳️", "💎"],
+                    caption: "Gloamdeep Caverns. Quiet. Private. No upstairs neighbors.",
+                    seconds: 3.8
+                ),
+                Shot(
+                    motif: "💎",
+                    strewn: ["🪨", "💧"],
+                    caption: "Excellent mineral rights. Some structural concerns.",
+                    seconds: 3.5
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["💎", "🪨"],
-                    caption: "Your pig went down a hole in the dust.",
-                    seconds: 2.5
-                ),
-                Shot(
-                    motif: "💧",
-                    strewn: ["💎", "🪨", "💧"],
-                    caption: "One river to a cave, and never two.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "💎",
-                    strewn: ["💧", "🪨"],
-                    caption: "Crystals take no fence. Five each.",
-                    seconds: 2.7
-                ),
-                Shot(
-                    motif: "🪨",
-                    strewn: ["💎", "💧"],
-                    caption: "Boulders take no fence. Build round them.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🕳️", "💎"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    strewn: ["🕳️", "🪨"],
+                    caption: "Natural light was admittedly limited.",
                     isCard: true,
-                    seconds: 3.0
+                    seconds: 2.8
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen in the caverns holds. It says what became of the roost, that the whole
-    /// of the Gloamdeep is fenced, and — like the five send-offs before it — points on past this
-    /// world to the next one waiting.
-    static func gloamdeepHeld(start: Date = .now) -> Self {
-        Self(
-            key: "gloamdeep-held",
-            title: "Gloamdeep Caverns held",
-            light: .gloamDusk,
-            shots: [
-                Shot(
-                    motif: "🦇",
-                    strewn: ["💎", "🪨"],
-                    caption: "The roost hangs together. The pig sleeps apart.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "💎",
-                    strewn: ["💧", "🦇", "💧"],
-                    caption: "Every crystal in the Gloamdeep, fenced and held.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🕳️",
-                    strewn: ["💎", "🪨"],
-                    caption: "Nothing comes up out of these caves now.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🤹",
-                    strewn: ["💎", "🎪", "💎"],
-                    caption: "Up ahead there is music, and far too many lights.",
-                    isCard: true,
-                    seconds: 3.4
-                )
-            ],
-            start: start
-        )
-    }
-
-    /// Before the caverns' last field, the way `visitorCrater` goes before the reaches'.
-    ///
-    /// Short, and for the same reason: a player standing at this signpost has fenced eight caves
-    /// and is owed the one thing this board does that no other board down here does. It is the
-    /// only rule in the game that asks two things at once *and* stands three animals on the
-    /// ground — the bat and its pup in one pen, the pig in another — so the middle still is the
-    /// story half and the card is the arithmetic.
-    ///
-    /// It is lit for the caverns' own light where the send-off is lit with it out, because a
-    /// briefing wants reading rather than admiring.
+    /// The caverns' boss briefing: the property was occupied twice over, and everyone gets their due.
     static func theRoost(start: Date = .now) -> Self {
         Self(
             key: "the-roost-briefing",
@@ -785,22 +574,54 @@ extension StorybookScene {
             shots: [
                 Shot(
                     motif: "🦇",
-                    strewn: ["💎", "🪨", "💧"],
-                    caption: "The Roost. Two bats hanging over one river.",
-                    seconds: 2.7
+                    strewn: ["🕳️", "💎"],
+                    caption: "The property was already occupied. Twice.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["🦇", "💎"],
-                    caption: "A pup hangs where its mother does. Not by a pig.",
+                    strewn: ["🦇", "🪨"],
+                    caption: "The bats were happy to share. Pig was not.",
                     seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🦇", "💧", "💎"],
-                    caption: "Twenty pieces. Both bats in one pen, pig in another.",
+                    strewn: ["🦇", "💎"],
+                    caption: "Pig gets his own pen. Both bats share the other. Everyone gets the arrangement they deserve.",
                     isCard: true,
-                    seconds: 3.2
+                    seconds: 5.5
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the caverns holds: affordable, quiet, extremely dark, and a carnival glow
+    /// promising much better lighting.
+    static func gloamdeepHeld(start: Date = .now) -> Self {
+        Self(
+            key: "gloamdeep-held",
+            title: "Gloamdeep Caverns held",
+            light: .gloamDusk,
+            shots: [
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🦇", "💎"],
+                    caption: "Affordable. Quiet. Extremely dark.",
+                    seconds: 2.6
+                ),
+                Shot(
+                    motif: "🎪",
+                    strewn: ["💎", "✨"],
+                    caption: "Then Pig saw somewhere with better lighting.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🎪",
+                    strewn: ["🍭", "✨"],
+                    caption: "Much, much better lighting.",
+                    isCard: true,
+                    seconds: 2.3
                 )
             ],
             start: start
@@ -811,16 +632,8 @@ extension StorybookScene {
 // MARK: - The carnival's films
 
 extension StorybookScene {
-    /// Before the first walk in through the gate of the Lantern Carnival. It carries the two
-    /// things the carnival changes — a toffee apple to shut in, a guy rope to build around — and
-    /// hands the game back on the rule it has always been.
-    ///
-    /// Six stills, the way the reaches' and the caverns' openings have, and the extra one is the
-    /// world's own idea rather than its water. Every world so far has staked its hazard about the
-    /// board one tile at a time; here they come pegged out in straight runs, and a run of them is
-    /// a line no wall crosses. A player who reads a rope as one more thing to step round will
-    /// build square pens all the way through this world and never understand why they will not
-    /// close, so the film says it before the first board does.
+    /// Before the first walk into the Lantern Carnival: colourful, exciting, amenities everywhere, its
+    /// lollipops a sweetener and its knots a sign of strings attached.
     static func lanternOpening(start: Date = .now) -> Self {
         Self(
             key: "lantern-opening",
@@ -828,95 +641,30 @@ extension StorybookScene {
             light: .lanternDay,
             shots: [
                 Shot(
-                    motif: "🎪",
-                    strewn: ["🍭", "🪢", "🎡"],
-                    caption: "Lantern Carnival. Music, lights, and a crowd.",
-                    seconds: 2.9
+                    motif: "🐷",
+                    strewn: ["🎪", "🍭"],
+                    caption: "Lantern Carnival. Colorful. Exciting. Amenities everywhere.",
+                    seconds: 3.9
+                ),
+                Shot(
+                    motif: "🍭",
+                    strewn: ["🪢", "🎡"],
+                    caption: "Lollipops sweeten the deal. Knots mean there are strings attached.",
+                    seconds: 4.2
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["🍭", "🪢"],
-                    caption: "Your pig went in under the tent flap.",
-                    seconds: 2.4
-                ),
-                Shot(
-                    motif: "👥",
-                    strewn: ["🎪", "🍭", "👥"],
-                    caption: "The crowd will not move. Lean on it for free.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🍭",
-                    strewn: ["👥", "🪢"],
-                    caption: "Toffee apples take no fence. Five each.",
-                    seconds: 2.7
-                ),
-                Shot(
-                    motif: "🪢",
-                    strewn: ["🍭", "👥"],
-                    caption: "Guy ropes take no fence, and they run in lines.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🎪", "🍭"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    strewn: ["🎪", "🎡"],
+                    caption: "It was certainly more lively than the cave.",
                     isCard: true,
-                    seconds: 3.0
-                )
-            ],
-            start: start
-        )
-    }
-
-    /// After the last pen in the carnival holds. It says what became of the ringmaster, that the
-    /// whole fairground is fenced, and — like the six send-offs before it — points on past this
-    /// world to the next one waiting.
-    static func lanternHeld(start: Date = .now) -> Self {
-        Self(
-            key: "lantern-held",
-            title: "Lantern Carnival held",
-            light: .lanternDusk,
-            shots: [
-                Shot(
-                    motif: "🤹",
-                    strewn: ["🎪", "👥"],
-                    caption: "The ringmaster has his ring. The pig has the rest.",
-                    seconds: 3.2
-                ),
-                Shot(
-                    motif: "🍭",
-                    strewn: ["🪢", "🎪", "🪢"],
-                    caption: "Every toffee apple on the field, fenced and held.",
                     seconds: 3.1
-                ),
-                Shot(
-                    motif: "🎡",
-                    strewn: ["🍭", "👥"],
-                    caption: "The lights go out one string at a time.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🦂",
-                    strewn: ["🏜️", "🍭", "🏜️"],
-                    caption: "Past the last stall, sand as far as it goes.",
-                    isCard: true,
-                    seconds: 3.2
                 )
             ],
             start: start
         )
     }
 
-    /// Before the carnival's last field, the way `theRoost` goes before the caverns'.
-    ///
-    /// Short, and for the same reason: a player standing at this signpost has fenced eight
-    /// fairgrounds and is owed the one thing this board does that no other board here does. It is
-    /// the only rule in the game about where one pen stands in relation to another rather than
-    /// about who is in which, so the middle still is the whole of it said in a line.
-    ///
-    /// Its key keeps the older spelling of the name, the way the meadow's films keep theirs: a
-    /// film is remembered by key, and a new one would sit a player back down in front of this.
+    /// The carnival's boss briefing: Pig meets management, who requires a generous setback.
     static func theCenterRing(start: Date = .now) -> Self {
         Self(
             key: "the-centre-ring-briefing",
@@ -925,22 +673,53 @@ extension StorybookScene {
             shots: [
                 Shot(
                     motif: "🤹",
-                    strewn: ["🎪", "👥", "🍭"],
-                    caption: "The Center Ring. He will not step aside.",
-                    seconds: 2.7
+                    strewn: ["🎪", "👥"],
+                    caption: "Then Pig met management.",
+                    seconds: 2.2
                 ),
                 Shot(
-                    motif: "🐷",
-                    strewn: ["🤹", "👥"],
-                    caption: "He keeps the middle. Take the ring round him.",
-                    seconds: 2.9
+                    motif: "🤹",
+                    strewn: ["🎪", "🍭"],
+                    caption: "The ringmaster stays in the center ring. He also requires a generous setback.",
+                    seconds: 4.8
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🤹", "👥", "🍭"],
-                    caption: "Twenty-two pieces, and they meet where they started.",
+                    strewn: ["🤹", "🎪"],
+                    caption: "Fence in Pig, the ringmaster, and his ring. But don't let your fence touch the ring. Apparently it's in the lease.",
                     isCard: true,
-                    seconds: 3.4
+                    seconds: 6.6
+                )
+            ],
+            start: start
+        )
+    }
+
+    /// After the last pen in the carnival holds: constant nightlife, and a quiet desert beyond.
+    static func lanternHeld(start: Date = .now) -> Self {
+        Self(
+            key: "lantern-held",
+            title: "Lantern Carnival held",
+            light: .lanternDusk,
+            shots: [
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🎪", "🍭"],
+                    caption: "Food. Entertainment. Nightlife. Constant nightlife.",
+                    seconds: 3.5
+                ),
+                Shot(
+                    motif: "🏜️",
+                    strewn: ["🎪", "✨"],
+                    caption: "Pig decided he wanted somewhere peaceful.",
+                    seconds: 3.0
+                ),
+                Shot(
+                    motif: "🏜️",
+                    strewn: ["🌵", "☀️"],
+                    caption: "He may have overcorrected.",
+                    isCard: true,
+                    seconds: 2.2
                 )
             ],
             start: start
@@ -948,11 +727,11 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The dunes' films
+
 extension StorybookScene {
-    /// Before the first walk into the dunes. Six stills, the way the carnival's opening is six:
-    /// the melon and the cactus have a still apiece, and so does the sand — because the shape of
-    /// the water here is the whole world, and a player who does not know a dune is a crescent
-    /// will read the first board as a wall with a dent in it.
+    /// Before the first walk into the dunes: quiet, open, miles from the nearest neighbour, its melons
+    /// a welcome amenity and its cacti a hit to the walkability score.
     static func duneOpening(start: Date = .now) -> Self {
         Self(
             key: "dune-opening",
@@ -960,52 +739,30 @@ extension StorybookScene {
             light: .duneDay,
             shots: [
                 Shot(
-                    motif: "🏜️",
-                    strewn: ["☀️", "🌵", "🦴"],
-                    caption: "Sunbaked Dunes. Sand to the horizon.",
-                    seconds: 2.7
-                ),
-                Shot(
                     motif: "🐷",
-                    strewn: ["🌵", "🍈"],
-                    caption: "Your pig went over the last dune at noon.",
-                    seconds: 2.8
-                ),
-                Shot(
-                    motif: "🌙",
-                    strewn: ["🏜️", "🌵"],
-                    caption: "Every dune is a crescent. Three free walls.",
-                    seconds: 2.9
+                    strewn: ["🏜️", "☀️"],
+                    caption: "Sunbaked Dunes. Quiet. Open. Miles from the nearest neighbor.",
+                    seconds: 4.0
                 ),
                 Shot(
                     motif: "🍈",
-                    strewn: ["🏜️", "🌵"],
-                    caption: "Melons lying in the sand. Five each.",
-                    seconds: 2.5
+                    strewn: ["🌵", "🏜️"],
+                    caption: "Melons are a welcome amenity. Cacti lower the walkability score.",
+                    seconds: 4.2
                 ),
                 Shot(
-                    motif: "🌵",
-                    strewn: ["🍈", "🏜️"],
-                    caption: "A cactus takes no fence. Walls go round.",
-                    seconds: 2.8
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🏜️", "🍈"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    motif: "🐷",
+                    strewn: ["🏜️", "🦴"],
+                    caption: "The lot was enormous. Shade was sold separately.",
                     isCard: true,
-                    seconds: 3.1
+                    seconds: 3.3
                 )
             ],
             start: start
         )
     }
 
-    /// Before the dunes' last field, the way `theCenterRing` goes before the carnival's.
-    ///
-    /// Short, and for the same reason: a player standing here has fenced seven worlds. What they
-    /// are owed is the one thing this board does that no board in the game has done — every boss
-    /// since the meadow has been allowed to let one wall do for both pens, and this one is not.
+    /// The dunes' boss briefing: the nearest neighbour, and a request for a little distance.
     static func theScorpionPit(start: Date = .now) -> Self {
         Self(
             key: "scorpion-flats-briefing",
@@ -1015,35 +772,28 @@ extension StorybookScene {
                 Shot(
                     motif: "🦂",
                     strewn: ["🏜️", "🌵"],
-                    caption: "Scorpion Flats. He stings through a fence.",
+                    caption: "Pig finally met the nearest neighbor.",
                     seconds: 2.8
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦂", "🏜️"],
-                    caption: "Hold them both. No wall may do for two.",
-                    seconds: 2.9
+                    caption: "Both parties requested a little distance.",
+                    seconds: 3.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦂", "🌵"],
-                    caption: "Leave clear ground between them.",
+                    caption: "Build separate pens. And don't let them share a fence. Good fences make good neighbors. Better gaps make better ones.",
                     isCard: true,
-                    seconds: 3.0
+                    seconds: 6.8
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen in the dunes holds. It says what became of the scorpion and — like the
-    /// seven send-offs before it — points on past this world to the next one waiting, which is water
-    /// where this one was sand.
-    ///
-    /// The middle line is the one place a send-off does not say *every* windfall is in, because out
-    /// here that would be a lie the whole world was built to tell against. Sand is both where the
-    /// melons lie and the thing no wall crosses, so most of the fruit on these boards is out of
-    /// reach on purpose, and the pen that wins the last field walks past five points it can see.
+    /// After the last pen in the dunes holds: tons of space, low humidity, and blue water on the horizon.
     static func duneHeld(start: Date = .now) -> Self {
         Self(
             key: "dune-held",
@@ -1051,29 +801,23 @@ extension StorybookScene {
             light: .duneDusk,
             shots: [
                 Shot(
-                    motif: "🦂",
-                    strewn: ["🏜️", "🌵"],
-                    caption: "The scorpion has his own pen and his own walls.",
-                    seconds: 3.2
+                    motif: "🐷",
+                    strewn: ["🦂", "🏜️"],
+                    caption: "Tons of space. Very low humidity.",
+                    seconds: 2.6
                 ),
                 Shot(
-                    motif: "🍈",
-                    strewn: ["🌵", "🏜️", "🌵"],
-                    caption: "Every melon worth fencing, fenced and held.",
-                    seconds: 3.0
+                    motif: "🌊",
+                    strewn: ["🏜️", "☀️"],
+                    caption: "Pig suddenly understood the appeal of waterfront property.",
+                    seconds: 3.8
                 ),
                 Shot(
-                    motif: "🌙",
-                    strewn: ["🏜️", "🦴"],
-                    caption: "The sun goes down and the sand goes cold.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🦀",
-                    strewn: ["🌊", "🍈", "🌊"],
-                    caption: "Past the last dune, the sea comes in.",
+                    motif: "🌊",
+                    strewn: ["🐚", "🌊"],
+                    caption: "What could go wrong?",
                     isCard: true,
-                    seconds: 3.2
+                    seconds: 2.2
                 )
             ],
             start: start
@@ -1081,11 +825,11 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The cove's films
+
 extension StorybookScene {
-    /// Before the first walk down onto the cove. Six stills, the way the dunes' opening is six:
-    /// the pearl and the jellyfish have a still apiece, and so does the water — because the shape
-    /// of it is the whole world, and a player who does not know a pool is a broken ring will
-    /// read the first board as a lake with a leak in it.
+    /// Before the first walk down onto the cove: ocean views, fresh air, prime waterfront, its
+    /// seashells coastal charm and its jellyfish a complication for the inspection.
     static func tidepoolOpening(start: Date = .now) -> Self {
         Self(
             key: "tidepool-opening",
@@ -1093,53 +837,30 @@ extension StorybookScene {
             light: .coveDay,
             shots: [
                 Shot(
-                    motif: "🌊",
-                    strewn: ["🐚", "🪨", "🦀"],
-                    caption: "Tidepool Cove. The sea only just left.",
-                    seconds: 2.6
-                ),
-                Shot(
                     motif: "🐷",
-                    strewn: ["🐚", "🌊"],
-                    caption: "Your pig came down off the dunes at low tide.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🕳️",
-                    strewn: ["🌊", "🪨"],
-                    caption: "Every pool is a broken ring. One break in the lip.",
-                    seconds: 3.1
+                    strewn: ["🌊", "🐚"],
+                    caption: "Tidepool Cove. Ocean views. Fresh air. Prime waterfront.",
+                    seconds: 3.7
                 ),
                 Shot(
                     motif: "🐚",
-                    strewn: ["🌊", "🪨"],
-                    caption: "Pearls in the shells. Five each.",
-                    seconds: 2.2
+                    strewn: ["🪼", "🌊"],
+                    caption: "Seashells add coastal charm. Jellyfish complicate the inspection.",
+                    seconds: 4.2
                 ),
                 Shot(
-                    motif: "🪼",
-                    strewn: ["🐚", "🌊"],
-                    caption: "A jellyfish takes no fence. Walls go round.",
-                    seconds: 2.7
-                ),
-                Shot(
-                    motif: "🚧",
+                    motif: "🐷",
                     strewn: ["🌊", "🐚"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    caption: "Pig was ready to put in an offer.",
                     isCard: true,
-                    seconds: 2.9
+                    seconds: 2.6
                 )
             ],
             start: start
         )
     }
 
-    /// Before the cove's last field, the way `theScorpionPit` goes before the dunes'.
-    ///
-    /// Short, and for the same reason: a player standing here has fenced eight worlds. What they
-    /// are owed is the one thing this board does that no board in the game has done — the
-    /// carnival asked for a ring round a man, and this one asks for a ring round a whole pool,
-    /// with the crab shut into his own heart on the way.
+    /// The cove's boss briefing: a small easement issue, and property inside the property.
     static func theCrabPool(start: Date = .now) -> Self {
         Self(
             key: "the-crab-pool-briefing",
@@ -1149,30 +870,29 @@ extension StorybookScene {
                 Shot(
                     motif: "🦀",
                     strewn: ["🌊", "🐚"],
-                    caption: "The Crab Pool. He keeps it, break and all.",
-                    seconds: 2.8
+                    caption: "Then Pig discovered a small easement issue.",
+                    seconds: 3.1
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦀", "🌊"],
-                    caption: "Shut his break, and never stand in with him.",
-                    seconds: 2.9
+                    caption: "The crab already had property inside the property. Naturally.",
+                    seconds: 4.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦀", "🐚"],
-                    caption: "Close your ground the whole way round the pool.",
+                    caption: "Put the crab in its own pen. Then put that pen inside Pig's. And keep the fences apart. It's less a floor plan and more a legal arrangement.",
                     isCard: true,
-                    seconds: 3.0
+                    seconds: 7.9
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen in the cove holds. It says what became of the crab and — like the
-    /// eight send-offs before it — points on past this world to the next one waiting, which is
-    /// ice where this one was tidewater.
+    /// After the last pen in the cove holds: beautiful views, a complicated title history, and a
+    /// cold gust off somewhere cooler.
     static func tidepoolHeld(start: Date = .now) -> Self {
         Self(
             key: "tidepool-held",
@@ -1180,29 +900,23 @@ extension StorybookScene {
             light: .coveDusk,
             shots: [
                 Shot(
-                    motif: "🦀",
+                    motif: "🐷",
+                    strewn: ["🦀", "🐚"],
+                    caption: "Beautiful views. Excellent beach access. Complicated title history.",
+                    seconds: 4.3
+                ),
+                Shot(
+                    motif: "❄️",
                     strewn: ["🌊", "🐚"],
-                    caption: "The crab has his pool, and a ring round the lot.",
-                    seconds: 3.2
+                    caption: "Pig wondered if somewhere cooler might be nice.",
+                    seconds: 3.3
                 ),
                 Shot(
-                    motif: "🐚",
-                    strewn: ["🌊", "🪼", "🌊"],
-                    caption: "Every pearl the tide let go of, fenced and held.",
-                    seconds: 3.0
-                ),
-                Shot(
-                    motif: "🌊",
-                    strewn: ["🐚", "🪨"],
-                    caption: "The tide comes back in over the lot of it.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🦭",
-                    strewn: ["❄️", "🐚", "❄️"],
-                    caption: "North along the water, the sea is turning white.",
+                    motif: "❄️",
+                    strewn: ["🧊", "❄️"],
+                    caption: "Again, he overcorrected.",
                     isCard: true,
-                    seconds: 3.2
+                    seconds: 2.2
                 )
             ],
             start: start
@@ -1210,11 +924,11 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The tundra's films
+
 extension StorybookScene {
-    /// Before the first walk out onto the tundra. Six stills, the way the cove's opening is
-    /// six: the fish and the berg have a still apiece, and so does the ice — because the shape
-    /// of it is the whole world, and a player who does not know a ridge runs on the slant will
-    /// read the first board as a scatter of ponds rather than as two walls already built.
+    /// Before the first walk out onto the tundra: quiet, scenic, excellent natural refrigeration, its
+    /// fish highly desirable and its extra ice distinctly not.
     static func frostwhiskerOpening(start: Date = .now) -> Self {
         Self(
             key: "frostwhisker-opening",
@@ -1222,53 +936,30 @@ extension StorybookScene {
             light: .frostDay,
             shots: [
                 Shot(
-                    motif: "❄️",
-                    strewn: ["🧊", "🌨️", "🦭"],
-                    caption: "Frostwhisker Tundra. The sea went white.",
-                    seconds: 2.7
-                ),
-                Shot(
                     motif: "🐷",
                     strewn: ["❄️", "🌨️"],
-                    caption: "Your pig came north from the cove onto the ice.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🏔️",
-                    strewn: ["❄️", "🧊"],
-                    caption: "The ice is crushed into ridges. They run on the slant.",
-                    seconds: 3.3
+                    caption: "Frostwhisker Tundra. Quiet. Scenic. Excellent natural refrigeration.",
+                    seconds: 4.3
                 ),
                 Shot(
                     motif: "🐟",
+                    strewn: ["🧊", "❄️"],
+                    caption: "Fish are highly desirable. More ice is not.",
+                    seconds: 3.1
+                ),
+                Shot(
+                    motif: "🐷",
                     strewn: ["❄️", "🧊"],
-                    caption: "Fish on the ice. Five each.",
-                    seconds: 2.2
-                ),
-                Shot(
-                    motif: "🧊",
-                    strewn: ["🐟", "❄️"],
-                    caption: "A berg takes no fence. Walls go round.",
-                    seconds: 2.7
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["❄️", "🐟"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    caption: "Pig had wanted cooler. Technically, he'd succeeded.",
                     isCard: true,
-                    seconds: 2.9
+                    seconds: 3.5
                 )
             ],
             start: start
         )
     }
 
-    /// Before the tundra's last field, the way `theCrabPool` goes before the cove's.
-    ///
-    /// Short, and for the same reason: a player standing here has fenced nine worlds. What
-    /// they are owed is the one thing this board does that no board in the game has done —
-    /// every two-pen boss so far asked who goes where, and this one is the first to be
-    /// particular about where the second pen *is*.
+    /// The tundra's boss briefing: the waterfront came with a resident who needs water access.
     static func theHaulout(start: Date = .now) -> Self {
         Self(
             key: "the-haulout-briefing",
@@ -1277,31 +968,29 @@ extension StorybookScene {
             shots: [
                 Shot(
                     motif: "🦭",
-                    strewn: ["❄️", "🧊"],
-                    caption: "The Haulout. The bull seal keeps a breathing hole.",
-                    seconds: 3.1
+                    strewn: ["❄️", "🌊"],
+                    caption: "The waterfront came with a resident.",
+                    seconds: 2.7
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦭", "❄️"],
-                    caption: "Box him dry and the board sends it back.",
-                    seconds: 2.6
+                    caption: "The seal wanted its own place. With water access. Non-negotiable.",
+                    seconds: 4.2
                 ),
                 Shot(
                     motif: "🚧",
-                    strewn: ["🦭", "🧊"],
-                    caption: "Two pens — and his must touch the water.",
+                    strewn: ["🦭", "🌊"],
+                    caption: "Build separate pens. The seal's pen must border the water. Location, location, location.",
                     isCard: true,
-                    seconds: 2.6
+                    seconds: 5.4
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen on the tundra holds. It says what became of the bull seal and — like
-    /// the nine send-offs before it — points on past this world to the next one waiting, which
-    /// is mud and reeds where this one was ice.
+    /// After the last pen on the tundra holds: beautiful and far too cool, and a green wetland beyond.
     static func frostwhiskerHeld(start: Date = .now) -> Self {
         Self(
             key: "frostwhisker-held",
@@ -1309,29 +998,23 @@ extension StorybookScene {
             light: .frostDusk,
             shots: [
                 Shot(
-                    motif: "🦭",
-                    strewn: ["❄️", "🧊"],
-                    caption: "The bull seal has his hole, and a pen against it.",
+                    motif: "🐷",
+                    strewn: ["🦭", "❄️"],
+                    caption: "Quiet. Beautiful. Very cool. Far too cool.",
                     seconds: 3.0
                 ),
                 Shot(
-                    motif: "🐟",
-                    strewn: ["❄️", "🧊", "❄️"],
-                    caption: "Every fish the ice flipped up, fenced and held.",
-                    seconds: 2.9
+                    motif: "🌿",
+                    strewn: ["❄️", "🌫️"],
+                    caption: "Pig decided to try somewhere with less ice.",
+                    seconds: 3.1
                 ),
                 Shot(
-                    motif: "🌌",
-                    strewn: ["❄️", "✨"],
-                    caption: "The aurora comes up green over the lot of it.",
-                    seconds: 2.8
-                ),
-                Shot(
-                    motif: "🐊",
-                    strewn: ["🌿", "🐟", "🌿"],
-                    caption: "South along the shore, the ice gives out into mud and reeds.",
+                    motif: "🌿",
+                    strewn: ["🐊", "🌿"],
+                    caption: "Much less.",
                     isCard: true,
-                    seconds: 3.6
+                    seconds: 2.2
                 )
             ],
             start: start
@@ -1339,11 +1022,11 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The fen's films
+
 extension StorybookScene {
-    /// Before the first walk into the fen. Six stills, the way the tundra's opening is six:
-    /// the bilberry and the snag have a still apiece, and so does the water — because the
-    /// shape of it is the whole world, and a player who does not know a channel closes on
-    /// itself will read the first board as a river that lost its way.
+    /// Before the first walk into the fen: waterfront property in every direction, its blueberries a
+    /// pleasant surprise and its logs a tripping hazard.
     static func mirebogOpening(start: Date = .now) -> Self {
         Self(
             key: "mirebog-opening",
@@ -1351,53 +1034,30 @@ extension StorybookScene {
             light: .fenDay,
             shots: [
                 Shot(
-                    motif: "🌫️",
-                    strewn: ["🌿", "🐊", "🌿"],
-                    caption: "Mirebog Fen. Half water, half mud.",
-                    seconds: 2.5
+                    motif: "🐷",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "Mirebog Fen. Waterfront property in every direction.",
+                    seconds: 3.5
+                ),
+                Shot(
+                    motif: "🫐",
+                    strewn: ["🪵", "🌿"],
+                    caption: "Blueberries are a pleasant surprise. Logs are a tripping hazard.",
+                    seconds: 4.2
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🌿", "🌫️"],
-                    caption: "Your pig came south off the ice into the reeds.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🌿",
-                    strewn: ["🌫️", "🌿"],
-                    caption: "The channels split and rejoin. Every one closes a ring.",
-                    seconds: 3.4
-                ),
-                Shot(
-                    motif: "🫐",
-                    strewn: ["🌿", "🌫️"],
-                    caption: "Bilberries in the sedge. Five each.",
-                    seconds: 2.3
-                ),
-                Shot(
-                    motif: "🪵",
-                    strewn: ["🌿", "🫐"],
-                    caption: "A snag takes no fence. Walls go round.",
-                    seconds: 2.5
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["🌿", "🫐"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    caption: "The listing described it as \"lush.\" That was generous.",
                     isCard: true,
-                    seconds: 2.9
+                    seconds: 3.6
                 )
             ],
             start: start
         )
     }
 
-    /// Before the fen's last field, the way `theHaulout` goes before the tundra's.
-    ///
-    /// Short, and for the same reason: a player standing here has fenced ten worlds. What
-    /// they are owed is the one thing this board does that no board in the game has done —
-    /// the tundra's seal wanted a pen that touched the water, and the croc wants a pen that
-    /// holds the whole of one channel, bank for bank.
+    /// The fen's boss briefing: a pool and a pool owner, who wants the whole thing.
     static func theWallow(start: Date = .now) -> Self {
         Self(
             key: "the-wallow-briefing",
@@ -1406,31 +1066,29 @@ extension StorybookScene {
             shots: [
                 Shot(
                     motif: "🐊",
-                    strewn: ["🌿", "🌫️"],
-                    caption: "The Wallow. The old croc keeps one whole channel.",
-                    seconds: 3.0
+                    strewn: ["🌿", "🌊"],
+                    caption: "There was also a pool. And a pool owner.",
+                    seconds: 2.9
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🐊", "🌿"],
-                    caption: "Two pens, never one — and no half measures.",
-                    seconds: 2.7
+                    caption: "The crocodile wanted the entire thing. Pig had no objections.",
+                    seconds: 4.0
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🐊", "🌿"],
-                    caption: "Every bank of one channel is his.",
+                    caption: "Build separate pens. The crocodile's pen must surround the whole body of water. And don't put the fence right on the shoreline. Even crocodiles have setback requirements.",
                     isCard: true,
-                    seconds: 2.4
+                    seconds: 9.4
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen in the fen holds. It says what became of the old croc and — like
-    /// the ten send-offs before it — points on past this world to the next one waiting,
-    /// which is sky where this one was water.
+    /// After the last pen in the fen holds: very green, very wet, and only one direction left to go.
     static func mirebogHeld(start: Date = .now) -> Self {
         Self(
             key: "mirebog-held",
@@ -1438,29 +1096,23 @@ extension StorybookScene {
             light: .fenDusk,
             shots: [
                 Shot(
-                    motif: "🐊",
-                    strewn: ["🌿", "🫐"],
-                    caption: "The old croc has his wallow, every bank of it.",
-                    seconds: 2.9
+                    motif: "🐷",
+                    strewn: ["🐊", "🌿"],
+                    caption: "Very green. Very wet.",
+                    seconds: 2.2
                 ),
                 Shot(
-                    motif: "🫐",
-                    strewn: ["🌿", "🪵", "🌿"],
-                    caption: "Every bilberry the fen let go of, fenced and held.",
-                    seconds: 3.1
+                    motif: "☁️",
+                    strewn: ["🌿", "🌫️"],
+                    caption: "Pig decided his next home should be as far from water as possible.",
+                    seconds: 4.2
                 ),
                 Shot(
-                    motif: "🌫️",
-                    strewn: ["🌿", "✨"],
-                    caption: "The mist comes up and the fen keeps its own.",
-                    seconds: 2.8
-                ),
-                Shot(
-                    motif: "🦅",
-                    strewn: ["☁️", "🌿", "☁️"],
-                    caption: "Up out of the reeds, the last fields hang in the sky.",
+                    motif: "☁️",
+                    strewn: ["🦅", "☁️"],
+                    caption: "There was really only one direction left.",
                     isCard: true,
-                    seconds: 3.3
+                    seconds: 3.0
                 )
             ],
             start: start
@@ -1468,11 +1120,11 @@ extension StorybookScene {
     }
 }
 
+// MARK: - The heights' films
+
 extension StorybookScene {
-    /// Before the first walk onto the heights. Six stills, the way every opening since the
-    /// tundra's is six: the balloon and the whirlwind have a still apiece, and so does the
-    /// sky — because the shape of it is the whole world, and a player who does not know the
-    /// blue between the fields is a drop rather than a lake will read the first board wrong.
+    /// Before the first walk onto the heights: fresh air, endless views, absolutely no flood risk,
+    /// its balloons a charm and its twisters a hit to the insurance premium.
     static func cloudspireOpening(start: Date = .now) -> Self {
         Self(
             key: "cloudspire-opening",
@@ -1480,53 +1132,30 @@ extension StorybookScene {
             light: .spireDay,
             shots: [
                 Shot(
-                    motif: "☁️",
-                    strewn: ["🦅", "💨"],
-                    caption: "Cloudspire Heights. Fields in the sky.",
-                    seconds: 2.5
-                ),
-                Shot(
                     motif: "🐷",
                     strewn: ["☁️", "💨"],
-                    caption: "Your pig climbed up out of the fen.",
-                    seconds: 2.4
-                ),
-                Shot(
-                    motif: "💨",
-                    strewn: ["☁️", "☁️"],
-                    caption: "Open sky between the fields. It walls a pen like water.",
-                    seconds: 3.4
+                    caption: "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk.",
+                    seconds: 4.5
                 ),
                 Shot(
                     motif: "🎈",
-                    strewn: ["☁️", "💨"],
-                    caption: "Lost balloons from the carnival. Five each.",
-                    seconds: 2.7
+                    strewn: ["🌪️", "☁️"],
+                    caption: "Balloons add charm. Twisters affect the insurance premium.",
+                    seconds: 3.8
                 ),
                 Shot(
-                    motif: "🌪️",
+                    motif: "🐷",
                     strewn: ["☁️", "🎈"],
-                    caption: "No post stands in a whirlwind. Walls go round.",
-                    seconds: 2.9
-                ),
-                Shot(
-                    motif: "🚧",
-                    strewn: ["☁️", "🎈"],
-                    caption: "Same as the meadow. Fence it in, big and shut.",
+                    caption: "Pig's property search had officially left the ground.",
                     isCard: true,
-                    seconds: 2.9
+                    seconds: 3.6
                 )
             ],
             start: start
         )
     }
 
-    /// Before the heights' last field, the way `theWallow` goes before the fen's.
-    ///
-    /// Short, and for the same reason: a player standing here has fenced eleven worlds.
-    /// What they are owed is the one thing this board does that no board in the game has
-    /// done — every boss so far cared where the pens were, and this one is the first to
-    /// care what can be *seen*, which turns a fence into a second tool.
+    /// The heights' boss briefing: very strict oversight, and an eye that reaches every straight line.
     static func theEyrie(start: Date = .now) -> Self {
         Self(
             key: "the-eyrie-briefing",
@@ -1536,31 +1165,29 @@ extension StorybookScene {
                 Shot(
                     motif: "🦅",
                     strewn: ["☁️", "💨"],
-                    caption: "The Eyrie. The eagle sees along his row and his column.",
-                    seconds: 3.4
+                    caption: "Unfortunately, the neighborhood had very strict oversight.",
+                    seconds: 3.8
                 ),
                 Shot(
-                    motif: "🐷",
-                    strewn: ["🦅", "☁️"],
-                    caption: "Pen her in his eye and the board sends it back.",
-                    seconds: 3.0
+                    motif: "🦅",
+                    strewn: ["☁️", "🐷"],
+                    caption: "The eagle sees everything directly above, below, and beside it. Everything.",
+                    seconds: 4.7
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦅", "☁️"],
-                    caption: "Only a fence breaks his line of sight.",
+                    caption: "Fence in Pig. Keep every piece of fence out of the eagle's line of sight. The homeowners association is watching.",
                     isCard: true,
-                    seconds: 2.5
+                    seconds: 6.6
                 )
             ],
             start: start
         )
     }
 
-    /// After the last pen in the game holds. Eleven send-offs pointed on past their world to
-    /// the next one waiting; this is the twelfth, and there is nothing left to point at — so
-    /// it is the one farewell that points back the way the whole trail came, and puts the
-    /// game to bed with the pig in it.
+    /// The last film in the game. Pig has toured every market, meets every neighbour again, and comes
+    /// home to build the one perfect pen — right before the open house goes very wrong.
     static func cloudspireHeld(start: Date = .now) -> Self {
         Self(
             key: "cloudspire-held",
@@ -1568,29 +1195,47 @@ extension StorybookScene {
             light: .spireDusk,
             shots: [
                 Shot(
-                    motif: "🦅",
-                    strewn: ["☁️", "⭐"],
-                    caption: "The eagle has his sky back, and nothing in his eye.",
-                    seconds: 3.2
+                    motif: "🐷",
+                    strewn: ["☁️", "🌈"],
+                    caption: "And that was it. Pig had toured every market imaginable.",
+                    seconds: 3.7
                 ),
                 Shot(
-                    motif: "🎈",
-                    strewn: ["☁️", "⭐", "☁️"],
-                    caption: "Every balloon the wind gave up, fenced and held.",
-                    seconds: 3.0
+                    motif: "🦌",
+                    strewn: ["🐗", "🐉", "🛸"],
+                    caption: "He'd met some interesting neighbors. Very interesting neighbors.",
+                    seconds: 4.2
                 ),
                 Shot(
-                    motif: "🌌",
-                    strewn: ["⭐", "✨"],
-                    caption: "The stars come out over the top of the weather.",
-                    seconds: 2.9
+                    motif: "🏡",
+                    strewn: ["🚧", "🐷"],
+                    caption: "After all that, Pig finally knew exactly what he wanted.",
+                    seconds: 3.7
+                ),
+                Shot(
+                    motif: "🌈",
+                    strewn: ["🐷", "🍎"],
+                    caption: "More space. Good snacks. No surprises. The perfect pen.",
+                    seconds: 3.7
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["⭐", "🌈", "⭐"],
-                    caption: "Twelve worlds, every one of them held. Good night, pig.",
-                    isCard: true,
+                    strewn: ["🌈", "🦌"],
+                    caption: "There was just one problem.",
+                    seconds: 2.3
+                ),
+                Shot(
+                    motif: "🦅",
+                    strewn: ["🐊", "🦂", "🦀"],
+                    caption: "Apparently the listing had excellent word of mouth.",
                     seconds: 3.5
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["🌈", "🦌", "🐗"],
+                    caption: "Open house was a mistake.",
+                    isCard: true,
+                    seconds: 2.2
                 )
             ],
             start: start

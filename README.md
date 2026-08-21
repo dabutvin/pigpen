@@ -1222,19 +1222,19 @@ next world, and a reason to go to it.
 #### Boar Hollow
 
 The thicket's boss gets the same short briefing, in the storybook hand rather than painted:
-the pool that runs across the wood, the boar that had the hollow before you did, and
-the rule on a card — *twenty pieces, both of them held, or neither counts*. It is the mere's
-briefing done in the woods, because it is the mere's board done in the woods, and a world
-should no more spring a second animal on a player than the meadow did. Lit for daylight
+Pig meets the neighbour, the two of them agree on separate units, and the rule lands on a
+card — *fence in Pig and the boar separately; shared walls are not permitted*. It is the
+mere's briefing done in the woods, because it is the mere's board done in the woods, and a
+world should no more spring a second animal on a player than the meadow did. Lit for daylight
 where the thicket's send-off is lit after dark, for the reason the mere's is lit flat.
 
 #### Wyrm Caldera
 
-The mountain's boss gets the same short briefing again, and says the same three things: the
-lake in the summit, the wyrm that had the crater long before you did, and the rule on a card
-— *twenty pieces, both of them held, or neither counts*. Three worlds in, this is the shape a
-boss is announced in, and a player who has seen the mere and the hollow knows what the stop
-means before the first still is up.
+The mountain's boss gets the same short briefing again, told in the same estate agent's
+voice: the seller undersold the local wildlife, this neighbour will not be joining the
+homeowners association, and the rule on a card — *fence in Pig, and keep the wyrm out*. Three
+worlds in, this is the shape a boss is announced in, and a player who has seen the mere and
+the hollow knows what the stop means before the first still is up.
 
 A briefing plays before a level that changes the rules, and no world so far has more than
 one — a boss is the only board that stands a second animal on the ground. Which level stops
