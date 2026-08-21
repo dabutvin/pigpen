@@ -70,19 +70,21 @@ struct StorybookScene: Sendable {
             self.crowd = crowd
             self.painting = painting
         }
-
-        /// How long the still is on screen — derived from its line at the shared reading pace,
-        /// the same as a painted shot, so a storybook line is read out a sentence at a time too.
-        var seconds: TimeInterval {
-            CutScene.captionDelay
-                + CutScene.sentences(of: caption).map(CutScene.sentenceWindow).reduce(0, +)
-        }
     }
 
     // MARK: - Timing
 
-    /// How long the whole film runs.
-    var runtime: TimeInterval { shots.reduce(0) { $0 + $1.seconds } }
+    /// How long the whole film runs, with the first and last stills carrying the film's slower
+    /// framing sentences, the same as a painted film.
+    var runtime: TimeInterval {
+        shots.indices.reduce(0) { total, index in
+            total + CutScene.shotSeconds(
+                of: shots[index].caption,
+                slowFirst: index == 0,
+                slowLast: index == shots.count - 1
+            )
+        }
+    }
 
     /// What is on screen one moment in: which still, where it comes, and how long it has held —
     /// which is what the caption and the cut flash are timed off. The same shape as a
@@ -91,14 +93,21 @@ struct StorybookScene: Sendable {
         let index: Int
         let shot: Shot
         let seconds: TimeInterval
+        let slowFirst: Bool
+        let slowLast: Bool
+
+        var shotSeconds: TimeInterval {
+            CutScene.shotSeconds(of: shot.caption, slowFirst: slowFirst, slowLast: slowLast)
+        }
 
         var progress: Double {
-            guard shot.seconds > 0 else { return 1 }
-            return min(max(seconds / shot.seconds, 0), 1)
+            let length = shotSeconds
+            guard length > 0 else { return 1 }
+            return min(max(seconds / length, 0), 1)
         }
 
         var caption: (sentence: String, opacity: Double) {
-            CutScene.caption(of: shot.caption, secondsIn: seconds)
+            CutScene.caption(of: shot.caption, secondsIn: seconds, slowFirst: slowFirst, slowLast: slowLast)
         }
 
         var flash: Double {
@@ -108,16 +117,22 @@ struct StorybookScene: Sendable {
 
     /// The still on screen `elapsed` seconds in, or nothing once the film has run out.
     func frame(secondsIn elapsed: TimeInterval) -> Frame? {
+        let lastIndex = shots.count - 1
         guard elapsed > 0 else {
-            return shots.first.map { Frame(index: 0, shot: $0, seconds: 0) }
+            return shots.first.map {
+                Frame(index: 0, shot: $0, seconds: 0, slowFirst: true, slowLast: lastIndex == 0)
+            }
         }
 
         var left = elapsed
         for (index, shot) in shots.enumerated() {
-            if left < shot.seconds {
-                return Frame(index: index, shot: shot, seconds: left)
+            let slowFirst = index == 0
+            let slowLast = index == lastIndex
+            let length = CutScene.shotSeconds(of: shot.caption, slowFirst: slowFirst, slowLast: slowLast)
+            if left < length {
+                return Frame(index: index, shot: shot, seconds: left, slowFirst: slowFirst, slowLast: slowLast)
             }
-            left -= shot.seconds
+            left -= length
         }
         return nil
     }

@@ -1184,10 +1184,12 @@ fence. There is a **Skip** in the corner from a beat in, and skipping counts as 
 Each shot's line is read out a sentence at a time under the same held picture: a sentence
 fades up, holds long enough to read on its own, and fades down before the next takes its
 place, so *Cozy.* and *Rustic.* each land as their own beat rather than flashing past in a
-paragraph. The pace is one knob — `CutScene.secondsPerCaptionCharacter`, with a floor under
-the shortest lines — and turning it up makes every film longer and easier to read, which is
-why the opening now runs the better part of a minute rather than the twenty seconds it did
-when the whole line was shown at once.
+paragraph. The body of a film reads at `CutScene.secondsPerCaptionCharacter`, with a floor
+under the shortest lines; the very first line a film opens on and the last line it hands the
+game over on read slower, at `secondsPerFramingCharacter`, so a scene eases in and out rather
+than rattling by at one speed. Turning either down makes films quicker; the opening runs
+around forty seconds at the current pace rather than the twenty it did when the whole line
+was shown at once.
 
 The last three shots are the briefing. Outside the practice pen nothing else tells a player
 that space is the score, that an apple shut in is worth five tiles and a skull five against,

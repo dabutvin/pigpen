@@ -54,21 +54,14 @@ struct CutScene: Equatable, Sendable {
         self.start = start
     }
 
-    /// One shot of a film: what it shows, and what it says over it.
+    /// One shot of a film: what it shows, and what it says over it. How long it holds is not a
+    /// property of the shot alone — the film's first and last lines read slower — so a shot's
+    /// length is figured by the film, in `frame(secondsIn:)` and `runtime`.
     struct Shot: Equatable, Sendable, Identifiable {
         let picture: Picture
         let caption: String
 
         var id: Picture { picture }
-
-        /// How long the shot is on screen. Derived from its line rather than set by hand, so
-        /// every sentence is held at one reading pace: the picture waits a beat after the cut,
-        /// then the line is read out a sentence at a time, each fading up, holding long enough
-        /// to be read on its own, and fading down before the next.
-        var seconds: TimeInterval {
-            CutScene.captionDelay
-                + CutScene.sentences(of: caption).map(CutScene.sentenceWindow).reduce(0, +)
-        }
     }
 
     /// What a shot shows. A script only says which picture is up and for how long; how each
@@ -118,8 +111,17 @@ struct CutScene: Equatable, Sendable {
 
     // MARK: - Timing
 
-    /// How long the whole film runs.
-    var runtime: TimeInterval { shots.reduce(0) { $0 + $1.seconds } }
+    /// How long the whole film runs, with the first and last shots carrying the film's slower
+    /// framing sentences.
+    var runtime: TimeInterval {
+        shots.indices.reduce(0) { total, index in
+            total + CutScene.shotSeconds(
+                of: shots[index].caption,
+                slowFirst: index == 0,
+                slowLast: index == shots.count - 1
+            )
+        }
+    }
 
     /// How long a film takes to come up out of black at the start and to go back into it at
     /// the end. The same beat does for both, so every one opens and closes evenly.
@@ -134,16 +136,23 @@ struct CutScene: Equatable, Sendable {
 
     // MARK: - Reading pace
 
-    /// The pace a line is read out at when it runs to more than one sentence. A shot's line is
-    /// shown a sentence at a time under the same held picture — each landing on its own, so each
-    /// has to be readable on its own, which is slower than a single caption glanced at whole.
+    /// The pace the lines in the body of a film are read out at, a sentence at a time under the
+    /// held picture — the quick middle of a scene, between the two lines it lingers on.
     ///
-    /// This is the one knob for how fast the words go by; turn it up and every film takes longer
-    /// and reads easier. Roughly thirteen characters a second.
-    static let secondsPerCaptionCharacter: TimeInterval = 0.077
-    /// The least a sentence is ever held fully up, however short. Without it "Cozy." is gone
+    /// This is the main knob for how fast the words go by; turn it down and every film reads
+    /// quicker. Roughly sixteen characters a second.
+    static let secondsPerCaptionCharacter: TimeInterval = 0.063
+    /// The least a body sentence is ever held fully up, however short. Without it "Cozy." is gone
     /// before it lands: a one-word line paced only by its length never gets a beat to be read in.
-    static let minSentenceHold: TimeInterval = 1.8
+    static let minSentenceHold: TimeInterval = 1.5
+
+    /// The slower pace the two lines a film frames on are read out at — the very first line it
+    /// opens on and the last line it hands the game over on. They are held a little longer than
+    /// the ones between, so a scene eases in and out rather than rattling by at one speed.
+    static let secondsPerFramingCharacter: TimeInterval = 0.084
+    /// The least a framing line is held fully up — a longer beat than a body line gets, so the
+    /// opening line and the closing card land with a little more weight.
+    static let minFramingHold: TimeInterval = 2.0
 
     /// A caption split into the sentences it is read out one at a time as. A line of a single
     /// sentence is a reel of one, and behaves exactly as a whole caption used to.
@@ -182,29 +191,58 @@ struct CutScene: Equatable, Sendable {
     }
 
     /// How long a sentence is held fully up, before the fades either side of it: its length at
-    /// the reading pace, floored so even a one-word line gets a beat.
-    static func sentenceHold(of sentence: String) -> TimeInterval {
-        max(minSentenceHold, Double(sentence.count) * secondsPerCaptionCharacter)
+    /// the reading pace, floored so even a one-word line gets a beat. `framing` is the slower,
+    /// longer beat the film's opening line and closing card get.
+    static func sentenceHold(of sentence: String, framing: Bool) -> TimeInterval {
+        let pace = framing ? secondsPerFramingCharacter : secondsPerCaptionCharacter
+        let floor = framing ? minFramingHold : minSentenceHold
+        return max(floor, Double(sentence.count) * pace)
     }
 
     /// How long a sentence owns the caption area for, all told: a fade up, its hold, and a fade
     /// down before the next one takes its place. Summed over a line's sentences (after the
     /// opening beat) this is how long a shot runs.
-    static func sentenceWindow(_ sentence: String) -> TimeInterval {
-        captionFade + sentenceHold(of: sentence) + captionFade
+    static func sentenceWindow(_ sentence: String, framing: Bool) -> TimeInterval {
+        captionFade + sentenceHold(of: sentence, framing: framing) + captionFade
+    }
+
+    /// Whether the sentence at `index` of a `count`-sentence line is one the film frames on and
+    /// so reads slower: the very first sentence of the film (when this is its first shot) or the
+    /// very last (its last shot's last sentence). The lines in between are the quick middle.
+    static func isFraming(index: Int, of count: Int, slowFirst: Bool, slowLast: Bool) -> Bool {
+        (index == 0 && slowFirst) || (index == count - 1 && slowLast)
+    }
+
+    /// How long a shot runs: the opening beat, then each of its sentences' windows, with the
+    /// film's very first and very last sentence held at the slower framing pace. `slowFirst` and
+    /// `slowLast` say whether this shot is the film's first and last, since only those two carry
+    /// a framing sentence.
+    static func shotSeconds(of caption: String, slowFirst: Bool, slowLast: Bool) -> TimeInterval {
+        let reel = sentences(of: caption)
+        return captionDelay + reel.indices.reduce(0) { total, index in
+            let framing = isFraming(index: index, of: reel.count, slowFirst: slowFirst, slowLast: slowLast)
+            return total + sentenceWindow(reel[index], framing: framing)
+        }
     }
 
     /// Which sentence of a line is showing `seconds` into a shot, and how far up it is: the
     /// shared caption clock a painted shot and a storybook still both read off. After the
     /// opening beat each sentence waits its turn, fades up over `captionFade`, holds, and fades
     /// down before the next — so only one sentence is ever up, and the last fades out with the
-    /// shot rather than being left over the cut.
-    static func caption(of line: String, secondsIn seconds: TimeInterval) -> (sentence: String, opacity: Double) {
+    /// shot rather than being left over the cut. `slowFirst`/`slowLast` hold the film's opening
+    /// and closing sentence a little longer.
+    static func caption(
+        of line: String,
+        secondsIn seconds: TimeInterval,
+        slowFirst: Bool,
+        slowLast: Bool
+    ) -> (sentence: String, opacity: Double) {
         let reel = sentences(of: line)
         guard !reel.isEmpty else { return ("", 0) }
         var t = seconds - captionDelay
         for (index, sentence) in reel.enumerated() {
-            let window = sentenceWindow(sentence)
+            let framing = isFraming(index: index, of: reel.count, slowFirst: slowFirst, slowLast: slowLast)
+            let window = sentenceWindow(sentence, framing: framing)
             if t < window || index == reel.count - 1 {
                 let arriving = t / captionFade
                 let leaving = (window - t) / captionFade
@@ -222,11 +260,21 @@ struct CutScene: Equatable, Sendable {
         let shot: Shot
         /// How long this shot has been on screen.
         let seconds: TimeInterval
+        /// Whether this shot is the film's first and its last, which is what makes its opening or
+        /// closing sentence a slower framing line.
+        let slowFirst: Bool
+        let slowLast: Bool
+
+        /// The framing-aware length of this frame's shot.
+        var shotSeconds: TimeInterval {
+            CutScene.shotSeconds(of: shot.caption, slowFirst: slowFirst, slowLast: slowLast)
+        }
 
         /// 0 at the cut to this shot, 1 as it cuts away. What the camera move is drawn from.
         var progress: Double {
-            guard shot.seconds > 0 else { return 1 }
-            return min(max(seconds / shot.seconds, 0), 1)
+            let length = shotSeconds
+            guard length > 0 else { return 1 }
+            return min(max(seconds / length, 0), 1)
         }
 
         /// The sentence of the shot's line showing right now, and how far up it is. The line is
@@ -235,7 +283,7 @@ struct CutScene: Equatable, Sendable {
         /// carries more than one sentence at once, and none is left over the cut. Before the
         /// beat is up it is the first sentence at nothing.
         var caption: (sentence: String, opacity: Double) {
-            CutScene.caption(of: shot.caption, secondsIn: seconds)
+            CutScene.caption(of: shot.caption, secondsIn: seconds, slowFirst: slowFirst, slowLast: slowLast)
         }
 
         /// How much light is still on the cut.
@@ -247,17 +295,23 @@ struct CutScene: Equatable, Sendable {
     /// The shot on screen `elapsed` seconds in, or nothing once the film has run out —
     /// which is the same moment the curtain is fully black, so there is nothing to draw.
     func frame(secondsIn elapsed: TimeInterval) -> Frame? {
+        let lastIndex = shots.count - 1
         // A clock that has not started yet sits on the first frame rather than on nothing.
         guard elapsed > 0 else {
-            return shots.first.map { Frame(index: 0, shot: $0, seconds: 0) }
+            return shots.first.map {
+                Frame(index: 0, shot: $0, seconds: 0, slowFirst: true, slowLast: lastIndex == 0)
+            }
         }
 
         var left = elapsed
         for (index, shot) in shots.enumerated() {
-            if left < shot.seconds {
-                return Frame(index: index, shot: shot, seconds: left)
+            let slowFirst = index == 0
+            let slowLast = index == lastIndex
+            let length = CutScene.shotSeconds(of: shot.caption, slowFirst: slowFirst, slowLast: slowLast)
+            if left < length {
+                return Frame(index: index, shot: shot, seconds: left, slowFirst: slowFirst, slowLast: slowLast)
             }
-            left -= shot.seconds
+            left -= length
         }
         return nil
     }

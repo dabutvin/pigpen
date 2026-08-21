@@ -1321,34 +1321,35 @@ struct PaintedPicture: View {
     var body: some View {
         Canvas { context, size in
             let shot = CutScene.Shot(picture: picture, caption: "")
-            let seconds = 0.2 + (shot.seconds - 0.2) * min(max(progress, 0), 1)
-            let frame = CutScene.Frame(index: 0, shot: shot, seconds: seconds)
+            let length = CutScene.shotSeconds(of: shot.caption, slowFirst: false, slowLast: false)
+            let seconds = 0.2 + (length - 0.2) * min(max(progress, 0), 1)
+            let frame = CutScene.Frame(index: 0, shot: shot, seconds: seconds, slowFirst: false, slowLast: false)
             Film(size: size, frame: frame, moves: !reduceMotion).draw(in: &context)
         }
         .accessibilityHidden(true)
     }
 }
 
-#Preview("Opening · home pen") { CutSceneView(.opening(), still: 1.8) }
+#Preview("Opening · home pen") { CutSceneView(.opening(), still: 1.9) }
 
-#Preview("Opening · the gate") { CutSceneView(.opening(), still: 13.3) }
+#Preview("Opening · the gate") { CutSceneView(.opening(), still: 12.2) }
 
-#Preview("Opening · welcome") { CutSceneView(.opening(), still: 20.1) }
+#Preview("Opening · welcome") { CutSceneView(.opening(), still: 18.1) }
 
-#Preview("Opening · apples and skulls") { CutSceneView(.opening(), still: 29.1) }
+#Preview("Opening · apples and skulls") { CutSceneView(.opening(), still: 25.9) }
 
-#Preview("Opening · close the fence") { CutSceneView(.opening(), still: 38.3) }
+#Preview("Opening · close the fence") { CutSceneView(.opening(), still: 33.8) }
 
-#Preview("Stag Mere · promising land") { CutSceneView(.stagMere(), still: 2.2) }
+#Preview("Stag Mere · promising land") { CutSceneView(.stagMere(), still: 2.4) }
 
-#Preview("Stag Mere · the resident") { CutSceneView(.stagMere(), still: 8.9) }
+#Preview("Stag Mere · the resident") { CutSceneView(.stagMere(), still: 8.5) }
 
-#Preview("Stag Mere · one or two") { CutSceneView(.stagMere(), still: 15.7) }
+#Preview("Stag Mere · one or two") { CutSceneView(.stagMere(), still: 14.5) }
 
-#Preview("Meadow held · finished pen") { CutSceneView(.theMeadowHeld(), still: 1.8) }
+#Preview("Meadow held · finished pen") { CutSceneView(.theMeadowHeld(), still: 1.9) }
 
-#Preview("Meadow held · forest edge") { CutSceneView(.theMeadowHeld(), still: 10.8) }
+#Preview("Meadow held · forest edge") { CutSceneView(.theMeadowHeld(), still: 10.1) }
 
-#Preview("Meadow held · into the forest") { CutSceneView(.theMeadowHeld(), still: 15.9) }
+#Preview("Meadow held · into the forest") { CutSceneView(.theMeadowHeld(), still: 15.0) }
 
 #Preview("Played through") { CutSceneView(.opening()) {} }
