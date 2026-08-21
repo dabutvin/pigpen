@@ -45,6 +45,13 @@ struct StorybookScene: Sendable {
         /// Whether the line is the point of the still and set big in the middle, the way the
         /// meadow's hand-off shots are, rather than tucked along the bottom.
         let isCard: Bool
+        /// Glyphs ringed around the motif rather than strewn behind it, popping in one at a time
+        /// as the shot runs. The game's last film gathers every world's boss round the pig this
+        /// way, so the whole cast is on screen at once rather than a few scattered behind it.
+        let crowd: [String]
+        /// A painted meadow picture to draw in place of the emoji motif, for a still that wants
+        /// the hand-drawn art rather than a glyph. The finale reaches back to `.homePen` with it.
+        let painting: CutScene.Picture?
 
         var id: String { motif + caption }
 
@@ -52,12 +59,16 @@ struct StorybookScene: Sendable {
             motif: String,
             strewn: [String] = [],
             caption: String,
-            isCard: Bool = false
+            isCard: Bool = false,
+            crowd: [String] = [],
+            painting: CutScene.Picture? = nil
         ) {
             self.motif = motif
             self.strewn = strewn
             self.caption = caption
             self.isCard = isCard
+            self.crowd = crowd
+            self.painting = painting
         }
 
         /// How long the still is on screen — derived from its line at the shared reading pace,
@@ -1095,7 +1106,9 @@ extension StorybookScene {
     /// The last film in the game. Pig has toured every market, meets every neighbour again, and comes
     /// home to build the one perfect pen — right before the open house goes very wrong.
     static func cloudspireHeld(start: Date = .now) -> Self {
-        Self(
+        // Every world's boss, in the order the pig met them, gathered round him at the end.
+        let bosses = ["🦌", "🐗", "🐉", "🐀", "🛸", "🦇", "🤹", "🦂", "🦀", "🦭", "🐊", "🦅"]
+        return Self(
             key: "cloudspire-held",
             title: "Cloudspire Heights held",
             light: .spireDusk,
@@ -1106,14 +1119,17 @@ extension StorybookScene {
                     caption: "And that was it. Pig had toured every market imaginable."
                 ),
                 Shot(
-                    motif: "🦌",
-                    strewn: ["🐗", "🐉", "🛸"],
-                    caption: "He'd met some interesting neighbors. Very interesting neighbors."
+                    motif: "🐷",
+                    strewn: ["☁️"],
+                    caption: "He'd met some interesting neighbors. Very interesting neighbors.",
+                    crowd: bosses
                 ),
+                // Back to the very first shot of the very first film: the poky farm pen, painted
+                // exactly as the opening painted it, so the ending returns to where it began.
                 Shot(
-                    motif: "🏡",
-                    strewn: ["🚧", "🐷"],
-                    caption: "After all that, Pig finally knew exactly what he wanted."
+                    motif: "🐷",
+                    caption: "After all that, Pig finally knew exactly what he wanted.",
+                    painting: .homePen
                 ),
                 Shot(
                     motif: "🌈",
@@ -1122,19 +1138,22 @@ extension StorybookScene {
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["🌈", "🦌"],
-                    caption: "There was just one problem."
-                ),
-                Shot(
-                    motif: "🦅",
-                    strewn: ["🐊", "🦂", "🦀"],
-                    caption: "Apparently the listing had excellent word of mouth."
+                    strewn: ["🌈"],
+                    caption: "There was just one problem.",
+                    crowd: bosses
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["🌈", "🦌", "🐗"],
+                    strewn: ["☁️"],
+                    caption: "Apparently the listing had excellent word of mouth.",
+                    crowd: bosses
+                ),
+                Shot(
+                    motif: "🐷",
+                    strewn: ["☁️"],
                     caption: "Open house was a mistake.",
-                    isCard: true
+                    isCard: true,
+                    crowd: bosses
                 )
             ],
             start: start

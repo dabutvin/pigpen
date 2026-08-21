@@ -78,44 +78,89 @@ struct StorybookSceneView: View {
     /// The themed ground the still is set on, the strewn glyphs of the world, and the motif the
     /// still is built around — the motif lifting a little as the shot runs, unless the player has
     /// asked for less motion.
+    ///
+    /// A still that carries a `painting` borrows the meadow's hand-drawn art instead of a glyph,
+    /// which is how the last film reaches back to the pen the pig started in; a still that carries
+    /// a `crowd` rings those glyphs round the motif, which is how it gathers every boss round him.
+    @ViewBuilder
     private func backdrop(size: CGSize, frame: StorybookScene.Frame) -> some View {
-        let light = scene.light
-        let lift = reduceMotion ? 0.5 : frame.progress
-        let motif = min(size.width, size.height) * 0.34
+        if let painting = frame.shot.painting {
+            PaintedPicture(picture: painting, progress: reduceMotion ? 0.5 : frame.progress)
+        } else {
+            let light = scene.light
+            let lift = reduceMotion ? 0.5 : frame.progress
+            let motif = min(size.width, size.height) * 0.34
 
-        return ZStack {
-            LinearGradient(
-                colors: [light.skyTop, light.skyHorizon, light.ground],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            ZStack {
+                LinearGradient(
+                    colors: [light.skyTop, light.skyHorizon, light.ground],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
 
-            strewn(size: size, frame: frame)
+                strewn(size: size, frame: frame)
 
-            // A soft glow behind the motif, so a lone glyph on a field reads as lit rather than
-            // pasted on.
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [light.discHalo.opacity(0.5), light.discHalo.opacity(0)],
-                        center: .center,
-                        startRadius: motif * 0.1,
-                        endRadius: motif * 0.9
+                // A soft glow behind the motif, so a lone glyph on a field reads as lit rather than
+                // pasted on.
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [light.discHalo.opacity(0.5), light.discHalo.opacity(0)],
+                            center: .center,
+                            startRadius: motif * 0.1,
+                            endRadius: motif * 0.9
+                        )
                     )
-                )
-                .frame(width: motif * 1.8, height: motif * 1.8)
-                .position(x: size.width / 2, y: size.height * 0.44)
+                    .frame(width: motif * 1.8, height: motif * 1.8)
+                    .position(x: size.width / 2, y: size.height * 0.44)
 
-            Text(frame.shot.motif)
-                .font(.system(size: motif))
-                .shadow(color: .black.opacity(0.35), radius: motif * 0.06, y: motif * 0.05)
-                .position(
-                    x: size.width / 2,
-                    y: size.height * 0.44 - motif * 0.08 * CGFloat(lift)
-                )
-                .scaleEffect(1 + 0.03 * CGFloat(lift))
+                // The gathered boss glyphs ring the motif, behind it, so the pig it rings stays
+                // in front of the crowd it has drawn.
+                crowd(size: size, frame: frame)
+
+                Text(frame.shot.motif)
+                    .font(.system(size: motif))
+                    .shadow(color: .black.opacity(0.35), radius: motif * 0.06, y: motif * 0.05)
+                    .position(
+                        x: size.width / 2,
+                        y: size.height * 0.44 - motif * 0.08 * CGFloat(lift)
+                    )
+                    .scaleEffect(1 + 0.03 * CGFloat(lift))
+            }
+            .accessibilityHidden(true)
         }
-        .accessibilityHidden(true)
+    }
+
+    /// The shot's `crowd` glyphs set evenly round the motif on a slightly flattened ring, each
+    /// popping in in its turn as the shot runs so the cast gathers one at a time rather than all
+    /// at once. Nothing at all unless the shot asked for a crowd.
+    @ViewBuilder
+    private func crowd(size: CGSize, frame: StorybookScene.Frame) -> some View {
+        let glyphs = frame.shot.crowd
+        if !glyphs.isEmpty {
+            let centre = CGPoint(x: size.width / 2, y: size.height * 0.44)
+            let radius = min(size.width, size.height) * 0.4
+            let glyph = min(size.width, size.height) * 0.12
+            let lift = reduceMotion ? 1.0 : frame.progress
+
+            ZStack {
+                ForEach(glyphs.indices, id: \.self) { index in
+                    let angle = -Double.pi / 2 + 2 * Double.pi * Double(index) / Double(glyphs.count)
+                    // Staggered round the ring, and eased so each springs in rather than sliding.
+                    let due = Double(index) / Double(glyphs.count) * 0.6
+                    let pop = min(max((lift - due) / 0.3, 0), 1)
+                    Text(glyphs[index])
+                        .font(.system(size: glyph))
+                        .shadow(color: .black.opacity(0.35), radius: glyph * 0.05, y: glyph * 0.04)
+                        .scaleEffect(CGFloat(pop))
+                        .opacity(pop)
+                        .position(
+                            x: centre.x + radius * CGFloat(cos(angle)),
+                            y: centre.y + radius * 0.82 * CGFloat(sin(angle))
+                        )
+                }
+            }
+        }
     }
 
     /// A scatter of the world's smaller glyphs, placed the same way every time from a seed so the

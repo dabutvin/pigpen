@@ -1305,6 +1305,30 @@ private struct Film {
     }
 }
 
+/// A single painted cut-scene picture drawn on its own, so a film that is not the meadow's can
+/// borrow a shot of its hand-drawn art. The game's last film reaches back to `.homePen` with
+/// this — the poky pen the pig started in, painted exactly as the opening painted it, so the
+/// ending plainly returns to where the whole thing began rather than only saying so.
+///
+/// `progress` drives the same slow camera the shot has in its own film; it is nudged off zero so
+/// the borrowed shot never shows the white flash a real cut lands on.
+@MainActor
+struct PaintedPicture: View {
+    let picture: CutScene.Picture
+    var progress: Double = 0.5
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Canvas { context, size in
+            let shot = CutScene.Shot(picture: picture, caption: "")
+            let seconds = 0.2 + (shot.seconds - 0.2) * min(max(progress, 0), 1)
+            let frame = CutScene.Frame(index: 0, shot: shot, seconds: seconds)
+            Film(size: size, frame: frame, moves: !reduceMotion).draw(in: &context)
+        }
+        .accessibilityHidden(true)
+    }
+}
+
 #Preview("Opening · home pen") { CutSceneView(.opening(), still: 1.8) }
 
 #Preview("Opening · the gate") { CutSceneView(.opening(), still: 13.3) }
