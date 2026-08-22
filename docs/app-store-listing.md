@@ -28,44 +28,36 @@ seasonal line if there ever is one. 170 characters; this is 150:
 > A cozy puzzle about a pig and some fences. Twelve worlds, a boss at the end of
 > each, and a new board every morning. No ads, no account — just the pig.
 
-**Description** — 4,000 characters allowed; this is well inside it:
+**Description** — 4,000 characters allowed, and deliberately nowhere near it: only the first
+few lines show before the fold, so the hook does the selling and everything after it earns
+its line or goes. What earns one: how it plays, how much game there is, what is free and
+what the one purchase opens — said plainly, since a paywall a player did not see coming is
+what one-star reviews are made of — and the no-ads, no-account line. The cut scenes and the
+rest of the game's furniture live better in the screenshots than in prose:
 
 > You get a grid, a pig, and a strict number of fence pieces. Pen the pig in — and pen in as
 > much mud as you can while you are at it.
 >
 > The pig walks up, down, left and right, never diagonally. Tap a tile to wall it off; press
-> and drag to lay a whole run at once. When you let the pig go it tries every route it has,
-> and one gap that reaches the edge of the map is an escape.
+> and drag to lay a whole run. When you let the pig go it tries every route it has, and one
+> gap that reaches the edge of the map is an escape.
 >
-> Holding the pig is only half of it. A pen is scored on the ground it shuts in, so the
-> question is never "can I trap it" but "how much mud can I trap it with". Water walls a pen
-> for free. An apple inside is worth five tiles, a skull costs five, and neither takes a
-> fence — a wall that meets one has to swallow it or step in beside it. Your best pen is kept
-> the moment it closes, and one press puts it back on the board to better it. Find the best
-> pen a map has in it and the ground goes rainbow.
+> Holding the pig is only half of it. A pen is scored on the ground it shuts in: water walls
+> a pen for free, an apple inside is worth five tiles, a skull costs five. Your best pen is
+> kept the moment it closes, and finding the best pen a map has in it turns the ground
+> rainbow.
 >
-> TWELVE WORLDS
-> A meadow, a thicket, a mountain, a clockwork city, the stars, a cavern, a carnival, dunes,
-> a cove, tundra, a fen and the heights above the weather. Nine puzzles each — 108 in all,
-> every one of them solvable with the pieces it gives you. Each world ends on a boss that
-> stands a second animal on the field and changes a rule: pen them together, pen them apart,
-> pen them evenly.
+> Twelve worlds, nine puzzles each — 108 in all, every one solvable with the pieces it gives
+> you — and a boss at the end of every world that stands a second animal on the field and
+> changes a rule. Past those, a new puzzle every morning: the same board for everybody, with
+> an archive that keeps every day you have held.
 >
-> A NEW PUZZLE EVERY MORNING
-> One board a day, the same board for everybody, with a clock on it and a run of days behind
-> it. The archive keeps every morning you have held.
+> Free to start: the download holds the whole first world and today's daily puzzle. One
+> purchase opens every world and every day, for good — a single one-time payment, no
+> subscription.
 >
-> A STORY, TOLD IN FILMS
-> Every world opens on a painted film, briefs you before its boss, and sends you off when its
-> last pen holds. Skip any of them; watch the whole reel end to end whenever you like.
->
-> FREE TO START
-> The download holds the whole first world and today's daily puzzle. One purchase — The Full
-> Game, a single one-time payment — opens every world past the meadow and every day in the
-> archive, for good.
->
-> No account, no sign-in, no ads. Progress lives on your phone; nothing about you is
-> collected, and the anonymous play counting can be turned off in settings.
+> No account, no sign-in, no ads. Progress lives on your phone, nothing about you is
+> collected, and the anonymous play counting can be switched off in settings.
 
 **Keywords** — 100 characters, commas and all; this is 86. The name and subtitle are already
 searched, so `pigpen`, `cozy` and `puzzle` are not spent again here:
