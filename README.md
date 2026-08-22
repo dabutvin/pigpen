@@ -1056,9 +1056,9 @@ because the player said it could.
   reminder before nine — and how a phone left shut for a week is still reminded every
   morning of it.
 - **A reminder says what sort of morning it is.** The week is a climb, so Monday's promises
-  a gentle start with plenty of water to build against and Sunday's warns of the toughest
-  board of the week — the same thing the bands the almanac is generated against are saying,
-  in a line rather than a number. It never gives a board away.
+  the easiest board of the week with plenty of water to build against and Sunday's warns of
+  the toughest — the same thing the bands the almanac is generated against are saying, in a
+  line rather than a number. It never gives a board away.
 - **The run of days rides on the next reminder only.** One that says *Keep the streak
   going — 6 days in a row* is one that can be sure of it: the number is written onto
   today's or tomorrow's reminder and no further, because the run either survives to the

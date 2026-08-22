@@ -365,7 +365,7 @@ final class DailyReminder {
     /// the trail's signposts say which world you are standing in.
     static func climb(_ weekday: Weekday) -> String {
         switch weekday.rung {
-        case 1: "A gentle start to the week, with plenty of water to build against."
+        case 1: "The easiest board of the week — plenty of water to build against."
         case 2: "A step up from Monday, but still a friendly board with water to spare."
         case 3: "Midweek, and the first apples appear. Worth a detour to fence them in."
         case 4: "The water is drying up — your fences do most of the work today."
