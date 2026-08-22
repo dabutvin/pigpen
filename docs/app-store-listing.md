@@ -51,7 +51,7 @@ policy page than in prose here:
 > Twelve worlds, nine puzzles each — 108 in all, every one solvable with the pieces it gives
 > you — and a boss at the end of every world that stands a second animal on the field and
 > changes a rule. Past those, a new puzzle every morning: the same board for everybody, with
-> an archive that keeps every day you have held.
+> an archive that keeps every day so far.
 >
 > Free to start: the download holds the whole first world and today's daily puzzle. One
 > purchase opens every world and every day, for good — a single one-time payment, no

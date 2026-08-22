@@ -338,7 +338,7 @@ struct PuzzleView: View {
             }
             .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("What this field asks. \(orders)")
+            .accessibilityLabel("The rule for this level. \(orders)")
         }
     }
 

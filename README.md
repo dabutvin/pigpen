@@ -1055,14 +1055,18 @@ because the player said it could.
   the whole fortnight down again, which is how a day held at ten past eight loses its
   reminder before nine — and how a phone left shut for a week is still reminded every
   morning of it.
-- **A reminder says what sort of morning it is.** The week is a climb, so Monday's says
-  mostly water and free walls everywhere and Sunday's says the worst of the week — the same
-  thing the bands the almanac is generated against are saying, in a line rather than a
-  number. It never gives a board away.
-- **The run of days rides on the next reminder only.** One that says *6 days in a row so
-  far* is one that can be sure of it: the number is written onto today's or tomorrow's
-  reminder and no further, because the run either survives to the next board or it does not,
-  and a reminder four days out cannot know which.
+- **A reminder says where the week stands, in a few words.** The week is a climb, so
+  Monday's says the easiest board of the week and Sunday's the toughest — the same thing
+  the bands the almanac is generated against are saying, as a signpost rather than a
+  number. A player hears the same weekday's line every week of the year, so it is kept
+  short enough not to go stale, says nothing the board will not say better itself ten
+  seconds after the tap, and never gives one away.
+- **The run of days rides on the next reminder only — as its title.** *6 days in a row —
+  keep it going* is the reason a morning tap is worth anything, so when there is a run it
+  takes the headline and the body names the day instead. And only the next reminder can
+  promise the number: it is written onto today's or tomorrow's and no further, because
+  the run either survives to the next board or it does not, and a reminder four days out
+  cannot know which.
 - **Tapping it opens the board.** A reminder that puts the player down on the title screen
   with the puzzle still a tap away has spent its one interruption on nothing: they were told
   the day's board is up, they said yes, and the game answered by showing them the front
@@ -1456,9 +1460,9 @@ never in its own words.
   that goes straight to the listing with the review sheet open on it. It is not drawn until
   there is a listing to open: the Apple ID is minted the day the app is created in App Store
   Connect and cannot be guessed before then, and a button that opens nothing is worse than no
-  button — the same call the front page makes with its *Coming to the App Store* chip, in the
-  same state, for the same reason. Filling in `AppStoreListing.id` in
-  `Pigpen/Models/AppStoreReviews.swift` is what puts the card on the sheet.
+  button — the same call the front page makes with its *Coming to the App Store* chip, for the
+  same reason. `AppStoreListing.id` in `Pigpen/Models/AppStoreReviews.swift` now carries that
+  ID, which is what puts the card on the sheet.
 
 Having been asked is not game data: *Clear all game data* leaves the record standing, the same
 way it leaves the reminder's hour and the counting switch alone. A player who has been asked has
@@ -1544,8 +1548,8 @@ python3 -m http.server -d site 8000     # then open http://localhost:8000
 the host and the two addresses, and nothing else in the app types one of these — moving the
 pages, or putting them on a different domain, is that one line. The game's own page on the App
 Store is the one address that is not here, since it belongs to Apple rather than to this
-repository: that one lives in `AppStoreListing`, waiting on the Apple ID it cannot be written
-without. Behind the gear, *Help* opens the support page and prints the address in plain text
+repository: that one lives in `AppStoreListing`, written in from App Store Connect the day
+the app was created there. Behind the gear, *Help* opens the support page and prints the address in plain text
 underneath for a phone with no signal, and *Privacy* opens the policy from directly under the
 words that say what is counted. Both go out through
 `Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks

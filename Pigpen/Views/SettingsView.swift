@@ -106,8 +106,8 @@ struct SettingsView: View {
             Text(
                 """
                 Every star you have earned, every level you have opened and every daily \
-                puzzle you have held will be forgotten, and \(world.name) goes back to its \
-                first puzzle. There is no getting them back.
+                puzzle you have finished will be forgotten, and \(world.name) goes back to \
+                its first puzzle. There is no getting them back.
                 """
             )
         }
@@ -189,8 +189,8 @@ struct SettingsView: View {
 
                 Text(
                     """
-                    The meadow and today's board are free. Unlock the rest of the worlds and \
-                    the whole archive — once, for good.
+                    The meadow and today's daily puzzle are free. Unlock the rest of the \
+                    worlds and the whole archive — once, for good.
                     """
                 )
                 .font(.footnote.weight(.semibold))
@@ -321,7 +321,7 @@ struct SettingsView: View {
                 .foregroundStyle(GamePalette.post)
 
             Toggle(isOn: wantsReminding) {
-                Text("Remind me when a new board goes up")
+                Text("Remind me when a new puzzle is ready")
                     .font(.subheadline.weight(.heavy))
                     .foregroundStyle(GamePalette.post)
             }
@@ -435,7 +435,7 @@ struct SettingsView: View {
             Text(
                 """
                 Which puzzles get played and how they go — stars, scores, and how many \
-                goes a pen took. It is what says which levels are too hard. No name, no \
+                tries a puzzle took. It shows which levels are too hard. No name, no \
                 account, no advertising identifier, and nothing that says who you are.
                 """
             )
@@ -580,10 +580,10 @@ struct SettingsView: View {
 
     private var saved: String {
         if hasCleared {
-            return "Cleared. \(world.name) is as it comes."
+            return "Cleared. \(world.name) is back to the start."
         }
         guard hasSomethingToClear else {
-            return "Nothing saved yet — \(world.name) is as it comes."
+            return "Nothing saved yet — \(world.name) is untouched."
         }
         let meadow = """
             \(progress.totalStars) of \(world.starTotal) stars, \
@@ -602,7 +602,7 @@ struct SettingsView: View {
     /// morning it can see ahead at once, so it goes on reminding through a fortnight the
     /// player never opens it.
     private var planned: String {
-        "A reminder at \(reminder.time.face), on any morning you have not already held the day."
+        "A reminder at \(reminder.time.face) on any morning you have not yet finished the day's puzzle."
     }
 
     // MARK: - The switch

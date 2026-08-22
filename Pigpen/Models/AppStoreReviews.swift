@@ -34,11 +34,10 @@ struct SystemReviews: ReviewRequester {
 /// App Store Connect, and there is no guessing it beforehand.
 enum AppStoreListing {
     /// The Apple ID out of App Store Connect: the digits in every `apps.apple.com/app/id…`
-    /// address. Nothing until the app is created there, which is where this repository stands
-    /// until its first submission — and while it is nothing, every door below it is closed
-    /// rather than opening onto a page that does not exist. The same call the front page makes
-    /// with its *Coming to the App Store* chip, in the same state, for the same reason.
-    static let id: String? = nil
+    /// address, minted the day the app was created there. While it was nothing, every door
+    /// below it was closed rather than opening onto a page that did not exist; now it is
+    /// written, the Rate Pigpen card behind the gear is drawn and both doors open.
+    static let id: String? = "6798006772"
 
     /// The listing itself, once there is one.
     static var page: URL? { id.flatMap(address(forAppleID:)) }

@@ -320,7 +320,7 @@ struct TitleScreenView: View {
     ///
     /// A reminder that puts the player down here, with the board still a tap away, has spent
     /// its one interruption on nothing — so whatever else is up comes down and the day it
-    /// names goes up instead. A player who taps *Sunday's puzzle is up* has said where they
+    /// names goes up instead. A player who taps *Sunday's puzzle is ready* has said where they
     /// want to be, and a world map they left an hour ago is not an answer to it.
     ///
     /// The tap is taken rather than read, so one tap opens one board and coming back here
@@ -636,7 +636,7 @@ struct TitleScreenView: View {
     /// steps past. Everything the old card said aloud is said here instead.
     private func dailySpoken(stars: Int, streak: Int) -> String {
         guard hasADailyPuzzle else {
-            return "Today's puzzle. There is none — the almanac stops before today."
+            return "Today's puzzle. There is none — update Pigpen to get more daily puzzles."
         }
         let spelled = ["no", "one", "two", "three"]
         var said = "Today's puzzle. \(today.fullTitle)."
@@ -657,7 +657,7 @@ struct TitleScreenView: View {
     /// the run of days once it is going, the best time once it has been held, or simply that
     /// it is today's and waiting.
     private func dailyDetail(stars: Int, streak: Int) -> String {
-        guard hasADailyPuzzle else { return "The almanac stops before today" }
+        guard hasADailyPuzzle else { return "Update Pigpen to get more daily puzzles" }
         if stars > 0 {
             if streak > 1 { return "Penned · \(streak) days in a row" }
             if let best = daily.bestTime(on: today) {

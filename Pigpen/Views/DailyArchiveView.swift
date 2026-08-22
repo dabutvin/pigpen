@@ -303,7 +303,7 @@ struct DailyArchiveView: View {
 
     /// What the calendar is for, said once at the bottom rather than on every square.
     private var footnote: some View {
-        Text("Every puzzle there has been is already here. A day opens when it comes round.")
+        Text("Every daily puzzle so far is here. Each new day unlocks when it arrives.")
             .font(.system(size: 11, weight: .semibold))
             .foregroundStyle(GamePalette.cream.opacity(0.75))
             .multilineTextAlignment(.center)

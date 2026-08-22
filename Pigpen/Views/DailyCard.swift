@@ -69,14 +69,14 @@ struct DailyCard: View {
     /// day asks of you is for the board to show rather than for the card to promise.
     private var day: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(hasAPuzzle ? date.title : "Nothing in the book")
+            Text(hasAPuzzle ? date.title : "No puzzle today")
                 .font(.system(size: 19, weight: .black, design: .rounded))
                 .foregroundStyle(GamePalette.post)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
             if !hasAPuzzle {
-                Text("The almanac stops before today")
+                Text("Update Pigpen to get more daily puzzles")
                     .font(.system(size: 12, weight: .heavy))
                     .foregroundStyle(GamePalette.post.opacity(0.62))
                     .lineLimit(2)
@@ -171,7 +171,7 @@ struct DailyCard: View {
     }
 
     private var spokenLabel: String {
-        guard hasAPuzzle else { return "Today's puzzle. There is none — the almanac stops before today." }
+        guard hasAPuzzle else { return "Today's puzzle. There is none — update Pigpen to get more daily puzzles." }
         let spelled = ["no", "one", "two", "three"]
         var said = "Today's puzzle. \(date.fullTitle)."
         if isComplete {
