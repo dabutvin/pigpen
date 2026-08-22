@@ -636,7 +636,7 @@ struct TitleScreenView: View {
     /// steps past. Everything the old card said aloud is said here instead.
     private func dailySpoken(stars: Int, streak: Int) -> String {
         guard hasADailyPuzzle else {
-            return "Today's puzzle. There is none — the almanac stops before today."
+            return "Today's puzzle. There is none — update Pigpen to get more daily puzzles."
         }
         let spelled = ["no", "one", "two", "three"]
         var said = "Today's puzzle. \(today.fullTitle)."
@@ -657,7 +657,7 @@ struct TitleScreenView: View {
     /// the run of days once it is going, the best time once it has been held, or simply that
     /// it is today's and waiting.
     private func dailyDetail(stars: Int, streak: Int) -> String {
-        guard hasADailyPuzzle else { return "The almanac stops before today" }
+        guard hasADailyPuzzle else { return "Update Pigpen to get more daily puzzles" }
         if stars > 0 {
             if streak > 1 { return "Penned · \(streak) days in a row" }
             if let best = daily.bestTime(on: today) {

@@ -226,7 +226,7 @@ struct UniverseMapView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("The Universe")
                     .font(.system(size: 17, weight: .black, design: .rounded))
-                Text("\(clearedWorlds) of \(progress.count) worlds held")
+                Text("\(clearedWorlds) of \(progress.count) worlds complete")
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }
