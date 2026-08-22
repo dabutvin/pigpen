@@ -368,9 +368,9 @@ final class DailyReminder {
         case 1: "The easiest board of the week — plenty of water to build against."
         case 2: "A notch harder than Monday, but the water still gives you plenty of wall for free."
         case 3: "Midweek, and the first apples appear. Worth a detour to fence them in."
-        case 4: "The water is drying up — your fences do most of the work today."
-        case 5: "Three apples to chase, and the week's first skull to keep out of your pen."
-        case 6: "Barely any water left, and apples worth going out of your way for."
+        case 4: "Harder from here on — less water, so your fences have to cover more ground."
+        case 5: "The first skull of the week shows up today, with three apples to make up for it."
+        case 6: "Nearly dry ground and another skull — the second-toughest board of the week."
         default: "The toughest board of the week: almost no water, and skulls right where the walls want to go."
         }
     }
