@@ -1460,9 +1460,9 @@ never in its own words.
   that goes straight to the listing with the review sheet open on it. It is not drawn until
   there is a listing to open: the Apple ID is minted the day the app is created in App Store
   Connect and cannot be guessed before then, and a button that opens nothing is worse than no
-  button — the same call the front page makes with its *Coming to the App Store* chip, in the
-  same state, for the same reason. Filling in `AppStoreListing.id` in
-  `Pigpen/Models/AppStoreReviews.swift` is what puts the card on the sheet.
+  button — the same call the front page makes with its *Coming to the App Store* chip, for the
+  same reason. `AppStoreListing.id` in `Pigpen/Models/AppStoreReviews.swift` now carries that
+  ID, which is what puts the card on the sheet.
 
 Having been asked is not game data: *Clear all game data* leaves the record standing, the same
 way it leaves the reminder's hour and the counting switch alone. A player who has been asked has
@@ -1548,8 +1548,8 @@ python3 -m http.server -d site 8000     # then open http://localhost:8000
 the host and the two addresses, and nothing else in the app types one of these — moving the
 pages, or putting them on a different domain, is that one line. The game's own page on the App
 Store is the one address that is not here, since it belongs to Apple rather than to this
-repository: that one lives in `AppStoreListing`, waiting on the Apple ID it cannot be written
-without. Behind the gear, *Help* opens the support page and prints the address in plain text
+repository: that one lives in `AppStoreListing`, written in from App Store Connect the day
+the app was created there. Behind the gear, *Help* opens the support page and prints the address in plain text
 underneath for a phone with no signal, and *Privacy* opens the policy from directly under the
 words that say what is counted. Both go out through
 `Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks
