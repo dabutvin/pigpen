@@ -23,9 +23,9 @@ same thing and keeps the word a player would search for at the front.
 ## The version page
 
 **Promotional text** — the one field that can change without a new build, so it carries the
-seasonal line if there ever is one. 170 characters; this is 161:
+seasonal line if there ever is one. 170 characters; this is 150:
 
-> A cozy puzzle about a pig and some fences. Twelve hand-built worlds, a boss at the end of
+> A cozy puzzle about a pig and some fences. Twelve worlds, a boss at the end of
 > each, and a new board every morning. No ads, no account — just the pig.
 
 **Description** — 4,000 characters allowed; this is well inside it:
