@@ -1555,7 +1555,11 @@ that all three reach each other — so a typo fails the build rather than a subm
 
 ### Before a submission
 
-The pages are most of it, and the rest is the listing agreeing with them:
+The words the listing wants — name, subtitle, description, keywords, the review notes and the
+purchase's own copy — are all written out in
+[`docs/app-store-listing.md`](docs/app-store-listing.md), each inside the store's limit as
+written, so filling in App Store Connect is pasting rather than composing. The pages are most
+of the rest, and what remains is the listing agreeing with them:
 
 - [ ] The page changes are merged and deployed, and all three URLs open in a browser, on a
       phone, over HTTPS — the apex and `www` alike.
@@ -1584,11 +1588,18 @@ The pages are most of it, and the rest is the listing agreeing with them:
       control from reading as a broken one.
 - [ ] Review notes: say that the game needs no account and no sign-in, and that every world is
       in the build. A reviewer who does not have to guess does not have to ask.
-- [ ] Once there is anything to buy, the listing has more to say than this list does: the
-      products are submitted alongside the build, the review notes have to tell a reviewer how
-      to reach them, and both pages want reading again for anything they promise about money.
-      The pages say nothing about it as it stands, which is the right thing for them to say
-      until there is something true to put there.
+- [ ] The purchase exists in App Store Connect and ships with the build: **The Full Game**,
+      non-consumable, product ID `com.pigpen.app.fullgame` — exactly the ID
+      `AppStoreStorefront` asks for and `Pigpen.storekit` rehearses, or the sheet in the app
+      finds nothing to sell. Its copy and price are in the listing doc; its review screenshot
+      is the offer sheet itself, shot as [`docs/app-store-assets.md`](docs/app-store-assets.md)
+      says. A first purchase is **attached to the version and submitted alongside the first
+      build** — left off, the map sells a thing the store has never heard of.
+- [ ] Review notes tell a reviewer the way to the money as well as the way around it: no
+      account and no sign-in, every world in the build, and the purchase sheet one press past
+      **Archive** — the universe map raises it too, but only opens once the meadow boss is
+      beaten, which a reviewer will not have done. The notes are written out in the listing
+      doc.
 
 ## Tech Stack
 

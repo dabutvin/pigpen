@@ -54,6 +54,15 @@ python3 Tools/appstore_frames.py \
 The frame keeps the canvas the size of the shot it is handed, so a shot taken at
 a store size comes out at that size.
 
+## The purchase's screenshot
+
+An in-app purchase is reviewed with a screenshot of its own, attached to the product in App
+Store Connect — the offer sheet, not the board. It is for the reviewer only and never shown
+on the store, so it is taken by hand rather than by the workflow: run the app in any
+simulator, press **Archive** on the title screen, tap any day but today, and shoot the sheet
+that comes up (⌘S in Simulator, or `xcrun simctl io booted screenshot offer.png`). Anything
+at or above 640 × 920 px does; a 6.9″ shot is comfortably past it.
+
 ## App previews (the video)
 
 Apple does not take a rendered video the way it takes a rendered screenshot: a
