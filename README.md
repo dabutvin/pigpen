@@ -1055,14 +1055,18 @@ because the player said it could.
   the whole fortnight down again, which is how a day held at ten past eight loses its
   reminder before nine — and how a phone left shut for a week is still reminded every
   morning of it.
-- **A reminder says what sort of morning it is.** The week is a climb, so Monday's promises
-  the easiest board of the week with plenty of water to build against and Sunday's warns of
-  the toughest — the same thing the bands the almanac is generated against are saying, in a
-  line rather than a number. It never gives a board away.
-- **The run of days rides on the next reminder only.** One that says *Keep the streak
-  going — 6 days in a row* is one that can be sure of it: the number is written onto
-  today's or tomorrow's reminder and no further, because the run either survives to the
-  next board or it does not, and a reminder four days out cannot know which.
+- **A reminder says where the week stands, in a few words.** The week is a climb, so
+  Monday's says the easiest board of the week and Sunday's the toughest — the same thing
+  the bands the almanac is generated against are saying, as a signpost rather than a
+  number. A player hears the same weekday's line every week of the year, so it is kept
+  short enough not to go stale, says nothing the board will not say better itself ten
+  seconds after the tap, and never gives one away.
+- **The run of days rides on the next reminder only — as its title.** *6 days in a row —
+  keep it going* is the reason a morning tap is worth anything, so when there is a run it
+  takes the headline and the body names the day instead. And only the next reminder can
+  promise the number: it is written onto today's or tomorrow's and no further, because
+  the run either survives to the next board or it does not, and a reminder four days out
+  cannot know which.
 - **Tapping it opens the board.** A reminder that puts the player down on the title screen
   with the puzzle still a tap away has spent its one interruption on nothing: they were told
   the day's board is up, they said yes, and the game answered by showing them the front

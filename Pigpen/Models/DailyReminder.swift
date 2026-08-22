@@ -331,13 +331,13 @@ final class DailyReminder {
 
             // As far ahead as the run of days can be promised: the reminder the player is
             // going to see next, and only while it is today's board or tomorrow's.
-            let carriesTheRun = due.isEmpty && step <= 1
+            let promised = due.isEmpty && step <= 1 ? streak : 0
             due.append(
                 ScheduledReminder(
                     date: day,
                     time: time,
-                    title: title(for: day),
-                    body: body(for: day, streak: carriesTheRun ? streak : 0)
+                    title: title(for: day, streak: promised),
+                    body: body(for: day, streak: promised)
                 )
             )
         }
@@ -345,33 +345,37 @@ final class DailyReminder {
         return due
     }
 
-    /// What a reminder calls itself. The day rather than the game's name, since the phone
-    /// writes the game's name over the top of it anyway.
-    static func title(for date: DailyDate) -> String {
-        "\(date.weekday.name)'s puzzle is ready"
+    /// What a reminder calls itself: the run of days when there is one to keep, since that
+    /// is the thing a morning tap actually protects, and otherwise the day. Never the
+    /// game's name — the phone writes that over the top of it anyway.
+    static func title(for date: DailyDate, streak: Int = 0) -> String {
+        guard streak > 1 else { return "\(date.weekday.name)'s puzzle is ready" }
+        return "\(streak) days in a row — keep it going"
     }
 
-    /// What a reminder says under that: what sort of board it is, and — when it can be
-    /// promised — the run of days riding on it.
+    /// What a reminder says under that: where the day stands on the week's climb, and —
+    /// when the title is carrying the run — which day's board it is, since the title is
+    /// no longer saying so.
     static func body(for date: DailyDate, streak: Int = 0) -> String {
         let said = climb(date.weekday)
         guard streak > 1 else { return said }
-        return said + " Keep the streak going — \(streak) days in a row."
+        return "\(date.weekday.name)'s puzzle is up. " + said
     }
 
-    /// The week is a climb, and a reminder may as well say where on it the morning stands.
-    /// Monday is mostly water and free walls; by Sunday there is barely anything to lean
-    /// on. Nothing here gives a board away — it says what sort of morning it is, the way
-    /// the trail's signposts say which world you are standing in.
+    /// Where the morning stands on the week's climb, in a few words and nothing else. A
+    /// player sees the same weekday's line every week of the year, so it is a signpost
+    /// rather than a sentence with a view: what the board holds they will see for
+    /// themselves ten seconds after tapping, and prose about it goes stale by the third
+    /// Friday. It never gives a board away.
     static func climb(_ weekday: Weekday) -> String {
         switch weekday.rung {
-        case 1: "The easiest board of the week — plenty of water to build against."
-        case 2: "A notch harder than Monday, but the water still gives you plenty of wall for free."
-        case 3: "Midweek, and the first apples appear. Worth a detour to fence them in."
-        case 4: "Harder from here on — less water, so your fences have to cover more ground."
-        case 5: "The first skull of the week shows up today, with three apples to make up for it."
-        case 6: "Nearly dry ground and another skull — the second-toughest board of the week."
-        default: "The toughest board of the week: almost no water, and skulls right where the walls want to go."
+        case 1: "The easiest board of the week."
+        case 2: "Still on the easy side."
+        case 3: "The middle of the week's climb."
+        case 4: "Where the week turns tough."
+        case 5: "A tough one."
+        case 6: "The second-toughest of the week."
+        default: "The toughest board of the week."
         }
     }
 }
