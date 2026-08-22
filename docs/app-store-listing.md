@@ -30,10 +30,11 @@ seasonal line if there ever is one. 170 characters; this is 150:
 
 **Description** — 4,000 characters allowed, and deliberately nowhere near it: only the first
 few lines show before the fold, so the hook does the selling and everything after it earns
-its line or goes. What earns one: how it plays, how much game there is, what is free and
+its line or goes. What earns one: how it plays, how much game there is, and what is free and
 what the one purchase opens — said plainly, since a paywall a player did not see coming is
-what one-star reviews are made of — and the no-ads, no-account line. The cut scenes and the
-rest of the game's furniture live better in the screenshots than in prose:
+what one-star reviews are made of. The cut scenes, the privacy talk and the rest of the
+game's furniture live better in the screenshots, the promotional text's six words and the
+policy page than in prose here:
 
 > You get a grid, a pig, and a strict number of fence pieces. Pen the pig in — and pen in as
 > much mud as you can while you are at it.
@@ -55,9 +56,6 @@ rest of the game's furniture live better in the screenshots than in prose:
 > Free to start: the download holds the whole first world and today's daily puzzle. One
 > purchase opens every world and every day, for good — a single one-time payment, no
 > subscription.
->
-> No account, no sign-in, no ads. Progress lives on your phone, nothing about you is
-> collected, and the anonymous play counting can be switched off in settings.
 
 **Keywords** — 100 characters, commas and all; this is 86. The name and subtitle are already
 searched, so `pigpen`, `cozy` and `puzzle` are not spent again here:
