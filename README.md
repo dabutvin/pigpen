@@ -1055,14 +1055,14 @@ because the player said it could.
   the whole fortnight down again, which is how a day held at ten past eight loses its
   reminder before nine — and how a phone left shut for a week is still reminded every
   morning of it.
-- **A reminder says what sort of morning it is.** The week is a climb, so Monday's says
-  mostly water and free walls everywhere and Sunday's says the worst of the week — the same
-  thing the bands the almanac is generated against are saying, in a line rather than a
-  number. It never gives a board away.
-- **The run of days rides on the next reminder only.** One that says *6 days in a row so
-  far* is one that can be sure of it: the number is written onto today's or tomorrow's
-  reminder and no further, because the run either survives to the next board or it does not,
-  and a reminder four days out cannot know which.
+- **A reminder says what sort of morning it is.** The week is a climb, so Monday's promises
+  a gentle start with plenty of water to build against and Sunday's warns of the toughest
+  board of the week — the same thing the bands the almanac is generated against are saying,
+  in a line rather than a number. It never gives a board away.
+- **The run of days rides on the next reminder only.** One that says *Keep the streak
+  going — 6 days in a row* is one that can be sure of it: the number is written onto
+  today's or tomorrow's reminder and no further, because the run either survives to the
+  next board or it does not, and a reminder four days out cannot know which.
 - **Tapping it opens the board.** A reminder that puts the player down on the title screen
   with the puzzle still a tap away has spent its one interruption on nothing: they were told
   the day's board is up, they said yes, and the game answered by showing them the front

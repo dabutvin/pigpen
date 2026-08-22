@@ -117,7 +117,7 @@ struct ReminderPromptView: View {
                     .frame(maxWidth: .infinity)
             }
 
-            Text("You can change the hour, or stop it, behind the gear.")
+            Text("You can change the time, or turn it off, in Settings.")
                 .font(.caption2)
                 .foregroundStyle(GamePalette.post.opacity(0.5))
                 .multilineTextAlignment(.center)
@@ -131,14 +131,14 @@ struct ReminderPromptView: View {
     private var offer: String {
         guard streak > 1 else {
             return """
-                There is a fresh board every morning, and a day gone by is a day gone. \
-                Pigpen can remind you once a day that the new one is up.
+                There's a fresh puzzle every morning. Pigpen can send you one reminder a \
+                day when the new board is ready — and never more than that.
                 """
         }
         return """
-            You are \(streak) days in a row. A run like that is broken by forgetting far \
-            more often than by a board nobody could hold — so Pigpen can remind you once a \
-            morning to say the new one is up.
+            You're on a \(streak)-day streak, and streaks are lost to forgetting far more \
+            often than to a hard board. Pigpen can send you one reminder each morning so \
+            this one survives.
             """
     }
 }

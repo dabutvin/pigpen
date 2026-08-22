@@ -348,7 +348,7 @@ final class DailyReminder {
     /// What a reminder calls itself. The day rather than the game's name, since the phone
     /// writes the game's name over the top of it anyway.
     static func title(for date: DailyDate) -> String {
-        "\(date.weekday.name)'s puzzle is up"
+        "\(date.weekday.name)'s puzzle is ready"
     }
 
     /// What a reminder says under that: what sort of board it is, and — when it can be
@@ -356,7 +356,7 @@ final class DailyReminder {
     static func body(for date: DailyDate, streak: Int = 0) -> String {
         let said = climb(date.weekday)
         guard streak > 1 else { return said }
-        return said + " \(streak) days in a row so far."
+        return said + " Keep the streak going — \(streak) days in a row."
     }
 
     /// The week is a climb, and a reminder may as well say where on it the morning stands.
@@ -365,13 +365,13 @@ final class DailyReminder {
     /// the trail's signposts say which world you are standing in.
     static func climb(_ weekday: Weekday) -> String {
         switch weekday.rung {
-        case 1: "Mostly water, and free walls everywhere. A gentle one to open the week."
-        case 2: "A little less to lean on than yesterday. Still a kind board."
-        case 3: "Half way up the week, and half the wall is yours to draw."
-        case 4: "The water is thinning out. More of the pen is yours than the map's."
-        case 5: "There is a better pen on this one than the obvious pen."
-        case 6: "Barely anything to lean on, and fruit worth going out of your way for."
-        default: "The worst of the week: almost no water, and skulls where a wall wants to go."
+        case 1: "A gentle start to the week, with plenty of water to build against."
+        case 2: "A step up from Monday, but still a friendly board with water to spare."
+        case 3: "Midweek, and the first apples appear. Worth a detour to fence them in."
+        case 4: "The water is drying up — your fences do most of the work today."
+        case 5: "Three apples to chase, and the week's first skull to keep out of your pen."
+        case 6: "Barely any water left, and apples worth going out of your way for."
+        default: "The toughest board of the week: almost no water, and skulls right where the walls want to go."
         }
     }
 }
