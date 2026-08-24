@@ -58,12 +58,12 @@ struct PigpenApp: App {
     static let stills: [(argument: String, scene: CutScene.Name, seconds: TimeInterval)] = [
         ("-opening", .opening, 1.9),
         ("-opening-gate", .opening, 12.2),
-        ("-opening-welcome", .opening, 18.1),
-        ("-opening-treats", .opening, 25.9),
-        ("-opening-close", .opening, 33.8),
+        ("-opening-welcome", .opening, 20.6),
+        ("-opening-treats", .opening, 30.7),
+        ("-opening-close", .opening, 36.6),
         ("-mere", .stagMere, 2.4),
-        ("-mere-resident", .stagMere, 8.5),
-        ("-mere-both", .stagMere, 14.5),
+        ("-mere-resident", .stagMere, 9.1),
+        ("-mere-both", .stagMere, 15.0),
         ("-held-penned", .theMeadowHeld, 1.9),
         ("-held-forest", .theMeadowHeld, 10.1),
         ("-held-away", .theMeadowHeld, 15.0)

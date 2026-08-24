@@ -1198,9 +1198,10 @@ was shown at once.
 The last three shots are the briefing. Outside the practice pen nothing else tells a player
 that space is the score, that an apple shut in is worth five tiles and a skull five against,
 or that a pen is worth nothing at all with a gap in it — so the film draws each of them
-rather than writing them down. *And close the fence. Pig has no respect for property lines.*
-is the card the film hands the game over on: the half of the rule the apple and the skull
-cannot teach, and the reason a pen the size of the meadow is worth nothing with a hole in it.
+rather than writing them down. *And make sure to close the fence. Pig is keeping his options
+open.* is the card the film hands the game over on: the half of the rule the apple and the
+skull cannot teach, and the reason a pen the size of the meadow is worth nothing with a hole
+in it.
 
 It plays once. `WorldProgress` keeps the names of the films already played beside the stars,
 so a player who watches one, backs out without penning anything and comes back does not get

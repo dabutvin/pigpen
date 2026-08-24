@@ -188,7 +188,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🌲", "🍄"],
-                    caption: "Pig was beginning to see himself as a country-estate sort of pig.",
+                    caption: "Pig was warming to the idea of living off the beaten path.",
                     isCard: true
                 )
             ],
@@ -216,7 +216,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🚧",
                     strewn: ["🐗", "🍄"],
-                    caption: "Fence in Pig and the boar separately. Shared walls are not permitted.",
+                    caption: "Fence in Pig and the boar separately.",
                     isCard: true
                 )
             ],
@@ -257,8 +257,8 @@ extension StorybookScene {
 // MARK: - The mountain's films
 
 extension StorybookScene {
-    /// Before the first walk up Emberpeak: dramatic views and natural heating, its chestnuts a perk
-    /// and its open flames a maintenance concern.
+    /// Before the first walk up Emberpeak: dramatic views and natural heating, its mineral
+    /// rights a perk and its open flames a maintenance concern.
     static func emberpeakOpening(start: Date = .now) -> Self {
         Self(
             key: "emberpeak-opening",
@@ -271,9 +271,9 @@ extension StorybookScene {
                     caption: "Welcome to Emberpeak. Dramatic views. Naturally heated."
                 ),
                 Shot(
-                    motif: "🌰",
+                    motif: "🪙",
                     strewn: ["🔥", "🪨"],
-                    caption: "Chestnuts are a nice perk. Open flames are a maintenance concern."
+                    caption: "Turns out the mineral rights have their perks. Open flames are a maintenance concern."
                 ),
                 Shot(
                     motif: "🐷",
@@ -329,7 +329,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🏙️",
                     strewn: ["🌋", "✨"],
-                    caption: "Still, Pig wondered if city living might be more fun."
+                    caption: "Still, Pig wondered if maybe a city had more to offer."
                 ),
                 Shot(
                     motif: "🏙️",
@@ -346,8 +346,8 @@ extension StorybookScene {
 // MARK: - The city's films
 
 extension StorybookScene {
-    /// Before the first walk into Cogsworth City: walkable, vibrant, close to everything, with fresh
-    /// pie nearby and mystery drains underfoot.
+    /// Before the first walk into Cogsworth City: walkable, vibrant, close to everything, with
+    /// pizza in walking distance and a trash pickup that appears to be irregular.
     static func cogsworthOpening(start: Date = .now) -> Self {
         Self(
             key: "cogsworth-opening",
@@ -360,9 +360,9 @@ extension StorybookScene {
                     caption: "Cogsworth City. Walkable. Vibrant. Close to everything."
                 ),
                 Shot(
-                    motif: "🥧",
-                    strewn: ["🕳️", "🧱"],
-                    caption: "Fresh pie nearby adds value. Mystery drains do not."
+                    motif: "🍕",
+                    strewn: ["🗑️", "🧱"],
+                    caption: "Pizza within walking distance is a strong selling point. Trash pickup appears to be… irregular."
                 ),
                 Shot(
                     motif: "🐷",
@@ -418,7 +418,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🌟",
                     strewn: ["🏙️", "✨"],
-                    caption: "Pig began wondering how far he'd have to go for truly quiet neighbors."
+                    caption: "Pig began wondering how far he'd have to go to get away from rats."
                 ),
                 Shot(
                     motif: "🌌",
@@ -474,7 +474,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🛸",
                     strewn: ["🌌", "🌟"],
-                    caption: "There were neighbors."
+                    caption: "Turns out, there were neighbors."
                 ),
                 Shot(
                     motif: "🐷",
@@ -525,8 +525,8 @@ extension StorybookScene {
 // MARK: - The caverns' films
 
 extension StorybookScene {
-    /// Before the first walk down into Gloamdeep Caverns: quiet, private, no upstairs neighbours, with
-    /// excellent mineral rights and some structural concerns.
+    /// Before the first walk down into Gloamdeep Caverns: solid construction and no street noise
+    /// (no street, either), with excellent mineral rights and boulders in the way of expansion.
     static func gloamdeepOpening(start: Date = .now) -> Self {
         Self(
             key: "gloamdeep-opening",
@@ -536,12 +536,12 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🕳️", "💎"],
-                    caption: "Gloamdeep Caverns. Quiet. Private. No upstairs neighbors."
+                    caption: "Gloamdeep Caverns. Solid construction. No street noise. No street, either."
                 ),
                 Shot(
                     motif: "💎",
                     strewn: ["🪨", "💧"],
-                    caption: "Excellent mineral rights. Some structural concerns."
+                    caption: "Excellent mineral rights. Boulders make expansion difficult."
                 ),
                 Shot(
                     motif: "🐷",
@@ -554,7 +554,8 @@ extension StorybookScene {
         )
     }
 
-    /// The caverns' boss briefing: the property was occupied twice over, and everyone gets their due.
+    /// The caverns' boss briefing: the property was occupied twice over, and Pig is absolutely
+    /// not accepting roommates.
     static func theRoost(start: Date = .now) -> Self {
         Self(
             key: "the-roost-briefing",
@@ -574,7 +575,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🚧",
                     strewn: ["🦇", "💎"],
-                    caption: "Pig gets his own pen. Both bats share the other. Everyone gets the arrangement they deserve.",
+                    caption: "Pig gets his own pen. Both bats share the other. Pig was absolutely not accepting roommates.",
                     isCard: true
                 )
             ],
@@ -615,8 +616,8 @@ extension StorybookScene {
 // MARK: - The carnival's films
 
 extension StorybookScene {
-    /// Before the first walk into the Lantern Carnival: colourful, exciting, amenities everywhere, its
-    /// lollipops a sweetener and its knots a sign of strings attached.
+    /// Before the first walk into the Lantern Carnival: bright, bustling, no shortage of
+    /// entertainment, its concessions a perk and its noise enough to sink the deal.
     static func lanternOpening(start: Date = .now) -> Self {
         Self(
             key: "lantern-opening",
@@ -626,12 +627,12 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🎪", "🍭"],
-                    caption: "Lantern Carnival. Colorful. Exciting. Amenities everywhere."
+                    caption: "Lantern Carnival. Bright. Bustling. Absolutely no shortage of entertainment."
                 ),
                 Shot(
-                    motif: "🍭",
-                    strewn: ["🪢", "🎡"],
-                    caption: "Lollipops sweeten the deal. Knots mean there are strings attached."
+                    motif: "🍿",
+                    strewn: ["📣", "🎡"],
+                    caption: "On-site concessions are a definite perk. The noise alone could sink the deal."
                 ),
                 Shot(
                     motif: "🐷",
@@ -644,7 +645,7 @@ extension StorybookScene {
         )
     }
 
-    /// The carnival's boss briefing: Pig meets management, who requires a generous setback.
+    /// The carnival's boss briefing: Pig meets management, who runs a tight ship.
     static func theCenterRing(start: Date = .now) -> Self {
         Self(
             key: "the-centre-ring-briefing",
@@ -659,7 +660,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🤹",
                     strewn: ["🎪", "🍭"],
-                    caption: "The ringmaster stays in the center ring. He also requires a generous setback."
+                    caption: "The ringmaster runs a tight ship. Keep your construction out of his personal space."
                 ),
                 Shot(
                     motif: "🚧",
@@ -687,12 +688,12 @@ extension StorybookScene {
                 Shot(
                     motif: "🏜️",
                     strewn: ["🎪", "✨"],
-                    caption: "Pig decided he wanted somewhere peaceful."
+                    caption: "Pig decided he wanted somewhere more peaceful."
                 ),
                 Shot(
                     motif: "🏜️",
                     strewn: ["🌵", "☀️"],
-                    caption: "He may have overcorrected.",
+                    caption: "Somewhere quiet hours practically enforce themselves.",
                     isCard: true
                 )
             ],
@@ -704,8 +705,8 @@ extension StorybookScene {
 // MARK: - The dunes' films
 
 extension StorybookScene {
-    /// Before the first walk into the dunes: quiet, open, miles from the nearest neighbour, its melons
-    /// a welcome amenity and its cacti a hit to the walkability score.
+    /// Before the first walk into the dunes: warm, secluded, extremely low-maintenance
+    /// landscaping, its water access worth a premium and its snakes a hit to buyer confidence.
     static func duneOpening(start: Date = .now) -> Self {
         Self(
             key: "dune-opening",
@@ -715,12 +716,12 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🏜️", "☀️"],
-                    caption: "Sunbaked Dunes. Quiet. Open. Miles from the nearest neighbor."
+                    caption: "Sunbaked Dunes. Warm. Secluded. Extremely low-maintenance landscaping."
                 ),
                 Shot(
                     motif: "🍈",
                     strewn: ["🌵", "🏜️"],
-                    caption: "Melons are a welcome amenity. Cacti lower the walkability score."
+                    caption: "Water access is worth a premium. Snakes tend to hurt buyer confidence."
                 ),
                 Shot(
                     motif: "🐷",
@@ -753,7 +754,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🚧",
                     strewn: ["🦂", "🌵"],
-                    caption: "Build separate pens. And don't let them share a fence. Good fences make good neighbors. Better gaps make better ones.",
+                    caption: "Build separate pens. And don't let them share a fence. Adjoining properties were not approved.",
                     isCard: true
                 )
             ],
@@ -776,7 +777,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🌊",
                     strewn: ["🏜️", "☀️"],
-                    caption: "Pig suddenly understood the appeal of waterfront property."
+                    caption: "Pig thought the sand would be more appealing with water attached."
                 ),
                 Shot(
                     motif: "🌊",
@@ -822,7 +823,8 @@ extension StorybookScene {
         )
     }
 
-    /// The cove's boss briefing: a small easement issue, and property inside the property.
+    /// The cove's boss briefing: the property came with a guest house, and everyone likes a
+    /// little privacy.
     static func theCrabPool(start: Date = .now) -> Self {
         Self(
             key: "the-crab-pool-briefing",
@@ -832,17 +834,17 @@ extension StorybookScene {
                 Shot(
                     motif: "🦀",
                     strewn: ["🌊", "🐚"],
-                    caption: "Then Pig discovered a small easement issue."
+                    caption: "Then Pig discovered the property came with a guest house."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🦀", "🌊"],
-                    caption: "The crab already had property inside the property. Naturally."
+                    caption: "Give the crab its own pen. Then build Pig's around it."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🦀", "🐚"],
-                    caption: "Put the crab in its own pen. Then put that pen inside Pig's. And keep the fences apart. It's less a floor plan and more a legal arrangement.",
+                    caption: "No shared fences. Everyone likes a little privacy.",
                     isCard: true
                 )
             ],
@@ -850,8 +852,8 @@ extension StorybookScene {
         )
     }
 
-    /// After the last pen in the cove holds: beautiful views, a complicated title history, and a
-    /// cold gust off somewhere cooler.
+    /// After the last pen in the cove holds: beautiful views, one too many uninvited guests, and
+    /// a cold gust off somewhere cooler.
     static func tidepoolHeld(start: Date = .now) -> Self {
         Self(
             key: "tidepool-held",
@@ -861,17 +863,17 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["🦀", "🐚"],
-                    caption: "Beautiful views. Excellent beach access. Complicated title history."
+                    caption: "Beautiful views. Excellent beach access. One too many uninvited guests."
                 ),
                 Shot(
                     motif: "❄️",
                     strewn: ["🌊", "🐚"],
-                    caption: "Pig wondered if somewhere cooler might be nice."
+                    caption: "Pig decided he'd had enough of sand, surf, and surprise crustaceans."
                 ),
                 Shot(
                     motif: "❄️",
                     strewn: ["🧊", "❄️"],
-                    caption: "Again, he overcorrected.",
+                    caption: "A cozy place near the slopes sounded hard to beat.",
                     isCard: true
                 )
             ],
@@ -883,8 +885,8 @@ extension StorybookScene {
 // MARK: - The tundra's films
 
 extension StorybookScene {
-    /// Before the first walk out onto the tundra: quiet, scenic, excellent natural refrigeration, its
-    /// fish highly desirable and its extra ice distinctly not.
+    /// Before the first walk out onto the tundra: charming, scenic, excellent natural
+    /// refrigeration, its slope access a major amenity and its black ice a hit to walkability.
     static func frostwhiskerOpening(start: Date = .now) -> Self {
         Self(
             key: "frostwhisker-opening",
@@ -894,17 +896,17 @@ extension StorybookScene {
                 Shot(
                     motif: "🐷",
                     strewn: ["❄️", "🌨️"],
-                    caption: "Frostwhisker Tundra. Quiet. Scenic. Excellent natural refrigeration."
+                    caption: "Frostwhisker Tundra. Charming. Scenic. Excellent natural refrigeration."
                 ),
                 Shot(
-                    motif: "🐟",
+                    motif: "🎿",
                     strewn: ["🧊", "❄️"],
-                    caption: "Fish are highly desirable. More ice is not."
+                    caption: "Slope access is a major amenity. Black ice hurts the walkability score."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["❄️", "🧊"],
-                    caption: "Pig had wanted cooler. Technically, he'd succeeded.",
+                    caption: "Pig was beginning to understand the ski-town premium.",
                     isCard: true
                 )
             ],
@@ -932,7 +934,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🚧",
                     strewn: ["🦭", "🌊"],
-                    caption: "Build separate pens. The seal's pen must border the water. Location, location, location.",
+                    caption: "Build separate pens. The seal's pen must border the water.",
                     isCard: true
                 )
             ],
@@ -972,8 +974,8 @@ extension StorybookScene {
 // MARK: - The fen's films
 
 extension StorybookScene {
-    /// Before the first walk into the fen: waterfront property in every direction, its blueberries a
-    /// pleasant surprise and its logs a tripping hazard.
+    /// Before the first walk into the fen: waterfront property in every direction, its lotus
+    /// flowers a lovely pop of color and its mosquito situation difficult to overlook.
     static func mirebogOpening(start: Date = .now) -> Self {
         Self(
             key: "mirebog-opening",
@@ -986,9 +988,9 @@ extension StorybookScene {
                     caption: "Mirebog Fen. Waterfront property in every direction."
                 ),
                 Shot(
-                    motif: "🫐",
-                    strewn: ["🪵", "🌿"],
-                    caption: "Blueberries are a pleasant surprise. Logs are a tripping hazard."
+                    motif: "🪷",
+                    strewn: ["🦟", "🌿"],
+                    caption: "Lotus flowers add a lovely pop of color. The mosquito situation is difficult to overlook."
                 ),
                 Shot(
                     motif: "🐷",
@@ -1001,7 +1003,7 @@ extension StorybookScene {
         )
     }
 
-    /// The fen's boss briefing: a pool and a pool owner, who wants the whole thing.
+    /// The fen's boss briefing: the crocodile has one requirement, and it is the whole waterway.
     static func theWallow(start: Date = .now) -> Self {
         Self(
             key: "the-wallow-briefing",
@@ -1011,17 +1013,17 @@ extension StorybookScene {
                 Shot(
                     motif: "🐊",
                     strewn: ["🌿", "🌊"],
-                    caption: "There was also a pool. And a pool owner."
+                    caption: "The crocodile had one requirement: waterfront."
                 ),
                 Shot(
                     motif: "🐷",
                     strewn: ["🐊", "🌿"],
-                    caption: "The crocodile wanted the entire thing. Pig had no objections."
+                    caption: "One waterway is enough. But he wants the whole thing."
                 ),
                 Shot(
                     motif: "🚧",
                     strewn: ["🐊", "🌿"],
-                    caption: "Build separate pens. The crocodile's pen must surround the whole body of water. And don't put the fence right on the shoreline. Even crocodiles have setback requirements.",
+                    caption: "Build separate pens. Fence the crocodile in with one entire waterway.",
                     isCard: true
                 )
             ],
@@ -1044,7 +1046,7 @@ extension StorybookScene {
                 Shot(
                     motif: "☁️",
                     strewn: ["🌿", "🌫️"],
-                    caption: "Pig decided his next home should be as far from water as possible."
+                    caption: "Pig still wasn't quite satisfied."
                 ),
                 Shot(
                     motif: "☁️",
@@ -1062,7 +1064,7 @@ extension StorybookScene {
 
 extension StorybookScene {
     /// Before the first walk onto the heights: fresh air, endless views, absolutely no flood risk,
-    /// its balloons a charm and its twisters a hit to the insurance premium.
+    /// its rainbows instant appeal and its severe weather a notable drawback.
     static func cloudspireOpening(start: Date = .now) -> Self {
         Self(
             key: "cloudspire-opening",
@@ -1075,9 +1077,9 @@ extension StorybookScene {
                     caption: "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk."
                 ),
                 Shot(
-                    motif: "🎈",
-                    strewn: ["🌪️", "☁️"],
-                    caption: "Balloons add charm. Twisters affect the insurance premium."
+                    motif: "🌈",
+                    strewn: ["🌩️", "☁️"],
+                    caption: "A rainbow adds instant appeal. Severe weather is a notable drawback."
                 ),
                 Shot(
                     motif: "🐷",
@@ -1149,7 +1151,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🌈",
                     strewn: ["🐷", "🍎"],
-                    caption: "More space. Good snacks. No surprises. The perfect pen."
+                    caption: "The best pen was already his. Plenty of space. Apples nearby. No fine print."
                 ),
                 Shot(
                     motif: "🐷",

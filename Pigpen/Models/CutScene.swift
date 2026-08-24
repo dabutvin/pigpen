@@ -27,7 +27,7 @@ struct CutScene: Equatable, Sendable {
     /// watched it should know what a good pen is before they are handed a rack of fencing:
     /// build the biggest pen the fencing will reach round, more space is a better score,
     /// apples improve the property and skulls hurt its resale value — and close the fence,
-    /// because the pig has no respect for property lines.
+    /// because the pig is keeping his options open.
     enum Name: String, Sendable, CaseIterable {
         /// Before the first walk up the meadow: a pig who has outgrown his farm pen, the
         /// open gate he leaves through, and the rules the whole game is scored on — biggest
@@ -82,7 +82,7 @@ struct CutScene: Equatable, Sendable {
         /// rule drawn rather than written — space scores, apples improve it, skulls hurt it.
         case applesAndSkulls
         /// One panel gone from the pen and the pig walking straight out through the gap: the
-        /// other half of the rule, and the pig's contempt for property lines.
+        /// other half of the rule, and the pig keeping his options open.
         case closeTheFence
 
         // MARK: Stag Mere
@@ -345,8 +345,8 @@ extension CutScene {
     /// The last three shots are the briefing the game never otherwise gives. A player who
     /// watches the film knows the property is theirs to build on, that space scores and
     /// apples help and skulls hurt — and, before a single piece is in the ground, that a pen
-    /// is worth nothing at all with a gap left in it, because the pig has no respect for
-    /// property lines.
+    /// is worth nothing at all with a gap left in it, because the pig is keeping his
+    /// options open.
     static func opening(start: Date = .now) -> Self {
         Self(
             name: .opening,
@@ -357,7 +357,7 @@ extension CutScene {
                 ),
                 Shot(
                     picture: .theOpenGate,
-                    caption: "Then someone left the gate open. Pig decided to explore the market."
+                    caption: "Then someone left the gate open. Pig decided it was time to explore the market for some new real estate."
                 ),
                 Shot(
                     picture: .welcomeMeadow,
@@ -369,7 +369,7 @@ extension CutScene {
                 ),
                 Shot(
                     picture: .closeTheFence,
-                    caption: "And close the fence. Pig has no respect for property lines."
+                    caption: "And make sure to close the fence. Pig is keeping his options open."
                 )
             ],
             start: start
@@ -391,7 +391,7 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .promisingLand,
-                    caption: "Pig found a promising piece of land. There was just one complication."
+                    caption: "Pig had found a promising piece of land. There was just one complication."
                 ),
                 Shot(
                     picture: .theResident,
@@ -399,7 +399,7 @@ extension CutScene {
                 ),
                 Shot(
                     picture: .oneOrTwo,
-                    caption: "Fence in both Pig and the deer. One pen or two, whatever makes the floor plan work."
+                    caption: "Fence in both Pig and the deer. One pen or two. Whatever makes the floor plan work."
                 )
             ],
             start: start
