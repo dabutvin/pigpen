@@ -1056,18 +1056,20 @@ because the player said it could.
   the whole fortnight down again, which is how a day held at ten past eight loses its
   reminder before nine — and how a phone left shut for a week is still reminded every
   morning of it.
-- **A reminder says where the week stands, in a few words.** The week is a climb, so
-  Monday's says the easiest board of the week and Sunday's the toughest — the same thing
-  the bands the almanac is generated against are saying, as a signpost rather than a
-  number. A player hears the same weekday's line every week of the year, so it is kept
-  short enough not to go stale, says nothing the board will not say better itself ten
-  seconds after the tap, and never gives one away.
-- **The run of days rides on the next reminder only — as its title.** *6 days in a row —
-  keep it going* is the reason a morning tap is worth anything, so when there is a run it
-  takes the headline and the body names the day instead. And only the next reminder can
-  promise the number: it is written onto today's or tomorrow's and no further, because
-  the run either survives to the next board or it does not, and a reminder four days out
-  cannot know which.
+- **A reminder says one of a hundred lines, picked by the day.** The pool is the estate
+  agent's patter the cut scenes talk in — *Pig's waiting* / *Come build him a yard he can
+  brag about* — a hundred title-and-body couplets, so mornings stop reading alike without
+  any line going stale. The pick is seeded off the date rather than rolled in the moment:
+  the fortnight is laid down again on every return to the title screen, and a true roll
+  would rewrite every pending reminder each time, so any one morning always says the same
+  thing and the mornings around it say something else. None of the lines gives a board
+  away.
+- **The run of days rides on the next reminder only — glued onto the body.** *6 days in a
+  row so far.* is the reason a morning tap is worth anything, and it is appended to the
+  body rather than swapped in for the title, because each title and body are written as a
+  couplet and neither half stands alone. Only the next reminder can promise the number: it
+  is written onto today's or tomorrow's and no further, because the run either survives to
+  the next board or it does not, and a reminder four days out cannot know which.
 - **Tapping it opens the board.** A reminder that puts the player down on the title screen
   with the puzzle still a tap away has spent its one interruption on nothing: they were told
   the day's board is up, they said yes, and the game answered by showing them the front
