@@ -1,7 +1,7 @@
 # Starfall Reaches
 
-The fifth world, solved the same way and drawn the same way. A stardrop takes the meadow's
-apple and a meteor its skull, so an `a` below is a stardrop worth five tiles to shut in, and an
+The fifth world, solved the same way and drawn the same way. A star takes the meadow's
+apple and a meteor its skull, so an `a` below is a star worth five tiles to shut in, and an
 `x` a meteor worth five fewer that no piece will build on — nothing drives a post through a
 stone that came in from that far out — and a `V` is the visitor, which is held like the deer,
 the boar and the rat king before it and, unlike any of them, will not be housed worse than the
@@ -25,11 +25,11 @@ more room out here than anywhere else and less of it a plain block can reach.
 | 2 | Fallwater Basin | 13 | 36 | — | 36 | 24 |
 | 3 | Broken Chain | 15 | 38 | — | 38 | 24 |
 | 4 | Swept Flat | 18 | 32 | — | 32 | 20 |
-| 5 | Stardrop Hollow | 13 | 34 | 1 stardrop | 39 | 23 |
+| 5 | Stardrop Hollow | 13 | 34 | 1 star | 39 | 23 |
 | 6 | Meteor Field | 15 | 42 | 2 meteors | 32 | 17 |
 | 7 | Starwell Ring | 12 | 32 | — | 32 | 14 |
-| 8 | Wide Reaches | 20 | 64 | 1 stardrop | 69 | 45 |
-| 9 | Visitor Crater | 20 | 44 | 2 stardrops, 1 meteor | 49 | 27 |
+| 8 | Wide Reaches | 20 | 64 | 1 star | 69 | 45 |
+| 9 | Visitor Crater | 20 | 44 | 2 stars, 1 meteor | 49 | 27 |
 
 ## 1. Dust Shore — 12 pieces, 31
 
@@ -156,13 +156,13 @@ south is not an answer either.
 ...........
 ```
 
-Two stardrops cooling on the north rim with a single tile of dust between them, and seven wells
+Two stars cooling on the north rim with a single tile of dust between them, and seven wells
 scattered round the hollow to lean on. Thirteen pieces squared off under the wells hold 13 tiles
-and, since no piece goes on a stardrop, both drops with them: 23.
+and, since no piece goes on a star, both drops with them: 23.
 
 The pen that wins bends out over the near drop and pays for it by cutting back on the diagonal
-underneath: 34 tiles and one stardrop, 39. The far one stays where it fell, one tile further
-out, and that is the whole of what a stardrop is for — the line between a windfall worth
+underneath: 34 tiles and one star, 39. The far one stays where it fell, one tile further
+out, and that is the whole of what a star is for — the line between a windfall worth
 reaching and a windfall worth leaving runs between two neighbours here.
 
 ## 6. Meteor Field — 15 pieces, 32
@@ -234,12 +234,12 @@ only rules out every shape but one — and every one of the six is on the answer
 ```
 
 The widest board in the game and the biggest pen anywhere in it. Twelve by twelve, six wells
-thrown across it, one stardrop down in the south-west, twenty pieces.
+thrown across it, one star down in the south-west, twenty pieces.
 
 The wells are a constellation the way the ring's are, but the wall they imply out here is a
 diamond ten tiles across, and the diamond is the point: twenty pieces laid as a staircase all
-the way round shut 64 tiles and take the stardrop in on the way, which is 69, where the best
-block those same twenty can square off holds 40 tiles and the same stardrop, or 45. Nothing
+the way round shut 64 tiles and take the star in on the way, which is 69, where the best
+block those same twenty can square off holds 40 tiles and the same star, or 45. Nothing
 else in the game holds sixty tiles.
 
 The well showing inside the diagram, down at the bottom, is standing in the pen's own wall
@@ -280,11 +280,11 @@ neck is what turns one pen into two.
 What is left after that is the rule, because the halves are not the same size. Plug the neck,
 fence the rim, and you have a pen holding every tile in the crater and a board that will not
 have it — so the last thing to work out is which tiles of the wider half to hand back. The
-answer holds 22 tiles on each side of the line, with a stardrop in each half and a meteor the
+answer holds 22 tiles on each side of the line, with a star in each half and a meteor the
 visitor's half swallows: 27 for the pig, 22 for the visitor, 49 between them, off a best pair of
 blocks worth 27.
 
-The third stardrop lies out past the west rim where no wall on this board can reach it, and the
+The third star lies out past the west rim where no wall on this board can reach it, and the
 second meteor stands up on the west rim exactly where a tidy wall would want to go.
 
 It asks for 21 of the 24 stars below it before it opens.

@@ -7,10 +7,10 @@ import SwiftUI
 /// can, so long as it is shut. What a theme changes is only ever the dressing: the light the
 /// trail and the board are drawn in, what grows around them, what the ground and the water of
 /// the board itself are made of, what the +5 windfall and the −5 hazard look like lying on
-/// that ground, and the shape that waits at the end of it. An apple in the meadow is a truffle
-/// in the woods and worth the same five tiles; a skull is a bramble and costs the same five;
-/// mud is ash on the mountain and takes a fence just the same. The board does not know the
-/// difference, which is why one board and one solver serve every world there is.
+/// that ground, and the shape that waits at the end of it. An apple in the meadow is a
+/// mushroom in the woods and worth the same five tiles; a skull is a wilted flower and costs
+/// the same five; mud is ash on the mountain and takes a fence just the same. The board does
+/// not know the difference, which is why one board and one solver serve every world there is.
 struct WorldTheme: Sendable {
     let id: String
     /// What the world is called, on the universe map and across the top of its own trail.
@@ -40,14 +40,14 @@ struct WorldTheme: Sendable {
 /// How a world dresses the two things that can lie on its ground: the windfall worth five
 /// tiles to shut in, and the hazard that costs five. Neither takes fencing. The mechanic is
 /// the meadow's apple and skull whatever the skin; only the glyph and the word for it change,
-/// so a truffle scores like an apple and reads like a truffle.
+/// so a mushroom scores like an apple and reads like a mushroom.
 struct TreatSkin: Sendable {
     /// The +5 windfall, staked in the ground and never fenced: an apple in the meadow, a
-    /// truffle in the woods.
+    /// mushroom in the woods.
     let bonusGlyph: String
     let bonusScale: CGFloat
     let bonusName: String
-    /// The −5 hazard, staked in the ground and never fenced: a skull, or a bramble.
+    /// The −5 hazard, staked in the ground and never fenced: a skull, or a wilted flower.
     let hazardGlyph: String
     let hazardScale: CGFloat
     let hazardName: String
@@ -105,17 +105,17 @@ extension WorldTheme {
     )
 
     /// Thornwood Thicket, the second world: the same pig loose in deep woods, where the
-    /// windfall is a truffle and the hazard a bramble, and neither turns up where the last
-    /// world would have put it.
+    /// windfall is a mushroom and the hazard a wilted flower, and neither turns up where the
+    /// last world would have put it.
     static let thornwood = WorldTheme(
         id: "thornwood-thicket",
         name: "Thornwood Thicket",
-        blurb: "The pig took the tree line. Truffles in the leaf mould, brambles in the dark.",
+        blurb: "The pig took the tree line. Mushrooms in the leaf mould, wilted flowers in the dark.",
         day: .forestDay,
         dusk: .forestDusk,
         treats: TreatSkin(
-            bonusGlyph: "🍄", bonusScale: 0.56, bonusName: "truffle",
-            hazardGlyph: "🥀", hazardScale: 0.60, hazardName: "bramble"
+            bonusGlyph: "🍄", bonusScale: 0.56, bonusName: "mushroom",
+            hazardGlyph: "🥀", hazardScale: 0.60, hazardName: "wilted flower"
         ),
         field: .thornwood,
         boss: BossMark(glyph: "🐗", name: "the boar"),
@@ -124,18 +124,18 @@ extension WorldTheme {
     )
 
     /// Emberpeak, the third world: the trees give out and the pig climbs a mountain that has
-    /// never stopped smoking. The windfall is a chestnut roasting where it fell and the
-    /// hazard an ember burning in the ash — each worth exactly what its meadow twin was, so
-    /// the board underneath is the board it always was.
+    /// never stopped smoking. The windfall is a coin turned up out of the mineral rights and
+    /// the hazard an open flame burning in the ash — each worth exactly what its meadow twin
+    /// was, so the board underneath is the board it always was.
     static let emberpeak = WorldTheme(
         id: "emberpeak",
         name: "Emberpeak",
-        blurb: "A mountain that never stops smoking. Chestnuts in the ash, embers under it.",
+        blurb: "A mountain that never stops smoking. Coins in the ash, flames under it.",
         day: .emberDay,
         dusk: .emberDusk,
         treats: TreatSkin(
-            bonusGlyph: "🌰", bonusScale: 0.56, bonusName: "chestnut",
-            hazardGlyph: "🔥", hazardScale: 0.62, hazardName: "ember"
+            bonusGlyph: "🪙", bonusScale: 0.56, bonusName: "coin",
+            hazardGlyph: "🔥", hazardScale: 0.62, hazardName: "flame"
         ),
         field: .emberpeak,
         boss: BossMark(glyph: "🐉", name: "the wyrm"),
@@ -144,21 +144,21 @@ extension WorldTheme {
     )
 
     /// Cogsworth City, the fourth world: down off the mountain and in under the gate, where
-    /// the ground is paved and the water is a canal somebody dug. The windfall is a pie
-    /// dropped outside a shop and the hazard a drain sunk in the road — each worth exactly
-    /// what its meadow twin was, so the board underneath is the board it always was.
+    /// the ground is paved and the water is a canal somebody dug. The windfall is a pizza
+    /// dropped outside a shop and the hazard a trash can left out in the road — each worth
+    /// exactly what its meadow twin was, so the board underneath is the board it always was.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for three worlds, so
     /// the planet a player has been walking towards is the planet they arrive at.
     static let cogsworth = WorldTheme(
         id: "cogsworth-city",
         name: "Cogsworth City",
-        blurb: "Alleys, rooftops and a pig on the loose. Pies on the pavement, drains under it.",
+        blurb: "Alleys, rooftops and a pig on the loose. Pizza on the pavement, trash cans along it.",
         day: .cityDay,
         dusk: .cityDusk,
         treats: TreatSkin(
-            bonusGlyph: "🥧", bonusScale: 0.58, bonusName: "pie",
-            hazardGlyph: "🕳️", hazardScale: 0.60, hazardName: "drain"
+            bonusGlyph: "🍕", bonusScale: 0.58, bonusName: "pizza",
+            hazardGlyph: "🗑️", hazardScale: 0.60, hazardName: "trash can"
         ),
         field: .cogsworth,
         boss: BossMark(glyph: "🐀", name: "the rat king"),
@@ -167,8 +167,8 @@ extension WorldTheme {
     )
 
     /// Starfall Reaches, the fifth world: up off the rooftops onto ground the sky keeps
-    /// falling on. The windfall is a stardrop still cooling where it landed and the hazard a
-    /// meteor sunk into the dust — each worth exactly what its meadow twin was, a stardrop
+    /// falling on. The windfall is a star still cooling where it landed and the hazard a
+    /// meteor sunk into the dust — each worth exactly what its meadow twin was, a star
     /// five tiles to shut in, a meteor five to shut in with and no fencing at all, since
     /// nothing will drive a post through a stone that came in from that far out.
     ///
@@ -177,11 +177,11 @@ extension WorldTheme {
     static let starfall = WorldTheme(
         id: "starfall-reaches",
         name: "Starfall Reaches",
-        blurb: "Fence a pig loose among the stars. Stardrops in the dust, meteors under it.",
+        blurb: "Fence a pig loose among the stars. Stars in the dust, meteors under it.",
         day: .starDay,
         dusk: .starDusk,
         treats: TreatSkin(
-            bonusGlyph: "🌟", bonusScale: 0.58, bonusName: "stardrop",
+            bonusGlyph: "🌟", bonusScale: 0.58, bonusName: "star",
             hazardGlyph: "☄️", hazardScale: 0.62, hazardName: "meteor"
         ),
         field: .starfall,
@@ -192,8 +192,8 @@ extension WorldTheme {
 
     /// Gloamdeep Caverns, the sixth world: down off the dust and in under it, where the ground is
     /// wet flowstone and the water is one river running through the dark. The windfall is a
-    /// crystal, which is the only light there is down here, and the hazard a boulder come off the
-    /// roof — each worth exactly what its meadow twin was, a crystal five tiles to shut in, a
+    /// diamond, which is the only light there is down here, and the hazard a boulder come off the
+    /// roof — each worth exactly what its meadow twin was, a diamond five tiles to shut in, a
     /// boulder five to shut in with and no fencing at all, since nothing drives a post through a
     /// fallen stone.
     ///
@@ -202,11 +202,11 @@ extension WorldTheme {
     static let gloamdeep = WorldTheme(
         id: "gloamdeep-caverns",
         name: "Gloamdeep Caverns",
-        blurb: "Deep dark, and something with wings. Crystals in the flowstone, boulders on it.",
+        blurb: "Deep dark, and something with wings. Diamonds in the flowstone, boulders on it.",
         day: .gloamDay,
         dusk: .gloamDusk,
         treats: TreatSkin(
-            bonusGlyph: "💎", bonusScale: 0.56, bonusName: "crystal",
+            bonusGlyph: "💎", bonusScale: 0.56, bonusName: "diamond",
             hazardGlyph: "🪨", hazardScale: 0.60, hazardName: "boulder"
         ),
         field: .gloamdeep,
@@ -216,23 +216,23 @@ extension WorldTheme {
     )
 
     /// Lantern Carnival, the seventh world: up out of the dark and into a field full of lights,
-    /// where the ground is trodden sawdust and the water is a crowd. The windfall is a toffee
-    /// apple dropped off its stick and the hazard a guy rope pegged down to hold a tent up —
-    /// each worth exactly what its meadow twin was, a toffee apple five tiles to shut in, a guy
-    /// rope five to shut in with and no fencing at all, since a peg is already somebody else's
-    /// post and there is no room beside it for one of yours.
+    /// where the ground is trodden sawdust and the water is a crowd. The windfall is popcorn
+    /// dropped at the concession stand and the hazard a megaphone blaring where it was set
+    /// down — each worth exactly what its meadow twin was, popcorn five tiles to shut in, a
+    /// megaphone five to shut in with and no fencing at all, since nobody builds a wall where
+    /// the noise is worst.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for six worlds, so the
     /// planet a player has been walking towards is the planet they arrive at.
     static let lanternCarnival = WorldTheme(
         id: "lantern-carnival",
         name: "Lantern Carnival",
-        blurb: "Lights, crowds and a pig on the loose. Toffee apples in the sawdust, guy ropes across it.",
+        blurb: "Lights, crowds and a pig on the loose. Popcorn in the sawdust, megaphones over it.",
         day: .lanternDay,
         dusk: .lanternDusk,
         treats: TreatSkin(
-            bonusGlyph: "🍭", bonusScale: 0.58, bonusName: "toffee apple",
-            hazardGlyph: "🪢", hazardScale: 0.58, hazardName: "guy rope"
+            bonusGlyph: "🍿", bonusScale: 0.58, bonusName: "popcorn",
+            hazardGlyph: "📣", hazardScale: 0.58, hazardName: "megaphone"
         ),
         field: .lanternCarnival,
         boss: BossMark(glyph: "🤹", name: "the ringmaster"),
@@ -242,9 +242,9 @@ extension WorldTheme {
 
     /// Sunbaked Dunes, the eighth world: out past the last of the lights and into sand to the
     /// horizon, where the ground is baked hardpan and the water is a dune. The windfall is a
-    /// desert melon split open where it lay and the hazard a cactus — each worth exactly what its
-    /// meadow twin was, a melon five tiles to shut in, a cactus five to shut in with and no
-    /// fencing at all, since a cactus is all spine and there is nothing in it to nail to.
+    /// desert melon split open where it lay and the hazard a snake — each worth exactly what its
+    /// meadow twin was, a melon five tiles to shut in, a snake five to shut in with and no
+    /// fencing at all, since nobody drives a post where a snake is coiled.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for seven worlds, so the
     /// planet a player has been walking towards is the planet they arrive at.
@@ -256,7 +256,7 @@ extension WorldTheme {
         dusk: .duneDusk,
         treats: TreatSkin(
             bonusGlyph: "🍈", bonusScale: 0.58, bonusName: "melon",
-            hazardGlyph: "🌵", hazardScale: 0.60, hazardName: "cactus"
+            hazardGlyph: "🐍", hazardScale: 0.60, hazardName: "snake"
         ),
         field: .sunbakedDunes,
         boss: BossMark(glyph: "🦂", name: "the scorpion"),
@@ -265,10 +265,10 @@ extension WorldTheme {
     )
 
     /// Tidepool Cove, the ninth world: down off the last dune to where the sea comes in, onto
-    /// wet sand the tide has only just let go of. The windfall is a pearl the tide left lying in
-    /// its shell and the hazard a jellyfish stranded where it washed up — each worth exactly what
-    /// its meadow twin was, a pearl five tiles to shut in, a jellyfish five to shut in with and
-    /// no fencing at all, since nothing drives a post through a sting.
+    /// wet sand the tide has only just let go of. The windfall is a seashell the tide left
+    /// lying on the strand and the hazard a jellyfish stranded where it washed up — each worth
+    /// exactly what its meadow twin was, a seashell five tiles to shut in, a jellyfish five to
+    /// shut in with and no fencing at all, since nothing drives a post through a sting.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for eight worlds, so the
     /// planet a player has been walking towards is the planet they arrive at.
@@ -279,7 +279,7 @@ extension WorldTheme {
         day: .coveDay,
         dusk: .coveDusk,
         treats: TreatSkin(
-            bonusGlyph: "🐚", bonusScale: 0.58, bonusName: "pearl",
+            bonusGlyph: "🐚", bonusScale: 0.58, bonusName: "seashell",
             hazardGlyph: "🪼", hazardScale: 0.60, hazardName: "jellyfish"
         ),
         field: .tidepoolCove,
@@ -289,10 +289,10 @@ extension WorldTheme {
     )
 
     /// Frostwhisker Tundra, the tenth world: north along the shore until the sea itself gives
-    /// up and goes white, onto snow lying over frozen ice. The windfall is a fish flipped up
-    /// onto the ice and the hazard a berg calved into the snow — each worth exactly what its
-    /// meadow twin was, a fish five tiles to shut in, a berg five to shut in with and no
-    /// fencing at all, since nothing drives a post through blue ice.
+    /// up and goes white, onto snow lying over frozen ice. The windfall is a ski dropped on
+    /// the way to the slopes and the hazard an ice slick sheeted black across the snow — each
+    /// worth exactly what its meadow twin was, a ski five tiles to shut in, an ice slick five
+    /// to shut in with and no fencing at all, since nothing drives a post through black ice.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for nine worlds, so the
     /// planet a player has been walking towards is the planet they arrive at.
@@ -303,8 +303,8 @@ extension WorldTheme {
         day: .frostDay,
         dusk: .frostDusk,
         treats: TreatSkin(
-            bonusGlyph: "🐟", bonusScale: 0.58, bonusName: "fish",
-            hazardGlyph: "🧊", hazardScale: 0.58, hazardName: "berg"
+            bonusGlyph: "🎿", bonusScale: 0.58, bonusName: "ski",
+            hazardGlyph: "🧊", hazardScale: 0.58, hazardName: "ice slick"
         ),
         field: .frostwhiskerTundra,
         boss: BossMark(glyph: "🦭", name: "the bull seal"),
@@ -313,10 +313,10 @@ extension WorldTheme {
     )
 
     /// Mirebog Fen, the eleventh world: south off the ice into ground that never chose
-    /// between land and water. The windfall is a bilberry ripened over the peat and the
-    /// hazard a snag — bog oak drowned black and hard as iron — each worth exactly what its
-    /// meadow twin was, a bilberry five tiles to shut in, a snag five to shut in with and no
-    /// fencing at all, since nothing drives a post into wood the bog already ate.
+    /// between land and water. The windfall is a lotus flower opened over the peat and the
+    /// hazard a mosquito whining over its own patch of mire — each worth exactly what its
+    /// meadow twin was, a lotus flower five tiles to shut in, a mosquito five to shut in with
+    /// and no fencing at all, since no wall on the fen keeps a mosquito off.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for ten worlds, so the
     /// planet a player has been walking towards is the planet they arrive at.
@@ -327,8 +327,8 @@ extension WorldTheme {
         day: .fenDay,
         dusk: .fenDusk,
         treats: TreatSkin(
-            bonusGlyph: "🫐", bonusScale: 0.56, bonusName: "bilberry",
-            hazardGlyph: "🪵", hazardScale: 0.58, hazardName: "snag"
+            bonusGlyph: "🪷", bonusScale: 0.56, bonusName: "lotus flower",
+            hazardGlyph: "🦟", hazardScale: 0.58, hazardName: "mosquito"
         ),
         field: .mirebogFen,
         boss: BossMark(glyph: "🐊", name: "the old croc"),
@@ -338,12 +338,11 @@ extension WorldTheme {
 
     /// Cloudspire Heights, the twelfth world and the last one: up out of the fen's mists and
     /// on climbing until the ground gives out, onto fields that float between the spires with
-    /// open sky where every other world kept its water. The windfall is a balloon that slipped
-    /// a child's fist at the carnival five worlds back and has been climbing ever since, and
-    /// the hazard a whirlwind worrying at the turf — each worth exactly what its meadow twin
-    /// was, a balloon five tiles to shut in, a whirlwind five to shut in with and no fencing
-    /// at all, since a balloon is tethered by nothing but its string and no post stands up in
-    /// a whirlwind.
+    /// open sky where every other world kept its water. The windfall is a rainbow pooled where
+    /// it came down on the turf, and the hazard a storm worrying at the fields — each worth
+    /// exactly what its meadow twin was, a rainbow five tiles to shut in, a storm five to shut
+    /// in with and no fencing at all, since a rainbow is anchored to nothing and no post
+    /// stands up in a storm.
     ///
     /// Its colours on the universe map are the ones its silhouette wore for eleven worlds, so
     /// the planet a player has been walking towards is the planet they arrive at.
@@ -354,8 +353,8 @@ extension WorldTheme {
         day: .spireDay,
         dusk: .spireDusk,
         treats: TreatSkin(
-            bonusGlyph: "🎈", bonusScale: 0.58, bonusName: "balloon",
-            hazardGlyph: "🌪️", hazardScale: 0.58, hazardName: "whirlwind"
+            bonusGlyph: "🌈", bonusScale: 0.58, bonusName: "rainbow",
+            hazardGlyph: "🌩️", hazardScale: 0.58, hazardName: "storm"
         ),
         field: .cloudspireHeights,
         boss: BossMark(glyph: "🦅", name: "the eagle"),

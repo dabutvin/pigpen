@@ -4,11 +4,11 @@ import Foundation
 ///
 /// Starfall Reaches is the meadow's game played on ground the sky keeps landing on: fence in the
 /// pig, the biggest pen the pieces will reach round, shut or it is no pen at all. The windfall
-/// here is a stardrop still cooling where it fell and the hazard a meteor sunk into the dust, but
-/// each is worth what its meadow twin was — a stardrop five tiles to shut in, a meteor five to
+/// here is a star still cooling where it fell and the hazard a meteor sunk into the dust, but
+/// each is worth what its meadow twin was — a star five tiles to shut in, a meteor five to
 /// shut in with and no fencing at all, since nothing will drive a post through a stone that came
 /// in from that far out — so the same solver that authored the meadow and the woods and the
-/// mountain and the city authored these, with `a` standing in for the stardrop and `x` for the
+/// mountain and the city authored these, with `a` standing in for the star and `x` for the
 /// meteor.
 ///
 /// What the reaches do that no world below them did is **break the water up altogether**. A
@@ -173,14 +173,14 @@ extension PuzzleLevel {
             """
     )
 
-    /// Two stardrops cooling on the north rim of a hollow with a single tile of dust between
+    /// Two stars cooling on the north rim of a hollow with a single tile of dust between
     /// them, and thirteen pieces with seven wells scattered round the ground to lean on. The
     /// near one is worth the ground the wall gives up bending out to it and the far one is not,
-    /// which is the whole of what a stardrop is for — and here the two are close enough that
+    /// which is the whole of what a star is for — and here the two are close enough that
     /// the line between worth it and not runs between neighbours.
     ///
     /// Thirteen pieces squared off under the wells hold 13 tiles and, since no piece goes on a
-    /// stardrop, both of the drops as well — which is 23. The same thirteen, bent out over the
+    /// star, both of the drops as well — which is 23. The same thirteen, bent out over the
     /// near drop and cut back on the diagonal to pay for it, hold 34 tiles and that drop, which
     /// is 39. The far one stays where it fell: reaching it costs more tiles than its five ever
     /// pays for, and the reaches are wide enough that the difference is obvious once it has been
@@ -275,13 +275,13 @@ extension PuzzleLevel {
     )
 
     /// The widest board in the game, and the biggest pen anywhere in it. Twelve tiles by twelve,
-    /// six wells thrown across it, one stardrop lying down in the south-west, and twenty pieces.
+    /// six wells thrown across it, one star lying down in the south-west, and twenty pieces.
     ///
     /// The wells are a constellation the way the ring's are — the budget is the rest of the wall
     /// they imply — but out here that wall is a diamond ten tiles across, and the diamond is
     /// the point: twenty pieces laid as a staircase all the way round shut 64 tiles and take the
-    /// stardrop in on the way, which is 69, where the best block those same twenty can square
-    /// off holds 40 tiles and the same stardrop, or 45. Nothing else in the game holds sixty
+    /// star in on the way, which is 69, where the best block those same twenty can square
+    /// off holds 40 tiles and the same star, or 45. Nothing else in the game holds sixty
     /// tiles.
     ///
     /// It stands outside the climb the way Smoulder Ridge and Clocktower Square do: a broad
@@ -333,8 +333,8 @@ extension PuzzleLevel {
     /// of the wider half to hand back.
     ///
     /// Twenty pieces. The best pair of blocks holds 27 between them; the answer holds 22 tiles
-    /// apiece with a stardrop in each half and a meteor swallowed by the visitor's, which comes
-    /// to 49. A third stardrop hangs out past the west rim where no wall on this board can reach
+    /// apiece with a star in each half and a meteor swallowed by the visitor's, which comes
+    /// to 49. A third star hangs out past the west rim where no wall on this board can reach
     /// it, and the other meteor stands out on the rim where the tidy wall would want to go. It asks for most of the stars the eight fields below it hold before it will open at
     /// all.
     static let visitorCrater = starfall(

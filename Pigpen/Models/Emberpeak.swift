@@ -3,16 +3,16 @@ import Foundation
 /// The third world's levels and the trail that strings them together.
 ///
 /// Emberpeak is the meadow's game taken up a mountain: fence in the pig, the biggest pen
-/// the pieces will reach round, shut or it is no pen at all. The windfall here is a chestnut
-/// roasting where it fell and the hazard an ember burning in the ash, but each is worth what
-/// its meadow twin was — a chestnut five tiles to shut in, an ember five to shut in with and
+/// the pieces will reach round, shut or it is no pen at all. The windfall here is a coin
+/// turned up out of the ash and the hazard a flame burning in it, but each is worth what
+/// its meadow twin was — a coin five tiles to shut in, a flame five to shut in with and
 /// no fencing at all — so the same solver that authored the meadow and the woods authored
-/// these, with `a` standing in for the chestnut and `x` for the ember.
+/// these, with `a` standing in for the coin and `x` for the flame.
 ///
 /// What the mountain does that neither world below it did is refuse to hand out clean
 /// ground. The meadow saved its treats for the last three fields and the thicket scattered
 /// them, but both of them had fields with nothing lying about at all; every field on
-/// Emberpeak has at least one ember staked in it, so there is nowhere up here a wall can run
+/// Emberpeak has at least one flame staked in it, so there is nowhere up here a wall can run
 /// straight without something in the way of it. `EmberpeakTests` pins that, and it is the
 /// whole reason a world that is mostly bare rock still asks more than a wood full of pools.
 ///
@@ -24,12 +24,12 @@ extension PuzzleLevel {
     /// Where the meadow put a river bend and the woods a brook, the mountain puts a melt
     /// channel: it comes down the west and turns east along the top, so the ground it leaves
     /// opens south and east with nothing on those two sides but the rim. Nine pieces squared
-    /// off hold 18 tiles; the same nine cut down the south-east and stepped round the ember
+    /// off hold 18 tiles; the same nine cut down the south-east and stepped round the flame
     /// hold 25, which is every tile the channel can be made to keep.
     ///
     /// It opens the world the way Bramble Brook opened the thicket, and asks a little more
     /// than that did — 28 against 25 — because a player standing here has held two worlds
-    /// of pens and the ember is one more thing to build round.
+    /// of pens and the flame is one more thing to build round.
     static let cinderSlope = emberpeak(
         id: "cinder-slope",
         name: "Cinder Slope",
@@ -54,11 +54,11 @@ extension PuzzleLevel {
 
     /// The first field in the game with no water on it at all. Every pen in both worlds
     /// below this one leant on a lake, a brook or a mere somewhere; here there is bare rock,
-    /// two embers staked in it, seventeen pieces and nothing else.
+    /// two flames staked in it, seventeen pieces and nothing else.
     ///
     /// Which makes it the plainest statement the game has of what a wall is worth: the best
     /// block those seventeen pieces can square off holds 16 tiles, and the same seventeen
-    /// run out as a ring that steps round both embers hold 23. Nothing is free on this one —
+    /// run out as a ring that steps round both flames hold 23. Nothing is free on this one —
     /// every tile of it is bought.
     static let basaltFlats = emberpeak(
         id: "basalt-flats",
@@ -83,14 +83,14 @@ extension PuzzleLevel {
             """
     )
 
-    /// The mountain's first chestnut, lying out south where a tidy pen would never go, with an
-    /// ember staked just south-east of the pig, on the line the wall wants to turn along. The
+    /// The mountain's first coin, lying out south where a tidy pen would never go, with an
+    /// flame staked just south-east of the pig, on the line the wall wants to turn along. The
     /// tarn down the west is the only free wall on the board.
     ///
     /// The pen that wins is neither tidy nor cheap: it runs out south far enough to take the
-    /// chestnut, then tapers away east past the ember and pays the five rather than walling
+    /// coin, then tapers away east past the flame and pays the five rather than walling
     /// round it, since walling round it costs more ground than it saves. Thirty-one tiles and
-    /// a chestnut, less the ember, come to thirty-one.
+    /// a coin, less the flame, come to thirty-one.
     static let ashfallTerrace = emberpeak(
         id: "ashfall-terrace",
         name: "Ashfall Terrace",
@@ -114,10 +114,10 @@ extension PuzzleLevel {
     )
 
     /// A meltwater tarn bars the whole west of the scree, so the ground beside it is cheap to
-    /// wall, and the chestnuts are strung out where the walling is dear: one east of the pig
-    /// and one well down the slope. A chestnut is worth more than the ground a pen gives up
+    /// wall, and the coins are strung out where the walling is dear: one east of the pig
+    /// and one well down the slope. A coin is worth more than the ground a pen gives up
     /// bending to reach it, so the best pen is a long tongue rather than a box — twenty-seven
-    /// tiles and both chestnuts, less the ember it swallows on the way, which comes to
+    /// tiles and both coins, less the flame it swallows on the way, which comes to
     /// thirty-two.
     static let chestnutScree = emberpeak(
         id: "chestnut-scree",
@@ -141,11 +141,11 @@ extension PuzzleLevel {
             """
     )
 
-    /// A scalding rill runs the whole foot of the shelf, and two embers are staked out
-    /// on the open ground north of it. Neither ember is worth paying for here — the wall runs
+    /// A scalding rill runs the whole foot of the shelf, and two flames are staked out
+    /// on the open ground north of it. Neither flame is worth paying for here — the wall runs
     /// down the diagonal tight past the upper one and pinches right in round the lower one,
     /// which is a wall built round a tile rather than over it — so this is the field
-    /// where the mountain teaches that an ember is something to shape a wall against rather
+    /// where the mountain teaches that a flame is something to shape a wall against rather
     /// than something to swallow. Thirteen pieces, 24 tiles, and a block worth 15.
     static let sulphurRill = emberpeak(
         id: "sulphur-rill",
@@ -169,14 +169,14 @@ extension PuzzleLevel {
             """
     )
 
-    /// Two embers venting either side of the pig, both chestnuts dropped out east beyond them
+    /// Two flames venting either side of the pig, both coins dropped out east beyond them
     /// and a small tarn at the head of the field. There is no block on this map worth having:
-    /// a rectangle that reaches the near chestnut has to swallow an ember to get there, and
+    /// a rectangle that reaches the near coin has to swallow a flame to get there, and
     /// the far one is past where any rectangle stops.
     ///
     /// So the pen goes out as a lozenge threaded between the two vents and runs on east for the
-    /// second chestnut: eighteen tiles and both of them, twenty-eight, against a block that
-    /// takes one chestnut, pays for an ember and comes to sixteen.
+    /// second coin: eighteen tiles and both of them, twenty-eight, against a block that
+    /// takes one coin, pays for a flame and comes to sixteen.
     static let fumaroleField = emberpeak(
         id: "fumarole-field",
         name: "Fumarole Field",
@@ -200,8 +200,8 @@ extension PuzzleLevel {
     )
 
     /// The hardest field in the three worlds up to here, and the third turn of the idea the
-    /// meadow's dew ponds opened. Tarns caught in the rock at three-tile intervals, an ember
-    /// staked out beyond them and a chestnut lying inside: the pools are the wall of a pen
+    /// meadow's dew ponds opened. Tarns caught in the rock at three-tile intervals, a flame
+    /// staked out beyond them and a coin lying inside: the pools are the wall of a pen
     /// nobody has drawn, and at this spacing they give away almost nothing — five hints of a
     /// ring, and the other two thirds of it to work out.
     ///
@@ -232,10 +232,10 @@ extension PuzzleLevel {
     )
 
     /// The widest board on the mountain and the last field before the caldera: a tarn in the
-    /// north-west, three chestnuts scattered down the slope and two embers burning in it.
-    /// Sixteen pieces cut the pen to the shape of the shore and gather every chestnut on the
-    /// way, taking the upper ember in and paying for it and leaving the lower one outside —
-    /// thirty-two tiles and three chestnuts, less the one ember, which is forty-two — the
+    /// north-west, three coins scattered down the slope and two flames burning in it.
+    /// Sixteen pieces cut the pen to the shape of the shore and gather every coin on the
+    /// way, taking the upper flame in and paying for it and leaving the lower one outside —
+    /// thirty-two tiles and three coins, less the one flame, which is forty-two — the
     /// biggest pen on any world's trail.
     static let smoulderRidge = emberpeak(
         id: "smoulder-ridge",
@@ -266,12 +266,12 @@ extension PuzzleLevel {
     /// The wyrm is not livestock. It is what the mountain has instead of weather, and the
     /// board does not want it fenced — it wants it left where it is, on the outside of
     /// whatever you build. So its tile is a hole you can neither cover nor stand a post on,
-    /// like an ember that walks, and the only ground that counts is the pig's.
+    /// like a flame that walks, and the only ground that counts is the pig's.
     ///
     /// Which turns the boss inside out. Stag Mere and Boar Hollow are a budget split two
     /// ways; here every one of the twenty pieces goes to the pig, and the question is how
     /// much of the mountain you can take before the wall has to bend round the thing sitting
-    /// in the middle of it. Thirty-eight tiles and three chestnuts, less two embers, come to 43,
+    /// in the middle of it. Thirty-eight tiles and three coins, less two flames, come to 43,
     /// where
     /// squaring off well clear of the wyrm is worth 27.
     static let wyrmCaldera = emberpeak(

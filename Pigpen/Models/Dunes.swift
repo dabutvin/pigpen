@@ -4,10 +4,10 @@ import Foundation
 ///
 /// Sunbaked Dunes is the meadow's game on sand: fence in the pig, the biggest pen the pieces will
 /// reach round, shut or it is no pen at all. The windfall here is a **melon** lying where it fell in
-/// the sand and the hazard a **cactus** rooted in it, and each is worth exactly what its meadow twin
-/// was — a melon five tiles to shut in, a cactus five to shut in with and no fencing at all, since
-/// there is no room beside a cactus for a post of yours — so the same solver that authored the seven
-/// worlds below these authored them, with `a` standing in for the melon and `x` for the cactus.
+/// the sand and the hazard a **snake** coiled in it, and each is worth exactly what its meadow twin
+/// was — a melon five tiles to shut in, a snake five to shut in with and no fencing at all, since
+/// nobody drives a post where a snake is coiled — so the same solver that authored the seven
+/// worlds below these authored them, with `a` standing in for the melon and `x` for the snake.
 ///
 /// What the water is here is **a dune**: sand too steep to climb and too loose to hold a post, so it
 /// stops a pig and a fence exactly as a river does. And the world's own idea is the shape of it —
@@ -27,7 +27,7 @@ import Foundation
 /// exactly what squaring a board off finds — and it is small, and it cannot be made bigger, because
 /// the sand is where it is. So the question every field here asks is *is the free pen worth having*,
 /// and the answer is almost always no. The shade under the dune is free, and it is not enough.
-/// Slipface Hollow says it on the first board by standing a cactus in each end of the shade.
+/// Slipface Hollow says it on the first board by standing a snake in each end of the shade.
 ///
 /// One field has no dune on it anywhere, the way The Blind Grike has no river: The Hardpan, the
 /// ground the sand never reached, where every tile of the pen is bought.
@@ -35,17 +35,17 @@ import Foundation
 /// The dunes floor at 38% against the carnival's 37 — the highest floor in the game — on boards
 /// where the free pen has to be turned down before anything else can be worked out.
 extension PuzzleLevel {
-    /// One wide, shallow barchan across the north of the hollow with a cactus standing in each end
+    /// One wide, shallow barchan across the north of the hollow with a snake standing in each end
     /// of its shade, and the pig out on the sand below its mouth.
     ///
     /// The basin question, asked on the only kind of bank this world has — and asked as a refusal,
     /// which is how the dunes introduce themselves. The shade under the back is a finished pen: six
     /// tiles with sand on three sides of them and a six-tile mouth to plug. It is also where both
-    /// cacti are, so six pieces buy six tiles and minus ten points — and the pig is out on the sand
+    /// snakes are, so six pieces buy six tiles and minus ten points — and the pig is out on the sand
     /// below in any case. A player who takes the gift the sand is holding out has been given nothing.
     ///
     /// So the answer is the shade *and* everything under it. The best rectangle fourteen pieces can
-    /// square off is the belly plus three rows below it — thirty tiles with the pair of cacti in
+    /// square off is the belly plus three rows below it — thirty tiles with the pair of snakes in
     /// them, which is 20. The same fourteen hung as a lozenge from the horns and tapered to a point
     /// in the south hold 43 tiles and the same pair, which is 33.
     ///
@@ -88,7 +88,7 @@ extension PuzzleLevel {
     /// south with them, which is 33 — because a diagonal wall closes two tiles a piece where a
     /// straight one closes one, and a rank of dunes set out on the slant is how the sand says so.
     ///
-    /// The pair of cacti is pegged against the western rim right where the pig stands, and the
+    /// The pair of snakes is pegged against the western rim right where the pig stands, and the
     /// answer walls in beside them rather than swallowing them: the staircase comes down between her
     /// and the pair, and their ten points stay outside. The second melon is a row further south
     /// again, outside everything.
@@ -166,9 +166,9 @@ extension PuzzleLevel {
     /// of it.
     ///
     /// What bends it is two melons out on the eastern sand, one north and one south, and a pair of
-    /// cacti staked on the pig's own latitude — one inboard, one on the rim behind it. That pair is
+    /// snakes staked on the pig's own latitude — one inboard, one on the rim behind it. That pair is
     /// the whole trick: a rectangle that wants a wall through that line has to swallow the inboard
-    /// cactus, and a rectangle nudged off a cactus walks onto the one behind it and then onto the
+    /// snake, and a rectangle nudged off a snake walks onto the one behind it and then onto the
     /// rim, where there is nothing left to bump out to. So the square answer is driven back to a
     /// five by five holding 25 and reaches neither melon.
     ///
@@ -206,13 +206,13 @@ extension PuzzleLevel {
     ///
     /// The span question: neither dune is any use on its own, and no rectangle on this board reaches
     /// round both, so squaring off gets one corner against each of them across the middle and holds
-    /// 29 — 29 tiles with both melons and both cacti in them, paying each other back exactly.
+    /// 29 — 29 tiles with both melons and both snakes in them, paying each other back exactly.
     /// Eighteen pieces run out as a great lozenge from one to the other hold 50 tiles and that same
     /// pair of each, so the pen is worth its ground and no more. It takes the northern dune's shade inside and leaves the southern one's out, which is the
     /// board's own answer to the question it asks.
     ///
-    /// The run of cactus is pegged directly north of the pig, which is the one thing that stops the
-    /// lozenge being tidier than it is: no piece will stand on a cactus and no pen may lean on one,
+    /// The run of snake is pegged directly north of the pig, which is the one thing that stops the
+    /// lozenge being tidier than it is: no piece will stand on a snake and no pen may lean on one,
     /// so the wall that comes down between the two horns has to come round the pair.
     static let twoHorns = dunes(
         id: "two-horns",
@@ -238,18 +238,18 @@ extension PuzzleLevel {
     )
 
     /// One barchan with its back to the east and its mouth open west, three melons lying out past
-    /// where the tidy wall goes, and a run of cactus pegged along the line the tidy wall would take.
+    /// where the tidy wall goes, and a run of snake pegged along the line the tidy wall would take.
     ///
     /// The best block seventeen pieces can square off against that back holds 24 tiles, the melon in
-    /// the south and both cacti, which is 19. So the whole field is which melons to go out for, and
+    /// the south and both snakes, which is 19. So the whole field is which melons to go out for, and
     /// the answer is the other two: seventeen pieces run out as a lozenge that reaches the one in the
-    /// north and the one out east hold 35 tiles and the same pair of cacti, which is 35.
+    /// north and the one out east hold 35 tiles and the same pair of snakes, which is 35.
     ///
     /// It gives up the melon the tidy block was already holding, and leaves it standing outside the
     /// wall rather than under it — no piece will lie on a melon — which is the plainest way any board
     /// in the game has said that five points is worth less than a tile of shape.
     ///
-    /// The run of cactus lies square in the middle of the ground the crescent encloses, so there is no
+    /// The run of snake lies square in the middle of the ground the crescent encloses, so there is no
     /// drawing this pen without swallowing the pair and paying their ten. The tiles the detour fetches
     /// cover it twice over.
     ///
@@ -319,7 +319,7 @@ extension PuzzleLevel {
     )
 
     /// The sand sea: twelve tiles by twelve, two barchans with their backs to the west standing at
-    /// opposite ends of it, a run of three cacti across the waist and three melons down the length.
+    /// opposite ends of it, a run of three snakes across the waist and three melons down the length.
     ///
     /// The erg stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide Reaches
     /// and the Great Gallery and The Midway do. A broad board leaves a wide gap against a squared-off
@@ -328,9 +328,9 @@ extension PuzzleLevel {
     /// the world and the third biggest in the game, behind Wide Reaches and the Great Gallery.
     ///
     /// Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 38
-    /// tiles, two of the melons and all three cacti, which comes to 33. The same nineteen run out to
+    /// tiles, two of the melons and all three snakes, which comes to 33. The same nineteen run out to
     /// both dunes and closed round the south hold 56 tiles, the third melon as well and the same three
-    /// cacti, which is 56. The two melons lying together at the foot of the sea are the reason the
+    /// snakes, which is 56. The two melons lying together at the foot of the sea are the reason the
     /// block stops where it does: neither takes a piece, so a wall that wants that row has to come
     /// round the pair of them or take them both in.
     static let theGreatErg = dunes(

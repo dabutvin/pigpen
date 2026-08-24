@@ -3,12 +3,12 @@ import Foundation
 /// The ninth world's levels and the trail that strings them together.
 ///
 /// Tidepool Cove is the meadow's game on wet sand: fence in the pig, the biggest pen the pieces
-/// will reach round, shut or it is no pen at all. The windfall here is a **pearl** the tide left
-/// lying in its shell and the hazard a **jellyfish** stranded where it washed up, and each is
-/// worth exactly what its meadow twin was — a pearl five tiles to shut in, a jellyfish five to
+/// will reach round, shut or it is no pen at all. The windfall here is a **seashell** the tide left
+/// lying on the sand and the hazard a **jellyfish** stranded where it washed up, and each is
+/// worth exactly what its meadow twin was — a seashell five tiles to shut in, a jellyfish five to
 /// shut in with and no fencing at all, since nothing drives a post through a sting — so the same
 /// solver that authored the eight worlds below these authored them, with `a` standing in for the
-/// pearl and `x` for the jellyfish.
+/// seashell and `x` for the jellyfish.
 ///
 /// What the water is here is **a tidepool**: seawater the tide left behind, too deep to wade and
 /// no ground to build on, so it stops a pig and a fence exactly as a river does. And the world's
@@ -36,11 +36,11 @@ import Foundation
 /// The cove floors at 40 against the dunes' 39 — the highest floor in the game — on boards where
 /// the tide's gift has to be priced before anything else can be worked out.
 extension PuzzleLevel {
-    /// One pool mid-board with its break facing the rim, a pearl lying in its heart, and two
+    /// One pool mid-board with its break facing the rim, a seashell lying in its heart, and two
     /// jellyfish stranded in its lee — the tide's whole repertoire on the first field.
     ///
     /// The basin question, asked backwards, which is how the cove introduces itself. The pool's
-    /// heart is a finished pen with a pearl in it, and there is no having it: the break faces
+    /// heart is a finished pen with a seashell in it, and there is no having it: the break faces
     /// the top of the map, so the only way in runs over the rim, where nothing can be penned.
     /// The gift is a picture of a gift. What the pool actually hands over is its south wall —
     /// and the ground under that wall is where the tide dumped its jellyfish, so the block a
@@ -54,7 +54,7 @@ extension PuzzleLevel {
     /// first lesson of the cove: price what the tide leaves lying about, and take the sting
     /// when the sting is cheaper than the swerve.
     ///
-    /// Two pearls lie on the south rim where the water went out, and nothing reaches them: no
+    /// Two seashells lie on the south rim where the water went out, and nothing reaches them: no
     /// pen may stand on the edge of the map, so a treat on the rim is the tide's to keep.
     static let ebbtidePool = tidepool(
         id: "ebbtide-pool",
@@ -84,16 +84,16 @@ extension PuzzleLevel {
     ///
     /// The span question: neither pool is any use on its own — a ring three tiles wide walls
     /// almost nothing — and no rectangle on this board reaches round both. Squaring off bends far
-    /// enough to pick up one pearl and holds 17 tiles and it, which is 22. Twelve pieces run out
+    /// enough to pick up one seashell and holds 17 tiles and it, which is 22. Twelve pieces run out
     /// as one long diagonal band from the top of the board down between the two rings hold 29
-    /// tiles and BOTH pearls, which is 39 — leaning on the outside of one pool going down and the
+    /// tiles and BOTH seashells, which is 39 — leaning on the outside of one pool going down and the
     /// other coming back, because two walls that face each other across open ground are a pen
     /// already drawn, if the wall thrown between them steps on the diagonal.
     ///
-    /// A pearl is laid where each pool argues for the band: one on the open sand off the
+    /// A seashell is laid where each pool argues for the band: one on the open sand off the
     /// north-east shoulder of the first ring, which only the long wall reaches, and one in the
     /// heart of the second, which is bought by stepping in through its own break. The hearts of
-    /// these pools were the cheapest ground on the board and the least of it; putting a pearl in
+    /// these pools were the cheapest ground on the board and the least of it; putting a seashell in
     /// one is what makes the cheap ground worth the walk.
     static let twinPools = tidepool(
         id: "twin-pools",
@@ -128,17 +128,17 @@ extension PuzzleLevel {
     /// there is nothing else to know — which is why the strand is the one field here a player
     /// has met before, and why it stands mid-trail rather than at the start of it.
     ///
-    /// What bends it is a pearl in each far corner — one out to the north-east, one down to the
+    /// What bends it is a seashell in each far corner — one out to the north-east, one down to the
     /// south-west — and a wrack line of three jellyfish laid on the diagonal between the pig and
     /// the nearer of them, which is the last tide's leavings dropped in a row the way a tide
-    /// actually drops them. A rectangle reaching for that pearl has to cross the wrack and
+    /// actually drops them. A rectangle reaching for that seashell has to cross the wrack and
     /// swallow it, and a rectangle nudged off one jellyfish walks onto the next and then onto the
     /// rim, so the square answer is driven back to a four by five holding 20 and reaches neither.
     ///
     /// The same nineteen run round as a diamond pulled out of true to the north-east hold 31
-    /// tiles and ONE pearl, which is 36. The other stays where the tide left it: on ground with
-    /// no free wall on it a pearl is four pieces of fence, and four pieces of diamond are more
-    /// than a pearl is worth — so the strand asks which one, not both, and that is the whole of
+    /// tiles and ONE seashell, which is 36. The other stays where the tide left it: on ground with
+    /// no free wall on it a seashell is four pieces of fence, and four pieces of diamond are more
+    /// than a seashell is worth — so the strand asks which one, not both, and that is the whole of
     /// what a bare field has to teach.
     static let theHighStrand = tidepool(
         id: "the-high-strand",
@@ -164,16 +164,16 @@ extension PuzzleLevel {
             """
     )
 
-    /// One pool with its break turned east and two pearls seeded in its heart, a third pearl out
+    /// One pool with its break turned east and two seashells seeded in its heart, a third seashell out
     /// on the open sand, and the pig in the far south-west corner.
     ///
     /// The detour question, asked through the break: the heart holds ten points and its only
-    /// door faces away from everything, so the pen that wants the pearls has to come the whole
+    /// door faces away from everything, so the pen that wants the seashells has to come the whole
     /// way round the pool and in at the east side — ground given up for ground, which is what a
     /// detour is. The best block fourteen pieces make leans the west rim and takes the field
-    /// pearl for 23. The same fourteen run out and round hold 27 tiles, both seeded pearls and
-    /// the field pearl too, which is 42 — the pen bends in at the break, swallows the heart,
-    /// and still reaches the loose pearl on its way back south.
+    /// seashell for 23. The same fourteen run out and round hold 27 tiles, both seeded seashells and
+    /// the field seashell too, which is 42 — the pen bends in at the break, swallows the heart,
+    /// and still reaches the loose seashell on its way back south.
     ///
     /// It is the first heart in the world worth buying, and the board makes buying it cost
     /// exactly the shape a rectangle cannot make.
@@ -205,12 +205,12 @@ extension PuzzleLevel {
     ///
     /// The gap question, asked at the top of the map: the channel joins both hearts to the open
     /// field, and every way into all of it funnels through the single tile where the channel
-    /// meets the rim. One piece there buys the channel, the western heart and the pearl lying in
+    /// meets the rim. One piece there buys the channel, the western heart and the seashell lying in
     /// it — the whole north of the board walled by two rings and a single post. Thirteen pieces
     /// squared off below reach 23; the same thirteen spent as that one plug and a lozenge slung
-    /// under both pools hold 38 tiles and the pearl, which is 43.
+    /// under both pools hold 38 tiles and the seashell, which is 43.
     ///
-    /// The eastern heart lost its pearl to the tide, which is the board saying the two rings are
+    /// The eastern heart lost its seashell to the tide, which is the board saying the two rings are
     /// not the same offer: one break leads to treasure and one to swept sand, and the wall is
     /// the same wall either way.
     static let theRunnel = tidepool(
@@ -237,12 +237,12 @@ extension PuzzleLevel {
     )
 
     /// One long pool the width of the strand, its break mid-lip on the south side, two jellyfish
-    /// stranded under its wall and two pearls further down the sand.
+    /// stranded under its wall and two seashells further down the sand.
     ///
     /// The shore question, on the longest bank the cove has: the pool's south lip is eight tiles
     /// of free wall, and the whole field is how much of it to use and what using it costs. The
     /// block squared off under the lip holds 31 tiles and both jellyfish, which is 21. The same
-    /// fourteen pieces flared out as a lozenge from the lip's two ends hold 44 tiles, one pearl
+    /// fourteen pieces flared out as a lozenge from the lip's two ends hold 44 tiles, one seashell
     /// and the same two jellyfish, which is 39 — the stings are the price of the bank either
     /// way, so the pen that wins is the one that buys the most sand with them.
     static let theLongPool = tidepool(
@@ -268,18 +268,18 @@ extension PuzzleLevel {
             """
     )
 
-    /// The corner of the cove: one great pool along the whole north of the board with pearls
+    /// The corner of the cove: one great pool along the whole north of the board with seashells
     /// teasing behind a rim-facing break, and a second pool down the east side with its break
-    /// turned in and a pearl behind it.
+    /// turned in and a seashell behind it.
     ///
     /// Which is the corner question with two free sides, the way Rimstone Corner and The Big Top
     /// and Scarp Corner asked it, and the hardest corner anywhere in the game. The
     /// right-angled answer tucks a rectangle under the north pool and pays its own east and
     /// south walls: 22. The ten pieces run instead as one long chevron from under the north lip
     /// down to the east pool's flank — every piece on the diagonal — and hold 42 tiles, and the
-    /// pen lets itself in at the east pool's break for the pearl on its way, which is 47.
+    /// pen lets itself in at the east pool's break for the seashell on its way, which is 47.
     ///
-    /// The north pool's two pearls sit behind a break that opens onto the rim, and stay there:
+    /// The north pool's two seashells sit behind a break that opens onto the rim, and stay there:
     /// the loudest tease in the world, nine tiles of heart and treasure with no door anybody
     /// can use.
     static let barnacleCorner = tidepool(
@@ -306,15 +306,15 @@ extension PuzzleLevel {
     )
 
     /// The flats at low water: the broadest board in the cove, two pools far apart with their
-    /// breaks turned in to the middle, a pearl in each heart, a third loose on the sand, and
+    /// breaks turned in to the middle, a seashell in each heart, a third loose on the sand, and
     /// a jellyfish on the straight line between everything.
     ///
     /// Low Water stands outside the climb the way Smoulder Ridge and The Midway and The Great
     /// Erg do. A broad board leaves a wide gap against a squared-off pen because it is broad —
     /// this one asks 46, less than Barnacle Corner above it — while holding 48 tiles, the
     /// biggest pen in the world. Sixteen pieces squared off between the pools hold 26 tiles, two
-    /// pearls and the jellyfish, which is 31. The same sixteen swung corner to corner as one
-    /// great lozenge hold 48 tiles, all three pearls and the same sting, which is 58 — a detour
+    /// seashells and the jellyfish, which is 31. The same sixteen swung corner to corner as one
+    /// great lozenge hold 48 tiles, all three seashells and the same sting, which is 58 — a detour
     /// on the scale of the whole board, each heart bought through its break in passing.
     static let lowWater = tidepool(
         id: "low-water",
@@ -359,7 +359,7 @@ extension PuzzleLevel {
     ///
     /// The tidy answer that satisfies it is the square moat: a box of wall round the pool with
     /// the one piece on the break, 17 tiles of ground and nothing on any of them. The same
-    /// twenty-two drawn as a great diamond hold 37 tiles and all three pearls — one off each
+    /// twenty-two drawn as a great diamond hold 37 tiles and all three seashells — one off each
     /// side of the square's reach, which is exactly where a diamond's points go — and that is
     /// 52, the widest gap any boss in the game left at 67, until the tundra's seal asked 69.
     ///

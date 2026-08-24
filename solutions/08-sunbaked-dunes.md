@@ -1,8 +1,8 @@
 # Sunbaked Dunes
 
 The eighth world, solved the same way and drawn the same way. A melon takes the meadow's apple and a
-cactus its skull, so an `a` below is a melon worth five tiles to shut in, and an `x` a cactus worth
-five fewer that no piece will build on — there is no room beside a cactus for a post of yours. An `S`
+snake its skull, so an `a` below is a melon worth five tiles to shut in, and an `x` a snake worth
+five fewer that no piece will build on — nobody drives a post where a snake is coiled. An `S`
 is the scorpion, and the last field will not have the pig in with him *or* sharing a wall with him.
 
 What the dunes do differently is that every `~` below is **a crescent**. A barchan: a straight back
@@ -19,19 +19,19 @@ three sides of it, and the only thing to pay for is the mouth. It is the cheapes
 And that is the trap, which is the whole world. The belly of a dune is rectangle-shaped, so it is
 exactly what squaring a board off finds — and it is a fixed size, because the sand is where it is
 and no amount of budget widens the shade. So every pen below turns the free one down, and the first
-board says why by standing a cactus in each end of the shade. One field has no sand on it at all:
+board says why by standing a snake in each end of the shade. One field has no sand on it at all:
 The Hardpan, where every tile is bought.
 
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
-| 1 | Slipface Hollow | 14 | 43 | 2 cacti | 33 | 20 |
+| 1 | Slipface Hollow | 14 | 43 | 2 snakes | 33 | 20 |
 | 2 | The Long Slack | 14 | 28 | 1 melon | 33 | 19 |
 | 3 | The Blowout | 13 | 32 | nothing | 32 | 18 |
 | 4 | The Hardpan | 21 | 40 | 1 melon | 45 | 25 |
-| 5 | Two Horns | 18 | 50 | 2 melons, 2 cacti | 50 | 29 |
-| 6 | Melon Ground | 17 | 35 | 2 melons, 2 cacti | 35 | 19 |
+| 5 | Two Horns | 18 | 50 | 2 melons, 2 snakes | 50 | 29 |
+| 6 | Melon Ground | 17 | 35 | 2 melons, 2 snakes | 35 | 19 |
 | 7 | Scarp Corner | 11 | 41 | nothing | 41 | 20 |
-| 8 | The Great Erg | 19 | 56 | 3 melons, 3 cacti | 56 | 33 |
+| 8 | The Great Erg | 19 | 56 | 3 melons, 3 snakes | 56 | 33 |
 | 9 | Scorpion Flats | 16 | 45 | 1 melon | 50 | 19 |
 
 ## 1. Slipface Hollow — 14 pieces, 33
@@ -55,12 +55,12 @@ its mouth. The basin question, asked on the only kind of bank this world has —
 refusal, which is how the dunes introduce themselves.
 
 The shade under the back is a finished pen: six tiles with sand on three sides of them and a
-six-tile mouth to plug. It is also where both cacti are, so six pieces buy six tiles and minus ten
+six-tile mouth to plug. It is also where both snakes are, so six pieces buy six tiles and minus ten
 points, and the pig is not in it in any case. A player who takes the gift the sand is holding out
 has been handed nothing at all.
 
 So the answer is the shade *and* everything under it. The best rectangle fourteen pieces can square
-off is the belly plus three rows below it — thirty tiles with the pair of cacti in them, which is 20.
+off is the belly plus three rows below it — thirty tiles with the pair of snakes in them, which is 20.
 The same fourteen hung as a lozenge from the two horns and tapered to a point in the south hold 43
 tiles and the same pair, which is 33.
 
@@ -94,7 +94,7 @@ diagonal, shut 28 tiles and the melon in the south with them, which is 33 — be
 closes two tiles a piece where a straight one closes one, and a rank of dunes set out on the slant is
 how the sand says so.
 
-The pair of cacti is pegged against the western rim right where the pig stands, and the answer walls
+The pair of snakes is pegged against the western rim right where the pig stands, and the answer walls
 in beside them rather than swallowing them: the wall comes down between her and the pair, and their
 ten points stay outside. The second melon is a row further south again, outside everything.
 
@@ -151,10 +151,10 @@ The pan itself: baked clay with no dune anywhere on it, and the biggest budget i
 across it. It is The Blind Grike again, and Basalt Flats and Cobble Yard and Swept Flat before it
 — nothing free, and a diagonal wall shuts two tiles a piece where a straight one shuts one.
 
-What bends it is two melons out on the eastern sand and a pair of cacti staked on the pig's own
+What bends it is two melons out on the eastern sand and a pair of snakes staked on the pig's own
 latitude, one inboard and one on the rim behind it. That pair is the whole trick: a rectangle that
-wants a wall through that line has to swallow the inboard cactus, and a rectangle nudged off a
-cactus walks onto the one behind it and then onto the rim, where there is nothing left to bump out
+wants a wall through that line has to swallow the inboard snake, and a rectangle nudged off a
+snake walks onto the one behind it and then onto the rim, where there is nothing left to bump out
 to. So squaring off is driven back west to a five by five holding 25, and it reaches neither melon.
 
 The same twenty-one pieces run round as a diamond pulled out of true to the east and hold 40 tiles
@@ -185,12 +185,12 @@ question: neither dune is any use on its own, and no rectangle on this board rea
 
 Squaring off gets one corner against each of them across the middle of the board and holds 29.
 Eighteen pieces run out as a great lozenge from the one to the other hold 50 tiles, both melons and
-both cacti — the melons pay the cacti back exactly, so the pen is worth its ground and no more. It
+both snakes — the melons pay the snakes back exactly, so the pen is worth its ground and no more. It
 takes the northern dune's shade into the pen and leaves the southern one's outside, which is the
 board's own answer to the question it asks.
 
-The run of cactus is pegged directly north of the pig, and it is the one thing that stops the lozenge
-being tidier than it is: no piece will stand on a cactus and no pen may lean on one, so the wall that
+The run of snake is pegged directly north of the pig, and it is the one thing that stops the lozenge
+being tidier than it is: no piece will stand on a snake and no pen may lean on one, so the wall that
 comes down between the two horns has to come round the pair.
 
 ## 6. Melon Ground — 17 pieces, 35
@@ -210,22 +210,22 @@ comes down between the two horns has to come round the pair.
 ```
 
 One barchan with its back to the east and its mouth open west, three melons scattered wide over the
-open sand, and a pair of cacti pegged down the middle of the field. The detour question, and the
+open sand, and a pair of snakes pegged down the middle of the field. The detour question, and the
 hardest one in the game.
 
 Seventeen pieces will square off a block under the crescent's southern horn, which does the
-north-west corner for nothing: 24 tiles holding the melon in the south and both cacti, which is 19.
+north-west corner for nothing: 24 tiles holding the melon in the south and both snakes, which is 19.
 That is the tidy answer, and the melon it is holding is the one melon of the three that is easy to
 hold.
 
 So the field is whether to give that one up and go out for the other two, and it is: the same
 seventeen run out as a lozenge reach the melon in the north and the melon in the east, 35 tiles with
-those two in them and the same pair of cacti, which is 35. What is more, the wall the lozenge comes
+those two in them and the same pair of snakes, which is 35. What is more, the wall the lozenge comes
 back on has to come round the melon it left behind rather than over it — no piece will lie on a
 melon — so this pen gives up a melon and a tile of ground for its own shape, which is the plainest
 way a board has ever said that a tile of pen is worth having.
 
-The pair of cacti lies in the middle of the ground either answer has to cross, so there is no drawing
+The pair of snakes lies in the middle of the ground either answer has to cross, so there is no drawing
 either pen without swallowing them and paying their ten. The tiles the detour fetches cover it twice
 over.
 
@@ -281,11 +281,11 @@ pieces of fence.
 ```
 
 The sand sea: twelve tiles by twelve, two barchans with their backs to the west standing at opposite
-ends of it, a run of three cacti across the waist and three melons down the length.
+ends of it, a run of three snakes across the waist and three melons down the length.
 
 Nineteen pieces squared off down the middle of the sea from the northern dune's back hold 38 tiles,
-two of the melons and all three cacti, which comes to 33. The same nineteen run out to both dunes
-and closed round the south hold 56 tiles, the third melon as well and the same three cacti, which is
+two of the melons and all three snakes, which comes to 33. The same nineteen run out to both dunes
+and closed round the south hold 56 tiles, the third melon as well and the same three snakes, which is
 56 — the biggest pen in the world, and the third biggest in the game, behind Wide Reaches and
 the Great Gallery, which the sand very nearly took second place from.
 

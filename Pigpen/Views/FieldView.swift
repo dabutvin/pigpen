@@ -80,8 +80,8 @@ struct FieldView: View {
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
     /// How this world dresses the windfall and the hazard: an apple and a skull in the meadow,
-    /// a truffle and a bramble in the woods. Only the glyph changes — a truffle is scored, tapped
-    /// and fenced exactly as an apple is, because it is one under the picture.
+    /// a mushroom and a wilted flower in the woods. Only the glyph changes — a mushroom is scored,
+    /// tapped and fenced exactly as an apple is, because it is one under the picture.
     var treatSkin: TreatSkin = WorldTheme.meadow.treats
     /// How this world paints the board itself: the ground it is cut out of, the water lying in
     /// it, and the fencing built on top. Mud is mud and water is water whatever the skin — the
@@ -716,7 +716,7 @@ struct FieldView: View {
 
     /// Flowstone: rock that has had water running over it long enough to lay it down in
     /// ledges, so the ground is banded — a black step with the wet lip of the next rib
-    /// catching the crystal light over the top of it.
+    /// catching the diamond light over the top of it.
     private func drawRibs(in context: inout GraphicsContext, rect: CGRect, scatter: inout Scatter) {
         for _ in 0..<2 {
             let down = rect.minY + rect.height * CGFloat(scatter.next(in: 0.22...0.8))

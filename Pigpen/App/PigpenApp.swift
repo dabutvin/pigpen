@@ -58,12 +58,12 @@ struct PigpenApp: App {
     static let stills: [(argument: String, scene: CutScene.Name, seconds: TimeInterval)] = [
         ("-opening", .opening, 1.9),
         ("-opening-gate", .opening, 12.2),
-        ("-opening-welcome", .opening, 18.1),
-        ("-opening-treats", .opening, 25.9),
-        ("-opening-close", .opening, 33.8),
+        ("-opening-welcome", .opening, 20.6),
+        ("-opening-treats", .opening, 30.7),
+        ("-opening-close", .opening, 36.6),
         ("-mere", .stagMere, 2.4),
-        ("-mere-resident", .stagMere, 8.5),
-        ("-mere-both", .stagMere, 14.5),
+        ("-mere-resident", .stagMere, 9.1),
+        ("-mere-both", .stagMere, 15.0),
         ("-held-penned", .theMeadowHeld, 1.9),
         ("-held-forest", .theMeadowHeld, 10.1),
         ("-held-away", .theMeadowHeld, 15.0)
@@ -170,8 +170,8 @@ struct PigpenApp: App {
         case .boss:
             PuzzleView(game: .theStagMeresBestPen())
         case .truffles:
-            // A thicket board: the truffle and the bramble stand where the apple and
-            // the skull would, the same +5 and -5 dressed for the woods, on leaf
+            // A thicket board: the mushroom and the wilted flower stand where the apple
+            // and the skull would, the same +5 and -5 dressed for the woods, on leaf
             // mould with peat pools in it rather than mud and open water.
             PuzzleView(
                 level: .nettleBank,
@@ -181,7 +181,7 @@ struct PigpenApp: App {
                 dusk: .forestDusk
             )
         case .embers:
-            // A mountain board: the chestnut and the ember stand where the apple and
+            // A mountain board: the coin and the flame stand where the apple and
             // the skull would, the same +5 and -5 dressed for the peak, on ash with
             // cinder still going in it and a tarn steaming where a mere would be.
             PuzzleView(
@@ -192,7 +192,7 @@ struct PigpenApp: App {
                 dusk: .emberDusk
             )
         case .pies:
-            // A city board: the pie and the drain stand where the apple and the
+            // A city board: the pizza and the trash can stand where the apple and the
             // skull would, the same +5 and -5 dressed for the streets, on paving,
             // with a canal for water and wrought iron for fencing.
             PuzzleView(

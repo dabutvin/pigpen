@@ -252,7 +252,7 @@ extension FieldSkin {
 
     /// The caverns': wet flowstone laid down in ribs, and the river running through it — dark
     /// and glassy, since there is no sky down here for water to take a colour from and what it
-    /// has instead is the crystals. The fencing is pit props, which is how anybody holds
+    /// has instead is the diamonds. The fencing is pit props, which is how anybody holds
     /// anything up underground.
     static let gloamdeep = Self(
         ground: Color(red: 0.38, green: 0.43, blue: 0.42),

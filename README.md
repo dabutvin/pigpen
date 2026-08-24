@@ -300,12 +300,12 @@ there.
 ### Thornwood Thicket
 
 The second world, and the first past the meadow. The pig has taken the tree line, so the
-trail runs through deep woods in forest light, the windfall is a **truffle** rather than an
-apple and the hazard a **bramble** rather than a skull — each worth exactly what its meadow
-twin was, a truffle five tiles to shut in and a bramble five to shut in with and no fencing
+trail runs through deep woods in forest light, the windfall is a **mushroom** rather than an
+apple and the hazard a **wilted flower** rather than a skull — each worth exactly what its meadow
+twin was, a mushroom five tiles to shut in and a wilted flower five to shut in with and no fencing
 at all. The one thing the thicket does that the meadow did not is **scatter** its treats. The
 meadow held them all back for its last three fields; the thicket has walked its pig everywhere
-at once, so a truffle turns up in the second field and a bramble in the seventh, with plain
+at once, so a mushroom turns up in the second field and a wilted flower in the seventh, with plain
 fields in between. It reads as woods a pig has been rooting through rather than a lesson laid
 out in order.
 
@@ -319,14 +319,14 @@ the meadow at nothing.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Bramble Brook | 9 | — | 20 | 27 | 25% |
-| 2 | Foxglove Dell | 7 | 2 truffles | 20 | 29 | 31% |
-| 3 | Hazel Copse | 12 | 1 truffle | 23 | 30 | 23% |
-| 4 | Fairy Ring | 13 | 1 truffle | 19 | 36 | 47% |
-| 5 | Fern Gully | 12 | 2 truffles | 23 | 34 | 32% |
+| 2 | Foxglove Dell | 7 | 2 mushrooms | 20 | 29 | 31% |
+| 3 | Hazel Copse | 12 | 1 mushroom | 23 | 30 | 23% |
+| 4 | Fairy Ring | 13 | 1 mushroom | 19 | 36 | 47% |
+| 5 | Fern Gully | 12 | 2 mushrooms | 23 | 34 | 32% |
 | 6 | Willow Corner | 8 | — | 16 | 26 | 38% |
-| 7 | Nettle Bank | 13 | 2 truffles, 1 bramble | 18 | 26 | 30% |
-| 8 | Elderwood | 15 | 3 truffles, 1 bramble | 30 | 41 | 26% |
-| 9 | Boar Hollow | 20 | a boar, 3 truffles, 2 brambles | 36 | 43 | 16% |
+| 7 | Nettle Bank | 13 | 2 mushrooms, 1 wilted flower | 18 | 26 | 30% |
+| 8 | Elderwood | 15 | 3 mushrooms, 1 wilted flower | 30 | 41 | 26% |
+| 9 | Boar Hollow | 20 | a boar, 3 mushrooms, 2 wilted flowers | 36 | 43 | 16% |
 
 Its boss, Boar Hollow, is the thicket's answer to Stag Mere: a hollow pool across the middle
 of the wood with the pig north of it and a boar south, and one budget for both. It asks for
@@ -338,21 +338,21 @@ Every pen is drawn out in [`solutions/02-thornwood-thicket.md`](solutions/02-tho
 
 The third world, and the first that takes something away rather than adding to it. Past the
 tree line the pig has climbed a mountain that has never stopped smoking, so the trail runs
-over ash and cinder in hazed light, the windfall is a **chestnut** roasting where it fell and
-the hazard an **ember** burning in the ground — each worth exactly what its meadow twin was, a
-chestnut five tiles to shut in, an ember five to shut in with and no fencing at all.
+over ash and cinder in hazed light, the windfall is a **coin** turned up out of the ash and
+the hazard an **flame** burning in the ground — each worth exactly what its meadow twin was, a
+coin five tiles to shut in, a flame five to shut in with and no fencing at all.
 
 The mountain's own idea is that there is **no clean ground on it**. The meadow saved its
 treats for its last three fields and the thicket scattered them, but both of them handed out
-fields with nothing lying about at all; every one of Emberpeak's nine has at least one ember
+fields with nothing lying about at all; every one of Emberpeak's nine has at least one flame
 staked in it, so there is nowhere up here a wall runs straight without something in the way of
-it. Sometimes the answer is to swallow the ember and pay the five, sometimes to step the wall
+it. Sometimes the answer is to swallow the flame and pay the five, sometimes to step the wall
 in beside it and give up a tile — which of the two is the whole of what most of these fields
 are asking.
 
 The other thing it does is **run dry**. Every field in both worlds below leans on water
 somewhere; **Basalt Flats** is the first field in the game with none on it at all — seventeen
-pieces, a bare shelf, two embers and nothing to build against but the shape of your own wall.
+pieces, a bare shelf, two flames and nothing to build against but the shape of your own wall.
 There are fewer than a hundred tiles of water in the whole world, where the thicket has 140
 and the meadow 159.
 
@@ -364,18 +364,18 @@ measured by that yardstick.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Cinder Slope | 9 | 1 ember | 18 | 25 | 28% |
-| 2 | Basalt Flats | 17 | 2 embers | 16 | 23 | 30% |
-| 3 | Ashfall Terrace | 13 | 1 chestnut, 1 ember | 21 | 31 | 32% |
-| 4 | Chestnut Scree | 12 | 2 chestnuts, 1 ember | 21 | 32 | 34% |
-| 5 | Sulphur Rill | 13 | 2 embers | 15 | 24 | 37% |
-| 6 | Fumarole Field | 14 | 2 chestnuts, 2 embers | 16 | 28 | 42% |
-| 7 | Crater Pools | 12 | 1 chestnut, 1 ember | 17 | 34 | 50% |
-| 8 | Smoulder Ridge | 16 | 3 chestnuts, 2 embers | 30 | 42 | 28% |
-| 9 | Wyrm Caldera | 20 | a wyrm, 3 chestnuts, 2 embers | 27 | 43 | 37% |
+| 1 | Cinder Slope | 9 | 1 flame | 18 | 25 | 28% |
+| 2 | Basalt Flats | 17 | 2 flames | 16 | 23 | 30% |
+| 3 | Ashfall Terrace | 13 | 1 coin, 1 flame | 21 | 31 | 32% |
+| 4 | Chestnut Scree | 12 | 2 coins, 1 flame | 21 | 32 | 34% |
+| 5 | Sulphur Rill | 13 | 2 flames | 15 | 24 | 37% |
+| 6 | Fumarole Field | 14 | 2 coins, 2 flames | 16 | 28 | 42% |
+| 7 | Crater Pools | 12 | 1 coin, 1 flame | 17 | 34 | 50% |
+| 8 | Smoulder Ridge | 16 | 3 coins, 2 flames | 30 | 42 | 28% |
+| 9 | Wyrm Caldera | 20 | a wyrm, 3 coins, 2 flames | 27 | 43 | 37% |
 
 Smoulder Ridge held the biggest pen on any world trail until Wide Reaches — 42, off sixteen
-pieces, three chestnuts and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself:
+pieces, three coins and a shore to follow. Its boss, Wyrm Caldera, is the crater lake itself:
 the pig up on the north rim, the wyrm down on the crater floor, and one budget for the pair. It
 charges the same 21 of the 24 stars below it that Stag Mere and Boar Hollow charge and stops for
 the same briefing on the way in; what it adds is how unevenly it wants the budget split, since
@@ -385,10 +385,10 @@ in [`solutions/03-emberpeak.md`](solutions/03-emberpeak.md).
 ### Cogsworth City
 
 The fourth world, and the first one somebody built. Down off the ash the pig has got in under
-the gate, so the trail runs over paving in gaslight, the windfall is a **pie** dropped outside
-a shop and the hazard a **drain** sunk in the road — each worth exactly what its meadow twin
-was, a pie five tiles to shut in, a drain five to shut in with and no fencing at all, since
-nothing will drive a post through cast iron.
+the gate, so the trail runs over paving in gaslight, the windfall is a **pizza** dropped outside
+a shop and the hazard a **trash can** sunk in the road — each worth exactly what its meadow twin
+was, a pizza five tiles to shut in, a trash can five to shut in with and no fencing at all, since
+nobody nails a fence to a trash can.
 
 The city's own idea is that its **water was dug**. A meadow has meres, a thicket pools and a
 mountain tarns, and every one of them lies in a body two or three tiles thick; every drop down
@@ -408,18 +408,18 @@ them as usual.
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | — | 18 | 26 | 30% |
-| 2 | Pieman's Row | 12 | 2 pies | 16 | 24 | 33% |
-| 3 | Cobble Yard | 14 | 2 drains | 12 | 18 | 33% |
-| 4 | Lock Gate | 13 | 1 drain | 14 | 22 | 36% |
+| 2 | Pieman's Row | 12 | 2 pizzas | 16 | 24 | 33% |
+| 3 | Cobble Yard | 14 | 2 trash cans | 12 | 18 | 33% |
+| 4 | Lock Gate | 13 | 1 trash can | 14 | 22 | 36% |
 | 5 | Culvert Row | 13 | — | 16 | 27 | 40% |
-| 6 | Gutter Lane | 14 | 2 drains | 15 | 26 | 42% |
-| 7 | Foundry Corner | 9 | 2 drains | 15 | 27 | 44% |
-| 8 | Clocktower Square | 17 | 3 pies, 2 drains | 25 | 40 | 37% |
-| 9 | Rat King Wharf | 19 | a rat king, 2 pies, 2 drains | 26 | 43 | 39% |
+| 6 | Gutter Lane | 14 | 2 trash cans | 15 | 26 | 42% |
+| 7 | Foundry Corner | 9 | 2 trash cans | 15 | 27 | 44% |
+| 8 | Clocktower Square | 17 | 3 pizzas, 2 trash cans | 25 | 40 | 37% |
+| 9 | Rat King Wharf | 19 | a rat king, 2 pizzas, 2 trash cans | 26 | 43 | 39% |
 
 Two of its fields ask questions nothing has asked since the meadow: Culvert Row puts its two
 banks at opposite ends of the street where The Narrows put them a stride apart, and Lock Gate
-stakes a drain beside the ford Otter Ford handed over for a single piece. Foundry Corner is the
+stakes a trash can beside the ford Otter Ford handed over for a single piece. Foundry Corner is the
 third `corner` field in the game and the first to stake anything on the diagonal itself —
 Puddle Corner and Willow Corner were both eight pieces on clean ground, and both asked 38%.
 
@@ -428,7 +428,7 @@ Its boss, Rat King Wharf, adds the city's own rule, and it is the thicket's rule
 own is exactly what a rat king is after, so two enclosures, however well they hold, are refused.
 Which makes the single pen a player learned not to build in Boar Hollow the only pen that counts
 here, and the whole question is what shape it has to be: the pair stand four tiles apart on the
-diagonal, so the smallest block that takes them both is a five by five with a drain in a corner
+diagonal, so the smallest block that takes them both is a five by five with a trash can in a corner
 it cannot avoid. It charges the same 21 of the 24 stars below it that every boss charges and
 stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions/04-cogsworth-city.md`](solutions/04-cogsworth-city.md).
@@ -436,9 +436,9 @@ stops for the same briefing on the way in. Every pen is drawn out in
 ### Starfall Reaches
 
 The fifth world, and the first one the sky keeps landing on. Up out of the gaslight the pig has
-walked out onto open dust under a violet sky, so the windfall is a **stardrop** still cooling
+walked out onto open dust under a violet sky, so the windfall is a **star** still cooling
 where it fell and the hazard a **meteor** sunk into the ground — each worth exactly what its
-meadow twin was, a stardrop five tiles to shut in, a meteor five to shut in with and no fencing
+meadow twin was, a star five tiles to shut in, a meteor five to shut in with and no fencing
 at all, since nothing will drive a post through a stone that came in from that far out.
 
 The reaches' own idea is that the **water is in single drops**. A meadow has meres, a thicket
@@ -464,11 +464,11 @@ way from Dust Shore to Starwell Ring.
 | 2 | Fallwater Basin | 13 | — | 24 | 36 | 33% |
 | 3 | Broken Chain | 15 | — | 24 | 38 | 36% |
 | 4 | Swept Flat | 18 | 3 meteors | 20 | 32 | 37% |
-| 5 | Stardrop Hollow | 13 | 2 stardrops | 23 | 39 | 41% |
+| 5 | Stardrop Hollow | 13 | 2 stars | 23 | 39 | 41% |
 | 6 | Meteor Field | 15 | 2 meteors | 17 | 32 | 46% |
 | 7 | Starwell Ring | 12 | — | 14 | 32 | 56% |
-| 8 | Wide Reaches | 20 | 1 stardrop | 45 | 69 | 34% |
-| 9 | Visitor Crater | 20 | a visitor, 3 stardrops, 2 meteors | 27 | 49 | 44% |
+| 8 | Wide Reaches | 20 | 1 star | 45 | 69 | 34% |
+| 9 | Visitor Crater | 20 | a visitor, 3 stars, 2 meteors | 27 | 49 | 44% |
 
 Starwell Ring asks 56%, which was the widest gap any field in the game left until the tundra's
 Whiskers asked 58 — six wells, twelve
@@ -497,13 +497,13 @@ the way in. Every pen is drawn out in [`solutions/05-starfall-reaches.md`](solut
 ### Gloamdeep Caverns
 
 The sixth world, and the first one under the ground. The pig went down a hole in the dust, so the
-trail runs through wet limestone by crystal light, the windfall is a **crystal** growing out of the
+trail runs through wet limestone by diamond light, the windfall is a **diamond** growing out of the
 flowstone and the hazard a **boulder** come off the roof — each worth exactly what its meadow twin
-was, a crystal five tiles to shut in, a boulder five to shut in with and no fencing at all, since
+was, a diamond five tiles to shut in, a boulder five to shut in with and no fencing at all, since
 nothing will drive a post through a block of limestone the size of a cow.
 
 The caverns' own idea is that all the water is **one river**. A meadow has meres, a thicket pools, a
-mountain tarns, a city canals and drains, and the reaches a scatter of wells no two of which touch;
+mountain tarns, a city canals and trash cans, and the reaches a scatter of wells no two of which touch;
 every board down here has one body of water on it at most, and it comes in off the rim of the cave,
 because it is the same river the whole way and a cave has no second river in it. `GloamdeepTests`
 pins both halves, and one field has no water at all — The Blind Grike, the cave the river never
@@ -517,32 +517,32 @@ water. And because the only way to make a river long enough to matter on a board
 step it, the banks down here are staircases rather than straight lines, so the pen that follows one
 is a wedge or a lozenge and never a box.
 
-The other thing it does is keep **the light**. Emberpeak staked an ember in all nine of its fields;
-this is that idea turned the other way up — there is a crystal on every board in the world, because
-a crystal is the only light in the Gloamdeep and a field with none would be a field nobody could
+The other thing it does is keep **the light**. Emberpeak staked a flame in all nine of its fields;
+this is that idea turned the other way up — there is a diamond on every board in the world, because
+a diamond is the only light in the Gloamdeep and a field with none would be a field nobody could
 see. Emberpeak is the only other world that guarantees anything on every board, and what it
 guarantees is a hazard; the caverns are the only world where every board has something worth going
 out for.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Sinter Basin | 12 | 2 crystals | 21 | 32 | 34% |
-| 2 | Dripstone Shelf | 11 | 2 crystals | 23 | 36 | 36% |
-| 3 | Stillwater Neck | 11 | 3 crystals, 1 boulder | 19 | 31 | 38% |
-| 4 | The Blind Grike | 19 | 2 crystals, 1 boulder | 25 | 41 | 39% |
-| 5 | Glowworm Reach | 11 | 3 crystals | 15 | 26 | 42% |
-| 6 | Rimstone Corner | 9 | a scalloped dam, 2 crystals, 1 boulder | 23 | 44 | 47% |
-| 7 | Boulder Chamber | 15 | 2 crystals, 3 boulders | 23 | 44 | 47% |
-| 8 | Great Gallery | 19 | 3 crystals, 1 boulder | 42 | 63 | 33% |
-| 9 | The Roost | 20 | a bat, a pup, 3 crystals, 1 boulder | 23 | 45 | 48% |
+| 1 | Sinter Basin | 12 | 2 diamonds | 21 | 32 | 34% |
+| 2 | Dripstone Shelf | 11 | 2 diamonds | 23 | 36 | 36% |
+| 3 | Stillwater Neck | 11 | 3 diamonds, 1 boulder | 19 | 31 | 38% |
+| 4 | The Blind Grike | 19 | 2 diamonds, 1 boulder | 25 | 41 | 39% |
+| 5 | Glowworm Reach | 11 | 3 diamonds | 15 | 26 | 42% |
+| 6 | Rimstone Corner | 9 | a scalloped dam, 2 diamonds, 1 boulder | 23 | 44 | 47% |
+| 7 | Boulder Chamber | 15 | 2 diamonds, 3 boulders | 23 | 44 | 47% |
+| 8 | Great Gallery | 19 | 3 diamonds, 1 boulder | 42 | 63 | 33% |
+| 9 | The Roost | 20 | a bat, a pup, 3 diamonds, 1 boulder | 23 | 45 | 48% |
 
 Rimstone Corner is the corner question with two free sides handed over: the river takes the whole
 west wall of the cave and the whole floor. What makes it more than a right angle drawn twice is the
 shape of the second bank — the south dam is **scalloped**, stepping in a tile and back out the way
 rimstone actually forms, in terraces rather than in rulers, so no rectangle can lie along it — and
 a boulder down off the roof onto the ground the tidy answer wants. The right angle is driven south
-of the boulder and holds 18 tiles and one crystal for 23; the same nine laid corner to corner as a
-staircase, stepping round the boulder, hold 34 tiles and both crystals, which is 44. Foundry Corner
+of the boulder and holds 18 tiles and one diamond for 23; the same nine laid corner to corner as a
+staircase, stepping round the boulder, hold 34 tiles and both diamonds, which is 44. Foundry Corner
 asked it with the same nine and one free side rather than two, and could only reach round 27. The Great Gallery holds the third biggest pen in the game, at 58 tiles — second until the
 dunes' Great Erg came in a tile above it.
 
@@ -565,10 +565,10 @@ same briefing on the way in. Every pen is drawn out in [`solutions/06-gloamdeep-
 
 The seventh world, and the way back up out of the dark. The pig came out of a cave into a field
 full of lights, so the trail runs over trodden sawdust under paper lanterns, the windfall is a
-**toffee apple** dropped off its stick and the hazard a **guy rope** pegged down to hold a tent
-up — each worth exactly what its meadow twin was, a toffee apple five tiles to shut in, a guy rope
-five to shut in with and no fencing at all, since a peg is already somebody else's post and there
-is no room beside it for one of yours.
+**popcorn** dropped at the concession stand and the hazard a **megaphone** set down where it
+blares — each worth exactly what its meadow twin was, a popcorn five tiles to shut in, a megaphone
+five to shut in with and no fencing at all, since nobody builds a wall where the noise is
+worst.
 
 What the water is up here is **the crowd**, and the carnival's own idea is that the crowd stands
 in **blocks**. A meadow has meres, a thicket pools, a mountain tarns, a city canals, the reaches a
@@ -584,33 +584,34 @@ So a pen out here is assembled rather than followed — pick which blocks to str
 piece for each gap between them, and the shape that comes out is whatever those blocks happened to
 leave, which is why the carnival's answers are lopsided where the caverns' were wedges.
 
-The other thing it does is keep **the guying**. Emberpeak staked an ember in all nine of its
-fields and the caverns hung a crystal in all nine of theirs; there is rope on every board here,
-and the *run* is the point — never one peg on its own, always two or more in a straight line. A
-single hazard is one tile to build around, which every world since the meadow has had. A run of
-them is a length of ground no wall may cross, because a rope takes no fence and a pen may not lean
-on one either, so a run of two is a strip of dead ground three tiles wide. The crowd is a wall the
-board gives you and a guy rope is a wall the board forbids you, and reading the difference is the
+The other thing it does is keep **the megaphone row**. Emberpeak staked a flame in all nine of
+its fields and the caverns hung a diamond in all nine of theirs; there is a row of megaphones on
+every board here, and the *row* is the point — never one megaphone on its own, always two or more
+in a straight line. A single hazard is one tile to build around, which every world since the
+meadow has had. A row of them is a length of ground no wall may cross, because a megaphone takes
+no fence and a pen may not lean on one either, so a row of two is a strip of dead ground three
+tiles wide. The crowd is a wall the
+board gives you and a megaphone is a wall the board forbids you, and reading the difference is the
 world.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Coconut Shy | 14 | 2 toffee apples, a run of rope | 18 | 29 | 37% |
-| 2 | Sideshow Row | 14 | 2 toffee apples, a run of rope | 24 | 39 | 38% |
-| 3 | The Turnstile | 14 | 3 toffee apples, a run of rope | 21 | 35 | 40% |
-| 4 | Ticket Line | 15 | 2 toffee apples, a run of rope | 20 | 34 | 41% |
-| 5 | The Toffee Stand | 17 | 3 toffee apples, a run of rope | 22 | 38 | 42% |
-| 6 | The Big Top | 11 | 2 toffee apples, a run of rope | 25 | 51 | 50% |
-| 7 | The Rigging | 18 | 3 toffee apples, 3 runs of rope | 21 | 44 | 52% |
-| 8 | The Midway | 19 | 3 toffee apples, a run of rope | 30 | 49 | 38% |
-| 9 | The Center Ring | 22 | the ringmaster, a toffee apple, 4 runs of rope | 17 | 40 | 57% |
+| 1 | Coconut Shy | 14 | 2 popcorns, a row of megaphones | 18 | 29 | 37% |
+| 2 | Sideshow Row | 14 | 2 popcorns, a row of megaphones | 24 | 39 | 38% |
+| 3 | The Turnstile | 14 | 3 popcorns, a row of megaphones | 21 | 35 | 40% |
+| 4 | Ticket Line | 15 | 2 popcorns, a row of megaphones | 20 | 34 | 41% |
+| 5 | The Toffee Stand | 17 | 3 popcorns, a row of megaphones | 22 | 38 | 42% |
+| 6 | The Big Top | 11 | 2 popcorns, a row of megaphones | 25 | 51 | 50% |
+| 7 | The Rigging | 18 | 3 popcorns, 3 rows of megaphones | 21 | 44 | 52% |
+| 8 | The Midway | 19 | 3 popcorns, a row of megaphones | 30 | 49 | 38% |
+| 9 | The Center Ring | 22 | the ringmaster, a popcorn, 4 rows of megaphones | 17 | 40 | 57% |
 
 The Big Top is the corner question with the crowd down the side of the tent and along its far
 end, so two of the four walls are handed over: eleven pieces laid corner to corner hold 51 tiles,
 the biggest pen in the world for the smallest budget in it, where the same eleven laid as a right
-angle hold 25 — because the pair of guy ropes is pegged inside every rectangle worth drawing, and
-the tidy pen has to swallow them and pay their ten. The Rigging carries seven pegs in three runs —
-more rope than any other field at the fair, and the only line of three in the game — and at 52% it
+angle hold 25 — because the pair of megaphones is set inside every rectangle worth drawing, and
+the tidy pen has to swallow them and pay their ten. The Rigging carries seven megaphones in three
+rows — more noise than any other field at the fair, and the only line of three in the game — and at 52% it
 leaves the widest gap of any ordinary field at the fair.
 
 Its boss, The Center Ring, adds the carnival's rule, and it is the first rule in the game about
@@ -630,9 +631,9 @@ it that every boss charges, and stops for the same briefing on the way in. Every
 
 The eighth world, and the driest. The lights of the fair are behind and there is sand to the
 horizon, so the trail runs over rippled sand under a white sky, the windfall is a **melon** lying
-where it fell and the hazard a **cactus** rooted in the sand — each worth exactly what its meadow
-twin was, a melon five tiles to shut in, a cactus five to shut in with and no fencing at all, since
-there is no room beside a cactus for a post of yours.
+where it fell and the hazard a **snake** coiled in the sand — each worth exactly what its meadow
+twin was, a melon five tiles to shut in, a snake five to shut in with and no fencing at all, since
+nobody drives a post where a snake is coiled.
 
 What the water is out here is **a dune**: sand too steep to climb and too loose to hold a post, so
 it stops a pig and a fence exactly as a river does. And the world's own idea is the shape of it —
@@ -652,7 +653,7 @@ And that is the trap, which is the whole world. The belly of a dune is rectangle
 exactly what squaring a board off finds; it is also a fixed size, because the sand is where it is
 and no amount of budget makes the shade any wider. So the question every field here asks is *is the
 free pen worth having*, and the answer is almost always no. Slipface Hollow says it on the first
-board by standing a cactus in each end of the shade: take the gift the sand is holding out and you
+board by standing a snake in each end of the shade: take the gift the sand is holding out and you
 have been given six tiles and ten points of debt.
 
 One field has no dune on it anywhere, the way The Blind Grike has no river: The Hardpan, the ground
@@ -661,14 +662,14 @@ laid out across bare hardpan to buy it.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 cacti | 20 | 33 | 39% |
-| 2 | The Long Slack | 14 | three barchans, 2 melons, a run of cactus | 19 | 33 | 42% |
+| 1 | Slipface Hollow | 14 | one barchan, 2 melons, 2 snakes | 20 | 33 | 39% |
+| 2 | The Long Slack | 14 | three barchans, 2 melons, a run of snakes | 19 | 33 | 42% |
 | 3 | The Blowout | 13 | two barchans back to back, 2 melons | 18 | 32 | 43% |
-| 4 | The Hardpan | 21 | no dune at all, 2 melons east, 2 cacti on one latitude | 25 | 45 | 44% |
-| 5 | Two Horns | 18 | two barchans, 2 melons, a run of cactus | 29 | 50 | 42% |
-| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of cactus | 19 | 35 | 45% |
+| 4 | The Hardpan | 21 | no dune at all, 2 melons east, 2 snakes on one latitude | 25 | 45 | 44% |
+| 5 | Two Horns | 18 | two barchans, 2 melons, a run of snakes | 29 | 50 | 42% |
+| 6 | Melon Ground | 17 | one barchan, 3 melons, a run of snakes | 19 | 35 | 45% |
 | 7 | Scarp Corner | 11 | one great barchan, 2 melons | 20 | 41 | 51% |
-| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three cacti | 33 | 56 | 41% |
+| 8 | The Great Erg | 19 | two barchans, 3 melons, a run of three snakes | 33 | 56 | 41% |
 | 9 | Scorpion Flats | 16 | the scorpion, two barchans, 2 melons | 19 | 50 | 62% |
 
 Scarp Corner is the corner question with one great barchan hooked into the north-west, so its back
@@ -708,8 +709,8 @@ stops for the same briefing on the way in. Every pen is drawn out in [`solutions
 
 The ninth world, and the first wet one since the meadow. The sand runs out into a sea that has
 only just turned back, so the trail runs over wet strand under sea light, the windfall is a
-**pearl** the tide left lying in its shell and the hazard a **jellyfish** stranded where it washed
-up — each worth exactly what its meadow twin was, a pearl five tiles to shut in, a jellyfish five
+**seashell** the tide left lying on the sand and the hazard a **jellyfish** stranded where it washed
+up — each worth exactly what its meadow twin was, a seashell five tiles to shut in, a jellyfish five
 to shut in with and no fencing at all, since nothing drives a post through a sting.
 
 What the water is down here is **a tidepool**: seawater the tide left standing, too deep to wade
@@ -723,7 +724,7 @@ Which out-offers even the dunes. A crescent handed over three walls and a mouth;
 hands over a pen that is *finished* but for its break, and one piece on the break shuts the heart.
 It is the cheapest pen the game has ever offered — and it is the trap the whole world is built on,
 because a heart is small, the ring is where the tide put it, and half of what the tide holds out
-it keeps. Ebbtide Pool says it on the first board: the one pearl on show sits in a heart whose
+it keeps. Ebbtide Pool says it on the first board: the one seashell on show sits in a heart whose
 break opens onto the rim of the map, where nothing can ever be penned, and the two out in the open
 lie on the rim itself. The cove's first lesson is that a gift on show is not a gift; its running
 lesson is what the ones that are real actually cost.
@@ -733,22 +734,22 @@ above the tideline, where every tile of the pen is bought.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | Ebbtide Pool | 13 | one pool, 3 pearls, 2 jellyfish | 10 | 17 | 41% |
-| 2 | Twin Pools | 12 | two pools, a pearl argued for by each | 22 | 39 | 43% |
-| 3 | The High Strand | 19 | no pool at all, a pearl in each far corner, a wrack line of 3 | 20 | 36 | 44% |
-| 4 | The Oyster Bed | 14 | one pool, 2 pearls seeded in its heart, 1 loose | 23 | 42 | 45% |
-| 5 | The Runnel | 13 | two pools either side of a channel, 2 pearls | 23 | 43 | 46% |
-| 6 | The Long Pool | 14 | one long pool, 2 pearls, 2 jellyfish | 21 | 39 | 46% |
-| 7 | Barnacle Corner | 10 | two great pools, 3 pearls | 22 | 47 | 53% |
-| 8 | Low Water | 16 | two pools, 3 pearls, a jellyfish | 31 | 58 | 46% |
-| 9 | The Crab Pool | 22 | the crab, his pool, 3 pearls | 17 | 52 | 67% |
+| 1 | Ebbtide Pool | 13 | one pool, 3 seashells, 2 jellyfish | 10 | 17 | 41% |
+| 2 | Twin Pools | 12 | two pools, a seashell argued for by each | 22 | 39 | 43% |
+| 3 | The High Strand | 19 | no pool at all, a seashell in each far corner, a wrack line of 3 | 20 | 36 | 44% |
+| 4 | The Oyster Bed | 14 | one pool, 2 seashells seeded in its heart, 1 loose | 23 | 42 | 45% |
+| 5 | The Runnel | 13 | two pools either side of a channel, 2 seashells | 23 | 43 | 46% |
+| 6 | The Long Pool | 14 | one long pool, 2 seashells, 2 jellyfish | 21 | 39 | 46% |
+| 7 | Barnacle Corner | 10 | two great pools, 3 seashells | 22 | 47 | 53% |
+| 8 | Low Water | 16 | two pools, 3 seashells, a jellyfish | 31 | 58 | 46% |
+| 9 | The Crab Pool | 22 | the crab, his pool, 3 seashells | 17 | 52 | 67% |
 
 Barnacle Corner is the corner question with two free sides, the way Rimstone Corner, The Big Top
 and Scarp Corner asked it — one great pool along the whole north of the board and a second down
 the east — and at 53% it is the hardest corner anywhere in the game. The right-angled answer tucks
 under the north pool and pays its own east and south walls for 22, where the same ten pieces run
 as a chevron from lip to flank hold 42 tiles and let themselves in at the east pool's break for
-the pearl on the way, which is 47. Low Water holds 48 tiles on the broadest board in the cove,
+the seashell on the way, which is 47. Low Water holds 48 tiles on the broadest board in the cove,
 which is the biggest pen in the world and nothing beside the game's real giants — the cove's
 budgets are the tide's, and the tide does not hand out ground.
 
@@ -762,7 +763,7 @@ other piece goes on a ring that no way off the map may miss. Run the ring and fo
 he strolls out of his pool into the pig's own ground, which is held and held together and no
 answer; plug the break and box the pig beside the pool and both are held in two tidy pens, which
 is no ring. The square moat with its plug is the obvious answer and worth 17 of 52; the same
-twenty-two pieces swung out as a diamond hold 37 tiles and all three pearls — one lying off each
+twenty-two pieces swung out as a diamond hold 37 tiles and all three seashells — one lying off each
 face of the square's reach, exactly where a diamond's points go — and at 67% that was the widest
 gap any board in the game left until the tundra's bull seal asked 69. It charges the same 21 of the 24 stars below it that every boss
 charges, and stops for the same briefing on the way in. Every pen is drawn out in
@@ -772,9 +773,10 @@ charges, and stops for the same briefing on the way in. Every pen is drawn out i
 
 The tenth world, and the coldest. North along the shore the sea itself gives up and goes white,
 so the trail runs over wind-combed snow under the palest light in the game, the windfall is a
-**fish** flipped up onto the ice and the hazard a **berg** calved into the snow — each worth
-exactly what its meadow twin was, a fish five tiles to shut in, a berg five to shut in with and
-no fencing at all, since nothing drives a post through blue ice.
+**ski** dropped on the way up to the slopes and the hazard an **ice slick** sheeted black
+across the snow — each worth exactly what its meadow twin was, a ski five tiles to shut in, an
+ice slick five to shut in with and no fencing at all, since nothing drives a post through
+black ice.
 
 What the water is up here is **a pressure ridge**: ice crushed upward where two floes met, too
 sheer to climb and no ground to build on, so it stops a pig and a fence exactly as a river does.
@@ -798,21 +800,21 @@ the weather has come down and every tile of the pen is bought.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | The Corrie | 13 | two ridges leaning together, 3 fish, 2 bergs | 22 | 38 | 42% |
-| 2 | Twin Spurs | 13 | two ridges in opposite quarters, 2 fish | 23 | 41 | 43% |
-| 3 | The Whiteout | 19 | no ice at all, 3 fish (2 on the line), 4 bergs | 20 | 36 | 44% |
-| 4 | The Seam | 12 | two ridges on one slant, a seam between, 2 fish | 19 | 36 | 47% |
-| 5 | Whaleback Ridge | 11 | one ridge seven tiles long, a school of 3 fish | 22 | 42 | 47% |
-| 6 | Fish Cache | 12 | one ridge, 3 fish hung wide of it | 20 | 39 | 48% |
-| 7 | The Whiskers | 10 | three ridges, all arcs of one ring, 2 fish | 21 | 51 | 58% |
-| 8 | The Great Floe | 14 | two long ridges, 2 fish | 34 | 60 | 43% |
-| 9 | The Haulout | 17 | the bull seal, three ridges, 1 fish, 1 berg | 13 | 42 | 69% |
+| 1 | The Corrie | 13 | two ridges leaning together, 3 skis, 2 ice slicks | 22 | 38 | 42% |
+| 2 | Twin Spurs | 13 | two ridges in opposite quarters, 2 skis | 23 | 41 | 43% |
+| 3 | The Whiteout | 19 | no ice at all, 3 skis (2 on the line), 4 ice slicks | 20 | 36 | 44% |
+| 4 | The Seam | 12 | two ridges on one slant, a seam between, 2 skis | 19 | 36 | 47% |
+| 5 | Whaleback Ridge | 11 | one ridge seven tiles long, a scatter of 3 skis | 22 | 42 | 47% |
+| 6 | Fish Cache | 12 | one ridge, 3 skis hung wide of it | 20 | 39 | 48% |
+| 7 | The Whiskers | 10 | three ridges, all arcs of one ring, 2 skis | 21 | 51 | 58% |
+| 8 | The Great Floe | 14 | two long ridges, 2 skis | 34 | 60 | 43% |
+| 9 | The Haulout | 17 | the bull seal, three ridges, 1 ski, 1 ice slick | 13 | 42 | 69% |
 
 The Whiskers is the constellation question at the widest spacing the game has asked it: three
 scattered ridges are all arcs of one diamond ring drawn at five paces round the pig, and the
 budget is exactly the ten mud tiles of that ring the ice did not build. See the whole shape and
 the whole shape is affordable; see anything less and it is not. The only affordable block is the
-bottom half-diamond between the south ridges at 21, the ring holds 41 tiles and both fish for
+bottom half-diamond between the south ridges at 21, the ring holds 41 tiles and both skis for
 51, and at 58% it is the widest gap any field outside a boss leaves anywhere in the game —
 Starwell Ring, the old title holder, asked 56. The Great Floe holds 50 tiles on the broadest
 board in the tundra, which is the biggest pen in the world and still shy of the game's giants,
@@ -828,7 +830,7 @@ the great ridge, where the ice broke and the sea shows through, and every piece 
 piece the pig's pen does not get. The tidy answer that satisfies it boxes the pig on her own
 tile and walls the seal his yard of ice against the ridge's tail, which is 13 of 42; the same
 seventeen pieces run down the great ridge's whole west flank instead, with a two-piece yard for
-the seal against the same tail, hold 42 tiles, the fish and the berg — and at 69% that was the
+the seal against the same tail, hold 42 tiles, the ski and the ice slick — and at 69% that was the
 widest gap any board in the game left until the fen's croc asked 72. It charges the same 21 of the 24 stars below it that
 every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
 [`solutions/10-frostwhisker-tundra.md`](solutions/10-frostwhisker-tundra.md).
@@ -837,10 +839,10 @@ every boss charges, and stops for the same briefing on the way in. Every pen is 
 
 The eleventh world, and the wettest. South off the ice the ground gives up choosing between land
 and water, so the trail runs through reeds and mist under the heaviest light in the game, the
-windfall is a **bilberry** ripened over the peat and the hazard a **snag** — bog oak drowned
-black and hard as iron — each worth exactly what its meadow twin was, a bilberry five tiles to
-shut in, a snag five to shut in with and no fencing at all, since nothing drives a post into
-wood the bog already ate.
+windfall is a **lotus flower** opened over the peat and the hazard a **mosquito** whining
+over its own patch of mire — each worth exactly what its meadow twin was, a lotus flower five
+tiles to shut in, a mosquito five to shut in with and no fencing at all, since no wall on the
+fen keeps a mosquito off.
 
 What the water is down here is **a channel**: fen water moving too slowly to see, too deep to
 wade and no ground to build on, so it stops a pig and a fence exactly as a river does. And the
@@ -851,11 +853,11 @@ two-by-two of water anywhere.
 
 Which hands over free walls the way every wet world has, jogged so a rectangle cannot follow
 them — and keeps something back no world has kept before: **the bars.** The ground a loop rings
-is ground nothing can ever walk to, so a bilberry parked on a bar is the loudest tease since
-the cove's rim pearls: in plain sight, five points, and nobody's. Four of them ride the bars
+is ground nothing can ever walk to, so a lotus flower parked on a bar is the loudest tease since
+the cove's rim seashells: in plain sight, five points, and nobody's. Four of them ride the bars
 across the trail, and `MirebogTests` checks nobody quietly moves one somewhere a pen could
 cash it. The fen keeps what it rings — and unlike the strand and the ice it always pays
-something too: every board's best pen wins at least one bilberry, which no world before this
+something too: every board's best pen wins at least one lotus flower, which no world before this
 one could promise.
 
 One field has no channel on it anywhere, the way The Whiteout has no ice: The Turbary, the
@@ -863,23 +865,23 @@ cut-over peat, where every tile of the pen is bought.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | The Eel Trap | 11 | two staircase braids in an arch, 2 bilberries, a snag | 21 | 37 | 43% |
-| 2 | The Two Carrs | 10 | two braids far apart, 2 bilberries, 1 on a bar | 26 | 47 | 44% |
-| 3 | The Turbary | 21 | no channel at all, 1 bilberry, 2 on the corners | 27 | 50 | 46% |
-| 4 | The Sluice | 11 | two braids nearly meeting, 2 bilberries, 1 on a bar, a snag | 20 | 38 | 47% |
-| 5 | Bittern Bank | 11 | one braid snaking the width, 2 bilberries, a snag | 17 | 33 | 48% |
-| 6 | Bilberry Hags | 11 | two pool-braids, 3 bilberries hung wide, a snag | 17 | 34 | 50% |
-| 7 | Heron Corner | 11 | two braids walling two sides, 3 bilberries, a snag | 16 | 35 | 54% |
-| 8 | The Great Slough | 13 | two braids at full stretch, 3 bilberries, a snag | 30 | 54 | 44% |
-| 9 | The Wallow | 19 | the old croc, four braids, 3 bilberries, 2 snags | 13 | 48 | 72% |
+| 1 | The Eel Trap | 11 | two staircase braids in an arch, 2 lotus flowers, a mosquito | 21 | 37 | 43% |
+| 2 | The Two Carrs | 10 | two braids far apart, 2 lotus flowers, 1 on a bar | 26 | 47 | 44% |
+| 3 | The Turbary | 21 | no channel at all, 1 lotus flower, 2 on the corners | 27 | 50 | 46% |
+| 4 | The Sluice | 11 | two braids nearly meeting, 2 lotus flowers, 1 on a bar, a mosquito | 20 | 38 | 47% |
+| 5 | Bittern Bank | 11 | one braid snaking the width, 2 lotus flowers, a mosquito | 17 | 33 | 48% |
+| 6 | Bilberry Hags | 11 | two pool-braids, 3 lotus flowers hung wide, a mosquito | 17 | 34 | 50% |
+| 7 | Heron Corner | 11 | two braids walling two sides, 3 lotus flowers, a mosquito | 16 | 35 | 54% |
+| 8 | The Great Slough | 13 | two braids at full stretch, 3 lotus flowers, a mosquito | 30 | 54 | 44% |
+| 9 | The Wallow | 19 | the old croc, four braids, 3 lotus flowers, 2 mosquitos | 13 | 48 | 72% |
 
 Heron Corner is the corner question the way Rimstone Corner, Scarp Corner and Barnacle Corner
 asked it — a loop-braid stacked up the whole west side and the bottom channel running east,
 their banks meeting at the south-west — and at 54% it is the hardest field in the fen. The
 right-angled answer ignores the gift and boxes the pig on the open peat for 16; the same eleven
 pieces throw one long diagonal from the high ground down to the east pool and hold 35. It asks
-the same scatter of berries as Bilberry Hags one field earlier, on purpose: the hags' question
-is whether the berries are worth bowing for, and the corner's is what the walls are worth — the
+the same scatter of flowers as Bilberry Hags one field earlier, on purpose: the hags' question
+is whether the flowers are worth bowing for, and the corner's is what the walls are worth — the
 same ground, asked two different things. The Great Slough holds 49 tiles on the broadest board
 in the fen, which is the biggest pen in the world and one more than the boss's.
 
@@ -893,9 +895,9 @@ with two pieces and both animals are held, and the board sends it back: his pen 
 and not the rest, which is no wallow at all. Pen the pair together in one sweep of the east fen
 — 49 tiles, more ground than the winning answer — and that comes back too, because the croc is
 not company. The tidy answer boxes the pig on her own tile and rings his channel tight, leaning
-the sister braids for walls, and the snag staked on the ring's south line makes even that
+the sister braids for walls, and the mosquito staked on the ring's south line makes even that
 answer pay: 13 of 48. The same nineteen pieces swing the ring wide instead and take the whole
-east fen into the croc's ground, both live bilberries and both snags — and at 72% that was the
+east fen into the croc's ground, both live lotus flowers and both mosquitos — and at 72% that was the
 widest gap any board in the game left until the heights' eagle asked 76. It charges the same 21
 of the 24 stars below it that
 every boss charges, and stops for the same briefing on the way in. Every pen is drawn out in
@@ -905,12 +907,11 @@ every boss charges, and stops for the same briefing on the way in. Every pen is 
 
 The twelfth world, and the last. Up out of the fen the ground gives out altogether, so the
 trail runs over turf terraces on the tops of spires that stand clear of the weather, under the
-clearest daylight and the blackest night in the game. The windfall is a **balloon** that
-slipped a child's fist at the carnival five worlds below and has been climbing ever since, and
-the hazard a **whirlwind** worrying at the turf — each worth exactly what its meadow twin was,
-a balloon five tiles to shut in, a whirlwind five to shut in with and no fencing at all, since
-a balloon is tethered by nothing but its string and no post stands in a wind that never stops
-turning.
+clearest daylight and the blackest night in the game. The windfall is a **rainbow** pooled
+where it came down on the turf, and the hazard a **storm** worrying at the fields — each worth
+exactly what its meadow twin was, a rainbow five tiles to shut in, a storm five to shut in with
+and no fencing at all, since a rainbow is anchored to nothing and no post stands in a wind that
+never stops turning.
 
 What the water is up here is **not water at all**: it is open sky between the fields, and a
 long way down. It stops a pig and a fence exactly as a river does, which is all the board ever
@@ -922,7 +923,7 @@ every world below still breaks at least one of them, which is what makes it a pr
 
 Which hands over free walls the way every wet world has — and keeps something back the way
 the fen did: **the far fields.** A field the pig's ground never touches is a field nothing
-will ever walk to, so a balloon adrift on one is the fen's bar-berries said in this world's
+will ever walk to, so a rainbow adrift on one is the fen's bar flowers said in this world's
 grammar: in plain sight, five points, and nobody's. Nine of them ride the far fields across
 the trail — one on every wet board — and `CloudspireTests` checks nobody quietly bridges one
 somewhere a pen could cash it.
@@ -932,26 +933,26 @@ the one field back on the ground, where every tile of the pen is bought.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
-| 1 | The Hollow Crown | 11 | a crown of sky round a hollow, 3 balloons, 3 whirlwinds | 24 | 43 | 44% |
-| 2 | The Two Pinnacles | 10 | two moated pinnacles, 3 balloons, 3 whirlwinds | 16 | 30 | 46% |
-| 3 | The Long Way Down | 21 | no sky at all, 2 balloons, 2 whirlwinds | 27 | 51 | 47% |
-| 4 | The Rope Bridge | 12 | an island, a causeway and a delta, 3 balloons, 3 whirlwinds | 24 | 47 | 48% |
-| 5 | The Cloudbank | 13 | one long bank of sky, 3 balloons, 4 whirlwinds | 26 | 51 | 49% |
-| 6 | The Lost Balloons | 11 | 4 balloons hung wide, 2 adrift for good, 2 whirlwinds | 20 | 41 | 51% |
-| 7 | Windward Corner | 10 | two free banks meeting, 3 balloons (1 on the world's corner), 2 whirlwinds | 20 | 45 | 55% |
-| 8 | The Open Sky | 14 | the widest board, 2 balloons, 6 whirlwinds in two gust-lines | 30 | 56 | 46% |
-| 9 | The Eyrie | 10 | the eagle on his pinnacle, 6 balloons, 1 whirlwind | 15 | 65 | 76% |
+| 1 | The Hollow Crown | 11 | a crown of sky round a hollow, 3 rainbows, 3 storms | 24 | 43 | 44% |
+| 2 | The Two Pinnacles | 10 | two moated pinnacles, 3 rainbows, 3 storms | 16 | 30 | 46% |
+| 3 | The Long Way Down | 21 | no sky at all, 2 rainbows, 2 storms | 27 | 51 | 47% |
+| 4 | The Rope Bridge | 12 | an island, a causeway and a delta, 3 rainbows, 3 storms | 24 | 47 | 48% |
+| 5 | The Cloudbank | 13 | one long bank of sky, 3 rainbows, 4 storms | 26 | 51 | 49% |
+| 6 | The Lost Balloons | 11 | 4 rainbows hung wide, 2 adrift for good, 2 storms | 20 | 41 | 51% |
+| 7 | Windward Corner | 10 | two free banks meeting, 3 rainbows (1 on the world's corner), 2 storms | 20 | 45 | 55% |
+| 8 | The Open Sky | 14 | the widest board, 2 rainbows, 6 storms in two gust-lines | 30 | 56 | 46% |
+| 9 | The Eyrie | 10 | the eagle on his pinnacle, 6 rainbows, 1 storm | 15 | 65 | 76% |
 
 Windward Corner is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner
 asked it — sky two deep along the whole north and west, the field hung on the east and south
 rims — and at 55% it is the hardest ordinary field in the heights; in the whole game only The
-Whiskers asks more. Two balloons hang where the diagonal goes and the right angle does not —
-one straight out along the pig's row, one straight down her column, each with a whirlwind
+Whiskers asks more. Two rainbows hang where the diagonal goes and the right angle does not —
+one straight out along the pig's row, one straight down her column, each with a storm
 between her and it — and the third rides the very corner of the map, where nothing can ever be
-penned. The right angle boxes a strip, pays both whirlwinds and reaches one balloon for 20; the
+penned. The right angle boxes a strip, pays both storms and reaches one rainbow for 20; the
 same ten pieces thrown as one grand diagonal, corner to corner — the largest single wall on any
-ordinary field in the game — lean both banks at once, pay the same two whirlwinds and take both
-live balloons, holding 45 tiles for 45. The Open Sky
+ordinary field in the game — lean both banks at once, pay the same two storms and take both
+live rainbows, holding 45 tiles for 45. The Open Sky
 holds 51 tiles on the broadest board in the heights, which is the biggest pen in the world
 and six more than the boss's.
 
@@ -966,8 +967,8 @@ nothing but putting out an eye: no other board in the game has a use for such a 
 the north approach on its free sky wall and the board sends the whole pen back, spotted. The
 tidy answer hides in the pocket out of both rays, three pieces for 15. The same ten pieces
 put out three eyes instead — one wall fenced across his north ray, lone pieces on both
-stepping stones — and take every tile the pig can walk to: 45 of them, five balloons, and the
-causeway whirlwind swallowed on the way east, which is 65. At 76% that is the widest gap any
+stepping stones — and take every tile the pig can walk to: 45 of them, five rainbows, and the
+causeway storm swallowed on the way east, which is 65. At 76% that is the widest gap any
 board in the game leaves, and the game saves it for last. It charges the same 21 of the 24
 stars below it that every boss charges, and stops for the same briefing on the way in. Every
 pen is drawn out in
@@ -1198,9 +1199,10 @@ was shown at once.
 The last three shots are the briefing. Outside the practice pen nothing else tells a player
 that space is the score, that an apple shut in is worth five tiles and a skull five against,
 or that a pen is worth nothing at all with a gap in it — so the film draws each of them
-rather than writing them down. *And close the fence. Pig has no respect for property lines.*
-is the card the film hands the game over on: the half of the rule the apple and the skull
-cannot teach, and the reason a pen the size of the meadow is worth nothing with a hole in it.
+rather than writing them down. *And make sure to close the fence. Pig is keeping his options
+open.* is the card the film hands the game over on: the half of the rule the apple and the
+skull cannot teach, and the reason a pen the size of the meadow is worth nothing with a hole
+in it.
 
 It plays once. `WorldProgress` keeps the names of the films already played beside the stars,
 so a player who watches one, backs out without penning anything and comes back does not get
@@ -1855,7 +1857,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of truffles and brambles and a mountain board of chestnuts and embers), the settings sheet, a daily board and its archive and all eleven shots of the three cut scenes in light + dark, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of mushrooms and wilted flowers and a mountain board of coins and flames), the settings sheet, a daily board and its archive and all eleven shots of the three cut scenes in light + dark, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -1865,7 +1867,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-truffles` opens Nettle Bank dressed for the woods, where a truffle and a bramble sit on the ground in place of an apple and a skull, and `-embers` opens Smoulder Ridge dressed for the mountain, on ash and cinder with chestnuts and embers on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The eleven film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-mushrooms`, `-flames`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-mushrooms` opens Nettle Bank dressed for the woods, where a mushroom and a wilted flower sit on the ground in place of an apple and a skull, and `-flames` opens Smoulder Ridge dressed for the mountain, on ash and cinder with coins and flames on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The eleven film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -2027,7 +2029,7 @@ Pigpen/
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
 │   ├── ChunkyButtonStyle.swift  # The wooden buttons: the title screen's, and the board's
-│   ├── GamePalette.swift        # Colours: the pasture's day, dusk and sunrise, and the forest, ember and city sets
+│   ├── GamePalette.swift        # Colours: the pasture's day, dusk and sunrise, and the forest, flame and city sets
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
