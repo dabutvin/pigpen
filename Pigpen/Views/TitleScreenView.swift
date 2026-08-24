@@ -320,8 +320,8 @@ struct TitleScreenView: View {
     ///
     /// A reminder that puts the player down here, with the board still a tap away, has spent
     /// its one interruption on nothing — so whatever else is up comes down and the day it
-    /// names goes up instead. A player who taps *Sunday's puzzle is ready* has said where they
-    /// want to be, and a world map they left an hour ago is not an answer to it.
+    /// names goes up instead. A player who taps *Pig's waiting* has said where they want
+    /// to be, and a world map they left an hour ago is not an answer to it.
     ///
     /// The tap is taken rather than read, so one tap opens one board and coming back here
     /// later does not open it again. A morning the almanac has nothing for, or one still to
