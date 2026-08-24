@@ -3,12 +3,12 @@ import Foundation
 /// The tenth world's levels and the trail that strings them together.
 ///
 /// Frostwhisker Tundra is the meadow's game on snow over sea ice: fence in the pig, the biggest
-/// pen the pieces will reach round, shut or it is no pen at all. The windfall here is a **fish**
-/// flipped up onto the ice beside somebody's breathing hole and the hazard a **berg** calved
-/// into the snow, and each is worth exactly what its meadow twin was — a fish five tiles to
-/// shut in, a berg five to shut in with and no fencing at all, since nothing drives a post
-/// through blue ice — so the same solver that authored the nine worlds below these authored
-/// them, with `a` standing in for the fish and `x` for the berg.
+/// pen the pieces will reach round, shut or it is no pen at all. The windfall here is a **ski**
+/// dropped on the way up to the slopes and the hazard an **ice slick** sheeted black across
+/// the snow, and each is worth exactly what its meadow twin was — a ski five tiles to
+/// shut in, an ice slick five to shut in with and no fencing at all, since nothing drives a post
+/// through black ice — so the same solver that authored the nine worlds below these authored
+/// them, with `a` standing in for the ski and `x` for the ice slick.
 ///
 /// What the water is here is **a pressure ridge**: ice crushed upward where two floes met, too
 /// sheer to climb and no ground to build on, so it stops a pig and a fence exactly as a river
@@ -34,20 +34,20 @@ import Foundation
 /// where the free wall is always the right shape and the whole question is what to do with it.
 extension PuzzleLevel {
     /// Two ridges leaning together like a roof — a corrie of ice with a one-tile gap at its
-    /// apex, two bergs calved into the bowl, and the pig on the open snow below.
+    /// apex, two ice slicks calved into the bowl, and the pig on the open snow below.
     ///
     /// The basin question, asked by the world's own wall: the ridges nearly close a bowl, one
     /// piece at the apex finishes it, and everything else follows from what the bowl turns out
     /// to be worth. Both answers here buy the plug — it is the cheapest wall on the board —
-    /// and both take the two bergs with it, because a bowl is where bergs calve and going round
+    /// and both take the two ice slicks with it, because a bowl is where ice slicks calve and going round
     /// them costs more ground than their ten points. The block squares the bowl off at the
-    /// ridges' feet and holds 32 tiles and the two bergs, which is 22. The same thirteen pieces
+    /// ridges' feet and holds 32 tiles and the two ice slicks, which is 22. The same thirteen pieces
     /// flare on south past the feet instead, lean the outside of both ridges the whole way
-    /// down, and hold 43 tiles, one fish and the same two bergs, which is 38 — the fish lying
+    /// down, and hold 43 tiles, one ski and the same two ice slicks, which is 38 — the ski lying
     /// out on the open snow is what the wider wall is for.
     ///
-    /// Two more fish lie frozen in along the south rim, and nothing reaches them: no pen may
-    /// stand on the edge of the map, so a fish on the rim is the ice's to keep.
+    /// Two more skis lie frozen in along the south rim, and nothing reaches them: no pen may
+    /// stand on the edge of the map, so a ski on the rim is the ice's to keep.
     static let theCorrie = frostwhisker(
         id: "the-corrie",
         name: "The Corrie",
@@ -72,14 +72,14 @@ extension PuzzleLevel {
     )
 
     /// Two short ridges thrown into opposite quarters of the board — spurs off floes that met
-    /// somewhere else — with the pig on the flat between them and a fish on the line of both.
+    /// somewhere else — with the pig on the flat between them and a ski on the line of both.
     ///
     /// The span question, on walls that are already diagonal: each spur is three tiles of free
     /// wall and each is useless alone, so the whole field is the wall thrown between them. The
-    /// block gets a corner against each across the middle and holds 18 tiles and the fish,
+    /// block gets a corner against each across the middle and holds 18 tiles and the ski,
     /// which is 23. The same thirteen pieces run out as one great lozenge that leans on every
     /// tile of both spurs — down the outside of one, back up the outside of the other — and
-    /// hold 36 tiles and the same fish, which is 41. A second fish rides the north rim where
+    /// hold 36 tiles and the same ski, which is 41. A second ski rides the north rim where
     /// the ice keeps it.
     static let twinSpurs = frostwhisker(
         id: "twin-spurs",
@@ -111,8 +111,8 @@ extension PuzzleLevel {
     /// always was: the best block nineteen pieces can square off is a four by five holding 20,
     /// and the same nineteen run round as a diamond hold 36. A diagonal wall shuts nearly two
     /// tiles a piece where a straight one shuts one — which on this world is the lesson every
-    /// ridge has been drawing on the ice for free, asked once with nothing drawing it. Two fish
-    /// lie along the rims where the whiteout dropped them and two bergs sit off in the corners,
+    /// ridge has been drawing on the ice for free, asked once with nothing drawing it. Two skis
+    /// lie along the rims where the whiteout dropped them and two ice slicks sit off in the corners,
     /// and the diamond that wins touches none of them.
     static let theWhiteout = frostwhisker(
         id: "the-whiteout",
@@ -144,9 +144,9 @@ extension PuzzleLevel {
     /// The gap question, asked in the world's own grammar: the two chains lie corner to corner
     /// on one line, so a single piece laid in the seam joins them into a seven-tile diagonal
     /// wall, the longest free wall the budget could never buy. The block refuses the seam and
-    /// huddles east of the lower ridge for 19, one fish included. The same twelve pieces spend
+    /// huddles east of the lower ridge for 19, one ski included. The same twelve pieces spend
     /// exactly one on the seam and the rest on a lozenge slung from end to end of the joined
-    /// wall, and hold 26 tiles and both fish — one at each far end of what the seam made one —
+    /// wall, and hold 26 tiles and both skis — one at each far end of what the seam made one —
     /// which is 36.
     static let theSeam = frostwhisker(
         id: "the-seam",
@@ -171,15 +171,15 @@ extension PuzzleLevel {
             """
     )
 
-    /// One ridge seven tiles long, whale-backed across the whole board, and a school of fish
-    /// flipped out on the ice off its lower flank.
+    /// One ridge seven tiles long, whale-backed across the whole board, and a scatter of skis
+    /// dropped out on the ice off its lower flank.
     ///
     /// The shore question, on the longest bank the tundra has: the ridge is the dominant free
-    /// wall and the whole field is which stretch of it to use. The school says the lower
-    /// stretch — three fish in a line, one flick of a tail apart — and the block believes it,
-    /// scoops the school in a skinny box that wastes the ridge, and holds 7 tiles and all
-    /// three fish, which is 22. The same eleven pieces flare from the ridge's high end instead,
-    /// lean its whole lower run, and hold 27 tiles and the same school, which is 42 — the fish
+    /// wall and the whole field is which stretch of it to use. The scatter says the lower
+    /// stretch — three skis in a line, one stride apart — and the block believes it,
+    /// scoops the scatter in a skinny box that wastes the ridge, and holds 7 tiles and all
+    /// three skis, which is 22. The same eleven pieces flare from the ridge's high end instead,
+    /// lean its whole lower run, and hold 27 tiles and the same scatter, which is 42 — the skis
     /// were never the question, the ridge was.
     static let whalebackRidge = frostwhisker(
         id: "whaleback-ridge",
@@ -205,13 +205,13 @@ extension PuzzleLevel {
             """
     )
 
-    /// Somebody's winter store, scattered: one ridge four tiles long, and three fish hung wide
+    /// Somebody's winter store, scattered: one ridge four tiles long, and three skis hung wide
     /// of the tidy line it suggests — one high, one far east, one tucked in behind the ice.
     ///
-    /// The detour question: the ridge offers a neat rectangle and the fish refuse it. The block
-    /// takes the offer, leans the ridge, and manages only the fish tucked inside its own lines
-    /// — 15 tiles and one fish, which is 20. The same twelve pieces bow out of the tidy line
-    /// three times over, once for each fish, and hold 24 tiles and all three, which is 39.
+    /// The detour question: the ridge offers a neat rectangle and the skis refuse it. The block
+    /// takes the offer, leans the ridge, and manages only the ski tucked inside its own lines
+    /// — 15 tiles and one ski, which is 20. The same twelve pieces bow out of the tidy line
+    /// three times over, once for each ski, and hold 24 tiles and all three, which is 39.
     /// Ground given up for ground, which is what a detour is, and this one is worth it three
     /// times.
     static let fishCache = frostwhisker(
@@ -245,7 +245,7 @@ extension PuzzleLevel {
     /// exactly the ten mud tiles of that ring the ice did not build: see the whole shape and
     /// the whole shape is affordable, see anything less and it is not. The block is the
     /// bottom half-diamond between the south ridges, 21. The full ring holds 41 tiles and the
-    /// two fish lying in its top half, which is 51 — the Dew Ponds' lesson, spaced out to the
+    /// two skis lying in its top half, which is 51 — the Dew Ponds' lesson, spaced out to the
     /// width of a world that has been teaching diagonals for nine fields.
     static let theWhiskers = frostwhisker(
         id: "the-whiskers",
@@ -271,15 +271,15 @@ extension PuzzleLevel {
     )
 
     /// The great floe: the broadest board in the tundra, two long ridges lying as opposite
-    /// sides of a pen nobody has drawn, and a fish in each half of it.
+    /// sides of a pen nobody has drawn, and a ski in each half of it.
     ///
     /// The Great Floe stands outside the climb the way Low Water and The Great Erg do. A broad
     /// board leaves a wide gap against a squared-off pen because it is broad — this one asks
     /// 43, less than The Whiskers above it — while holding 50 tiles, the biggest pen in the
-    /// world. The block squares off between the ridges and nudges out over one fish for 34.
+    /// world. The block squares off between the ridges and nudges out over one ski for 34.
     /// The same fourteen pieces close the lozenge the two ridges already imply — each ridge a
     /// finished side, the bought wall only joining their ends — and hold 50 tiles and both
-    /// fish, which is 60.
+    /// ski, which is 60.
     static let theGreatFloe = frostwhisker(
         id: "the-great-floe",
         name: "The Great Floe",
@@ -322,7 +322,7 @@ extension PuzzleLevel {
     /// is 13. The same seventeen pieces spent the other way round run the pig's wall down the
     /// whole west flank of the great ridge — the longest free wall in the world doing the
     /// holding — with a two-piece yard for the seal tucked against the same tail, and that is
-    /// 42 tiles, one fish and one berg, which is 42: the widest gap any boss in the game
+    /// 42 tiles, one ski and one ice slick, which is 42: the widest gap any boss in the game
     /// left, at 69, until the fen's croc asked 72. And the one answer nine worlds have
     /// drilled — one great pen round the pair — holds 51 tiles and is sent back whole,
     /// because the seal will not share.

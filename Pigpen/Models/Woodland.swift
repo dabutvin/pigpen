@@ -4,16 +4,16 @@ import Foundation
 ///
 /// Thornwood Thicket is the meadow's game moved into the trees: fence in the pig, the biggest
 /// pen the pieces will reach round, shut or it is no pen at all. What is different is the
-/// ground it is played on. The windfall here is a truffle rather than an apple and the hazard
-/// a bramble rather than a skull, but each is worth what its meadow twin was — a truffle five
-/// tiles to shut in, a bramble five to shut in with and no fencing at all — so the same solver
-/// that authored the meadow authored these, with `a` standing in for the truffle and `x` for
-/// the bramble.
+/// ground it is played on. The windfall here is a mushroom rather than an apple and the hazard
+/// a wilted flower rather than a skull, but each is worth what its meadow twin was — a mushroom five
+/// tiles to shut in, a wilted flower five to shut in with and no fencing at all — so the same solver
+/// that authored the meadow authored these, with `a` standing in for the mushroom and `x` for
+/// the wilted flower.
 ///
 /// The one thing the thicket does that the meadow did not is scatter its treats. The meadow
 /// held them all back for its last three fields, teaching water and fencing clean first and
 /// only then handing the player an orchard and a patch of sour ground. The thicket has walked
-/// its pig everywhere at once, so a truffle turns up in the second field and a bramble in the
+/// its pig everywhere at once, so a mushroom turns up in the second field and a wilted flower in the
 /// seventh, and there are fields between them with nothing lying about at all. It reads as woods
 /// a pig has been rooting through rather than a syllabus — which is the whole difference the
 /// theme is there to make.
@@ -58,15 +58,15 @@ extension PuzzleLevel {
     )
 
     /// A pool the pig sits in the middle of, walled on every side by water bar the mouth at the
-    /// bottom, with a truffle lying out beyond either corner of that mouth. Four pieces plug the
+    /// bottom, with a mushroom lying out beyond either corner of that mouth. Four pieces plug the
     /// mouth and hold the pool's 16 tiles; squaring off below it holds 20 and reaches neither
-    /// truffle — the block that used to hold 21 stood a piece on one of them, and no piece goes
-    /// on a truffle — where seven spent leaning the wall out to the east gather the truffle on
+    /// mushroom — the block that used to hold 21 stood a piece on one of them, and no piece goes
+    /// on a mushroom — where seven spent leaning the wall out to the east gather the mushroom on
     /// that side and come to 29.
     ///
-    /// The choice is which truffle rather than whether — the two lie too far apart for one
+    /// The choice is which mushroom rather than whether — the two lie too far apart for one
     /// budget to reach both, and a wall that goes after the second gives up more ground on the
-    /// way than the truffle is worth. It is the thicket's first treat, and it is out here in
+    /// way than the mushroom is worth. It is the thicket's first treat, and it is out here in
     /// the second field where the meadow kept its first apple back until the seventh.
     static let foxgloveDell = woodland(
         id: "foxglove-dell",
@@ -90,9 +90,9 @@ extension PuzzleLevel {
             """
     )
 
-    /// A truffle that costs nothing to take, after a dell where taking one was the whole
+    /// A mushroom that costs nothing to take, after a dell where taking one was the whole
     /// question: a brook bars the west, so the ground beside it is cheap to wall, and the
-    /// truffle sits in the pig's own column where the pen was going to close anyway. What
+    /// mushroom sits in the pig's own column where the pen was going to close anyway. What
     /// this one asks for is the shape — twelve pieces cut a lozenge, and the corners a plain
     /// block pays for are the seven tiles between 23 and 30.
     static let hazelCopse = woodland(
@@ -123,7 +123,7 @@ extension PuzzleLevel {
     /// are exactly the rest of that wall — no more, no less.
     ///
     /// Which is the whole of the field. A rectangle cannot use a single pool, so squaring off
-    /// is worth 19; the ring the pools imply holds 36. The truffle out past the north-east is
+    /// is worth 19; the ring the pools imply holds 36. The mushroom out past the north-east is
     /// the decoy, since reaching it means breaking the ring and giving up more ground than
     /// five points. The meadow spaced its ponds a tile apart; these are two, and the shape is
     /// that much less obvious for it.
@@ -149,11 +149,11 @@ extension PuzzleLevel {
             """
     )
 
-    /// A gully with a pool along its head and a truffle at either end of the walling that is
+    /// A gully with a pool along its head and a mushroom at either end of the walling that is
     /// dear: one out east on the pig's own line, one well down the gully to the south-west. A
-    /// truffle is worth more than the ground a pen gives up bending to reach it, and no piece
+    /// mushroom is worth more than the ground a pen gives up bending to reach it, and no piece
     /// will lie on one, so the best pen is a long tongue that goes out for both rather than a
-    /// tidy box that takes the near one and stops: twenty-four tiles and both truffles, which
+    /// tidy box that takes the near one and stops: twenty-four tiles and both mushrooms, which
     /// comes to thirty-four, against a block worth twenty-three.
     static let fernGully = woodland(
         id: "fern-gully",
@@ -177,10 +177,10 @@ extension PuzzleLevel {
             """
     )
 
-    /// The first bramble: one staked in the mud north of the pig, and a truffle either side of
-    /// the puzzle. A bramble takes no fencing, so a wall that wants its tile has to step round
-    /// it — and the best pen here takes the near bramble in and pays its five, since walling
-    /// round it would cost more ground than that, while leaving the far truffle out.
+    /// The first wilted flower: one staked in the mud north of the pig, and a mushroom either side of
+    /// the puzzle. A wilted flower takes no fencing, so a wall that wants its tile has to step round
+    /// it — and the best pen here takes the near wilted flower in and pays its five, since walling
+    /// round it would cost more ground than that, while leaving the far mushroom out.
     static let nettleBank = woodland(
         id: "nettle-bank",
         name: "Nettle Bank",
@@ -227,9 +227,9 @@ extension PuzzleLevel {
             """
     )
 
-    /// The widest board in the woods: a mere down one side, a bramble staked off to the west,
-    /// and truffles scattered through the open ground. Fifteen pieces cut the pen to the shape
-    /// of the shore and gather three truffles on the way, leaving the bramble out — forty-one.
+    /// The widest board in the woods: a mere down one side, a wilted flower staked off to the west,
+    /// and mushrooms scattered through the open ground. Fifteen pieces cut the pen to the shape
+    /// of the shore and gather three mushrooms on the way, leaving the wilted flower out — forty-one.
     static let elderwood = woodland(
         id: "elderwood",
         name: "Elderwood",
@@ -264,8 +264,8 @@ extension PuzzleLevel {
     /// It is not, because the boar will not have it. This is the first field in the game that
     /// refuses a pen for a reason other than something walking out of it: hold them both, but
     /// never in the same ground. So the twenty pieces go out as two enclosures that lean on
-    /// the pool from opposite sides and share not one tile — 28 tiles and three truffles, 43,
-    /// against a squared-off 36, since a pair of blocks nudged out over the truffles their walls
+    /// the pool from opposite sides and share not one tile — 28 tiles and three mushrooms, 43,
+    /// against a squared-off 36, since a pair of blocks nudged out over the mushrooms their walls
     /// wanted collect all three of those as well. It asks for most of the stars the fields below
     /// it hold.
     static let boarHollow = woodland(
@@ -322,8 +322,8 @@ private func woodland(
 
 extension WorldMap {
     /// Thornwood Thicket: nine fields up a winding trail through the trees, climbing to a boss
-    /// that stands a second animal and asks for most of the stars below it. The truffles and
-    /// brambles are scattered rather than saved for the end, so the woods read as country a
+    /// that stands a second animal and asks for most of the stars below it. The mushrooms and
+    /// wilted flowers are scattered rather than saved for the end, so the woods read as country a
     /// pig has been through rather than a lesson laid out in order.
     ///
     /// It is also the same trail walked from higher up. The meadow could open on two fields

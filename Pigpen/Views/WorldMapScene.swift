@@ -1078,8 +1078,8 @@ private struct Meadow {
     }
 
     /// A cactus standing on the sand with its shadow pulled out long beside it. It is what the
-    /// dunes have where the meadow has a tree — and it is the world's hazard seen doing what a
-    /// hazard does, since a cactus is the one thing on these boards no post will go through.
+    /// dunes have where the meadow has a tree, keeping the same dry country the boards' own
+    /// snakes are coiled in.
     private func drawCactus(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
         let tall = 42 * scale
         let wide = tall * 0.24
@@ -2022,7 +2022,7 @@ private struct Meadow {
     }
 
     /// The first crater, at the foot of the trail through the reaches: the one that came down
-    /// on the night the pig got up here, with a well of water standing in it and the stardrop
+    /// on the night the pig got up here, with a well of water standing in it and the star
     /// that made it still lying in the middle. It is this world's answer to the barn the pig
     /// came out of, the stump it went past in the woods, the cairn somebody left on the
     /// mountain and the clocktower it walked in under in the city — the thing at the bottom of
@@ -2074,7 +2074,7 @@ private struct Meadow {
             with: .color(GamePalette.waterRipple.opacity(colors.isNight ? 0.45 : 0.75))
         )
 
-        // The stardrop that dug it, still sitting in the middle of its own crater.
+        // The star that dug it, still sitting in the middle of its own crater.
         let star = CGPoint(x: well.midX, y: well.midY - 1)
         context.fill(
             circle(at: star, radius: 12),

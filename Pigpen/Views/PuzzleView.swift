@@ -595,7 +595,7 @@ struct PuzzleView: View {
     }
 
     /// What a pen caught besides ground: windfall worth having in it, hazards worth keeping out —
-    /// named the way this world names them, an apple and a skull or a truffle and a bramble.
+    /// named the way this world names them, an apple and a skull or a mushroom and a wilted flower.
     private func spoils(in tally: PenTally) -> String? {
         var caught: [String] = []
         if tally.apples > 0 { caught.append(counted(tally.apples, treatSkin.name(for: .apple))) }

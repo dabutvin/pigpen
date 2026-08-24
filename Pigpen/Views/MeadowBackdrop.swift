@@ -795,9 +795,9 @@ private struct Paddock {
                 case .sand:
                     // Nothing much lives out here, so the ground is dressed with the three
                     // things that do: a cactus standing up out of the hardpan, a stone the wind
-                    // has scoured bare, and a dry tussock that has found water somewhere. The
-                    // board's own hazard is a cactus, and this is where a player has already seen
-                    // one before the first field asks about it.
+                    // has scoured bare, and a dry tussock that has found water somewhere — the
+                    // country the board's own snakes are coiled in, seen before the first
+                    // field asks about them.
                     switch roll {
                     case ..<0.44: drawCactus(in: &context, at: spot, scale: scale)
                     case ..<0.78: drawStone(in: &context, at: spot, scale: scale)
@@ -826,9 +826,9 @@ private struct Paddock {
                     }
                 case .marsh:
                     // The fen is dressed with what grows where the ground never dries: reeds
-                    // in standing clumps, a dead snag the bog got the roots of — the board's
-                    // own hazard, met before the first field asks about it — and ordinary
-                    // grass on whatever passes for high ground.
+                    // in standing clumps, a dead snag the bog got the roots of — the sort of
+                    // water the board's own mosquitos whine over — and ordinary grass on
+                    // whatever passes for high ground.
                     switch roll {
                     case ..<0.44: drawReedClump(in: &context, at: spot, scale: scale, scatter: &scatter)
                     case ..<0.72: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
@@ -837,8 +837,8 @@ private struct Paddock {
                 case .cloudtop:
                     // The high turf is dressed with what survives the wind: grass grown
                     // short, mountain flowers keeping low, stone the weather has scoured —
-                    // and the odd whirlwind worrying its way across, the board's own hazard
-                    // met before the first field asks about it.
+                    // and the odd twist of wind worrying its way across, a taste of the
+                    // storms the boards up here stake out.
                     switch roll {
                     case ..<0.40: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     case ..<0.66: drawFlowers(in: &context, at: spot, scale: scale, scatter: &scatter)
@@ -849,8 +849,8 @@ private struct Paddock {
                     // A field with a fair on it is still a field, so the grass is here — but
                     // it is trodden grass with the fair's own leavings in it: pegs driven in
                     // with the rope going up out of shot, and a lantern hung low enough to
-                    // stand beside. The board's own hazard is a guy rope, and this is where a
-                    // player has already seen one before the first field asks about it.
+                    // stand beside — the fair the board's own megaphones are set out across,
+                    // seen before the first field asks about them.
                     switch roll {
                     case ..<0.44: drawTuft(in: &context, at: spot, scale: scale, scatter: &scatter)
                     case ..<0.76: drawPeg(in: &context, at: spot, scale: scale)
@@ -1305,7 +1305,7 @@ private struct Paddock {
         )
     }
 
-    /// A small toadstool on the thicket floor — the backdrop's echo of the truffles that
+    /// A small toadstool on the thicket floor — the backdrop's echo of the mushrooms that
     /// lie on the board itself.
     private func drawMushroom(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
         let stem = x(0.01) * scale
@@ -1359,7 +1359,7 @@ private struct Paddock {
     }
 
     /// A cinder lying on the ash with a little heat still in it — the backdrop's echo of
-    /// the embers staked out on the board itself, and what a mountain has instead of
+    /// the flames staked out on the board itself, and what a mountain has instead of
     /// wildflowers.
     private func drawCinder(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
         let spread = x(0.016) * scale
@@ -1408,7 +1408,7 @@ private struct Paddock {
     }
 
     /// A four-pointed spark lying in the dust with a little of the sky still in it — the
-    /// backdrop's echo of the stardrops out on the board, and what the reaches have instead
+    /// backdrop's echo of the stars out on the board, and what the reaches have instead
     /// of wildflowers. It reads brightest after dark, since it is the one thing out here
     /// giving off light of its own.
     private func drawSpark(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
@@ -1492,8 +1492,8 @@ private struct Paddock {
     }
 
     /// A crystal growing out of the flowstone with its own light in it — the backdrop's echo
-    /// of the crystals lying on the board, and what the caverns have instead of wildflowers.
-    /// It reads brightest after dark for the same reason a stardrop does, and for a better
+    /// of the diamonds lying on the board, and what the caverns have instead of wildflowers.
+    /// It reads brightest after dark for the same reason a star does, and for a better
     /// one: down here it is the only light there is.
     private func drawCrystal(in context: inout GraphicsContext, at foot: CGPoint, scale: CGFloat) {
         let tall = x(0.024) * scale

@@ -3,13 +3,12 @@ import Foundation
 /// The seventh world's levels and the trail that strings them together.
 ///
 /// Lantern Carnival is the meadow's game with a fair put on it: fence in the pig, the biggest pen
-/// the pieces will reach round, shut or it is no pen at all. The windfall here is a **toffee
-/// apple** dropped off its stick into the sawdust and the hazard a **guy rope** pegged down to
-/// hold a tent up, and each is worth exactly what its meadow twin was — an apple five tiles to
-/// shut in, a rope five to shut in with and no fencing at all, since a peg is already somebody
-/// else's post and there is no room beside it for one of yours — so the same solver that authored
-/// the six worlds below these authored them, with `a` standing in for the toffee apple and `x` for
-/// the rope.
+/// the pieces will reach round, shut or it is no pen at all. The windfall here is **popcorn**
+/// dropped at the concession stand into the sawdust and the hazard a **megaphone** set down
+/// where it blares, and each is worth exactly what its meadow twin was — a popcorn five tiles to
+/// shut in, a megaphone five to shut in with and no fencing at all, since nobody builds a wall
+/// where the noise is worst — so the same solver that authored the six worlds below these
+/// authored them, with `a` standing in for the popcorn and `x` for the megaphone.
 ///
 /// What the water is here is **the crowd**, and what the carnival does that no world above it did
 /// is stand that crowd in **solid blocks**. A meadow has meres, a thicket pools, a mountain tarns,
@@ -30,27 +29,27 @@ import Foundation
 /// whatever those blocks happened to leave. It is why the carnival's answers are lopsided where
 /// the caverns' were wedges and the reaches' were diamonds.
 ///
-/// The other thing it keeps is **the rope**. Emberpeak staked an ember in all nine of its fields
-/// and the caverns hung a crystal in all nine of theirs; there is a run of guy rope on every board
-/// here, and a *run* is the point — never one peg on its own, always two or more in a straight
-/// line. A single hazard is a tile to build around, which every world since the meadow has had. A
-/// run of them is a **length of ground no wall may cross**, because a rope takes no fence and a
-/// pen may not lean on one either. The crowd is a wall the board gives you; a guy rope is a wall
-/// the board forbids you, and reading the difference is the world.
+/// The other thing it keeps is **the megaphone row**. Emberpeak staked a flame in all nine of its
+/// fields and the caverns hung a diamond in all nine of theirs; there is a row of megaphones on
+/// every board here, and a *row* is the point — never one megaphone on its own, always two or more
+/// in a straight line. A single hazard is a tile to build around, which every world since the
+/// meadow has had. A row of them is a **length of ground no wall may cross**, because a megaphone
+/// takes no fence and a pen may not lean on one either. The crowd is a wall the board gives you; a
+/// megaphone is a wall the board forbids you, and reading the difference is the world.
 ///
 /// The carnival floors at 37% against the caverns' 34 — the highest floor in the game — on ground
-/// where a plain block has to keep a clear tile off every rope on the field.
+/// where a plain block has to keep a clear tile off every megaphone on the field.
 extension PuzzleLevel {
     /// A ring of stalls in a shallow vee, with the gangways between them wide open and the whole
-    /// southern side of the board missing. Two toffee apples lie out past the arms of it.
+    /// southern side of the board missing. Two popcorns lie out past the arms of it.
     ///
     /// The basin question asked on the only kind of bank the carnival has: not one long shore but
     /// four short ones with gaps between, so following it means paying a piece at each gap and
     /// deciding which of them are worth the piece. Fourteen pieces hung under the vee as a
-    /// rectangle hold 18 tiles and neither apple, since both are dropped a row below where any
+    /// rectangle hold 18 tiles and neither popcorn, since both are dropped a row below where any
     /// rectangle stops; the same fourteen fitted to the stalls — one in
     /// the gangway at the bottom of the vee, then out east under the arm and tapering back — hold
-    /// 24 tiles and the eastern apple, which is 29.
+    /// 24 tiles and the eastern popcorn, which is 29.
     ///
     /// It opens the world the way Sinter Basin opened the caverns, and asks less than that did —
     /// 27 against 34 — because a bank in four pieces has to be read before it can be followed, and
@@ -83,10 +82,10 @@ extension PuzzleLevel {
     ///
     /// Which is the shore question asked on a bank that is not a bank at all but four of them in
     /// a line. Fourteen pieces squared off beside the row can only get one of their four sides
-    /// against it and hold 24, reaching neither apple; the same fourteen laid as a staircase of
+    /// against it and hold 24, reaching neither popcorn; the same fourteen laid as a staircase of
     /// their own, mirroring the
-    /// row back at itself and cutting each gangway on the diagonal, shut 39 tiles with both apples
-    /// and both ropes inside them, which comes back to 39. A diagonal wall closes two tiles a
+    /// row back at itself and cutting each gangway on the diagonal, shut 39 tiles with both popcorns
+    /// and both megaphones inside them, which comes back to 39. A diagonal wall closes two tiles a
     /// piece where a straight one closes one, and a row of stalls set out on the slant is how the
     /// carnival says so.
     static let sideshowRow = carnival(
@@ -119,12 +118,12 @@ extension PuzzleLevel {
     /// of free wall that cost nothing: one piece in the turnstile and the whole queue is wall.
     /// Everybody finds that piece — the block this field is measured against spends it too, and
     /// hangs a plain rectangle off it for 21. What the block cannot then do is spread, because the
-    /// run of rope is pegged just south-west of the gate and no wall may lie along it — and the
-    /// apple dropped south-east of the gate is a tile no wall will lie along either, so the
+    /// row of megaphones is set just south-west of the gate and no wall may lie along it — and the
+    /// popcorn dropped south-east of the gate is a tile no wall will lie along either, so the
     /// rectangle stops short of it rather than collecting it. The same fourteen pieces opened out
-    /// east as a lozenge instead hold 30 tiles and that apple, which is 35.
+    /// east as a lozenge instead hold 30 tiles and that popcorn, which is 35.
     ///
-    /// The apple north of the queue is on the far side of the crowd, and like every far bank in
+    /// The popcorn north of the queue is on the far side of the crowd, and like every far bank in
     /// the game nothing reaches it.
     static let theTurnstile = carnival(
         id: "the-turnstile",
@@ -150,19 +149,19 @@ extension PuzzleLevel {
             """
     )
 
-    /// Two queues standing well apart — one north-west, one south-east — and a run of rope pegged
+    /// Two queues standing well apart — one north-west, one south-east — and a row of megaphones set
     /// between them, right where a wall from one to the other would want to lie.
     ///
     /// The span question: neither queue is any use on its own, and no rectangle on this board
     /// reaches both, so squaring off leans on one of them and holds 20. Fifteen pieces run
     /// diagonally from the corner of the near queue to the corner of the far one hold 34 tiles
-    /// with both apples and both ropes inside them, which comes back to 34.
+    /// with both popcorns and both megaphones inside them, which comes back to 34.
     ///
-    /// The ropes are not a choice here, which makes this the only board at the fair where they are
-    /// not: the pig stands directly under the pair of them and no piece will stand on a rope, so
+    /// The megaphones are not a choice here, which makes this the only board at the fair where they are
+    /// not: the pig stands directly under the pair of them and no piece will stand on a megaphone, so
     /// nothing can be walled between her and them and every pen on this board has them in it. What
     /// the diagonal buys is the second queue — a rectangle leans on one, and only a slanted wall
-    /// leans on both — and the two apples it collects on the way pay the ropes back.
+    /// leans on both — and the two popcorns it collects on the way pay the megaphones back.
     static let ticketLine = carnival(
         id: "ticket-line",
         name: "Ticket Line",
@@ -186,16 +185,16 @@ extension PuzzleLevel {
             """
     )
 
-    /// Three toffee apples dropped where the tidy pen does not go, and one block of crowd off to
+    /// Three popcorns dropped where the tidy pen does not go, and one block of crowd off to
     /// the west doing a third of a wall's work. The best block seventeen pieces can square off
-    /// against that crowd holds 17 tiles and the apple up in the north, or 22.
+    /// against that crowd holds 17 tiles and the popcorn up in the north, or 22.
     ///
     /// So the whole field is which of the other two to go out for. The one hanging in the south is
     /// three tiles of wall below where the pen would otherwise stop, and three tiles of wall cost
-    /// more than five points pay — the run of rope is pegged directly between it and the pig, so
+    /// more than five points pay — the row of megaphones is set directly between it and the pig, so
     /// the wall that fetches it has to go round the pair of them as well. The one up in the north
     /// is reached by running the pen up the eastern side of the crowd and closing over the top of
-    /// it, which is 28 tiles and two apples, or 38.
+    /// it, which is 28 tiles and two popcorns, or 38.
     static let toffeeStand = carnival(
         id: "toffee-stand",
         name: "The Toffee Stand",
@@ -225,14 +224,14 @@ extension PuzzleLevel {
     /// over, and eleven pieces to draw the other two.
     ///
     /// Which is the corner question with two free sides, the way Rimstone Corner asked it, and the
-    /// hardest corner in the game. What is different is the pair of guy ropes pegged out in the
-    /// middle of the ground, and where they are pegged: a right-angled block in this corner is a
-    /// rectangle hung under the crowd, and the ropes are lying inside every rectangle worth
+    /// hardest corner in the game. What is different is the pair of megaphones set out in the
+    /// middle of the ground, and where they are set: a right-angled block in this corner is a
+    /// rectangle hung under the crowd, and the megaphones are lying inside every rectangle worth
     /// drawing. So the tidy pen has to swallow the pair and pay their ten, and comes to 25 where
-    /// the same block on clear ground would be 35 — the apples are dropped clear of it, and no
+    /// the same block on clear ground would be 35 — the popcorns are dropped clear of it, and no
     /// wall will lie on one to sweep it up. The eleven pieces laid corner to corner
     /// instead — one long diagonal from the north side down to the south-east, cutting the whole
-    /// bend off in a single line — hold 51 tiles, both apples and the same pair of ropes, which
+    /// bend off in a single line — hold 51 tiles, both popcorns and the same pair of megaphones, which
     /// comes back to 51. The biggest pen in the world for the smallest budget in it, which is what
     /// two free sides are worth.
     static let theBigTop = carnival(
@@ -259,28 +258,28 @@ extension PuzzleLevel {
             """
     )
 
-    /// The guying behind the tents: three runs of rope pegged out across the only ground worth
+    /// The guying behind the tents: three rows of megaphones set out across the only ground worth
     /// having, and the hardest field in the world. A fence will not go through any of them, and a
     /// pen may not lean on one either — so a wall has to stand a clear tile off a run it does not
     /// shut in, which makes every run of two a strip of dead ground three wide.
     ///
     /// Every board above this one lays its hazards down one at a time and never two of them
     /// touching — two on Sour Ground, two on Gutter Lane, three on Boulder Chamber. Here there are
-    /// seven pegs in three runs, which is more rope than any other field at the fair carries and
+    /// seven megaphones in three runs, which is more noise than any other field at the fair carries and
     /// includes the only line of three anywhere in the game. Every rectangle worth having runs
     /// into one of them, so squaring off means retreating down the west and swallowing the pair
-    /// of ropes nearest the pig on the way: 31 tiles less their ten, which is 21. The same
-    /// eighteen pieces fitted round the rigging instead keep clear of every peg on the board and
-    /// hold 34 tiles with two of the three apples inside them, which comes to 44.
+    /// of megaphones nearest the pig on the way: 31 tiles less their ten, which is 21. The same
+    /// eighteen pieces fitted round the rigging instead keep clear of every megaphone on the board and
+    /// hold 34 tiles with two of the three popcorns inside them, which comes to 44.
     ///
-    /// The apples are the other half of the field. No piece will lie on one any more than on a
-    /// rope, so a wall cannot run through one and cannot pretend it is not there: it comes
+    /// The popcorns are the other half of the field. No piece will lie on one any more than on a
+    /// megaphone, so a wall cannot run through one and cannot pretend it is not there: it comes
     /// inside and pays for itself, or the pen stops short of it. The widest pen the rigging
-    /// leaves holds 37 tiles and reaches only the apple in the south, which is 42; the pen that
-    /// wins gives three of those tiles back to come round the apple out east as well, and two
-    /// apples for three tiles is the two points in it. The run of three and the pair beside it
-    /// are left standing out in the north with the third apple behind them, because the ground
-    /// back there is not worth the twenty-five points the pegs would cost to shut in.
+    /// leaves holds 37 tiles and reaches only the popcorn in the south, which is 42; the pen that
+    /// wins gives three of those tiles back to come round the popcorn out east as well, and two
+    /// popcorns for three tiles is the two points in it. The run of three and the pair beside it
+    /// are left standing out in the north with the third popcorn behind them, because the ground
+    /// back there is not worth the twenty-five points the megaphones would cost to shut in.
     static let theRigging = carnival(
         id: "the-rigging",
         name: "The Rigging",
@@ -307,17 +306,17 @@ extension PuzzleLevel {
 
     /// The longest walk at the carnival: twelve tiles by twelve with the biggest budget of any
     /// field at the fair laid out along it, a stall at the top of the walk, a crowd round the
-    /// waltzer at the bottom of it and three toffee apples down the length.
+    /// waltzer at the bottom of it and three popcorns down the length.
     ///
     /// The midway stands outside the climb the way Smoulder Ridge and Clocktower Square and Wide
     /// Reaches and the Great Gallery do. A broad board leaves a wide gap against a squared-off pen
     /// because it is broad, which says more about its size than about how hard it is to hold — and
     /// this one asks 38, less than three of the fields below it, while holding the second biggest
     /// pen at the fair.
-    /// Nineteen pieces squared off down the middle of the walk hold 30 tiles with two apples in
-    /// them and the pair of ropes lying across them, which comes to 30. The same nineteen run out to
-    /// both blocks of crowd and closed round the south hold 49 tiles, two apples and that same run
-    /// of rope, which comes back to 49. The third apple hangs up in the north-east past the stall,
+    /// Nineteen pieces squared off down the middle of the walk hold 30 tiles with two popcorns in
+    /// them and the pair of megaphones lying across them, which comes to 30. The same nineteen run out to
+    /// both blocks of crowd and closed round the south hold 49 tiles, two popcorns and that same
+    /// row of megaphones, which comes back to 49. The third popcorn hangs up in the north-east past the stall,
     /// where nothing these nineteen pieces can draw will reach it.
     static let theMidway = carnival(
         id: "the-midway",
@@ -363,9 +362,9 @@ extension PuzzleLevel {
     /// crowd that way hold 16 tiles of walkway, and the single tile he is standing on makes 17 —
     /// a fair answer, and one nobody has to be taught. The same twenty-two run out as an octagon —
     /// out from the pig's corner, round the crowd on all four diagonals and back to where they
-    /// started — hold 35 tiles and the toffee apple hanging over the ring, which is 40.
+    /// started — hold 35 tiles and the popcorn hanging over the ring, which is 40.
     ///
-    /// The four runs of guy rope are pegged at the corners, one to each quarter, and they are what
+    /// The four rows of megaphones are set at the corners, one to each quarter, and they are what
     /// stops the octagon being a bigger octagon: the wall has to come inside them on every
     /// diagonal, and a ring that has to be inside four corners at once is a ring with very little
     /// slack in it. Without them the same budget reaches 46. It asks for most of the stars the

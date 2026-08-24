@@ -3,12 +3,12 @@ import Foundation
 /// The fourth world's levels and the trail that strings them together.
 ///
 /// Cogsworth City is the meadow's game played on paving: fence in the pig, the biggest pen
-/// the pieces will reach round, shut or it is no pen at all. The windfall here is a pie
-/// dropped outside a shop and the hazard a drain sunk into the road, but each is worth what
-/// its meadow twin was — a pie five tiles to shut in, a drain five to shut in with and no
-/// fencing at all, since nothing will drive a post through cast iron — so the same solver
+/// the pieces will reach round, shut or it is no pen at all. The windfall here is a pizza
+/// dropped outside a shop and the hazard a trash can left out in the road, but each is worth what
+/// its meadow twin was — a pizza five tiles to shut in, a trash can five to shut in with and no
+/// fencing at all, since nobody nails a fence to a trash can — so the same solver
 /// that authored the meadow and the woods and the mountain authored these, with `a` standing
-/// in for the pie and `x` for the drain.
+/// in for the pizza and `x` for the trash can.
 ///
 /// What the city does that none of the three worlds below it did is **cut its water**. A
 /// meadow has meres, a thicket has pools and a mountain has tarns, and every one of them lies
@@ -54,17 +54,17 @@ extension PuzzleLevel {
             """
     )
 
-    /// The city's first pie, and the first field to ask what one is worth. Two of them lie
+    /// The city's first pizza, and the first field to ask what one is worth. Two of them lie
     /// out on the row — one halfway along it on the east side, one away down in the south-west
     /// past where any tidy wall would stop — and the cut along the north is the only free wall
     /// there is.
     ///
-    /// Twelve pieces squared off under the cut hold sixteen tiles and neither pie — both lie
+    /// Twelve pieces squared off under the cut hold sixteen tiles and neither pizza — both lie
     /// past where a rectangle hung off the canal stops, and no piece will lie on one to sweep it
     /// up in passing. That is 16. The pen that wins gives up the tidy shape altogether and runs
-    /// out on the diagonal for the near pie: nineteen tiles and that pie, which is 24. The far one
+    /// out on the diagonal for the near pizza: nineteen tiles and that pizza, which is 24. The far one
     /// stays where it fell, because the ground a wall gives up bending out to it costs more
-    /// than the five it pays — which is the whole of what a pie is for.
+    /// than the five it pays — which is the whole of what a pizza is for.
     static let piemansRow = cogsworth(
         id: "piemans-row",
         name: "Pieman's Row",
@@ -86,13 +86,13 @@ extension PuzzleLevel {
             """
     )
 
-    /// Paving, and nothing else: no canal anywhere near it, two drains sunk in the middle of
+    /// Paving, and nothing else: no canal anywhere near it, two trash cans sunk in the middle of
     /// it and fourteen pieces. Every tile of this pen is bought.
     ///
     /// It is the city's answer to Basalt Flats, and a tighter one. The best block those
     /// fourteen pieces can square off in a yard this size holds 12; the same fourteen run out
-    /// as a ring that steps round both drains hold 18. Half the answer is knowing a ring beats
-    /// a box, and the other half is where to put the ring so neither drain is on its wall.
+    /// as a ring that steps round both trash cans hold 18. Half the answer is knowing a ring beats
+    /// a box, and the other half is where to put the ring so neither trash can is on its wall.
     static let cobbleYard = cogsworth(
         id: "cobble-yard",
         name: "Cobble Yard",
@@ -117,11 +117,11 @@ extension PuzzleLevel {
     /// A canal down the whole world with the lock standing open in the middle of it. One
     /// piece laid in the gate shuts the only way west and buys the entire canal as a free
     /// wall, which is Otter Ford's lesson taught on a board a third the size — and with a
-    /// drain staked just inside the gate, so the ground the plug buys is sour.
+    /// trash can staked just inside the gate, so the ground the plug buys is sour.
     ///
     /// Twelve pieces are then left for three sides. Squaring them off holds 19 tiles, less the
-    /// drain, which is 14; the same twelve stepped away east on the diagonal hold 27, less the
-    /// drain, which is 22. Walling round the drain costs more ground than the drain does, so
+    /// trash can, which is 14; the same twelve stepped away east on the diagonal hold 27, less the
+    /// trash can, which is 22. Walling round the trash can costs more ground than the trash can does, so
     /// this is a field where the answer is to swallow it and pay.
     static let lockGate = cogsworth(
         id: "lock-gate",
@@ -174,10 +174,10 @@ extension PuzzleLevel {
             """
     )
 
-    /// The canal runs the whole foot of the lane and two drains are sunk out in the
+    /// The canal runs the whole foot of the lane and two trash cans are sunk out in the
     /// middle of the paving, exactly where a wall would want to stand. Neither is worth paying
     /// for here: the wall comes off the canal and runs out on the diagonal tight past the upper
-    /// drain, then pinches in round the lower one, which is a wall built round a tile rather
+    /// trash can, then pinches in round the lower one, which is a wall built round a tile rather
     /// than over it.
     ///
     /// Sour Ground made that choice once and Sulphur Rill made it twice; this makes it twice
@@ -208,9 +208,9 @@ extension PuzzleLevel {
     ///
     /// Puddle Corner and Willow Corner both handed out eight pieces and asked the same
     /// question — how much does a diagonal buy over a right angle — and both were worth 26 off
-    /// clean ground. This one hands out nine and stakes two drains on the diagonal itself, so
-    /// the staircase cannot simply be drawn: it has to be drawn round one drain and over the
-    /// other. Nine pieces cut the corner off and hold 32 tiles, less the drain the wall
+    /// clean ground. This one hands out nine and stakes two trash cans on the diagonal itself, so
+    /// the staircase cannot simply be drawn: it has to be drawn round one trash can and over the
+    /// other. Nine pieces cut the corner off and hold 32 tiles, less the trash can the wall
     /// swallows on the way, which is 27; the best right-angled block those same nine can wall
     /// is worth 15. No corner in the game gives a diagonal this much to buy.
     static let foundryCorner = cogsworth(
@@ -235,10 +235,10 @@ extension PuzzleLevel {
     )
 
     /// The widest board in the city and the last field before the wharf: the canal comes in
-    /// under the clocktower, three pies are dropped across the square and two drains are sunk
+    /// under the clocktower, three pizzas are dropped across the square and two trash cans are sunk
     /// in it. Seventeen pieces cut the pen to the shape of the canal and gather two of the
-    /// pies on the way, taking one drain in and paying for it and leaving the far pie and the
-    /// other drain outside — thirty-five tiles and two pies, less the one drain, which is
+    /// pizzas on the way, taking one trash can in and paying for it and leaving the far pizza and the
+    /// other trash can outside — thirty-five tiles and two pizzas, less the one trash can, which is
     /// forty, and the biggest pen in the world.
     ///
     /// It stands outside the climb the way Smoulder Ridge does: a broad board leaves a wide
@@ -277,12 +277,12 @@ extension PuzzleLevel {
     /// and the whole question is what shape it has to be.
     ///
     /// A rectangle can hold the pair — they stand four tiles apart on the diagonal, so the
-    /// smallest block that takes them both is a five by five, and a drain sits in each of the
+    /// smallest block that takes them both is a five by five, and a trash can sits in each of the
     /// two corners such a block cannot avoid. Nudged out over what its wall cannot stand on, the
-    /// best of those blocks holds 31 tiles with a pie and both drains in them, which comes back to
+    /// best of those blocks holds 31 tiles with a pizza and both trash cans in them, which comes back to
     /// 26. The pen that wins runs out along
-    /// the diagonal instead, leaning on both cuts, taking a pie off each end of it and
-    /// leaving both drains outside: 33 tiles and two pies, which is 43, for every one of the
+    /// the diagonal instead, leaning on both cuts, taking a pizza off each end of it and
+    /// leaving both trash cans outside: 33 tiles and two pizzas, which is 43, for every one of the
     /// nineteen pieces. It asks for most of the stars the fields below it hold before it will
     /// open.
     static let ratKingWharf = cogsworth(

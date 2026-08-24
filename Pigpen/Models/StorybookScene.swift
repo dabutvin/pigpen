@@ -603,7 +603,7 @@ extension StorybookScene {
                 ),
                 Shot(
                     motif: "🎪",
-                    strewn: ["🍭", "✨"],
+                    strewn: ["🍿", "✨"],
                     caption: "Much, much better lighting.",
                     isCard: true
                 )
@@ -626,7 +626,7 @@ extension StorybookScene {
             shots: [
                 Shot(
                     motif: "🐷",
-                    strewn: ["🎪", "🍭"],
+                    strewn: ["🎪", "🍿"],
                     caption: "Lantern Carnival. Bright. Bustling. Absolutely no shortage of entertainment."
                 ),
                 Shot(
@@ -659,7 +659,7 @@ extension StorybookScene {
                 ),
                 Shot(
                     motif: "🤹",
-                    strewn: ["🎪", "🍭"],
+                    strewn: ["🎪", "🍿"],
                     caption: "The ringmaster runs a tight ship. Keep your construction out of his personal space."
                 ),
                 Shot(
@@ -682,7 +682,7 @@ extension StorybookScene {
             shots: [
                 Shot(
                     motif: "🐷",
-                    strewn: ["🎪", "🍭"],
+                    strewn: ["🎪", "🍿"],
                     caption: "Food. Entertainment. Nightlife. Constant nightlife."
                 ),
                 Shot(
@@ -720,7 +720,7 @@ extension StorybookScene {
                 ),
                 Shot(
                     motif: "🍈",
-                    strewn: ["🌵", "🏜️"],
+                    strewn: ["🐍", "🏜️"],
                     caption: "Water access is worth a premium. Snakes tend to hurt buyer confidence."
                 ),
                 Shot(
@@ -795,7 +795,7 @@ extension StorybookScene {
 
 extension StorybookScene {
     /// Before the first walk down onto the cove: ocean views, fresh air, prime waterfront, its
-    /// seashells coastal charm and its jellyfish a complication for the inspection.
+    /// seashells coastal charm and its jellyfish coastal hazard.
     static func tidepoolOpening(start: Date = .now) -> Self {
         Self(
             key: "tidepool-opening",
@@ -810,7 +810,7 @@ extension StorybookScene {
                 Shot(
                     motif: "🐚",
                     strewn: ["🪼", "🌊"],
-                    caption: "Seashells add coastal charm. Jellyfish complicate the inspection."
+                    caption: "Seashells add coastal charm. Jellyfish add coastal hazard."
                 ),
                 Shot(
                     motif: "🐷",
@@ -1083,7 +1083,7 @@ extension StorybookScene {
                 ),
                 Shot(
                     motif: "🐷",
-                    strewn: ["☁️", "🎈"],
+                    strewn: ["☁️", "🌈"],
                     caption: "Pig's property search had officially left the ground.",
                     isCard: true
                 )

@@ -1,8 +1,8 @@
 # Cloudspire Heights
 
-The twelfth world and the last, solved the same way and drawn the same way. A balloon takes the
-meadow's apple and a whirlwind its skull, so an `a` below is a balloon worth five tiles to shut
-in, and an `x` a whirlwind worth five fewer that no piece will build on — nothing stands up in a
+The twelfth world and the last, solved the same way and drawn the same way. A rainbow takes the
+meadow's apple and a storm its skull, so an `a` below is a rainbow worth five tiles to shut
+in, and an `x` a storm worth five fewer that no piece will build on — nothing stands up in a
 wind that never stops turning. An `E` is the eagle, and the last field will not have the pig
 anywhere he can see her.
 
@@ -14,7 +14,7 @@ hold a two-by-two of nothing but air. No mere sitting inside its banks, no scatt
 braid running thin.
 
 Which means a field the pig's ground never touches is a field nothing can ever walk to — so a
-balloon adrift on one is the loudest tease since the fen's bar-berries, and there are nine of
+rainbow adrift on one is the loudest tease since the fen's bar flowers, and there are nine of
 them across the trail, one on every board with sky on it: in plain sight, five points, and
 nobody's. The far fields keep what floats on them.
 
@@ -23,15 +23,15 @@ every tile is bought.
 
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
-| 1 | The Hollow Crown | 11 | 38 | 2 balloons, 1 whirlwind | 43 | 24 |
-| 2 | The Two Pinnacles | 10 | 20 | 2 balloons | 30 | 16 |
-| 3 | The Long Way Down | 21 | 41 | 2 balloons | 51 | 27 |
-| 4 | The Rope Bridge | 12 | 37 | 2 balloons | 47 | 24 |
-| 5 | The Cloudbank | 13 | 41 | 2 balloons | 51 | 26 |
-| 6 | The Lost Balloons | 11 | 36 | 1 balloon | 41 | 20 |
-| 7 | Windward Corner | 10 | 45 | 2 balloons, 2 whirlwinds | 45 | 20 |
-| 8 | The Open Sky | 14 | 51 | 1 balloon | 56 | 30 |
-| 9 | The Eyrie | 10 | 45 | 5 balloons, 1 whirlwind | 65 | 15 |
+| 1 | The Hollow Crown | 11 | 38 | 2 rainbows, 1 storm | 43 | 24 |
+| 2 | The Two Pinnacles | 10 | 20 | 2 rainbows | 30 | 16 |
+| 3 | The Long Way Down | 21 | 41 | 2 rainbows | 51 | 27 |
+| 4 | The Rope Bridge | 12 | 37 | 2 rainbows | 47 | 24 |
+| 5 | The Cloudbank | 13 | 41 | 2 rainbows | 51 | 26 |
+| 6 | The Lost Balloons | 11 | 36 | 1 rainbow | 41 | 20 |
+| 7 | Windward Corner | 10 | 45 | 2 rainbows, 2 storms | 45 | 20 |
+| 8 | The Open Sky | 14 | 51 | 1 rainbow | 56 | 30 |
+| 9 | The Eyrie | 10 | 45 | 5 rainbows, 1 storm | 65 | 15 |
 
 ## 1. The Hollow Crown — 11 pieces, 43
 
@@ -49,15 +49,15 @@ every tile is bought.
 .#.x.###~..
 ```
 
-A crown of open sky rings the top of the board with one balloon adrift in it — the crown's
+A crown of open sky rings the top of the board with one rainbow adrift in it — the crown's
 jewel, and nobody's — and the hollow inside it opens its whole width south into the field. The
 basin question at altitude: both flanks of the hollow are walled for free, and the only thing
 to decide is where the south line falls.
 
-The block squares the bowl off with a straight row and the whirlwind on that row has to be
+The block squares the bowl off with a straight row and the storm on that row has to be
 swallowed, so it stops at 24. The same eleven pieces run the wall out as a pair of deep pockets
-down either side of the dead column instead, scooping both live balloons: 38 tiles and the
-pair, less the one whirlwind, which is 43. The east terrace across the fjord is ground the pen
+down either side of the dead column instead, scooping both live rainbows: 38 tiles and the
+pair, less the one storm, which is 43. The east terrace across the fjord is ground the pen
 can see and never reach.
 
 ## 2. The Two Pinnacles — 10 pieces, 30
@@ -77,14 +77,14 @@ can see and never reach.
 ```
 
 An L of ground hung on two rims, and the sky bites into it twice: a west bay with a bare
-pinnacle standing in it, and a moated pocket holding the second with a balloon on top, walled
+pinnacle standing in it, and a moated pocket holding the second with a rainbow on top, walled
 round by air on every side. Neither bank is worth anything alone.
 
 Ten pieces throw one staircase from the north rim down to the bay, leaning the bay's east bank,
-the pocket's north bank and the shelf below all at once, and the two live balloons hang exactly
-where the wall bows widest: 20 tiles and the pair, which is 30. A whirlwind stacked over another
+the pocket's north bank and the shelf below all at once, and the two live rainbows hang exactly
+where the wall bows widest: 20 tiles and the pair, which is 30. A storm stacked over another
 kills every rectangle that wants a north wall through that column at either depth, so the block
-huddles east, swallows the third, and manages 16. The pocket's balloon stays on its pinnacle:
+huddles east, swallows the third, and manages 16. The pocket's rainbow stays on its pinnacle:
 the second lesson in the world, and the first one it charges for.
 
 ## 3. The Long Way Down — 21 pieces, 51
@@ -105,13 +105,13 @@ the second lesson in the world, and the first one it charges for.
 ```
 
 The one field back on the ground: no sky anywhere, the pig pushed south, and the biggest budget
-in the world laid across bare turf. It is The Turbary and The Whiteout again, with two balloons
-to bend the answer and two whirlwinds staked exactly on the natural diamond's rim.
+in the world laid across bare turf. It is The Turbary and The Whiteout again, with two rainbows
+to bend the answer and two storms staked exactly on the natural diamond's rim.
 
-The block is a fat rectangle that nudges out over the near balloon and has to swallow a
-whirlwind doing it: 27. The same twenty-one pieces run round as a long diamond bent to keep
-both whirlwinds outside and both balloons in — 41 tiles and the pair, which is 51. The long
-walk north for the far balloon is the whole field.
+The block is a fat rectangle that nudges out over the near rainbow and has to swallow a
+storm doing it: 27. The same twenty-one pieces run round as a long diamond bent to keep
+both storms outside and both rainbows in — 41 tiles and the pair, which is 51. The long
+walk north for the far rainbow is the whole field.
 
 ## 4. The Rope Bridge — 12 pieces, 47
 
@@ -135,9 +135,9 @@ beyond. The gap question, asked as a rope bridge: one piece at the neck seals th
 almost nothing.
 
 That is the cheap answer and the block takes it — island, neck and one row of the delta, 24. The
-best pen crosses instead and fans out over the whole delta, notching round the whirlwind tower
+best pen crosses instead and fans out over the whole delta, notching round the storm tower
 that kills every rectangle's deep east wall and round the one that breaks the shallow line, and
-takes both live balloons: 37 tiles and the pair, which is 47. The third balloon glitters on a
+takes both live rainbows: 37 tiles and the pair, which is 47. The third rainbow glitters on a
 dead strip across the last fjord, one tile of sky too far.
 
 ## 5. The Cloudbank — 13 pieces, 51
@@ -160,12 +160,12 @@ One long cloudbank across the whole north and nothing else, its underside broken
 bumps — free tiles for any pen that leans it, and the tell for which stretch to take. The shore
 question on the longest bank the heights have.
 
-Two whirlwind pairs pin every tidy rectangle to the middle columns: one on the west rim line,
-one on the south, and each kills its line at both depths because a wall nudged off a whirlwind
-walks onto the rim and dies there. So the block is a plain strip, 26, and reaches no balloon at
+Two storm pairs pin every tidy rectangle to the middle columns: one on the west rim line,
+one on the south, and each kills its line at both depths because a wall nudged off a storm
+walks onto the rim and dies there. So the block is a plain strip, 26, and reaches no rainbow at
 all. The best pen takes the whole bank frontage with both bumps and runs deep down either side
-of the dead notch for the pair of balloons: 41 tiles and the pair, which is 51. The limb across
-the fjord is twenty-seven tiles of ground with a balloon on it that no pen will ever hold.
+of the dead notch for the pair of rainbows: 41 tiles and the pair, which is 51. The limb across
+the fjord is twenty-seven tiles of ground with a rainbow on it that no pen will ever hold.
 
 ## 6. The Lost Balloons — 11 pieces, 41
 
@@ -183,14 +183,14 @@ the fjord is twenty-seven tiles of ground with a balloon on it that no pen will 
 ~~~~~~~~~~~
 ```
 
-Balloons hung wide of every tidy line — and two of them hung where no line will ever reach, on
-islets adrift in the great south-west sky. Those are the lost balloons: the board is named for
+Rainbows hung wide of every tidy line — and two of them hung where no line will ever reach, on
+islets adrift in the great south-west sky. Those are the lost rainbows: the board is named for
 the two it will never give up.
 
-The whirlwind pair kills every rectangle whose north wall crosses their column, so the tidy box
+The storm pair kills every rectangle whose north wall crosses their column, so the tidy box
 keeps west at 20. The best pen bows east instead, notching around the dead column and stretching
-its wall down the rim to swallow the high balloon: 36 tiles and the one, which is 41. The deep
-balloon by the south bank hangs one detour too far and is refused on purpose — the detour
+its wall down the rim to swallow the high rainbow: 36 tiles and the one, which is 41. The deep
+rainbow by the south bank hangs one detour too far and is refused on purpose — the detour
 question answered both ways on the same board, and then twice more by a sky that does not
 answer at all.
 
@@ -211,21 +211,21 @@ a~~~~~~~~~~
 ~~#........
 ```
 
-Sky two deep along the whole north and west, with a balloon riding the very corner of the world
+Sky two deep along the whole north and west, with a rainbow riding the very corner of the world
 where nothing can ever be penned, and the field hanging on the other two rims: a right angle of
 free bank, handed over.
 
 Which is the corner question the way Scarp Corner, Barnacle Corner and Heron Corner asked it, and
 at 55% the hardest ordinary field in the heights — in the whole game only The Whiskers asks more.
-Two live balloons hang where a diagonal goes and a right angle does not: one straight out along
-the pig's row, one straight down her column, each with a whirlwind standing between her and it, so
-neither is had for nothing. The right angle boxes a strip, pays both whirlwinds and reaches one
-balloon: 25 tiles and one, less ten, which is 20. The same ten pieces laid corner to corner as one
+Two live rainbows hang where a diagonal goes and a right angle does not: one straight out along
+the pig's row, one straight down her column, each with a storm standing between her and it, so
+neither is had for nothing. The right angle boxes a strip, pays both storms and reaches one
+rainbow: 25 tiles and one, less ten, which is 20. The same ten pieces laid corner to corner as one
 grand diagonal — the largest single wall any ordinary field in the game has ever handed out — lean
-both banks at once, pay the same two whirlwinds and take both live balloons: 45 tiles and the
+both banks at once, pay the same two storms and take both live rainbows: 45 tiles and the
 pair, less ten, which is 45.
 
-The corner balloon stays exactly where it always was, on the one tile of the world no pen will
+The corner rainbow stays exactly where it always was, on the one tile of the world no pen will
 ever hold. A tease is worth having when the board also pays out; it is only scenery when nothing
 on the board can be won.
 
@@ -247,15 +247,15 @@ xxx#oooooo~~
 ```
 
 The airiest board in the world and the biggest pen in it: a three-row bank of sky over a
-ten-wide field, the sky coming back down a channel on the east, and a balloon adrift mid-bank
+ten-wide field, the sky coming back down a channel on the east, and a rainbow adrift mid-bank
 on a scrap of ground nothing walks to.
 
 Two gust-lines rake the field — a triple across the west and a triple up the south — and each
-kills every straight wall through its line, since a rectangle that swallows one whirlwind is
+kills every straight wall through its line, since a rectangle that swallows one storm is
 walked onto the next and then onto the rim. So the block retreats east of both and squares off
 30. The fourteen pieces lean the whole bank and the east channel instead and wrap round the
-dead column to swallow the far balloon: 51 tiles — the biggest pen in the world, six more than
-the boss holds — and the balloon, which is 56.
+dead column to swallow the far rainbow: 51 tiles — the biggest pen in the world, six more than
+the boss holds — and the rainbow, which is 56.
 
 ## 9. The Eyrie — 10 pieces, 65
 
@@ -293,8 +293,8 @@ below the neck, out of both rays, and that is three pieces for 15.
 
 The same ten pieces put out three eyes instead — one wall fenced across his north ray, and a
 lone piece on each stepping stone — and take every tile the pig can walk to: the north field,
-the neck, the pocket, the causeway with its whirlwind swallowed, and the whole east fields with
-their three balloons. 45 tiles, five balloons and one whirlwind come to 65. At 76% it is the
+the neck, the pocket, the causeway with its storm swallowed, and the whole east fields with
+their three rainbows. 45 tiles, five rainbows and one storm come to 65. At 76% it is the
 widest gap any board in the game leaves, which is the right way for a game to finish. The
-balloon on the islet by the crown of the map stays exactly where it is: up here even the last
+rainbow on the islet by the crown of the map stays exactly where it is: up here even the last
 board keeps a tease. It asks for 21 of the 24 stars below it before it opens.

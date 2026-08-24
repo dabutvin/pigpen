@@ -24,17 +24,17 @@ table of best pens and all nine of its maps drawn out, boss last.
 | # | World | Treat | Hazard | Boss |
 |---|---|---|---|---|
 | 1 | [Mudlark Meadow](01-mudlark-meadow.md) | apple `a` | skull `x` | Stag Mere |
-| 2 | [Thornwood Thicket](02-thornwood-thicket.md) | truffle `a` | bramble `x` | Boar Hollow |
-| 3 | [Emberpeak](03-emberpeak.md) | chestnut `a` | ember `x` | Wyrm Caldera |
-| 4 | [Cogsworth City](04-cogsworth-city.md) | pie `a` | drain `x` | Rat King Wharf |
-| 5 | [Starfall Reaches](05-starfall-reaches.md) | stardrop `a` | meteor `x` | Visitor Crater |
-| 6 | [Gloamdeep Caverns](06-gloamdeep-caverns.md) | crystal `a` | boulder `x` | The Roost |
-| 7 | [Lantern Carnival](07-lantern-carnival.md) | toffee apple `a` | guy rope `x` | The Center Ring |
-| 8 | [Sunbaked Dunes](08-sunbaked-dunes.md) | melon `a` | cactus `x` | Scorpion Flats |
-| 9 | [Tidepool Cove](09-tidepool-cove.md) | pearl `a` | jellyfish `x` | The Crab Pool |
-| 10 | [Frostwhisker Tundra](10-frostwhisker-tundra.md) | fish `a` | berg `x` | The Haulout |
-| 11 | [Mirebog Fen](11-mirebog-fen.md) | bilberry `a` | snag `x` | The Wallow |
-| 12 | [Cloudspire Heights](12-cloudspire-heights.md) | balloon `a` | whirlwind `x` | The Eyrie |
+| 2 | [Thornwood Thicket](02-thornwood-thicket.md) | mushroom `a` | wilted flower `x` | Boar Hollow |
+| 3 | [Emberpeak](03-emberpeak.md) | coin `a` | flame `x` | Wyrm Caldera |
+| 4 | [Cogsworth City](04-cogsworth-city.md) | pizza `a` | trash can `x` | Rat King Wharf |
+| 5 | [Starfall Reaches](05-starfall-reaches.md) | star `a` | meteor `x` | Visitor Crater |
+| 6 | [Gloamdeep Caverns](06-gloamdeep-caverns.md) | diamond `a` | boulder `x` | The Roost |
+| 7 | [Lantern Carnival](07-lantern-carnival.md) | popcorn `a` | megaphone `x` | The Center Ring |
+| 8 | [Sunbaked Dunes](08-sunbaked-dunes.md) | melon `a` | snake `x` | Scorpion Flats |
+| 9 | [Tidepool Cove](09-tidepool-cove.md) | seashell `a` | jellyfish `x` | The Crab Pool |
+| 10 | [Frostwhisker Tundra](10-frostwhisker-tundra.md) | ski `a` | ice slick `x` | The Haulout |
+| 11 | [Mirebog Fen](11-mirebog-fen.md) | lotus flower `a` | mosquito `x` | The Wallow |
+| 12 | [Cloudspire Heights](12-cloudspire-heights.md) | rainbow `a` | storm `x` | The Eyrie |
 
 Every world is the meadow's game on new ground, so a treat is worth five tiles to shut in
 and a hazard five fewer wherever you meet it, whatever it is called locally. The six ideas

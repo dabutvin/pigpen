@@ -1,8 +1,8 @@
 # Cogsworth City
 
-The fourth world, solved the same way and drawn the same way. A pie takes the meadow's apple
-and a drain its skull, so an `a` below is a pie worth five tiles to shut in, and an `x` a
-drain worth five fewer that no piece will build on — nothing drives a post through cast iron
+The fourth world, solved the same way and drawn the same way. A pizza takes the meadow's apple
+and a trash can its skull, so an `a` below is a pizza worth five tiles to shut in, and an `x` a
+trash can worth five fewer that no piece will build on — nobody nails a fence to a trash can
 — and an `R` is the rat king, which is held like the deer and the boar before it and, unlike
 either, will not be penned on its own.
 
@@ -21,14 +21,14 @@ Gasworks Cut to Foundry Corner.
 | # | Level | Pieces | Ground held | In the pen | Score | Squared off |
 |---|---|---|---|---|---|---|
 | 1 | Gasworks Cut | 9 | 26 | — | 26 | 18 |
-| 2 | Pieman's Row | 12 | 19 | 1 pie | 24 | 16 |
+| 2 | Pieman's Row | 12 | 19 | 1 pizza | 24 | 16 |
 | 3 | Cobble Yard | 14 | 18 | — | 18 | 12 |
-| 4 | Lock Gate | 13 | 27 | 1 drain | 22 | 14 |
+| 4 | Lock Gate | 13 | 27 | 1 trash can | 22 | 14 |
 | 5 | Culvert Row | 13 | 27 | — | 27 | 16 |
 | 6 | Gutter Lane | 14 | 26 | — | 26 | 15 |
-| 7 | Foundry Corner | 9 | 32 | 1 drain | 27 | 15 |
-| 8 | Clocktower Square | 17 | 35 | 2 pies, 1 drain | 40 | 25 |
-| 9 | Rat King Wharf | 19 | 33 | 2 pies | 43 | 26 |
+| 7 | Foundry Corner | 9 | 32 | 1 trash can | 27 | 15 |
+| 8 | Clocktower Square | 17 | 35 | 2 pizzas, 1 trash can | 40 | 25 |
+| 9 | Rat King Wharf | 19 | 33 | 2 pizzas | 43 | 26 |
 
 ## 1. Gasworks Cut — 9 pieces, 26
 
@@ -66,13 +66,13 @@ the ground it gives up at the far end. 26 tiles, and every one the yard has in i
 ........
 ```
 
-Two pies on the row and one canal along the north. A block under the canal holds sixteen tiles
-and neither pie — both lie past where a rectangle stops, and no piece will lie on one to sweep
+Two pizzas on the row and one canal along the north. A block under the canal holds sixteen tiles
+and neither pizza — both lie past where a rectangle stops, and no piece will lie on one to sweep
 it up on the way past — which is 16 and two stars.
 
-The pen that wins goes out for the near pie and puts nineteen tiles round it, by running the
-wall out on the diagonal and back. The far pie stays where it fell: the ground a wall gives up
-bending out to it costs more than the five it pays, which is the whole of what a pie is for.
+The pen that wins goes out for the near pizza and puts nineteen tiles round it, by running the
+wall out on the diagonal and back. The far pizza stays where it fell: the ground a wall gives up
+bending out to it costs more than the five it pays, which is the whole of what a pizza is for.
 
 ## 3. Cobble Yard — 14 pieces, 18
 
@@ -88,12 +88,12 @@ bending out to it costs more than the five it pays, which is the whole of what a
 ...#....
 ```
 
-Paving and two drains, and nothing else. Every tile of this pen is bought out of the fourteen
+Paving and two trash cans, and nothing else. Every tile of this pen is bought out of the fourteen
 pieces, the way Basalt Flats is bought out of seventeen — on tighter ground, so the ring is
-smaller and the drains are harder to keep off its wall.
+smaller and the trash cans are harder to keep off its wall.
 
 The best block here holds 12. The same fourteen pieces run out as a ring hold 18, and the
-ring has to be placed so that neither drain falls on it: a drain takes no fencing, so a ring
+ring has to be placed so that neither trash can falls on it: a trash can takes no fencing, so a ring
 that wants one of those tiles is a ring you cannot build.
 
 ## 4. Lock Gate — 13 pieces, 22
@@ -114,8 +114,8 @@ The canal runs the whole depth of the world with the lock standing open in the m
 One piece in the gate shuts the only way west and buys the entire canal as a free wall — Otter
 Ford's lesson, on a third of the board.
 
-The other twelve close three sides, and the drain inside the gate is in the middle of whatever
-they close, so it is taken in and paid for rather than walled round. 27 tiles less the drain,
+The other twelve close three sides, and the trash can inside the gate is in the middle of whatever
+they close, so it is taken in and paid for rather than walled round. 27 tiles less the trash can,
 which is 22, against a block worth 14.
 
 ## 5. Culvert Row — 13 pieces, 27
@@ -153,13 +153,13 @@ paid for. 27 tiles for thirteen pieces.
 ~~~~~~~.
 ```
 
-The canal walls the whole foot of the lane and two drains are sunk out where a wall wants to
+The canal walls the whole foot of the lane and two trash cans are sunk out where a wall wants to
 stand. Neither is worth five points: the wall comes off the canal, runs out on the diagonal
-tight past the upper drain and pinches in round the lower one, and both stay outside for a
+tight past the upper trash can and pinches in round the lower one, and both stay outside for a
 tile apiece.
 
 Sour Ground made that choice once and Sulphur Rill made it twice. This makes it twice with
-nowhere to put the mistake — a block that keeps clear of both drains is worth 15.
+nowhere to put the mistake — a block that keeps clear of both trash cans is worth 15.
 
 ## 7. Foundry Corner — 9 pieces, 27
 
@@ -176,12 +176,12 @@ nowhere to put the mistake — a block that keeps clear of both drains is worth 
 ```
 
 Two canals meeting at a corner, which Puddle Corner and Willow Corner both asked before — and
-both of those were eight pieces on clean ground. This is nine pieces with two drains staked on
+both of those were eight pieces on clean ground. This is nine pieces with two trash cans staked on
 the diagonal itself, so the staircase cannot simply be drawn.
 
-It has to be drawn round one and over the other. The upper drain is in the middle of the pen,
+It has to be drawn round one and over the other. The upper trash can is in the middle of the pen,
 where walling round it would cost more ground than the five points it charges, so it is taken
-in; the lower one is out past the wall entirely. 32 tiles less one drain, which is 27, against
+in; the lower one is out past the wall entirely. 32 tiles less one trash can, which is 27, against
 a right-angled block worth 15. No corner in the game gives a diagonal that much to buy.
 
 ## 8. Clocktower Square — 17 pieces, 40
@@ -199,11 +199,11 @@ a right-angled block worth 15. No corner in the game gives a diagonal that much 
 ```
 
 The widest board in the city and the biggest pen in it. The canal comes in under the tower and
-the wall is cut to its shape, gathering the pie on the east and the pie down in the south-west
-on the way round: 35 tiles, two pies, one drain, 40.
+the wall is cut to its shape, gathering the pizza on the east and the pizza down in the south-west
+on the way round: 35 tiles, two pizzas, one trash can, 40.
 
-The third pie, out at the bottom right, is left where it fell — the pen would have to bend a
-long way for it and give up more than five tiles doing it. The drain by the pig's shoulder is
+The third pizza, out at the bottom right, is left where it fell — the pen would have to bend a
+long way for it and give up more than five tiles doing it. The trash can by the pig's shoulder is
 in the middle of the ground and is bought; the one on the south rim is outside the wall
 altogether. A block leaning on the canal holds 25.
 
@@ -227,12 +227,12 @@ them, and a player who learned the woods' answer has to unlearn it here.
 
 So the question is what shape one pen has to be. The pig and the rat king stand four tiles
 apart on the diagonal, which makes the smallest block that takes them both a five by five —
-and a drain sits in one of the corners such a block cannot avoid, so squaring off is worth 26.
+and a trash can sits in one of the corners such a block cannot avoid, so squaring off is worth 26.
 
 The pen that wins runs out along the diagonal instead of round it: it leans on the culvert in
-the north-east and the cut in the south-west, takes the pie at each end of the run, and leaves
-both drains outside — the one by the culvert steps in beside it, the one down in the yard is
-never reached. 33 tiles and two pies, 43, for every one of the nineteen pieces.
+the north-east and the cut in the south-west, takes the pizza at each end of the run, and leaves
+both trash cans outside — the one by the culvert steps in beside it, the one down in the yard is
+never reached. 33 tiles and two pizzas, 43, for every one of the nineteen pieces.
 
 It asks for 21 of the 24 stars below it before it opens.
 

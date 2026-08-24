@@ -170,8 +170,8 @@ struct PigpenApp: App {
         case .boss:
             PuzzleView(game: .theStagMeresBestPen())
         case .truffles:
-            // A thicket board: the truffle and the bramble stand where the apple and
-            // the skull would, the same +5 and -5 dressed for the woods, on leaf
+            // A thicket board: the mushroom and the wilted flower stand where the apple
+            // and the skull would, the same +5 and -5 dressed for the woods, on leaf
             // mould with peat pools in it rather than mud and open water.
             PuzzleView(
                 level: .nettleBank,
@@ -181,7 +181,7 @@ struct PigpenApp: App {
                 dusk: .forestDusk
             )
         case .embers:
-            // A mountain board: the chestnut and the ember stand where the apple and
+            // A mountain board: the coin and the flame stand where the apple and
             // the skull would, the same +5 and -5 dressed for the peak, on ash with
             // cinder still going in it and a tarn steaming where a mere would be.
             PuzzleView(
@@ -192,7 +192,7 @@ struct PigpenApp: App {
                 dusk: .emberDusk
             )
         case .pies:
-            // A city board: the pie and the drain stand where the apple and the
+            // A city board: the pizza and the trash can stand where the apple and the
             // skull would, the same +5 and -5 dressed for the streets, on paving,
             // with a canal for water and wrought iron for fencing.
             PuzzleView(

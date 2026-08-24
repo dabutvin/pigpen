@@ -4,12 +4,12 @@ import Foundation
 ///
 /// Mirebog Fen is the meadow's game on ground that never chose between land and water: fence
 /// in the pig, the biggest pen the pieces will reach round, shut or it is no pen at all. The
-/// windfall here is a **bilberry** ripened over the peat and the hazard a **snag** — bog oak
-/// drowned black and hard as iron — and each is worth exactly what its meadow twin was, a
-/// bilberry five tiles to shut in, a snag five to shut in with and no fencing at all, since
-/// nothing drives a post into wood the bog already ate. So the same solver that authored the
-/// ten worlds below these authored them, with `a` standing in for the bilberry and `x` for
-/// the snag.
+/// windfall here is a **lotus flower** opened over the peat and the hazard a **mosquito**
+/// whining over its own patch of mire — and each is worth exactly what its meadow twin was, a
+/// lotus flower five tiles to shut in, a mosquito five to shut in with and no fencing at all, since
+/// no wall on the fen keeps a mosquito off. So the same solver that authored the
+/// ten worlds below these authored them, with `a` standing in for the lotus flower and `x` for
+/// the mosquito.
 ///
 /// What the water is here is **a channel**: fen water moving too slowly to see, too deep to
 /// wade and no ground to build on, so it stops a pig and a fence exactly as a river does. And
@@ -22,7 +22,7 @@ import Foundation
 /// Which hands over walls the way every wet world has — a braid's outer bank is free fencing,
 /// jogged so a rectangle cannot follow it — and keeps something back that no world has kept
 /// before: **the bars.** The ground a loop rings is ground nothing can ever walk to, so a
-/// bilberry parked on a bar is the loudest tease since the cove's rim pearls: in plain sight,
+/// lotus flower parked on a bar is the loudest tease since the cove's rim seashells: in plain sight,
 /// five points, and nobody's. The fen keeps what it rings, and the trail says so from the
 /// second field on.
 ///
@@ -32,16 +32,16 @@ import Foundation
 /// The fen floors at 42 against the tundra's 41 — the highest floor in the game — on boards
 /// where the free wall is real but never straight, and half of what the water offers it keeps.
 extension PuzzleLevel {
-    /// Two staircase braids leaning together into a broad arch over the pig's hollow, a snag
-    /// in the hollow's lee, and two bilberries out on the open peat below.
+    /// Two staircase braids leaning together into a broad arch over the pig's hollow, a mosquito
+    /// in the hollow's lee, and two lotus flowers out on the open peat below.
     ///
     /// The basin question, asked in the fen's grammar: the water has nearly done it — the bowl
     /// under the arch is walled on both flanks for free, and one piece at the apex shuts the
     /// mouth. The rest of the budget is the whole field. The block plugs the apex and squares
-    /// the bowl off with a straight row, but the snag sits exactly where its second row wants
+    /// the bowl off with a straight row, but the mosquito sits exactly where its second row wants
     /// to be, so it stops short at 21. The same eleven pieces run the south wall out as a deep
-    /// V instead, scoop the west bilberry on the way, and hold 32 tiles and the berry, which
-    /// is 37 — the east bilberry is the gift not worth taking, since reaching both costs more
+    /// V instead, scoop the west lotus flower on the way, and hold 32 tiles and the flower, which
+    /// is 37 — the east lotus flower is the gift not worth taking, since reaching both costs more
     /// ground than one is worth.
     static let theEelTrap = mirebog(
         id: "the-eel-trap",
@@ -72,10 +72,10 @@ extension PuzzleLevel {
     ///
     /// The span question: neither bank pens anything by itself, and the best answer throws one
     /// wall of ten pieces between and around both, a great lozenge whose far faces are the two
-    /// channels' banks. The bilberries hang at the lozenge's west and east waist, exactly
+    /// channels' banks. The lotus flowers hang at the lozenge's west and east waist, exactly
     /// where the wall bows widest, and the pen takes both: 37 tiles and the pair, which is 47.
-    /// The block nests against the north-west braid and nudges out over one berry for 26 —
-    /// barely more than half. The third bilberry rides the north-west pool's bar, ringed and
+    /// The block nests against the north-west braid and nudges out over one flower for 26 —
+    /// barely more than half. The third lotus flower rides the north-west pool's bar, ringed and
     /// unreachable, which is the fen's first word on what it keeps.
     static let theTwoCarrs = mirebog(
         id: "the-two-carrs",
@@ -104,10 +104,10 @@ extension PuzzleLevel {
     /// biggest budget in the world laid out across it.
     ///
     /// It is The Whiteout again, and The High Strand and The Hardpan before it, and the answer
-    /// is the answer it always was — with one bilberry to bend it. The best block twenty-one
-    /// pieces can square off is a strip nudged out over the berry for 27; the same twenty-one
-    /// run round as a diamond slung off-centre hold 45 tiles and the berry, which is 50. Two
-    /// more bilberries sit on the very corners of the map, where nothing can ever be penned:
+    /// is the answer it always was — with one lotus flower to bend it. The best block twenty-one
+    /// pieces can square off is a strip nudged out over the flower for 27; the same twenty-one
+    /// run round as a diamond slung off-centre hold 45 tiles and the flower, which is 50. Two
+    /// more lotus flowers sit on the very corners of the map, where nothing can ever be penned:
     /// cut peat or no, the fen keeps its corners.
     static let theTurbary = mirebog(
         id: "the-turbary",
@@ -137,10 +137,10 @@ extension PuzzleLevel {
     ///
     /// The gap question, asked as a sluice: one piece on that tile fuses the two braids into a
     /// single barrier from the north rim to the south-east pool, and the best pen is the long
-    /// diagonal strip behind it, capped with a staircase and holding both live bilberries at
-    /// its two ends — 28 tiles and the pair, which is 38. The snag is staked exactly where the
+    /// diagonal strip behind it, capped with a staircase and holding both live lotus flowers at
+    /// its two ends — 28 tiles and the pair, which is 38. The mosquito is staked exactly where the
     /// squared-off answer wants its south fence, so the block huddles mid-strip at 20. A third
-    /// bilberry sits in the south-east pool's eye, ringed, teasing, and nobody's.
+    /// lotus flower sits in the south-east pool's eye, ringed, teasing, and nobody's.
     static let theSluice = mirebog(
         id: "the-sluice",
         name: "The Sluice",
@@ -170,11 +170,11 @@ extension PuzzleLevel {
     /// rims.
     ///
     /// The shore question, on the longest bank the fen has: the braid's south bank is the
-    /// dominant free wall, and the whole field is which stretch of it to use. The bilberries
+    /// dominant free wall, and the whole field is which stretch of it to use. The lotus flowers
     /// hang deep to the south-west and south-east, and the best pen leans on the bank and
-    /// funnels its V south-west to swallow the west berry — 28 tiles and the berry, which is
-    /// 33. The block leans the same bank, but the snag stands where its east wall wants to,
-    /// so it squares off at 17 and reaches no berry at all.
+    /// funnels its V south-west to swallow the west flower — 28 tiles and the flower, which is
+    /// 33. The block leans the same bank, but the mosquito stands where its east wall wants to,
+    /// so it squares off at 17 and reaches no flower at all.
     static let bitternBank = mirebog(
         id: "bittern-bank",
         name: "Bittern Bank",
@@ -203,11 +203,11 @@ extension PuzzleLevel {
     /// walling the bottom corners and a one-tile gap in the bottom channel.
     ///
     /// The detour question, teased three ways: the tidy answer is a straight-walled box over
-    /// the pig with a plug in the gap, and the snag is staked exactly where that box's
+    /// the pig with a plug in the gap, and the mosquito is staked exactly where that box's
     /// north-west fence wants to be, so the block swallows it and pays the five — 22 tiles
-    /// less the snag is 17. The best pen bows out east instead, a skewed dome leaning both
-    /// pools, and stretches its wall to the east bilberry: 29 tiles and the berry, which is
-    /// 34. The high berry hangs one tile past its tip and the west one stays wide — the pen
+    /// less the mosquito is 17. The best pen bows out east instead, a skewed dome leaning both
+    /// pools, and stretches its wall to the east lotus flower: 29 tiles and the flower, which is
+    /// 34. The high flower hangs one tile past its tip and the west one stays wide — the pen
     /// bows for one, and is teased by two.
     static let bilberryHags = mirebog(
         id: "bilberry-hags",
@@ -234,16 +234,16 @@ extension PuzzleLevel {
 
     /// The corner of the fen: a tall loop-braid stacked up the whole west side, the bottom
     /// channel running east to the south-east pool, and their banks meeting at the south-west
-    /// — two whole sides of the field walled for free. The same scatter of berries as
+    /// — two whole sides of the field walled for free. The same scatter of flowers as
     /// Bilberry Hags, asked a harder question.
     ///
     /// Which is the corner question the way Rimstone Corner, Scarp Corner and Barnacle Corner
     /// asked it. The right-angled answer ignores the gift, boxes the pig high on the peat and
-    /// nudges over the west bilberry: 16. The best pen takes the corner and beats the box with
+    /// nudges over the west lotus flower: 16. The best pen takes the corner and beats the box with
     /// one long diagonal thrown from the high ground down to the east pool, plus a short
-    /// staircase to scoop the same west berry — 30 tiles and the berry, which is 35 against
-    /// 16, and at 54 the hardest field in the fen. The high berry hangs one tile past the
-    /// funnel's tip, and the east one is stranded behind the snag.
+    /// staircase to scoop the same west flower — 30 tiles and the flower, which is 35 against
+    /// 16, and at 54 the hardest field in the fen. The high flower hangs one tile past the
+    /// funnel's tip, and the east one is stranded behind the mosquito.
     static let heronCorner = mirebog(
         id: "heron-corner",
         name: "Heron Corner",
@@ -269,15 +269,15 @@ extension PuzzleLevel {
     )
 
     /// The great slough: the broadest board in the fen, the north-west pool-and-channel braid
-    /// and its south-east mirror thrown as far apart as the board allows, a bilberry off each,
-    /// and a snag dead in the middle of everything.
+    /// and its south-east mirror thrown as far apart as the board allows, a lotus flower off each,
+    /// and a mosquito dead in the middle of everything.
     ///
     /// The Great Slough stands outside the climb the way Low Water and The Great Floe do. The
     /// span question at full stretch: thirteen pieces close the lozenge the two braids imply
-    /// and hold 49 tiles — the biggest pen in the world — both live bilberries, and the fen's
-    /// one bitter mouthful: the snag sits mid-lozenge where no wall can exclude it, and the
+    /// and hold 49 tiles — the biggest pen in the world — both live lotus flowers, and the fen's
+    /// one bitter mouthful: the mosquito sits mid-lozenge where no wall can exclude it, and the
     /// pen swallows it and pays, 49 and 10 less 5 for 54. The block leans the north-west braid
-    /// and pays the same snag for 30. The third bilberry rides the south-east pool's eye,
+    /// and pays the same mosquito for 30. The third lotus flower rides the south-east pool's eye,
     /// ringed and untouchable.
     static let theGreatSlough = mirebog(
         id: "the-great-slough",
@@ -318,11 +318,11 @@ extension PuzzleLevel {
     ///
     /// The tidy answer that satisfies it is mean with everybody: box the pig on her own tile
     /// and run a tight ring of causeways round the croc's channel, leaning the sister braids
-    /// for walls — and the snag on the ring's south line is staked so the ring must swallow
-    /// it, 18 tiles less the snag and the pig's one, which is 13. The same nineteen pieces
+    /// for walls — and the mosquito on the ring's south line is staked so the ring must swallow
+    /// it, 18 tiles less the mosquito and the pig's one, which is 13. The same nineteen pieces
     /// swing the ring wide instead, take the whole east fen into the croc's ground with both
-    /// live bilberries and both snags, and that is 48 — at 72 the widest gap any board in the
-    /// game left until the heights' Eyrie asked 76. His channel's own bar keeps a bilberry no
+    /// live lotus flowers and both mosquitos, and that is 48 — at 72 the widest gap any board in the
+    /// game left until the heights' Eyrie asked 76. His channel's own bar keeps a lotus flower no
     /// pen will ever hold, which on this board is the croc's pantry.
     ///
     /// It asks for 21 of the 24 stars below it before it opens, the way every boss since the
