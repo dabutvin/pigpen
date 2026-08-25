@@ -2,7 +2,8 @@ import SwiftUI
 import UIKit
 
 /// The title screen's how-to-play: the practice pen with a coach card that walks through
-/// tapping, dragging, water, closing a pen and releasing the pig.
+/// tapping, dragging, what a bonus and a penalty are worth, closing a pen and releasing
+/// the pig.
 @MainActor
 struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
@@ -106,6 +107,10 @@ struct TutorialView: View {
                 .foregroundStyle(GamePalette.post.opacity(0.78))
                 .fixedSize(horizontal: false, vertical: true)
 
+            if lesson.step == .treats {
+                treatTags
+            }
+
             if lesson.showsContinue {
                 Button {
                     if lesson.step == .finished {
@@ -117,7 +122,7 @@ struct TutorialView: View {
                         Haptics.tap(.light)
                     }
                 } label: {
-                    Text(lesson.step == .finished ? "To the meadow" : "Continue")
+                    Text(lesson.step == .finished ? "Play" : "Continue")
                         .font(.headline.weight(.bold))
                         .frame(maxWidth: .infinity)
                 }
@@ -135,6 +140,36 @@ struct TutorialView: View {
         )
         .shadow(color: .black.opacity(0.16), radius: 6, y: 3)
         .accessibilityElement(children: .combine)
+    }
+
+    /// The bonus and the penalty side by side, each with its little price tag over the top —
+    /// shown on the card rather than staked in the practice pen, whose ground stays bare.
+    private var treatTags: some View {
+        HStack(spacing: 24) {
+            treatTile(glyph: "🍎", price: "+\(Treat.apple.worth)")
+            treatTile(glyph: "☠️", price: "\(Treat.skull.worth)")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 2)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("An apple is worth \(Treat.apple.worth) points, a skull \(Treat.skull.worth).")
+    }
+
+    private func treatTile(glyph: String, price: String) -> some View {
+        VStack(spacing: 3) {
+            Text(price)
+                .font(.caption.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 1)
+                .background(GamePalette.cream, in: Capsule())
+                .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.3), lineWidth: 1))
+
+            Text(glyph)
+                .font(.system(size: 26))
+                .frame(width: 44, height: 44)
+                .background(GamePalette.mud, in: RoundedRectangle(cornerRadius: 9))
+        }
     }
 
     // MARK: - Controls

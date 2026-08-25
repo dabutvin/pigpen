@@ -1098,8 +1098,9 @@ stars taken so far sit in a badge in the top corner, well away from Play.
 Under Play is a board with **today's puzzle** on it — what day it is, and once it is
 complete, the stars it gave up, the time it took and how many days in a row you are on. Under that, **Archive** opens the calendar of every daily there has been,
 and **Tutorial** opens a practice pen off the world map and walks through
-tapping a post, dragging a run, building against water, shutting the pen until the ground
-washes gold, and releasing the pig.
+tapping a post, dragging a run, what a bonus and a penalty are worth (a card with the two
+tiles and their +5/−5 tags over the top, since the practice pen's own ground stays bare),
+shutting the pen, and releasing the pig to see the stars.
 
 **The walkthrough opens itself on a first run.** A game with nothing won in it and no
 walkthrough behind it puts the practice pen up as the title screen arrives, rather than
