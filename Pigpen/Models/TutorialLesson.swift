@@ -16,13 +16,13 @@ final class TutorialLesson {
         case tap
         /// Drag a short run of fencing.
         case drag
-        /// Point out that water is a free wall.
-        case water
+        /// Point out the bonus and the penalty, each with its little price tag.
+        case treats
         /// Fence the remaining gaps until the pen washes gold.
         case close
         /// Release the pig to prove the pen holds.
         case release
-        /// Score, stars, and the way out to the meadow.
+        /// The send-off, and the way out to the meadow.
         case finished
     }
 
@@ -73,7 +73,7 @@ final class TutorialLesson {
             Self.eastRun.subtracting(game.fences)
         case .close:
             Self.closingRun.subtracting(game.fences)
-        case .welcome, .water, .release, .finished:
+        case .welcome, .treats, .release, .finished:
             []
         }
     }
@@ -85,7 +85,7 @@ final class TutorialLesson {
         case .tap: [Self.firstPost]
         case .drag: Self.eastRun
         case .close: Self.closingRun
-        case .welcome, .water, .release, .finished: []
+        case .welcome, .treats, .release, .finished: []
         }
     }
 
@@ -97,47 +97,40 @@ final class TutorialLesson {
     /// Whether the coach card advances on Continue rather than on something done to the field.
     var showsContinue: Bool {
         switch step {
-        case .welcome, .water, .finished: true
+        case .welcome, .treats, .finished: true
         case .tap, .drag, .close, .release: false
         }
     }
 
     var headline: String {
         switch step {
-        case .welcome: "A practice field"
-        case .tap: "Plant a post"
-        case .drag: "Lay a run"
-        case .water: "Water walls for free"
-        case .close: "Shut the gaps"
-        case .release: "Let it try"
-        case .finished: "Penned in"
+        case .welcome: "Welcome to Pigpen"
+        case .tap: "Place a fence"
+        case .drag: "Build faster"
+        case .treats: "Choose what's inside"
+        case .close: "Keep Pig in"
+        case .release: "See how you did"
+        case .finished: "You're ready"
         }
     }
 
     var detail: String {
         switch step {
         case .welcome:
-            "Fence in the pig. The bigger the pen you shut it in the better — a pig wants room to run — and a pen with a gap left in it holds nothing at all. You get a fixed number of pieces; tap Continue and we will walk through how to spend them."
+            "Pig needs a little more room. Your job is to build him the biggest pen you can. Let's try one."
         case .tap:
-            "Tap the glowing mud tile to lay a fence piece. The pig cannot walk through fencing."
+            "Tap a tile to place a fence piece. Try it now."
         case .drag:
-            "Press on a glowing tile and drag to the next. A whole run of fencing goes down in one stroke."
-        case .water:
-            "Rivers and lakes are a boundary the pig cannot cross. You cannot build on them, and you never need to — build against them instead."
+            "Tap and drag across tiles to place several pieces at once. Give it a try."
+        case .treats:
+            "Bonus tiles add points. Penalty tiles take points away. Try to fence in the bonus and leave the penalty out."
         case .close:
-            "Fence the glowing tiles. When every way off the map is closed, the ground inside washes gold."
+            "Make sure your fence is completely closed. Leave a gap and Pig will wander off."
         case .release:
-            "The wash says the pen holds. Release the pig to prove it — and to see what the pen is worth."
+            "Release the pig. Earn up to 3 stars. More space + bonuses = a better score."
         case .finished:
-            finishedDetail
+            "That's it. Go give Pig some room to roam."
         }
-    }
-
-    /// What the closed pen held, and why the meadow will ask for more of it.
-    private var finishedDetail: String {
-        let held = game.penTally?.area ?? game.bestScore
-        let tiles = held == 1 ? "1 mud tile" : "\(held) mud tiles"
-        return "You held \(tiles). Every tile inside a pen that holds scores a point, and bigger pens earn more stars. Ready for the meadow?"
     }
 
     // MARK: - Advancing
@@ -149,7 +142,7 @@ final class TutorialLesson {
         case .welcome:
             step = .tap
             return true
-        case .water:
+        case .treats:
             step = .close
             return true
         case .finished:
@@ -195,7 +188,7 @@ final class TutorialLesson {
             // The coach asks for a drag, but two taps that fill the same tiles count —
             // the lesson is the run of fencing, not the gesture that got it there.
             if Self.eastRun.isSubset(of: game.fences) {
-                step = .water
+                step = .treats
             }
         case .close:
             if game.isPenClosed {
@@ -205,7 +198,7 @@ final class TutorialLesson {
             if case .penned = game.phase {
                 step = .finished
             }
-        case .welcome, .water, .finished:
+        case .welcome, .treats, .finished:
             break
         }
     }
