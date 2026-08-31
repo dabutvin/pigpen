@@ -389,33 +389,35 @@ struct PuzzleView: View {
     /// single piece is laid.
     @ViewBuilder
     private var bestPenTally: some View {
-        if game.bestScore > 0 {
-            HStack(spacing: 10) {
-                Text(tallySummary)
-                    .font(.footnote.weight(.heavy))
-                    // Written straight onto the grass, so it is painted rather than printed.
-                    .foregroundStyle(GamePalette.cream)
-                    .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
-                    .contentTransition(.numericText())
-                    // Sits on one line beside the button rather than pushing it off the
-                    // screen when the type is large.
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
+        HStack(spacing: 10) {
+            Text(tallySummary)
+                .font(.footnote.weight(.heavy))
+                // Written straight onto the grass, so it is painted rather than printed.
+                .foregroundStyle(GamePalette.cream)
+                .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
+                .contentTransition(.numericText())
+                // Sits on one line beside the button rather than pushing it off the
+                // screen when the type is large.
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
 
-                if game.canRestoreBestPen {
-                    Button { putBestPenBack() } label: {
-                        Label("Restore", systemImage: "clock.arrow.circlepath")
-                            .font(.footnote.weight(.heavy))
-                    }
-                    .buttonStyle(PlaqueButtonStyle(padding: 6))
-                    .accessibilityLabel(
-                        "Restore your best pen, \(scored(game.bestScore))"
-                    )
-                    .transition(.opacity.combined(with: .scale))
-                }
+            Button { putBestPenBack() } label: {
+                Label("Restore", systemImage: "clock.arrow.circlepath")
+                    .font(.footnote.weight(.heavy))
             }
-            .transition(.opacity)
+            .buttonStyle(PlaqueButtonStyle(padding: 6))
+            .accessibilityLabel("Restore your best pen, \(scored(game.bestScore))")
+            .opacity(game.canRestoreBestPen ? 1 : 0)
+            .disabled(!game.canRestoreBestPen)
         }
+        // The row is always laid out and only ever fades, so the button above it is standing
+        // where it will stand all game before there is anything down here to say. Building it
+        // the other way — putting the row in when the first pen closes — moved the one button
+        // the player is aiming at, at the exact moment they had just been rewarded for
+        // aiming at it. The plaque holds its place inside the row for the same reason: it is
+        // the tallest thing in it, so leaving it out would shrink the row it is reserving.
+        .opacity(game.bestScore > 0 ? 1 : 0)
+        .accessibilityHidden(game.bestScore == 0)
     }
 
     /// Reads out the best pen being kept, and what the fencing holds now when that is
