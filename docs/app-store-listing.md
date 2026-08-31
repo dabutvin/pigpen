@@ -64,7 +64,15 @@ searched, so `pigpen`, `cozy` and `puzzle` are not spent again here:
 pig,puzzle,logic,cozy,daily,brain,fence,farm,grid,relax,casual,pen,animal,board,teaser
 ```
 
-**What's New** — for 1.0, one line is the honest one:
+**What's New** — one entry per shipped version, newest first, each written to be read by a
+player deciding whether to update:
+
+For 1.1.0:
+
+> The story films and the tutorial have been rewritten, and the daily reminder now draws
+> from a hundred different lines — a fresh one each morning.
+
+For 1.0.0:
 
 > The first release: twelve worlds, a daily puzzle, and a pig.
 
