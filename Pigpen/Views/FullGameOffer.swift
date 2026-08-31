@@ -83,13 +83,11 @@ struct FullGameOffer: View {
 
     // MARK: - Pieces
 
+    /// The way out, and nothing else. The sheet used to name itself over the top of the card
+    /// below, which then named the same thing again in the heading that says what the money
+    /// buys — so the bar keeps the close button and gives the rest of its width back.
     private var header: some View {
         HStack(spacing: 12) {
-            Text("The full game")
-                .font(.system(size: 22, weight: .black, design: .rounded))
-                .foregroundStyle(GamePalette.cream)
-                .shadow(color: .black.opacity(0.35), radius: 3, y: 1)
-
             Spacer(minLength: 0)
 
             Button {
