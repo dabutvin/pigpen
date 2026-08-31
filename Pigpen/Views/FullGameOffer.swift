@@ -108,19 +108,29 @@ struct FullGameOffer: View {
         .padding(.bottom, 16)
     }
 
-    /// What the money buys, said in the two things it opens: the rest of the worlds and the
-    /// rest of the days. The meadow and the day are named as already yours, so the offer reads
-    /// as the game widening rather than as a gate that was always there.
+    /// What the money buys, said in the three things it opens: the rest of the markets, the
+    /// days already gone, and the promise that none of it is paid for twice.
+    ///
+    /// The heading is the thing being bought rather than a line of warmth about it, so a
+    /// player reading one line of this card reads the one that answers their question. The
+    /// days are named as the past, because that is what is actually behind the wall — today's
+    /// board is free and always will be, and calling the archive "every day" invited the
+    /// reading that a daily is what is being sold.
+    ///
+    /// The last perk is the absence of a thing, which is worth as much room as the two
+    /// presences above it: a one-off purchase in a game with no advertising in it is a
+    /// different offer from the same price in a game that has some, and the player cannot see
+    /// the difference from inside a paywall unless it is said.
     private var pitch: some View {
         card {
-            Text("Pigpen is yours to keep from here.")
+            Text("Unlock the full game")
                 .font(.headline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
 
             Text(
                 """
-                You have the meadow and today's board for nothing, and always will. The full \
-                game opens everything past them — once, for good.
+                Help Pig explore every market imaginable. Twelve worlds in the universe, each \
+                with its own challenges and its own boss at the top.
                 """
             )
             .font(.footnote.weight(.semibold))
@@ -129,13 +139,18 @@ struct FullGameOffer: View {
 
             perk(
                 icon: "globe.americas.fill",
-                title: "Every world",
+                title: "Every market",
                 detail: "The whole universe map past the meadow — eleven more worlds, each with its own boss and its own send-off."
             )
             perk(
                 icon: "calendar",
-                title: "Every day",
-                detail: "The whole archive, not just today — every daily puzzle there has ever been, any day you like."
+                title: "Every past puzzle",
+                detail: "The whole archive behind today — every daily puzzle there has ever been, any day you like."
+            )
+            perk(
+                icon: "hand.raised.slash.fill",
+                title: "Never any ads",
+                detail: "There are none in Pigpen and there never will be. You buy it once and that is the end of it."
             )
         }
     }

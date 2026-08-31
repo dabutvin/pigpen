@@ -309,15 +309,19 @@ struct PuzzleView: View {
             } label: {
                 Text("Release \(quarry)")
                     .font(.headline.weight(.heavy))
+                    // Dark lettering, because the face under it is the pen's own gold rather
+                    // than the fencing's brown, and white on gold is not a thing to read.
+                    .foregroundStyle(GamePalette.post)
                     // Two animals make for a longer button than one; it shrinks its
                     // lettering rather than growing a second line and moving the board.
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 4)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(GamePalette.rail)
+            // The same painted button the offer buys the game with: it stands on a ledge of
+            // its own shadow and sinks onto it when pressed. This is the one press on the
+            // screen that ends a go, so it is the one that is worth hitting.
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
             // Live on an empty field too. Opening the gate with nothing in the ground is a
             // legal go — the pig walks straight off the map and the verdict says so — and a
             // button greyed out until some unstated amount of work is done says less about
