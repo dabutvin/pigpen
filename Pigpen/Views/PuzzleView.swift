@@ -167,6 +167,9 @@ struct PuzzleView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 12) {
+                bossOrders
+                    .padding(.horizontal, 16)
+
                 FenceRack(
                     used: game.fences.count,
                     budget: level.fenceBudget,
@@ -197,6 +200,13 @@ struct PuzzleView: View {
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 // The board is the screen, so it is given all the width there is to give.
                 .padding(.horizontal, 6)
+
+                fieldCorrections
+                    // Right aligned to the same margin the button below keeps, so the row of
+                    // glyphs and the end of the button stand on one line.
+                    .padding(.horizontal, 16)
+                    .opacity(showsVerdict ? 0 : 1)
+                    .allowsHitTesting(!showsVerdict)
 
                 Spacer(minLength: 0)
 
@@ -241,6 +251,36 @@ struct PuzzleView: View {
         .task(id: game.phase) { await reactToPhase() }
     }
 
+    /// Undo, redo and clear, tucked under the right-hand corner of the board.
+    ///
+    /// No plaques: three cream glyphs painted straight onto the grass, the way the tally
+    /// beneath them is, so that the only thing on this screen wearing a button's clothes is
+    /// the button that ends the turn. Cream on pasture rather than the fencing's dark brown,
+    /// because a dark glyph laid on grass reads as a mark in the grass — and each keeps a
+    /// finger's worth of room around it whatever the glyph inside is doing.
+    ///
+    /// They fade rather than vanish when the verdict is up: the card below covers what they
+    /// act on, and a row that came and went would move the board it is pinned to.
+    private var fieldCorrections: some View {
+        HStack(spacing: 2) {
+            Spacer(minLength: 0)
+
+            fieldIcon("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
+                game.undo()
+            }
+            .keyboardShortcut("z", modifiers: .command)
+
+            fieldIcon("Redo", systemImage: "arrow.uturn.forward", enabled: game.canRedo) {
+                game.redo()
+            }
+            .keyboardShortcut("z", modifiers: [.command, .shift])
+
+            fieldIcon("Clear the field", systemImage: "trash", enabled: game.canClearField) {
+                game.startOver()
+            }
+        }
+    }
+
     /// The clock, up in the bar with the day's name rather than down on the board: it is
     /// something to glance at afterwards, not something to play against. It stops while
     /// the pen holds and the card is up, and picks up again if the player goes back out.
@@ -253,56 +293,45 @@ struct PuzzleView: View {
 
     // MARK: - Pieces
 
-    /// Undo, redo and clear sit to the left of the button that ends the turn, small and
-    /// always in the same place so the board keeps the room and the thumb learns where
-    /// they are. Each greys out rather than vanishing when there is nothing for it to do.
-    /// The tally of the best pen sits above them, since it has something to say only once
-    /// a pen has closed.
+    /// The button that ends the turn, with the whole width of the screen to itself, and what
+    /// the field has already been held for underneath it.
+    ///
+    /// Undo, redo and clear used to stand beside it and take three quarters of the row. They
+    /// are corrections rather than the move, so they have gone up under the board as plain
+    /// glyphs and the one button that finishes a go is now the only thing down here that
+    /// looks like a button. The best pen sits below rather than above it, since it is the
+    /// last thing to appear and has something to say only once a pen has closed.
     private var buildingControls: some View {
         VStack(spacing: 10) {
-            bossOrders
+            Button {
+                attempts += 1
+                game.openTheGate()
+            } label: {
+                Text("Release \(quarry)")
+                    .font(.headline.weight(.heavy))
+                    // Two animals make for a longer button than one; it shrinks its
+                    // lettering rather than growing a second line and moving the board.
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(GamePalette.rail)
+            // Live on an empty field too. Opening the gate with nothing in the ground is a
+            // legal go — the pig walks straight off the map and the verdict says so — and a
+            // button greyed out until some unstated amount of work is done says less about
+            // the rule than watching the pig leave does.
+            .disabled(!game.isBuilding)
 
             bestPenTally
-
-            HStack(spacing: 10) {
-                fieldButton("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
-                    game.undo()
-                }
-                .keyboardShortcut("z", modifiers: .command)
-
-                fieldButton("Redo", systemImage: "arrow.uturn.forward", enabled: game.canRedo) {
-                    game.redo()
-                }
-                .keyboardShortcut("z", modifiers: [.command, .shift])
-
-                fieldButton("Clear the field", systemImage: "trash", enabled: game.canClearField) {
-                    game.startOver()
-                }
-
-                Button {
-                    attempts += 1
-                    game.openTheGate()
-                } label: {
-                    Text("Release \(quarry)")
-                        .font(.headline.weight(.heavy))
-                        // Two animals make for a longer button than one; it shrinks its
-                        // lettering rather than growing a second line and moving the board.
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 4)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(GamePalette.rail)
-                .disabled(!game.isBuilding || game.fences.isEmpty)
-            }
         }
         .animation(.easeInOut(duration: 0.25), value: game.bestScore)
         .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
     }
 
-    /// The rule this world's boss adds, on a small painted board between the field and the
-    /// buttons — the strip of grass every other level leaves empty.
+    /// The rule this world's boss adds, on a small painted board above the rack — the first
+    /// thing under the title bar, and the strip of grass every other level leaves empty.
     ///
     /// A boss is the one field in a world whose rule the ground cannot show: water walls a pen
     /// and an apple says what it is worth, but nothing on the board says the deer has to be
@@ -310,20 +339,25 @@ struct PuzzleView: View {
     /// the field is up, so a player who tapped past that film, or who came back a week later to
     /// better a two-star pen, is never building against a rule they have to remember. Every
     /// other level shows nothing here, because there is nothing to add.
+    ///
+    /// It reads top down rather than left to right: a heading naming the thing, and the rule
+    /// under it. The animal used to stand at the front of it as a glyph, which said the same
+    /// thing the board below was already saying in the round — so the heading says what this
+    /// is instead, which is the one thing neither the board nor the film ever says.
     @ViewBuilder
     private var bossOrders: some View {
         if let orders = level.orders {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(level.bossGlyphs)
-                    .font(.subheadline)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("What to do")
+                    .font(.caption2.weight(.black))
+                    .foregroundStyle(GamePalette.post.opacity(0.55))
+                    .textCase(.uppercase)
 
                 Text(orders)
-                    .font(.caption.weight(.heavy))
-                    .foregroundStyle(GamePalette.post.opacity(0.82))
+                    .font(.subheadline)
+                    .foregroundStyle(GamePalette.post.opacity(0.9))
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
-
-                Spacer(minLength: 0)
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 11)
@@ -338,7 +372,7 @@ struct PuzzleView: View {
             }
             .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("The rule for this level. \(orders)")
+            .accessibilityLabel("What to do on this level. \(orders)")
         }
     }
 
@@ -370,12 +404,12 @@ struct PuzzleView: View {
 
                 if game.canRestoreBestPen {
                     Button { putBestPenBack() } label: {
-                        Label("Put it back", systemImage: "trophy")
+                        Label("Restore", systemImage: "clock.arrow.circlepath")
                             .font(.footnote.weight(.heavy))
                     }
                     .buttonStyle(PlaqueButtonStyle(padding: 6))
                     .accessibilityLabel(
-                        "Put the fencing back to your best pen, \(scored(game.bestScore))"
+                        "Restore your best pen, \(scored(game.bestScore))"
                     )
                     .transition(.opacity.combined(with: .scale))
                 }
@@ -397,7 +431,7 @@ struct PuzzleView: View {
 
     /// One of the small painted boards that work the fencing already down. A button with
     /// nothing to do fades rather than vanishing, so the three of them never move about.
-    private func fieldButton(
+    private func fieldIcon(
         _ title: String,
         systemImage: String,
         enabled: Bool,
@@ -409,14 +443,26 @@ struct PuzzleView: View {
         } label: {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
-                .font(.body.weight(.heavy))
-                // One box for all three, so a wider glyph does not make a wider button.
-                .frame(width: 24, height: 24)
-                // The glyph fades, not the board it is painted on: a see-through plaque
-                // would only pick up the colour of the grass behind it.
-                .opacity(enabled ? 1 : 0.3)
+                .font(.system(size: 17, weight: .heavy))
+                // Cream with the light behind it, which is what everything else painted
+                // straight onto the grass does. Against pasture that is the whole contrast:
+                // a near-white glyph on a mid green, with a shadow under it for the places
+                // the grass runs light.
+                .foregroundStyle(GamePalette.cream)
+                // Two shadows rather than one: a tight dark halo that darkens the grass
+                // immediately under the strokes, and a softer one below it for the lift. The
+                // single soft shadow measured 3.1:1 against pasture, which only just clears
+                // what a glyph needs; the halo is what carries it clear of the green.
+                .shadow(color: .black.opacity(0.8), radius: 2)
+                .shadow(color: .black.opacity(0.5), radius: 6, y: 2)
+                .opacity(enabled ? 1 : 0.35)
+                // One box for all three, so a wider glyph does not make a wider button — and
+                // wider than the glyph needs, so a thumb has something to land on without
+                // three plaques' worth of the board being spent on it.
+                .frame(width: 42, height: 38)
+                .contentShape(Rectangle())
         }
-        .buttonStyle(PlaqueButtonStyle())
+        .buttonStyle(.plain)
         .disabled(!enabled)
         .accessibilityLabel(title)
     }
@@ -437,7 +483,7 @@ struct PuzzleView: View {
             }
         case .penned(let pen):
             verdictCard(
-                headline: game.isPenAsGoodAsItGets ? "The best pen there is" : "Penned in",
+                headline: game.isPenAsGoodAsItGets ? "The best pen there is" : "Moved in",
                 detail: pennedDetail(tally: level.tally(for: pen)),
                 tint: GamePalette.clover
             ) {
@@ -463,41 +509,41 @@ struct PuzzleView: View {
     /// it: the two that will not share are in one pen, or the one that had to stay out is in.
     private func refusedHeadline(_ refusal: Refusal) -> String {
         switch refusal {
-        case .together(let animal): "The \(animal.name) will not share"
-        case .apart(let animal): "The \(animal.name) is on its own"
-        case .uneven(let animal): "The \(animal.name) has the smaller half"
-        case .split(let animal): "The \(animal.name) is hanging alone"
-        case .shutIn(let animal): "The \(animal.name) is inside"
-        case .beside(let animal): "The \(animal.name) has no ring round him"
-        case .tooClose(let animal): "The \(animal.name) is near enough to reach"
-        case .landlocked(let animal): "The \(animal.name) is high and dry"
-        case .parched(let animal): "The \(animal.name) has half a wallow"
-        case .spotted(let animal): "The \(animal.name) has her in his eye"
+        case .together(let animal): "The \(animal.name) wants its own place"
+        case .apart(let animal): "The \(animal.name) will not live alone"
+        case .uneven(let animal): "The \(animal.name) got the smaller place"
+        case .split(let animal): "The \(animal.name) is on its own"
+        case .shutIn(let animal): "The \(animal.name) came with the place"
+        case .beside: "Pig is next door, not around"
+        case .tooClose: "Too close for comfort"
+        case .landlocked(let animal): "No water for the \(animal.name)"
+        case .parched(let animal): "The \(animal.name) is sharing the water"
+        case .spotted: "Pig has no privacy"
         }
     }
 
     private func refusedDetail(_ refusal: Refusal) -> String {
         switch refusal {
         case .together(let animal):
-            "Both of them are held, but in the one pen. The \(animal.name) needs ground of its own."
+            "Both of them have a place, but it is the same place. The \(animal.name) wants its own."
         case .apart(let animal):
-            "Both of them are held, but in pens of their own. The \(animal.name) goes where the pig goes."
+            "Both of them have a place, but one each. The \(animal.name) goes where Pig goes."
         case .uneven(let animal):
-            "Both of them are held, but one pen is bigger than the other. The \(animal.name) wants ground to match the pig's."
+            "Both of them have a place, but one is bigger. The \(animal.name) wants ground to match Pig's."
         case .split(let animal):
-            "Everything is held, but the roost is in two pens. The \(animal.name) hangs where the other bat hangs."
+            "Everything is held, but the roost is split between two places. The \(animal.name) lives where the other bat lives."
         case .shutIn(let animal):
-            "The pig is held, and so is the \(animal.name). Leave that one on the outside."
+            "Pig has a place, and the \(animal.name) is on it. Leave that one outside the fence."
         case .beside(let animal):
-            "Both of them are held, but side by side. The pig has to go all the way round the \(animal.name), and it is her own ground that makes the ring — so she needs a clear path to run the whole way round, with nothing she cannot walk across breaking it."
+            "Both of them have a place, but side by side. Pig's ground has to go the whole way round the \(animal.name) — and it is ground she walks, so she needs a clear path the whole way round, with nothing she cannot cross breaking it."
         case .tooClose(let animal):
-            "Both of them are held, but one wall does for both pens — and a \(animal.name) stings straight through a fence. Leave clear ground between them."
+            "Both of them have a place, but one wall does for both — and a \(animal.name) stings straight through a fence. Leave clear ground between them."
         case .landlocked(let animal):
-            "Both of them are held, but the \(animal.name)'s pen never touches the water. He keeps a breathing hole, so his ground has to lie against it."
+            "Both of them have a place, but the \(animal.name)'s never touches the water. He keeps a breathing hole, so his ground has to lie against it."
         case .parched(let animal):
-            "Both of them are held, but no channel is wholly the \(animal.name)'s. Every bank of one channel has to be his own ground — half a wallow is nobody's."
+            "Both of them have a place, but no channel is wholly the \(animal.name)'s. Every bank of one channel has to be his own ground — half a wallow is nobody's."
         case .spotted(let animal):
-            "The pen is shut, but some of its ground stands where the \(animal.name) can see it. He looks along his row and his column, and only a fence breaks his line of sight — a wall of the pen's own, or one piece planted in his way."
+            "The pen is shut, but the \(animal.name) can see into it. He looks along his row and his column, and only a fence blocks the view — a wall of the pen's own, or one piece planted in his way."
         }
     }
 
@@ -559,18 +605,18 @@ struct PuzzleView: View {
 
     /// Who got out, which on a boss map may be one of the two rather than both.
     private func escapedHeadline(_ escapes: [Escape]) -> String {
-        guard escapes.count == 1 else { return "They both got out" }
-        return "The \(escapes[0].animal.kind.name) got out"
+        guard escapes.count == 1 else { return "They both walked out" }
+        return "The \(escapes[0].animal.kind.name) walked out"
     }
 
     private func escapedDetail(_ escapes: [Escape]) -> String {
         guard escapes.count == 1 else {
-            return "Both of them found a way to the edge of the map. Follow the trails and close the gaps."
+            return "Both of them found a gap and showed themselves out. Follow the trails and close them."
         }
         guard level.holdsAHerd else {
-            return "It found a way to the edge of the map. Follow its trail and close the gap."
+            return "It found a gap and showed itself out. Follow the trail and close it."
         }
-        return "It found a way to the edge of the map while the other stayed put — and both of them have to be held. Follow its trail and close the gap."
+        return "It found a gap and showed itself out while the other stayed put — and both of them need a place. Follow the trail and close it."
     }
 
     private func pennedDetail(tally: PenTally) -> String {

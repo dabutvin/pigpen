@@ -165,15 +165,19 @@ struct UniverseMapView: View {
         return progress.isForSale(index) || progress.state(of: index) == .playable
     }
 
-    /// A line under a world's name: how much of it is held, or what is keeping it shut. A
+    /// A line under a world's name: how much of it is sold, or what is keeping it shut. A
     /// world behind the wall says so over whatever its stars would — it is not locked for
     /// want of play, it is waiting on the full game.
+    ///
+    /// Sold rather than held. A world is nine lots to find somebody a home on, and the films
+    /// have called them that from the first one — so the count under the name counts the same
+    /// way the story does.
     private func subtitle(for index: Int) -> String {
         if progress.isForSale(index) { return "Unlock the full game" }
         switch progress.state(of: index) {
-        case .cleared: return "Every pen held"
+        case .cleared: return "Every lot sold"
         case .playable:
-            return progress.isCleared(index) ? "Every pen held" : "\(heldCount(index)) of \(worldCount(index)) held"
+            return progress.isCleared(index) ? "Every lot sold" : "\(heldCount(index)) of \(worldCount(index)) sold"
         case .comingSoon: return "Coming soon"
         case .locked: return "Locked"
         }
@@ -226,7 +230,7 @@ struct UniverseMapView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("The Universe")
                     .font(.system(size: 17, weight: .black, design: .rounded))
-                Text("\(clearedWorlds) of \(progress.count) worlds complete")
+                Text("\(clearedWorlds) of \(progress.count) worlds sold out")
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }
@@ -541,7 +545,7 @@ private struct WorldPlanet: View {
             standing = "unlock the full game to play it"
         } else {
             switch state {
-            case .cleared: standing = "held"
+            case .cleared: standing = "every lot sold"
             case .playable: standing = "open, \(subtitle)"
             case .comingSoon: standing = "coming soon"
             case .locked: standing = "locked"

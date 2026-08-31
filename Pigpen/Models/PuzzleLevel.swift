@@ -330,19 +330,29 @@ extension PuzzleLevel {
     /// The practice field the title screen walks a new player through. Water takes the
     /// north and west for free; six pieces close the other two sides and hold 11 tiles.
     /// It is not on the world map — it is only ever opened from Tutorial.
+    ///
+    /// An apple lies inside those 11 tiles and a skull just outside the corner the wall
+    /// turns, so the walkthrough's scripted pen shuts the one in and leaves the other out
+    /// without the player having to aim for either. That is the whole of the treats lesson,
+    /// and it is taught by the board rather than by a picture on the coach card: the pen the
+    /// script builds is worth 16 — 11 tiles of ground and the apple standing on one of them.
+    ///
+    /// The skull sits on the rim, where no pen may reach, so it can only ever be the example
+    /// of a treat left outside. That is deliberate for a practice field: the fork a treat
+    /// puts to a real pen is the meadow's lesson, not this one's.
     static let practicePen = authored(
         id: "practice-pen",
         name: "Practice Pen",
         fenceBudget: 6,
-        twoStarScore: 6,
-        threeStarScore: 10,
-        maximumScore: 11,
+        twoStarScore: 9,
+        threeStarScore: 15,
+        maximumScore: 16,
         map: """
             ~~~~~
             ~....
             ~.P..
-            ~....
-            ~....
+            ~..a.
+            ~...x
             .....
             """
     )

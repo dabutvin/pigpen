@@ -89,6 +89,13 @@ final class TutorialLesson {
         }
     }
 
+    /// Treats the coach is pricing up. The treats step is the one that has to say what an
+    /// apple and a skull are worth, so it puts the number on both where they lie; every
+    /// other step lets the board alone and prices a treat only once a pen has shut on it.
+    var pricedTiles: Set<GridPoint> {
+        step == .treats ? Set(game.level.treats.keys) : []
+    }
+
     var allowsBuilding: Bool { !buildableTiles.isEmpty }
 
     /// The Release button only lights once the pen is shut and the coach asks for it.

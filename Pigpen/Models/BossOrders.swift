@@ -34,44 +34,43 @@ extension PuzzleLevel {
 
         switch question {
         case .herd:
-            return "Hold the pig and the \(boss.name), both. One pen round the pair or a pen "
-                + "apiece — whichever holds more."
+            return "Fence in both Pig and the \(boss.name). One pen or two. Whatever makes "
+                + "the floor plan work."
         case .apart:
-            return "Hold the pig and the \(boss.name), both — in two pens, never one. The "
-                + "\(boss.name) shares its ground with nobody."
+            return "Fence in Pig and the \(boss.name) separately."
         case .exclude:
-            return "Hold the pig and leave the \(boss.name) outside. Only the pig's ground counts."
+            return "Fence in Pig. Keep the \(boss.name) out. Very, very out."
         case .together:
-            return "Hold the pig and the \(boss.name), both, in one pen — never two. The "
-                + "\(boss.name) goes where the pig goes."
+            return "Fence Pig and the \(boss.name) in together. Sometimes real estate is "
+                + "about compromise."
         case .even:
-            return "Hold the pig and the \(boss.name), both, in two pens — and neither pen "
-                + "bigger. The \(boss.name) wants ground to match."
+            return "Build Pig and the \(boss.name) two separate pens. They must be exactly "
+                + "the same size. Equal square footage. No exceptions."
         case .roost:
             // The flock is named for the one hanging at the top of it — the same animal the
             // rule itself is anchored on — rather than for whichever of them the map happens
             // to write down first, so moving the pup up a row does not rename the roost.
             let mother: Animal = otherAnimals.contains(.bat) ? .bat : boss
-            return "Both \(mother.name)s in one pen, the pig in another. A pup hangs where its "
-                + "mother does, and never beside a pig."
+            return "Pig gets his own pen. Both \(mother.name)s share the other. Pig was "
+                + "absolutely not accepting roommates."
         case .ring:
-            return "The \(boss.name) keeps the middle and will not be moved. Close the pig's "
-                + "ground the whole way round — a pen alongside is no ring."
+            return "Fence in Pig, the \(boss.name), and his ring. But don't let your fence "
+                + "touch the ring. Apparently it's in the lease."
         case .berth:
-            return "Hold the pig and the \(boss.name), both, and leave clear ground between "
-                + "them: a sting goes straight through a fence, so no wall may do for two."
+            return "Build Pig and the \(boss.name) separate pens. And don't let them share a "
+                + "fence. Adjoining properties were not approved."
         case .moat:
-            return "The \(boss.name) keeps his pool and will not leave it. Close the pig's "
-                + "ground the whole way round the pool — break, \(boss.name) and all."
+            return "Give the \(boss.name) its own pen. Then build Pig's around it. No shared "
+                + "fences."
         case .hole:
-            return "Hold the pig and the \(boss.name), both, in two pens — never one — and pen "
-                + "the \(boss.name) against the water: he keeps a breathing hole."
+            return "Build Pig and the \(boss.name) separate pens. The \(boss.name)'s pen "
+                + "must border the water."
         case .wallow:
-            return "Hold the pig and the \(boss.name), both, in two pens — never one — and give "
-                + "the \(boss.name) one whole channel: every bank of it is his."
+            return "Build Pig and the \(boss.name) separate pens. Fence the \(boss.name) in "
+                + "with one entire waterway."
         case .stoop:
-            return "Hold the pig out of the \(boss.name)'s eye. He sees along his row and his "
-                + "column, and only a fence breaks his line of sight."
+            return "Fence in Pig. Keep every tile of his pen out of the \(boss.name)'s line "
+                + "of sight. The homeowners association is watching."
         case .shore, .basin, .span, .gap, .corner, .constellation, .detour, .obstruction, .bare:
             // The game's own question, asked on new ground. There is nothing to say about it
             // that the ground does not say itself.
