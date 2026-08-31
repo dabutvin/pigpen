@@ -39,6 +39,15 @@ targets:
     scheme:
       testTargets:
         - PigpenTests
+      # Runs the app against the local StoreKit config rather than a real storefront, so a
+      # simulator can fetch the price and buy the full game without an App Store account or a
+      # sandbox tester. Only the scheme's run action reads it — an archive still talks to the
+      # real store — so this is a development convenience and not a shipping switch.
+      #
+      # The leading `../` is not a mistake. XcodeGen writes this into the scheme relative to
+      # the scheme's own folder, two levels down inside the generated project; naming the file
+      # plainly lands the reference inside Pigpen.xcodeproj, where the file is not.
+      storeKitConfiguration: ../Pigpen.storekit
     info:
       path: Pigpen/Resources/Info.plist
       properties:
