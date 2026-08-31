@@ -24,7 +24,14 @@ jobs:
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
       APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
       TEAM_ID: ${{ secrets.TEAM_ID }}
-      PROFILE_PREFIX: 'Pigpen CI '
+      # Its own prefix, so TestFlight's sweep never touches a release certificate.
+      # The certificate that signed a build sitting in App Review has to stay valid
+      # until Apple approves it — resubmission re-checks the signature, and a revoked
+      # certificate fails it (ITMS-90035, the hard way) — while CI keeps building
+      # main all week. Release certificates are retired only here, by the next
+      # release's sweep, by which time the one before it is approved. The one rule
+      # left: don't cut a new release while the previous one is still in review.
+      PROFILE_PREFIX: 'Pigpen Release '
 
     steps:
       - name: Checkout
@@ -68,7 +75,9 @@ jobs:
             echo "No stored certificate, so this build makes its own and retires it."
           fi
 
-      # See testflight.yml: the sweep runs before minting, not after uploading.
+      # See testflight.yml: the sweep runs before minting, not after uploading. This
+      # one retires only earlier *release* certificates — the previous release is
+      # approved by the time the next one builds, so its certificate has done its job.
       - name: Retire earlier builds' certificates
         if: steps.source.outputs.mode == 'per-build'
         run: Tools/bootstrap_signing.py cleanup --profile-prefix "$PROFILE_PREFIX" --include-orphans

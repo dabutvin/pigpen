@@ -75,7 +75,14 @@ jobs:
       # Sweeping at the start of the next build rather than the end of this one keeps
       # revocation well clear of App Store Connect still processing the upload, and
       # picks up anything a cancelled run left behind. One certificate sits idle
-      # between builds; the account never holds more than two.
+      # between builds; the account never holds more than two of ours.
+      #
+      # Only *CI* certificates, by prefix. A release build signs under
+      # 'Pigpen Release ' and its certificate must outlive every CI build that runs
+      # while the release sits in App Review — resubmission re-checks the signature,
+      # and a revoked certificate fails it. The release profile keeps that
+      # certificate out of the orphan sweep too, since an orphan is a certificate no
+      # profile at all points to.
       - name: Retire earlier builds' certificates
         if: steps.source.outputs.mode == 'per-build'
         run: Tools/bootstrap_signing.py cleanup --profile-prefix "$PROFILE_PREFIX" --include-orphans
