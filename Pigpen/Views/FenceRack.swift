@@ -34,8 +34,13 @@ struct FenceRack: View {
 
     /// What is left, big enough to read without looking for it, with what it was to start
     /// with underneath in small print.
+    ///
+    /// The two are centred on one another rather than sat on a shared baseline. Aligning the
+    /// baselines lines "LEFT" up with the foot of the big number and leaves "of 12" hanging
+    /// below it, so the small print reads as having sunk to the bottom of the board; centring
+    /// hangs the pair either side of the number's middle, which is where the eye expects them.
     private var count: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 5) {
+        HStack(alignment: .center, spacing: 5) {
             Text("\(left)")
                 .font(.system(size: 30, weight: .black, design: .rounded))
                 .monospacedDigit()

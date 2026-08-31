@@ -79,6 +79,16 @@ struct FieldView: View {
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
+    /// Turned up by one every time a press lands somewhere the coach did not ask for, which
+    /// shakes the highlighted tiles. A refused press is a question about where to tap, so the
+    /// answer is the thing that moves: the target says "here" rather than the budget saying
+    /// something is wrong with the budget. Unused during ordinary play.
+    var highlightShake: CGFloat = 0
+    /// Treats to price up where they lie, whatever the fencing is doing — the walkthrough
+    /// pointing at what an apple and a skull are worth before a pen has closed on either.
+    /// A treat shut into a pen states its price anyway, so this is only ever the tutorial
+    /// asking early. Empty during ordinary play.
+    var pricedTiles: Set<GridPoint> = []
     /// How this world dresses the windfall and the hazard: an apple and a skull in the meadow,
     /// a mushroom and a wilted flower in the woods. Only the glyph changes — a mushroom is scored,
     /// tapped and fenced exactly as an apple is, because it is one under the picture.
@@ -192,6 +202,7 @@ struct FieldView: View {
                     }
                 }
             }
+            .modifier(Shake(amount: highlightShake))
             .allowsHitTesting(false)
         }
     }
@@ -1647,6 +1658,10 @@ struct FieldView: View {
             // Shut in and counted. The tally under the board is taken from exactly this
             // ground, so a stamped tile and a counted tile are never two different things.
             let counted = penGlow > 0 && penTiles.contains(tile)
+            // A treat the wall has closed over steps back and lets its number do the
+            // talking; one the coach is merely pointing at has to still read as an apple,
+            // so it keeps its colour and wears the price above it instead.
+            let priced = counted || pricedTiles.contains(tile)
 
             var lying = context
             lying.opacity = counted ? 0.3 : 1
@@ -1667,9 +1682,49 @@ struct FieldView: View {
             )
             lying.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
 
-            guard counted else { continue }
-            stamp(treat.scoreSaid, in: &context, board: board, tile: tile)
+            guard priced else { continue }
+            if counted {
+                stamp(treat.scoreSaid, in: &context, board: board, tile: tile)
+            } else {
+                priceTag(treat.scoreSaid, in: &context, board: board, tile: tile)
+            }
         }
+    }
+
+    /// A treat's worth on a little tag above it, the way the coach card used to show one
+    /// before the practice pen had any ground to stake them in. Cream on the board's own
+    /// dark, so it reads as a label pinned to the tile rather than as part of the field.
+    private func priceTag(
+        _ said: String,
+        in context: inout GraphicsContext,
+        board: BoardGeometry,
+        tile: GridPoint
+    ) {
+        let rect = board.rect(for: tile)
+        let text = context.resolve(
+            Text(said)
+                .font(.system(size: board.cell * 0.3, weight: .heavy, design: .rounded))
+                .foregroundStyle(GamePalette.post)
+        )
+        let size = text.measure(in: rect.size)
+        let tag = CGRect(
+            x: rect.midX - size.width / 2 - board.cell * 0.1,
+            y: rect.minY + board.cell * 0.02,
+            width: size.width + board.cell * 0.2,
+            height: size.height + board.cell * 0.06
+        )
+
+        var pinned = context
+        pinned.addFilter(
+            .shadow(color: .black.opacity(0.35), radius: board.cell * 0.04, y: board.cell * 0.02)
+        )
+        pinned.fill(Path(roundedRect: tag, cornerRadius: tag.height / 2), with: .color(GamePalette.cream))
+        pinned.stroke(
+            Path(roundedRect: tag, cornerRadius: tag.height / 2),
+            with: .color(GamePalette.post.opacity(0.3)),
+            lineWidth: max(1, board.cell * 0.02)
+        )
+        pinned.draw(text, at: CGPoint(x: tag.midX, y: tag.midY))
     }
 
     /// What a treat inside the pen has added or taken away, written on the tile it is lying

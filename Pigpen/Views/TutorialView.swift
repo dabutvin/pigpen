@@ -13,6 +13,12 @@ struct TutorialView: View {
     @State private var pig = AnimalMark(kind: .pig, tile: PuzzleLevel.practicePen.pigStart, opacity: 1)
     @State private var celebration: Celebration?
     @State private var budgetShake: CGFloat = 0
+    /// Bumped when a press lands off the tiles the coach asked for, which shakes the
+    /// highlight rather than the rack.
+    @State private var targetShake: CGFloat = 0
+    /// Bumped when the board is pressed during a step that is only asking to be read, which
+    /// shakes Continue — the one thing there is to tap.
+    @State private var continueShake: CGFloat = 0
     @State private var refusedThisPress = false
 
     private var game: PuzzleGame { lesson.game }
@@ -37,19 +43,19 @@ struct TutorialView: View {
             MeadowBackdrop()
                 .ignoresSafeArea()
 
+            // The coach talks from the bottom of the screen, under the board rather than over
+            // it: what it is saying is always about the ground, and a card between the rack
+            // and the field puts the reading furthest from the thing being read. Down here it
+            // sits beside the thumb that has to act on it, and the board keeps the top of the
+            // screen to itself.
             VStack(spacing: 12) {
-                coachCard
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-
                 FenceRack(
                     used: game.fences.count,
                     budget: level.fenceBudget,
                     shake: budgetShake
                 )
                 .padding(.horizontal, 16)
-
-                Spacer(minLength: 0)
+                .padding(.top, 8)
 
                 FieldView(
                     level: level,
@@ -60,15 +66,21 @@ struct TutorialView: View {
                     animals: [pig],
                     celebration: celebration,
                     highlightedTiles: lesson.highlightedTiles,
+                    highlightShake: targetShake,
+                    pricedTiles: lesson.pricedTiles,
                     onStroke: { build($0) },
                     onStrokeEnd: { lesson.endStroke() }
                 )
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 .padding(.horizontal, 6)
 
+                // The only slack on the screen, and it is all below the board: the rack and
+                // the field are pinned to the top, so a coach card that runs to two lines on
+                // one step and one on the next grows downwards into this and never moves the
+                // ground the player is being asked to tap.
                 Spacer(minLength: 0)
 
-                controls
+                coachCard
                     .padding(.horizontal, 16)
             }
             .padding(.bottom, 12)
@@ -107,29 +119,10 @@ struct TutorialView: View {
                 .foregroundStyle(GamePalette.post.opacity(0.78))
                 .fixedSize(horizontal: false, vertical: true)
 
-            if lesson.step == .treats {
-                treatTags
-            }
-
-            if lesson.showsContinue {
-                Button {
-                    if lesson.step == .finished {
-                        Haptics.tap(.medium)
-                        reachedTheMeadow = true
-                        Analytics.record(.tutorialFinished)
-                        dismiss()
-                    } else if lesson.continueTapped() {
-                        Haptics.tap(.light)
-                    }
-                } label: {
-                    Text(lesson.step == .finished ? "Play" : "Continue")
-                        .font(.headline.weight(.bold))
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(GamePalette.rail)
+            actionButton
+                .frame(height: 38)
                 .padding(.top, 2)
-            }
+                .modifier(Shake(amount: continueShake))
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -142,57 +135,48 @@ struct TutorialView: View {
         .accessibilityElement(children: .combine)
     }
 
-    /// The bonus and the penalty side by side, each with its little price tag over the top —
-    /// shown on the card rather than staked in the practice pen, whose ground stays bare.
-    private var treatTags: some View {
-        HStack(spacing: 24) {
-            treatTile(glyph: "🍎", price: "+\(Treat.apple.worth)")
-            treatTile(glyph: "☠️", price: "\(Treat.skull.worth)")
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 2)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("An apple is worth \(Treat.apple.worth) points, a skull \(Treat.skull.worth).")
-    }
-
-    private func treatTile(glyph: String, price: String) -> some View {
-        VStack(spacing: 3) {
-            Text(price)
-                .font(.caption.weight(.heavy))
-                .foregroundStyle(GamePalette.post)
-                .padding(.horizontal, 7)
-                .padding(.vertical, 1)
-                .background(GamePalette.cream, in: Capsule())
-                .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.3), lineWidth: 1))
-
-            Text(glyph)
-                .font(.system(size: 26))
-                .frame(width: 44, height: 44)
-                .background(GamePalette.mud, in: RoundedRectangle(cornerRadius: 9))
-        }
-    }
-
-    // MARK: - Controls
-
+    /// The one button the walkthrough ever offers, in the one place it ever offers it.
+    ///
+    /// Every step's button used to be its own: Continue inside the card, releasing the pig in
+    /// a bar under the board, and nothing at all on the steps that only want a tap. Three
+    /// different buttons in two different places meant the card changed height and the board
+    /// moved under the player's thumb every time the lesson turned a page. So there is one
+    /// slot, it is always the same height, and what changes is only which button is standing
+    /// in it — or none, on the steps that are asking for something on the board instead.
     @ViewBuilder
-    private var controls: some View {
-        if lesson.step == .release || lesson.step == .finished {
+    private var actionButton: some View {
+        if lesson.showsContinue {
             Button {
-                lesson.releasePig()
+                if lesson.step == .finished {
+                    Haptics.tap(.medium)
+                    reachedTheMeadow = true
+                    Analytics.record(.tutorialFinished)
+                    dismiss()
+                } else if lesson.continueTapped() {
+                    Haptics.tap(.light)
+                }
             } label: {
-                Text(lesson.step == .finished ? "Penned in" : "Release the pig")
-                    .font(.headline.weight(.heavy))
+                Text(lesson.step == .finished ? "Play" : "Continue")
+                    .font(.headline.weight(.bold))
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .tint(GamePalette.rail)
-            .controlSize(.large)
+        } else if lesson.step == .release {
+            Button {
+                lesson.releasePig()
+            } label: {
+                Text("Release the pig")
+                    .font(.headline.weight(.bold))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(GamePalette.rail)
             .disabled(!lesson.allowsRelease)
-            .opacity(lesson.step == .finished ? 0 : 1)
         } else {
-            // Keeps the board's vertical place steady while the coach is talking, without
-            // offering undo or clear — the walkthrough only ever asks for posts to go down.
-            Color.clear.frame(height: 50)
+            // The steps that want a tap on the board rather than a button. The slot keeps its
+            // height so that wanting nothing here does not move the field.
+            Color.clear
         }
     }
 
@@ -208,17 +192,31 @@ struct TutorialView: View {
         guard stroke.mode == .building else { return }
 
         guard !game.fences.contains(stroke.tile) else { return }
+
+        // A press somewhere the coach did not ask for is a question about where to tap, so
+        // the tiles it did ask for are what answers it. Anything else the field turns down —
+        // which in the practice pen means the budget, since the script never asks for more
+        // pieces than it hands over — still shakes the rack, because that is what is wrong.
+        guard lesson.buildableTiles.contains(stroke.tile) else {
+            // Whatever the coach is asking for is what answers a press in the wrong place:
+            // the tiles it is pointing at while it wants fencing, and Continue while it only
+            // wants reading — which is the one thing on screen a press can usefully land on.
+            refuse { lesson.highlightedTiles.isEmpty ? (continueShake += 1) : (targetShake += 1) }
+            return
+        }
         guard lesson.buildFence(on: stroke.tile) else {
-            refuse()
+            refuse { budgetShake += 1 }
             return
         }
         Haptics.tap(.rigid)
     }
 
-    private func refuse() {
+    /// One refusal per press, whichever thing is doing the shaking: a drag that crosses six
+    /// tiles it may not fence is one wrong answer, not six.
+    private func refuse(_ shake: () -> Void) {
         guard !refusedThisPress else { return }
         refusedThisPress = true
-        withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
+        withAnimation(.easeInOut(duration: 0.4)) { shake() }
         Haptics.buzz(.warning)
     }
 
