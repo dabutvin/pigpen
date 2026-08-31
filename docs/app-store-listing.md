@@ -69,8 +69,14 @@ player deciding whether to update:
 
 For 1.1.0:
 
-> The story films and the tutorial have been rewritten, and the daily reminder now draws
-> from a hundred different lines — a fresh one each morning.
+> Pigpen's first update gives the words a polish:
+>
+> • The story films between worlds have been rewritten — the same tale, better told.
+> • The tutorial explains the game more clearly, so new players get penning faster.
+> • Your morning reminder now has a hundred different lines, and picks a fresh one
+>   every day.
+>
+> Happy penning! 🐷
 
 For 1.0.0:
 
