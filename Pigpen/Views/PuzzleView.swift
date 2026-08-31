@@ -640,24 +640,33 @@ struct PuzzleView: View {
         return "It found a gap and showed itself out while the other stayed put — and both of them need a place. Follow the trail and close it."
     }
 
+    /// What the pen came to, under the verdict.
+    ///
+    /// A pen that can still be bettered gets the whole account of itself: the ground, what it
+    /// cost, what was standing on it and how that came out — because every one of those is a
+    /// thing the next go could change. A pen there is nothing above gets one line, because
+    /// there is no next go to inform. The card already says "The best pen there is" over the
+    /// top of it; spending three more sentences on the arithmetic behind a verdict the player
+    /// has just been given is reading them the receipt for a thing they have already won.
     private func pennedDetail(tally: PenTally) -> String {
-        var detail = "\(counted(tally.area, "mud tile")) held with \(counted(game.fences.count, "fence piece"))"
-        if let spoils = spoils(in: tally) {
-            detail += ", and \(spoils) shut in with \(quarry) — \(counted(tally.score, "point"))."
+        var detail: String
+
+        if game.isPenAsGoodAsItGets {
+            detail = "The biggest lot on this map — \(scored(tally.score))."
         } else {
-            detail += "."
+            detail = "\(counted(tally.area, "mud tile")) held with \(counted(game.fences.count, "fence piece"))"
+            if let spoils = spoils(in: tally) {
+                detail += ", and \(spoils) shut in with \(quarry) — \(counted(tally.score, "point"))."
+            } else {
+                detail += "."
+            }
         }
 
         if let heldIn {
             detail += " \(Stopwatch.face(heldIn)) on the clock."
         }
 
-        if game.isPenAsGoodAsItGets {
-            return detail + (level.holdsTreats
-                ? " There is no better pen on this map."
-                : " Not one more tile can be shut in on this map.")
-        }
-        guard game.bestScore > tally.score else { return detail }
+        guard !game.isPenAsGoodAsItGets, game.bestScore > tally.score else { return detail }
         return detail + " Your best so far is \(game.bestScore)."
     }
 
