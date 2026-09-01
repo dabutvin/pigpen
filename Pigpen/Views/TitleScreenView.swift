@@ -8,8 +8,8 @@ import UIKit
 /// does it open the universe map. Under Play is the day's own board on a card of its own — what
 /// day it is, what that day asks, and once it has been held, the stars it gave up, the time it
 /// took and the run of days it is part of. Under that, the archive of every daily there has
-/// been, and the tutorial for anybody who wants the walkthrough before the meadow — which
-/// on a first run opens itself, so that a player meeting the game has been shown how to lay a
+/// been. The walkthrough is kept behind the gear for anybody who wants it back — and on a
+/// first run it opens itself, so that a player meeting the game has been shown how to lay a
 /// fence before they are asked to.
 @MainActor
 struct TitleScreenView: View {
@@ -194,10 +194,19 @@ struct TitleScreenView: View {
                 .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress, daily: daily, reminder: reminder, fullGame: fullGame)
-                .onAppear { Analytics.record(.settingsOpened) }
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
+            SettingsView(
+                progress: progress,
+                daily: daily,
+                reminder: reminder,
+                fullGame: fullGame,
+                onOpenTutorial: {
+                    showsSettings = false
+                    isTutorial = true
+                }
+            )
+            .onAppear { Analytics.record(.settingsOpened) }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $isOfferingReminders) {
             ReminderPromptView(
@@ -439,39 +448,39 @@ struct TitleScreenView: View {
     // MARK: - The name
 
     private var wordmark: some View {
-        VStack(spacing: 16) {
-            PlantedWord(word: "PIGPEN", size: 54, planted: planted)
+        VStack(spacing: 4) {
+            PlantedWord(word: "PIGPEN", size: 62, planted: planted)
 
             tagline
                 .opacity(arrived ? 1 : 0)
                 .scaleEffect(arrived ? 1 : 0.88)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Pigpen. Fence in the pig.")
+        .accessibilityLabel("Pigpen. Build the perfect pen.")
     }
 
-    /// A board nailed up under the name, lit from above like the buttons are, with a nail
-    /// head holding down each end of it.
+    /// A board hung under the name on two short ropes, lit from above like the buttons are,
+    /// with a peg at each end where the rope ties on.
     private var tagline: some View {
-        Text("Fence in the pig")
+        Text("Build the perfect pen")
             .font(.subheadline.weight(.heavy))
             .foregroundStyle(GamePalette.post)
-            .padding(.vertical, 9)
-            .padding(.horizontal, 26)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 28)
             .background(plank)
             .overlay(nailHeads)
+            .overlay(alignment: .top) { ropes }
             .shadow(color: .black.opacity(0.3), radius: 5, y: 4)
-            .rotationEffect(.degrees(-2))
     }
 
     private var plank: some View {
         RoundedRectangle(cornerRadius: 8, style: .continuous)
-            .fill(GamePalette.picket)
+            .fill(GamePalette.rail)
             .overlay {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [.white.opacity(0.42), .clear],
+                            colors: [.white.opacity(0.28), .clear],
                             startPoint: .top,
                             endPoint: .center
                         )
@@ -479,7 +488,7 @@ struct TitleScreenView: View {
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .strokeBorder(GamePalette.post.opacity(0.28), lineWidth: 1.5)
+                    .strokeBorder(GamePalette.post.opacity(0.35), lineWidth: 1.5)
             }
     }
 
@@ -489,24 +498,43 @@ struct TitleScreenView: View {
             Spacer(minLength: 0)
             nailHead
         }
-        .padding(.horizontal, 9)
+        .padding(.horizontal, 12)
     }
 
     private var nailHead: some View {
         Circle()
-            .fill(GamePalette.post.opacity(0.45))
+            .fill(GamePalette.post.opacity(0.6))
             .frame(width: 6, height: 6)
+    }
+
+    /// Two short strings coming off the top of the plank, so the sign reads as hanging rather
+    /// than as floating in the air on its own.
+    private var ropes: some View {
+        HStack(spacing: 0) {
+            rope
+            Spacer(minLength: 0)
+            rope
+        }
+        .padding(.horizontal, 15)
+        .frame(height: 18)
+        .offset(y: -14)
+    }
+
+    private var rope: some View {
+        Capsule()
+            .fill(GamePalette.post.opacity(0.55))
+            .frame(width: 2.5, height: 18)
     }
 
     // MARK: - The list of ways to play
 
     /// Every way off the title screen, painted on the one run of boards so they read as a
-    /// list rather than as four buttons the game happened to leave lying about: Play at the
-    /// head of it in gold, today's board under it, and the archive and the tutorial below
-    /// that. Each is the same plank with the same press in it; only the paint and what stands
-    /// on the right-hand end tell one from the next.
+    /// list rather than as three buttons the game happened to leave lying about: Play at the
+    /// head of it in cream, today's board under it in barn red, and the archive below that
+    /// back on cream. Each is the same plank with the same press in it; only the paint and
+    /// what stands on the right-hand end tell one from the next.
     private var playBlock: some View {
-        VStack(spacing: 9) {
+        VStack(spacing: 12) {
             Button {
                 Haptics.tap(.medium)
                 play()
@@ -514,16 +542,11 @@ struct TitleScreenView: View {
                 MenuRow(
                     icon: "play.fill",
                     title: "Play",
-                    detail: playDetail,
-                    tint: GamePalette.pen
-                ) {
-                    HStack(spacing: 8) {
-                        if completion.percent > 0 {
-                            CompletionBadge(completion: completion)
-                        }
-                        chevron
-                    }
-                }
+                    detail: "See where Pig goes next",
+                    tint: GamePalette.cream,
+                    trailing: { chevron },
+                    footer: { playStats }
+                )
             }
             .buttonStyle(MenuRowButtonStyle())
             .modifier(Breathing(active: !reduceMotion))
@@ -532,43 +555,108 @@ struct TitleScreenView: View {
             dailyRow
 
             destinationRow(
-                icon: "calendar",
+                icon: "archivebox.fill",
                 title: "Archive",
-                detail: "Every daily puzzle there has been",
+                detail: "See past puzzles",
                 hint: "Every daily puzzle there has been, a month at a time"
             ) {
                 isArchiveOpen = true
-            }
-
-            destinationRow(
-                icon: "hand.tap.fill",
-                title: "Tutorial",
-                detail: "Walk through how to fence in the pig",
-                hint: "Walk through how to fence in the pig"
-            ) {
-                isTutorial = true
             }
         }
         .opacity(arrived ? 1 : 0)
         .offset(y: arrived ? 0 : 26)
     }
 
-    /// What Play has to say for itself under its own name: the world it walks into while the
-    /// meadow is still being held, and the whole universe once it is.
-    private var playDetail: String {
-        progress.isTheWorldHeld
-            // Short enough to stand beside the badge on the narrowest phone the game runs on.
-            // Once the meadow is held the row carries "56% complete" as well, and between that,
-            // the token and the chevron the line is left about ninety points on a 375-point
-            // screen — so it is written to that width rather than shrunk down to it.
-            ? "Worlds to fence"
-            : "\(world.name) · \(world.count) puzzles"
+    /// The stars-and-completion line that sits inside the Play card, underneath its own
+    /// title. It only appears once the player has something to show for themselves — a first
+    /// run has nothing to say here and the card is left cleaner for it.
+    @ViewBuilder
+    private var playStats: some View {
+        if tally > 0 || completion.percent > 0 {
+            HStack(spacing: 6) {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(GamePalette.pen)
+                    .shadow(color: GamePalette.post.opacity(0.25), radius: 0.5, y: 0.5)
+
+                Text("\(tally) / \(starDenominator) stars")
+                    .font(.system(size: 13, weight: .heavy, design: .rounded))
+                    .foregroundStyle(GamePalette.post.opacity(0.72))
+                    .contentTransition(.numericText())
+
+                if completion.percent > 0 {
+                    Text("·")
+                        .font(.system(size: 13, weight: .heavy))
+                        .foregroundStyle(GamePalette.post.opacity(0.4))
+                        .padding(.horizontal, 2)
+
+                    completionText
+                }
+            }
+            .padding(.leading, 53)
+            .padding(.top, 2)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityHidden(true)
+        }
     }
 
-    /// Play read out in full, since the percent it wears sits in the row as a badge VoiceOver
-    /// would otherwise read as a bare number.
+    /// The percent-complete line inside Play's stats row: plain text on cream when the game
+    /// is still going, and a rainbow wash the moment there is nothing left to take — the same
+    /// mark the finished badge used to wear, kept for the one player who has finished
+    /// everything.
+    @ViewBuilder
+    private var completionText: some View {
+        let text = Text("\(completion.percent)% complete")
+            .font(.system(size: 13, weight: .heavy, design: .rounded))
+            .monospacedDigit()
+            .contentTransition(.numericText())
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
+
+        if completion.isEverything {
+            text
+                .foregroundStyle(GamePalette.post)
+                .padding(.vertical, 2)
+                .padding(.horizontal, 8)
+                .background {
+                    Capsule()
+                        .fill(.white.opacity(0.5))
+                        .overlay {
+                            RainbowWash()
+                                .mask { Capsule() }
+                                .opacity(0.8)
+                        }
+                }
+                .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1))
+        } else {
+            text.foregroundStyle(GamePalette.post.opacity(0.72))
+        }
+    }
+
+    /// How many stars there are to take in the ground the Play button opens: this world's
+    /// count while the meadow is still being held, and every world's once Play widens to the
+    /// universe map. Matches whatever `tally` is counting up towards.
+    private var starDenominator: Int {
+        progress.isTheWorldHeld ? Universe.all.starTotal : world.starTotal
+    }
+
+    /// Where Play walks into, said in a whole sentence for VoiceOver: this world by name while
+    /// the meadow is still being held, and the universe map once it is. The row itself carries
+    /// only "See where Pig goes next" now, which is fine on screen and no help spoken.
+    private var playWhereItGoes: String {
+        progress.isTheWorldHeld
+            ? "The universe map — every world there is."
+            : "\(world.name), \(world.count) puzzles."
+    }
+
+    /// Play read out in full: the row's own title, where it is going, and — from the stats line
+    /// beneath — how many stars have been taken and how much of the game that is, since those
+    /// sit inside the card as small print VoiceOver would otherwise read as bare numbers.
     private var playSpoken: String {
-        var said = "Play. \(playDetail)."
+        var said = "Play. \(playWhereItGoes)"
+        if tally > 0 {
+            said += " \(tally) of \(starDenominator) stars taken."
+        }
         guard completion.percent > 0 else { return said }
         said += " \(completion.percent) per cent of the game held."
         if completion.isEverything {
@@ -596,10 +684,11 @@ struct TitleScreenView: View {
             .foregroundStyle(GamePalette.post.opacity(0.4))
     }
 
-    /// Today's board, made to sit in the list as one more row: the day itself along the top,
-    /// how the day has gone underneath, and — once it has been held — the stars it gave up
-    /// where the other rows keep their chevron. A day the almanac has nothing for is greyed
-    /// down rather than left off, so the list never changes height under a finger.
+    /// Today's board, made to sit in the list as one more row on its own paint: the day named
+    /// along the top, the date underneath, and on the right-hand end a badge that reads NEW!
+    /// while the board is still to be pressed, and the stars it gave up once it has been.
+    /// A day the almanac has nothing for is greyed down rather than left off, so the list
+    /// never changes height under a finger.
     private var dailyRow: some View {
         let stars = daily.stars(on: today)
         let streak = daily.streak(upTo: today)
@@ -609,27 +698,73 @@ struct TitleScreenView: View {
         } label: {
             MenuRow(
                 icon: dailyIcon(stars: stars),
-                title: hasADailyPuzzle ? today.title : "No puzzle today",
+                title: hasADailyPuzzle ? "Today's puzzle" : "No puzzle today",
                 detail: dailyDetail(stars: stars, streak: streak),
-                tint: GamePalette.cream,
-                dimmed: !hasADailyPuzzle
-            ) {
-                if stars > 0 {
-                    StarRow(stars: stars, size: 12, hasTheBestPen: daily.hasTheBestPen(on: today))
-                } else if hasADailyPuzzle {
-                    chevron
-                }
-            }
+                tint: GamePalette.barn,
+                titleColor: GamePalette.cream,
+                detailColor: GamePalette.cream.opacity(0.85),
+                iconColor: GamePalette.barn,
+                dimmed: !hasADailyPuzzle,
+                trailing: {
+                    if stars > 0 {
+                        StarRow(stars: stars, size: 12, hasTheBestPen: daily.hasTheBestPen(on: today))
+                    } else if hasADailyPuzzle && streak > 0 {
+                        streakBadge(streak)
+                    } else if hasADailyPuzzle {
+                        newBadge
+                    } else {
+                        chevron
+                    }
+                },
+                footer: { EmptyView() }
+            )
         }
         .buttonStyle(MenuRowButtonStyle())
         .disabled(!hasADailyPuzzle)
         .accessibilityLabel(dailySpoken(stars: stars, streak: streak))
     }
 
-    /// The seal for a day that has been held, the sun for one still waiting — the same two
-    /// marks the card carried before the board became a row.
+    /// The gold pill that marks today's board as unpressed. Pen-yellow on the barn-red row so
+    /// it reads as the row's one call to attention, the way Play does at the top of the list.
+    /// It only shows to somebody with no run of days going: a player mid-streak sees the
+    /// streak instead — the thing they would rather not lose than the news that the board is
+    /// fresh.
+    private var newBadge: some View {
+        Text("NEW!")
+            .font(.system(size: 12, weight: .black, design: .rounded))
+            .foregroundStyle(GamePalette.post)
+            .padding(.vertical, 5)
+            .padding(.horizontal, 12)
+            .background(Capsule().fill(GamePalette.pen))
+            .overlay(Capsule().strokeBorder(.white.opacity(0.55), lineWidth: 1))
+            .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+    }
+
+    /// The run-of-days pill that replaces NEW for a player who already has a streak going: a
+    /// flame beside the count, cut from the same gold-and-cream cloth as the NEW pill so the
+    /// two read as one badge in two moods. The archive header shows the same mark, so a
+    /// player who knows it there knows it here.
+    private func streakBadge(_ count: Int) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 11, weight: .black))
+            Text("\(count)")
+                .font(.system(size: 13, weight: .black, design: .rounded))
+                .monospacedDigit()
+                .contentTransition(.numericText())
+        }
+        .foregroundStyle(GamePalette.post)
+        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .background(Capsule().fill(GamePalette.pen))
+        .overlay(Capsule().strokeBorder(.white.opacity(0.55), lineWidth: 1))
+        .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+        .accessibilityLabel("\(count) day\(count == 1 ? "" : "s") in a row")
+    }
+
+    /// The seal for a day that has been held, and a calendar leaf for one still waiting.
     private func dailyIcon(stars: Int) -> String {
-        stars > 0 ? "checkmark.seal.fill" : "sun.max.fill"
+        stars > 0 ? "checkmark.seal.fill" : "calendar"
     }
 
     /// The daily read out in full, since its stars sit in the row as a picture VoiceOver
@@ -653,9 +788,9 @@ struct TitleScreenView: View {
         return said
     }
 
-    /// What the day has to say for itself under its own name: nothing if the book is empty,
-    /// the run of days once it is going, the best time once it has been held, or simply that
-    /// it is today's and waiting.
+    /// What sits under *Today's puzzle*: the date itself on a fresh day, and once it has been
+    /// held whichever of the run of days or the best time is worth saying — the row's title is
+    /// the standing headline now and the date has moved down here.
     private func dailyDetail(stars: Int, streak: Int) -> String {
         guard hasADailyPuzzle else { return "Update Pigpen to get more daily puzzles" }
         if stars > 0 {
@@ -665,7 +800,7 @@ struct TitleScreenView: View {
             }
             return "Penned — play it again"
         }
-        return streak > 1 ? "Today's puzzle · \(streak) days in a row" : "Today's puzzle"
+        return today.title
     }
 
     /// Opens a day's board, or — once a wall has been submitted — offers to put that wall
@@ -684,8 +819,8 @@ struct TitleScreenView: View {
         }
     }
 
-    /// A row that simply pushes another screen: the archive and the tutorial, cut from the
-    /// same board as Play so the list stays one thing.
+    /// A row that simply pushes another screen — the archive — cut from the same board as
+    /// Play so the list stays one thing.
     private func destinationRow(
         icon: String,
         title: String,
@@ -697,9 +832,14 @@ struct TitleScreenView: View {
             Haptics.tap(.light)
             action()
         } label: {
-            MenuRow(icon: icon, title: title, detail: detail, tint: GamePalette.cream) {
-                chevron
-            }
+            MenuRow(
+                icon: icon,
+                title: title,
+                detail: detail,
+                tint: GamePalette.cream,
+                trailing: { chevron },
+                footer: { EmptyView() }
+            )
         }
         .buttonStyle(MenuRowButtonStyle())
         .accessibilityHint(hint)
@@ -778,22 +918,37 @@ private struct PlantedWord: View {
     }
 
     private func lettering(_ letter: Character) -> some View {
-        ZStack {
-            // A dark copy behind the letter gives it its cut-out edge.
+        let stroke = size * 0.055
+        return ZStack {
+            // The cream outline: the same letter set eight times around the fill so the
+            // stroke is even on every side. Text does not stroke on its own; this stack of
+            // offsets is what makes the outline read as one.
+            ForEach(0..<Self.strokeOffsets.count, id: \.self) { index in
+                let offset = Self.strokeOffsets[index]
+                glyph(letter)
+                    .foregroundStyle(GamePalette.cream)
+                    .offset(x: offset.x * stroke, y: offset.y * stroke)
+            }
+
+            // A small dark shadow underneath so the letter still reads as sitting on the
+            // sky rather than floating over it.
             glyph(letter)
-                .foregroundStyle(GamePalette.post)
-                .offset(y: 4)
+                .foregroundStyle(GamePalette.post.opacity(0.35))
+                .offset(y: stroke * 0.6)
 
             glyph(letter)
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [GamePalette.cream, GamePalette.pen],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
+                .foregroundStyle(GamePalette.barn)
         }
     }
+
+    /// Eight directions around the compass, so the cream outline lies at the same thickness
+    /// whichever way the glyph runs.
+    private static let strokeOffsets: [CGPoint] = [
+        CGPoint(x: 1, y: 0), CGPoint(x: -1, y: 0),
+        CGPoint(x: 0, y: 1), CGPoint(x: 0, y: -1),
+        CGPoint(x: 0.7, y: 0.7), CGPoint(x: -0.7, y: 0.7),
+        CGPoint(x: 0.7, y: -0.7), CGPoint(x: -0.7, y: -0.7)
+    ]
 
     private func glyph(_ letter: Character) -> Text {
         Text(String(letter))
@@ -833,93 +988,73 @@ private enum PlayDestination: Hashable {
     case universe
 }
 
-/// How much of the whole game is in, worn on the right-hand end of Play the way the daily wears
-/// its stars — every world, every level, every star and every rainbow, in one number, and the
-/// word for what that number counts so it is not left to be guessed at.
-///
-/// It goes rainbow at a hundred, and only there. Three stars on every level in the game stops at
-/// 75, so the badge sitting gold at 99 is the game saying there is a map somewhere still holding
-/// its best pen back — which is the whole reason the number is on the button rather than buried
-/// in the settings sheet.
-private struct CompletionBadge: View {
-    let completion: GameCompletion
-
-    var body: some View {
-        Text("\(completion.percent)% complete")
-            .font(.system(size: 13, weight: .black, design: .rounded))
-            .monospacedDigit()
-            .contentTransition(.numericText())
-            // The badge says its piece whole or not at all: a capsule broken over two lines, or
-            // clipped to "56% comp…", is worse than the row's own text scaling down to make room.
-            .lineLimit(1)
-            .fixedSize(horizontal: true, vertical: false)
-            .foregroundStyle(GamePalette.post)
-            .padding(.vertical, 4)
-            .padding(.horizontal, 9)
-            .background {
-                Capsule()
-                    .fill(.white.opacity(0.45))
-                    .overlay {
-                        if completion.isEverything {
-                            RainbowWash()
-                                .mask { Capsule() }
-                                .opacity(0.8)
-                        }
-                    }
-            }
-            .overlay(Capsule().strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1))
-            .accessibilityHidden(true)
-    }
-}
-
 /// One board on the title screen's list of ways to play: a round token on the left with the
 /// row's mark in it, the row's name and a line under it, and whatever the row keeps on its
 /// right-hand end — a chevron for the ones that only open a screen, the day's stars for the
 /// daily.
 ///
 /// Every row is the same plank, lit from the top the way the fence rack and the signposts
-/// are, so Play, today's board, the archive and the tutorial read as one list rather than as
-/// four unlike buttons. The paint is the only thing that sets the head of the list apart:
-/// Play stands in gold, the rest on cream.
-private struct MenuRow<Trailing: View>: View {
+/// are, so Play, today's board and the archive read as one list rather than as three unlike
+/// buttons. The paint is the only thing that sets the head of the list apart: today's board
+/// stands in barn red, the rest on cream.
+private struct MenuRow<Trailing: View, Footer: View>: View {
     let icon: String
     let title: String
     let detail: String
-    /// The paint on the board. Gold marks the row the screen most wants pressed.
+    /// The paint on the board. Barn red marks today's board so it stands out among the cream
+    /// rows either side of it.
     var tint: Color
+    /// The colour the title reads in — cream on a barn-red row, post-brown on a cream one.
+    var titleColor: Color = GamePalette.post
+    /// The colour the line under it reads in. Left as nothing so the row picks the natural
+    /// dim of its own title colour, and any caller who needs to override it can.
+    var detailColor: Color? = nil
+    /// The paint on the round token, so the mark reads as the tint of the plank rather than
+    /// the pen-gold every other icon carries. Only barn-red rows override this so the seal
+    /// on the token reads as belonging to the row's own paint.
+    var iconColor: Color = GamePalette.post
     /// A row with nothing behind it — a day the almanac skips — is greyed down rather than
     /// dropped, so the list never changes height under a finger.
     var dimmed = false
     @ViewBuilder var trailing: () -> Trailing
+    /// A second line inside the plank, sitting under the title/detail block. Play uses it for
+    /// its stars and its per-cent-complete; everything else leaves it empty.
+    @ViewBuilder var footer: () -> Footer
 
     var body: some View {
-        HStack(spacing: 13) {
-            token
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 13) {
+                token
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 18, weight: .heavy, design: .rounded))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 18, weight: .heavy, design: .rounded))
+                        .foregroundStyle(titleColor)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
 
-                Text(detail)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(GamePalette.post.opacity(0.62))
-                    .lineLimit(1)
-                    // Lower than the title's floor, because this is the line that runs long and
-                    // the one a badge crowds. A sentence a size or two down still reads; one cut
-                    // off mid-word does not, and there is no width at which cutting is the
-                    // better of the two.
-                    .minimumScaleFactor(0.6)
+                    Text(detail)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(detailColor ?? titleColor.opacity(0.62))
+                        .lineLimit(1)
+                        // Lower than the title's floor, because this is the line that runs long
+                        // and the one a badge crowds. A sentence a size or two down still reads;
+                        // one cut off mid-word does not, and there is no width at which cutting
+                        // is the better of the two.
+                        .minimumScaleFactor(0.6)
+                }
+                // The words take the slack themselves rather than leaving it to a Spacer. A
+                // Spacer here is every bit as hungry as the text beside it, so the two split
+                // what is going and the line came out clipped to "A universe of wo…" with the
+                // gap it wanted still sitting empty to its right. Widening the column instead
+                // hands that gap to the words, and only what they cannot use goes to holding
+                // the trailing end out.
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                trailing()
             }
-            // The words take the slack themselves rather than leaving it to a Spacer. A Spacer
-            // here is every bit as hungry as the text beside it, so the two split what is going
-            // and the line came out clipped to "A universe of wo…" with the gap it wanted still
-            // sitting empty to its right. Widening the column instead hands that gap to the
-            // words, and only what they cannot use goes to holding the trailing end out.
-            .frame(maxWidth: .infinity, alignment: .leading)
 
-            trailing()
+            footer()
         }
         .foregroundStyle(GamePalette.post)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -935,10 +1070,11 @@ private struct MenuRow<Trailing: View>: View {
     private var token: some View {
         Image(systemName: icon)
             .font(.system(size: 16, weight: .black))
+            .foregroundStyle(iconColor)
             .frame(width: 40, height: 40)
             .background {
                 Circle()
-                    .fill(.white.opacity(0.4))
+                    .fill(GamePalette.cream)
                     .overlay(Circle().strokeBorder(GamePalette.post.opacity(0.18), lineWidth: 1))
             }
     }
