@@ -30,8 +30,10 @@ struct ReminderPromptView: View {
 
     var body: some View {
         ZStack {
+            // A cream page rather than timber, the same as the other sheets, with the card
+            // separated from it by its own dark shadow.
             LinearGradient(
-                colors: [GamePalette.rail, GamePalette.post],
+                colors: [GamePalette.mudLit, GamePalette.mud],
                 startPoint: .top,
                 endPoint: .bottom
             )
