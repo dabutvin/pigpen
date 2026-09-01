@@ -61,8 +61,8 @@ struct FenceRack: View {
         .animation(.easeInOut(duration: 0.2), value: left)
     }
 
-    /// One picket for every piece the level allows: pale timber for the ones still in hand,
-    /// and the dark socket it came out of for every one already in the ground.
+    /// One picket for every piece the level allows: timber for the ones still in hand,
+    /// and the pale socket it came out of for every one already in the ground.
     ///
     /// The pieces stand shoulder to shoulder from the left rather than spreading out to fill
     /// the rack, so six of them read as six pieces of fencing and not as a wide gappy comb —
@@ -88,7 +88,7 @@ struct FenceRack: View {
                 let timber = picket(in: stall)
                 context.fill(
                     timber,
-                    with: .color(inHand ? GamePalette.picket : GamePalette.post.opacity(0.17))
+                    with: .color(inHand ? GamePalette.picket : GamePalette.mudShade)
                 )
                 guard inHand else { continue }
                 // The lit side of the timber, the side the sun is on everywhere else.
