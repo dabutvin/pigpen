@@ -7,6 +7,9 @@ import UIKit
 struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Only for the words painted straight onto the grass: the meadow is pale by day and
+    /// dark after dusk, so what is written on it swaps between ink and cream to stay read.
+    @Environment(\.colorScheme) private var colorScheme
 
     /// Told what a pen was worth — its stars, whether it was the best pen the map has in
     /// it, how long it took, and the fencing that held it — every time one holds.
@@ -253,11 +256,10 @@ struct PuzzleView: View {
 
     /// Undo, redo and clear, tucked under the right-hand corner of the board.
     ///
-    /// No plaques: three cream glyphs painted straight onto the grass, the way the tally
-    /// beneath them is, so that the only thing on this screen wearing a button's clothes is
-    /// the button that ends the turn. Cream on pasture rather than the fencing's dark brown,
-    /// because a dark glyph laid on grass reads as a mark in the grass — and each keeps a
-    /// finger's worth of room around it whatever the glyph inside is doing.
+    /// No plaques: three glyphs painted straight onto the grass, the way the tally beneath
+    /// them is, so that the only thing on this screen wearing a button's clothes is the
+    /// button that ends the turn — and each keeps a finger's worth of room around it
+    /// whatever the glyph inside is doing.
     ///
     /// They fade rather than vanish when the verdict is up: the card below covers what they
     /// act on, and a row that came and went would move the board it is pinned to.
@@ -309,9 +311,9 @@ struct PuzzleView: View {
             } label: {
                 Text("Release \(quarry)")
                     .font(.headline.weight(.heavy))
-                    // Dark lettering, because the face under it is the pen's own gold rather
-                    // than the fencing's brown, and white on gold is not a thing to read.
-                    .foregroundStyle(GamePalette.post)
+                    // Cream lettering, because the face under it is the chrome's own
+                    // terracotta rather than the pen's gold.
+                    .foregroundStyle(GamePalette.cream)
                     // Two animals make for a longer button than one; it shrinks its
                     // lettering rather than growing a second line and moving the board.
                     .lineLimit(1)
@@ -321,7 +323,7 @@ struct PuzzleView: View {
             // The same painted button the offer buys the game with: it stands on a ledge of
             // its own shadow and sinks onto it when pressed. This is the one press on the
             // screen that ends a go, so it is the one that is worth hitting.
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
             // Live on an empty field too. Opening the gate with nothing in the ground is a
             // legal go — the pig walks straight off the map and the verdict says so — and a
             // button greyed out until some unstated amount of work is done says less about
@@ -413,9 +415,17 @@ struct PuzzleView: View {
             HStack(spacing: 10) {
                 Text(tallySummary)
                     .font(.footnote.weight(.heavy))
-                    // Written straight onto the grass, so it is painted rather than printed.
-                    .foregroundStyle(GamePalette.cream)
-                    .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
+                    // Written straight onto the grass, so it is painted rather than
+                    // printed — in ink on the pale daytime meadow, in cream with a shadow
+                    // once the ground has gone dark.
+                    .foregroundStyle(
+                        colorScheme == .dark ? GamePalette.cream : GamePalette.post
+                    )
+                    .shadow(
+                        color: .black.opacity(colorScheme == .dark ? 0.45 : 0),
+                        radius: 3,
+                        y: 1
+                    )
                     .contentTransition(.numericText())
                     // Sits on one line beside the button rather than pushing it off the
                     // screen when the type is large.
@@ -454,7 +464,7 @@ struct PuzzleView: View {
             : "Holding \(holding), best \(game.bestScore)"
     }
 
-    /// One of the small painted boards that work the fencing already down. A button with
+    /// One of the small painted glyphs that work the fencing already down. A button with
     /// nothing to do fades rather than vanishing, so the three of them never move about.
     private func fieldIcon(
         _ title: String,
@@ -469,17 +479,16 @@ struct PuzzleView: View {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
                 .font(.system(size: 17, weight: .heavy))
-                // Cream with the light behind it, which is what everything else painted
-                // straight onto the grass does. Against pasture that is the whole contrast:
-                // a near-white glyph on a mid green, with a shadow under it for the places
-                // the grass runs light.
-                .foregroundStyle(GamePalette.cream)
-                // Two shadows rather than one: a tight dark halo that darkens the grass
-                // immediately under the strokes, and a softer one below it for the lift. The
-                // single soft shadow measured 3.1:1 against pasture, which only just clears
-                // what a glyph needs; the halo is what carries it clear of the green.
-                .shadow(color: .black.opacity(0.8), radius: 2)
-                .shadow(color: .black.opacity(0.5), radius: 6, y: 2)
+                // Painted straight onto the grass, the way the tally below is: ink on the
+                // pale daytime meadow, and cream with a dark halo once the ground has gone
+                // dark — the halo is what carries a light glyph clear of a dark green.
+                .foregroundStyle(colorScheme == .dark ? GamePalette.cream : GamePalette.post)
+                .shadow(color: .black.opacity(colorScheme == .dark ? 0.8 : 0), radius: 2)
+                .shadow(
+                    color: .black.opacity(colorScheme == .dark ? 0.5 : 0),
+                    radius: 6,
+                    y: 2
+                )
                 .opacity(enabled ? 1 : 0.35)
                 // One box for all three, so a wider glyph does not make a wider button — and
                 // wider than the glyph needs, so a thumb has something to land on without

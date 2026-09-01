@@ -150,18 +150,19 @@ struct FieldSkin: Sendable {
 }
 
 extension FieldSkin {
-    /// The meadow's board, exactly as the game has always drawn it: mud with stones turned up
-    /// in it, blue water with the light breaking on it, and pale timber fencing.
+    /// The meadow's board, repainted the way a storybook draws a field: pale parchment
+    /// ground with stones turned up in it, a soft wash of blue water with white light
+    /// breaking on it, and timber fencing left the strongest colour on the map.
     static let meadow = Self(
-        ground: Color(red: 0.64, green: 0.49, blue: 0.36),
-        groundLit: Color(red: 0.71, green: 0.56, blue: 0.42),
-        groundShade: Color(red: 0.55, green: 0.41, blue: 0.29),
-        grit: Color(red: 0.44, green: 0.32, blue: 0.22),
+        ground: Color(red: 0.93, green: 0.88, blue: 0.77),
+        groundLit: Color(red: 0.96, green: 0.92, blue: 0.83),
+        groundShade: Color(red: 0.86, green: 0.80, blue: 0.68),
+        grit: Color(red: 0.72, green: 0.63, blue: 0.50),
         grain: .stones,
-        water: Color(red: 0.24, green: 0.55, blue: 0.76),
-        waterDeep: Color(red: 0.16, green: 0.42, blue: 0.64),
-        waterLight: Color(red: 0.76, green: 0.90, blue: 0.98),
-        shore: Color(red: 0.82, green: 0.72, blue: 0.54),
+        water: Color(red: 0.62, green: 0.80, blue: 0.92),
+        waterDeep: Color(red: 0.50, green: 0.71, blue: 0.88),
+        waterLight: Color(red: 0.97, green: 0.99, blue: 1.00),
+        shore: Color(red: 0.91, green: 0.88, blue: 0.80),
         surface: .ripples,
         post: Color(red: 0.27, green: 0.17, blue: 0.10),
         rail: Color(red: 0.62, green: 0.42, blue: 0.24),

@@ -1666,11 +1666,8 @@ struct FieldView: View {
             var lying = context
             lying.opacity = counted ? 0.3 : 1
 
-            lying.fill(
-                Path(ellipseIn: rect.insetBy(dx: board.cell * 0.15, dy: board.cell * 0.15)),
-                with: .color(.white.opacity(0.2))
-            )
-            // A shadow on the ground under it, so it lies on the mud rather than in it.
+            // A shadow on the ground under it, so it lies on the mud rather than in it —
+            // and nothing else: the treat sits straight on the ground, no plate under it.
             lying.fill(
                 Path(ellipseIn: CGRect(
                     x: rect.minX + board.cell * 0.24,

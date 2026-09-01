@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// The colours of the game. Mud is warm and dull so the water and the finished pen can be
-/// the two things that catch the eye.
+/// The colours of the game, mixed the way a storybook watercolour is: the ground pale and
+/// papery, the water a soft wash of blue, so the fencing and the finished pen can be the
+/// two things that catch the eye.
 ///
 /// The board in the middle of the screen no longer draws itself out of these: a world hands
 /// it a `FieldSkin` and the ground, the water and the fencing come out of that, so the
@@ -11,18 +12,18 @@ import SwiftUI
 /// colours that belong to no world at all: the pen's gold, the cream of a painted board, barn
 /// red for bad news and clover for good.
 enum GamePalette {
-    static let mud = Color(red: 0.64, green: 0.49, blue: 0.36)
-    /// The same mud with the light full on it and with the light off it, so the field can
+    static let mud = Color(red: 0.93, green: 0.88, blue: 0.77)
+    /// The same ground with the light full on it and with the light off it, so the field can
     /// be lit from above the way every other drawn thing in the game is.
-    static let mudLit = Color(red: 0.71, green: 0.56, blue: 0.42)
-    static let mudShade = Color(red: 0.55, green: 0.41, blue: 0.29)
-    static let mudSpeckle = Color(red: 0.44, green: 0.32, blue: 0.22)
-    static let water = Color(red: 0.24, green: 0.55, blue: 0.76)
+    static let mudLit = Color(red: 0.96, green: 0.92, blue: 0.83)
+    static let mudShade = Color(red: 0.86, green: 0.80, blue: 0.68)
+    static let mudSpeckle = Color(red: 0.72, green: 0.63, blue: 0.50)
+    static let water = Color(red: 0.62, green: 0.80, blue: 0.92)
     /// Out in the middle of a lake, where the bottom of it is further down.
-    static let waterDeep = Color(red: 0.16, green: 0.42, blue: 0.64)
-    static let waterRipple = Color(red: 0.76, green: 0.90, blue: 0.98)
+    static let waterDeep = Color(red: 0.50, green: 0.71, blue: 0.88)
+    static let waterRipple = Color(red: 0.97, green: 0.99, blue: 1.00)
     /// Wet silt along a bank, where the water gives out and the mud starts.
-    static let shore = Color(red: 0.82, green: 0.72, blue: 0.54)
+    static let shore = Color(red: 0.91, green: 0.88, blue: 0.80)
     static let pen = Color(red: 0.98, green: 0.78, blue: 0.33)
     /// The wash for a pen with nothing left to beat: the whole colour wheel laid across it,
     /// starting `phase` turns round from red. Turning the phase over time is what makes the
@@ -47,6 +48,12 @@ enum GamePalette {
     /// The barn at the bottom of the world map, and the only red in the game. It doubles as
     /// the colour of bad news on a painted board: a pig out on the loose, a budget spent.
     static let barn = Color(red: 0.70, green: 0.27, blue: 0.22)
+    /// The terracotta the game's chrome is glazed in: the bar over a board, and the one
+    /// button on a field that ends a go. Warmer than the barn's red, because it is paint on
+    /// woodwork rather than a verdict.
+    static let clay = Color(red: 0.81, green: 0.45, blue: 0.34)
+    /// The same glaze with the light off it, for the underside of whatever wears it.
+    static let clayShade = Color(red: 0.71, green: 0.36, blue: 0.27)
     /// Good news on a painted board: a pen that held, dark enough to read against cream.
     static let clover = Color(red: 0.17, green: 0.43, blue: 0.22)
     /// A signpost for a level that is still shut: weathered, unpainted, and dull on purpose.
@@ -113,18 +120,21 @@ enum GamePalette {
 }
 
 extension GamePalette.Pasture {
+    /// The meadow by day, washed the way a storybook paints one: a hazed sky, sage hills,
+    /// and grass more grey-green than green, so the board and its fencing are the strongest
+    /// colours on the screen.
     static let day = Self(
-        skyTop: Color(red: 0.36, green: 0.66, blue: 0.92),
-        skyHorizon: Color(red: 0.94, green: 0.94, blue: 0.83),
-        disc: Color(red: 1.00, green: 0.91, blue: 0.55),
-        discHalo: Color(red: 1.00, green: 0.94, blue: 0.66),
+        skyTop: Color(red: 0.71, green: 0.81, blue: 0.85),
+        skyHorizon: Color(red: 0.94, green: 0.93, blue: 0.86),
+        disc: Color(red: 1.00, green: 0.93, blue: 0.68),
+        discHalo: Color(red: 1.00, green: 0.95, blue: 0.78),
         cloud: .white,
-        farHill: Color(red: 0.60, green: 0.78, blue: 0.49),
-        ground: GamePalette.beyond,
-        foreground: Color(red: 0.38, green: 0.59, blue: 0.30),
-        blade: Color(red: 0.30, green: 0.50, blue: 0.24),
-        canopy: Color(red: 0.36, green: 0.61, blue: 0.31),
-        canopyShade: Color(red: 0.25, green: 0.46, blue: 0.24),
+        farHill: Color(red: 0.71, green: 0.78, blue: 0.61),
+        ground: Color(red: 0.77, green: 0.81, blue: 0.64),
+        foreground: Color(red: 0.67, green: 0.73, blue: 0.55),
+        blade: Color(red: 0.54, green: 0.62, blue: 0.45),
+        canopy: Color(red: 0.46, green: 0.59, blue: 0.44),
+        canopyShade: Color(red: 0.34, green: 0.47, blue: 0.35),
         isNight: false,
         cover: .pasture
     )
