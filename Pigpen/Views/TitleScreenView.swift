@@ -8,8 +8,8 @@ import UIKit
 /// does it open the universe map. Under Play is the day's own board on a card of its own — what
 /// day it is, what that day asks, and once it has been held, the stars it gave up, the time it
 /// took and the run of days it is part of. Under that, the archive of every daily there has
-/// been, and the tutorial for anybody who wants the walkthrough before the meadow — which
-/// on a first run opens itself, so that a player meeting the game has been shown how to lay a
+/// been. The walkthrough is kept behind the gear for anybody who wants it back — and on a
+/// first run it opens itself, so that a player meeting the game has been shown how to lay a
 /// fence before they are asked to.
 @MainActor
 struct TitleScreenView: View {
@@ -194,10 +194,19 @@ struct TitleScreenView: View {
                 .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
         .sheet(isPresented: $showsSettings) {
-            SettingsView(progress: progress, daily: daily, reminder: reminder, fullGame: fullGame)
-                .onAppear { Analytics.record(.settingsOpened) }
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
+            SettingsView(
+                progress: progress,
+                daily: daily,
+                reminder: reminder,
+                fullGame: fullGame,
+                onOpenTutorial: {
+                    showsSettings = false
+                    isTutorial = true
+                }
+            )
+            .onAppear { Analytics.record(.settingsOpened) }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $isOfferingReminders) {
             ReminderPromptView(
@@ -501,10 +510,10 @@ struct TitleScreenView: View {
     // MARK: - The list of ways to play
 
     /// Every way off the title screen, painted on the one run of boards so they read as a
-    /// list rather than as four buttons the game happened to leave lying about: Play at the
-    /// head of it in gold, today's board under it, and the archive and the tutorial below
-    /// that. Each is the same plank with the same press in it; only the paint and what stands
-    /// on the right-hand end tell one from the next.
+    /// list rather than as three buttons the game happened to leave lying about: Play at the
+    /// head of it in gold, today's board under it, and the archive below that. Each is the
+    /// same plank with the same press in it; only the paint and what stands on the right-hand
+    /// end tell one from the next.
     private var playBlock: some View {
         VStack(spacing: 9) {
             Button {
@@ -538,15 +547,6 @@ struct TitleScreenView: View {
                 hint: "Every daily puzzle there has been, a month at a time"
             ) {
                 isArchiveOpen = true
-            }
-
-            destinationRow(
-                icon: "hand.tap.fill",
-                title: "Tutorial",
-                detail: "Walk through how to fence in the pig",
-                hint: "Walk through how to fence in the pig"
-            ) {
-                isTutorial = true
             }
         }
         .opacity(arrived ? 1 : 0)
@@ -684,8 +684,8 @@ struct TitleScreenView: View {
         }
     }
 
-    /// A row that simply pushes another screen: the archive and the tutorial, cut from the
-    /// same board as Play so the list stays one thing.
+    /// A row that simply pushes another screen — the archive — cut from the same board as
+    /// Play so the list stays one thing.
     private func destinationRow(
         icon: String,
         title: String,
@@ -878,9 +878,9 @@ private struct CompletionBadge: View {
 /// daily.
 ///
 /// Every row is the same plank, lit from the top the way the fence rack and the signposts
-/// are, so Play, today's board, the archive and the tutorial read as one list rather than as
-/// four unlike buttons. The paint is the only thing that sets the head of the list apart:
-/// Play stands in gold, the rest on cream.
+/// are, so Play, today's board and the archive read as one list rather than as three unlike
+/// buttons. The paint is the only thing that sets the head of the list apart: Play stands in
+/// gold, the rest on cream.
 private struct MenuRow<Trailing: View>: View {
     let icon: String
     let title: String

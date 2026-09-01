@@ -39,6 +39,10 @@ struct SettingsView: View {
     /// offer — beside the locked worlds on the map and the shut days in the archive — and
     /// the one place a player who already owns it can be told so.
     var fullGame: FullGame = .shared
+    /// The way back to the practice pen, handed in so the title screen can put the sheet
+    /// down and push the walkthrough on its own stack rather than trying to open it from
+    /// under this one.
+    var onOpenTutorial: () -> Void = {}
 
     /// Whether the projection room is up: every film in the game, one after another.
     @State private var isWatchingFilms = false
@@ -71,6 +75,7 @@ struct SettingsView: View {
                     VStack(spacing: 14) {
                         about
                         fullGameCard
+                        howToPlay
                         help
                         rate
                         films
@@ -217,6 +222,43 @@ struct SettingsView: View {
     private var unlockTitle: String {
         if let price = fullGame.price { return "Unlock the full game · \(price)" }
         return "Unlock the full game"
+    }
+
+    /// The way back to the walkthrough for anybody who wants it again — the same practice
+    /// pen a first run is put through, kept behind the gear so the title screen is not four
+    /// buttons of things to do.
+    ///
+    /// The button puts this sheet down first and then hands the push back to the title
+    /// screen: the walkthrough lives on the same stack the game itself does, and opening it
+    /// from under a sheet would leave the sheet sitting over its own coach card.
+    private var howToPlay: some View {
+        card {
+            Text("How to play")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Text(
+                """
+                The practice pen: how a fence is laid, why water is worth building against \
+                and what closing a pen is worth.
+                """
+            )
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(GamePalette.post.opacity(0.7))
+            .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                haptics.tap(.medium)
+                onOpenTutorial()
+            } label: {
+                Label("Walk through the tutorial", systemImage: "hand.tap.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .padding(.top, 4)
+        }
     }
 
     /// The way out of the game to a person.
