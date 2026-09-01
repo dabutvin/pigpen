@@ -201,13 +201,6 @@ struct PuzzleView: View {
                 // The board is the screen, so it is given all the width there is to give.
                 .padding(.horizontal, 6)
 
-                fieldCorrections
-                    // Right aligned to the same margin the button below keeps, so the row of
-                    // glyphs and the end of the button stand on one line.
-                    .padding(.horizontal, 16)
-                    .opacity(showsVerdict ? 0 : 1)
-                    .allowsHitTesting(!showsVerdict)
-
                 Spacer(minLength: 0)
 
                 Group {
@@ -251,36 +244,6 @@ struct PuzzleView: View {
         .task(id: game.phase) { await reactToPhase() }
     }
 
-    /// Undo, redo and clear, tucked under the right-hand corner of the board.
-    ///
-    /// No plaques: three cream glyphs painted straight onto the grass, the way the tally
-    /// beneath them is, so that the only thing on this screen wearing a button's clothes is
-    /// the button that ends the turn. Cream on pasture rather than the fencing's dark brown,
-    /// because a dark glyph laid on grass reads as a mark in the grass — and each keeps a
-    /// finger's worth of room around it whatever the glyph inside is doing.
-    ///
-    /// They fade rather than vanish when the verdict is up: the card below covers what they
-    /// act on, and a row that came and went would move the board it is pinned to.
-    private var fieldCorrections: some View {
-        HStack(spacing: 2) {
-            Spacer(minLength: 0)
-
-            fieldIcon("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
-                game.undo()
-            }
-            .keyboardShortcut("z", modifiers: .command)
-
-            fieldIcon("Redo", systemImage: "arrow.uturn.forward", enabled: game.canRedo) {
-                game.redo()
-            }
-            .keyboardShortcut("z", modifiers: [.command, .shift])
-
-            fieldIcon("Clear the field", systemImage: "trash", enabled: game.canClearField) {
-                game.startOver()
-            }
-        }
-    }
-
     /// The clock, up in the bar with the day's name rather than down on the board: it is
     /// something to glance at afterwards, not something to play against. It stops while
     /// the pen holds and the card is up, and picks up again if the player goes back out.
@@ -293,42 +256,55 @@ struct PuzzleView: View {
 
     // MARK: - Pieces
 
-    /// The button that ends the turn, with the whole width of the screen to itself, and what
-    /// the field has already been held for underneath it.
-    ///
-    /// Undo, redo and clear used to stand beside it and take three quarters of the row. They
-    /// are corrections rather than the move, so they have gone up under the board as plain
-    /// glyphs and the one button that finishes a go is now the only thing down here that
-    /// looks like a button. The best pen sits below rather than above it, since it is the
+    /// One row along the foot of the screen: undo, redo and clear on their own painted
+    /// plaques, and then the button that ends the turn with the rest of the width to
+    /// itself — corrections on the left, the move on the right, the way the hand expects
+    /// them. What the field has already been held for sits above the row, since it is the
     /// last thing to appear and has something to say only once a pen has closed.
     private var buildingControls: some View {
         VStack(spacing: 10) {
-            Button {
-                attempts += 1
-                game.openTheGate()
-            } label: {
-                Text("Release \(quarry)")
-                    .font(.headline.weight(.heavy))
-                    // Dark lettering, because the face under it is the pen's own gold rather
-                    // than the fencing's brown, and white on gold is not a thing to read.
-                    .foregroundStyle(GamePalette.post)
-                    // Two animals make for a longer button than one; it shrinks its
-                    // lettering rather than growing a second line and moving the board.
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                    .frame(maxWidth: .infinity)
-            }
-            // The same painted button the offer buys the game with: it stands on a ledge of
-            // its own shadow and sinks onto it when pressed. This is the one press on the
-            // screen that ends a go, so it is the one that is worth hitting.
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
-            // Live on an empty field too. Opening the gate with nothing in the ground is a
-            // legal go — the pig walks straight off the map and the verdict says so — and a
-            // button greyed out until some unstated amount of work is done says less about
-            // the rule than watching the pig leave does.
-            .disabled(!game.isBuilding)
-
             bestPenTally
+
+            HStack(spacing: 8) {
+                fieldIcon("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
+                    game.undo()
+                }
+                .keyboardShortcut("z", modifiers: .command)
+
+                fieldIcon("Redo", systemImage: "arrow.uturn.forward", enabled: game.canRedo) {
+                    game.redo()
+                }
+                .keyboardShortcut("z", modifiers: [.command, .shift])
+
+                fieldIcon("Clear the field", systemImage: "trash", enabled: game.canClearField) {
+                    game.startOver()
+                }
+
+                Button {
+                    attempts += 1
+                    game.openTheGate()
+                } label: {
+                    Text("Release \(quarry)")
+                        .font(.headline.weight(.heavy))
+                        // Cream lettering, because the face under it is the chrome's own
+                        // terracotta now rather than the pen's gold.
+                        .foregroundStyle(GamePalette.cream)
+                        // Two animals make for a longer button than one; it shrinks its
+                        // lettering rather than growing a second line and moving the board.
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity)
+                }
+                // The same painted button the offer buys the game with: it stands on a ledge
+                // of its own shadow and sinks onto it when pressed. This is the one press on
+                // the screen that ends a go, so it is the one that is worth hitting.
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
+                // Live on an empty field too. Opening the gate with nothing in the ground is
+                // a legal go — the pig walks straight off the map and the verdict says so —
+                // and a button greyed out until some unstated amount of work is done says
+                // less about the rule than watching the pig leave does.
+                .disabled(!game.isBuilding)
+            }
         }
         .animation(.easeInOut(duration: 0.25), value: game.bestScore)
         .animation(.easeInOut(duration: 0.25), value: game.canRestoreBestPen)
@@ -454,8 +430,10 @@ struct PuzzleView: View {
             : "Holding \(holding), best \(game.bestScore)"
     }
 
-    /// One of the small painted boards that work the fencing already down. A button with
-    /// nothing to do fades rather than vanishing, so the three of them never move about.
+    /// One of the small painted boards that work the fencing already down: a cream plaque
+    /// with a dark glyph on it, kin to the rack and the signposts rather than a mark in the
+    /// grass. A button with nothing to do fades rather than vanishing, so the row never
+    /// moves about.
     private func fieldIcon(
         _ title: String,
         systemImage: String,
@@ -468,27 +446,16 @@ struct PuzzleView: View {
         } label: {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
-                .font(.system(size: 17, weight: .heavy))
-                // Cream with the light behind it, which is what everything else painted
-                // straight onto the grass does. Against pasture that is the whole contrast:
-                // a near-white glyph on a mid green, with a shadow under it for the places
-                // the grass runs light.
-                .foregroundStyle(GamePalette.cream)
-                // Two shadows rather than one: a tight dark halo that darkens the grass
-                // immediately under the strokes, and a softer one below it for the lift. The
-                // single soft shadow measured 3.1:1 against pasture, which only just clears
-                // what a glyph needs; the halo is what carries it clear of the green.
-                .shadow(color: .black.opacity(0.8), radius: 2)
-                .shadow(color: .black.opacity(0.5), radius: 6, y: 2)
-                .opacity(enabled ? 1 : 0.35)
-                // One box for all three, so a wider glyph does not make a wider button — and
-                // wider than the glyph needs, so a thumb has something to land on without
-                // three plaques' worth of the board being spent on it.
-                .frame(width: 42, height: 38)
-                .contentShape(Rectangle())
+                .font(.system(size: 19, weight: .heavy))
+                // One box for all three, so a wider glyph does not make a wider button.
+                .frame(width: 24, height: 24)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PlaqueButtonStyle(padding: 12))
         .disabled(!enabled)
+        .opacity(enabled ? 1 : 0.45)
+        // The plaque sits level with the face of the release button beside it, which
+        // stands its ledge's depth above the row's own floor.
+        .padding(.bottom, 5)
         .accessibilityLabel(title)
     }
 

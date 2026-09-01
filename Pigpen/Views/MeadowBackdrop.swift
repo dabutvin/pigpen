@@ -73,7 +73,9 @@ private struct Paddock {
     func drawGround(in context: inout GraphicsContext) {
         drawGrass(in: &context)
         switch colors.cover {
-        case .pasture: drawMowing(in: &context)
+        case .pasture:
+            drawMowing(in: &context)
+            drawMeadowHorizon(in: &context)
         case .woodland: drawLeafLitter(in: &context)
         case .scree: drawAshDrifts(in: &context)
         case .cobbles: drawPaving(in: &context)
@@ -149,6 +151,87 @@ private struct Paddock {
                 startPoint: .zero,
                 endPoint: CGPoint(x: 0, y: size.height)
             )
+        )
+    }
+
+    /// The country the meadow runs away into, laid over the top of the field: the sky's
+    /// haze coming down onto the grass, the swell of two far hills, and a stand of pines
+    /// along their tops. It is what turns the strip of ground above the board from a green
+    /// wall into somewhere the pig could conceivably get to, which is the whole threat of
+    /// the game — and it is painted in the pasture's own colours, so the meadow's dusk
+    /// silvers it rather than switching it off.
+    private func drawMeadowHorizon(in context: inout GraphicsContext) {
+        // The haze first, so everything in front of it stands out of the light.
+        context.fill(
+            Path(CGRect(x: 0, y: 0, width: size.width, height: y(0.42))),
+            with: .linearGradient(
+                Gradient(colors: [
+                    colors.skyHorizon.opacity(colors.isNight ? 0.25 : 0.85),
+                    colors.skyHorizon.opacity(0)
+                ]),
+                startPoint: .zero,
+                endPoint: CGPoint(x: 0, y: y(0.42))
+            )
+        )
+
+        // The hills: two soft swells, each one paler than the ground in front of it, which
+        // is how distance reads through haze.
+        for (index, hill) in [
+            (crest: 0.13, centre: 0.22, reach: 0.85),
+            (crest: 0.17, centre: 0.88, reach: 0.75)
+        ].enumerated() {
+            let top = y(hill.crest)
+            let spread = x(hill.reach)
+            context.fill(
+                Path(ellipseIn: CGRect(
+                    x: x(hill.centre) - spread,
+                    y: top,
+                    width: spread * 2,
+                    height: y(0.34)
+                )),
+                with: .color(
+                    colors.farHill.opacity(
+                        (colors.isNight ? 0.30 : 0.55) - Double(index) * 0.12
+                    )
+                )
+            )
+        }
+
+        // And the pines along their tops, small with the distance, so the horizon has
+        // something standing on it.
+        var scatter = Scatter(seed: 911)
+        for _ in 0..<8 {
+            let foot = CGPoint(
+                x: x(scatter.next(in: 0.02...0.98)),
+                y: y(scatter.next(in: 0.16...0.29))
+            )
+            drawPine(in: &context, at: foot, tall: y(scatter.next(in: 0.035...0.06)))
+        }
+    }
+
+    /// One far-off pine: a trunk with three boughs stacked up it, drawn flat the way the
+    /// world map draws its trees.
+    private func drawPine(in context: inout GraphicsContext, at foot: CGPoint, tall: CGFloat) {
+        context.fill(
+            Path(CGRect(
+                x: foot.x - tall * 0.04, y: foot.y - tall * 0.18,
+                width: tall * 0.08, height: tall * 0.18
+            )),
+            with: .color(colors.canopyShade.opacity(colors.isNight ? 0.5 : 0.8))
+        )
+
+        var boughs = Path()
+        let half = tall * 0.34
+        for (step, spread) in [(0.10, 1.0), (0.38, 0.72), (0.62, 0.45)] {
+            let base = foot.y - tall * CGFloat(step)
+            boughs.move(to: CGPoint(x: foot.x - half * CGFloat(spread), y: base))
+            boughs.addLine(to: CGPoint(x: foot.x + half * CGFloat(spread), y: base))
+            boughs.addLine(to: CGPoint(x: foot.x, y: base - tall * 0.42))
+            boughs.closeSubpath()
+        }
+        context.fill(
+            boughs,
+            with: .color(colors.canopy.opacity(colors.isNight ? 0.5 : 0.85))
         )
     }
 
@@ -1963,7 +2046,9 @@ private struct Paddock {
         let centre = CGPoint(x: size.width / 2, y: size.height / 2)
         let reach = max(size.width, size.height) * 0.8
         let edge: Double = switch colors.cover {
-        case .pasture: colors.isNight ? 0.3 : 0.2
+        // Day keeps the lightest edge in the game, because a watercolour meadow is painted
+        // to run out at the paper rather than into shadow.
+        case .pasture: colors.isNight ? 0.3 : 0.1
         case .woodland: colors.isNight ? 0.42 : 0.32
         case .scree: colors.isNight ? 0.38 : 0.26
         case .cobbles: colors.isNight ? 0.44 : 0.30
@@ -2018,20 +2103,23 @@ private struct Paddock {
 }
 
 extension View {
-    /// The bar the board screens wear across the top: the same timber the world map's
-    /// banner is cut from, so a puzzle opened off the trail looks like the next room of the
-    /// same building rather than a sheet of paper laid over it.
+    /// The bar the board screens wear across the top: terracotta paintwork rather than raw
+    /// timber, the same glaze as the button that ends a go, so a puzzle opened off the
+    /// trail looks like the next room of the same building rather than a sheet of paper
+    /// laid over it.
     func fieldNavigationBar() -> some View {
         toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(
                 LinearGradient(
-                    colors: [GamePalette.rail, GamePalette.post],
+                    colors: [GamePalette.clay, GamePalette.clayShade],
                     startPoint: .top,
                     endPoint: .bottom
                 ),
                 for: .navigationBar
             )
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            // Dark lettering on the glaze, painted on rather than punched out white, so
+            // the bar reads as signage in the same hand as the cream boards below it.
+            .toolbarColorScheme(.light, for: .navigationBar)
     }
 
     /// Stops the navigation stack from reading a drag across the left of the board as a

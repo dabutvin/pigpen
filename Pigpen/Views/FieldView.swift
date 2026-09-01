@@ -1666,19 +1666,22 @@ struct FieldView: View {
             var lying = context
             lying.opacity = counted ? 0.3 : 1
 
-            lying.fill(
-                Path(ellipseIn: rect.insetBy(dx: board.cell * 0.15, dy: board.cell * 0.15)),
-                with: .color(.white.opacity(0.2))
-            )
             // A shadow on the ground under it, so it lies on the mud rather than in it.
             lying.fill(
                 Path(ellipseIn: CGRect(
-                    x: rect.minX + board.cell * 0.24,
-                    y: rect.maxY - board.cell * 0.28,
-                    width: board.cell * 0.52,
-                    height: board.cell * 0.14
+                    x: rect.minX + board.cell * 0.22,
+                    y: rect.maxY - board.cell * 0.24,
+                    width: board.cell * 0.56,
+                    height: board.cell * 0.16
                 )),
-                with: .color(.black.opacity(0.16))
+                with: .color(.black.opacity(0.14))
+            )
+            // The plate it sits on: a solid white round, so a treat reads as something set
+            // out on the ground rather than as a smudge of it, on the pale boards and the
+            // dark ones alike.
+            lying.fill(
+                Path(ellipseIn: rect.insetBy(dx: board.cell * 0.14, dy: board.cell * 0.14)),
+                with: .color(.white.opacity(0.85))
             )
             lying.draw(mark(for: treat, cell: board.cell), at: board.center(of: tile))
 
