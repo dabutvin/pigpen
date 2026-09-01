@@ -7,6 +7,9 @@ import UIKit
 struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Only for the words painted straight onto the grass: the meadow is pale by day and
+    /// dark after dusk, so what is written on it swaps between ink and cream to stay read.
+    @Environment(\.colorScheme) private var colorScheme
 
     /// Told what a pen was worth — its stars, whether it was the best pen the map has in
     /// it, how long it took, and the fencing that held it — every time one holds.
@@ -389,9 +392,17 @@ struct PuzzleView: View {
             HStack(spacing: 10) {
                 Text(tallySummary)
                     .font(.footnote.weight(.heavy))
-                    // Written straight onto the grass, so it is painted rather than printed.
-                    .foregroundStyle(GamePalette.cream)
-                    .shadow(color: .black.opacity(0.45), radius: 3, y: 1)
+                    // Written straight onto the grass, so it is painted rather than
+                    // printed — in ink on the pale daytime meadow, in cream with a shadow
+                    // once the ground has gone dark.
+                    .foregroundStyle(
+                        colorScheme == .dark ? GamePalette.cream : GamePalette.post
+                    )
+                    .shadow(
+                        color: .black.opacity(colorScheme == .dark ? 0.45 : 0),
+                        radius: 3,
+                        y: 1
+                    )
                     .contentTransition(.numericText())
                     // Sits on one line beside the button rather than pushing it off the
                     // screen when the type is large.
@@ -447,12 +458,15 @@ struct PuzzleView: View {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
                 .font(.system(size: 19, weight: .heavy))
+                // Only the glyph fades when there is nothing to do: a whole plaque gone
+                // translucent lets the grass through and reads as a different button, not
+                // a resting one.
+                .opacity(enabled ? 1 : 0.35)
                 // One box for all three, so a wider glyph does not make a wider button.
                 .frame(width: 24, height: 24)
         }
         .buttonStyle(PlaqueButtonStyle(padding: 12))
         .disabled(!enabled)
-        .opacity(enabled ? 1 : 0.45)
         // The plaque sits level with the face of the release button beside it, which
         // stands its ledge's depth above the row's own floor.
         .padding(.bottom, 5)
