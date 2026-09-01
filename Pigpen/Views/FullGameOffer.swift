@@ -47,8 +47,10 @@ struct FullGameOffer: View {
 
     var body: some View {
         ZStack {
+            // A cream page rather than timber, the same as the settings sheet, with the
+            // card separated from it by its own dark shadow.
             LinearGradient(
-                colors: [GamePalette.rail, GamePalette.post],
+                colors: [GamePalette.mudLit, GamePalette.mud],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -108,7 +110,16 @@ struct FullGameOffer: View {
                     .font(.system(size: 15, weight: .black))
                     .foregroundStyle(GamePalette.post)
                     .frame(width: 34, height: 34)
-                    .background(Circle().fill(GamePalette.cream))
+                    .background {
+                        Circle()
+                            .fill(GamePalette.cream)
+                            .overlay(
+                                Circle().strokeBorder(
+                                    GamePalette.post.opacity(0.15), lineWidth: 1
+                                )
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 5, y: 3)
+                    }
             }
             .accessibilityLabel("Close")
         }
@@ -167,9 +178,9 @@ struct FullGameOffer: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 17, weight: .black))
-                .foregroundStyle(GamePalette.rail)
+                .foregroundStyle(GamePalette.clay)
                 .frame(width: 34, height: 34)
-                .background(Circle().fill(GamePalette.rail.opacity(0.14)))
+                .background(Circle().fill(GamePalette.clay.opacity(0.14)))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
@@ -196,10 +207,10 @@ struct FullGameOffer: View {
         } label: {
             Label(buyTitle, systemImage: "lock.open.fill")
                 .font(.subheadline.weight(.heavy))
-                .foregroundStyle(GamePalette.post)
+                .foregroundStyle(GamePalette.cream)
                 .frame(maxWidth: .infinity)
         }
-        .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
+        .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
         .disabled(fullGame.isWorking)
         .opacity(fullGame.isWorking ? 0.6 : 1)
         // The perks end where this begins now that one box holds both.
@@ -210,7 +221,7 @@ struct FullGameOffer: View {
         } label: {
             Text("Restore a purchase")
                 .font(.footnote.weight(.heavy))
-                .foregroundStyle(GamePalette.rail)
+                .foregroundStyle(GamePalette.clayShade)
                 .frame(maxWidth: .infinity)
         }
         .disabled(fullGame.isWorking)
@@ -240,7 +251,7 @@ struct FullGameOffer: View {
         } label: {
             Text("Privacy policy")
                 .font(.caption2.weight(.heavy))
-                .foregroundStyle(GamePalette.rail)
+                .foregroundStyle(GamePalette.clayShade)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -281,7 +292,9 @@ struct FullGameOffer: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1)
         )
-        .shadow(color: .black.opacity(0.22), radius: 6, y: 4)
+        // A darker, longer drop than a card on timber needed: on a cream page the shadow
+        // is the whole of what lifts a cream card off it.
+        .shadow(color: .black.opacity(0.3), radius: 10, y: 5)
     }
 
     // MARK: - Actions

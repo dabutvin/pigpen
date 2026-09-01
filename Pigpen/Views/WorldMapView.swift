@@ -284,7 +284,8 @@ struct WorldMapView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }
-            .foregroundStyle(GamePalette.cream)
+            // Dark lettering on the glaze, the same ink the puzzle bar's title is set in.
+            .foregroundStyle(GamePalette.post)
 
             Spacer(minLength: 0)
 
@@ -305,8 +306,10 @@ struct WorldMapView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
         .background {
+            // The same terracotta glaze the puzzle screens wear across the top, so the
+            // map and the boards it opens read as rooms of one building.
             LinearGradient(
-                colors: [GamePalette.rail, GamePalette.post],
+                colors: [GamePalette.clay, GamePalette.clayShade],
                 startPoint: .top,
                 endPoint: .bottom
             )

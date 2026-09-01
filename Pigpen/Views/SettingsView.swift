@@ -57,8 +57,11 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
+            // The sheet is a cream page rather than timber, so the cards on it separate by
+            // standing off it — a shade of parchment under them and a dark shadow apiece —
+            // rather than by being the only light thing on a dark ground.
             LinearGradient(
-                colors: [GamePalette.rail, GamePalette.post],
+                colors: [GamePalette.mudLit, GamePalette.mud],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -119,8 +122,7 @@ struct SettingsView: View {
         HStack(spacing: 12) {
             Text("Settings")
                 .font(.system(size: 22, weight: .black, design: .rounded))
-                .foregroundStyle(GamePalette.cream)
-                .shadow(color: .black.opacity(0.35), radius: 3, y: 1)
+                .foregroundStyle(GamePalette.post)
 
             Spacer(minLength: 0)
 
@@ -131,7 +133,16 @@ struct SettingsView: View {
                     .font(.system(size: 15, weight: .black))
                     .foregroundStyle(GamePalette.post)
                     .frame(width: 34, height: 34)
-                    .background(Circle().fill(GamePalette.cream))
+                    .background {
+                        Circle()
+                            .fill(GamePalette.cream)
+                            .overlay(
+                                Circle().strokeBorder(
+                                    GamePalette.post.opacity(0.15), lineWidth: 1
+                                )
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 5, y: 3)
+                    }
             }
             .accessibilityLabel("Close settings")
         }
@@ -204,10 +215,10 @@ struct SettingsView: View {
                 } label: {
                     Label(unlockTitle, systemImage: "lock.open.fill")
                         .font(.subheadline.weight(.heavy))
-                        .foregroundStyle(GamePalette.post)
+                        .foregroundStyle(GamePalette.cream)
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 5))
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
                 .padding(.top, 4)
             }
         }
@@ -250,7 +261,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
             .padding(.top, 4)
 
             Text("Or write to \(SupportLinks.email).")
@@ -301,7 +312,7 @@ struct SettingsView: View {
                         .foregroundStyle(GamePalette.cream)
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
                 .padding(.top, 4)
             }
         }
@@ -336,7 +347,7 @@ struct SettingsView: View {
                         .font(.subheadline.weight(.heavy))
                         .foregroundStyle(GamePalette.post)
                 }
-                .tint(GamePalette.rail)
+                .tint(GamePalette.clay)
 
                 Text(planned)
                     .font(.caption2)
@@ -374,7 +385,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 4))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 4))
         }
         .padding(.top, 2)
     }
@@ -454,7 +465,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
             .padding(.top, 4)
         }
     }
@@ -497,7 +508,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
             .padding(.top, 4)
 
             Text(runningOrder)
@@ -555,7 +566,9 @@ struct SettingsView: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1)
         )
-        .shadow(color: .black.opacity(0.22), radius: 6, y: 4)
+        // A darker, longer drop than a card on timber needed: on a cream page the shadow
+        // is the whole of what lifts a cream card off it.
+        .shadow(color: .black.opacity(0.3), radius: 10, y: 5)
     }
 
     // MARK: - Words
