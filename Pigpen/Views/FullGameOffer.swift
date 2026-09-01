@@ -178,9 +178,9 @@ struct FullGameOffer: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 17, weight: .black))
-                .foregroundStyle(GamePalette.rail)
+                .foregroundStyle(GamePalette.clay)
                 .frame(width: 34, height: 34)
-                .background(Circle().fill(GamePalette.rail.opacity(0.14)))
+                .background(Circle().fill(GamePalette.clay.opacity(0.14)))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
@@ -207,10 +207,10 @@ struct FullGameOffer: View {
         } label: {
             Label(buyTitle, systemImage: "lock.open.fill")
                 .font(.subheadline.weight(.heavy))
-                .foregroundStyle(GamePalette.post)
+                .foregroundStyle(GamePalette.cream)
                 .frame(maxWidth: .infinity)
         }
-        .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
+        .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
         .disabled(fullGame.isWorking)
         .opacity(fullGame.isWorking ? 0.6 : 1)
         // The perks end where this begins now that one box holds both.
@@ -221,7 +221,7 @@ struct FullGameOffer: View {
         } label: {
             Text("Restore a purchase")
                 .font(.footnote.weight(.heavy))
-                .foregroundStyle(GamePalette.rail)
+                .foregroundStyle(GamePalette.clayShade)
                 .frame(maxWidth: .infinity)
         }
         .disabled(fullGame.isWorking)
@@ -251,7 +251,7 @@ struct FullGameOffer: View {
         } label: {
             Text("Privacy policy")
                 .font(.caption2.weight(.heavy))
-                .foregroundStyle(GamePalette.rail)
+                .foregroundStyle(GamePalette.clayShade)
                 .frame(maxWidth: .infinity)
         }
     }

@@ -83,11 +83,11 @@ struct ReminderPromptView: View {
         Image(systemName: "bell.badge.fill")
             .font(.system(size: 34, weight: .black))
             .symbolRenderingMode(.palette)
-            .foregroundStyle(GamePalette.barn, GamePalette.rail)
+            .foregroundStyle(GamePalette.barn, GamePalette.clay)
             .frame(width: 68, height: 68)
             .background {
                 Circle()
-                    .fill(GamePalette.pen.opacity(0.35))
+                    .fill(GamePalette.clay.opacity(0.18))
                     .overlay(Circle().strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1))
             }
             .accessibilityHidden(true)
@@ -102,10 +102,10 @@ struct ReminderPromptView: View {
             } label: {
                 Label("Remind me at \(time.face)", systemImage: "bell.fill")
                     .font(.system(size: 16, weight: .black, design: .rounded))
-                    .foregroundStyle(GamePalette.post)
+                    .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 6))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
 
             Button {
                 Haptics.tap(.light)

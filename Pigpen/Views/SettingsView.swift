@@ -215,10 +215,10 @@ struct SettingsView: View {
                 } label: {
                     Label(unlockTitle, systemImage: "lock.open.fill")
                         .font(.subheadline.weight(.heavy))
-                        .foregroundStyle(GamePalette.post)
+                        .foregroundStyle(GamePalette.cream)
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.pen, depth: 5))
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
                 .padding(.top, 4)
             }
         }
@@ -261,7 +261,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
             .padding(.top, 4)
 
             Text("Or write to \(SupportLinks.email).")
@@ -312,7 +312,7 @@ struct SettingsView: View {
                         .foregroundStyle(GamePalette.cream)
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+                .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
                 .padding(.top, 4)
             }
         }
@@ -347,7 +347,7 @@ struct SettingsView: View {
                         .font(.subheadline.weight(.heavy))
                         .foregroundStyle(GamePalette.post)
                 }
-                .tint(GamePalette.rail)
+                .tint(GamePalette.clay)
 
                 Text(planned)
                     .font(.caption2)
@@ -385,7 +385,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 4))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 4))
         }
         .padding(.top, 2)
     }
@@ -465,7 +465,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
             .padding(.top, 4)
         }
     }
@@ -508,7 +508,7 @@ struct SettingsView: View {
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.rail, depth: 5))
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
             .padding(.top, 4)
 
             Text(runningOrder)
