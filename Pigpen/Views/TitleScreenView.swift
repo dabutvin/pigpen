@@ -708,6 +708,8 @@ struct TitleScreenView: View {
                 trailing: {
                     if stars > 0 {
                         StarRow(stars: stars, size: 12, hasTheBestPen: daily.hasTheBestPen(on: today))
+                    } else if hasADailyPuzzle && streak > 0 {
+                        streakBadge(streak)
                     } else if hasADailyPuzzle {
                         newBadge
                     } else {
@@ -724,6 +726,9 @@ struct TitleScreenView: View {
 
     /// The gold pill that marks today's board as unpressed. Pen-yellow on the barn-red row so
     /// it reads as the row's one call to attention, the way Play does at the top of the list.
+    /// It only shows to somebody with no run of days going: a player mid-streak sees the
+    /// streak instead — the thing they would rather not lose than the news that the board is
+    /// fresh.
     private var newBadge: some View {
         Text("NEW!")
             .font(.system(size: 12, weight: .black, design: .rounded))
@@ -733,6 +738,28 @@ struct TitleScreenView: View {
             .background(Capsule().fill(GamePalette.pen))
             .overlay(Capsule().strokeBorder(.white.opacity(0.55), lineWidth: 1))
             .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+    }
+
+    /// The run-of-days pill that replaces NEW for a player who already has a streak going: a
+    /// flame beside the count, cut from the same gold-and-cream cloth as the NEW pill so the
+    /// two read as one badge in two moods. The archive header shows the same mark, so a
+    /// player who knows it there knows it here.
+    private func streakBadge(_ count: Int) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 11, weight: .black))
+            Text("\(count)")
+                .font(.system(size: 13, weight: .black, design: .rounded))
+                .monospacedDigit()
+                .contentTransition(.numericText())
+        }
+        .foregroundStyle(GamePalette.post)
+        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .background(Capsule().fill(GamePalette.pen))
+        .overlay(Capsule().strokeBorder(.white.opacity(0.55), lineWidth: 1))
+        .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+        .accessibilityLabel("\(count) day\(count == 1 ? "" : "s") in a row")
     }
 
     /// The seal for a day that has been held, and a calendar leaf for one still waiting.
