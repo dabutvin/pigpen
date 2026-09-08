@@ -440,7 +440,7 @@ struct TitleScreenView: View {
 
     private var wordmark: some View {
         VStack(spacing: 16) {
-            PlantedWord(word: "PIGPEN", size: 54, planted: planted)
+            PlantedWord(word: "PIGPEN", size: 70, planted: planted)
 
             tagline
                 .opacity(arrived ? 1 : 0)
@@ -761,39 +761,130 @@ private struct PlantedWord: View {
 
     private var letters: [Character] { Array(word) }
 
+    /// How far the ends of the word drop below the middle of it, as a share of the letter
+    /// size, and how far the outermost letter leans away from upright. Both are small on
+    /// purpose: the name should read as painted along a gentle curve, the way a sign over a
+    /// gate is, rather than as a semicircle of letters.
+    private static let arcDrop = 0.11
+    private static let arcLean = 5.0
+
     var body: some View {
-        HStack(spacing: size * 0.06) {
+        ZStack {
+            // Two passes along the word, the whole white cut first and every letter after
+            // it. One pass could not do it: laid down letter by letter, each keyline went
+            // on top of the letter to its left — a keyline reaches further than the gap
+            // between two letters — and took a bite of paint out of the P where the I's
+            // white crossed it. Nothing white is drawn after any letter now.
+            word { keyline(letters[$0]) }
+            word { painted(letters[$0]) }
+        }
+        // Flattened before the shadow is thrown, and that is the whole point of it: a
+        // shadow put on a stack is put on every letter in it, so each one cast its own and
+        // the ones they threw across their neighbours showed up as seams inside a sticker
+        // that is meant to read as one piece. Grouped first, the sky sees a single shape.
+        .compositingGroup()
+        // A soft grey under the whole name, rather than the name's own colour: the sticker
+        // is lifted off the sky by a shadow, and a shadow is not pink. Mid grey rather than
+        // black, which under a white keyline read as a smudge.
+        .shadow(color: Color(white: 0.4).opacity(0.5), radius: 10, y: 8)
+    }
+
+    /// One pass along the word: each letter placed on the curve and carrying whatever it is
+    /// this pass draws. Both passes lay their letters on exactly the same spots, because
+    /// every placement here is worked out from the letter's index and nothing else.
+    private func word<Letter: View>(
+        @ViewBuilder _ content: @escaping (Int) -> Letter
+    ) -> some View {
+        HStack(spacing: letterSpacing) {
             ForEach(letters.indices, id: \.self) { index in
                 let landed = landing(of: index)
                 let settling = 1 - min(landed, 1)
 
-                lettering(letters[index])
+                content(index)
                     .opacity(min(landed, 1))
-                    .scaleEffect(CGFloat(0.7 + 0.3 * landed))
-                    .rotationEffect(.degrees(-9 * settling))
-                    .offset(y: -size * 0.45 * CGFloat(settling))
+                    // Clamped, like the opacity beside it. A letter's landing runs past 1
+                    // — that is what staggers the run, each letter having the back half of
+                    // it to itself — and scaling by the raw figure left every letter but
+                    // the last resting bigger than the one after it: the P a third larger
+                    // than the N, and the whole name tapering off to the right.
+                    .scaleEffect(CGFloat(0.7 + 0.3 * min(landed, 1)))
+                    // The arc rides on top of the drop-in: a letter still on its way in is
+                    // leaning the way it always did, and comes to rest along the curve.
+                    .rotationEffect(.degrees(lean(of: index) - 9 * settling))
+                    .offset(y: drop(of: index) - size * 0.45 * CGFloat(settling))
             }
         }
-        .shadow(color: .black.opacity(0.25), radius: 10, y: 8)
     }
 
-    private func lettering(_ letter: Character) -> some View {
-        ZStack {
-            // A dark copy behind the letter gives it its cut-out edge.
-            glyph(letter)
-                .foregroundStyle(GamePalette.post)
-                .offset(y: 4)
+    /// Where a letter sits along the word, from -1 at the left end to 1 at the right.
+    private func across(_ index: Int) -> Double {
+        guard letters.count > 1 else { return 0 }
+        return Double(index) / Double(letters.count - 1) * 2 - 1
+    }
 
-            glyph(letter)
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [GamePalette.cream, GamePalette.pen],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
+    /// How far down the curve carries a letter. The average drop is taken back off every
+    /// letter, so the word keeps the middle of the space it is given however long it is —
+    /// an arc that pushed its ends down would otherwise hang the whole name low.
+    private func drop(of index: Int) -> CGFloat {
+        let curve = across(index) * across(index)
+        let average = letters.indices
+            .map { across($0) * across($0) }
+            .reduce(0, +) / Double(max(letters.count, 1))
+        return size * CGFloat(Self.arcDrop * (curve - average))
+    }
+
+    /// A letter's lean: none in the middle of the word, most at either end, and away from
+    /// the middle in both directions, so each one stands square to the curve it is on.
+    private func lean(of index: Int) -> Double {
+        Self.arcLean * across(index)
+    }
+
+    /// The white a letter is cut out on: the letter laid down all the way round itself, a
+    /// full turn of copies, which is the outline of the letter grown outwards by the width
+    /// of one. Four hard shadows did this in a quarter of the passes and left corners that
+    /// read as melted, because nothing was ever laid on the diagonals.
+    private func keyline(_ letter: Character) -> some View {
+        ZStack {
+            ForEach(0..<keylineTurns, id: \.self) { turn in
+                let angle = 2 * Double.pi * Double(turn) / Double(keylineTurns)
+                glyph(letter)
+                    .foregroundStyle(.white)
+                    .offset(x: outline * CGFloat(cos(angle)), y: outline * CGFloat(sin(angle)))
+            }
         }
     }
+
+    /// The letter itself: the glaze, flat. It wore a wash of light across the top and an
+    /// edge shaded into its foot, the way the painted buttons do, and both are gone — a
+    /// sticker is printed in one colour, and the keyline round it is what gives it its
+    /// edge rather than a light source.
+    private func painted(_ letter: Character) -> some View {
+        glyph(letter)
+            .foregroundStyle(GamePalette.clay)
+    }
+
+    /// How thick the keyline round each letter is.
+    private var outline: CGFloat { size * 0.12 }
+
+    /// How many copies of the letter go round to lay that keyline down. Enough that they
+    /// land about a point and a half apart whatever the keyline is set to: a fixed count
+    /// scallops the curves as soon as the line is thickened, since the copies spread out
+    /// round a longer way round.
+    private var keylineTurns: Int {
+        min(32, max(12, Int((2 * Double.pi * outline / 1.5).rounded(.up))))
+    }
+
+    /// The gap between one letter and the next, and it has two jobs at once: the keylines
+    /// either side of it have to overlap, so the white reads as one sticker cut out of the
+    /// sky, while the letters inside that sticker have to stay clear of each other.
+    ///
+    /// Both hold across a fair range, because a keyline reaches a good deal further than
+    /// this gap: two of them close over anything under about four points, and the letters
+    /// keep their own side bearings on top of whatever is set here. This lands the tightest
+    /// pair — the I against the G — around six points apart with the white still overlapping
+    /// by eight. Tighter and the letters start to touch; wider and the sticker comes apart
+    /// into six.
+    private var letterSpacing: CGFloat { size * 0.02 }
 
     private func glyph(_ letter: Character) -> Text {
         Text(String(letter))
