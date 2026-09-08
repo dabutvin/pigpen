@@ -101,6 +101,11 @@ final class TutorialLesson {
     /// The Release button only lights once the pen is shut and the coach asks for it.
     var allowsRelease: Bool { step == .release }
 
+    /// Whether the coach card has a button in it at all: Continue on the steps that only
+    /// want reading, Release on the one that wants the gate opened. The steps that want a
+    /// tap on the board have neither, and their card closes up around its words.
+    var hasActionButton: Bool { showsContinue || step == .release }
+
     /// Whether the coach card advances on Continue rather than on something done to the field.
     var showsContinue: Bool {
         switch step {
@@ -109,7 +114,14 @@ final class TutorialLesson {
         }
     }
 
-    var headline: String {
+    var headline: String { Self.headline(for: step) }
+
+    var detail: String { Self.detail(for: step) }
+
+    /// A step's words without a lesson to ask: the view sizes the coach card from the
+    /// wordiest step there is, and it needs to read every step to find it. Neither of these
+    /// touches a lesson, so neither of them waits for the main actor to hand one over.
+    nonisolated static func headline(for step: Step) -> String {
         switch step {
         case .welcome: "Welcome to Pigpen"
         case .tap: "Place a fence"
@@ -121,7 +133,7 @@ final class TutorialLesson {
         }
     }
 
-    var detail: String {
+    nonisolated static func detail(for step: Step) -> String {
         switch step {
         case .welcome:
             "Pig needs a little more room. Your job is to build him the biggest pen you can. Let's try one."

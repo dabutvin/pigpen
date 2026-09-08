@@ -21,6 +21,10 @@ struct TutorialView: View {
     @State private var continueShake: CGFloat = 0
     @State private var refusedThisPress = false
 
+    /// The height of the one slot the walkthrough's button stands in: the button's own
+    /// lettering and padding plus the depth it sinks through when pressed.
+    private static let actionSlotHeight: CGFloat = 58
+
     private var game: PuzzleGame { lesson.game }
     private var level: PuzzleLevel { game.level }
 
@@ -55,7 +59,6 @@ struct TutorialView: View {
                     shake: budgetShake
                 )
                 .padding(.horizontal, 16)
-                .padding(.top, 8)
 
                 FieldView(
                     level: level,
@@ -74,15 +77,19 @@ struct TutorialView: View {
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 .padding(.horizontal, 6)
 
-                // The only slack on the screen, and it is all below the board: the rack and
-                // the field are pinned to the top, so a coach card that runs to two lines on
-                // one step and one on the next grows downwards into this and never moves the
-                // ground the player is being asked to tap.
-                Spacer(minLength: 0)
-
-                coachCard
+                coach
                     .padding(.horizontal, 16)
+
+                // The only slack on the screen, and it is all below the card: the rack, the
+                // field and the coach are pinned to the top in that order, so a card that
+                // runs to two lines on one step and one on the next — or carries no button
+                // at all — grows and shrinks downwards into this. Neither the ground the
+                // player is being asked to tap nor the words about it ever move.
+                Spacer(minLength: 0)
             }
+            // The same distance off the bar the field keeps, so the walkthrough opens on the
+            // board's own spacing rather than on a tighter version of it.
+            .padding(.top, 22)
             .padding(.bottom, 12)
         }
         .navigationTitle(level.name)
@@ -108,21 +115,69 @@ struct TutorialView: View {
 
     // MARK: - Coach
 
+    /// The coach, and the room the coach is given.
+    ///
+    /// The card itself closes up around whatever this step has to say: the steps that ask
+    /// for a tap on the board carry no button, and no empty button's worth of air either.
+    /// What does not change is the room set aside for it, which is held open by a copy of
+    /// the wordiest card there is — laid underneath, never drawn, and measured by SwiftUI
+    /// all the same. Without it the board took back every line the coach gave up and the
+    /// ground resized under the player's thumb between one step and the next.
+    private var coach: some View {
+        ZStack(alignment: .top) {
+            card(headline: Self.wordiestHeadline, detail: Self.wordiestDetail) {
+                Color.clear
+                    .frame(height: Self.actionSlotHeight)
+                    .padding(.top, 2)
+            }
+            .hidden()
+
+            coachCard
+        }
+    }
+
+    /// The wordiest step's words, which are what the hidden copy is built from. Read off the
+    /// lesson rather than written out again, so rewording a step cannot leave the room set
+    /// aside for it the wrong size.
+    private static let wordiestHeadline = TutorialLesson.Step.allCases
+        .map(TutorialLesson.headline(for:))
+        .max { $0.count < $1.count } ?? ""
+
+    private static let wordiestDetail = TutorialLesson.Step.allCases
+        .map(TutorialLesson.detail(for:))
+        .max { $0.count < $1.count } ?? ""
+
     private var coachCard: some View {
+        card(headline: lesson.headline, detail: lesson.detail) {
+            if lesson.hasActionButton {
+                actionButton
+                    // Tall enough for the painted button and the ledge of shadow it stands on.
+                    .frame(height: Self.actionSlotHeight)
+                    .padding(.top, 2)
+                    .modifier(Shake(amount: continueShake))
+            }
+        }
+    }
+
+    /// A painted card with a headline, a line or two under it and whatever the step wants
+    /// pressed. The real one and the hidden one that sizes it are both built from this, so
+    /// the two cannot drift apart.
+    private func card<Action: View>(
+        headline: String,
+        detail: String,
+        @ViewBuilder action: () -> Action
+    ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(lesson.headline)
+            Text(headline)
                 .font(.title3.weight(.bold))
                 .foregroundStyle(GamePalette.post)
 
-            Text(lesson.detail)
+            Text(detail)
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(GamePalette.post.opacity(0.78))
                 .fixedSize(horizontal: false, vertical: true)
 
-            actionButton
-                .frame(height: 38)
-                .padding(.top, 2)
-                .modifier(Shake(amount: continueShake))
+            action()
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -141,8 +196,12 @@ struct TutorialView: View {
     /// a bar under the board, and nothing at all on the steps that only want a tap. Three
     /// different buttons in two different places meant the card changed height and the board
     /// moved under the player's thumb every time the lesson turned a page. So there is one
-    /// slot, it is always the same height, and what changes is only which button is standing
-    /// in it — or none, on the steps that are asking for something on the board instead.
+    /// slot, always the same height, and what changes is only which button is standing in it.
+    /// The steps that ask for something on the board instead carry no slot at all.
+    ///
+    /// Whichever button it is, it is the painted one the field itself ends a go with, in the
+    /// same dusty salmon as the bar overhead: the walkthrough is teaching the board, so the
+    /// thing it asks the player to press should be the thing the board will ask them to press.
     @ViewBuilder
     private var actionButton: some View {
         if lesson.showsContinue {
@@ -157,26 +216,24 @@ struct TutorialView: View {
                 }
             } label: {
                 Text(lesson.step == .finished ? "Play" : "Continue")
-                    .font(.headline.weight(.bold))
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(GamePalette.rail)
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
         } else if lesson.step == .release {
             Button {
                 lesson.releasePig()
             } label: {
                 Text("Release the pig")
-                    .font(.headline.weight(.bold))
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                     .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(GamePalette.rail)
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
             .disabled(!lesson.allowsRelease)
-        } else {
-            // The steps that want a tap on the board rather than a button. The slot keeps its
-            // height so that wanting nothing here does not move the field.
-            Color.clear
         }
     }
 
