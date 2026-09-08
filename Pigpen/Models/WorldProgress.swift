@@ -313,9 +313,11 @@ final class WorldProgress {
         return frontier > before
     }
 
-    /// Whether a film has been played, by the key it is remembered under. The keyed pair is
-    /// what lets a world other than the meadow — whose films are `StorybookScene`s rather than
-    /// `CutScene`s — track its own opening and send-off through the same store.
+    /// Whether a film has been played, by the key it is remembered under. Films are keyed by
+    /// string rather than by name so that every world tracks its own opening, briefing and
+    /// send-off through the same store — and so that a film keeps its key when it changes,
+    /// which is how a world's stills could be repainted without anyone being sat back down in
+    /// front of a film they had already watched.
     func hasPlayed(sceneKey key: String) -> Bool {
         playedScenes.contains(key)
     }
@@ -376,9 +378,8 @@ final class WorldProgress {
     /// rather than the ground.
     ///
     /// Which films a world has is the world's business and which have been watched is this
-    /// one's, so the world is handed in rather than held: the meadow's briefing is a painted
-    /// `CutScene` and the thicket's a `StorybookScene`, and neither this nor the map it stops
-    /// need know which.
+    /// one's, so the world is handed in rather than held: the meadow briefs at Stag Mere and the
+    /// thicket at Boar Hollow, and neither this nor the map it stops need know which is which.
     ///
     /// Returns the film rather than a yes or no so that asking whether to stop and asking what
     /// to play are one question. Two would be two things to keep in agreement.

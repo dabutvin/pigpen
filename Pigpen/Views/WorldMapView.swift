@@ -36,7 +36,7 @@ struct WorldMapView: View {
     /// screen — the same way the title screen hands the opening on to the map.
     @State private var briefedStop: Int?
     /// The film that closes the world out, while it is on screen.
-    @State private var farewellFilm: WorldFilm?
+    @State private var farewellFilm: CutScene?
     /// Whether the map has already made its opening run up the trail. Putting a puzzle away
     /// brings the map back on screen, which is not an arrival — it is a return to a map the
     /// player left mid-trail.
@@ -132,10 +132,10 @@ struct WorldMapView: View {
             }
         }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
-            WorldFilmView(film: waiting.film) { endBriefing(waiting) }
+            CutSceneView(waiting.film) { endBriefing(waiting) }
         }
         .fullScreenCover(item: $farewellFilm, onDismiss: { leaveForTheUniverse() }) { film in
-            WorldFilmView(film: film) { endFarewell(film) }
+            CutSceneView(film) { endFarewell(film) }
         }
     }
 
@@ -368,7 +368,7 @@ struct WorldMapView: View {
         farewellFilm = spec.raise()
     }
 
-    private func endFarewell(_ film: WorldFilm) {
+    private func endFarewell(_ film: CutScene) {
         progress.markPlayed(sceneKey: film.key)
         farewellFilm = nil
     }
@@ -537,7 +537,7 @@ struct MapArrival {
 /// A level waiting behind the film that sets it up — whichever kind of film its world keeps.
 private struct Briefing: Identifiable {
     let stop: Int
-    let film: WorldFilm
+    let film: CutScene
 
     var id: Int { stop }
 }

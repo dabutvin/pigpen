@@ -31,7 +31,7 @@ struct FilmReelView: View {
     @State private var index = 0
     /// The film itself, raised — and so its clock started — as it goes up rather than when the
     /// reel was put together. Held in state so a redraw does not start it again.
-    @State private var playing: WorldFilm?
+    @State private var playing: CutScene?
     /// How many times the curtain has gone up, which is what the film on screen is named by.
     ///
     /// Counted rather than named after the film because the same film can come up twice running —
@@ -56,7 +56,7 @@ struct FilmReelView: View {
                     // Named by the take rather than the film, so every raising of the curtain is
                     // a fresh clock — one storybook still handing on to another, and a film
                     // rewound onto itself, alike.
-                    WorldFilmView(film: playing, counted: false) { advance() }
+                    CutSceneView(playing, counted: false) { advance() }
                         .id(take)
                 }
 

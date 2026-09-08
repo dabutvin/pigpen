@@ -18,7 +18,7 @@ struct UniverseMapView: View {
     /// The world whose trail is on screen, if any.
     @State private var entering: Int?
     /// A world's opening film, over the map, before its trail comes up.
-    @State private var openingFilm: WorldFilm?
+    @State private var openingFilm: CutScene?
     /// The world to drop into once that film has come down, so the two never fight over the
     /// screen — the same hand-off the title screen makes for the opening.
     @State private var pendingEntry: Int?
@@ -73,7 +73,7 @@ struct UniverseMapView: View {
             }
         }
         .fullScreenCover(item: $openingFilm, onDismiss: { openPendingWorld() }) { film in
-            WorldFilmView(film: film) { endOpening(film) }
+            CutSceneView(film) { endOpening(film) }
         }
         .sheet(isPresented: $isOffering) {
             FullGameOffer(fullGame: progress.fullGame, source: .map)
@@ -307,7 +307,7 @@ struct UniverseMapView: View {
         }
     }
 
-    private func endOpening(_ film: WorldFilm) {
+    private func endOpening(_ film: CutScene) {
         progress.markPlayed(sceneKey: film.key)
         openingFilm = nil
     }

@@ -152,48 +152,12 @@ jobs:
           # at the end of the gallery rather than renumbering every shot above it.
           capture 69 universe_locked -universe-locked
 
-          # A cut scene is lit by the shot rather than by the phone, so both
-          # appearances of one were the same picture twice and only one of them is
-          # taken now — about forty-five seconds off this step. The phone is put into
-          # light once here rather than inside `scene`, so that what comes out is the
-          # shot that used to be filed as the light one and not whatever appearance
-          # the screen above happened to leave behind.
-          xcrun simctl ui "$UDID" appearance light
-
-          # The file is marked `_scene` rather than `_light` so that nothing reads it
-          # as half of a pair, and the numbering is left as it was — odd numbers, with
-          # the even one beside each still free — so that these keep their order and a
-          # second shot can go back if one is ever wanted.
-          scene() {
-            local order="$1"
-            local screen="$2"
-            shift 2
-
-            local shot
-            shot=$(printf 'screenshots/%02d_%s_scene.png' "$order" "$screen")
-
-            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
-            sleep 3
-            xcrun simctl io "$UDID" screenshot "$shot"
-
-            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
-            echo "Captured: $shot"
-          }
-
-          # The cut scenes, a shot at a time. Each argument stops the clock on one shot,
-          # so these come out the same on every run rather than wherever a film happened to
-          # have got to.
-          scene 41 opening_home_pen -opening
-          scene 43 opening_gate -opening-gate
-          scene 45 opening_welcome -opening-welcome
-          scene 47 opening_treats -opening-treats
-          scene 49 opening_close -opening-close
-          scene 51 mere_land -mere
-          scene 53 mere_resident -mere-resident
-          scene 55 mere_both -mere-both
-          scene 57 held_penned -held-penned
-          scene 59 held_forest -held-forest
-          scene 61 held_away -held-away
+          # The cut scenes are not photographed here. There are a hundred and fourteen
+          # shots across the game's thirty-six films, every one of them stopped on a clock
+          # that does not move, and a gallery that size is a worse way to look at them than
+          # opening the film in a preview or in the projection room behind the gear. The
+          # launch arguments that stop each shot are still there — `PigpenApp.stills` — for
+          # anyone who wants to photograph one.
 
           xcrun simctl status_bar "$UDID" clear
 
