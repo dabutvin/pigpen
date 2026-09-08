@@ -280,13 +280,13 @@ struct WorldMapView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(world.name)
                     .font(.system(size: 17, weight: .black, design: .rounded))
-                Text("\(progress.clearedCount) of \(world.count) sold")
+                Text("\(progress.clearedCount) of \(world.count) puzzles solved")
                     .font(.system(size: 11, weight: .semibold))
-                    .opacity(0.75)
+                    .opacity(0.85)
             }
-            // Dark lettering on the glaze, which the banner keeps: it is set over a map
-            // rather than over a board, with a cream disc of its own carrying the way back.
-            .foregroundStyle(GamePalette.post)
+            // Painted lettering on the glaze, the same white the star tally beside it wears,
+            // so the whole banner reads as one line of signwriting across the bar.
+            .foregroundStyle(GamePalette.cream)
 
             Spacer(minLength: 0)
 
