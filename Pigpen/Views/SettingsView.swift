@@ -97,6 +97,10 @@ struct SettingsView: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
         }
+        // The switches, the reminder's clock and the alert that asks before it clears
+        // everything are all stock, and stock controls follow the phone unless they are
+        // told not to.
+        .staysInDaylight()
         // Permission is granted and taken away in the system settings, which is a place
         // this screen cannot see into. Reading it on the way in is what lets the card admit
         // that the phone has stopped passing the reminders on.

@@ -46,6 +46,13 @@ struct FullGameOffer: View {
     }
 
     var body: some View {
+        page
+            // A cream page, wherever it is raised from — including over the starfield of
+            // the universe map, which is the one screen in the game that is night.
+            .staysInDaylight()
+    }
+
+    private var page: some View {
         ZStack {
             // A cream page rather than timber, the same as the settings sheet, with the
             // card separated from it by its own dark shadow.

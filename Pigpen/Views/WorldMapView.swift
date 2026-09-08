@@ -13,7 +13,6 @@ import UIKit
 @MainActor
 struct WorldMapView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var progress: WorldProgress
@@ -65,7 +64,9 @@ struct WorldMapView: View {
 
     private var world: WorldMap { progress.world }
     private var theme: WorldTheme { game.theme }
-    private var colors: GamePalette.Pasture { theme.pasture(dark: colorScheme == .dark) }
+    /// The one light this trail is ever drawn in. The map used to fall to dusk with the
+    /// phone; now only the title screen does.
+    private var colors: GamePalette.Pasture { theme.day }
     /// How much of the trail is the player's, which is as far as the pig has ever stood
     /// — walking back down to an old level does not shut the meadow behind you.
     private var opened: Double { max(pigStop, Double(progress.frontier)) }
@@ -100,6 +101,7 @@ struct WorldMapView: View {
             }
         }
         .background(colors.ground)
+        .staysInDaylight()
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { index in
@@ -110,7 +112,6 @@ struct WorldMapView: View {
                 treatSkin: theme.treats,
                 skin: theme.field,
                 day: theme.day,
-                dusk: theme.dusk,
                 trail: (world: world.name, stop: index)
             ) { verdict, _, fences in
                 let wasHeld = progress.isTheWorldHeld

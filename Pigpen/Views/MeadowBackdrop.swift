@@ -11,20 +11,23 @@ import UIKit
 /// mowing and wildflowers.
 ///
 /// The ground it is all standing on is painted once. Only the things that would move in a
-/// breeze — the grass, the flowers, the fireflies over them after dark — are on a clock,
-/// and they are on a slow one, so a level has some air moving through it without the whole
-/// meadow being repainted behind a board nobody is looking past. It follows the system
-/// appearance the way the rest of the world does — daylight, or the ground after dark.
+/// breeze — the grass, the flowers, the fireflies over them — are on a clock, and they are
+/// on a slow one, so a level has some air moving through it without the whole meadow being
+/// repainted behind a board nobody is looking past.
+///
+/// It is daylight whatever the phone is set to. It used to fall to dusk with the system
+/// appearance, and a board is the one place in the game where that was worth nothing: the
+/// field itself keeps one set of colours either way, so all the night ever did was put a
+/// dark ring round a board painted for daylight. The title screen is the only meadow that
+/// still keeps its hours.
 struct MeadowBackdrop: View {
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var opened = Date()
 
-    /// Daylight and dusk for this patch of ground. Defaults to the meadow, which is what
+    /// The light this patch of ground is painted in. Defaults to the meadow, which is what
     /// every board that is not a themed world — dailies, the tutorial, a level opened on
     /// its own — is cut out of.
     var day: GamePalette.Pasture = .day
-    var dusk: GamePalette.Pasture = .dusk
     /// How far down the screen to carry the far country — the haze, the two hills and the
     /// pines standing on them — as a fraction of the height. Zero behind a board, where the
     /// horizon belongs tucked up at the top with the fence rack. A screen whose own chrome
@@ -33,7 +36,7 @@ struct MeadowBackdrop: View {
     var horizonDrop: Double = 0
 
     var body: some View {
-        let colors: GamePalette.Pasture = colorScheme == .dark ? dusk : day
+        let colors = day
 
         ZStack {
             Canvas { context, size in
@@ -169,8 +172,8 @@ private struct Paddock {
     /// haze coming down onto the grass, the swell of two far hills, and a stand of pines
     /// along their tops. It is what turns the strip of ground above the board from a green
     /// wall into somewhere the pig could conceivably get to, which is the whole threat of
-    /// the game — and it is painted in the pasture's own colours, so the meadow's dusk
-    /// silvers it rather than switching it off.
+    /// the game — and it is painted in the pasture's own colours, so a thicket's canopy
+    /// closes it in rather than switching it off.
     private func drawMeadowHorizon(in context: inout GraphicsContext) {
         // The haze first, so everything in front of it stands out of the light. It reaches
         // as far down as the far country has been carried, so a screen that drops the
@@ -2139,6 +2142,21 @@ extension View {
             .tint(GamePalette.cream)
     }
 
+    /// Holds a screen in daylight whatever the phone is set to.
+    ///
+    /// Every screen but the title is painted in one light now, and this is what makes the
+    /// rest of the screen agree with the paint: the stock switches in settings, the wheel
+    /// on the reminder's clock, the alert that asks before it throws everything away, and
+    /// the status bar over the lot of it. Without it a phone set to dark puts white numerals
+    /// over a pale sky.
+    ///
+    /// It is worn a screen at a time rather than set once over the whole app because there
+    /// is exactly one screen it must not reach. The title screen still keeps its hours, and
+    /// its meadow still goes to dusk when the phone does.
+    func staysInDaylight() -> some View {
+        preferredColorScheme(.light)
+    }
+
     /// Stops the navigation stack from reading a drag across the left of the board as a
     /// swipe back to the screen behind. On a field that drag is fencing, and the edge is
     /// exactly where a wall often has to go — so the way out stays the bar's back button,
@@ -2193,26 +2211,26 @@ private struct KeepsSwipeFromPopping: UIViewControllerRepresentable {
 }
 
 #Preview("Thicket") {
-    MeadowBackdrop(day: .forestDay, dusk: .forestDusk)
+    MeadowBackdrop(day: .forestDay)
         .ignoresSafeArea()
 }
 
 #Preview("Emberpeak") {
-    MeadowBackdrop(day: .emberDay, dusk: .emberDusk)
+    MeadowBackdrop(day: .emberDay)
         .ignoresSafeArea()
 }
 
 #Preview("Cogsworth City") {
-    MeadowBackdrop(day: .cityDay, dusk: .cityDusk)
+    MeadowBackdrop(day: .cityDay)
         .ignoresSafeArea()
 }
 
 #Preview("Starfall Reaches") {
-    MeadowBackdrop(day: .starDay, dusk: .starDusk)
+    MeadowBackdrop(day: .starDay)
         .ignoresSafeArea()
 }
 
 #Preview("Gloamdeep Caverns") {
-    MeadowBackdrop(day: .gloamDay, dusk: .gloamDusk)
+    MeadowBackdrop(day: .gloamDay)
         .ignoresSafeArea()
 }

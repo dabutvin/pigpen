@@ -47,6 +47,9 @@ struct ReminderPromptView: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
         }
+        // The wheel that picks the hour is stock, and a stock wheel follows the phone
+        // unless it is told not to.
+        .staysInDaylight()
     }
 
     // MARK: - Pieces

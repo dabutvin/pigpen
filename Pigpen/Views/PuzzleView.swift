@@ -7,9 +7,6 @@ import UIKit
 struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// Only for the words painted straight onto the grass: the meadow is pale by day and
-    /// dark after dusk, so what is written on it swaps between ink and cream to stay read.
-    @Environment(\.colorScheme) private var colorScheme
 
     /// Told what a pen was worth — its stars, whether it was the best pen the map has in
     /// it, how long it took, and the fencing that held it — every time one holds.
@@ -35,10 +32,11 @@ struct PuzzleView: View {
     /// meadow's mud and blue water are the default, and a themed world passes its own, so the
     /// mountain's board is ash with a steaming tarn in it rather than mud with a mere.
     private let skin: FieldSkin
-    /// Daylight and dusk for the ground the board is cut out of. Defaults to the meadow;
+    /// The light the ground the board is cut out of is painted in. Defaults to the meadow;
     /// a themed world passes its own so the thicket sits in leaf litter rather than mowing.
+    /// One light, whatever the phone is set to: the field itself has always kept one set of
+    /// colours, and the ground it is cut out of now keeps its daylight to match.
     private let day: GamePalette.Pasture
-    private let dusk: GamePalette.Pasture
     /// Which world this board is a stop on, and how far up its trail — and nothing at all
     /// for a board that is not on a trail.
     ///
@@ -93,7 +91,6 @@ struct PuzzleView: View {
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
         skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
-        dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
@@ -106,7 +103,6 @@ struct PuzzleView: View {
             treatSkin: treatSkin,
             skin: skin,
             day: day,
-            dusk: dusk,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
             trail: trail,
@@ -123,7 +119,6 @@ struct PuzzleView: View {
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
         skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
-        dusk: GamePalette.Pasture = .dusk,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
@@ -135,7 +130,6 @@ struct PuzzleView: View {
         self.treatSkin = treatSkin
         self.skin = skin
         self.day = day
-        self.dusk = dusk
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
         self.trail = trail
@@ -166,7 +160,7 @@ struct PuzzleView: View {
 
     var body: some View {
         ZStack {
-            MeadowBackdrop(day: day, dusk: dusk)
+            MeadowBackdrop(day: day)
                 .ignoresSafeArea()
 
             VStack(spacing: 12) {
@@ -232,6 +226,7 @@ struct PuzzleView: View {
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
         .fieldNavigationBar()
+        .staysInDaylight()
         .keepsSwipeFromPopping()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
@@ -416,16 +411,9 @@ struct PuzzleView: View {
                 Text(tallySummary)
                     .font(.footnote.weight(.heavy))
                     // Written straight onto the grass, so it is painted rather than
-                    // printed — in ink on the pale daytime meadow, in cream with a shadow
-                    // once the ground has gone dark.
-                    .foregroundStyle(
-                        colorScheme == .dark ? GamePalette.cream : GamePalette.post
-                    )
-                    .shadow(
-                        color: .black.opacity(colorScheme == .dark ? 0.45 : 0),
-                        radius: 3,
-                        y: 1
-                    )
+                    // printed — in ink, since the ground under it is pale in every light
+                    // the board is ever cut out of.
+                    .foregroundStyle(GamePalette.post)
                     .contentTransition(.numericText())
                     // Sits on one line beside the button rather than pushing it off the
                     // screen when the type is large.
@@ -479,16 +467,9 @@ struct PuzzleView: View {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
                 .font(.system(size: 17, weight: .heavy))
-                // Painted straight onto the grass, the way the tally below is: ink on the
-                // pale daytime meadow, and cream with a dark halo once the ground has gone
-                // dark — the halo is what carries a light glyph clear of a dark green.
-                .foregroundStyle(colorScheme == .dark ? GamePalette.cream : GamePalette.post)
-                .shadow(color: .black.opacity(colorScheme == .dark ? 0.8 : 0), radius: 2)
-                .shadow(
-                    color: .black.opacity(colorScheme == .dark ? 0.5 : 0),
-                    radius: 6,
-                    y: 2
-                )
+                // Painted straight onto the grass, the way the tally below is: ink, on
+                // ground that is pale whatever the phone is set to.
+                .foregroundStyle(GamePalette.post)
                 .opacity(enabled ? 1 : 0.35)
                 // One box for all three, so a wider glyph does not make a wider button — and
                 // wider than the glyph needs, so a thumb has something to land on without

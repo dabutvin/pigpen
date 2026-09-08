@@ -84,6 +84,7 @@ struct DailyArchiveView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
         }
+        .staysInDaylight()
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { date in
