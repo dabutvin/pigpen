@@ -60,6 +60,11 @@ struct UniverseMapView: View {
         }
         .background(Color(red: 0.04, green: 0.05, blue: 0.12))
         .safeAreaInset(edge: .top, spacing: 0) { banner }
+        // The one screen that is night and always was. It is painted in space, not in a
+        // meadow, so it never followed the phone and does not start now — it is simply
+        // told which light it is in, once, so the clock over the starfield stays white
+        // rather than turning to ink on black when the phone is set the other way.
+        .preferredColorScheme(.dark)
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $entering) { index in
             if let game = progress.universe.game(at: index), let world = progress.progress(for: index) {

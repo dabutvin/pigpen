@@ -17,10 +17,10 @@ struct WorldTheme: Sendable {
     let name: String
     /// A line for the universe map, so a world says what it is before it is ever opened.
     let blurb: String
-    /// The trail's daylight and nightfall, following the player's own screen the way the
-    /// meadow always has.
+    /// The light the trail and the boards cut out of it are drawn in. One light and no
+    /// nightfall: the map used to follow the player's own screen down to dusk, and the
+    /// title screen is the only meadow that still keeps those hours.
     let day: GamePalette.Pasture
-    let dusk: GamePalette.Pasture
     /// How the windfall bonus and the staked hazard are dressed on this world's ground.
     let treats: TreatSkin
     /// How the board itself is painted: the ground it is cut out of, the water lying in that
@@ -32,9 +32,6 @@ struct WorldTheme: Sendable {
     /// The world's own colour on the universe map: the planet it is drawn as, lit and shaded.
     let accent: Color
     let accentDeep: Color
-
-    /// The palette for a world map drawn under a given appearance.
-    func pasture(dark: Bool) -> GamePalette.Pasture { dark ? dusk : day }
 }
 
 /// How a world dresses the two things that can lie on its ground: the windfall worth five
@@ -93,7 +90,6 @@ extension WorldTheme {
         name: "Mudlark Meadow",
         blurb: "Where it all began. A pig, an open gate, and nine fields of nothing to stop it.",
         day: .day,
-        dusk: .dusk,
         treats: TreatSkin(
             bonusGlyph: "🍎", bonusScale: 0.58, bonusName: "apple",
             hazardGlyph: "☠️", hazardScale: 0.68, hazardName: "skull"
@@ -112,7 +108,6 @@ extension WorldTheme {
         name: "Thornwood Thicket",
         blurb: "The pig took the tree line. Mushrooms in the leaf mould, wilted flowers in the dark.",
         day: .forestDay,
-        dusk: .forestDusk,
         treats: TreatSkin(
             bonusGlyph: "🍄", bonusScale: 0.56, bonusName: "mushroom",
             hazardGlyph: "🥀", hazardScale: 0.60, hazardName: "wilted flower"
@@ -132,7 +127,6 @@ extension WorldTheme {
         name: "Emberpeak",
         blurb: "A mountain that never stops smoking. Coins in the ash, flames under it.",
         day: .emberDay,
-        dusk: .emberDusk,
         treats: TreatSkin(
             bonusGlyph: "🪙", bonusScale: 0.56, bonusName: "coin",
             hazardGlyph: "🔥", hazardScale: 0.62, hazardName: "flame"
@@ -155,7 +149,6 @@ extension WorldTheme {
         name: "Cogsworth City",
         blurb: "Alleys, rooftops and a pig on the loose. Pizza on the pavement, trash cans along it.",
         day: .cityDay,
-        dusk: .cityDusk,
         treats: TreatSkin(
             bonusGlyph: "🍕", bonusScale: 0.58, bonusName: "pizza",
             hazardGlyph: "🗑️", hazardScale: 0.60, hazardName: "trash can"
@@ -179,7 +172,6 @@ extension WorldTheme {
         name: "Starfall Reaches",
         blurb: "Fence a pig loose among the stars. Stars in the dust, meteors under it.",
         day: .starDay,
-        dusk: .starDusk,
         treats: TreatSkin(
             bonusGlyph: "🌟", bonusScale: 0.58, bonusName: "star",
             hazardGlyph: "☄️", hazardScale: 0.62, hazardName: "meteor"
@@ -204,7 +196,6 @@ extension WorldTheme {
         name: "Gloamdeep Caverns",
         blurb: "Deep dark, and something with wings. Diamonds in the flowstone, boulders on it.",
         day: .gloamDay,
-        dusk: .gloamDusk,
         treats: TreatSkin(
             bonusGlyph: "💎", bonusScale: 0.56, bonusName: "diamond",
             hazardGlyph: "🪨", hazardScale: 0.60, hazardName: "boulder"
@@ -229,7 +220,6 @@ extension WorldTheme {
         name: "Lantern Carnival",
         blurb: "Lights, crowds and a pig on the loose. Popcorn in the sawdust, megaphones over it.",
         day: .lanternDay,
-        dusk: .lanternDusk,
         treats: TreatSkin(
             bonusGlyph: "🍿", bonusScale: 0.58, bonusName: "popcorn",
             hazardGlyph: "📣", hazardScale: 0.58, hazardName: "megaphone"
@@ -253,7 +243,6 @@ extension WorldTheme {
         name: "Sunbaked Dunes",
         blurb: "Sand to the horizon, and a sting in it.",
         day: .duneDay,
-        dusk: .duneDusk,
         treats: TreatSkin(
             bonusGlyph: "🍈", bonusScale: 0.58, bonusName: "melon",
             hazardGlyph: "🐍", hazardScale: 0.60, hazardName: "snake"
@@ -277,7 +266,6 @@ extension WorldTheme {
         name: "Tidepool Cove",
         blurb: "Where the tide keeps rearranging the walls.",
         day: .coveDay,
-        dusk: .coveDusk,
         treats: TreatSkin(
             bonusGlyph: "🐚", bonusScale: 0.58, bonusName: "seashell",
             hazardGlyph: "🪼", hazardScale: 0.60, hazardName: "jellyfish"
@@ -301,7 +289,6 @@ extension WorldTheme {
         name: "Frostwhisker Tundra",
         blurb: "Ice, snow, and a pig that will not stay put.",
         day: .frostDay,
-        dusk: .frostDusk,
         treats: TreatSkin(
             bonusGlyph: "🎿", bonusScale: 0.58, bonusName: "ski",
             hazardGlyph: "🧊", hazardScale: 0.58, hazardName: "ice slick"
@@ -325,7 +312,6 @@ extension WorldTheme {
         name: "Mirebog Fen",
         blurb: "Half water, half mud, all trouble.",
         day: .fenDay,
-        dusk: .fenDusk,
         treats: TreatSkin(
             bonusGlyph: "🪷", bonusScale: 0.56, bonusName: "lotus flower",
             hazardGlyph: "🦟", hazardScale: 0.58, hazardName: "mosquito"
@@ -351,7 +337,6 @@ extension WorldTheme {
         name: "Cloudspire Heights",
         blurb: "Fields in the sky, and a long way down.",
         day: .spireDay,
-        dusk: .spireDusk,
         treats: TreatSkin(
             bonusGlyph: "🌈", bonusScale: 0.58, bonusName: "rainbow",
             hazardGlyph: "🌩️", hazardScale: 0.58, hazardName: "storm"

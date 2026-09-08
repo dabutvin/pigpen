@@ -127,6 +127,7 @@ struct NoPuzzleView: View {
         .navigationTitle(date.title)
         .navigationBarTitleDisplayMode(.inline)
         .fieldNavigationBar()
+        .staysInDaylight()
     }
 }
 

@@ -177,8 +177,7 @@ struct PigpenApp: App {
                 level: .nettleBank,
                 treatSkin: WorldTheme.thornwood.treats,
                 skin: WorldTheme.thornwood.field,
-                day: .forestDay,
-                dusk: .forestDusk
+                day: .forestDay
             )
         case .embers:
             // A mountain board: the coin and the flame stand where the apple and
@@ -188,8 +187,7 @@ struct PigpenApp: App {
                 level: .smoulderRidge,
                 treatSkin: WorldTheme.emberpeak.treats,
                 skin: WorldTheme.emberpeak.field,
-                day: .emberDay,
-                dusk: .emberDusk
+                day: .emberDay
             )
         case .pies:
             // A city board: the pizza and the trash can stand where the apple and the
@@ -199,8 +197,7 @@ struct PigpenApp: App {
                 level: .clocktowerSquare,
                 treatSkin: WorldTheme.cogsworth.treats,
                 skin: WorldTheme.cogsworth.field,
-                day: .cityDay,
-                dusk: .cityDusk
+                day: .cityDay
             )
         case .map:
             WorldMapView(progress: .partWayThrough())
