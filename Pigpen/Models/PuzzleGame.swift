@@ -188,14 +188,6 @@ final class PuzzleGame {
         bestPen = Pen(fences: fences, tally: tally)
     }
 
-    /// Lays a submitted wall back down on an empty board in one step, the way *Put it
-    /// back* does mid-session — used when a completed day is opened with the offer taken.
-    @discardableResult
-    func putSubmittedPenBack(_ fences: Set<GridPoint>) -> Bool {
-        rememberSubmittedPen(fences)
-        return restoreBestPen()
-    }
-
     /// Fills a tile in with fencing, or clears it again. Returns whether anything changed,
     /// so the caller can tell a refused tap from an accepted one.
     @discardableResult

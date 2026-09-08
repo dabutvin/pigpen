@@ -17,10 +17,6 @@ struct DailyPuzzleView: View {
     /// draft with a clock already under way takes its own; a screenshot hands one in
     /// already stopped, which cannot photograph something that is still moving.
     var clock = Stopwatch()
-    /// Whether the board should open with the submitted wall already down — the player
-    /// took *Put it back* on a day they had held before. Otherwise the wall is only
-    /// remembered, so the trophy can offer it once the field is somewhere else.
-    var restoreSubmitted = false
 
     var body: some View {
         if let level = DailyAlmanac.level(on: date) {
@@ -65,16 +61,13 @@ struct DailyPuzzleView: View {
         return level.tally(for: pen).score
     }
 
-    /// The board the day opens on: whatever fencing was left standing when it was last
-    /// put away, and behind that the wall submitted for the day's best pen — laid down
-    /// already when the player asked for it back, or only kept so *Put it back* can offer
-    /// it after they rearrange.
+    /// The board the day opens on: whatever fencing was left standing when it was last put
+    /// away — which on a day already held is the submitted wall itself — and behind that
+    /// the wall submitted for the day's best pen, kept so *Restore* has something to offer
+    /// the moment the field stands anywhere else.
     private func game(for level: PuzzleLevel) -> PuzzleGame {
         let game = progress.game(for: level, on: date)
-        guard let fences = progress.submittedFences(on: date) else { return game }
-        if restoreSubmitted {
-            game.putSubmittedPenBack(fences)
-        } else {
+        if let fences = progress.submittedFences(on: date) {
             game.rememberSubmittedPen(fences)
         }
         return game

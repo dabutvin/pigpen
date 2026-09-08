@@ -25,13 +25,20 @@ struct MeadowBackdrop: View {
     /// its own — is cut out of.
     var day: GamePalette.Pasture = .day
     var dusk: GamePalette.Pasture = .dusk
+    /// How far down the screen to carry the far country — the haze, the two hills and the
+    /// pines standing on them — as a fraction of the height. Zero behind a board, where the
+    /// horizon belongs tucked up at the top with the fence rack. A screen whose own chrome
+    /// wants that band drops it: the archive puts its month bar against open sky and leaves
+    /// the pines standing well below it, rather than in among the lettering.
+    var horizonDrop: Double = 0
 
     var body: some View {
         let colors: GamePalette.Pasture = colorScheme == .dark ? dusk : day
 
         ZStack {
             Canvas { context, size in
-                Paddock(size: size, elapsed: 0, colors: colors).drawGround(in: &context)
+                Paddock(size: size, elapsed: 0, colors: colors, horizonDrop: horizonDrop)
+                    .drawGround(in: &context)
             }
 
             // A sway this slow has nowhere near thirty frames of movement in it to show,
@@ -40,12 +47,14 @@ struct MeadowBackdrop: View {
                 let elapsed = reduceMotion ? 0 : timeline.date.timeIntervalSince(opened)
 
                 Canvas { context, size in
-                    Paddock(size: size, elapsed: elapsed, colors: colors).drawGrowth(in: &context)
+                    Paddock(size: size, elapsed: elapsed, colors: colors, horizonDrop: horizonDrop)
+                        .drawGrowth(in: &context)
                 }
             }
 
             Canvas { context, size in
-                Paddock(size: size, elapsed: 0, colors: colors).drawVignette(in: &context)
+                Paddock(size: size, elapsed: 0, colors: colors, horizonDrop: horizonDrop)
+                    .drawVignette(in: &context)
             }
         }
         .accessibilityHidden(true)
@@ -61,6 +70,8 @@ private struct Paddock {
     /// for a player who would rather it kept still.
     let elapsed: TimeInterval
     let colors: GamePalette.Pasture
+    /// How far down the screen the far country has been carried — see `MeadowBackdrop`.
+    var horizonDrop: Double = 0
 
     /// The board takes the middle of the screen, the rack the top of it and the controls the
     /// foot, so everything the ground is dressed with keeps to the two bands either side of
@@ -161,16 +172,19 @@ private struct Paddock {
     /// the game — and it is painted in the pasture's own colours, so the meadow's dusk
     /// silvers it rather than switching it off.
     private func drawMeadowHorizon(in context: inout GraphicsContext) {
-        // The haze first, so everything in front of it stands out of the light.
+        // The haze first, so everything in front of it stands out of the light. It reaches
+        // as far down as the far country has been carried, so a screen that drops the
+        // horizon gets more open sky above it rather than the same band moved bodily down.
+        let foot = y(0.42 + horizonDrop)
         context.fill(
-            Path(CGRect(x: 0, y: 0, width: size.width, height: y(0.42))),
+            Path(CGRect(x: 0, y: 0, width: size.width, height: foot)),
             with: .linearGradient(
                 Gradient(colors: [
                     colors.skyHorizon.opacity(colors.isNight ? 0.25 : 0.85),
                     colors.skyHorizon.opacity(0)
                 ]),
                 startPoint: .zero,
-                endPoint: CGPoint(x: 0, y: y(0.42))
+                endPoint: CGPoint(x: 0, y: foot)
             )
         )
 
@@ -180,7 +194,7 @@ private struct Paddock {
             (crest: 0.13, centre: 0.22, reach: 0.85),
             (crest: 0.17, centre: 0.88, reach: 0.75)
         ].enumerated() {
-            let top = y(hill.crest)
+            let top = y(hill.crest + horizonDrop)
             let spread = x(hill.reach)
             context.fill(
                 Path(ellipseIn: CGRect(
@@ -203,7 +217,7 @@ private struct Paddock {
         for _ in 0..<8 {
             let foot = CGPoint(
                 x: x(scatter.next(in: 0.02...0.98)),
-                y: y(scatter.next(in: 0.16...0.29))
+                y: y(scatter.next(in: 0.16...0.29) + horizonDrop)
             )
             drawPine(in: &context, at: foot, tall: y(scatter.next(in: 0.035...0.06)))
         }
