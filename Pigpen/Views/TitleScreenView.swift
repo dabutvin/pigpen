@@ -29,9 +29,6 @@ struct TitleScreenView: View {
     /// in do not always name the same day: the row under Play opens today's, and a reminder
     /// tapped after midnight is asking about the morning it was posted for.
     @State private var playingDaily: DailyDate?
-    /// The day whose submitted wall is being offered back, while that offer is up.
-    @State private var offeringDaily: DailyDate?
-    @State private var restoreSubmittedDaily = false
     @State private var isArchiveOpen = false
     @State private var showsSettings = false
     /// Whether the settings sheet was closed on its way to the walkthrough. The practice pen
@@ -159,40 +156,7 @@ struct TitleScreenView: View {
             TutorialView()
         }
         .navigationDestination(item: $playingDaily) { date in
-            DailyPuzzleView(
-                date: date,
-                progress: daily,
-                restoreSubmitted: restoreSubmittedDaily
-            )
-        }
-        .confirmationDialog(
-            offeringDaily?.fullTitle ?? "",
-            isPresented: Binding(
-                get: { offeringDaily != nil },
-                set: { if !$0 { offeringDaily = nil } }
-            ),
-            titleVisibility: .visible
-        ) {
-            Button("Put it back") {
-                guard let offeringDaily else { return }
-                restoreSubmittedDaily = true
-                playingDaily = offeringDaily
-                self.offeringDaily = nil
-            }
-            Button("Play again") {
-                guard let offeringDaily else { return }
-                // Clear the field means clear the field: the board filed away when the day
-                // was left is the submitted wall itself, so it has to go or *Play again*
-                // opens on the very wall *Put it back* offers. The wall stays on the books
-                // — the trophy still has it once the new field is somewhere else.
-                daily.clearDraft(on: offeringDaily)
-                restoreSubmittedDaily = false
-                playingDaily = offeringDaily
-                self.offeringDaily = nil
-            }
-            Button("Cancel", role: .cancel) { offeringDaily = nil }
-        } message: {
-            Text("Put the fencing back the way you submitted it, or clear the field and try again.")
+            DailyPuzzleView(date: date, progress: daily)
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
             DailyArchiveView(today: today, progress: daily, fullGame: fullGame)
@@ -684,20 +648,22 @@ struct TitleScreenView: View {
         return "\(today.written) · \(streak) days in a row"
     }
 
-    /// Opens a day's board, or — once a wall has been submitted — offers to put that wall
-    /// back before the field comes up empty.
+    /// Opens a day's board, exactly as it was left.
+    ///
+    /// A day already held used to be a question first — put the submitted wall back, or clear
+    /// the field and play it again — asked before the board had been seen. It is not asked
+    /// any more. Tapping the day opens the day: the fencing that was standing when it was put
+    /// away is laid back down, submitted wall and all, and the board itself carries both
+    /// answers once it is up. *Restore* on the tally puts the best pen back the moment the
+    /// field is somewhere else, and *Start over* clears it — either of which is a better
+    /// place to choose than a dialog in front of a board the player has not looked at yet.
     ///
     /// It takes the day rather than assuming today's, since a tapped reminder can ask for
     /// the morning behind this one: a reminder posted at nine and read after midnight is
     /// about yesterday's board, and yesterday's board is what it should open.
     private func open(_ date: DailyDate) {
         Analytics.record(.dailyOpened(isToday: date == today))
-        if daily.submittedFences(on: date) != nil {
-            offeringDaily = date
-        } else {
-            restoreSubmittedDaily = false
-            playingDaily = date
-        }
+        playingDaily = date
     }
 
     /// A row that simply pushes another screen: the archive and the tutorial, cut from the

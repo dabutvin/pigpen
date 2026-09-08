@@ -24,11 +24,6 @@ struct DailyArchiveView: View {
     @State private var month: DailyMonth
     /// The day whose board is on screen. Emptying it pops back to the calendar.
     @State private var playing: DailyDate?
-    /// Whether the board about to open should put the submitted wall back down.
-    @State private var restoreSubmitted = false
-    /// A completed day the player has tapped, waiting on whether to put the submitted
-    /// wall back or clear the field and go again.
-    @State private var offering: DailyDate?
     /// Whether the offer of the full game is up, raised by tapping a day the free game does
     /// not open — any day but today.
     @State private var isOffering = false
@@ -57,7 +52,10 @@ struct DailyArchiveView: View {
 
     var body: some View {
         ZStack {
-            MeadowBackdrop()
+            // The far country carried down the screen, so the month bar stands against open
+            // sky and the pines keep to the grass below it rather than crowding the name of
+            // the month and the weekday letters under it.
+            MeadowBackdrop(horizonDrop: 0.58)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
@@ -89,42 +87,7 @@ struct DailyArchiveView: View {
         .safeAreaInset(edge: .top, spacing: 0) { banner }
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $playing) { date in
-            DailyPuzzleView(
-                date: date,
-                progress: progress,
-                restoreSubmitted: restoreSubmitted
-            )
-        }
-        .confirmationDialog(
-            offering.map(\.fullTitle) ?? "",
-            isPresented: Binding(
-                get: { offering != nil },
-                set: { if !$0 { offering = nil } }
-            ),
-            titleVisibility: .visible
-        ) {
-            Button("Put it back") {
-                guard let offering else { return }
-                restoreSubmitted = true
-                playing = offering
-                self.offering = nil
-            }
-            Button("Play again") {
-                guard let offering else { return }
-                // Clear the field means clear the field: the board filed away when the day
-                // was left is the submitted wall itself, so it has to go or *Play again*
-                // opens on the very wall *Put it back* offers. The wall stays on the books
-                // — the trophy still has it once the new field is somewhere else.
-                progress.clearDraft(on: offering)
-                restoreSubmitted = false
-                playing = offering
-                self.offering = nil
-            }
-            Button("Cancel", role: .cancel) {
-                offering = nil
-            }
-        } message: {
-            Text("Put the fencing back the way you submitted it, or clear the field and try again.")
+            DailyPuzzleView(date: date, progress: progress)
         }
         .sheet(isPresented: $isOffering) {
             FullGameOffer(fullGame: fullGame, source: .archive)
@@ -180,8 +143,10 @@ struct DailyArchiveView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
         .background {
+            // The same dusty salmon glaze the map and the boards wear across the top, so
+            // every screen with a bar over it is a room of the one building.
             LinearGradient(
-                colors: [GamePalette.rail, GamePalette.post],
+                colors: [GamePalette.clay, GamePalette.clayShade],
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -255,8 +220,10 @@ struct DailyArchiveView: View {
             ForEach(Weekday.allCases, id: \.rawValue) { day in
                 Text(day.initial)
                     .font(.system(size: 12, weight: .black, design: .rounded))
-                    .foregroundStyle(GamePalette.cream.opacity(0.8))
-                    .shadow(color: .black.opacity(0.45), radius: 2, y: 1)
+                    // Dark lettering, the same as the month's name on the pill above them:
+                    // these used to be cream cut out of a dark horizon, and the sky behind
+                    // them now is pale enough that a pale letter had nothing to stand on.
+                    .foregroundStyle(GamePalette.post)
                     .frame(maxWidth: .infinity)
                     .accessibilityLabel(day.name)
             }
@@ -327,14 +294,11 @@ struct DailyArchiveView: View {
         // A day out of the archive rather than this morning's, which is the difference
         // between somebody catching up and somebody browsing.
         Analytics.record(.dailyOpened(isToday: date == today))
-        // A day already submitted offers its wall back rather than opening straight onto
-        // an empty field — the same *Put it back* the board itself offers mid-session.
-        if progress.submittedFences(on: date) != nil {
-            offering = date
-        } else {
-            restoreSubmitted = false
-            playing = date
-        }
+        // Opened as it was left, submitted wall and all, the same as today's is off the
+        // title screen. A day already held used to be asked about first — put the wall
+        // back, or clear the field — in front of a board the player had not looked at yet;
+        // the board carries both answers itself, in *Restore* and *Start over*.
+        playing = date
     }
 }
 
