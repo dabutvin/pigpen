@@ -226,7 +226,7 @@ struct PuzzleView: View {
             }
             // The rack is the first thing under the title bar, so it is given room to stand
             // clear of it rather than being pressed up against the bar's underside.
-            .padding(.top, 14)
+            .padding(.top, 22)
             .padding(.bottom, 12)
         }
         .navigationTitle(level.name)

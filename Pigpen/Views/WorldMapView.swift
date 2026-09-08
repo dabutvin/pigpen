@@ -284,7 +284,8 @@ struct WorldMapView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }
-            // Dark lettering on the glaze, the same ink the puzzle bar's title is set in.
+            // Dark lettering on the glaze, which the banner keeps: it is set over a map
+            // rather than over a board, with a cream disc of its own carrying the way back.
             .foregroundStyle(GamePalette.post)
 
             Spacer(minLength: 0)

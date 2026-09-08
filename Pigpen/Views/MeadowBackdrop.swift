@@ -2117,9 +2117,12 @@ extension View {
                 ),
                 for: .navigationBar
             )
-            // Dark lettering on the glaze, painted on rather than punched out white, so
-            // the bar reads as signage in the same hand as the cream boards below it.
-            .toolbarColorScheme(.light, for: .navigationBar)
+            // Cream lettering on the glaze: white words on paintwork, the way a sign over a
+            // gate is lettered, rather than ink that has to hold its own against the salmon.
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            // The title comes with the scheme; the back button takes the screen's tint, and
+            // the stock blue is the one thing on these screens that belongs to no world.
+            .tint(GamePalette.cream)
     }
 
     /// Stops the navigation stack from reading a drag across the left of the board as a

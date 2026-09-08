@@ -188,8 +188,17 @@ struct FieldView: View {
                     : 0.35 + 0.35 * (sin(timeline.date.timeIntervalSinceReferenceDate * 3) + 1) / 2
 
                 Canvas { context, _ in
+                    let line = max(2, board.cell * 0.08)
+                    // A ring on a tile at the edge of the map used to be drawn across the
+                    // rim: a pale stroke over the turned earth, with the corner of it out
+                    // past the board altogether. So every ring is held in by the width of
+                    // the timber plus its own half-stroke, which is the most any of it
+                    // reaches outwards. The same inset applies to a tile in the middle,
+                    // where there is nothing to clear, so that every target is one size.
+                    let inset = max(board.cell * 0.08, timber(board) + line / 2)
+
                     for tile in highlightedTiles {
-                        let rect = board.rect(for: tile).insetBy(dx: board.cell * 0.08, dy: board.cell * 0.08)
+                        let rect = board.rect(for: tile).insetBy(dx: inset, dy: inset)
                         context.fill(
                             Path(roundedRect: rect, cornerRadius: board.cell * 0.18),
                             with: .color(GamePalette.pen.opacity(0.22 + pulse * 0.25))
@@ -197,7 +206,7 @@ struct FieldView: View {
                         context.stroke(
                             Path(roundedRect: rect, cornerRadius: board.cell * 0.18),
                             with: .color(GamePalette.cream.opacity(0.55 + pulse * 0.35)),
-                            lineWidth: max(2, board.cell * 0.08)
+                            lineWidth: line
                         )
                     }
                 }
@@ -1558,7 +1567,7 @@ struct FieldView: View {
     /// the inside of it. Everything past it is open country, which is exactly where the pig
     /// is trying to get to.
     private func drawRim(in context: inout GraphicsContext, board: BoardGeometry) {
-        let timber = max(2, board.cell * 0.1)
+        let timber = timber(board)
         context.stroke(
             rim(board, inset: timber / 2),
             with: .color(skin.post.opacity(0.85)),
@@ -1569,6 +1578,12 @@ struct FieldView: View {
             with: .color(GamePalette.cream.opacity(0.14)),
             lineWidth: max(1, board.cell * 0.03)
         )
+    }
+
+    /// The lip of turned earth around the board, measured so that anything drawn on an edge
+    /// tile can be kept clear of it.
+    private func timber(_ board: BoardGeometry) -> CGFloat {
+        max(2, board.cell * 0.1)
     }
 
     /// The board's own outline, and the shape everything drawn on the field is kept inside.

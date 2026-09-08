@@ -48,12 +48,13 @@ enum GamePalette {
     /// The barn at the bottom of the world map, and the only red in the game. It doubles as
     /// the colour of bad news on a painted board: a pig out on the loose, a budget spent.
     static let barn = Color(red: 0.70, green: 0.27, blue: 0.22)
-    /// The terracotta the game's chrome is glazed in: the bar over a board, and the one
+    /// The dusty salmon the game's chrome is glazed in: the bar over a board, and the one
     /// button on a field that ends a go. Warmer than the barn's red, because it is paint on
-    /// woodwork rather than a verdict.
-    static let clay = Color(red: 0.81, green: 0.45, blue: 0.34)
+    /// woodwork rather than a verdict, and dusty rather than red, so a bar the player looks
+    /// past all game long sits behind the board instead of shouting over it.
+    static let clay = Color(red: 0.820, green: 0.525, blue: 0.412)
     /// The same glaze with the light off it, for the underside of whatever wears it.
-    static let clayShade = Color(red: 0.71, green: 0.36, blue: 0.27)
+    static let clayShade = Color(red: 0.720, green: 0.435, blue: 0.342)
     /// Good news on a painted board: a pen that held, dark enough to read against cream.
     static let clover = Color(red: 0.17, green: 0.43, blue: 0.22)
     /// A signpost for a level that is still shut: weathered, unpainted, and dull on purpose.
