@@ -332,51 +332,51 @@ final class DailyReminder {
             // As far ahead as the run of days can be promised: the reminder the player is
             // going to see next, and only while it is today's board or tomorrow's.
             let promised = due.isEmpty && step <= 1 ? streak : 0
+            let said = line(on: day, streak: promised)
             due.append(
-                ScheduledReminder(
-                    date: day,
-                    time: time,
-                    title: title(for: day),
-                    body: body(for: day, streak: promised)
-                )
+                ScheduledReminder(date: day, time: time, title: said.title, body: said.body)
             )
         }
 
         return due
     }
 
-    /// What a reminder calls itself: its morning's own line from the hundred, and never
-    /// the game's name — the phone writes that over the top of it anyway.
-    static func title(for date: DailyDate) -> String {
-        line(on: date).title
+    /// What a reminder calls itself: the first half of its morning's line, and never the
+    /// game's name — the phone writes that over the top of it anyway.
+    static func title(for date: DailyDate, streak: Int = 0) -> String {
+        line(on: date, streak: streak).title
     }
 
-    /// What a reminder says under that: the rest of its morning's line, with the run of
-    /// days glued onto the end when there is one to keep. The run rides in the body rather
-    /// than the title, because a title and its body are written as a couplet — *Pig would
-    /// like a word* / *The word is "bigger."* — and neither half stands alone.
+    /// What a reminder says under that: the rest of its morning's line, which is empty for
+    /// the lines that are one sentence long and say all they have to say in the title.
     static func body(for date: DailyDate, streak: Int = 0) -> String {
-        let said = line(on: date).body
-        guard streak > 1 else { return said }
-        return said + " \(streak) days in a row so far."
+        line(on: date, streak: streak).body
     }
 
-    /// Which of the hundred lines a morning says.
+    /// What a morning says: a line out of the streak pool when there is a run to keep, and
+    /// one out of the generic pool when there is not.
     ///
-    /// Picked by the day rather than in the moment, because the fortnight is laid down
-    /// again on every return to the title screen: a true roll of the dice would rewrite
-    /// every pending reminder each time, and a screenshot run would never photograph the
-    /// same morning twice. Seeded off the date instead, so any one morning always says the
-    /// same thing and the mornings around it say something else — random on any day,
-    /// settled for that day.
-    static func line(on date: DailyDate) -> (title: String, body: String) {
-        lines[pick(on: date, outOf: lines.count)]
+    /// A run of one is not a run — it is the single day the player has just had — so it is
+    /// left unmentioned and the morning speaks generically. Everything above that has a
+    /// number worth putting in front of somebody.
+    ///
+    /// Which line of the pool is picked by the day rather than in the moment, because the
+    /// fortnight is laid down again on every return to the title screen: a true roll of the
+    /// dice would rewrite every pending reminder each time, and a screenshot run would never
+    /// photograph the same morning twice. Seeded off the date instead, so any one morning
+    /// always says the same thing and the mornings around it say something else — random on
+    /// any day, settled for that day.
+    static func line(on date: DailyDate, streak: Int = 0) -> (title: String, body: String) {
+        guard streak > 1 else {
+            return genericLines[pick(on: date, outOf: genericLines.count)]
+        }
+        return streakLine(streak, at: pick(on: date, outOf: streakLineCount))
     }
 
     /// The date scrambled down to an index: a stamp of the calendar day pushed through
-    /// SplitMix64's finalizer, so consecutive mornings land all over the hundred rather
-    /// than walking through them in order — and the same morning lands on the same line on
-    /// every launch, which `hashValue` (salted per process) could not promise.
+    /// SplitMix64's finalizer, so consecutive mornings land all over the pool rather than
+    /// walking through it in order — and the same morning lands on the same line on every
+    /// launch, which `hashValue` (salted per process) could not promise.
     static func pick(on date: DailyDate, outOf count: Int) -> Int {
         var mixed = UInt64(date.year * 10_000 + date.month * 100 + date.day)
         mixed = (mixed ^ (mixed >> 30)) &* 0xbf58_476d_1ce4_e5b9
@@ -385,112 +385,52 @@ final class DailyReminder {
         return Int(mixed % UInt64(max(1, count)))
     }
 
-    /// The hundred things a morning can say, each a couplet: the estate agent's patter the
-    /// cut scenes talk in, carried on into the notification shade. One is picked per day in
-    /// `line(on:)`; none of them gives a board away, and every body reads on from its title
-    /// rather than standing alone — so the pair travels together, streak clause and all.
-    static let lines: [(title: String, body: String)] = [
-        ("Pig's waiting", "Come build him a yard he can brag about."),
-        ("Today's listing is in", "Cozy lot. Limited fence. Pig has high hopes."),
-        ("New lot, who dis?", "Pig found another place. Help him fence it in."),
-        ("A fresh pen awaits", "Come see how much yard you can squeeze out of it."),
-        ("It's giving acreage", "Come give Pig the spacious-yard lifestyle he deserves."),
-        ("Pig needs a yard", "Preferably one with an unreasonable amount of square footage."),
-        ("Open house", "Pig is already wandering around the property."),
-        ("Fresh pasture", "Come turn today's little lot into prime pig real estate."),
-        ("Today's property", "It has potential. Pig would like you to find it."),
-        ("A little yard work?", "The kind that involves geometry instead of weeds."),
-        ("Pig found a place", "Come see if you can improve the floor plan."),
-        ("New listing", "One pig. One fence budget. Plenty of ambition."),
-        ("Pig's ready to move in", "Small issue: there is currently no pen."),
-        ("Today's lot is ready", "Come make it look expensive."),
-        ("Room to roam", "Pig would like as much of it as you can manage."),
-        ("Vibe check: spacious", "Open today's puzzle and see how much yard you can find."),
-        ("A fresh little plot", "Pig has already mentally moved in."),
-        ("Pig has plans", "They mostly involve making the yard bigger."),
-        ("Today's floor plan", "Come give Pig something spacious and tastefully fenced."),
-        ("Home sweet pen", "Today's version still needs some work."),
-        ("Another showing", "Pig has never met a property he wouldn't tour."),
-        ("Pig found some acreage", "\"Acreage\" may be generous. Come help."),
-        ("Fresh property", "Come see what a few strategically placed fences can do."),
-        ("Pig's house hunt", "Today's candidate is ready for your inspection."),
-        ("A promising little lot", "Pig can already picture himself standing in it."),
-        ("Today's pen is up to you", "No pressure. Pig is very easy to impress with square footage."),
-        ("Big yard energy", "Come see how roomy you can make today's pen."),
-        ("Pig wants more space", "A timeless request. See what you can do."),
-        ("Fresh fence, fresh possibilities", "Come make Pig's tiny real-estate dreams come true."),
-        ("Today's listing", "Great bones. Mostly because there are no walls yet."),
-        ("A new place for Pig", "Come add the one feature it's missing: boundaries."),
-        ("Fence time", "Pig has once again outsourced the entire floor plan to you."),
-        ("Pig's got a new project", "By \"project,\" he means \"you build it.\""),
-        ("A little geometry", "Come draw a shape Pig would be proud to live in."),
-        ("Pig understood the assignment", "He showed up. You handle the geometry."),
-        ("Fresh listing alert", "Pig is ready to see what you do with the place."),
-        ("Pig has feedback", "Before you even start: more yard."),
-        ("Today's puzzle is ready", "Come make Pig's fence budget look generous."),
-        ("A blank lot awaits", "Pig sees a future here. Mostly a fenced one."),
-        ("New day, new pen", "Help Pig achieve his pen dreams."),
-        ("Pig found another contender", "Come see if this one earns a spot on the shortlist."),
-        ("A cozy little challenge", "See how much yard you can make."),
-        ("Today's viewing", "Pig is ready. The property is… unfinished."),
-        ("More square footage, please", "Pig's daily request has arrived."),
-        ("The client is here", "He is pink, round, and very interested in the yard."),
-        ("Today's property tour", "Come help Pig find the best use of space."),
-        ("Pig has arrived", "The fence contractor has not. That's you."),
-        ("It's giving open concept", "Maybe a little too open. Come add some fence."),
-        ("Pig's daily showing", "He likes the location. Now about that fence…"),
-        ("Another day, another listing", "Pig is nothing if not thorough."),
-        ("Fence budget approved", "It is exactly as small as yesterday's ambitions were large."),
-        ("Pig would like an upgrade", "Come see what today's lot can become."),
-        ("A fresh patch of real estate", "Pig has already claimed the best spot to stand."),
-        ("Today's project", "Build a pen. Make it roomy. Impress one pig."),
-        ("Pig is browsing again", "Come help him make today's listing work."),
-        ("A little home improvement", "The home is mostly imaginary. The fence is up to you."),
-        ("Today's lot has charm", "Pig thinks it could use more yard."),
-        ("Pig's wish list", "Spacious. Cozy. Closed on all sides."),
-        ("New property, same priorities", "Pig would like the biggest yard possible, please."),
-        ("A fresh floor plan", "Come make every fence piece earn its keep."),
-        ("Three-star potential", "Pig is ready to see what you've got."),
-        ("Today's appraisal", "Build the pen first. Pig will handle the judging."),
-        ("Pig brought his standards", "Fortunately, they're mostly about square footage."),
-        ("A perfect pen?", "Come see if today's puzzle has one hiding in it."),
-        ("Rainbow potential", "Build big enough and today's pen might show off a little."),
-        ("Pig smells a three-star property", "Come see if he's right."),
-        ("Today could be the one", "The one with an unnecessarily excellent pen."),
-        ("Pig is optimistic", "Come justify his confidence."),
-        ("A fresh puzzle awaits", "Find the roomy little solution hiding inside."),
-        ("Today's lot is looking good", "Pig would like you to make it look even better."),
-        ("Mind the gap", "Pig considers openings a strong suggestion to leave."),
-        ("Close the fence", "Unless you'd like to watch Pig immediately wander off."),
-        ("Pig's feeling adventurous", "A closed pen may help with that."),
-        ("Tiny escape artist", "Come build Pig somewhere nice enough to stay."),
-        ("Pig spotted an opening", "Better get to today's puzzle before he does."),
-        ("Please contain your pig", "Spaciously, of course."),
-        ("Pig is on the loose", "In a very calm, cozy sort of way."),
-        ("Fence check", "Come make sure Pig's new place has all four-ish sides."),
-        ("Plot twist: more plot", "Come find Pig a little extra land today."),
-        ("A nice closed pen", "Pig asks for so little. Except square footage."),
-        ("Your daily pig break", "Come spend a few minutes rearranging fences."),
-        ("Pig o'clock", "Today's little puzzle is ready when you are."),
-        ("A cozy puzzle is waiting", "Come make Pig somewhere nice to stand."),
-        ("Daily Pigpen", "A fresh board, a small pig, and a few quiet minutes."),
-        ("Take a little Pigpen break", "Today's lot is ready for you."),
-        ("A new puzzle for today", "Come see what kind of pen takes shape."),
-        ("Pig has cleared his calendar", "He's available for today's puzzle whenever you are."),
-        ("A few minutes with Pig?", "There's a fresh pen waiting to be figured out."),
-        ("Today's tiny project", "Give Pig a surprisingly large backyard."),
-        ("A quiet little challenge", "Come make the most of today's fence."),
-        ("Pig's got nowhere to be", "Take your time with today's puzzle."),
-        ("A small favor for Pig", "Could you optimize his entire living situation?"),
-        ("Pig would like a word", "The word is \"bigger.\""),
-        ("Client feedback is in", "Pig says the yard could use more yard."),
-        ("Pig's in his homeowner era", "Come help him make the most of today's lot."),
-        ("Very important pig business", "Today's property isn't going to fence itself."),
-        ("Pig did some house hunting", "Now you get to do the hard part."),
-        ("Today in real estate", "Local pig seeks roomy pen. Fence budget firm."),
-        ("Pig found \"the one\"", "Or at least today's one. Come take a look."),
-        ("New Daily Puzzle", "Come give Pig the kind of yard he'll immediately take for granted.")
+    /// The ten things a morning says when there is no run to keep: today's puzzle is up,
+    /// and Pig needs a pen built.
+    ///
+    /// Each is one line of copy split at its first full stop — the phone sets a title in
+    /// bold over a body in plain, and a notification is read at a glance, so the hook goes
+    /// on top and the rest underneath. A line that is one sentence long is all title and no
+    /// body, which is a notification the phone draws perfectly well.
+    static let genericLines: [(title: String, body: String)] = [
+        ("Today's puzzle is ready", "Help Pig build his pen."),
+        ("A new puzzle is waiting for you", ""),
+        ("Today's pen won't build itself", ""),
+        ("Pig needs your help", "Today's puzzle is ready."),
+        ("Your daily puzzle is here", "See how big you can build."),
+        ("New day, new puzzle", "Let's build."),
+        ("Think you can beat today's puzzle?", ""),
+        ("Today's challenge is ready when you are", ""),
+        ("Pig has a fresh puzzle for you", ""),
+        ("Got a minute?", "Today's puzzle is waiting.")
     ]
+
+    /// How many things a morning has to say to somebody with a run going. A count rather
+    /// than an array, because half of these are written round the number and so cannot be
+    /// stood up until there is one.
+    static let streakLineCount = 10
+
+    /// The ten things a morning says when there is a run to keep, written round the run as
+    /// it stands.
+    ///
+    /// - Parameters:
+    ///   - streak: Days in a row so far, counting back from the last board held. Today's is
+    ///     still to be played, which is why these ask for it rather than congratulate it.
+    ///   - index: Which of the ten, picked off the date by `line(on:streak:)`.
+    static func streakLine(_ streak: Int, at index: Int) -> (title: String, body: String) {
+        switch index % streakLineCount {
+        case 0: ("Don't lose your \(streak)-day streak", "Today's puzzle is ready.")
+        case 1: ("Your \(streak)-day streak is on the line", "")
+        case 2: ("Keep your \(streak)-day streak going", "Play today's puzzle.")
+        case 3: ("One puzzle keeps your \(streak)-day streak alive", "")
+        case 4: ("You've played \(streak) days in a row", "Make it \(streak + 1).")
+        case 5: ("Your streak needs you", "Today's puzzle is waiting.")
+        case 6: ("So close to another streak day", "Don't stop now.")
+        case 7: ("\(streak) days and counting", "Keep it going.")
+        case 8: ("Pig remembers your streak", "Do you?")
+        default: ("Your streak won't save itself", "Play today's puzzle.")
+        }
+    }
 }
 
 extension DailyReminder {
