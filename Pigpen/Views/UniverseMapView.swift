@@ -2,7 +2,8 @@ import SwiftUI
 import UIKit
 
 /// The universe map: every world there is, strung up a winding path through space, each drawn as
-/// a little planet with its boss shown on it.
+/// the medallion it was painted as — the place itself, seen through a gold ring — or, where no
+/// painting has been made yet, as a little planet with its boss shown on it.
 ///
 /// It opens from Play only once the meadow is held, and it is where a world's send-off lands —
 /// the world just finished behind you, the next one lit up ahead, and the rest standing out past
@@ -378,8 +379,9 @@ private struct ConstellationLayout: Layout {
     }
 }
 
-/// One world on the universe map: a planet in its own colour, the boss shown on it — a silhouette
-/// while the world is shut, in full colour once it is open — and a plate with its name.
+/// One world on the universe map: its painted medallion where there is one, and otherwise a
+/// planet in its own colour with the boss shown on it — either way a silhouette while the world
+/// is shut, in full colour once it is open — and a plate with its name.
 private struct WorldPlanet: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -425,6 +427,46 @@ private struct WorldPlanet: View {
                 beckoning
             }
 
+            if let medallion = theme.medallion {
+                painting(medallion)
+            } else {
+                globe
+                bossMark
+            }
+
+            badge
+        }
+        .frame(width: 84, height: 84)
+    }
+
+    /// A world that has had its medallion painted hangs the painting itself on the map: the
+    /// place seen through its own gold ring, standing in for the coloured disc and the boss
+    /// stamped on it both. Shut worlds have the colour drained out of them and are put in the
+    /// dark, which is the same silhouetting the painted planets get.
+    ///
+    /// The clip is not decoration. Each painting is stored as a disc that fills its square
+    /// exactly, and the catalog keeps it under lossy compression to hold the app's size down —
+    /// which is kind to the picture but rough on the transparent corners, and leaves them
+    /// faintly opaque. Cutting the circle here throws those corners away and gives the
+    /// medallion the clean edge the compression took off it.
+    private func painting(_ name: String) -> some View {
+        Image(name)
+            .resizable()
+            .interpolation(.high)
+            .scaledToFit()
+            .frame(width: 78, height: 78)
+            .clipShape(Circle())
+            .saturation(isOpen ? 1 : 0.3)
+            .brightness(isOpen ? 0 : -0.22)
+            .shadow(color: theme.accent.opacity(isOpen ? 0.55 : 0.2), radius: 12)
+    }
+
+    /// A world with no painting yet: a disc in the world's own colour with its boss on it, the
+    /// way every world on the map was drawn before the first medallion was made. Nothing on the
+    /// shipped map reaches for this any more, and it is kept for the same reason the map keeps
+    /// room for a world with no trail behind it — a world can arrive before its painting does.
+    private var globe: some View {
+        ZStack {
             Circle()
                 .fill(
                     RadialGradient(
@@ -448,12 +490,7 @@ private struct WorldPlanet: View {
                 .saturation(isOpen ? 1 : 0.5)
                 .brightness(state == .locked ? -0.12 : 0)
                 .shadow(color: theme.accent.opacity(isOpen ? 0.55 : 0.2), radius: 12)
-
-            bossMark
-
-            badge
         }
-        .frame(width: 84, height: 84)
     }
 
     /// The boss on the planet: a silhouette in the world's deep colour while it is shut, and in
@@ -479,11 +516,13 @@ private struct WorldPlanet: View {
     }
 
     /// A ring pushed out from a world waiting to be played — the one thing on the map that moves
-    /// when nothing else is.
+    /// when nothing else is. A medallion is already ringed in gold, so the pulse starts clear of
+    /// that ring rather than on it, where the two would read as one smudged frame.
     private var beckoning: some View {
-        Circle()
+        let start: CGFloat = theme.medallion == nil ? 72 : 84
+        return Circle()
             .strokeBorder(GamePalette.cream, lineWidth: 3)
-            .frame(width: 72, height: 72)
+            .frame(width: start, height: start)
             .phaseAnimator([0.0, 1.0]) { ring, phase in
                 ring.scaleEffect(1 + 0.3 * phase).opacity(0.8 - 0.8 * phase)
             } animation: { _ in
