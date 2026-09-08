@@ -212,7 +212,6 @@ struct TitleScreenView: View {
         }
         .sheet(isPresented: $isOfferingReminders) {
             ReminderPromptView(
-                streak: daily.streak(upTo: today),
                 time: reminder.time,
                 onAccept: {
                     // The offer is marked as made whichever way it goes, so the sheet is
