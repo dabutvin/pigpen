@@ -433,9 +433,10 @@ private struct Meadow {
         return path
     }
 
-    /// The hills the world runs out into, and the hedge along the foot of them. A thicket
-    /// gets a taller dark tree line instead of a low hedge, so the sky closes sooner; a
-    /// mountain gets the peak itself, standing over the trail with smoke coming off it.
+    /// The hills the world runs out into, and what closes the foot of them. A thicket gets a
+    /// tall dark tree line, so the sky shuts sooner; a mountain gets the peak itself, standing
+    /// over the trail with smoke coming off it, and a hedge along the bottom besides. The
+    /// meadow gets nothing: its pasture runs up into the hills unbroken.
     private func drawHills(in context: inout GraphicsContext) {
         var hills = Path()
         hills.move(to: CGPoint(x: 0, y: horizon))
@@ -476,7 +477,10 @@ private struct Meadow {
             drawFenTreeline(in: &context)
         } else if colors.cover == .cloudtop {
             drawCloudSea(in: &context)
-        } else {
+        } else if colors.cover != .pasture {
+            // A hedge low across the foot of the hills. The meadow goes without: on grass this
+            // pale it landed as one hard green rule drawn the full width of the map, and the
+            // far side of a backdrop is the last place to put a line that straight.
             var hedge = Path()
             hedge.move(to: CGPoint(x: 0, y: horizon + 24))
             hedge.addQuadCurve(
