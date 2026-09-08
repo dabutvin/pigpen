@@ -12,9 +12,13 @@ struct StarRow: View {
     /// True for a day that has given up the best pen it had in it. Nothing on a map beats
     /// such a pen, which is worth saying long after the board has gone.
     var hasTheBestPen = false
+    /// The colour of a star not won yet. Cream by default, which is what the row needs on
+    /// the dark squares of the archive; a row standing on a cream board of its own has to
+    /// draw its empties in ink instead, or three of them read as nothing at all.
+    var hollow: Color = GamePalette.cream.opacity(0.55)
 
     var body: some View {
-        row(filled: AnyShapeStyle(GamePalette.pen), hollow: AnyShapeStyle(GamePalette.cream.opacity(0.55)))
+        row(filled: AnyShapeStyle(GamePalette.pen), hollow: AnyShapeStyle(hollow))
             .overlay {
                 if hasTheBestPen {
                     RainbowWash()
