@@ -39,6 +39,10 @@ struct SettingsView: View {
     /// offer — beside the locked worlds on the map and the shut days in the archive — and
     /// the one place a player who already owns it can be told so.
     var fullGame: FullGame = .shared
+    /// What to do when the walkthrough is asked for. The practice pen is pushed onto the
+    /// title screen rather than raised over this sheet, so the screen behind is told and this
+    /// sheet gets out of the way.
+    var onWalkthrough: () -> Void = {}
 
     /// Whether the projection room is up: every film in the game, one after another.
     @State private var isWatchingFilms = false
@@ -75,6 +79,7 @@ struct SettingsView: View {
                         about
                         fullGameCard
                         help
+                        tutorial
                         rate
                         films
                         feel
@@ -477,6 +482,41 @@ struct SettingsView: View {
     /// whole reel end to end, in the order the journey meets them, with Skip moving on to the
     /// next film rather than out of the lot.
     ///
+    /// The walkthrough, which used to be a row on the title screen's own list of ways to
+    /// play. It is read once and then never again, where everything else on that list is
+    /// somewhere to go back to — so it sits in the drawer with the rest of what a player
+    /// reads once, and the list is the shorter for it.
+    private var tutorial: some View {
+        card {
+            Text("How to play")
+                .font(.headline.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+
+            Text(
+                """
+                The practice pen, start to finish: laying a fence, dragging a run of it, what \
+                a bonus and a penalty are worth, and what shutting the pig in is worth.
+                """
+            )
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(GamePalette.post.opacity(0.7))
+            .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                haptics.tap(.medium)
+                onWalkthrough()
+                dismiss()
+            } label: {
+                Label("Walk through the tutorial", systemImage: "hand.tap.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
+            .padding(.top, 4)
+        }
+    }
+
     /// It is the whole game's films rather than the ones a player has earned, and the line under
     /// the button says so plainly, since somebody a world in is being offered eleven worlds of
     /// story they have not reached. Watching them here changes nothing the game remembers: every

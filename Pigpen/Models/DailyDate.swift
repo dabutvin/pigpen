@@ -103,6 +103,11 @@ struct DailyDate: Hashable, Comparable, Sendable, Identifiable {
     /// The day with the year on it, for anywhere the month is not already written down.
     var fullTitle: String { "\(title) \(year)" }
 
+    /// The day as a line under a button's own name: `Tuesday, September 8`. The month comes
+    /// before the day and the weekday takes a comma, which is how a date is read rather than
+    /// how a puzzle is named.
+    var written: String { "\(weekday.name), \(Self.monthName(month)) \(day)" }
+
     static func monthName(_ month: Int) -> String {
         let names = [
             "January", "February", "March", "April", "May", "June",

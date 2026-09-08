@@ -41,6 +41,10 @@ enum GamePalette {
     static let rail = Color(red: 0.62, green: 0.42, blue: 0.24)
     /// Pale, freshly cut timber, light enough to stand out against the mud.
     static let picket = Color(red: 0.78, green: 0.60, blue: 0.39)
+    /// Sawn board for a sign rather than for a fence: the same timber planed and left paler,
+    /// so the game's brown can be lettered across it and still read. The fencing keeps
+    /// `picket`, which has mud to stand out against rather than words to carry.
+    static let signboard = Color(red: 0.85, green: 0.72, blue: 0.56)
     /// Everything past the edge of the map: open country, and a lost pig.
     static let beyond = Color(red: 0.47, green: 0.68, blue: 0.38)
     /// Painted board: lettering and signage that has to read against sky or grass alike.
@@ -124,18 +128,24 @@ extension GamePalette.Pasture {
     /// The meadow by day, washed the way a storybook paints one: a hazed sky, sage hills,
     /// and grass more grey-green than green, so the board and its fencing are the strongest
     /// colours on the screen.
+    ///
+    /// Every green here has since been taken a quarter of the way to its own grey, at the
+    /// brightness it already had. The hills and the grass were reading as the loudest thing
+    /// on a title screen whose name is painted in the game's terracotta, and a backdrop is
+    /// not the thing to be looking at. The trees came with them, so that a canopy does not
+    /// stand out greener than the field under it.
     static let day = Self(
         skyTop: Color(red: 0.71, green: 0.81, blue: 0.85),
         skyHorizon: Color(red: 0.94, green: 0.93, blue: 0.86),
         disc: Color(red: 1.00, green: 0.93, blue: 0.68),
         discHalo: Color(red: 1.00, green: 0.95, blue: 0.78),
         cloud: .white,
-        farHill: Color(red: 0.71, green: 0.78, blue: 0.61),
-        ground: Color(red: 0.77, green: 0.81, blue: 0.64),
-        foreground: Color(red: 0.67, green: 0.73, blue: 0.55),
-        blade: Color(red: 0.54, green: 0.62, blue: 0.45),
-        canopy: Color(red: 0.46, green: 0.59, blue: 0.44),
-        canopyShade: Color(red: 0.34, green: 0.47, blue: 0.35),
+        farHill: Color(red: 0.72, green: 0.77, blue: 0.65),
+        ground: Color(red: 0.77, green: 0.80, blue: 0.68),
+        foreground: Color(red: 0.68, green: 0.72, blue: 0.59),
+        blade: Color(red: 0.55, green: 0.61, blue: 0.49),
+        canopy: Color(red: 0.48, green: 0.58, blue: 0.47),
+        canopyShade: Color(red: 0.36, green: 0.46, blue: 0.37),
         isNight: false,
         cover: .pasture
     )
