@@ -5,9 +5,9 @@ import UIKit
 /// the phone is allowed to buzz, how far the player has got, and the one button that hands
 /// it all back.
 ///
-/// Nothing in here is part of playing, so it stays out of the way on a sheet rather than
-/// taking a screen of its own — and the button that throws away every star a player owns
-/// asks before it does anything.
+/// Nothing in here is part of playing, but there is enough of it to scroll, so it takes a
+/// screen of its own and gives it all back on the cross — and the button that throws away
+/// every star a player owns asks before it does anything.
 @MainActor
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -55,8 +55,12 @@ struct SettingsView: View {
     @State private var hasCleared = false
 
     private var world: WorldMap { progress.world }
+    /// What the whole game holds, world by world, since that is what the clear button takes:
+    /// `progress` speaks for the world it is standing in, and the card speaks for all of them.
+    private var starsHeld: Int { Universe.all.totalStars(stars: progress.bestStars) }
+    private var levelsHeld: Int { Universe.all.clearedCount(stars: progress.bestStars) }
     private var hasSomethingToClear: Bool {
-        progress.clearedCount > 0 || daily.completedCount > 0 || daily.hasDrafts
+        levelsHeld > 0 || daily.completedCount > 0 || daily.hasDrafts
     }
 
     var body: some View {
@@ -135,19 +139,12 @@ struct SettingsView: View {
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 15, weight: .black))
-                    .foregroundStyle(GamePalette.post)
+                    .font(.system(size: 17, weight: .black))
+                    .foregroundStyle(GamePalette.post.opacity(0.6))
+                    // No disc under it, but the tap target stays the size a disc would give.
+                    // It is the only way out now that this is a page, so it keeps its room.
                     .frame(width: 34, height: 34)
-                    .background {
-                        Circle()
-                            .fill(GamePalette.cream)
-                            .overlay(
-                                Circle().strokeBorder(
-                                    GamePalette.post.opacity(0.15), lineWidth: 1
-                                )
-                            )
-                            .shadow(color: .black.opacity(0.25), radius: 5, y: 3)
-                    }
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("Close settings")
         }
@@ -588,7 +585,7 @@ struct SettingsView: View {
                 .font(.caption2)
                 .foregroundStyle(GamePalette.post.opacity(0.55))
         }
-        .animation(.easeInOut(duration: 0.25), value: progress.totalStars)
+        .animation(.easeInOut(duration: 0.25), value: starsHeld)
         .animation(.easeInOut(duration: 0.25), value: daily.completedCount)
     }
 
@@ -638,12 +635,16 @@ struct SettingsView: View {
         guard hasSomethingToClear else {
             return "Nothing saved yet — \(world.name) is untouched."
         }
-        let meadow = """
-            \(progress.totalStars) of \(world.starTotal) stars, \
-            \(progress.clearedCount) of \(world.count) puzzles complete.
+        // The whole universe rather than the world the player happens to be standing in.
+        // This card counted the meadow's stars out of the meadow's total, under a button
+        // that clears every world there is — so a player with stars up the map read a
+        // smaller number here than the title screen was showing them.
+        let held = """
+            \(starsHeld) of \(Universe.all.starTotal) stars, \
+            \(levelsHeld) of \(Universe.all.levelTotal) puzzles complete.
             """
-        guard daily.completedCount > 0 else { return meadow }
-        return meadow + " \(counted(daily.completedCount, "daily puzzle")) as well."
+        guard daily.completedCount > 0 else { return held }
+        return held + " \(counted(daily.completedCount, "daily puzzle")) as well."
     }
 
     private func counted(_ number: Int, _ noun: String) -> String {

@@ -93,6 +93,20 @@ struct Universe: Sendable {
             return running + game.map.nodes.reduce(0) { $0 + min(max(stars[$1.id] ?? 0, 0), 3) }
         }
     }
+
+    /// Every level there is across the whole universe, on the same rule as the stars: a world
+    /// that is still a silhouette has no levels in it to count.
+    var levelTotal: Int {
+        worlds.reduce(0) { $0 + ($1.game?.map.count ?? 0) }
+    }
+
+    /// How many of those levels the given ratings have penned at least once.
+    func clearedCount(stars: [String: Int]) -> Int {
+        worlds.reduce(0) { running, world in
+            guard let game = world.game else { return running }
+            return running + game.map.nodes.count { (stars[$0.id] ?? 0) > 0 }
+        }
+    }
 }
 
 extension Universe {

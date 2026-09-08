@@ -198,7 +198,11 @@ struct TitleScreenView: View {
             DailyArchiveView(today: today, progress: daily, fullGame: fullGame)
                 .onAppear { Analytics.record(.dailyArchiveOpened) }
         }
-        .sheet(isPresented: $showsSettings) {
+        // A page of its own rather than a sheet with the meadow showing over the top of it.
+        // Settings is a list long enough to scroll — the version, the purchase, the films,
+        // the switches, the reminder, and the button that throws it all away — and a half
+        // screen made the player read it through a letterbox.
+        .fullScreenCover(isPresented: $showsSettings) {
             SettingsView(
                 progress: progress,
                 daily: daily,
@@ -207,12 +211,9 @@ struct TitleScreenView: View {
                 onWalkthrough: { wantsWalkthrough = true }
             )
                 .onAppear { Analytics.record(.settingsOpened) }
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $isOfferingReminders) {
             ReminderPromptView(
-                streak: daily.streak(upTo: today),
                 time: reminder.time,
                 onAccept: {
                     // The offer is marked as made whichever way it goes, so the sheet is

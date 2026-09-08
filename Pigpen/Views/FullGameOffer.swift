@@ -96,30 +96,28 @@ struct FullGameOffer: View {
         .animation(.easeInOut(duration: 0.2), value: fullGame.isWorking)
     }
 
-    /// The way out, and nothing else. The sheet used to name itself over the top of the card
-    /// below, which then named the same thing again in the heading that says what the money
-    /// buys — so the bar keeps the close button and gives the rest of its width back.
+    /// What is being sold, and the way out of being sold it. The name sits up here on the page
+    /// rather than inside the card, so the card is only the offer itself — what the money buys
+    /// and the button that spends it — and the player reads the title before the box, the way
+    /// a title is read.
     private var header: some View {
         HStack(spacing: 12) {
+            Text("Unlock the full game")
+                .font(.title3.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+                .fixedSize(horizontal: false, vertical: true)
+
             Spacer(minLength: 0)
 
             Button {
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 15, weight: .black))
-                    .foregroundStyle(GamePalette.post)
+                    .font(.system(size: 17, weight: .black))
+                    .foregroundStyle(GamePalette.post.opacity(0.6))
+                    // No disc under it, but the tap target stays the size the disc was.
                     .frame(width: 34, height: 34)
-                    .background {
-                        Circle()
-                            .fill(GamePalette.cream)
-                            .overlay(
-                                Circle().strokeBorder(
-                                    GamePalette.post.opacity(0.15), lineWidth: 1
-                                )
-                            )
-                            .shadow(color: .black.opacity(0.25), radius: 5, y: 3)
-                    }
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel("Close")
         }
@@ -128,14 +126,15 @@ struct FullGameOffer: View {
         .padding(.bottom, 16)
     }
 
-    /// What the money buys, said in the three things it opens: the rest of the markets, the
+    /// What the money buys, said in the three things it opens: the rest of the levels, the
     /// days already gone, and the promise that none of it is paid for twice.
     ///
-    /// The heading is the thing being bought rather than a line of warmth about it, so a
-    /// player reading one line of this card reads the one that answers their question. The
-    /// days are named as the past, because that is what is actually behind the wall — today's
-    /// board is free and always will be, and calling the archive "every day" invited the
-    /// reading that a daily is what is being sold.
+    /// The card is the three perks and nothing before them. It used to open with a paragraph
+    /// of warmth about exploring every market, which said in prose what the first perk says in
+    /// a line, under a title that had already named the thing — so the reader met the offer
+    /// three times before reaching the price. The days are named as the past, because that is
+    /// what is actually behind the wall — today's board is free and always will be, and calling
+    /// the archive "every day" invited the reading that a daily is what is being sold.
     ///
     /// The last perk is the absence of a thing, which is worth as much room as the two
     /// presences above it: a one-off purchase in a game with no advertising in it is a
@@ -143,34 +142,20 @@ struct FullGameOffer: View {
     /// the difference from inside a paywall unless it is said.
     @ViewBuilder
     private var pitch: some View {
-        Text("Unlock the full game")
-            .font(.headline.weight(.heavy))
-            .foregroundStyle(GamePalette.post)
-
-        Text(
-            """
-            Help Pig explore every market imaginable. Twelve worlds in the universe, each \
-            with its own challenges and its own boss at the top.
-            """
-        )
-        .font(.footnote.weight(.semibold))
-        .foregroundStyle(GamePalette.post.opacity(0.7))
-        .fixedSize(horizontal: false, vertical: true)
-
         perk(
             icon: "globe.americas.fill",
-            title: "Every market",
-            detail: "The whole universe map past the meadow — eleven more worlds, each with its own boss and its own send-off."
+            title: "Every level",
+            detail: "Help Pig explore the whole universe. Eleven more worlds await you."
         )
         perk(
             icon: "calendar",
-            title: "Every past puzzle",
-            detail: "The whole archive behind today — every daily puzzle there has ever been, any day you like."
+            title: "Every daily puzzle",
+            detail: "Get access to every daily puzzle including all past puzzles."
         )
         perk(
             icon: "hand.raised.slash.fill",
             title: "Never any ads",
-            detail: "There are none in Pigpen and there never will be. You buy it once and that is the end of it."
+            detail: "Pigpen will never have any ads. Buy it once, it is yours forever."
         )
     }
 
@@ -213,8 +198,9 @@ struct FullGameOffer: View {
         .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
         .disabled(fullGame.isWorking)
         .opacity(fullGame.isWorking ? 0.6 : 1)
-        // The perks end where this begins now that one box holds both.
-        .padding(.top, 6)
+        // The perks are a list and this is not part of it: a wider gap than the one between
+        // perks marks where reading stops and buying starts.
+        .padding(.top, 18)
 
         Button {
             Task { await restore() }

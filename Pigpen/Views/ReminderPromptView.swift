@@ -17,9 +17,6 @@ import UIKit
 struct ReminderPromptView: View {
     @Environment(\.dismiss) private var dismiss
 
-    /// What the run of days stands at, so the offer can say what there is to keep rather
-    /// than talk about streaks in the abstract.
-    var streak = 0
     /// The hour the reminder would come at, in the player's own reckoning of o'clock.
     var time: ReminderTime = .morning
     /// Taken when the player says yes. Raising the phone's prompt is the caller's to do,
@@ -39,44 +36,83 @@ struct ReminderPromptView: View {
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 18) {
-                gate
+            VStack(spacing: 0) {
+                header
 
-                VStack(spacing: 10) {
-                    // Wraps rather than truncating. Heading type this size does not fit
-                    // the card on one line, and a `Text` left to itself in a stack this
-                    // narrow gives up and puts an ellipsis on the end of the question.
-                    Text("A reminder each morning?")
-                        .font(.system(size: 24, weight: .black, design: .rounded))
-                        .foregroundStyle(GamePalette.post)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Text(offer)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(GamePalette.post.opacity(0.75))
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
+                ScrollView {
+                    card
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 28)
                 }
-
-                buttons
+                .scrollBounceBehavior(.basedOnSize)
             }
-            .padding(22)
-            .frame(maxWidth: 380)
-            .background(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .fill(GamePalette.cream)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1)
-            )
-            .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
-            .padding(26)
         }
     }
 
     // MARK: - Pieces
+
+    /// What is being offered, and the way out of being offered it — laid out the way the
+    /// full-game sheet is, since they are the same kind of thing: a name on the page, and
+    /// under it one card that is only the offer.
+    ///
+    /// The cross is *Not now* by another route. A player who shuts the sheet has answered,
+    /// and the answer has to be marked the same way the button marks it or the offer comes
+    /// back tomorrow having already been made.
+    private var header: some View {
+        HStack(spacing: 12) {
+            Text("Daily reminders")
+                .font(.title3.weight(.heavy))
+                .foregroundStyle(GamePalette.post)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Spacer(minLength: 0)
+
+            Button {
+                Haptics.tap(.light)
+                onDecline()
+                dismiss()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 17, weight: .black))
+                    .foregroundStyle(GamePalette.post.opacity(0.6))
+                    // No disc under it, but the tap target stays the size a disc would give.
+                    .frame(width: 34, height: 34)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Close")
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 22)
+        .padding(.bottom, 16)
+    }
+
+    /// The offer itself: the bell, what there is to be reminded about, and the two answers.
+    private var card: some View {
+        VStack(spacing: 14) {
+            gate
+
+            Text(offer)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(GamePalette.post.opacity(0.75))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
+            buttons
+        }
+        .frame(maxWidth: .infinity)
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(GamePalette.cream)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1)
+        )
+        // A darker, longer drop than a card on timber needed: on a cream page the shadow
+        // is the whole of what lifts a cream card off it.
+        .shadow(color: .black.opacity(0.3), radius: 10, y: 5)
+    }
 
     /// A bell over the gate, which is the whole of what this is offering.
     private var gate: some View {
@@ -106,6 +142,9 @@ struct ReminderPromptView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
+            // A wider gap than the one between the two answers: what is being read ends
+            // here and what is being answered begins.
+            .padding(.top, 16)
 
             Button {
                 Haptics.tap(.light)
@@ -128,24 +167,16 @@ struct ReminderPromptView: View {
 
     // MARK: - Words
 
-    /// What there is to be reminded about. A player with a run going is told what the run
-    /// is worth keeping; a player without one is told what a new board is.
-    private var offer: String {
-        guard streak > 1 else {
-            return """
-                There's a fresh puzzle every morning. Pigpen can send you one reminder a \
-                day when the new board is ready — and never more than that.
-                """
-        }
-        return """
-            You're on a \(streak)-day streak, and streaks are lost to forgetting far more \
-            often than to a hard board. Pigpen can send you one reminder each morning so \
-            this one survives.
-            """
-    }
+    /// What there is to be reminded about. One line for everybody: the offer is the same
+    /// whether or not there is a run going, and a sentence that names the streak reads as a
+    /// bargain struck over something the player already has rather than a plain offer of a
+    /// morning nudge.
+    private let offer = """
+        Enable notifications to get daily reminders that help you build your streak.
+        """
 }
 
-#Preview("Nothing to lose yet") {
+#Preview("Nine in the morning") {
     Color.clear
         .sheet(isPresented: .constant(true)) {
             ReminderPromptView(onAccept: {}, onDecline: {})
@@ -153,10 +184,10 @@ struct ReminderPromptView: View {
         }
 }
 
-#Preview("A run going") {
+#Preview("Half seven in the evening") {
     Color.clear
         .sheet(isPresented: .constant(true)) {
-            ReminderPromptView(streak: 6, time: ReminderTime(hour: 19, minute: 30), onAccept: {}, onDecline: {})
+            ReminderPromptView(time: ReminderTime(hour: 19, minute: 30), onAccept: {}, onDecline: {})
                 .presentationDetents([.medium, .large])
         }
 }
