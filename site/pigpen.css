@@ -29,7 +29,8 @@ body {
 }
 
 header {
-  padding: 56px 0 8px;
+  /* The nav sits above the title on every page, so the header only needs to clear it. */
+  padding: 16px 0 8px;
   text-align: center;
 }
 
