@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Draw the Pigpen app icon (a pig face) and write the asset catalog PNGs.
 
+The shipped icon is no longer this drawing: the tile in the asset catalogue is a
+painted one, squared off from art made outside the repository. This is kept as the
+icon's first form, and as the thing to reach for if the painting ever has to go —
+but running it writes over the painting, so run it only meaning to.
+
 Usage:
     pip install cairosvg pillow
     python3 Tools/generate_app_icon.py
