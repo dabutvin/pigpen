@@ -29,7 +29,8 @@ body {
 }
 
 header {
-  padding: 56px 0 8px;
+  /* The nav sits above the title on every page, so the header only needs to clear it. */
+  padding: 16px 0 8px;
   text-align: center;
 }
 
@@ -119,17 +120,27 @@ li { margin: 6px 0; }
   padding: 8px 0 4px;
 }
 
-.hero h1 {
-  /* The wordmark is set as wide as the screen will take and no wider: at a fixed size the
-     tracking pushes six capitals past the edge of a phone, and a line that overflows widens
-     the whole document under it rather than only itself. */
-  font-size: clamp(2rem, 12vw, 3.2rem);
+/* The name is the app's own die-cut sticker rather than type, drawn by
+   Tools/generate_wordmark.py from the same numbers the title screen uses. It is the widest
+   thing on the page, so it is sized off the screen and never past it. */
+.wordmark {
+  display: block;
+  width: min(100%, 24rem);
+  height: auto;
+  margin: 0 auto;
 }
 
 .pitch {
   max-width: 32rem;
-  margin: 14px auto 22px;
+  margin: 14px auto 0;
   font-size: 1.15rem;
+}
+
+/* The hook goes first at full size; the sentence explaining it follows a little smaller,
+   and carries the gap down to the button. */
+.pitch + .pitch {
+  margin: 10px auto 22px;
+  font-size: 1.02rem;
 }
 
 .chip {
@@ -146,7 +157,7 @@ li { margin: 6px 0; }
   gap: 22px;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 30px 0 12px;
+  margin: 30px 0 26px;
 }
 
 .shots img {
@@ -159,15 +170,6 @@ li { margin: 6px 0; }
 
 @media (max-width: 30rem) {
   .shots img { max-width: 68%; }
-}
-
-.caption {
-  max-width: 34rem;
-  margin: 0 auto;
-  text-align: center;
-  font-size: 0.9rem;
-  font-style: italic;
-  opacity: 0.7;
 }
 
 .grid {

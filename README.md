@@ -1547,7 +1547,7 @@ there is no state anywhere else to keep in step with it.
 | `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
 | `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
 | `404.html` | Whatever the host points at it | Somewhere to land other than the host's own grey page |
-| `img/` | `pigpen.app/img/…` | The two shots on the front page — the same frames as the ones at the top of this README, and replaced the same way |
+| `img/` | `pigpen.app/img/…` | The two shots on the front page, cut down from a run of the **App Store Assets** workflow, and the wordmark above them — `wordmark.png`, which `Tools/generate_wordmark.py` draws from the same numbers the title screen's own sticker is built from |
 
 The front page is the marketing URL and the other two are the ones on the app's information
 page, which is why neither of them is the root: somebody arriving at pigpen.app from a link
@@ -2109,6 +2109,7 @@ site/                            # Served at pigpen.app by Netlify on every merg
 docs/                            # The shots at the top of this README
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
+├── generate_wordmark.py         # Draws the title screen's sticker as a PNG for the website
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks
 ├── generate_dailies.py          # Writes a year of daily puzzles, and measures what each asks
 ├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API
