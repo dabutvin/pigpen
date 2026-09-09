@@ -112,6 +112,7 @@ struct WorldMapView: View {
                 treatSkin: theme.treats,
                 skin: theme.field,
                 day: theme.day,
+                chrome: theme.chrome,
                 trail: (world: world.name, stop: index)
             ) { verdict, _, fences in
                 let wasHeld = progress.isTheWorldHeld
@@ -308,10 +309,11 @@ struct WorldMapView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
         .background {
-            // The same terracotta glaze the puzzle screens wear across the top, so the
-            // map and the boards it opens read as rooms of one building.
+            // The same glaze the boards down this trail wear across the top — this world's
+            // own paint — so the map and the puzzles it opens read as rooms of one building
+            // and every world's building is painted differently.
             LinearGradient(
-                colors: [GamePalette.clay, GamePalette.clayShade],
+                colors: [theme.chrome.paint, theme.chrome.paintShade],
                 startPoint: .top,
                 endPoint: .bottom
             )

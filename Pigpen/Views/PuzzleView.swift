@@ -37,6 +37,11 @@ struct PuzzleView: View {
     /// One light, whatever the phone is set to: the field itself has always kept one set of
     /// colours, and the ground it is cut out of now keeps its daylight to match.
     private let day: GamePalette.Pasture
+    /// The paintwork this board wears: the bar across the top, the face of the button that
+    /// ends a go, and the ink or chalk anything written straight onto the ground is written
+    /// in. The meadow's terracotta is the default, so the tutorial and a day off the calendar
+    /// — neither of which stands in a world — wear the paint the whole game used to.
+    private let chrome: ChromeSkin
     /// Which world this board is a stop on, and how far up its trail — and nothing at all
     /// for a board that is not on a trail.
     ///
@@ -91,6 +96,7 @@ struct PuzzleView: View {
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
         skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
+        chrome: ChromeSkin = .meadow,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
@@ -103,6 +109,7 @@ struct PuzzleView: View {
             treatSkin: treatSkin,
             skin: skin,
             day: day,
+            chrome: chrome,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
             trail: trail,
@@ -119,6 +126,7 @@ struct PuzzleView: View {
         treatSkin: TreatSkin = WorldTheme.meadow.treats,
         skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
+        chrome: ChromeSkin = .meadow,
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
@@ -130,6 +138,7 @@ struct PuzzleView: View {
         self.treatSkin = treatSkin
         self.skin = skin
         self.day = day
+        self.chrome = chrome
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
         self.trail = trail
@@ -225,7 +234,7 @@ struct PuzzleView: View {
         }
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
-        .fieldNavigationBar()
+        .fieldNavigationBar(chrome)
         .staysInDaylight()
         .keepsSwipeFromPopping()
         .toolbar {
@@ -306,8 +315,9 @@ struct PuzzleView: View {
             } label: {
                 Text("Release \(quarry)")
                     .font(.headline.weight(.heavy))
-                    // Cream lettering, because the face under it is the chrome's own
-                    // terracotta rather than the pen's gold.
+                    // Cream lettering, because the face under it is the world's own paint
+                    // rather than the pen's gold — and every world's is mixed deep enough
+                    // to carry white words.
                     .foregroundStyle(GamePalette.cream)
                     // Two animals make for a longer button than one; it shrinks its
                     // lettering rather than growing a second line and moving the board.
@@ -318,7 +328,7 @@ struct PuzzleView: View {
             // The same painted button the offer buys the game with: it stands on a ledge of
             // its own shadow and sinks onto it when pressed. This is the one press on the
             // screen that ends a go, so it is the one that is worth hitting.
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
+            .buttonStyle(ChunkyButtonStyle(tint: chrome.paint, depth: 6))
             // Live on an empty field too. Opening the gate with nothing in the ground is a
             // legal go — the pig walks straight off the map and the verdict says so — and a
             // button greyed out until some unstated amount of work is done says less about
@@ -410,10 +420,10 @@ struct PuzzleView: View {
             HStack(spacing: 10) {
                 Text(tallySummary)
                     .font(.footnote.weight(.heavy))
-                    // Written straight onto the grass, so it is painted rather than
-                    // printed — in ink, since the ground under it is pale in every light
-                    // the board is ever cut out of.
-                    .foregroundStyle(GamePalette.post)
+                    // Written straight onto the ground, so it is painted rather than
+                    // printed — in the world's own ink, dark where that ground is pale and
+                    // pale where it is dark.
+                    .foregroundStyle(chrome.groundInk)
                     .contentTransition(.numericText())
                     // Sits on one line beside the button rather than pushing it off the
                     // screen when the type is large.
@@ -467,9 +477,11 @@ struct PuzzleView: View {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
                 .font(.system(size: 17, weight: .heavy))
-                // Painted straight onto the grass, the way the tally below is: ink, on
-                // ground that is pale whatever the phone is set to.
-                .foregroundStyle(GamePalette.post)
+                // Painted straight onto the ground, the way the tally below is, and in
+                // whichever of ink and chalk that ground can carry: dark on the meadow's
+                // mown grass and the tundra's snow, pale on the thicket's leaf mould and
+                // the caverns' flowstone.
+                .foregroundStyle(chrome.groundInk)
                 .opacity(enabled ? 1 : 0.35)
                 // One box for all three, so a wider glyph does not make a wider button — and
                 // wider than the glyph needs, so a thumb has something to land on without

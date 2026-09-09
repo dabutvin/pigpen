@@ -2120,22 +2120,29 @@ private struct Paddock {
 }
 
 extension View {
-    /// The bar the board screens wear across the top: terracotta paintwork rather than raw
-    /// timber, the same glaze as the button that ends a go, so a puzzle opened off the
-    /// trail looks like the next room of the same building rather than a sheet of paper
-    /// laid over it.
-    func fieldNavigationBar() -> some View {
+    /// The bar the board screens wear across the top: painted woodwork rather than raw timber,
+    /// the same glaze as the button that ends a go, so a puzzle opened off the trail looks like
+    /// the next room of the same building rather than a sheet of paper laid over it.
+    ///
+    /// The glaze is the world's own — the meadow's terracotta, the thicket's bark green, the
+    /// tundra's glacier blue — so the bar over a board says which world the board is in before
+    /// the title under it is read. Screens that stand in no world at all — the tutorial, a day
+    /// off the calendar — keep the meadow's, which is the paint the whole game wore before any
+    /// world had its own.
+    func fieldNavigationBar(_ chrome: ChromeSkin = .meadow) -> some View {
         toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(
                 LinearGradient(
-                    colors: [GamePalette.clay, GamePalette.clayShade],
+                    colors: [chrome.paint, chrome.paintShade],
                     startPoint: .top,
                     endPoint: .bottom
                 ),
                 for: .navigationBar
             )
             // Cream lettering on the glaze: white words on paintwork, the way a sign over a
-            // gate is lettered, rather than ink that has to hold its own against the salmon.
+            // gate is lettered, rather than ink that has to hold its own against the paint.
+            // Every world's glaze is mixed deep enough for it, so the lettering is the one
+            // thing across the top of a board that never changes from world to world.
             .toolbarColorScheme(.dark, for: .navigationBar)
             // The title comes with the scheme; the back button takes the screen's tint, and
             // the stock blue is the one thing on these screens that belongs to no world.
