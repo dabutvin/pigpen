@@ -28,16 +28,24 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 # The game's own colours, out of GamePalette, so the frame and the screen inside
 # it are painted from one tin. RGB, since that is what Pillow wants.
 CREAM = (252, 242, 222)
 POST = (69, 43, 26)
-# The pasture the phone stands on: a warm cream sky at the top settling into a
-# lit meadow green at the foot, light enough that the brown caption stays legible.
-SKY = (244, 237, 221)
-MEADOW = (171, 206, 135)
+# The ground the phone stands on, in three stops rather than two: warm cream light
+# at the head of the tile, a pale field through the middle, and a muted sage at the
+# foot. The green it used to end on was a lit meadow green, and against the game's
+# own creams it read as poster paint — a colour from a different tin than anything
+# in the screenshot standing on it. This one is the same pasture with the light off
+# it, which is what lets the shot be the brightest thing in its own frame.
+SKY = (250, 246, 236)
+FIELD = (229, 234, 213)
+MEADOW = (179, 199, 163)
+# The pool of light the phone stands in, and the warm dark that closes the corners.
+GLOW = (255, 253, 246)
+SHADE = (86, 66, 43)
 
 # Where to look for a bold, rounded face. SF Pro Rounded first, since that is the
 # font the game itself sets its wordmark in, then whatever the machine has, then
@@ -75,17 +83,56 @@ def load_font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.load_default(size)
 
 
-def gradient(width: int, height: int, top: tuple, bottom: tuple) -> Image.Image:
-    """A vertical wash from one colour to another, the pasture behind the phone."""
-    base = Image.new("RGB", (width, height), top)
-    draw = ImageDraw.Draw(base)
+def gradient(width: int, height: int, stops: list) -> Image.Image:
+    """A vertical wash through a run of colours, the pasture behind the phone.
+
+    Eased rather than ruled straight: a linear ramp between two colours has a visible
+    kink where it starts and where it stops, and the eye finds both. Each step is
+    softened at either end, and the whole thing is drawn one pixel wide and stretched,
+    which is the same picture for a fraction of the work.
+    """
+    strip = Image.new("RGB", (1, height))
+    px = strip.load()
+    spans = len(stops) - 1
     for y in range(height):
         t = y / max(height - 1, 1)
-        draw.line(
-            [(0, y), (width, y)],
-            fill=tuple(round(top[i] + (bottom[i] - top[i]) * t) for i in range(3)),
-        )
-    return base
+        span = min(int(t * spans), spans - 1)
+        u = t * spans - span
+        u = u * u * (3 - 2 * u)
+        lo, hi = stops[span], stops[span + 1]
+        px[0, y] = tuple(round(lo[i] + (hi[i] - lo[i]) * u) for i in range(3))
+    return strip.resize((width, height), Image.BILINEAR)
+
+
+def halo(size: tuple, colour: tuple, strength: float) -> Image.Image:
+    """A soft pool of light, brightest at its middle and gone by its edge."""
+    mask = ImageOps.invert(Image.radial_gradient("L")).resize(size, Image.BILINEAR)
+    mask = mask.point(lambda v: round((v / 255) ** 1.7 * 255 * strength))
+    layer = Image.new("RGBA", size, colour + (255,))
+    layer.putalpha(mask)
+    return layer
+
+
+def vignetted(canvas: Image.Image, strength: float) -> Image.Image:
+    """The corners closed a little, so the tile reads as lit rather than as flat fill."""
+    mask = Image.radial_gradient("L").resize(canvas.size, Image.BILINEAR)
+    mask = mask.point(lambda v: round((v / 255) ** 2.4 * 255 * strength))
+    layer = Image.new("RGBA", canvas.size, SHADE + (255,))
+    layer.putalpha(mask)
+    canvas.alpha_composite(layer)
+    return canvas
+
+
+def grained(canvas: Image.Image) -> Image.Image:
+    """A pinch of noise over the wash.
+
+    A gradient this wide, held in eight bits and saved as a PNG, bands: the eye picks
+    out the step where one value gives way to the next and reads it as a stripe across
+    the sky. A couple of levels of noise scattered over it puts the step somewhere
+    different in every column, and the banding goes.
+    """
+    noise = Image.effect_noise(canvas.size, 2.2).convert("RGB")
+    return ImageChops.add(canvas, noise, scale=1.0, offset=-128)
 
 
 def rounded(image: Image.Image, radius: int) -> Image.Image:
@@ -119,7 +166,7 @@ def frame(input_path: Path, caption: str, output_path: Path) -> tuple:
     shot = Image.open(input_path).convert("RGB")
     width, height = shot.size
 
-    canvas = gradient(width, height, SKY, MEADOW)
+    canvas = gradient(width, height, [SKY, FIELD, MEADOW]).convert("RGBA")
 
     # The phone sits in the lower four-fifths, leaving a band at the top for the
     # caption; it is scaled to fit that box with room to breathe on either side.
@@ -136,20 +183,41 @@ def frame(input_path: Path, caption: str, output_path: Path) -> tuple:
     # phones; squarer ones are tablets, and get the gentler curve the device has.
     radius = round(shot_w * (0.085 if height / width >= 1.9 else 0.035))
 
-    # A soft shadow under the phone, drawn as a blurred dark plate a touch below
-    # and behind it, so the screenshot lifts off the pasture rather than sitting flat.
-    blur = round(width * 0.02)
-    shadow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    plate = [
-        (shot_x, shot_y + round(height * 0.006)),
-        (shot_x + shot_w, shot_y + shot_h + round(height * 0.006)),
-    ]
-    ImageDraw.Draw(shadow).rounded_rectangle(plate, radius=radius, fill=(40, 26, 14, 120))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
+    # A pool of light behind the phone, wider than the phone and centred on it, so the
+    # tile has somewhere the light is coming from and the shot sits in the bright of it.
+    glow_w, glow_h = round(width * 1.5), round(height * 0.95)
+    canvas.alpha_composite(
+        halo((glow_w, glow_h), GLOW, 0.68),
+        ((width - glow_w) // 2, shot_y + shot_h // 2 - glow_h // 2),
+    )
 
-    canvas = canvas.convert("RGBA")
-    canvas.alpha_composite(shadow)
+    # Two shadows rather than one. A single blurred plate is either tight and hard or
+    # wide and vague; a phone on a table casts both at once — a dark seam where it
+    # meets the ground, and a soft breadth well beyond it — and having the two lets
+    # the shot look set down rather than pasted on.
+    def plate(drop: float, blur: float, alpha: int) -> Image.Image:
+        layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        top = shot_y + round(height * drop)
+        ImageDraw.Draw(layer).rounded_rectangle(
+            [(shot_x, top), (shot_x + shot_w, top + shot_h)],
+            radius=radius,
+            fill=SHADE + (alpha,),
+        )
+        return layer.filter(ImageFilter.GaussianBlur(round(width * blur)))
+
+    canvas.alpha_composite(plate(0.020, 0.055, 78))
+    canvas.alpha_composite(plate(0.005, 0.010, 92))
     canvas.alpha_composite(rounded(shot, radius), (shot_x, shot_y))
+
+    # A hairline round the phone. Three of the five screens are cream to their own
+    # edges, and on a cream ground the shot dissolved into the tile it stands on;
+    # a thread of the game's brown, barely there, gives the glass an edge to end at.
+    ImageDraw.Draw(canvas).rounded_rectangle(
+        [(shot_x, shot_y), (shot_x + shot_w - 1, shot_y + shot_h - 1)],
+        radius=radius,
+        outline=POST + (46,),
+        width=max(2, round(width * 0.0018)),
+    )
 
     draw = ImageDraw.Draw(canvas)
 
@@ -176,8 +244,10 @@ def frame(input_path: Path, caption: str, output_path: Path) -> tuple:
         draw.text((round((width - w) / 2), y), line, font=font, fill=POST)
         y += line_h
 
+    canvas = vignetted(canvas, 0.16)
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    canvas.convert("RGB").save(output_path, "PNG")
+    grained(canvas.convert("RGB")).save(output_path, "PNG")
     return canvas.size
 
 
