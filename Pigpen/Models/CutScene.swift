@@ -2,26 +2,26 @@ import Foundation
 
 /// A film the game stops to play, as a clock.
 ///
-/// Three of them so far: the one before a player's first walk up the meadow, the one that
-/// says what makes the meadow's last puzzle the boss, and the one that sees them off it.
-/// They are all the same machine — a list of shots, each held for a moment and captioned —
-/// so a fourth is a list and a few pictures rather than another screen.
+/// Three per world: the one before a player's first walk into it, the one that says what makes
+/// its last puzzle the boss, and the one that sees them off it. They are all the same machine —
+/// a list of shots, each held for a moment and captioned — so a world's three are a list and a
+/// few pictures rather than another screen.
 ///
 /// Like the pasture behind the title and the lap of honour on a pen that holds, a scene is
 /// written as a clock rather than as a queue of steps: the screen asks what is on it at a
 /// given moment and draws that. So a film cannot fall out of step with itself, a still of
 /// any moment of it can be taken for a preview or a screenshot, and skipping it is a matter
 /// of walking away from the clock rather than unwinding a pile of half-finished animation.
-struct CutScene: Equatable, Sendable {
+struct CutScene: Equatable, Sendable, Identifiable {
     /// Which film this is.
     ///
     /// Named rather than left anonymous because the game has to remember which ones a
     /// player has already sat through — none of them is worth showing twice.
     ///
-    /// Between them they are the whole of the meadow's story, told in an estate agent's
-    /// voice: a pig who outgrew a poky farm pen and went looking for property, the meadow
-    /// he found and the resident he had to share it with, and the pig — housed at last, and
-    /// already reading other listings.
+    /// Between them they are the whole of the pig's story, told in an estate agent's voice: a
+    /// pig who outgrew a poky farm pen and went looking for property, every market he toured
+    /// and every resident he had to share it with, and the pig — housed at last on each of
+    /// them, and already reading the next listing.
     ///
     /// The first of them carries the rules as well as the story, since a player who has
     /// watched it should know what a good pen is before they are handed a rack of fencing:
@@ -40,9 +40,143 @@ struct CutScene: Equatable, Sendable {
         /// After it, once every pen in the meadow is held: the pig housed and comfortable,
         /// and the dark forest at the meadow's edge that he has already started eyeing.
         case theMeadowHeld
+
+        // MARK: Thornwood Thicket
+
+        /// Before the first walk into the thicket: the tree line the meadow pointed at, and a
+        /// listing that is secluded, wooded and very private, whichever way you read those.
+        case thornwoodOpening = "thornwood-opening"
+        /// Before the thicket's last puzzle: the neighbour, and the one thing he and the pig
+        /// agree on, which is that they are not sharing a fence.
+        case boarHollow = "boar-hollow-briefing"
+        /// After it, once every pen in the thicket is held: a private, peaceful, almost
+        /// perfect wood, and a mountain showing over the top of it.
+        case thornwoodHeld = "thornwood-held"
+
+        // MARK: Emberpeak
+
+        /// Before the first walk up the mountain: dramatic views, naturally heated, and a
+        /// maintenance concern the listing calls an open flame.
+        case emberpeakOpening = "emberpeak-opening"
+        /// Before the mountain's last puzzle: the seller disclosed some local wildlife and
+        /// undersold it, and this neighbour is not to be fenced in but kept out.
+        case wyrmCaldera = "wyrm-caldera-briefing"
+        /// After it: an unbeatable heating bill, and a city lighting up a long way below.
+        case emberpeakHeld = "emberpeak-held"
+
+        // MARK: Cogsworth City
+
+        /// Before the first walk into the city: walkable, vibrant, close to everything, with a
+        /// trash pickup that appears to be irregular.
+        case cogsworthOpening = "cogsworth-opening"
+        /// Before the city's last puzzle: the apartment came with a roommate who has never once
+        /// considered leaving, so this is the boss the pig is fenced in *with*.
+        case ratKingWharf = "rat-king-wharf-briefing"
+        /// After it: great food, a minor rodent situation, and a star overhead.
+        case cogsworthHeld = "cogsworth-held"
+
+        // MARK: Starfall Reaches
+
+        /// Before the first walk out into the reaches: no traffic, no crowds, unbelievable lot
+        /// sizes, and no cover for meteor damage.
+        case starfallOpening = "starfall-opening"
+        /// Before the reaches' last puzzle: there were neighbours after all, and both parties
+        /// value fairness enough to want two pens of exactly the same size.
+        case visitorCrater = "visitor-crater-briefing"
+        /// After it: remote, spacious, mostly peaceful, and something listed very far below
+        /// market.
+        case starfallHeld = "starfall-held"
+
+        // MARK: Gloamdeep Caverns
+
+        /// Before the first walk down into the caverns: solid construction, no street noise, no
+        /// street, and admittedly limited natural light.
+        case gloamdeepOpening = "gloamdeep-opening"
+        /// Before the caverns' last puzzle: the property is occupied twice over, and the pig is
+        /// absolutely not accepting roommates.
+        case theRoost = "the-roost-briefing"
+        /// After it: affordable, quiet, extremely dark, and a carnival glow promising much
+        /// better lighting.
+        case gloamdeepHeld = "gloamdeep-held"
+
+        // MARK: Lantern Carnival
+
+        /// Before the first walk into the carnival: bright, bustling, and no shortage of
+        /// entertainment, if you can live with the noise.
+        case lanternOpening = "lantern-opening"
+        /// Before the carnival's last puzzle: management runs a tight ship, and wants its ring
+        /// fenced in but not touched.
+        case theCenterRing = "the-centre-ring-briefing"
+        /// After it: constant nightlife, and a desert where quiet hours enforce themselves.
+        case lanternHeld = "lantern-held"
+
+        // MARK: Sunbaked Dunes
+
+        /// Before the first walk into the dunes: warm, secluded, extremely low-maintenance
+        /// landscaping, and snakes.
+        case duneOpening = "dune-opening"
+        /// Before the dunes' last puzzle: the nearest neighbour would like a little distance,
+        /// and adjoining properties were not approved.
+        case scorpionFlats = "scorpion-flats-briefing"
+        /// After it: tons of space, very low humidity, and blue water on the horizon.
+        case duneHeld = "dune-held"
+
+        // MARK: Tidepool Cove
+
+        /// Before the first walk down onto the cove: ocean views, fresh air, prime waterfront,
+        /// and a certain amount of coastal hazard.
+        case tidepoolOpening = "tidepool-opening"
+        /// Before the cove's last puzzle: the property came with a guest house, and everyone
+        /// likes a little privacy.
+        case theCrabPool = "the-crab-pool-briefing"
+        /// After it: beautiful views, one too many uninvited guests, and a cold gust off
+        /// somewhere cooler.
+        case tidepoolHeld = "tidepool-held"
+
+        // MARK: Frostwhisker Tundra
+
+        /// Before the first walk out onto the tundra: charming, scenic, excellent natural
+        /// refrigeration, and black ice.
+        case frostwhiskerOpening = "frostwhisker-opening"
+        /// Before the tundra's last puzzle: the waterfront came with a resident, and its water
+        /// access is non-negotiable.
+        case theHaulout = "the-haulout-briefing"
+        /// After it: quiet, beautiful, very cool — far too cool — and somewhere green beyond.
+        case frostwhiskerHeld = "frostwhisker-held"
+
+        // MARK: Mirebog Fen
+
+        /// Before the first walk into the fen: waterfront property in every direction, described
+        /// in the listing as lush.
+        case mirebogOpening = "mirebog-opening"
+        /// Before the fen's last puzzle: the crocodile has one requirement, and it is the whole
+        /// waterway.
+        case theWallow = "the-wallow-briefing"
+        /// After it: very green, very wet, and only one direction left to go.
+        case mirebogHeld = "mirebog-held"
+
+        // MARK: Cloudspire Heights
+
+        /// Before the first walk onto the heights: fresh air, endless views, absolutely no flood
+        /// risk, and severe weather.
+        case cloudspireOpening = "cloudspire-opening"
+        /// Before the last puzzle in the game: the neighbourhood has very strict oversight, and
+        /// the eagle sees everything above, below and beside it.
+        case theEyrie = "the-eyrie-briefing"
+        /// The last film in the game. Every market toured, every neighbour met, and the best pen
+        /// turning out to have been the first one — right up until the open house.
+        case cloudspireHeld = "cloudspire-held"
     }
 
     let name: Name
+    /// What the world remembers this film by, so it plays once and is never shown twice — and
+    /// what tells one on screen apart from another, so presenting a new film swaps the screen
+    /// rather than leaving the old one up.
+    ///
+    /// It is the name's raw value rather than the name because a device that has already seen a
+    /// film has the string on it: a case can be renamed freely, and what it spells cannot.
+    var key: String { name.rawValue }
+    var id: String { key }
     /// The film, in order.
     let shots: [Shot]
     /// The moment the curtain went up.
@@ -66,47 +200,47 @@ struct CutScene: Equatable, Sendable {
 
     /// What a shot shows. A script only says which picture is up and for how long; how each
     /// one is painted is the screen's business.
+    ///
+    /// A world at a time rather than one flat list. Every film in the game is painted with the
+    /// same brushes — a sky, a ridge, a band of ground, an animal stood on it — but a thicket's
+    /// shots are no more the meadow's than its boar is its deer, and one list of every shot in
+    /// the game would carry a `finishedPen` per world with nothing but a longer name to tell
+    /// them apart. So each world names its own shots inside its own case, in its own file
+    /// beside the films that use them, and the switch that paints one is only ever as long as
+    /// the world it belongs to.
     enum Picture: Hashable, Sendable {
-        // MARK: The opening
+        case meadow(Meadow)
+        case thornwood(Thornwood)
+        case emberpeak(Emberpeak)
+        case cogsworth(Cogsworth)
+        case starfall(Starfall)
+        case gloamdeep(Gloamdeep)
+        case lantern(Lantern)
+        case dunes(Dunes)
+        case tidepool(Tidepool)
+        case frostwhisker(Frostwhisker)
+        case mirebog(Mirebog)
+        case cloudspire(Cloudspire)
 
-        /// The pig in a poky farm pen by the barn, stepping up to the fence and looking
-        /// thoroughly unimpressed with the square footage.
-        case homePen
-        /// The barn, and the one gap in the fence that nobody shut — the pig already through
-        /// it and off to explore the market.
-        case theOpenGate
-        /// The meadow, with fence pieces popping up around the pig: the property, and the
-        /// rack of fencing a player is handed to build on it.
-        case welcomeMeadow
-        /// A shut pen round the pig with an apple inside it and a skull outside: the scoring
-        /// rule drawn rather than written — space scores, apples improve it, skulls hurt it.
-        case applesAndSkulls
-        /// One panel gone from the pen and the pig walking straight out through the gap: the
-        /// other half of the rule, and the pig keeping his options open.
-        case closeTheFence
-
-        // MARK: Stag Mere
-
-        /// The meadow, with a deer walking into frame behind the pig: a promising piece of
-        /// land, and the one complication on it.
-        case promisingLand
-        /// The pig and the deer looking at each other across the grass: the current
-        /// resident, and the discovery that this was not a vacant lot.
-        case theResident
-        /// Both animals with a single pen outline round them that splits into two: fence in
-        /// both of them, one pen or two, whatever makes the floor plan work.
-        case oneOrTwo
-
-        // MARK: The meadow held
-
-        /// The pig stood comfortable in the finished meadow pen: space, good views, plenty
-        /// of apples.
-        case finishedPen
-        /// The pig turned toward a dark forest at the edge of the meadow — the thing he
-        /// should have been satisfied without.
-        case forestEdge
-        /// The pig walking off toward the forest: he has started checking other listings.
-        case intoTheForest
+        /// Whether the line over this shot is the point of the whole film rather than a note
+        /// under the picture, and so is set big in the middle of the frame as a card. The shot
+        /// a film hands the game over on is the one that gets it.
+        var isCard: Bool {
+            switch self {
+            case .meadow(let shot): shot.isCard
+            case .thornwood(let shot): shot.isCard
+            case .emberpeak(let shot): shot.isCard
+            case .cogsworth(let shot): shot.isCard
+            case .starfall(let shot): shot.isCard
+            case .gloamdeep(let shot): shot.isCard
+            case .lantern(let shot): shot.isCard
+            case .dunes(let shot): shot.isCard
+            case .tidepool(let shot): shot.isCard
+            case .frostwhisker(let shot): shot.isCard
+            case .mirebog(let shot): shot.isCard
+            case .cloudspire(let shot): shot.isCard
+            }
+        }
     }
 
     // MARK: - Timing
@@ -331,6 +465,62 @@ struct CutScene: Equatable, Sendable {
     }
 }
 
+// MARK: - The meadow's shots
+
+extension CutScene.Picture {
+    /// Every shot of the meadow's three films: the world the game has always shipped, and the
+    /// one that was painted before there was anywhere else to go.
+    enum Meadow: Hashable, Sendable {
+        // MARK: The opening
+
+        /// The pig in a poky farm pen by the barn, stepping up to the fence and looking
+        /// thoroughly unimpressed with the square footage.
+        case homePen
+        /// The barn, and the one gap in the fence that nobody shut — the pig already through
+        /// it and off to explore the market.
+        case theOpenGate
+        /// The meadow, with fence pieces popping up around the pig: the property, and the
+        /// rack of fencing a player is handed to build on it.
+        case welcomeMeadow
+        /// A shut pen round the pig with an apple inside it and a skull outside: the scoring
+        /// rule drawn rather than written — space scores, apples improve it, skulls hurt it.
+        case applesAndSkulls
+        /// One panel gone from the pen and the pig walking straight out through the gap: the
+        /// other half of the rule, and the pig keeping his options open.
+        case closeTheFence
+
+        // MARK: Stag Mere
+
+        /// The meadow, with a deer walking into frame behind the pig: a promising piece of
+        /// land, and the one complication on it.
+        case promisingLand
+        /// The pig and the deer looking at each other across the grass: the current
+        /// resident, and the discovery that this was not a vacant lot.
+        case theResident
+        /// Both animals with a single pen outline round them that splits into two: fence in
+        /// both of them, one pen or two, whatever makes the floor plan work.
+        case oneOrTwo
+
+        // MARK: The meadow held
+
+        /// The pig stood comfortable in the finished meadow pen: space, good views, plenty
+        /// of apples.
+        case finishedPen
+        /// The pig turned toward a dark forest at the edge of the meadow — the thing he
+        /// should have been satisfied without.
+        case forestEdge
+        /// The pig walking off toward the forest: he has started checking other listings.
+        case intoTheForest
+
+        var isCard: Bool {
+            switch self {
+            case .closeTheFence, .intoTheForest: true
+            default: false
+            }
+        }
+    }
+}
+
 // MARK: - The films
 
 extension CutScene {
@@ -352,23 +542,23 @@ extension CutScene {
             name: .opening,
             shots: [
                 Shot(
-                    picture: .homePen,
+                    picture: .meadow(.homePen),
                     caption: "Pig had a home. Cozy. Rustic. Extremely limited square footage."
                 ),
                 Shot(
-                    picture: .theOpenGate,
+                    picture: .meadow(.theOpenGate),
                     caption: "Then someone left the gate open. Pig decided it was time to explore the market for some new real estate."
                 ),
                 Shot(
-                    picture: .welcomeMeadow,
+                    picture: .meadow(.welcomeMeadow),
                     caption: "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can."
                 ),
                 Shot(
-                    picture: .applesAndSkulls,
+                    picture: .meadow(.applesAndSkulls),
                     caption: "More space means a better score. Apples improve the property. Skulls hurt the resale value."
                 ),
                 Shot(
-                    picture: .closeTheFence,
+                    picture: .meadow(.closeTheFence),
                     caption: "And make sure to close the fence. Pig is keeping his options open."
                 )
             ],
@@ -390,15 +580,15 @@ extension CutScene {
             name: .stagMere,
             shots: [
                 Shot(
-                    picture: .promisingLand,
+                    picture: .meadow(.promisingLand),
                     caption: "Pig had found a promising piece of land. There was just one complication."
                 ),
                 Shot(
-                    picture: .theResident,
+                    picture: .meadow(.theResident),
                     caption: "The current resident. Apparently this was not a vacant lot."
                 ),
                 Shot(
-                    picture: .oneOrTwo,
+                    picture: .meadow(.oneOrTwo),
                     caption: "Fence in both Pig and the deer. One pen or two. Whatever makes the floor plan work."
                 )
             ],
@@ -417,15 +607,15 @@ extension CutScene {
             name: .theMeadowHeld,
             shots: [
                 Shot(
-                    picture: .finishedPen,
+                    picture: .meadow(.finishedPen),
                     caption: "Mudlark Meadow had space. Good views. Plenty of apples."
                 ),
                 Shot(
-                    picture: .forestEdge,
+                    picture: .meadow(.forestEdge),
                     caption: "By all accounts, Pig should have been satisfied."
                 ),
                 Shot(
-                    picture: .intoTheForest,
+                    picture: .meadow(.intoTheForest),
                     caption: "Unfortunately, he'd started checking other listings."
                 )
             ],
@@ -433,8 +623,24 @@ extension CutScene {
         )
     }
 
-    /// Every film the game has, which is what the tests walk.
-    static var all: [CutScene] { [.opening(), .stagMere(), .theMeadowHeld()] }
+    /// Every film the game has, which is what the tests walk. In the order the journey meets
+    /// them, so a world's three stand together.
+    static var all: [CutScene] {
+        [
+            .opening(), .stagMere(), .theMeadowHeld(),
+            .thornwoodOpening(), .boarHollow(), .thornwoodHeld(),
+            .emberpeakOpening(), .wyrmCaldera(), .emberpeakHeld(),
+            .cogsworthOpening(), .ratKingWharf(), .cogsworthHeld(),
+            .starfallOpening(), .visitorCrater(), .starfallHeld(),
+            .gloamdeepOpening(), .theRoost(), .gloamdeepHeld(),
+            .lanternOpening(), .theCenterRing(), .lanternHeld(),
+            .duneOpening(), .scorpionFlats(), .duneHeld(),
+            .tidepoolOpening(), .theCrabPool(), .tidepoolHeld(),
+            .frostwhiskerOpening(), .theHaulout(), .frostwhiskerHeld(),
+            .mirebogOpening(), .theWallow(), .mirebogHeld(),
+            .cloudspireOpening(), .theEyrie(), .cloudspireHeld()
+        ]
+    }
 
     /// The film a name stands for, so a screen that has been handed a name can play it
     /// without knowing which one it is.
@@ -443,6 +649,39 @@ extension CutScene {
         case .opening: .opening(start: start)
         case .stagMere: .stagMere(start: start)
         case .theMeadowHeld: .theMeadowHeld(start: start)
+        case .thornwoodOpening: .thornwoodOpening(start: start)
+        case .boarHollow: .boarHollow(start: start)
+        case .thornwoodHeld: .thornwoodHeld(start: start)
+        case .emberpeakOpening: .emberpeakOpening(start: start)
+        case .wyrmCaldera: .wyrmCaldera(start: start)
+        case .emberpeakHeld: .emberpeakHeld(start: start)
+        case .cogsworthOpening: .cogsworthOpening(start: start)
+        case .ratKingWharf: .ratKingWharf(start: start)
+        case .cogsworthHeld: .cogsworthHeld(start: start)
+        case .starfallOpening: .starfallOpening(start: start)
+        case .visitorCrater: .visitorCrater(start: start)
+        case .starfallHeld: .starfallHeld(start: start)
+        case .gloamdeepOpening: .gloamdeepOpening(start: start)
+        case .theRoost: .theRoost(start: start)
+        case .gloamdeepHeld: .gloamdeepHeld(start: start)
+        case .lanternOpening: .lanternOpening(start: start)
+        case .theCenterRing: .theCenterRing(start: start)
+        case .lanternHeld: .lanternHeld(start: start)
+        case .duneOpening: .duneOpening(start: start)
+        case .scorpionFlats: .scorpionFlats(start: start)
+        case .duneHeld: .duneHeld(start: start)
+        case .tidepoolOpening: .tidepoolOpening(start: start)
+        case .theCrabPool: .theCrabPool(start: start)
+        case .tidepoolHeld: .tidepoolHeld(start: start)
+        case .frostwhiskerOpening: .frostwhiskerOpening(start: start)
+        case .theHaulout: .theHaulout(start: start)
+        case .frostwhiskerHeld: .frostwhiskerHeld(start: start)
+        case .mirebogOpening: .mirebogOpening(start: start)
+        case .theWallow: .theWallow(start: start)
+        case .mirebogHeld: .mirebogHeld(start: start)
+        case .cloudspireOpening: .cloudspireOpening(start: start)
+        case .theEyrie: .theEyrie(start: start)
+        case .cloudspireHeld: .cloudspireHeld(start: start)
         }
     }
 }

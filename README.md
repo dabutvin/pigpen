@@ -1170,9 +1170,8 @@ came through — which is the next world, and a reason to go to it.
 
 ### The cut scenes
 
-Thirty-six films — the meadow's three, painted shot by shot, and three apiece for the eleven
-worlds past it in storybook stills — each played once and each with a **Skip** in the corner
-from a beat in.
+Thirty-six films, three to a world and every one of them painted shot by shot — a hundred and
+fourteen shots in all — each played once and each with a **Skip** in the corner from a beat in.
 Skipping counts as having seen one. Every world plays the same three: an opening before its
 first field, a briefing before its boss, and a send-off once every pen in it is held. All of
 them are behind the gear as well, end to end, for a player who wants the story again — see
@@ -1237,14 +1236,35 @@ can already see into, and the two shots that turn toward it fall into dusk where
 opens at sunrise: what is past the meadow is nobody's business yet, except that it is the
 next world, and a reason to go to it.
 
+#### Into the thicket
+
+The thicket's opening is the meadow's, one world on and with a roof over it. Three shots: the
+mouth of the woods with the trail running in under two ranks of trees and the pig small at the
+foot of it, a clearing that holds up the mushroom while the line calls it a charming local
+amenity and then the wilted flower while the line admits what it does to the curb appeal, and
+the pig away up the trail with the wood closing over behind it. The middle shot is the meadow's
+apple and skull with the pen taken out from around them: the meadow is teaching the rule for
+the first time and the fence is half of what it teaches, where a player in the thicket has
+already fenced a whole meadow and is being reminded rather than taught — so the picture changes
+hands where the caption changes sentence, and the shot is whichever half of the line is being
+read.
+
+The send-off is the meadow's trick played on the thicket. Every pen holds, the pig has the
+private, peaceful, almost perfect wood it came for, and it is looking through a gap in its own
+roof at a mountain — which turns out, one shot later, to have a plume going up off it and a
+light in the crater. What the meadow's forest was to the meadow, the mountain is to the woods:
+the next listing, and a reason to go and look at it.
+
 #### Boar Hollow
 
-The thicket's boss gets the same short briefing, in the storybook hand rather than painted:
-Pig meets the neighbour, the two of them agree on separate units, and the rule lands on a
-card — *fence in Pig and the boar separately; shared walls are not permitted*. It is the
+The thicket's boss gets the same short briefing, and it is painted now: the boar comes down
+through the trees, the two of them stand either side of a tree that grew where the party wall
+should be, and the rule lands on a card — *fence in Pig and the boar separately*. It is the
 mere's briefing done in the woods, because it is the mere's board done in the woods, and a
-world should no more spring a second animal on a player than the meadow did. Lit for daylight
-where the thicket's send-off is lit after dark, for the reason the mere's is lit flat.
+world should no more spring a second animal on a player than the meadow did. Where the mere
+splits one pen into two, the hollow opens two at once with clear ground between them: the deer
+could have shared and the boar will not. Lit for daylight where the thicket's send-off is lit
+after dark, for the reason the mere's is lit flat.
 
 #### Wyrm Caldera
 
@@ -1258,8 +1278,7 @@ A briefing plays before a level that changes the rules, and no world so far has 
 one — a boss is the only board that stands a second animal on the ground. Which level stops
 for which film is the world's own business: [`GameWorld`](Pigpen/Models/GameWorld.swift)
 carries its briefings by level id, so the thicket briefs Boar Hollow and the mountain briefs
-Wyrm Caldera in their own storybook stills without the meadow or the map screen knowing which
-kind of film came up. A boss you have already held is never briefed — the same reason the opening checks the stars as well
+Wyrm Caldera without the meadow or the map screen knowing which film came up. A boss you have already held is never briefed — the same reason the opening checks the stars as well
 as its own flag, and what keeps a film written after a world has shipped from stopping the
 player who finished it first.
 
@@ -1312,20 +1331,45 @@ their specs, so asking what is on the reel does not start three dozen clocks —
 
 Like the pasture behind the title and the lap of honour on a pen that holds, a film is a
 clock rather than a queue of steps: [`CutScene`](Pigpen/Models/CutScene.swift) says which
-shot is up at a given second and how far through it, and `CutSceneView` paints that. All
-three are the same machine — a list of shots, each held for a moment and captioned — so a
-fourth is a list and a few pictures rather than another screen.
+shot is up at a given second and how far through it, and `CutSceneView` paints that. They are
+all the same machine — a list of shots, each held for a moment and captioned — so the next one
+is a list and a few pictures rather than another screen.
 
-A themed world's films are the same clock with a lighter hand:
-[`StorybookScene`](Pigpen/Models/StorybookScene.swift) is a themed backdrop, a motif held
-over it and a line of type, timed to the frame the way a painted film is, so a new world
-can open, brief its boss and close on a film long before it has art of its own. `WorldFilm`
-wraps either kind and `WorldFilmView` plays it, which is why the map screen can stop for a
-briefing without knowing whether what comes up was painted or strewn.
+A world at a time, in files of its own. `CutScene.Picture` names its shots inside a case per
+world — `.meadow(.homePen)`, `.thornwood(.theTreeLine)` — so a hundred shots do not become one
+list with a `finishedPen` in it per world, and each world keeps its shots, its films and the
+painting of them together: [`CutScene+Thornwood`](Pigpen/Models/CutScene+Thornwood.swift) for
+the script, [`ThornwoodFilm`](Pigpen/Views/Film/ThornwoodFilm.swift) for the brush, and the
+same pair for every other world.
 
-So any moment of any of them can be stopped and photographed, which is how CI shows all
-eleven shots, and a player who asks for reduced motion gets every shot and every caption
-with the camera held still. They are the only screens in the game lit by something other
+[`Film`](Pigpen/Views/Film/Film.swift) holds what every world paints with — a sky, a sun, a
+ridge, a band of ground, tufts along its edge, a trail, a fence, a pen, an animal stood in it —
+and each world adds only what it needs of its own, prefixed with its own name so that twelve
+files extending the same type never collide. The thicket wanted a canopy, trunks and light
+through leaves; the mountain a crater and a plume; the city a skyline, a canal and lamps; the
+caverns a stone roof and crystal light; the carnival a big top, a wheel and strung lanterns;
+the dunes barchans and a shimmer on the horizon; the cove surf and rock pools; the tundra
+pressure ridges, sastrugi and falling snow; the fen reed beds and standing water; the heights a
+sea of cloud with spires standing out of it. None of that is shared, because none of it is
+shared ground.
+
+Two rules hold the compositions together, both learnt from photographing them. A rank of trees
+— or a mountain, or a skyline — is drawn first and the ground is drawn over its feet, because a
+flat lower edge reads as a sticker. And nothing that matters goes where the words go: along the
+bottom on a shot with a subtitle, across the middle on the three cards a world hands over on.
+
+Promoting a world from stills to paint keeps its keys. `WorldProgress` remembers a film by the
+string its world files it under, so the thicket's painted films are still `thornwood-opening`,
+`boar-hollow-briefing` and `thornwood-held`, and the same for every world that was once a reel
+of stills: a player who watched one is not sat back down in front of its replacement.
+`CutSceneTests` pins all thirty-six keys, spelled out, because a case can be renamed freely and
+what it spells cannot.
+
+So any moment of any of them can be stopped and photographed — `PigpenApp.stills` names a launch
+argument per shot, all hundred and fourteen of them, which is how a shot is checked while it is
+being painted — and a player who asks for reduced motion gets every shot and every caption with
+the camera held still. CI does not photograph them: a gallery of a hundred and fourteen frames is
+a worse way to look at a film than opening it in a preview or in the projection room. They are the only screens in the game lit by something other
 than the phone: the opening is at sunrise and the send-off opens on the same gold, so the
 world is always shown at its best whatever the system appearance says.
 
@@ -1860,7 +1904,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of mushrooms and wilted flowers and a mountain board of coins and flames), the settings sheet, a daily board and its archive and all eleven shots of the three cut scenes in light + dark, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of mushrooms and wilted flowers and a mountain board of coins and flames), the settings sheet, a daily board and its archive, post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -1870,7 +1914,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-mushrooms`, `-flames`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-mushrooms` opens Nettle Bank dressed for the woods, where a mushroom and a wilted flower sit on the ground in place of an apple and a skull, and `-flames` opens Smoulder Ridge dressed for the mountain, on ash and cinder with coins and flames on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The eleven film arguments each stop a cut scene on one of its shots rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it; the films are lit by the shot rather than by the phone, so their two appearances are meant to match. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-woods-map`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-mushrooms`, `-flames`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-mushrooms` opens Nettle Bank dressed for the woods, where a mushroom and a wilted flower sit on the ground in place of an apple and a skull, and `-flames` opens Smoulder Ridge dressed for the mountain, on ash and cinder with coins and flames on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The films are not photographed here. `PigpenApp.stills` still names a launch argument per shot — a hundred and fourteen of them, each stopping a film on one shot rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it — but they are for looking at a shot while it is being painted, not for a gallery on every pull request. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -1968,8 +2012,18 @@ Pigpen/
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── BossOrders.swift         # The rule a boss adds, in the one line the board keeps on screen
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
-│   ├── CutScene.swift           # The meadow's films, as clocks: which shot is up when, and for how long
-│   ├── StorybookScene.swift     # A themed world's films, as clocks: the lighter hand a new world opens, briefs and closes on
+│   ├── CutScene.swift           # A painted film, as a clock: which shot is up when, and for how long — and the meadow's three
+│   ├── CutScene+Thornwood.swift # The thicket's three, and the shots they are cut from
+│   ├── CutScene+Emberpeak.swift # The mountain's three, and so on for every world below
+│   ├── CutScene+Cogsworth.swift
+│   ├── CutScene+Starfall.swift
+│   ├── CutScene+Gloamdeep.swift
+│   ├── CutScene+Lantern.swift
+│   ├── CutScene+Dunes.swift
+│   ├── CutScene+Tidepool.swift
+│   ├── CutScene+Frostwhisker.swift
+│   ├── CutScene+Mirebog.swift
+│   ├── CutScene+Cloudspire.swift # And the last of them, whose send-off is the game's ending
 │   ├── FilmReel.swift           # Every film in the game in one running order, for watching them back to back
 │   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
@@ -2014,8 +2068,11 @@ Pigpen/
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
-│   ├── CutSceneView.swift       # Paints any of the meadow's films, shot by shot
-│   ├── StorybookSceneView.swift # Plays a storybook film, and either kind of film behind one interface
+│   ├── CutSceneView.swift       # Plays a painted film: the bars, the type, the way out
+│   ├── Film/
+│   │   ├── Film.swift           # One frame of a film, and every brush a world paints with
+│   │   ├── MeadowFilm.swift     # Mudlark Meadow's eleven shots
+│   │   └── ThornwoodFilm.swift  # Thornwood Thicket's nine, and the canopy, trunks, shafts and mountain it wanted
 │   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
 │   ├── FullGameOffer.swift      # The offer of the full game: what it opens, the price, the buy and the restore
 │   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data

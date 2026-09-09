@@ -55,7 +55,7 @@ struct FilmReel: Sendable {
         var title: String { "\(world) · \(part.word)" }
 
         /// The film, its clock started now.
-        func raise(at start: Date = .now) -> WorldFilm { spec.raise(at: start) }
+        func raise(at start: Date = .now) -> CutScene { spec.raise(at: start) }
     }
 
     let billings: [Billing]
