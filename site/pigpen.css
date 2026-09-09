@@ -128,8 +128,15 @@ li { margin: 6px 0; }
 
 .pitch {
   max-width: 32rem;
-  margin: 14px auto 22px;
+  margin: 14px auto 0;
   font-size: 1.15rem;
+}
+
+/* The hook goes first at full size; the sentence explaining it follows a little smaller,
+   and carries the gap down to the button. */
+.pitch + .pitch {
+  margin: 10px auto 22px;
+  font-size: 1.02rem;
 }
 
 .chip {
