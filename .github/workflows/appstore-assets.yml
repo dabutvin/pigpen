@@ -82,7 +82,7 @@ jobs:
           # much of it there is, the daily, and the chase.
           SCREENS=(
             "title:-title-fresh:A cozy pig puzzle"
-            "board:-orchard:Build the pig a home"
+            "board:-orchard-building:Build the pig a home"
             "universe:-universe:A whole universe to solve"
             "daily:-archive:A new puzzle every day"
             "stars:-boss:Chase every last star"

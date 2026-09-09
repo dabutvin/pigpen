@@ -27,7 +27,9 @@ struct PigpenApp: App {
     /// time, the stars it was worth, and the trophy offering the whole wall back. The next
     /// two boards are the ones with something lying on the ground: the
     /// orchard with its best pen closed, where an apple inside the pen and an apple under
-    /// the fencing sit side by side, and Sour Ground with a pen holding one of each, where
+    /// the fencing sit side by side — and the same orchard with that pen only half up, the
+    /// mouth of it open and two pieces still in hand, for a picture that wants a pen being
+    /// built rather than one already shut — and Sour Ground with a pen holding one of each, where
     /// the apple and the skull cancel out. `-boss` is the meadow's last level, where a
     /// stag stands on the far shore of the mere and the best pen holds both animals in two
     /// enclosures at once. Settings opens over a world part-way through as well, and one
@@ -188,6 +190,7 @@ struct PigpenApp: App {
         case puzzle = "-puzzle"
         case beaten = "-beaten"
         case orchard = "-orchard"
+        case orchardBuilding = "-orchard-building"
         case sour = "-sour"
         case boss = "-boss"
         case truffles = "-truffles"
@@ -268,6 +271,8 @@ struct PigpenApp: App {
             PuzzleView(game: .pickedBackUp())
         case .orchard:
             PuzzleView(game: .theOrchardsBestPen())
+        case .orchardBuilding:
+            PuzzleView(game: .theOrchardPartWalled())
         case .sour:
             PuzzleView(game: .applesAndSkulls())
         case .boss:
