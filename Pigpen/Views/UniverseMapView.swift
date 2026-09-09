@@ -457,7 +457,14 @@ private struct WorldPlanet: View {
             .frame(width: 78, height: 78)
             .clipShape(Circle())
             .saturation(isOpen ? 1 : 0.3)
-            .brightness(isOpen ? 0 : -0.22)
+            // Put out rather than darkened. `brightness` is added on top of a pixel and not
+            // taken through the cover it has, so the clipped edge — the half-covered pixels
+            // the gold rim ends on — kept most of the value it was painted while everything
+            // inside it went down, and a shut world hung there with a bright thread of cream
+            // around it: a rim lit against a dark sky, which is not a rim any painting has.
+            // A multiply goes through that cover, so the edge goes down with the picture it
+            // belongs to and the medallion keeps one outline rather than growing a second.
+            .colorMultiply(isOpen ? .white : Color(white: 0.62))
             .shadow(color: theme.accent.opacity(isOpen ? 0.55 : 0.2), radius: 12)
     }
 
