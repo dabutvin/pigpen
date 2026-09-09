@@ -84,3 +84,6 @@ __pycache__/
 *.p8
 *.cer
 *.certSigningRequest
+
+# macOS
+.DS_Store

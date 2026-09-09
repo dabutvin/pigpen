@@ -130,7 +130,11 @@ def frame(input_path: Path, caption: str, output_path: Path) -> tuple:
 
     shot_x = (width - shot_w) // 2
     shot_y = round(height * 0.185)
-    radius = round(shot_w * 0.085)
+    # A phone's corners are far rounder than a tablet's, and a phone's radius laid
+    # over an iPad shot bites the clock out of the top-left corner — the status bar
+    # sits nearer the edge there, with no notch to hold it in. Tall shots are
+    # phones; squarer ones are tablets, and get the gentler curve the device has.
+    radius = round(shot_w * (0.085 if height / width >= 1.9 else 0.035))
 
     # A soft shadow under the phone, drawn as a blurred dark plate a touch below
     # and behind it, so the screenshot lifts off the pasture rather than sitting flat.

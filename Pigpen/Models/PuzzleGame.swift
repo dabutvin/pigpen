@@ -357,6 +357,21 @@ extension PuzzleGame {
         return game
     }
 
+    /// Windfall Orchard with that same pen half up: both walls of it standing down to the
+    /// last row and the mouth of it still open, two pieces still in hand. The board to
+    /// photograph when the picture wants a pen being built rather than a pen already shut —
+    /// a shut pen photographs as a solved puzzle, and the store is selling the solving.
+    static func theOrchardPartWalled() -> PuzzleGame {
+        let game = PuzzleGame(level: .windfallOrchard)
+        for row in 3...7 {
+            game.beginStroke()
+            game.buildFence(on: GridPoint(row: row, column: max(0, row - 5)))
+            game.buildFence(on: GridPoint(row: row, column: 12 - row))
+            game.endStroke()
+        }
+        return game
+    }
+
     /// Sour Ground with the ground east of the little lake boxed off, which is the board
     /// that has an apple and a skull on it at once. One of each is inside the pen, where
     /// they cancel out and leave it worth exactly the ten tiles it holds. The other skull
