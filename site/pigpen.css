@@ -120,11 +120,14 @@ li { margin: 6px 0; }
   padding: 8px 0 4px;
 }
 
-.hero h1 {
-  /* The wordmark is set as wide as the screen will take and no wider: at a fixed size the
-     tracking pushes six capitals past the edge of a phone, and a line that overflows widens
-     the whole document under it rather than only itself. */
-  font-size: clamp(2rem, 12vw, 3.2rem);
+/* The name is the app's own die-cut sticker rather than type, drawn by
+   Tools/generate_wordmark.py from the same numbers the title screen uses. It is the widest
+   thing on the page, so it is sized off the screen and never past it. */
+.wordmark {
+  display: block;
+  width: min(100%, 24rem);
+  height: auto;
+  margin: 0 auto;
 }
 
 .pitch {
