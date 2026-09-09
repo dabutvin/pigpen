@@ -32,6 +32,10 @@ struct WorldTheme: Sendable {
     /// The world's own colour on the universe map: the planet it is drawn as, lit and shaded.
     let accent: Color
     let accentDeep: Color
+    /// The paintwork round this world's board: the bar across the top of a puzzle and of the
+    /// trail, and the face of the one button that ends a go — along with the ink or chalk that
+    /// anything written straight onto this world's ground is written in.
+    let chrome: ChromeSkin
     /// The world painted as a medallion, for the universe map to hang in space in place of a
     /// planet: the place itself seen through a gold ring, rather than a coloured disc with the
     /// boss stamped on it. Every world is painted now, so nothing on the shipped map goes
@@ -105,6 +109,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🦌", name: "the stag"),
         accent: Color(red: 0.58, green: 0.78, blue: 0.45),
         accentDeep: Color(red: 0.36, green: 0.58, blue: 0.30),
+        chrome: .meadow,
         medallion: "medallion-mudlark-meadow"
     )
 
@@ -124,6 +129,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🐗", name: "the boar"),
         accent: Color(red: 0.40, green: 0.62, blue: 0.36),
         accentDeep: Color(red: 0.20, green: 0.38, blue: 0.22),
+        chrome: .thornwood,
         medallion: "medallion-thornwood-thicket"
     )
 
@@ -144,6 +150,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🐉", name: "the wyrm"),
         accent: Color(red: 0.92, green: 0.47, blue: 0.26),
         accentDeep: Color(red: 0.55, green: 0.18, blue: 0.12),
+        chrome: .emberpeak,
         medallion: "medallion-emberpeak"
     )
 
@@ -167,6 +174,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🐀", name: "the rat king"),
         accent: Color(red: 0.62, green: 0.66, blue: 0.73),
         accentDeep: Color(red: 0.31, green: 0.35, blue: 0.42),
+        chrome: .cogsworth,
         medallion: "medallion-cogsworth-city"
     )
 
@@ -191,6 +199,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🛸", name: "the visitor"),
         accent: Color(red: 0.61, green: 0.53, blue: 0.89),
         accentDeep: Color(red: 0.29, green: 0.23, blue: 0.52),
+        chrome: .starfall,
         medallion: "medallion-starfall-reaches"
     )
 
@@ -216,6 +225,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🦇", name: "the roost"),
         accent: Color(red: 0.53, green: 0.47, blue: 0.63),
         accentDeep: Color(red: 0.24, green: 0.20, blue: 0.34),
+        chrome: .gloamdeep,
         medallion: "medallion-gloamdeep-caverns"
     )
 
@@ -241,6 +251,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🤹", name: "the ringmaster"),
         accent: Color(red: 0.93, green: 0.43, blue: 0.67),
         accentDeep: Color(red: 0.55, green: 0.20, blue: 0.41),
+        chrome: .lanternCarnival,
         medallion: "medallion-lantern-carnival"
     )
 
@@ -265,6 +276,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🦂", name: "the scorpion"),
         accent: Color(red: 0.93, green: 0.77, blue: 0.43),
         accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20),
+        chrome: .sunbakedDunes,
         medallion: "medallion-sunbaked-dunes"
     )
 
@@ -289,6 +301,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🦀", name: "the crab"),
         accent: Color(red: 0.37, green: 0.74, blue: 0.72),
         accentDeep: Color(red: 0.16, green: 0.44, blue: 0.46),
+        chrome: .tidepoolCove,
         medallion: "medallion-tidepool-cove"
     )
 
@@ -313,6 +326,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🦭", name: "the bull seal"),
         accent: Color(red: 0.69, green: 0.84, blue: 0.93),
         accentDeep: Color(red: 0.36, green: 0.56, blue: 0.71),
+        chrome: .frostwhiskerTundra,
         medallion: "medallion-frostwhisker-tundra"
     )
 
@@ -337,6 +351,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🐊", name: "the old croc"),
         accent: Color(red: 0.47, green: 0.56, blue: 0.35),
         accentDeep: Color(red: 0.24, green: 0.32, blue: 0.18),
+        chrome: .mirebogFen,
         medallion: "medallion-mirebog-fen"
     )
 
@@ -363,6 +378,7 @@ extension WorldTheme {
         boss: BossMark(glyph: "🦅", name: "the eagle"),
         accent: Color(red: 0.73, green: 0.83, blue: 0.96),
         accentDeep: Color(red: 0.44, green: 0.58, blue: 0.79),
+        chrome: .cloudspireHeights,
         medallion: "medallion-cloudspire-heights"
     )
 }

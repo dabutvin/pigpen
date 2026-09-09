@@ -2029,7 +2029,7 @@ Pigpen/
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
 │   ├── WorldMap.swift           # The levels of a world and where their signposts stand
 │   ├── WorldProgress.swift      # Best stars, best pens and the walls that held them, what that unlocks, which films are owed
-│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its board skin, its boss silhouette
+│   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its board skin, its paintwork, its boss silhouette
 │   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
 │   ├── Emberpeak.swift          # Emberpeak: its nine levels and the trail up them
@@ -2086,6 +2086,7 @@ Pigpen/
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing
+│   ├── ChromeSkin.swift         # A world's paintwork: the bar over a board, the button that ends a go
 │   ├── MeadowBackdrop.swift     # The meadow behind a board, and the timber bar over it
 │   ├── FenceRack.swift          # The budget as a rack of pieces, spent ones taken off it
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it

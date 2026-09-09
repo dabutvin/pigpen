@@ -280,7 +280,8 @@ struct PigpenApp: App {
                 level: .nettleBank,
                 treatSkin: WorldTheme.thornwood.treats,
                 skin: WorldTheme.thornwood.field,
-                day: .forestDay
+                day: .forestDay,
+                chrome: WorldTheme.thornwood.chrome
             )
         case .embers:
             // A mountain board: the coin and the flame stand where the apple and
@@ -290,7 +291,8 @@ struct PigpenApp: App {
                 level: .smoulderRidge,
                 treatSkin: WorldTheme.emberpeak.treats,
                 skin: WorldTheme.emberpeak.field,
-                day: .emberDay
+                day: .emberDay,
+                chrome: WorldTheme.emberpeak.chrome
             )
         case .pies:
             // A city board: the pizza and the trash can stand where the apple and the
@@ -300,7 +302,8 @@ struct PigpenApp: App {
                 level: .clocktowerSquare,
                 treatSkin: WorldTheme.cogsworth.treats,
                 skin: WorldTheme.cogsworth.field,
-                day: .cityDay
+                day: .cityDay,
+                chrome: WorldTheme.cogsworth.chrome
             )
         case .map:
             WorldMapView(progress: .partWayThrough())
