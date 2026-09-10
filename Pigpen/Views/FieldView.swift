@@ -459,13 +459,17 @@ struct FieldView: View {
     /// between the tiles, and whatever fencing has been laid. All of it is kept inside the
     /// board's rim, so the corners of the map are rounded off rather than cut square.
     private func draw(in context: inout GraphicsContext, board: BoardGeometry) {
-        let lake = run(of: waterTiles, board: board, radius: board.cell * 0.42)
+        let water = waterTiles
+        let lake = run(of: water, board: board, radius: board.cell * 0.42)
+        // The bank is the lake's own edge and nothing else, so that everything drawn along it
+        // follows the shore rather than the tiles the shore happens to be made of.
+        let bank = shore(of: water, board: board, radius: board.cell * 0.42)
 
         var field = context
         field.clip(to: rim(board))
 
         drawGround(in: &field, board: board)
-        drawWater(in: &field, board: board, lake: lake)
+        drawWater(in: &field, board: board, lake: lake, bank: bank)
         drawGridLines(in: &field, board: board, lake: lake)
         drawFences(in: &field, board: board)
 
@@ -521,13 +525,18 @@ struct FieldView: View {
     /// bank above it throws a shadow down onto it, only the near shore catches any light, and
     /// the shore is a line rather than a change of colour. That reads at a glance in any
     /// palette, which is what a wall the player is being given has to do.
-    private func drawWater(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
+    private func drawWater(
+        in context: inout GraphicsContext,
+        board: BoardGeometry,
+        lake: Path,
+        bank: Path
+    ) {
         guard !lake.isEmpty else { return }
 
         // Laid on the ground first and then covered over by the water itself, which leaves
         // the silt showing only on the bank.
         context.stroke(
-            lake,
+            bank,
             with: .color(skin.shore.opacity(0.5)),
             lineWidth: board.cell * 0.18
         )
@@ -536,7 +545,7 @@ struct FieldView: View {
         // it is the thing casting one — so its shadow goes out onto the ground first, under
         // where it is about to be drawn.
         if skin.surface.lie == .standing {
-            drawFootShadow(in: &context, board: board, mass: lake)
+            drawFootShadow(in: &context, board: board, mass: lake, foot: bank)
         }
 
         context.fill(
@@ -554,12 +563,12 @@ struct FieldView: View {
 
         switch skin.surface.lie {
         case .sunken:
-            drawBank(in: &surface, board: board, lake: lake)
+            drawBank(in: &surface, board: board, bank: bank)
         case .standing:
             // A dune, a ridge and a crowd each paint their own light on their own tops, and
             // a bank drawn round them would only flatten what they are standing up out of.
             surface.stroke(
-                lake,
+                bank,
                 with: .color(skin.waterLight.opacity(0.4)),
                 lineWidth: board.cell * 0.16
             )
@@ -570,7 +579,7 @@ struct FieldView: View {
         // line right on the edge, which is what tells the eye where the ground stops whatever
         // the two colours either side of it happen to be doing.
         context.stroke(
-            lake,
+            bank,
             with: .color(skin.waterDeep.opacity(0.55)),
             lineWidth: max(1, board.cell * 0.035)
         )
@@ -586,13 +595,13 @@ struct FieldView: View {
     /// than painted onto it — the same reading as a dent in anything else lit from above —
     /// and it is drawn in the water's own colours, so a mountain tarn is banked in its green
     /// and a fen channel in its olive.
-    private func drawBank(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
+    private func drawBank(in context: inout GraphicsContext, board: BoardGeometry, bank: Path) {
         // The near shore first: the light gets in at the bottom of the water, where there is
         // no bank in the way of it.
         var lit = context
         lit.translateBy(x: 0, y: -board.cell * 0.07)
         lit.stroke(
-            lake,
+            bank,
             with: .color(skin.waterLight.opacity(0.45)),
             lineWidth: board.cell * 0.14
         )
@@ -602,13 +611,13 @@ struct FieldView: View {
         var shade = context
         shade.translateBy(x: 0, y: board.cell * 0.09)
         shade.stroke(
-            lake,
+            bank,
             with: .color(skin.waterDeep.opacity(0.5)),
             lineWidth: board.cell * 0.18
         )
         shade.translateBy(x: 0, y: board.cell * 0.10)
         shade.stroke(
-            lake,
+            bank,
             with: .color(skin.waterDeep.opacity(0.28)),
             lineWidth: board.cell * 0.16
         )
@@ -618,13 +627,18 @@ struct FieldView: View {
     /// pressure ridge, a crowd. It is the bank's shadow the other way up: laid outside the
     /// shape instead of inside it, so the tiles read as something standing off the board
     /// rather than as ground somebody painted another colour.
-    private func drawFootShadow(in context: inout GraphicsContext, board: BoardGeometry, mass: Path) {
+    private func drawFootShadow(
+        in context: inout GraphicsContext,
+        board: BoardGeometry,
+        mass: Path,
+        foot: Path
+    ) {
         var ground = context
         ground.clip(to: mass, options: .inverse)
         ground.translateBy(x: 0, y: board.cell * 0.09)
-        ground.stroke(mass, with: .color(.black.opacity(0.20)), lineWidth: board.cell * 0.18)
+        ground.stroke(foot, with: .color(.black.opacity(0.20)), lineWidth: board.cell * 0.18)
         ground.translateBy(x: 0, y: board.cell * 0.09)
-        ground.stroke(mass, with: .color(.black.opacity(0.10)), lineWidth: board.cell * 0.16)
+        ground.stroke(foot, with: .color(.black.opacity(0.10)), lineWidth: board.cell * 0.16)
     }
 
     /// Every tile the map has water on. They are drawn as one lake, so the shape of the
@@ -1688,6 +1702,32 @@ struct FieldView: View {
     /// the edge of the map counts as part of the run, so a river that reaches the rim of
     /// the board is not rounded away from it.
     private func run(of tiles: Set<GridPoint>, board: BoardGeometry, radius: CGFloat) -> Path {
+        outline(of: tiles, board: board, radius: radius, sidesFacingOut: false)
+    }
+
+    /// The same run, drawn as its shore alone: every side of it that faces something else, and
+    /// none of the sides where one tile of it meets the next.
+    ///
+    /// This is the path to stroke rather than the one to fill. A run is built a tile at a time,
+    /// which fills as one sheet with no seam anywhere in it — but stroking it draws the outline
+    /// of every tile in it, the shared edges in the middle included, and a lake with a line
+    /// ruled across it at every tile boundary is exactly the spreadsheet the run is built to
+    /// avoid. So the bank, its shadow and the shoreline are all laid along this instead, and
+    /// what they follow is the water's own edge.
+    private func shore(of tiles: Set<GridPoint>, board: BoardGeometry, radius: CGFloat) -> Path {
+        outline(of: tiles, board: board, radius: radius, sidesFacingOut: true)
+    }
+
+    /// Walks the edge of a run of tiles, either all the way round each tile — which closes into
+    /// one filled sheet — or along the sides that face out of the run only, which leaves the
+    /// shore and nothing else. Both take the corner off wherever the run actually turns, so a
+    /// line laid along the shore sits on the shape the fill makes.
+    private func outline(
+        of tiles: Set<GridPoint>,
+        board: BoardGeometry,
+        radius: CGFloat,
+        sidesFacingOut: Bool
+    ) -> Path {
         func belongs(_ row: Int, _ column: Int) -> Bool {
             let tile = GridPoint(row: row, column: column)
             return tiles.contains(tile) || !level.contains(tile)
@@ -1706,36 +1746,69 @@ struct FieldView: View {
             let bottomRight = down || right ? 0 : radius
             let bottomLeft = down || left ? 0 : radius
 
-            path.move(to: CGPoint(x: rect.minX + topLeft, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.maxX - topRight, y: rect.minY))
-            if topRight > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.maxX, y: rect.minY + topRight),
-                    control: CGPoint(x: rect.maxX, y: rect.minY)
-                )
+            // Where the pen is, if it is down. A side the run carries on through lifts it, and
+            // the next side that is drawn puts it down again where that side starts — which is
+            // what leaves the shared edges out without breaking the ones either side of them.
+            var pen: CGPoint?
+
+            /// One side of the tile and the corner it turns at the end of it. `facing` is what
+            /// is on the far side of it: another tile of the run, or something else.
+            func side(
+                facing neighbour: Bool,
+                from start: CGPoint,
+                to end: CGPoint,
+                corner: CGFloat,
+                turning pivot: CGPoint,
+                onto next: CGPoint
+            ) {
+                guard !(sidesFacingOut && neighbour) else {
+                    pen = nil
+                    return
+                }
+                if pen != start { path.move(to: start) }
+                path.addLine(to: end)
+                if corner > 0 {
+                    path.addQuadCurve(to: next, control: pivot)
+                    pen = next
+                } else {
+                    pen = end
+                }
             }
-            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - bottomRight))
-            if bottomRight > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY),
-                    control: CGPoint(x: rect.maxX, y: rect.maxY)
-                )
-            }
-            path.addLine(to: CGPoint(x: rect.minX + bottomLeft, y: rect.maxY))
-            if bottomLeft > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft),
-                    control: CGPoint(x: rect.minX, y: rect.maxY)
-                )
-            }
-            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + topLeft))
-            if topLeft > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.minX + topLeft, y: rect.minY),
-                    control: CGPoint(x: rect.minX, y: rect.minY)
-                )
-            }
-            path.closeSubpath()
+
+            side(
+                facing: up,
+                from: CGPoint(x: rect.minX + topLeft, y: rect.minY),
+                to: CGPoint(x: rect.maxX - topRight, y: rect.minY),
+                corner: topRight,
+                turning: CGPoint(x: rect.maxX, y: rect.minY),
+                onto: CGPoint(x: rect.maxX, y: rect.minY + topRight)
+            )
+            side(
+                facing: right,
+                from: CGPoint(x: rect.maxX, y: rect.minY + topRight),
+                to: CGPoint(x: rect.maxX, y: rect.maxY - bottomRight),
+                corner: bottomRight,
+                turning: CGPoint(x: rect.maxX, y: rect.maxY),
+                onto: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY)
+            )
+            side(
+                facing: down,
+                from: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY),
+                to: CGPoint(x: rect.minX + bottomLeft, y: rect.maxY),
+                corner: bottomLeft,
+                turning: CGPoint(x: rect.minX, y: rect.maxY),
+                onto: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft)
+            )
+            side(
+                facing: left,
+                from: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft),
+                to: CGPoint(x: rect.minX, y: rect.minY + topLeft),
+                corner: topLeft,
+                turning: CGPoint(x: rect.minX, y: rect.minY),
+                onto: CGPoint(x: rect.minX + topLeft, y: rect.minY)
+            )
+
+            if !sidesFacingOut { path.closeSubpath() }
         }
         return path
     }
