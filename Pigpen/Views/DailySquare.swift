@@ -39,13 +39,24 @@ struct DailySquare: View {
             square
             Text("\(date.day)")
                 .font(.system(size: 11, weight: .heavy, design: .rounded))
-                .foregroundStyle(GamePalette.cream.opacity(standing == .missing ? 0.25 : 0.9))
+                // Dark lettering, the same ink as the weekday letters heading the calendar
+                // and the month's name on the pill above them. These were cream with a
+                // shadow under them, written as though painted onto the grass, and against
+                // a meadow this pale a pale number had nothing to stand on.
+                .foregroundStyle(GamePalette.post.opacity(standing == .missing ? 0.3 : 1))
                 .monospacedDigit()
-                // Written straight onto the grass, so it is painted rather than printed.
-                .shadow(color: .black.opacity(0.45), radius: 2, y: 1)
             // The row is kept whether or not there are stars in it, so every square in the
             // month stands the same height and the grid does not go ragged.
+            //
+            // Gold on grass is two colours of the same weight — the stars were there to be
+            // counted and came out as a smudge — so the row is laid on a little dark plaque,
+            // the same ink the square above it stands on, and the gold has something to
+            // strike against.
             StarRow(stars: stars, size: 7, hasTheBestPen: hasTheBestPen)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 2)
+                .background(Capsule().fill(GamePalette.post.opacity(0.72)))
+                .shadow(color: .black.opacity(0.25), radius: 2, y: 1)
                 .opacity(stars > 0 ? 1 : 0)
         }
         .accessibilityElement(children: .ignore)
@@ -154,5 +165,7 @@ struct DailySquare: View {
         DailySquare(date: DailyDate(year: 2026, month: 4, day: 10), standing: .missing)
     }
     .padding(30)
-    .background(GamePalette.post)
+    // The grass of the archive rather than a dark board, since the day's number and the
+    // stars under it are read against the meadow.
+    .background(GamePalette.Pasture.day.ground)
 }
