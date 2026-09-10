@@ -113,6 +113,35 @@ struct FieldSkin: Sendable {
         /// below the level of the turf. The one wall in the game a pig could fall off rather
         /// than into.
         case sky
+
+        /// Whether this world's water lies in the field or stands on it.
+        ///
+        /// Which of the two it is has to be legible before anything else about it is, because
+        /// the first question a player asks of a tile is not what kind of water it is but
+        /// whether it is water at all — a tile he can fence, or a wall he is being given for
+        /// nothing. Colour on its own was answering that, and on the worlds where the water
+        /// and the ground are near neighbours — pale ice on paler snow, duckweed on peat,
+        /// sand on sand — colour on its own is not enough of an answer.
+        ///
+        /// So the board answers it with light instead, which no palette can flatten: what
+        /// lies in the field is sunk into it, with the bank above throwing a shadow down onto
+        /// the surface and only the near shore catching any light. What stands on the field
+        /// is lit the other way up and throws its shadow outward onto the ground instead.
+        var lie: Lie {
+            switch self {
+            case .dune, .pressureRidge, .crowd: .standing
+            case .ripples, .peat, .steam, .sheen, .starlight, .flow, .rockPool, .duckweed, .sky:
+                .sunken
+            }
+        }
+    }
+
+    /// Which way round a world's water is lit: sunk into the field, the way water and a hole
+    /// in the ground both are, or standing up off it the way a dune, a ridge of crushed ice
+    /// and a crowd of people all do.
+    enum Lie: Sendable, Hashable {
+        case sunken
+        case standing
     }
 
     /// What a piece of fencing is on this world's ground. Every one of them is the same
