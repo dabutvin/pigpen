@@ -95,18 +95,23 @@ struct DailySquare: View {
                 }
             }
             .frame(width: 40, height: 40)
+            // The frame the ground sits in, lightened once the stars below grew a plaque of
+            // this same ink: two heavy dark shapes stacked up read as one blot, and the
+            // square is meant to be the field rather than the frame round it.
             .background {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(GamePalette.post.opacity(standing == .locked ? 0.35 : 0.55))
+                    .fill(GamePalette.post.opacity(standing == .locked ? 0.26 : 0.38))
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .strokeBorder(
-                        isToday ? GamePalette.cream : GamePalette.post.opacity(0.35),
+                        // Today keeps its cream ring — it is the one square a month of them
+                        // is meant to be found by, so it stays as loud as it was.
+                        isToday ? GamePalette.cream : GamePalette.post.opacity(0.22),
                         lineWidth: isToday ? 2.5 : 1
                     )
             }
-            .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
+            .shadow(color: .black.opacity(0.18), radius: 3, y: 2)
         }
     }
 
