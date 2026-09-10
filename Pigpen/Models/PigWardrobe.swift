@@ -87,10 +87,6 @@ final class PigWardrobe {
         self.outfit = store.loadOutfit()
     }
 
-    /// Whether there is anything on her at all, which is the one thing the bare peg needs to
-    /// know about itself.
-    var isDressed: Bool { outfit != .asSheComes }
-
     func wear(_ outfit: PigOutfit) {
         self.outfit = outfit
     }

@@ -110,41 +110,40 @@ struct DressingRoomView: View {
                     .font(.system(size: 19, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.post)
 
-                Text(greeting)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(GamePalette.post.opacity(0.7))
-                    .multilineTextAlignment(.center)
-                    .fixedSize(horizontal: false, vertical: true)
+                if hasJustOpened {
+                    welcome
+                }
             }
             .frame(maxWidth: .infinity)
         }
     }
 
-    /// What the room says about itself: a word of welcome the first time, and after that the
-    /// one thing worth knowing — that the choice follows her out of the door.
-    private var greeting: String {
-        if hasJustOpened {
-            return """
-                The washing line at the end of the lane is yours. Pick a peg and she wears it \
-                everywhere — up the trail, on the board, and out in front of the title.
-                """
-        }
-        return wardrobe.isDressed
-            ? "She wears it everywhere: up the trail, on the board, and out in front of the title."
-            : "Pick a peg. She wears it everywhere — up the trail, on the board, and out in front of the title."
+    /// The one line of writing the room keeps, and only the once: a player who has just walked
+    /// down a lane that leads nowhere is owed a word about what they found at the end of it.
+    /// Every other visit says nothing — the pig in the thing is the whole of what a peg has to
+    /// tell anybody, and eleven captions under eleven pictures of her say it eleven times worse.
+    private var welcome: some View {
+        Text(
+            """
+            The washing line at the end of the lane is yours. Pick a peg and she wears it \
+            everywhere — up the trail, on the board, and out in front of the title.
+            """
+        )
+        .font(.footnote.weight(.semibold))
+        .foregroundStyle(GamePalette.post.opacity(0.7))
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     /// Every peg in the room. Each one is the pig in that outfit rather than the garment on its
-    /// own, because what a player is choosing between is eleven pigs and not eleven hats.
+    /// own, because what a player is choosing between is eleven pigs and not eleven hats — and
+    /// each says nothing but its name, since a picture of the pig in the thing is a better
+    /// account of it than a line of writing under the picture.
     private var rail: some View {
         card {
             Text("The pegs")
                 .font(.headline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
-
-            Text("\(PigOutfit.wardrobe.count) outfits, and the peg she arrived on.")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(GamePalette.post.opacity(0.7))
 
             LazyVGrid(
                 columns: [GridItem(.adaptive(minimum: 96), spacing: 10)],
@@ -180,12 +179,6 @@ struct DressingRoomView: View {
                     .foregroundStyle(GamePalette.post)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-
-                Text(outfit.said)
-                    .font(.system(size: 9, weight: .semibold))
-                    .foregroundStyle(GamePalette.post.opacity(0.6))
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2, reservesSpace: true)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)

@@ -280,19 +280,24 @@ yours. The doors open there and then, on the way back out to the map, and after 
 in **Settings** is the way back in: a reward you cannot find twice is a reward you had once.
 
 Inside is the pig on a stand and eleven pegs: **ten outfits**, and the bare one she arrived on.
+A peg is the pig wearing the thing, with its name under her and nothing else — a picture of her
+in it is a better account of an outfit than a line of writing beneath the picture, and eleven
+captions under eleven pictures of the same pig say it eleven times worse. The only writing the
+room keeps is one line the first time the doors open, which is the only visit that has anything
+to say.
 
-| Peg | On her |
+| Peg | Where it hangs |
 |---|---|
 | Sun Hat 👒 | On top of her head, at an angle |
-| Top Hat 🎩 | Likewise, and unexplained |
-| Crown 👑 | She found it. It is hers now |
+| Top Hat 🎩 | Likewise, straighter |
+| Crown 👑 | Likewise, and smaller |
 | Sunglasses 🕶️ | Across her eyes |
-| Spectacles 👓 | Likewise, for reading fencing |
+| Spectacles 👓 | Likewise |
 | Ribbon 🎀 | Behind one ear |
-| Sunflower 🌻 | Likewise, picked from the end of the lane |
-| Scarf 🧣 | Under her chin |
-| Rosette 🏅 | Likewise, first in class |
-| Wellies 🥾 | Under her. Four of them |
+| Sunflower 🌻 | Likewise |
+| Scarf 🧣 | Knotted at her jaw, hanging below it |
+| Rosette 🏅 | At her neck, hanging below it |
+| Wellies 🥾 | Under her, clear of her chin |
 | Just the pig | Nothing at all, which is where she starts |
 
 Whatever is on the peg with the tick beside it, she wears **everywhere**: on every board, on

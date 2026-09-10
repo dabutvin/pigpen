@@ -110,24 +110,6 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// The line under the name on the peg: where the thing came from, which is the whole of
-    /// the story the dressing room tells.
-    var said: String {
-        switch self {
-        case .asSheComes: "Out of the washing and back to the mud."
-        case .sunHat: "Off the hook by the orchard gate."
-        case .topHat: "Nobody has ever explained the top hat."
-        case .crown: "She found it. It is hers now."
-        case .shades: "For a long afternoon in a dry field."
-        case .spectacles: "She has been squinting at the fencing for weeks."
-        case .ribbon: "Tied behind one ear, where it stays all day."
-        case .sunflower: "Picked from the end of the lane."
-        case .scarf: "Knitted for somebody with a longer neck."
-        case .rosette: "First in class, every class she has entered."
-        case .wellies: "Four of them. It took some doing."
-        }
-    }
-
     /// The glyph hung on her, and nothing at all for the bare peg.
     var glyph: String {
         switch self {
