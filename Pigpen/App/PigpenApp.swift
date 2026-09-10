@@ -317,10 +317,16 @@ struct PigpenApp: App {
             WorldMapView(progress: .atTheLane())
         case .dressing:
             // The room at the end of that lane, with something already on her, since an
-            // undressed pig on the stand says nothing the trail does not say. Its wardrobe is
-            // held in memory for the same reason the reminder's is: nothing a screenshot
-            // runner does should be left standing on the machine that took the picture.
-            DressingRoomView(wardrobe: .remembering(.sunHat))
+            // undressed pig on the stand says nothing the trail does not say. The wellies
+            // rather than a hat: nine of the eleven pegs are on screen under the mirror
+            // already, and the two that are not are the ones worn lowest — so the shot shows
+            // the most of the room by standing one of those on the mirror, and it is the
+            // furthest-hung garment in the wardrobe that most wants looking at.
+            //
+            // Its wardrobe is held in memory for the same reason the reminder's is: nothing a
+            // screenshot runner does should be left standing on the machine that took the
+            // picture.
+            DressingRoomView(wardrobe: .remembering(.wellies))
         case .universe:
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.
