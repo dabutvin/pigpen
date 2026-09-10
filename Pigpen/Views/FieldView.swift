@@ -545,7 +545,7 @@ struct FieldView: View {
         // it is the thing casting one — so its shadow goes out onto the ground first, under
         // where it is about to be drawn.
         if skin.surface.lie == .standing {
-            drawFootShadow(in: &context, board: board, mass: lake, foot: bank)
+            drawFootShadow(in: &context, board: board)
         }
 
         context.fill(
@@ -563,7 +563,7 @@ struct FieldView: View {
 
         switch skin.surface.lie {
         case .sunken:
-            drawBank(in: &surface, board: board, bank: bank)
+            drawBank(in: &surface, board: board)
         case .standing:
             // A dune, a ridge and a crowd each paint their own light on their own tops, and
             // a bank drawn round them would only flatten what they are standing up out of.
@@ -586,59 +586,129 @@ struct FieldView: View {
     }
 
     /// The bank, drawn inside the water: the ground standing above the far shore throwing its
-    /// shadow down across the surface, and the near shore taking the light that ground is
-    /// keeping off. Two strokes of the shore's own line, one nudged down into the water and
-    /// one nudged up out of it, so that the shadow lands along the far bank, the light along
-    /// the near one, and neither reaches the other side.
+    /// shadow down across the surface, the two sides shaded more lightly the way the walls of
+    /// any hollow are, and the near shore taking the light all three of them are keeping off.
     ///
-    /// That pairing is the whole of what says a body of water is *set into* the field rather
-    /// than painted onto it — the same reading as a dent in anything else lit from above —
-    /// and it is drawn in the water's own colours, so a mountain tarn is banked in its green
-    /// and a fen channel in its olive.
-    private func drawBank(in context: inout GraphicsContext, board: BoardGeometry, bank: Path) {
-        // The near shore first: the light gets in at the bottom of the water, where there is
-        // no bank in the way of it.
-        var lit = context
-        lit.translateBy(x: 0, y: -board.cell * 0.07)
-        lit.stroke(
-            bank,
-            with: .color(skin.waterLight.opacity(0.45)),
-            lineWidth: board.cell * 0.14
-        )
+    /// That is the whole of what says a body of water is *set into* the field rather than
+    /// painted onto it — the same reading as a dent in anything else lit from above — and it
+    /// is done in the water's own colours, so a mountain tarn is banked in its green and a fen
+    /// channel in its olive.
+    ///
+    /// Each band is a wash off one edge of one tile, laid only where that edge has ground on
+    /// the far side of it. Which means a bank is only ever drawn where there is a bank: two
+    /// tiles of water meeting have nothing between them, and the wash on a tile at the turn of
+    /// the shore is cropped by the water's own rounded corner, since all of this is drawn
+    /// inside it.
+    private func drawBank(in context: inout GraphicsContext, board: BoardGeometry) {
+        let water = waterTiles
 
-        // Then the bank above, laid over it: hard where the ground drops in, and thinning as
-        // it reaches out over the water, which is as far as a bank of that height would throw.
-        var shade = context
-        shade.translateBy(x: 0, y: board.cell * 0.09)
-        shade.stroke(
-            bank,
-            with: .color(skin.waterDeep.opacity(0.5)),
-            lineWidth: board.cell * 0.18
-        )
-        shade.translateBy(x: 0, y: board.cell * 0.10)
-        shade.stroke(
-            bank,
-            with: .color(skin.waterDeep.opacity(0.28)),
-            lineWidth: board.cell * 0.16
-        )
+        for tile in water {
+            let rect = board.rect(for: tile)
+
+            if banked(tile, .up, in: water) {
+                wash(
+                    in: &context, off: .up, of: rect,
+                    reaching: board.cell * 0.34, colour: skin.waterDeep, strength: 0.6
+                )
+            }
+            for side in [Direction.left, .right] where banked(tile, side, in: water) {
+                wash(
+                    in: &context, off: side, of: rect,
+                    reaching: board.cell * 0.2, colour: skin.waterDeep, strength: 0.32
+                )
+            }
+            // The near shore last, so that the light on it is the light and not what is left
+            // of it after the sides have been laid over the top.
+            if banked(tile, .down, in: water) {
+                wash(
+                    in: &context, off: .down, of: rect,
+                    reaching: board.cell * 0.22, colour: skin.waterLight, strength: 0.5
+                )
+            }
+        }
     }
 
     /// The shadow a mass standing on the field throws onto the ground below it — a dune, a
-    /// pressure ridge, a crowd. It is the bank's shadow the other way up: laid outside the
-    /// shape instead of inside it, so the tiles read as something standing off the board
-    /// rather than as ground somebody painted another colour.
-    private func drawFootShadow(
+    /// pressure ridge, a crowd. It is the bank the other way up: laid outside the shape rather
+    /// than inside it, and heaviest under the near side, which is the side a shadow falls on
+    /// when the light is where this game always keeps it. What it buys is that the tiles read
+    /// as something standing off the board rather than as ground painted another colour.
+    private func drawFootShadow(in context: inout GraphicsContext, board: BoardGeometry) {
+        let mass = waterTiles
+
+        for tile in mass {
+            let rect = board.rect(for: tile)
+
+            if banked(tile, .down, in: mass) {
+                wash(
+                    in: &context, off: .down, of: rect,
+                    reaching: -board.cell * 0.24, colour: .black, strength: 0.22
+                )
+            }
+            for side in [Direction.left, .right] where banked(tile, side, in: mass) {
+                wash(
+                    in: &context, off: side, of: rect,
+                    reaching: -board.cell * 0.12, colour: .black, strength: 0.12
+                )
+            }
+        }
+    }
+
+    /// Whether one edge of a tile is a bank: ground of the board on the far side of it, rather
+    /// than more of the same water or the world off the edge of the map.
+    private func banked(_ tile: GridPoint, _ edge: Direction, in water: Set<GridPoint>) -> Bool {
+        let step = tile.stepped(edge)
+        return !water.contains(step) && level.contains(step)
+    }
+
+    /// A wash off one edge of a tile: full strength against the edge and gone by the end of its
+    /// reach. A reach over the tile itself lies inside the water; a reach the other way lies out
+    /// on the ground beyond it.
+    private func wash(
         in context: inout GraphicsContext,
-        board: BoardGeometry,
-        mass: Path,
-        foot: Path
+        off edge: Direction,
+        of rect: CGRect,
+        reaching reach: CGFloat,
+        colour: Color,
+        strength: Double
     ) {
-        var ground = context
-        ground.clip(to: mass, options: .inverse)
-        ground.translateBy(x: 0, y: board.cell * 0.09)
-        ground.stroke(foot, with: .color(.black.opacity(0.20)), lineWidth: board.cell * 0.18)
-        ground.translateBy(x: 0, y: board.cell * 0.09)
-        ground.stroke(foot, with: .color(.black.opacity(0.10)), lineWidth: board.cell * 0.16)
+        // The edge itself, and the way one unit of reach lies off it.
+        let line: CGRect
+        let across: CGVector
+        switch edge {
+        case .up:
+            line = CGRect(x: rect.minX, y: rect.minY, width: rect.width, height: 0)
+            across = CGVector(dx: 0, dy: 1)
+        case .down:
+            line = CGRect(x: rect.minX, y: rect.maxY, width: rect.width, height: 0)
+            across = CGVector(dx: 0, dy: -1)
+        case .left:
+            line = CGRect(x: rect.minX, y: rect.minY, width: 0, height: rect.height)
+            across = CGVector(dx: 1, dy: 0)
+        case .right:
+            line = CGRect(x: rect.maxX, y: rect.minY, width: 0, height: rect.height)
+            across = CGVector(dx: -1, dy: 0)
+        }
+
+        let far = CGPoint(
+            x: line.midX + across.dx * reach,
+            y: line.midY + across.dy * reach
+        )
+        let band = CGRect(
+            x: min(line.minX, line.minX + across.dx * reach),
+            y: min(line.minY, line.minY + across.dy * reach),
+            width: line.width + abs(across.dx * reach),
+            height: line.height + abs(across.dy * reach)
+        )
+
+        context.fill(
+            Path(band),
+            with: .linearGradient(
+                Gradient(colors: [colour.opacity(strength), colour.opacity(0)]),
+                startPoint: CGPoint(x: line.midX, y: line.midY),
+                endPoint: far
+            )
+        )
     }
 
     /// Every tile the map has water on. They are drawn as one lake, so the shape of the
