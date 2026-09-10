@@ -510,7 +510,7 @@ struct PuzzleView: View {
             }
         case .penned(let pen):
             verdictCard(
-                headline: game.isPenAsGoodAsItGets ? "The best pen there is" : "Moved in",
+                headline: pennedHeadline(tally: level.tally(for: pen)),
                 detail: pennedDetail(tally: level.tally(for: pen)),
                 tint: GamePalette.clover
             ) {
@@ -644,6 +644,20 @@ struct PuzzleView: View {
             return "It found a gap and showed itself out. Follow the trail and close it."
         }
         return "It found a gap and showed itself out while the other stayed put — and both of them need a place. Follow the trail and close it."
+    }
+
+    /// What the field makes of a pen that holds, which is a different thing from what it
+    /// holds. One star is the plain fact of it and no more: the animals have somewhere to
+    /// live, and there is a good deal more ground out there than they got. Two is a place
+    /// worth keeping with a better one still on the map, three is a pen worth admiring, and
+    /// the rainbow is the one pen this map has nothing above.
+    private func pennedHeadline(tally: PenTally) -> String {
+        guard !game.isPenAsGoodAsItGets else { return "The best pen there is" }
+        return switch level.starRating(forScore: tally.score) {
+        case 3: "That is a handsome pen"
+        case 2: "A good place, and better out there"
+        default: "Moved in"
+        }
     }
 
     /// What the pen came to, under the verdict.
