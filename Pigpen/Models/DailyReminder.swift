@@ -64,7 +64,11 @@ struct ScheduledReminder: Hashable, Sendable, Identifiable {
 
     let date: DailyDate
     let time: ReminderTime
+    /// The headline: the game's own name on every reminder it posts.
     let title: String
+    /// The morning's hook, under the name.
+    let subtitle: String
+    /// The rest of the morning's line, under that.
     let body: String
 
     var id: String { Self.idPrefix + date.id }
@@ -159,6 +163,12 @@ final class DailyReminder {
     /// game for a week is still reminded every morning of it, short enough to sit well
     /// inside the sixty-four pending notifications a phone will hold for one app.
     static let fortnight = 14
+
+    /// What every reminder calls itself. The phone prints the app's name in small letters
+    /// along the top of a notification either way, but the headline is the line somebody
+    /// actually reads off a locked screen, and a morning that says whose it is is worth
+    /// more than one that only says something is ready.
+    static let name = "Pigpen"
 
     /// Whether the player has asked to be reminded. Their wish rather than the phone's
     /// permission — those come apart the moment somebody turns notifications off in the
@@ -334,21 +344,27 @@ final class DailyReminder {
             let promised = due.isEmpty && step <= 1 ? streak : 0
             let said = line(on: day, streak: promised)
             due.append(
-                ScheduledReminder(date: day, time: time, title: said.title, body: said.body)
+                ScheduledReminder(
+                    date: day,
+                    time: time,
+                    title: name,
+                    subtitle: said.title,
+                    body: said.body
+                )
             )
         }
 
         return due
     }
 
-    /// What a reminder calls itself: the first half of its morning's line, and never the
-    /// game's name — the phone writes that over the top of it anyway.
-    static func title(for date: DailyDate, streak: Int = 0) -> String {
+    /// What a reminder says under its name: the first half of its morning's line, which is
+    /// the half somebody reads at a glance.
+    static func subtitle(for date: DailyDate, streak: Int = 0) -> String {
         line(on: date, streak: streak).title
     }
 
     /// What a reminder says under that: the rest of its morning's line, which is empty for
-    /// the lines that are one sentence long and say all they have to say in the title.
+    /// the lines that are one sentence long and say all they have to say in the first half.
     static func body(for date: DailyDate, streak: Int = 0) -> String {
         line(on: date, streak: streak).body
     }
@@ -388,10 +404,11 @@ final class DailyReminder {
     /// The ten things a morning says when there is no run to keep: today's puzzle is up,
     /// and Pig needs a pen built.
     ///
-    /// Each is one line of copy split at its first full stop — the phone sets a title in
-    /// bold over a body in plain, and a notification is read at a glance, so the hook goes
-    /// on top and the rest underneath. A line that is one sentence long is all title and no
-    /// body, which is a notification the phone draws perfectly well.
+    /// Each is one line of copy split at its first full stop. The game's name is the
+    /// headline, so these sit underneath it: the phone sets the first half in bold over the
+    /// rest in plain, and a notification is read at a glance, so the hook goes on top and
+    /// the rest underneath that. A line that is one sentence long is all hook and no body,
+    /// which is a notification the phone draws perfectly well.
     static let genericLines: [(title: String, body: String)] = [
         ("Today's puzzle is ready", "Help Pig build his pen."),
         ("A new puzzle is waiting for you", ""),

@@ -64,6 +64,7 @@ struct SystemReminderScheduler: ReminderScheduler {
         for reminder in reminders {
             let content = UNMutableNotificationContent()
             content.title = reminder.title
+            content.subtitle = reminder.subtitle
             content.body = reminder.body
             content.sound = .default
 
