@@ -165,6 +165,23 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// How far below her a garment hangs, as a fraction of her size, and nothing at all for one
+    /// that stays on her.
+    ///
+    /// The overlay that draws it takes up no room on purpose — a dressed pig has to measure
+    /// exactly what an undressed one does, or a board would shift under a hat. Out on the mud
+    /// that costs nothing, since there is ground under her. A room that stands her on a shelf
+    /// with her name written under it has to leave the room for it itself.
+    var overhang: Double {
+        guard let fit else { return 0 }
+        return max(0, fit.down + fit.scale / 2 - 0.5)
+    }
+
+    /// The deepest anything in the wardrobe hangs. The dressing room leaves this much space
+    /// under every pig it draws rather than under the ones that need it, so a peg is the same
+    /// size whatever is on it and the wall does not shuffle as outfits are tried on.
+    static var deepestOverhang: Double { allCases.map(\.overhang).max() ?? 0 }
+
     /// How the pig is described out loud while she is wearing it, for a screen reader that
     /// has no way of seeing the hat.
     /// *The* rather than *a*, so that one wording covers the sunglasses and the wellies as

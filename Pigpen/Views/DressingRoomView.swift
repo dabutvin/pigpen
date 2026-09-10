@@ -28,6 +28,10 @@ struct DressingRoomView: View {
     /// The pegs, in the order the wardrobe hangs them, with the bare one at the front.
     private var pegs: [PigOutfit] { [.asSheComes] + PigOutfit.wardrobe }
 
+    /// How large the pig is drawn on the mirror and on a peg.
+    private static let mirrorSize: CGFloat = 124
+    private static let pegSize: CGFloat = 46
+
     var body: some View {
         ZStack {
             LinearGradient(
@@ -87,9 +91,14 @@ struct DressingRoomView: View {
     private var mirror: some View {
         card {
             VStack(spacing: 10) {
-                DressedAnimal(animal: .pig, size: 124, outfit: wardrobe.outfit)
+                DressedAnimal(animal: .pig, size: Self.mirrorSize, outfit: wardrobe.outfit)
                     .shadow(color: .black.opacity(0.25), radius: 10, y: 8)
                     .padding(.top, 6)
+                    // Room under her for whatever hangs below her chin, since the garment is
+                    // laid over her rather than stacked with her and so asks for none of its
+                    // own. Reserved for the deepest peg in the wardrobe rather than for the one
+                    // she has on, so the mirror does not jump as outfits are tried on.
+                    .padding(.bottom, Self.mirrorSize * PigOutfit.deepestOverhang)
                     // The whole point of the screen, so it is said out loud as well as drawn.
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(wardrobe.outfit.spoken)
@@ -156,8 +165,15 @@ struct DressingRoomView: View {
             wear(outfit)
         } label: {
             VStack(spacing: 6) {
-                DressedAnimal(animal: .pig, size: 46, outfit: outfit)
-                    .frame(height: 58)
+                DressedAnimal(animal: .pig, size: Self.pegSize, outfit: outfit)
+                    // The same room under her the mirror leaves, so a boot does not land on
+                    // the name of the peg it is hanging from. Aligned to the top, or the extra
+                    // height would be shared out above and below and only half of it would fall
+                    // where the boot is.
+                    .frame(
+                        height: Self.pegSize * (1.26 + PigOutfit.deepestOverhang),
+                        alignment: .top
+                    )
 
                 Text(outfit.name)
                     .font(.system(size: 12, weight: .heavy, design: .rounded))
