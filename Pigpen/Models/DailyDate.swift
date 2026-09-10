@@ -103,10 +103,11 @@ struct DailyDate: Hashable, Comparable, Sendable, Identifiable {
     /// The day with the year on it, for anywhere the month is not already written down.
     var fullTitle: String { "\(title) \(year)" }
 
-    /// The day as a line under a button's own name: `Tuesday, September 8`. The month comes
+    /// The day as a line under a button's own name: `Tue, September 8`. The month comes
     /// before the day and the weekday takes a comma, which is how a date is read rather than
-    /// how a puzzle is named.
-    var written: String { "\(weekday.name), \(Self.monthName(month)) \(day)" }
+    /// how a puzzle is named — and the weekday is shortened, since the line has a run of days
+    /// to carry beside it and the day of the week reads at a glance from three letters.
+    var written: String { "\(weekday.short), \(Self.monthName(month)) \(day)" }
 
     static func monthName(_ month: Int) -> String {
         let names = [
@@ -144,6 +145,10 @@ enum Weekday: Int, CaseIterable, Sendable {
         case .saturday: "Saturday"
         }
     }
+
+    /// The day shortened to the three letters a calendar uses, for a line with other things
+    /// on it. Never spoken — VoiceOver is handed `name` wherever this is drawn.
+    var short: String { String(name.prefix(3)) }
 
     /// The letter over its column in the archive.
     var initial: String { String(name.prefix(1)) }
