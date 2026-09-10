@@ -194,6 +194,7 @@ struct PigpenApp: App {
         case embers = "-embers"
         case pies = "-pies"
         case map = "-map"
+        case toll = "-toll"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -307,6 +308,12 @@ struct PigpenApp: App {
             )
         case .map:
             WorldMapView(progress: .partWayThrough())
+        case .toll:
+            // The meadow run out to the top and stopped there: every pen below Stag Mere
+            // held, on twos and threes, and the stars still short of the twenty-one it
+            // asks for. The card the map puts up in that standing is already on screen,
+            // since what is being photographed is the card and not the trail behind it.
+            WorldMapView(progress: .stoppedAtTheToll(), showsTollNotice: true)
         case .universe:
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.

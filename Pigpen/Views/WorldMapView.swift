@@ -27,6 +27,12 @@ struct WorldMapView: View {
     /// How far the world had been opened when the puzzle now on screen was started, so
     /// that coming back from a level tells the map whether anything new was won.
     @State private var frontierWhenOpened = 0
+    /// How many stars the world held when that puzzle was started, so that coming back
+    /// tells the map whether a star was won as well as whether a stop was opened.
+    @State private var starsWhenOpened = 0
+    /// The word owed to a player stopped at the top of the trail by a toll they cannot pay,
+    /// while that card is up.
+    @State private var tollNotice: TollNotice?
     /// The stop the map has been asked to bring into view, and how long it has to do it in.
     @State private var scrollOrder: ScrollOrder?
     @State private var ordersGiven = 0
@@ -51,15 +57,31 @@ struct WorldMapView: View {
     /// itself opened from the universe, this is empty and `dismiss` is enough to go back.
     private let onWorldHeld: (() -> Void)?
 
+    /// - Parameter showsTollNotice: Opens with the boss's price already up, which is how CI
+    ///   photographs that card. Nothing else passes it: in a game being played the notice is
+    ///   raised by a level coming back, and this is the camera's way in.
     init(
         world game: GameWorld = .mudlarkMeadow,
         progress: WorldProgress = WorldProgress(),
+        showsTollNotice: Bool = false,
         onWorldHeld: (() -> Void)? = nil
     ) {
         self.game = game
         self.onWorldHeld = onWorldHeld
         _progress = State(initialValue: progress)
         _pigStop = State(initialValue: Double(progress.frontier))
+        // Nothing but the camera opens with the card already up, and a world that charges
+        // nothing for its last stop has no card to open with at all.
+        let waiting = showsTollNotice ? progress.tolledStop : nil
+        _tollNotice = State(
+            initialValue: waiting.map { stop in
+                TollNotice(
+                    boss: progress.world[stop].level.name,
+                    have: progress.totalStars,
+                    need: progress.world[stop].starToll
+                )
+            }
+        )
     }
 
     private var world: WorldMap { progress.world }
@@ -89,12 +111,14 @@ struct WorldMapView: View {
                 .task { await arrive() }
                 .onChange(of: playing) { _, level in
                     guard level == nil else { return }
-                    // Two steps rather than one: the walk is skipped when the pig is
-                    // already standing where the world has got to, which is exactly what
-                    // beating the last level looks like — and that is the one time the
-                    // send-off is owed.
+                    // Three steps rather than one, and in this order: the walk is skipped
+                    // when the pig is already standing where the world has got to, which is
+                    // exactly what beating the last level looks like — and that is when one
+                    // of the two things after it is owed. A world finished gets its send-off;
+                    // a world whose boss is still unpaid for gets told so.
                     Task {
                         await follow()
+                        await raiseTheToll()
                         await sendOff()
                     }
                 }
@@ -137,6 +161,11 @@ struct WorldMapView: View {
         }
         .fullScreenCover(item: $farewellFilm, onDismiss: { leaveForTheUniverse() }) { film in
             CutSceneView(film) { endFarewell(film) }
+        }
+        .sheet(item: $tollNotice) { notice in
+            TollNoticeView(notice: notice)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
     }
 
@@ -336,6 +365,7 @@ struct WorldMapView: View {
         Task {
             await walk(to: Double(index), secondsPerStop: 0.3)
             frontierWhenOpened = progress.frontier
+            starsWhenOpened = progress.totalStars
 
             // A map with something to say about itself says it before the board comes up,
             // not over the top of one.
@@ -385,6 +415,31 @@ struct WorldMapView: View {
         } else {
             dismiss()
         }
+    }
+
+    /// The word owed to a player who has just run the trail out under a boss they cannot pay
+    /// for: what it is asking, what they hold against it, and where the rest of it is to be
+    /// won. Every other go up the trail this is nothing at all.
+    ///
+    /// Raised after the walk and on the same beat the send-off would take, so it lands on a
+    /// map at rest rather than over the top of a puzzle screen still sliding away. The two
+    /// never both go up: a world with every pen in it held has paid its toll long since.
+    private func raiseTheToll() async {
+        guard let stop = progress.tolledStop else { return }
+        guard let notice = TollNotice.afterALevel(
+            boss: world[stop].level.name,
+            toll: world[stop].starToll,
+            starsBefore: starsWhenOpened,
+            starsNow: progress.totalStars,
+            isTheTrailBelowHeld: progress.isEverythingBelowHeld(stop)
+        ) else { return }
+
+        // Counted where it is raised rather than where it is read: how many players run the
+        // trail out and cannot get in is the one question the top of a world asks.
+        Analytics.record(.tollShort(world.name, stars: notice.have, of: notice.need))
+
+        try? await Task.sleep(for: .milliseconds(650))
+        tollNotice = notice
     }
 
     /// Walks the pig on once a puzzle has been played and put away — but only if playing it
@@ -624,5 +679,11 @@ private struct TrailWalk: GeometryEffect {
 #Preview {
     NavigationStack {
         WorldMapView(progress: .partWayThrough())
+    }
+}
+
+#Preview("Stopped at the toll") {
+    NavigationStack {
+        WorldMapView(progress: .stoppedAtTheToll(), showsTollNotice: true)
     }
 }

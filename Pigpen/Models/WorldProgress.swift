@@ -238,6 +238,25 @@ final class WorldProgress {
         return totalStars >= world[index].starToll
     }
 
+    /// The stop that charges for itself, if the world keeps one — the boss, on every world
+    /// built so far, and nothing at all on a trail that asks only to be walked.
+    ///
+    /// The last one rather than the first, so a world that ever grows a second toll charges
+    /// for the top of its trail rather than for somewhere half way up it.
+    var tolledStop: Int? {
+        world.nodes.indices.last { world[$0].starToll > 0 }
+    }
+
+    /// Whether every stop below a given one has been beaten. True of the first stop on the
+    /// trail, which has nothing below it to beat.
+    ///
+    /// What it is for is the top of a world: a player with this and an unpaid toll has run
+    /// the trail out and has nowhere left to go but back down it.
+    func isEverythingBelowHeld(_ index: Int) -> Bool {
+        guard world.nodes.indices.contains(index) else { return false }
+        return (0..<index).allSatisfy { isCleared($0) }
+    }
+
     var clearedCount: Int {
         world.nodes.indices.filter { isCleared($0) }.count
     }
@@ -462,6 +481,29 @@ extension WorldProgress {
                 stars: seeded,
                 bestPens: world.count > 0 ? [world[0].id] : [],
                 scenesPlayed: [CutScene.Name.opening.rawValue]
+            )
+        )
+    }
+
+    /// A world run out to the top and stopped there: every pen below the boss held, the first
+    /// few of them bettered since, and the tally still short of what the boss is asking.
+    ///
+    /// The standing the toll notice goes up in, and the one a screenshot of it wants — a
+    /// player who has beaten everything they can reach and has nowhere to go but back down
+    /// the trail. Held in memory, so the shot is that standing however far up the meadow the
+    /// device it is taken on happens to be.
+    static func stoppedAtTheToll(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
+        var stars: [String: Int] = [:]
+        for (index, node) in world.nodes.dropLast().enumerated() {
+            // A trail rushed and then part-way bettered: within sight of the gate, and not
+            // through it.
+            stars[node.id] = index < 3 ? 3 : 2
+        }
+        return WorldProgress(
+            world: world,
+            store: RememberedProgress(
+                stars: stars,
+                scenesPlayed: [CutScene.Name.opening.rawValue, TutorialLesson.seenKey]
             )
         )
     }
