@@ -8,8 +8,16 @@ import Foundation
 /// the dressing-room mirror. A hat that was measured in points would slide off the back of her
 /// head the first time the board got bigger.
 ///
-/// They were tuned by eye against the pig glyph. An emoji carries its own padding inside its
-/// box, so the numbers look as though they overlap her more than they do.
+/// They are measured against the pig glyph rather than guessed at, off the screenshots CI takes
+/// of the dressing room. She fills her box: the tips of her ears are at `-0.5` and her chin at
+/// `+0.5`, her eyes sit at about `-0.05`, and her snout — which is the trap — is only at `+0.16`,
+/// so anything meant for her neck has to be put a long way further down than it looks.
+///
+/// `down` is measured to the middle of the garment's own box, and a garment is rarely in the
+/// middle of its picture: a scarf carries its knot high and hangs tassels below it, a rosette
+/// hangs its disc low under a ribbon. What has to line up with her is the part of the garment
+/// that touches her, not the middle of the picture it is drawn in — which is why two things worn
+/// at the same place do not share a number.
 struct OutfitFit: Equatable, Sendable {
     /// How large the garment is set beside the pig, as a fraction of her own size.
     let scale: Double
@@ -36,14 +44,16 @@ struct OutfitFit: Equatable, Sendable {
         OutfitFit(scale: scale, across: 0.30, down: -0.29, lean: 14)
     }
 
-    /// Something worn under the chin.
-    static func atTheNeck(scale: Double) -> OutfitFit {
-        OutfitFit(scale: scale, across: 0, down: 0.31, lean: 0)
+    /// Something worn under the chin — which is at `+0.5`, so this hangs most of itself below
+    /// her and only tucks its top edge under her jaw.
+    static func atTheNeck(scale: Double, down: Double = 0.52) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0, down: down, lean: 0)
     }
 
-    /// Something worn on the feet, which on a pig drawn as a face means under her.
+    /// Something worn on the feet, which on a pig drawn as a face means under her: clear of her
+    /// chin rather than across her mouth, or it reads as something she is eating.
     static func onTheFeet(scale: Double) -> OutfitFit {
-        OutfitFit(scale: scale, across: 0, down: 0.41, lean: 0)
+        OutfitFit(scale: scale, across: 0, down: 0.62, lean: 0)
     }
 }
 
@@ -147,9 +157,11 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .spectacles: OutfitFit.onTheFace(scale: 0.52)
         case .ribbon: OutfitFit.behindTheEar(scale: 0.36)
         case .sunflower: OutfitFit.behindTheEar(scale: 0.38)
-        case .scarf: OutfitFit.atTheNeck(scale: 0.46)
-        case .rosette: OutfitFit.atTheNeck(scale: 0.40)
-        case .wellies: OutfitFit.onTheFeet(scale: 0.42)
+        // Lower than the rosette, because the knot a scarf is worn by sits high in its own
+        // picture: at 0.58 the knot lands on her jaw and the tassels hang under it.
+        case .scarf: OutfitFit.atTheNeck(scale: 0.40, down: 0.58)
+        case .rosette: OutfitFit.atTheNeck(scale: 0.36, down: 0.50)
+        case .wellies: OutfitFit.onTheFeet(scale: 0.34)
         }
     }
 
