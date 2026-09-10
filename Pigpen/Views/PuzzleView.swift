@@ -709,10 +709,7 @@ struct PuzzleView: View {
             if let stars = game.starRating {
                 HStack(spacing: 4) {
                     ForEach(1...3, id: \.self) { star in
-                        Image(systemName: star <= stars ? "star.fill" : "star")
-                            .foregroundStyle(
-                                star <= stars ? GamePalette.pen : GamePalette.post.opacity(0.3)
-                            )
+                        verdictStar(won: star <= stars)
                     }
                 }
                 .font(.title3)
@@ -741,6 +738,26 @@ struct PuzzleView: View {
                 .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
         }
         .shadow(color: .black.opacity(0.22), radius: 7, y: 4)
+    }
+
+    /// One star on the verdict card, drawn with a line of the game's ink around it.
+    ///
+    /// The pen's gold and the cream the card is painted on are only a shade apart, so three
+    /// filled stars on it read as one gold smudge and a player has to stop and count them.
+    /// The outline is the hollow star laid over the filled one — the two symbols share an
+    /// edge, so it lands exactly on the rim — in the same brown the fencing and the
+    /// lettering are drawn in. It gives every star its own line to be seen against, and a
+    /// star not won keeps that line at the weight it always had, so filled and empty are
+    /// still told apart by the gold rather than by which of them has an edge.
+    private func verdictStar(won: Bool) -> some View {
+        Image(systemName: won ? "star.fill" : "star")
+            .foregroundStyle(won ? GamePalette.pen : GamePalette.post.opacity(0.3))
+            .overlay {
+                if won {
+                    Image(systemName: "star")
+                        .foregroundStyle(GamePalette.post.opacity(0.85))
+                }
+            }
     }
 
     // MARK: - Actions
