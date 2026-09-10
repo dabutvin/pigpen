@@ -1056,6 +1056,12 @@ because the player said it could.
   the whole fortnight down again, which is how a day held at ten past eight loses its
   reminder before nine — and how a phone left shut for a week is still reminded every
   morning of it.
+- **The game's name is the headline.** Every reminder is titled *Pigpen*, and what the
+  morning has to say goes underneath it: the hook on the second line, the rest of the
+  couplet on the third. The phone prints the app's name in small letters along the top of a
+  notification either way, but the headline is the line somebody actually reads off a locked
+  screen, and a morning that says whose it is is worth more than one that only says
+  something is ready.
 - **A reminder says one of a hundred lines, picked by the day.** The pool is the estate
   agent's patter the cut scenes talk in — *Pig's waiting* / *Come build him a yard he can
   brag about* — a hundred title-and-body couplets, so mornings stop reading alike without
