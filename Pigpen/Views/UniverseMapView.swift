@@ -236,7 +236,7 @@ struct UniverseMapView: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text("The Universe")
                     .font(.system(size: 17, weight: .black, design: .rounded))
-                Text("\(clearedWorlds) of \(progress.count) worlds sold out")
+                Text("\(unlockedWorlds) of \(progress.count) worlds unlocked")
                     .font(.system(size: 11, weight: .semibold))
                     .opacity(0.75)
             }
@@ -247,7 +247,7 @@ struct UniverseMapView: View {
             HStack(spacing: 4) {
                 Image(systemName: "globe.americas.fill")
                     .foregroundStyle(GamePalette.pen)
-                Text("\(clearedWorlds)/\(progress.count)")
+                Text("\(unlockedWorlds)/\(progress.count)")
                     .foregroundStyle(GamePalette.cream)
                     .monospacedDigit()
             }
@@ -272,8 +272,14 @@ struct UniverseMapView: View {
         }
     }
 
-    private var clearedWorlds: Int {
-        (0..<progress.count).filter { progress.isCleared($0) }.count
+    /// How many worlds the player can walk into: the ones their stars have opened, less any
+    /// still standing behind the wall. The banner used to count the worlds held instead, which
+    /// said how much of the map was finished; what a player looking at a map of silhouettes
+    /// wants to know is how much of it is theirs to play.
+    private var unlockedWorlds: Int {
+        (0..<progress.count)
+            .filter { progress.isUnlocked($0) && !progress.isBehindTheWall($0) }
+            .count
     }
 
     // MARK: - Entering a world
