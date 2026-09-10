@@ -142,7 +142,10 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         // Lower than the rosette, because the knot a scarf is worn by sits high in its own
         // picture: at 0.58 the knot lands on her jaw and the tassels hang under it.
         case .scarf: OutfitFit.atTheNeck(scale: 0.40, down: 0.58)
-        case .rosette: OutfitFit.atTheNeck(scale: 0.36, down: 0.50)
+        // Lower again, and for the scarf's reason: a medal is a ribbon over a disc, and the
+        // ribbon it hangs by is the top of its picture. At 0.60 the ribbon crosses her jaw and
+        // the disc hangs under it, where a rosette is worn.
+        case .rosette: OutfitFit.atTheNeck(scale: 0.36, down: 0.60)
         case .wellies: OutfitFit.onTheFeet(scale: 0.34)
         }
     }
