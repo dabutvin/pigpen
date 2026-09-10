@@ -647,17 +647,25 @@ struct PuzzleView: View {
     }
 
     /// What the field makes of a pen that holds, which is a different thing from what it
-    /// holds. One star is the plain fact of it and no more: the animals have somewhere to
-    /// live, and there is a good deal more ground out there than they got. Two is a place
-    /// worth keeping with a better one still on the map, three is a pen worth admiring, and
-    /// the rainbow is the one pen this map has nothing above.
+    /// holds. One star is a start and says so, and sends the player back out for ground;
+    /// two allows the pen is a good one and still asks for bigger; three is a pen worth
+    /// talking about; and the pen the map has nothing above wants no telling at all.
     private func pennedHeadline(tally: PenTally) -> String {
-        guard !game.isPenAsGoodAsItGets else { return "The best pen there is" }
+        guard !game.isPenAsGoodAsItGets else { return noNotes }
         return switch level.starRating(forScore: tally.score) {
-        case 3: "That is a handsome pen"
-        case 2: "A good place, and better out there"
-        default: "Moved in"
+        case 3: "Now this is a pen worth bragging about"
+        case 2: "A great pen — can you make it bigger?"
+        default: "Good start — can you make the pen bigger?"
         }
+    }
+
+    /// The last word on the best pen there is: the one being housed has nothing to add to
+    /// it. Named the way the field names what it is holding — Pig on all but the map where
+    /// somebody else is being fenced in, and the herd where there is more than one of them.
+    private var noNotes: String {
+        guard !level.holdsAHerd else { return "The animals have no notes" }
+        let name = level.animals[0].kind.name
+        return "\(name.prefix(1).uppercased())\(name.dropFirst()) has no notes"
     }
 
     /// What the pen came to, under the verdict.
@@ -665,9 +673,9 @@ struct PuzzleView: View {
     /// A pen that can still be bettered gets the whole account of itself: the ground, what it
     /// cost, what was standing on it and how that came out — because every one of those is a
     /// thing the next go could change. A pen there is nothing above gets one line, because
-    /// there is no next go to inform. The card already says "The best pen there is" over the
-    /// top of it; spending three more sentences on the arithmetic behind a verdict the player
-    /// has just been given is reading them the receipt for a thing they have already won.
+    /// there is no next go to inform. The card already says there are no notes on it over the
+    /// top; spending three more sentences on the arithmetic behind a verdict the player has
+    /// just been given is reading them the receipt for a thing they have already won.
     private func pennedDetail(tally: PenTally) -> String {
         var detail: String
 
@@ -736,6 +744,7 @@ struct PuzzleView: View {
             Text(headline)
                 .font(.title3.weight(.black))
                 .foregroundStyle(tint)
+                .multilineTextAlignment(.center)
 
             Text(detail)
                 .font(.footnote.weight(.medium))
