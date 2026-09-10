@@ -98,6 +98,10 @@ struct FieldView: View {
     /// game underneath cannot tell ash from leaf mould — but the meadow's field is mud with
     /// stones in it and the mountain's is ash with cinder still going in it.
     var skin: FieldSkin = .meadow
+    /// What the pig has on, for the field that stands her on its ground. Handed in rather than
+    /// read off the wardrobe here so that a preview can dress her without a choice saved on the
+    /// machine it is running on; the screen above this one passes whatever is on the peg.
+    var outfit: PigOutfit = .asSheComes
     let onStroke: (FenceStroke) -> Void
     /// Told when the finger comes up, so everything one press laid or tore out can be
     /// taken back together.
@@ -256,8 +260,9 @@ struct FieldView: View {
             column: Double(animal.tile.column)
         )
 
-        return Text(animal.kind.glyph)
-            .font(.system(size: board.cell * 0.78))
+        // Clothes and all, and before anything else is done to her: every squash, lean, shadow
+        // and hop below is applied to the whole of the pig rather than to the pig inside her hat.
+        return DressedAnimal(animal: animal.kind, size: board.cell * 0.78, outfit: outfit)
             .scaleEffect(x: CGFloat(pose.stretch), y: CGFloat(pose.squash), anchor: .bottom)
             // The hop a tap on it gets: a stretch upwards on the way, on top of whatever
             // pose it is already holding, so an animal answering a finger during its own

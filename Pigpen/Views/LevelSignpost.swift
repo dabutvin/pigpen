@@ -18,9 +18,17 @@ struct LevelSignpost: View {
         case tolled(have: Int, need: Int)
     }
 
+    /// What this signpost is standing at: a numbered stop on the trail, or the sign at the end
+    /// of a lane off it. A lane has no number because it is not one of the world's nine, so it
+    /// carries a glyph in place of one, and says what it is rather than where it comes.
+    enum Sign: Equatable {
+        case stop(Int)
+        case lane(String)
+    }
+
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    let number: Int
+    let sign: Sign
     let name: String
     let stars: Int
     let standing: Standing
@@ -176,9 +184,15 @@ struct LevelSignpost: View {
                 .font(.system(size: 21, weight: .black))
                 .foregroundStyle(GamePalette.cream.opacity(0.85))
         case .open, .cleared:
-            Text("\(number)")
-                .font(.system(size: 26, weight: .black, design: .rounded))
-                .foregroundStyle(GamePalette.post)
+            switch sign {
+            case .stop(let number):
+                Text("\(number)")
+                    .font(.system(size: 26, weight: .black, design: .rounded))
+                    .foregroundStyle(GamePalette.post)
+            case .lane(let glyph):
+                Text(glyph)
+                    .font(.system(size: 24))
+            }
         }
     }
 
@@ -212,18 +226,28 @@ struct LevelSignpost: View {
         }
     }
 
+    /// How the sign names itself out loud. A stop is called by its number and its name; a lane
+    /// has only its name, and says that it is optional — which is the one thing about it a
+    /// player cannot see from the shape of the trail if they cannot see the trail.
+    private var called: String {
+        switch sign {
+        case .stop(let number): "Level \(number), \(name)"
+        case .lane: "\(name), an optional lane off the trail"
+        }
+    }
+
     private var spokenLabel: String {
         let spelled = ["no", "one", "two", "three"]
         switch standing {
         case .shut:
-            return "Level \(number), \(name), locked"
+            return "\(called), locked"
         case .tolled(let have, let need):
-            return "Level \(number), \(name), locked until \(need) stars, \(have) so far"
+            return "\(called), locked until \(need) stars, \(have) so far"
         case .open:
-            return "Level \(number), \(name), not yet played"
+            return "\(called), not yet played"
         case .cleared:
             let count = spelled[min(max(stars, 0), 3)]
-            let earned = "Level \(number), \(name), \(count) star\(stars == 1 ? "" : "s")"
+            let earned = "\(called), \(count) star\(stars == 1 ? "" : "s")"
             // Worth saying out loud as well as showing: it is the one thing three stars
             // does not already say.
             return hasTheBestPen ? earned + ", the best pen there is" : earned
@@ -242,13 +266,16 @@ struct SignpostButtonStyle: ButtonStyle {
 
 #Preview {
     HStack(spacing: 18) {
-        LevelSignpost(number: 1, name: "River Bend", stars: 3, standing: .cleared, hasTheBestPen: true)
+        LevelSignpost(sign: .stop(1), name: "River Bend", stars: 3, standing: .cleared, hasTheBestPen: true)
         // Three stars and still something left in the map, which is what the rainbow is
         // there to tell apart from the one beside it.
-        LevelSignpost(number: 2, name: "Puddle Corner", stars: 3, standing: .cleared)
-        LevelSignpost(number: 3, name: "Horseshoe Lake", stars: 0, standing: .open)
-        LevelSignpost(number: 4, name: "The Narrows", stars: 0, standing: .shut)
-        LevelSignpost(number: 9, name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
+        LevelSignpost(sign: .stop(2), name: "Puddle Corner", stars: 3, standing: .cleared)
+        LevelSignpost(sign: .stop(3), name: "Horseshoe Lake", stars: 0, standing: .open)
+        LevelSignpost(sign: .stop(4), name: "The Narrows", stars: 0, standing: .shut)
+        LevelSignpost(sign: .stop(9), name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
+        // The lane off the orchard, which carries a washing basket where a stop carries
+        // its number.
+        LevelSignpost(sign: .lane("🧺"), name: "Washday Lane", stars: 2, standing: .cleared)
     }
     .padding(40)
     .background(GamePalette.beyond)

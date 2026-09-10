@@ -202,6 +202,19 @@ final class WorldProgress {
 
     func isCleared(_ index: Int) -> Bool { stars(at: index) > 0 }
 
+    /// Whether a level has been penned at all, wherever in the world it stands. The index
+    /// version above speaks for the trail; this one also answers for a lane off it.
+    func isCleared(_ levelID: String) -> Bool { stars(for: levelID) > 0 }
+
+    /// Whether a lane off the trail can be walked down: the stop it leaves has to have been
+    /// penned, and that is the whole of it. A lane is never on the way to anything, so there is
+    /// no toll on one and nothing past the junction has any say in it.
+    func isOpen(_ spur: WorldSpur) -> Bool { isCleared(spur.junction) }
+
+    /// Whether the dressing room has been found. It hangs on one pen down one lane, and the
+    /// room itself is the only thing in the game that asks.
+    var isDressingRoomOpen: Bool { DressingRoom.isOpen(stars: bestStars) }
+
     /// How far along the trail play has got: the first level still to be cleared, or the
     /// last stop on the map once the whole world is done. A stop with a star toll on it
     /// can still be shut inside that.
@@ -260,7 +273,9 @@ final class WorldProgress {
         fences: Set<GridPoint> = [],
         for levelID: String
     ) -> Bool {
-        guard world.index(of: levelID) != nil else { return false }
+        // Any level the world holds, a lane off the trail included: a pen down the lane is
+        // worth its stars and its rainbow like any other, however little it opens.
+        guard world.level(withID: levelID) != nil else { return false }
 
         if verdict.isAsGoodAsItGets, verdict.stars > 0, !bestPens.contains(levelID) {
             bestPens.insert(levelID)
@@ -281,9 +296,8 @@ final class WorldProgress {
     private func isWorthKeeping(_ fences: Set<GridPoint>, for levelID: String) -> Bool {
         guard !fences.isEmpty else { return false }
         guard let kept = submittedFences(for: levelID) else { return true }
-        guard let index = world.index(of: levelID) else { return false }
+        guard let level = world.level(withID: levelID) else { return false }
 
-        let level = world[index].level
         guard case .penned(let pen) = level.release(fences: fences),
               case .penned(let held) = level.release(fences: kept)
         else {
@@ -303,7 +317,7 @@ final class WorldProgress {
     /// Returns whether this opened the next level up — the pig's cue to walk on.
     @discardableResult
     func record(stars rating: Int, for levelID: String) -> Bool {
-        guard rating > 0, world.index(of: levelID) != nil else { return false }
+        guard rating > 0, world.level(withID: levelID) != nil else { return false }
 
         let before = frontier
         if rating > stars(for: levelID) {
@@ -466,6 +480,26 @@ extension WorldProgress {
         )
     }
 
+    /// The meadow as far as the orchard, which is the moment the lane off it opens and the
+    /// dressing room is a thing to go and win rather than a thing a player has.
+    ///
+    /// Seven stops held and nothing down the lane, so a preview or a screenshot shows the fork
+    /// as a player meets it: the trail climbing on past the orchard, and a side path trodden
+    /// but unplayed.
+    static func atTheLane(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
+        var stars: [String: Int] = [:]
+        for node in world.nodes.prefix(7) {
+            stars[node.id] = 3
+        }
+        return WorldProgress(
+            world: world,
+            store: RememberedProgress(
+                stars: stars,
+                scenesPlayed: [CutScene.Name.opening.rawValue, TutorialLesson.seenKey]
+            )
+        )
+    }
+
     /// The meadow held and nothing past it taken: the standing a player is in the moment Play
     /// stops leading up the trail and starts opening the universe, which is where the title
     /// screen's tally has to widen out past the one world.
@@ -502,9 +536,12 @@ extension WorldProgress {
 
         for stop in universe.worlds {
             guard let game = stop.game else { continue }
-            for node in game.map.nodes {
-                stars[node.id] = 3
-                bestPens.insert(node.id)
+            // Every level the world holds, the lanes off the trail included: a game with
+            // nothing left in it has been down the lane as well, so the dressing room is open
+            // in every photograph taken of one.
+            for level in game.map.levels {
+                stars[level.id] = 3
+                bestPens.insert(level.id)
             }
             // Somebody who has held every pen in a world has been shown every film it keeps.
             for spec in [game.opening, game.farewell].compactMap({ $0 }) + Array(game.briefings.values) {

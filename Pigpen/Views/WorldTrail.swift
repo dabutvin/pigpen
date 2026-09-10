@@ -27,9 +27,39 @@ struct WorldTrail {
     /// Where a stop stands.
     func point(of index: Int) -> CGPoint {
         let node = map[min(max(index, 0), map.count - 1)]
-        return CGPoint(
-            x: Self.verge + CGFloat(node.across) * max(width - Self.verge * 2, 1),
-            y: height - Self.apron - CGFloat(node.up) * Self.climb
+        return place(across: node.across, up: node.up)
+    }
+
+    /// Where the sign at the end of a lane off the trail stands. Placed on exactly the same
+    /// fractions a stop is, so a lane is somewhere in the same meadow rather than somewhere of
+    /// its own.
+    func point(of spur: WorldSpur) -> CGPoint {
+        place(across: spur.across, up: spur.up)
+    }
+
+    private func place(across: Double, up: Double) -> CGPoint {
+        CGPoint(
+            x: Self.verge + CGFloat(across) * max(width - Self.verge * 2, 1),
+            y: height - Self.apron - CGFloat(up) * Self.climb
+        )
+    }
+
+    /// The lane itself: one bowed length of path leaving the junction for the sign at its end.
+    ///
+    /// It bows the opposite way to the leg of trail it leaves, so the fork reads as a fork
+    /// rather than as the trail doubling back on itself.
+    func lane(to spur: WorldSpur) -> TrailCurve {
+        let start = point(of: spur.junction)
+        let end = point(of: spur)
+        let lean: CGFloat = spur.junction.isMultiple(of: 2) ? -1 : 1
+        let run = CGPoint(x: end.x - start.x, y: end.y - start.y)
+        return TrailCurve(
+            start: start,
+            control: CGPoint(
+                x: (start.x + end.x) / 2 - run.y * Self.bow * lean,
+                y: (start.y + end.y) / 2 + run.x * Self.bow * lean
+            ),
+            end: end
         )
     }
 
@@ -104,6 +134,15 @@ struct TrailCurve {
             x: left * left * start.x + 2 * left * along * control.x + along * along * end.x,
             y: left * left * start.y + 2 * left * along * control.y + along * along * end.y
         )
+    }
+
+    /// The whole length as a path of its own, for a piece of trail that is drawn in one go
+    /// rather than grown out under a walking pig.
+    var path: Path {
+        var path = Path()
+        path.move(to: start)
+        path.addQuadCurve(to: end, control: control)
+        return path
     }
 
     /// The first `fraction` of the length, as a bowed length in its own right.

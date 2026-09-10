@@ -135,7 +135,8 @@ Play leads into **Mudlark Meadow** until that world is held, and only then opens
 with the pig standing at the furthest one it has reached and mist over everything past that.
 The first six are fencing and water alone and climb in what they ask of you, the next two
 scatter apples and skulls as well, and the last is the boss. Every world in the game is a
-trail like this one.
+trail like this one — and one stop in the meadow has a lane off it, which is the only thing
+in the game you can finish a world without ever having seen.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
@@ -157,6 +158,10 @@ trail like this one.
 - **You can go back down the trail** to any level already open, and the pig trots down to
   it before the puzzle opens — and stays there when you come back out. Only something newly
   opened moves the pig on its own, so a replay leaves you standing where you chose to be.
+- **One stop has a lane off it.** Pen the seventh — Windfall Orchard — and a side path
+  opens west of the signpost, with a tenth puzzle at the end of it: Washday Lane. Nothing
+  waits on it and nothing behind it needs it. What is down there is
+  [the dressing room](#the-dressing-room).
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
@@ -229,6 +234,80 @@ for less than the last one did.
 
 Each of those pens is drawn out in [`solutions/`](solutions/), which is spoilers from
 the first line.
+
+### The lane off the orchard
+
+| Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|
+| Washday Lane | 9 | 3 apples | 19 | 26 | 26% |
+
+Washday Lane is the one puzzle in the game that is not a stop on a trail. It hangs off the
+meadow's seventh signpost as a **junction**: the trail carries on up to Sour Ground as it
+always did, and a narrower path leaves it west for a sign with a washing basket on it instead
+of a number. It opens as soon as the orchard has been penned at all, and it can be walked past
+forever — a player who never turns down it holds the meadow, sees its send-off and goes out to
+the universe without ever knowing it was there.
+
+A lane walls itself, which is why it is the gentlest kind of board to hand somebody who went
+looking rather than somebody who was sent. Water runs the whole length of both sides, so
+nothing along it costs a piece; the only place it touches the rim is the top end, and three
+pieces shut that. The puzzle is the other end, where the lane opens onto the drying green:
+plugging the three-tile mouth flat holds the lane and nothing else, and the six pieces left
+over are worth more leaned out sideways. Three windfalls have rolled down off the orchard onto
+the green, the nearest of them one tile west of the mouth, and taking that one is worth more
+than the ground the wall gives up bending round to it. 21 tiles and one apple come to 26.
+
+Because a lane is not a stop, it stays out of the world's arithmetic entirely — and that is
+deliberate rather than incidental:
+
+- The tally across the top of the map is still 27 stars over nine puzzles, and the banner still
+  counts nine.
+- Its stars do not pay Stag Mere its toll. The boss asks for 21 of the 24 the trail below it
+  holds, and an optional level may not quietly make a gate the game already set cheaper.
+- Holding the meadow means its nine pens held. The send-off plays, the universe opens, and the
+  lane can still be lying there unplayed.
+- It has no **question** and no floor, because those are the order a trail is built in, and the
+  lane stands beside that order rather than in it. `DifficultyTests` measures the nine.
+
+What it does keep is everything a level keeps for its own sake: its own stars on its own sign,
+its own rainbow for the best pen there is, and the wall that held it, so *Put it back* works
+down the lane like anywhere else.
+
+### The dressing room
+
+Pen Washday Lane — one star is the whole price — and the washing line at the end of it is
+yours. The doors open there and then, on the way back out to the map, and after that the card
+in **Settings** is the way back in: a reward you cannot find twice is a reward you had once.
+
+Inside is the pig on a stand and eleven pegs: **ten outfits**, and the bare one she arrived on.
+
+| Peg | On her |
+|---|---|
+| Sun Hat 👒 | On top of her head, at an angle |
+| Top Hat 🎩 | Likewise, and unexplained |
+| Crown 👑 | She found it. It is hers now |
+| Sunglasses 🕶️ | Across her eyes |
+| Spectacles 👓 | Likewise, for reading fencing |
+| Ribbon 🎀 | Behind one ear |
+| Sunflower 🌻 | Likewise, picked from the end of the lane |
+| Scarf 🧣 | Under her chin |
+| Rosette 🏅 | Likewise, first in class |
+| Wellies 🥾 | Under her. Four of them |
+| Just the pig | Nothing at all, which is where she starts |
+
+Whatever is on the peg with the tick beside it, she wears **everywhere**: on every board, on
+the signpost trail, in the practice pen, and out in front of the title. The game has drawn her
+as one glyph since the first build and an outfit does not change that — it is a second glyph
+hung on the first at a fixed place, size and angle, all three measured as fractions of the pig
+herself, so the same hat sits right on a board tile the size of a fingernail and on the
+dressing-room mirror. Everything already done to the pig — squashed flat on a landing, leaned
+into a trot, a shadow under her, a hop when a finger lands on her — is done to the whole of
+her, clothes included. The painted films keep their own pig: a cut scene is a still, not the
+board.
+
+The choice is a preference rather than progress, kept under one key on the phone, and it is
+the only thing the dressing room remembers. It survives everything except **Clear all game
+data**, which shuts the lane that opened the room and so takes the hats with it.
 
 ## The Universe
 
@@ -1715,6 +1794,8 @@ Then work out where on the trail it belongs. `--demand` squares the map off as w
 A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
 Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
+A stop is not the only thing a level can be. A **lane** — a `WorldSpur` — hangs off a stop as a junction instead of standing in the line, and the meadow's Washday Lane is the one the game has: it carries a level, the index of the stop it leaves, where its sign stands and the glyph painted on that sign in place of a number. A lane is optional by construction, so it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and a level down one needs no baseline in `DifficultyTests` and no `question`. What it does need is its best pen pinned in `shipped` like any other, and something at the end of it worth the walk: the lane is the door to the dressing room, and `DressingRoom` is where the game asks whether that door is open.
+
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
 The search carries its pens as bitmasks — one bit per tile of the board — rather than as sets of coordinates, which is the same search written so that it finishes in a second rather than half a minute. Nothing about which pens it keeps changed when it was rewritten, and the nine shipped levels come out at exactly the numbers they always did, which is what `PuzzleLevelTests` and `DifficultyTests` are there to say. That speed is what makes a year of daily puzzles possible at all.
@@ -2027,7 +2108,7 @@ Pigpen/
 │   ├── FilmReel.swift           # Every film in the game in one running order, for watching them back to back
 │   ├── Stopwatch.swift          # The count-up clock over a timed board: start, stop, resume, reset
 │   ├── PuzzleGame.swift         # Observable state for one puzzle in progress
-│   ├── WorldMap.swift           # The levels of a world and where their signposts stand
+│   ├── WorldMap.swift           # The levels of a world, the lanes off its trail, and where every sign stands
 │   ├── WorldProgress.swift      # Best stars, best pens and the walls that held them, what that unlocks, which films are owed
 │   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its board skin, its paintwork, its boss silhouette
 │   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
@@ -2057,6 +2138,8 @@ Pigpen/
 │   ├── RatingPrompt.swift       # When the game asks what a player thinks of it, and how rarely it may
 │   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
 │   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
+│   ├── PigOutfit.swift          # The ten outfits, and where each one hangs on the pig
+│   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing room
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 │   └── SupportLinks.swift       # The support page, the privacy policy and the address behind them, in one place
@@ -2075,14 +2158,16 @@ Pigpen/
 │   │   └── ThornwoodFilm.swift  # Thornwood Thicket's nine, and the canopy, trunks, shafts and mountain it wanted
 │   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
 │   ├── FullGameOffer.swift      # The offer of the full game: what it opens, the price, the buy and the restore
-│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the way back into the dressing room, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
-│   ├── WorldTrail.swift         # Stops ↔ points on screen, and the curve between them
-│   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
+│   ├── WorldTrail.swift         # Stops and lanes ↔ points on screen, and the curves between them
+│   ├── LevelSignpost.swift      # One sign on the map: stars — rainbow for a best pen — a number, or a glyph for a lane
+│   ├── DressingRoomView.swift   # The room at the end of the lane: the pig on a stand, and eleven pegs
+│   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing

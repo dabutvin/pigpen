@@ -508,6 +508,21 @@ extension AnalyticsSignal {
         AnalyticsSignal("Settings.pageOpened", ["page": page])
     }
 
+    // MARK: The dressing room
+
+    /// The room at the end of the meadow's lane opened, and which door it was opened through:
+    /// the lane itself giving way, or the card in settings. The two say different things — one
+    /// is how many players ever find the lane at all, the other is whether anybody goes back.
+    static func dressingRoomOpened(from door: String) -> AnalyticsSignal {
+        AnalyticsSignal("Dressing.opened", ["from": door])
+    }
+
+    /// A peg taken off the wall. The name of an outfit and nothing else — which hat is worth
+    /// having is the only question this corner of the game has.
+    static func outfitWorn(_ outfit: String) -> AnalyticsSignal {
+        AnalyticsSignal("Dressing.outfitWorn", ["outfit": outfit])
+    }
+
     // MARK: The full game
 
     /// The offer of the full game put in front of somebody. `from` is where it was raised —

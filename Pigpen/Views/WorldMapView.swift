@@ -20,6 +20,15 @@ struct WorldMapView: View {
     @State private var pigStop: Double
     /// The stop whose puzzle is on screen, if any. Emptying it pops back to the map.
     @State private var playing: Int?
+    /// The lane whose puzzle is on screen, if any. Held apart from `playing` because a lane is
+    /// not a stop: it opens nothing, walks the pig nowhere and is not owed a send-off.
+    @State private var playingLane: WorldSpur?
+    /// Whether the dressing room is up. Raised the moment the lane first gives way, which is
+    /// the whole of what is down there.
+    @State private var isDressingUp = false
+    /// Whether the room that is about to go up is being seen for the first time, so it can say
+    /// where it came from. Set by the pen that opens it and let go of as the doors shut.
+    @State private var justOpenedTheDressingRoom = false
     /// A stop that has only just opened, so its signpost can make something of itself.
     @State private var unveiled: Int?
     /// Held while the pig is on the move, so a second tap cannot send it two ways at once.
@@ -46,6 +55,11 @@ struct WorldMapView: View {
     /// the briefings it stops for. Held apart from `world` below, which is the trail itself —
     /// that map is the one the progress already carries.
     private let game: GameWorld
+    /// What the pig has on, which is whatever is hanging in the dressing room with a tick beside
+    /// it. Read here as well as on the board, so the pig walking up the trail is the same pig
+    /// the player dressed — and read through the shared wardrobe rather than handed in, since
+    /// there is only ever one pig to dress.
+    private let wardrobe: PigWardrobe = .shared
     /// Called when this world's send-off finishes, if the map was opened from the title rather
     /// than from the universe. The title uses it to reveal the universe map; when the map was
     /// itself opened from the universe, this is empty and `dismiss` is enough to go back.
@@ -98,6 +112,17 @@ struct WorldMapView: View {
                         await sendOff()
                     }
                 }
+                // The lane opens nothing, so there is no walk and no send-off owed — only the
+                // room at the end of it, and only the first time. It waits for the board to
+                // finish sliding away, the way the send-off does, rather than going up over
+                // the top of one still moving.
+                .onChange(of: playingLane) { _, lane in
+                    guard lane == nil, justOpenedTheDressingRoom else { return }
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(520))
+                        isDressingUp = true
+                    }
+                }
             }
         }
         .background(colors.ground)
@@ -132,6 +157,38 @@ struct WorldMapView: View {
                 }
             }
         }
+        .navigationDestination(item: $playingLane) { spur in
+            // The same board every stop on this trail opens, dressed the same way. The lane is
+            // counted against the stop it leaves — it is not a stop of its own, and the level
+            // id on the signal is what tells the two apart.
+            PuzzleView(
+                game: board(for: spur),
+                treatSkin: theme.treats,
+                skin: theme.field,
+                day: theme.day,
+                chrome: theme.chrome,
+                trail: (world: world.name, stop: spur.junction)
+            ) { verdict, _, fences in
+                let wasOpen = progress.isDressingRoomOpen
+                progress.record(verdict, fences: fences, for: spur.id)
+                // The reward, handed over on the spot rather than left to be found in settings:
+                // a player who has just walked down a lane that leads nowhere is owed the room
+                // at the end of it. Only the first time — a replay for a better rating is a
+                // replay, and the way back in is the card in settings from then on.
+                if !wasOpen, progress.isDressingRoomOpen {
+                    justOpenedTheDressingRoom = true
+                }
+            }
+        }
+        .fullScreenCover(
+            isPresented: $isDressingUp,
+            onDismiss: { justOpenedTheDressingRoom = false }
+        ) {
+            DressingRoomView(hasJustOpened: justOpenedTheDressingRoom)
+                .onAppear {
+                    Analytics.record(.dressingRoomOpened(from: DressingRoom.Door.lane.rawValue))
+                }
+        }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
             CutSceneView(waiting.film) { endBriefing(waiting) }
         }
@@ -150,8 +207,17 @@ struct WorldMapView: View {
     /// stand the whole wall again for a player who only wanted another look at it.
     private func board(at index: Int) -> PuzzleGame {
         let node = world[index]
-        let game = PuzzleGame(level: node.level)
-        if let fences = progress.submittedFences(for: node.id) {
+        return board(for: node.level)
+    }
+
+    /// The board at the end of a lane, opened on exactly the terms a stop's is.
+    private func board(for spur: WorldSpur) -> PuzzleGame {
+        board(for: spur.level)
+    }
+
+    private func board(for level: PuzzleLevel) -> PuzzleGame {
+        let game = PuzzleGame(level: level)
+        if let fences = progress.submittedFences(for: level.id) {
             game.rememberSubmittedPen(fences)
         }
         return game
@@ -193,8 +259,39 @@ struct WorldMapView: View {
                     GamePalette.cream.opacity(0.3),
                     style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [5, 11])
                 )
+
+            lanes(trail: trail)
         }
         .allowsHitTesting(false)
+    }
+
+    /// The lanes off the trail, drawn narrower than it is: a side path that nobody has to take
+    /// should not look like the way on. Each is worn faintly into the grass from the off, so a
+    /// player can see there is something off to one side before they have earned it, and laid
+    /// over as proper trodden path once the stop it leaves has been penned.
+    private func lanes(trail: WorldTrail) -> some View {
+        ForEach(world.spurs) { spur in
+            let lane = trail.lane(to: spur).path
+
+            ZStack {
+                lane.stroke(
+                    GamePalette.mud.opacity(0.24),
+                    style: StrokeStyle(lineWidth: 11, lineCap: .round)
+                )
+
+                if progress.isOpen(spur) {
+                    lane.stroke(
+                        GamePalette.mudSpeckle.opacity(0.4),
+                        style: StrokeStyle(lineWidth: 17, lineCap: .round)
+                    )
+                    lane.stroke(GamePalette.mud, style: StrokeStyle(lineWidth: 13, lineCap: .round))
+                    lane.stroke(
+                        GamePalette.cream.opacity(0.3),
+                        style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [4, 9])
+                    )
+                }
+            }
+        }
     }
 
     /// Morning mist over the part of the meadow that has not been earned yet. It lifts
@@ -219,13 +316,18 @@ struct WorldMapView: View {
     }
 
     private func signposts(trail: WorldTrail) -> some View {
-        TrailLayout(stops: (0..<world.count).map { trail.point(of: $0) }) {
+        // The stops first and the lanes after, in the same order the layout below is handed
+        // their places — one list of points, one list of signs, and the two read off together.
+        TrailLayout(
+            stops: (0..<world.count).map { trail.point(of: $0) }
+                + world.spurs.map { trail.point(of: $0) }
+        ) {
             ForEach(Array(0..<world.count), id: \.self) { index in
                 Button {
                     visit(index)
                 } label: {
                     LevelSignpost(
-                        number: index + 1,
+                        sign: .stop(index + 1),
                         name: world[index].level.name,
                         stars: progress.stars(at: index),
                         standing: standing(at: index),
@@ -237,12 +339,28 @@ struct WorldMapView: View {
                 .disabled(!progress.isUnlocked(index))
                 .id(index)
             }
+
+            ForEach(world.spurs) { spur in
+                Button {
+                    visitTheLane(spur)
+                } label: {
+                    LevelSignpost(
+                        sign: .lane(spur.glyph),
+                        name: spur.level.name,
+                        stars: progress.stars(for: spur.id),
+                        standing: standing(of: spur),
+                        hasTheBestPen: progress.hasTheBestPen(for: spur.id)
+                    )
+                }
+                .buttonStyle(SignpostButtonStyle())
+                .disabled(!progress.isOpen(spur))
+                .id(spur.id)
+            }
         }
     }
 
     private func pig(trail: WorldTrail) -> some View {
-        Text("🐷")
-            .font(.system(size: 36))
+        DressedAnimal(animal: .pig, size: 36, outfit: wardrobe.outfit)
             .shadow(color: .black.opacity(0.3), radius: 4, y: 4)
             .modifier(TrailWalk(walked: pigStop, trail: trail))
             .allowsHitTesting(false)
@@ -259,6 +377,18 @@ struct WorldMapView: View {
             // can see the price of — and how close they are to it — is one worth going back
             // down the trail for.
             .tolled(have: progress.totalStars, need: world[index].starToll)
+        } else {
+            .shut
+        }
+    }
+
+    /// What the map has to say about a lane. There is no toll on one and nothing waiting behind
+    /// it, so it is only ever penned, open, or shut until the stop it leaves has been held.
+    private func standing(of spur: WorldSpur) -> LevelSignpost.Standing {
+        if progress.isCleared(spur.id) {
+            .cleared
+        } else if progress.isOpen(spur) {
+            .open
         } else {
             .shut
         }
@@ -344,6 +474,22 @@ struct WorldMapView: View {
             } else {
                 playing = index
             }
+        }
+    }
+
+    /// Opens the lane off the trail.
+    ///
+    /// The pig trots to the junction rather than down the lane. The trail is the only thing the
+    /// map walks her along — a lane is a step off it — and standing her at the corner it leaves
+    /// says where she has gone as well as a walk would: the board comes up from there, and she
+    /// is still at the corner when it is put away.
+    private func visitTheLane(_ spur: WorldSpur) {
+        guard progress.isOpen(spur), !walking else { return }
+        Haptics.tap(.medium)
+
+        Task {
+            await walk(to: Double(spur.junction), secondsPerStop: 0.3)
+            playingLane = spur
         }
     }
 
@@ -624,5 +770,13 @@ private struct TrailWalk: GeometryEffect {
 #Preview {
     NavigationStack {
         WorldMapView(progress: .partWayThrough())
+    }
+}
+
+/// The fork: the orchard penned, the trail climbing on past it, and the lane off to one side
+/// trodden but not yet played.
+#Preview("The lane off the orchard") {
+    NavigationStack {
+        WorldMapView(progress: .atTheLane())
     }
 }

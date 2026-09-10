@@ -78,6 +78,9 @@ struct TitleScreenView: View {
     /// has nowhere to push a board from, so it writes the day down and this screen — the
     /// root of the stack, and so the one screen that is always there to be asked — opens it.
     private let taps: TappedReminder
+    /// What the pig in the pasture has on. The shared wardrobe, read here so that coming back
+    /// from the dressing room puts the new outfit straight on the pig behind the name.
+    private let wardrobe: PigWardrobe = .shared
 
     /// - Parameters:
     ///   - today: The day the game is being played on, or nothing at all to ask the phone.
@@ -123,7 +126,7 @@ struct TitleScreenView: View {
 
     var body: some View {
         ZStack {
-            TitleSceneView()
+            TitleSceneView(outfit: wardrobe.outfit)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {

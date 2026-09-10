@@ -11,6 +11,10 @@
 | 7 | Windfall Orchard | 12 | 27 | 2 apples | 37 | 30 |
 | 8 | Sour Ground | 14 | 24 | 2 apples, 1 skull | 29 | 22 |
 | 9 | Stag Mere | 20 | 33 | 3 apples, 2 skulls | 38 | 34 |
+| — | Washday Lane | 9 | 21 | 1 apple | 26 | 19 |
+
+Washday Lane has no number because it is not a stop on the trail: it is the lane off the
+orchard, and what is at the end of it is the dressing room rather than the way on.
 
 Every one of these spends its whole budget.
 
@@ -275,6 +279,38 @@ skulls, 38.
 Boxing the pig into its own tile for four pieces and pouring the other sixteen into the
 stag's shore is the tempting shortcut. The north shore gives up far more than four pieces'
 worth of ground when it is abandoned, which is what makes the split the puzzle.
+
+## The lane off the orchard — Washday Lane, 9 pieces, 26
+
+```
+~~~###~~~~
+~~~ooo~~~~
+~~~oPo~~~~
+~~~ooo~~~~
+~~~ooo~~~~
+~~~ooo~~~~
+#oooo#....
+.#ao#..a..
+..##......
+....a.....
+..........
+```
+
+A lane walls itself. Water runs the whole length of both sides, so not a piece of the budget
+goes on them, and the only place the lane touches the rim of the map is the top end — three
+pieces, and the pig cannot get out that way.
+
+That leaves six for the other end, where the lane opens onto the drying green. Plugging the
+three-tile mouth flat costs three and holds the lane and nothing else: 15 tiles. So the wall
+leans out of the mouth instead, west, to where the nearest of the three windfalls is lying one
+tile off the corner. Swallowing it costs the wall a bend and buys five points and the ground
+it bends round; 21 tiles and one apple come to 26.
+
+The other two apples are the same question asked where the answer is no. The one to the east
+is a tile further out than the one to the west, and the one due south is further still: nine
+pieces cannot reach either without giving up more green than the five is worth. It is the
+orchard's lesson on a board small enough to see all of at once, which is the right thing to
+find down a lane nobody made you walk.
 
 ---
 

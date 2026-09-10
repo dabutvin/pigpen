@@ -1,0 +1,163 @@
+import Foundation
+
+/// Where a garment hangs on the pig, and how it sits there.
+///
+/// Every measure is a fraction of the size the pig herself is drawn at rather than a number of
+/// points, so one set of numbers dresses her everywhere she appears: on a board tile the size
+/// of a fingernail, trotting along the fence on the title screen, and standing full height on
+/// the dressing-room mirror. A hat that was measured in points would slide off the back of her
+/// head the first time the board got bigger.
+///
+/// They were tuned by eye against the pig glyph. An emoji carries its own padding inside its
+/// box, so the numbers look as though they overlap her more than they do.
+struct OutfitFit: Equatable, Sendable {
+    /// How large the garment is set beside the pig, as a fraction of her own size.
+    let scale: Double
+    /// How far out from the middle of the pig it hangs: `across` to her right, `down` towards
+    /// her feet. Both are fractions of her size too.
+    let across: Double
+    let down: Double
+    /// How far it is tipped, in degrees. A hat worn dead straight is a hat nobody had any fun
+    /// with.
+    let lean: Double
+
+    /// Something worn on top of the head.
+    static func hat(scale: Double, down: Double = -0.44, lean: Double = -10) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0.02, down: down, lean: lean)
+    }
+
+    /// Something worn across the eyes.
+    static func onTheFace(scale: Double) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0, down: -0.06, lean: 0)
+    }
+
+    /// Something tucked behind one ear.
+    static func behindTheEar(scale: Double) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0.30, down: -0.29, lean: 14)
+    }
+
+    /// Something worn under the chin.
+    static func atTheNeck(scale: Double) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0, down: 0.31, lean: 0)
+    }
+
+    /// Something worn on the feet, which on a pig drawn as a face means under her.
+    static func onTheFeet(scale: Double) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0, down: 0.41, lean: 0)
+    }
+}
+
+/// What the pig has on.
+///
+/// The game has drawn her as one glyph since the first build, and an outfit does not change
+/// that: it is a second glyph hung on the first at a fixed place and angle. So a pig in a top
+/// hat is still the pig the board is playing with — the same tile, the same size, the same
+/// shadow, the same hop when a finger lands on her — and nothing in the game has to be taught
+/// about clothes to draw her in them. It also means an outfit costs nothing to carry about:
+/// a string in the defaults, and two numbers and a turn at the moment of drawing.
+///
+/// Ten of them hang in the dressing room, and `asSheComes` is the eleventh peg: the pig as the
+/// game has always shipped her, which is where a player who has had enough of hats goes.
+///
+/// The raw values are what the choice is kept under on the phone, so they are not to be
+/// renamed — a player who has put a crown on her is entitled to find it there next week.
+enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
+    /// Nothing on at all. The default, and the way out of every other peg.
+    case asSheComes
+    case sunHat
+    case topHat
+    case crown
+    case shades
+    case spectacles
+    case ribbon
+    case sunflower
+    case scarf
+    case rosette
+    case wellies
+
+    var id: String { rawValue }
+
+    /// The ten outfits, in the order the dressing room hangs them up: the hats together, then
+    /// what goes on the face, then what is tucked behind an ear, then what hangs at the neck,
+    /// and the boots last. `asSheComes` is not one of them — it is the bare peg the room keeps
+    /// at the front, and a player wearing nothing is not wearing an outfit.
+    static var wardrobe: [PigOutfit] { allCases.filter { $0 != .asSheComes } }
+
+    /// What the peg is labelled.
+    var name: String {
+        switch self {
+        case .asSheComes: "Just the pig"
+        case .sunHat: "Sun Hat"
+        case .topHat: "Top Hat"
+        case .crown: "Crown"
+        case .shades: "Sunglasses"
+        case .spectacles: "Spectacles"
+        case .ribbon: "Ribbon"
+        case .sunflower: "Sunflower"
+        case .scarf: "Scarf"
+        case .rosette: "Rosette"
+        case .wellies: "Wellies"
+        }
+    }
+
+    /// The line under the name on the peg: where the thing came from, which is the whole of
+    /// the story the dressing room tells.
+    var said: String {
+        switch self {
+        case .asSheComes: "Out of the washing and back to the mud."
+        case .sunHat: "Off the hook by the orchard gate."
+        case .topHat: "Nobody has ever explained the top hat."
+        case .crown: "She found it. It is hers now."
+        case .shades: "For a long afternoon in a dry field."
+        case .spectacles: "She has been squinting at the fencing for weeks."
+        case .ribbon: "Tied behind one ear, where it stays all day."
+        case .sunflower: "Picked from the end of the lane."
+        case .scarf: "Knitted for somebody with a longer neck."
+        case .rosette: "First in class, every class she has entered."
+        case .wellies: "Four of them. It took some doing."
+        }
+    }
+
+    /// The glyph hung on her, and nothing at all for the bare peg.
+    var glyph: String {
+        switch self {
+        case .asSheComes: ""
+        case .sunHat: "👒"
+        case .topHat: "🎩"
+        case .crown: "👑"
+        case .shades: "🕶️"
+        case .spectacles: "👓"
+        case .ribbon: "🎀"
+        case .sunflower: "🌻"
+        case .scarf: "🧣"
+        case .rosette: "🏅"
+        case .wellies: "🥾"
+        }
+    }
+
+    /// Where that glyph hangs, and nothing at all for the bare peg — which is how everything
+    /// that draws the pig knows whether there is anything to draw on top of her.
+    var fit: OutfitFit? {
+        switch self {
+        case .asSheComes: nil
+        case .sunHat: OutfitFit.hat(scale: 0.60, down: -0.41, lean: -12)
+        case .topHat: OutfitFit.hat(scale: 0.56, down: -0.46)
+        case .crown: OutfitFit.hat(scale: 0.48, down: -0.47, lean: 0)
+        case .shades: OutfitFit.onTheFace(scale: 0.54)
+        case .spectacles: OutfitFit.onTheFace(scale: 0.52)
+        case .ribbon: OutfitFit.behindTheEar(scale: 0.36)
+        case .sunflower: OutfitFit.behindTheEar(scale: 0.38)
+        case .scarf: OutfitFit.atTheNeck(scale: 0.46)
+        case .rosette: OutfitFit.atTheNeck(scale: 0.40)
+        case .wellies: OutfitFit.onTheFeet(scale: 0.42)
+        }
+    }
+
+    /// How the pig is described out loud while she is wearing it, for a screen reader that
+    /// has no way of seeing the hat.
+    /// *The* rather than *a*, so that one wording covers the sunglasses and the wellies as
+    /// well as the top hat.
+    var spoken: String {
+        self == .asSheComes ? "The pig, wearing nothing" : "The pig wearing the \(name.lowercased())"
+    }
+}
