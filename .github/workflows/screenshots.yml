@@ -95,10 +95,12 @@ jobs:
           # the same board rather than two rolls of the dice. `-universe`, `-map`,
           # `-woods-map`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`, `-orchard`,
           # `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`, `-archive`,
-          # `-title`, `-title-fresh`, `-settings` and `-reminder` are launch
+          # `-title`, `-title-fresh`, `-settings`, `-reminder`, `-lane-map` and `-dressing`
+          # are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
-          # settings sheet and the offer of a daily reminder can be captured without
+          # settings sheet, the offer of a daily reminder, the fork off the orchard and
+          # the dressing room at the end of it can be captured without
           # tapping through the title screen. The reminder screens are handed a
           # reminder held in memory, so nothing on the runner is ever asked for
           # permission to post a notification.
@@ -151,6 +153,12 @@ jobs:
           # free meadow for sale, in colour under a gold lock. Numbered high so it sits
           # at the end of the gallery rather than renumbering every shot above it.
           capture 69 universe_locked -universe-locked
+
+          # The lane off the orchard — the one fork on any trail in the game — and the
+          # dressing room at the end of it, with something already on the pig. Numbered high
+          # for the same reason the shot above is: so nothing already in the gallery shifts.
+          capture 71 lane_map -lane-map
+          capture 73 dressing -dressing
 
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock

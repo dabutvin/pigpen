@@ -10,7 +10,8 @@ struct PigpenApp: App {
 
     /// CI launches the app with one of the arguments in `Photograph` below, or one of the
     /// film arguments in `stills`, so the pull request screenshots can show the boards, the
-    /// universe map, each world's trail, the practice pen, the daily puzzle and its archive,
+    /// universe map, each world's trail, the lane off the meadow's orchard and the dressing
+    /// room at the end of it, the practice pen, the daily puzzle and its archive,
     /// the settings sheet, the offer of a daily reminder and every shot of every cut scene
     /// rather than only the title screen.
     ///
@@ -194,6 +195,8 @@ struct PigpenApp: App {
         case embers = "-embers"
         case pies = "-pies"
         case map = "-map"
+        case laneMap = "-lane-map"
+        case dressing = "-dressing"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -307,6 +310,17 @@ struct PigpenApp: App {
             )
         case .map:
             WorldMapView(progress: .partWayThrough())
+        case .laneMap:
+            // The fork: the orchard penned, the trail climbing on past it, and the lane off
+            // to one side trodden but unplayed — the one shape on any trail in the game that
+            // is not a line, and the only way to photograph it is to stand a world at it.
+            WorldMapView(progress: .atTheLane())
+        case .dressing:
+            // The room at the end of that lane, with something already on her, since an
+            // undressed pig on the stand says nothing the trail does not say. Its wardrobe is
+            // held in memory for the same reason the reminder's is: nothing a screenshot
+            // runner does should be left standing on the machine that took the picture.
+            DressingRoomView(wardrobe: .remembering(.sunHat))
         case .universe:
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.
