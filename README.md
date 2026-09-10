@@ -144,12 +144,13 @@ trail like this one.
   down the trail and better the pens you rushed. The star that pays it opens the level
   wherever on the trail it was won, and the pig sets off up the meadow for it there and then.
 - **And the game says so when you run out of trail.** Hold the last pen below a boss you
-  cannot afford and a card comes up over the map once the pig has settled: what the gate
-  wants, what you hold against it, and the one thing there is to do about the difference —
-  go back down and better a pen you rushed. It is raised on a star being won rather than on
-  the map coming back, which keeps it a nudge and not a nag: a level opened for another look
-  and backed out of says nothing, a replay that does no better says nothing, and every star
-  that leaves you still short says how much closer you are.
+  cannot afford and a card comes up over the map once the pig has settled: the padlock its
+  signpost is wearing, your stars against its price, and one line — *You need two more stars
+  to play this level.* Nothing else, because there is nothing else to say: the trail behind
+  you is all open and every stop on it is worth another go. It is raised on a star being won
+  rather than on the map coming back, which keeps it a nudge and not a nag: a level opened
+  for another look and backed out of says nothing, a replay that does no better says nothing,
+  and every star that leaves you still short says how much closer you are.
 - **The pig walks there.** Come back from a level you have just beaten and it sets off up
   a length of trail that was not there before, the map scrolling along behind it, and the
   mist pulls back off the signpost it arrives at.
@@ -2092,7 +2093,7 @@ Pigpen/
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
 │   ├── WorldTrail.swift         # Stops ↔ points on screen, and the curve between them
 │   ├── LevelSignpost.swift      # One stop on the map: stars — rainbow for a best pen — number, name
-│   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and where the rest are
+│   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and how many more you need
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing

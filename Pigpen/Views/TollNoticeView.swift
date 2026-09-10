@@ -1,13 +1,14 @@
 import SwiftUI
 
-/// The notice the map puts up over a boss nobody can pay for yet: the price, the stars
-/// against it, and the one thing there is to do about it.
+/// The notice the map puts up over a boss nobody can pay for yet: what is shut, the stars
+/// against its price, and how many more of them there are to find.
 ///
 /// Laid out the way the game's other offers are — a name on the page, and under it one card
 /// that is only the thing being said — because it is the same kind of interruption and ought
-/// to look like one. What it must never read as is a wall: the trail behind the player is
-/// full of pens worth bettering, every one of them open, and the sentence that says so is
-/// the whole point of the card.
+/// to look like one. It says its one line and stops: a player who has just been told they
+/// are two stars short does not also need telling where stars come from, and the map behind
+/// the card — every stop on it open, every one of them worth another go — says that better
+/// than a paragraph would.
 @MainActor
 struct TollNoticeView: View {
     @Environment(\.dismiss) private var dismiss
@@ -70,7 +71,8 @@ struct TollNoticeView: View {
         .padding(.bottom, 16)
     }
 
-    /// The lock, the running count against the price, and what to do about the difference.
+    /// The lock, the running count against the price, and the one line that says what the
+    /// difference between them comes to.
     private var card: some View {
         VStack(spacing: 14) {
             gate
@@ -79,12 +81,6 @@ struct TollNoticeView: View {
             Text(shortfall)
                 .font(.system(size: 15, weight: .heavy))
                 .foregroundStyle(GamePalette.post)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(remedy)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(GamePalette.post.opacity(0.75))
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -98,7 +94,7 @@ struct TollNoticeView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
-            // A wider gap than the lines above it: what is being read ends here.
+            // A wider gap than the line above it: what is being read ends here.
             .padding(.top, 10)
         }
         .frame(maxWidth: .infinity)
@@ -146,16 +142,12 @@ struct TollNoticeView: View {
 
     // MARK: - Words
 
+    /// The whole of what the card has to say in words: how many stars short of playing this
+    /// level the player is. What the gate costs and what they hold against it are already on
+    /// the tally above, and where the rest of the stars are to be won is the trail itself —
+    /// so the sentence says the one thing neither of those says, and stops.
     private var shortfall: String {
-        "\(notice.boss) wants \(notice.need) stars before it opens, and you have \(notice.have)."
-    }
-
-    /// Where the missing stars are, which is the only part of this the player does not
-    /// already know by the time they are reading it.
-    private var remedy: String {
-        "Every pen below it is held, so \(missing) is all that is left in the way. Go back "
-            + "down the trail and better a pen you rushed — the star that pays the toll "
-            + "opens the boss wherever on the trail you win it."
+        "You need \(missing) to play this level."
     }
 
     /// The shortfall in words, since a sentence reads better with one and the tally above it
