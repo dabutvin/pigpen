@@ -509,8 +509,18 @@ struct FieldView: View {
     }
 
     /// The water, drawn as one body of it rather than tile by tile: a lake with its
-    /// outside corners taken off, silt along the bank, and the light on the surface. Water
-    /// is a wall the pen never pays for, so it is worth its looking like one.
+    /// outside corners taken off, silt along the bank, the bank's own shadow lying across
+    /// the surface, whatever the surface is doing, and a shoreline drawn round the whole of
+    /// it. Water is a wall the pen never pays for, so it is worth its looking like one.
+    ///
+    /// It used to be told apart from the ground by its colour and by the marks scattered on
+    /// it, which is enough on a meadow — blue water in a parchment field — and not nearly
+    /// enough on a world whose water and ground are neighbours: pale ice on paler snow,
+    /// duckweed on peat, a canal between grey setts. So the water is drawn as ground that is
+    /// *not there* rather than as ground of another colour. It sits below the field, the
+    /// bank above it throws a shadow down onto it, only the near shore catches any light, and
+    /// the shore is a line rather than a change of colour. That reads at a glance in any
+    /// palette, which is what a wall the player is being given has to do.
     private func drawWater(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
         guard !lake.isEmpty else { return }
 
@@ -521,6 +531,13 @@ struct FieldView: View {
             with: .color(skin.shore.opacity(0.5)),
             lineWidth: board.cell * 0.18
         )
+
+        // What stands on the field rather than lying in it takes no shadow off the bank —
+        // it is the thing casting one — so its shadow goes out onto the ground first, under
+        // where it is about to be drawn.
+        if skin.surface.lie == .standing {
+            drawFootShadow(in: &context, board: board, mass: lake)
+        }
 
         context.fill(
             lake,
@@ -535,12 +552,79 @@ struct FieldView: View {
         var surface = context
         surface.clip(to: lake)
 
-        surface.stroke(
+        switch skin.surface.lie {
+        case .sunken:
+            drawBank(in: &surface, board: board, lake: lake)
+        case .standing:
+            // A dune, a ridge and a crowd each paint their own light on their own tops, and
+            // a bank drawn round them would only flatten what they are standing up out of.
+            surface.stroke(
+                lake,
+                with: .color(skin.waterLight.opacity(0.4)),
+                lineWidth: board.cell * 0.16
+            )
+        }
+        drawSurface(in: &surface, board: board)
+
+        // The shoreline last, so that nothing drawn on the surface runs out over it: one dark
+        // line right on the edge, which is what tells the eye where the ground stops whatever
+        // the two colours either side of it happen to be doing.
+        context.stroke(
             lake,
-            with: .color(skin.waterLight.opacity(0.4)),
+            with: .color(skin.waterDeep.opacity(0.55)),
+            lineWidth: max(1, board.cell * 0.035)
+        )
+    }
+
+    /// The bank, drawn inside the water: the ground standing above the far shore throwing its
+    /// shadow down across the surface, and the near shore taking the light that ground is
+    /// keeping off. Two strokes of the shore's own line, one nudged down into the water and
+    /// one nudged up out of it, so that the shadow lands along the far bank, the light along
+    /// the near one, and neither reaches the other side.
+    ///
+    /// That pairing is the whole of what says a body of water is *set into* the field rather
+    /// than painted onto it — the same reading as a dent in anything else lit from above —
+    /// and it is drawn in the water's own colours, so a mountain tarn is banked in its green
+    /// and a fen channel in its olive.
+    private func drawBank(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
+        // The near shore first: the light gets in at the bottom of the water, where there is
+        // no bank in the way of it.
+        var lit = context
+        lit.translateBy(x: 0, y: -board.cell * 0.07)
+        lit.stroke(
+            lake,
+            with: .color(skin.waterLight.opacity(0.45)),
+            lineWidth: board.cell * 0.14
+        )
+
+        // Then the bank above, laid over it: hard where the ground drops in, and thinning as
+        // it reaches out over the water, which is as far as a bank of that height would throw.
+        var shade = context
+        shade.translateBy(x: 0, y: board.cell * 0.09)
+        shade.stroke(
+            lake,
+            with: .color(skin.waterDeep.opacity(0.5)),
+            lineWidth: board.cell * 0.18
+        )
+        shade.translateBy(x: 0, y: board.cell * 0.10)
+        shade.stroke(
+            lake,
+            with: .color(skin.waterDeep.opacity(0.28)),
             lineWidth: board.cell * 0.16
         )
-        drawSurface(in: &surface, board: board)
+    }
+
+    /// The shadow a mass standing on the field throws onto the ground below it — a dune, a
+    /// pressure ridge, a crowd. It is the bank's shadow the other way up: laid outside the
+    /// shape instead of inside it, so the tiles read as something standing off the board
+    /// rather than as ground somebody painted another colour.
+    private func drawFootShadow(in context: inout GraphicsContext, board: BoardGeometry, mass: Path) {
+        var ground = context
+        ground.clip(to: mass, options: .inverse)
+        ground.translateBy(x: 0, y: board.cell * 0.09)
+        ground.stroke(mass, with: .color(.black.opacity(0.20)), lineWidth: board.cell * 0.18)
+        ground.translateBy(x: 0, y: board.cell * 0.09)
+        ground.stroke(mass, with: .color(.black.opacity(0.10)), lineWidth: board.cell * 0.16)
     }
 
     /// Every tile the map has water on. They are drawn as one lake, so the shape of the
