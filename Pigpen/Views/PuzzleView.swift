@@ -483,6 +483,7 @@ struct PuzzleView: View {
         Button {
             action()
             Haptics.tap(.soft)
+            Sounds.play(.press)
         } label: {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
@@ -825,9 +826,11 @@ struct PuzzleView: View {
                 return
             }
             Haptics.tap(.rigid)
+            Sounds.play(.fenceIn)
         case .clearing:
             guard game.clearFence(on: stroke.tile) else { return }
             Haptics.tap(.light)
+            Sounds.play(.fenceOut)
         }
     }
 
@@ -841,6 +844,7 @@ struct PuzzleView: View {
             clock?.setElapsed(heldIn)
         }
         Haptics.tap(.soft)
+        Sounds.play(.press)
     }
 
     /// Says no to a tile the map or the budget will not take, once per press: a finger
@@ -850,6 +854,7 @@ struct PuzzleView: View {
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
         Haptics.buzz(.warning)
+        Sounds.play(.refusal)
     }
 
     /// Floats a word off the tile a finger just landed on, once per press: a drag that
@@ -860,6 +865,7 @@ struct PuzzleView: View {
         refusedThisPress = true
         callout = FieldCallout(tile: tile, said: words)
         Haptics.tap(.soft)
+        Sounds.play(.callout)
         UIAccessibility.post(notification: .announcement, argument: words)
     }
 
@@ -907,6 +913,7 @@ struct PuzzleView: View {
             guard !Task.isCancelled else { return }
             reveal()
             Haptics.buzz(.error)
+            Sounds.play(.pigAway)
         case .refused(_, let refusal):
             // Which rule was broken rather than only that one was: a briefing nobody takes
             // in reads on the charts as the same refusal over and over on the same board.
@@ -919,6 +926,7 @@ struct PuzzleView: View {
             guard !Task.isCancelled else { return }
             reveal()
             Haptics.buzz(.error)
+            Sounds.play(.pigAway)
         case .penned(let pen):
             // The clock stops on the pen holding rather than on the card coming up, so the
             // lap of honour is not charged to the player.
@@ -967,6 +975,7 @@ struct PuzzleView: View {
             guard await Task.pausing(for: .milliseconds(350)) else { return }
             reveal()
             Haptics.buzz(.success)
+            Sounds.play(.penHeld)
             return
         }
 
@@ -976,6 +985,7 @@ struct PuzzleView: View {
         guard await cheer.waitOut() else { return }
         reveal()
         Haptics.buzz(.success)
+        Sounds.play(.penHeld)
 
         await cheer.waitForTheConfetti()
         celebration = nil

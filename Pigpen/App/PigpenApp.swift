@@ -245,6 +245,9 @@ struct PigpenApp: App {
                 }
             }
             .task {
+                // Readied now rather than on the first fence, so that the first fence goes
+                // in with its knock rather than a beat behind it while the files open.
+                _ = Sounds.shared
                 guard !Self.isPhotographing(launch) else { return }
                 Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
                 // Reconcile the full game with the App Store and then listen for anything it

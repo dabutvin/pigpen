@@ -29,6 +29,8 @@ targets:
     resources:
       - path: Pigpen/Resources/Assets.xcassets
       - path: Pigpen/Resources/PrivacyInfo.xcprivacy
+      # Every noise the game makes, written by Tools/generate_sounds.py and played by name.
+      - path: Pigpen/Resources/Sounds
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pigpen.app

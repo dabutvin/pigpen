@@ -1187,12 +1187,19 @@ opening film is owed separately and still plays on the first **Play**, so the wa
 teaches the fencing and the film says what the fencing is for.
 
 A gear in the corner opens settings, which holds the version number, every film in the game,
-a switch for the buzzing, a switch for the daily reminder and one red button. **Watch every
-cut scene** plays the lot end to end, a tap for the next and a swipe back for the one before
-— see [the cut scenes](#the-cut-scenes). **Haptics** turns off every buzz
+a switch for the noises, a switch for the buzzing, a switch for the daily reminder and one
+red button. **Watch every cut scene** plays the lot end to end, a tap for the next and a
+swipe back for the one before — see [the cut scenes](#the-cut-scenes). **Sounds** turns off
+every noise in the game — the knock as a post goes into the ground, the pop as one comes
+back up, the hum of the rack refusing a piece, the four notes climbing when a pen holds and
+the two stepping down when the pig gets away — for a quiet carriage or a sleeping child; the
+noises also follow the ring/silent switch on the side of the phone, and sit under whatever
+the player already has playing rather than stopping it. **Haptics** turns off every buzz
 in the game — the tap as a piece of fencing goes into the ground, the verdict when the gate
-is opened — for a phone on a table or a battery being nursed; it is on as the game comes, it
-is remembered, and flicking it on gives the tap it is promising straight away. **The daily
+is opened — for a phone on a table or a battery being nursed. Both are on as the game comes,
+both are remembered, and flicking either on gives the thing it is promising straight away.
+They are two switches because the two reasons are two: a phone on a table wants the buzz
+off and the sound on, and the carriage wants it the other way round. **The daily
 puzzle reminder** is whether the game says so when a new board goes up and at what hour, and
 it admits it plainly when the phone has stopped passing them on. Clearing all game data
 throws away every star and every day completed, and shuts the trail back to its first level,
@@ -1452,7 +1459,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Thirty signals, all of them written out in one place —
+**What goes out.** Thirty-four signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1473,7 +1480,8 @@ is filling in Apple's privacy questionnaire.
 | `Reminder.followed` | A reminder tapped, and the morning's board it opened |
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
-| `Settings.opened` / `.dataCleared` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear |
+| `Settings.opened` / `.dataCleared` / `.soundsSwitched` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear, and its switches — the noises, the buzzing and the counting |
+| `Dressing.opened` / `.outfitWorn` | The dressing barn, which door it was opened through, and what the pig was put in |
 | `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
 | `Store.offerShown` / `.purchase` / `.restore` | The offer of the full game, which wall raised it, and how the buying went |
 | `Rating.asked` | Apple's own rating prompt asked for, and which high point asked for it |
@@ -1764,6 +1772,30 @@ python3 Tools/generate_app_icon.py
 ```
 
 Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the script; the shapes are one SVG shared by all three. Commit the regenerated PNGs — the build reads them, not the script.
+
+### Sounds
+
+Nothing in the game is recorded. Every noise is a few oscillators and an envelope, the way the icon is a few shapes, so a sound can be tuned by changing a figure and running the script again. `Tools/generate_sounds.py` writes one short WAV per sound into `Pigpen/Resources/Sounds/` and needs nothing beyond the standard library:
+
+```bash
+python3 Tools/generate_sounds.py
+```
+
+The nine sounds, and the moments they belong to:
+
+| File | Moment | Made of |
+|---|---|---|
+| `fence-in` | A post going into the ground | A sine dropping from 190 to 140 Hz under a burst of dull noise |
+| `fence-out` | A piece pulled back up | The same turned over: a quick rise from 420 to 680 Hz |
+| `refusal` | The field or the budget saying no | Two low hums a beat apart, two notes a few hertz apart in each |
+| `callout` | A word floating off a tile, a signpost unveiled, an outfit put on | One triangle-wave blip, A5 up to D6 |
+| `press` | A button taking a press, a page turning | A five-hundredth of a second of tick |
+| `hop` | An animal landing on its lap of honour | A soft triangle wave falling from 320 to 170 Hz |
+| `pen-held` | The gate shut on a pen that holds | C5, E5, G5, C6, each a triangle with a sine an octave up |
+| `pig-away` | The gate opened on a gap, or a boss's rule broken | E4 then C4 wilting to B3, a soft sawtooth with a wobble on it |
+| `fanfare` | A new world opening, or the full game bought | The climb again, faster, and the chord it was climbing to |
+
+`Sound` in `Pigpen/Views/Sounds.swift` names each one after its moment rather than its noise, and its raw value is the file name, so `SoundsTests` can check that every case has a file in the bundle. The game plays them through the ambient audio session: they sit under whatever the player already has on rather than stopping it, and they go quiet with the ring/silent switch. Commit the regenerated WAVs — the build reads them, not the script.
 
 ### Adding a level
 
@@ -2153,8 +2185,9 @@ Pigpen/
 │   │   └── ThornwoodFilm.swift  # Thornwood Thicket's nine, and the canopy, trunks, shafts and mountain it wanted
 │   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
 │   ├── FullGameOffer.swift      # The offer of the full game: what it opens, the price, the buy and the restore
-│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the way into the dressing barn, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the way into the dressing barn, the sound and haptics switches, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
+│   ├── Sounds.swift             # Every noise in the game, named for its moment, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
@@ -2178,6 +2211,7 @@ Pigpen/
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
+    ├── Sounds/                  # Generated: one short WAV for every noise the game makes
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
     └── Pigpen.entitlements
 PigpenTests/                     # Unit tests, including the generated daily almanac fixtures
@@ -2192,6 +2226,7 @@ docs/                            # The shots at the top of this README
 Tools/
 ├── generate_app_icon.py         # Redraws the app icon PNGs
 ├── generate_wordmark.py         # Draws the title screen's sticker as a PNG for the website
+├── generate_sounds.py           # Synthesises every noise the game makes and writes the WAVs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks
 ├── generate_dailies.py          # Writes a year of daily puzzles, and measures what each asks
 ├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API

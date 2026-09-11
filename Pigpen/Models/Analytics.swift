@@ -509,6 +509,13 @@ extension AnalyticsSignal {
         AnalyticsSignal("Settings.hapticsSwitched", ["on": String(on)])
     }
 
+    /// The other switch on the same card. Counted apart from the buzzing because it is
+    /// asked for apart from it: how many players turn the noise off says whether the
+    /// noises are worth having, and the phone's own silent switch is not counted at all.
+    static func soundsSwitched(on: Bool) -> AnalyticsSignal {
+        AnalyticsSignal("Settings.soundsSwitched", ["on": String(on)])
+    }
+
     static func analyticsSwitched(on: Bool) -> AnalyticsSignal {
         AnalyticsSignal("Settings.analyticsSwitched", ["on": String(on)])
     }

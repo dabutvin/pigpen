@@ -2,8 +2,8 @@ import SwiftUI
 import UIKit
 
 /// What is behind the gear on the title screen: which version of the game this is, whether
-/// the phone is allowed to buzz, how far the player has got, and the one button that hands
-/// it all back.
+/// the phone is allowed to make a noise or buzz, how far the player has got, and the one
+/// button that hands it all back.
 ///
 /// Nothing in here is part of playing, but there is enough of it to scroll, so it takes a
 /// screen of its own and gives it all back on the cross — and the button that throws away
@@ -32,6 +32,8 @@ struct SettingsView: View {
     /// The switch the whole game feels through. The shared one by default, since a toggle
     /// wired to anything else would move a switch nothing is listening to.
     @Bindable var haptics: Haptics = .shared
+    /// The switch the whole game is heard through, on the same terms.
+    @Bindable var sounds: Sounds = .shared
     /// The switch everything the game counts goes through, on the same terms as the
     /// buzzing: the shared one, so the toggle moves the thing it names.
     @Bindable var analytics: Analytics = .shared
@@ -410,16 +412,33 @@ struct SettingsView: View {
         .padding(.top, 2)
     }
 
-    /// The buzzing, and the switch that stops it.
+    /// The noises and the buzzing, and the two switches that stop them.
     ///
-    /// Turning it on gives the tap it is promising straight away, so the switch answers in
-    /// the thing it governs rather than in words. Turning it off says nothing, which is the
-    /// whole point of turning it off.
+    /// Turning either on gives the thing it is promising straight away — a knock, a tick —
+    /// so the switch answers in the thing it governs rather than in words. Turning it off
+    /// says nothing, which is the whole point of turning it off.
+    ///
+    /// Two switches rather than one, because the two reasons are two: a phone on a table
+    /// wants the buzz off and the sound on, and a quiet carriage wants it the other way
+    /// round. The sound also follows the phone's own ring/silent switch, and the line under
+    /// it says so, since a switch that is on and a phone that is silent would otherwise
+    /// look like a game that has gone quiet.
     private var feel: some View {
         card {
-            Text("Feel")
+            Text("Sound and feel")
                 .font(.headline.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
+
+            Toggle(isOn: $sounds.isOn) {
+                Text("Sounds")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+            }
+            .tint(GamePalette.clover)
+            .onChange(of: sounds.isOn) { _, on in
+                sounds.play(.press)
+                Analytics.record(.soundsSwitched(on: on))
+            }
 
             Toggle(isOn: $haptics.isOn) {
                 Text("Haptics")
@@ -432,10 +451,15 @@ struct SettingsView: View {
                 Analytics.record(.hapticsSwitched(on: on))
             }
 
-            Text("The little buzz as fencing goes in, a pen holds, or the pig gets away.")
-                .font(.caption2)
-                .foregroundStyle(GamePalette.post.opacity(0.55))
-                .fixedSize(horizontal: false, vertical: true)
+            Text(
+                """
+                The knock and the little buzz as fencing goes in, a pen holds, or the pig \
+                gets away. Sounds follow the ring/silent switch on the side of the phone.
+                """
+            )
+            .font(.caption2)
+            .foregroundStyle(GamePalette.post.opacity(0.55))
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -839,6 +863,13 @@ private func previewHaptics(isOn: Bool = true) -> Haptics {
     Haptics(store: RememberedHaptics(isOn: isOn), engine: RecordedHaptics())
 }
 
+/// The same for the noise: a switch held in memory and a speaker that keeps a list instead
+/// of playing anything, so a preview neither changes the setting nor makes a sound.
+@MainActor
+private func previewSounds(isOn: Bool = true) -> Sounds {
+    Sounds(store: RememberedSounds(isOn: isOn), engine: RecordedSounds())
+}
+
 /// Counting held in memory and going nowhere, so that flicking the toggle in a preview
 /// neither changes the setting on this machine nor puts a preview on the charts.
 @MainActor
@@ -854,6 +885,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
                 reminder: .reminding(),
                 haptics: previewHaptics(),
+                sounds: previewSounds(),
                 analytics: previewAnalytics(),
                 wardrobe: .remembering(.sunHat),
                 fullGame: .locked()
@@ -870,6 +902,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
                 reminder: .reminding(),
                 haptics: previewHaptics(),
+                sounds: previewSounds(),
                 analytics: previewAnalytics(),
                 wardrobe: .remembering(.crown),
                 fullGame: .unlocked()
@@ -884,6 +917,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         daily: DailyProgress(store: RememberedDailyRecords()),
         reminder: .neverAsked(),
         haptics: previewHaptics(),
+        sounds: previewSounds(),
         analytics: previewAnalytics(),
         wardrobe: .remembering()
     )
@@ -895,17 +929,19 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
         reminder: .refused(),
         haptics: previewHaptics(),
+        sounds: previewSounds(),
         analytics: previewAnalytics(),
         wardrobe: .remembering()
     )
 }
 
-#Preview("Haptics off") {
+#Preview("Sounds and haptics off") {
     SettingsView(
         progress: .partWayThrough(),
         daily: DailyProgress(store: RememberedDailyRecords()),
         reminder: .reminding(),
         haptics: previewHaptics(isOn: false),
+        sounds: previewSounds(isOn: false),
         analytics: previewAnalytics(),
         wardrobe: .remembering(.wellies)
     )

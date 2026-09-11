@@ -364,6 +364,7 @@ struct TitleScreenView: View {
 
             Button {
                 Haptics.tap(.light)
+                Sounds.play(.press)
                 showsSettings = true
             } label: {
                 Image(systemName: "gearshape.fill")
@@ -497,6 +498,7 @@ struct TitleScreenView: View {
         VStack(spacing: 14) {
             Button {
                 Haptics.tap(.medium)
+                Sounds.play(.press)
                 play()
             } label: {
                 MenuRow(
@@ -597,6 +599,7 @@ struct TitleScreenView: View {
         let streak = daily.streak(upTo: today)
         return Button {
             Haptics.tap(.medium)
+            Sounds.play(.press)
             open(today)
         } label: {
             MenuRow(
@@ -697,6 +700,7 @@ struct TitleScreenView: View {
     ) -> some View {
         Button {
             Haptics.tap(.light)
+            Sounds.play(.press)
             action()
         } label: {
             MenuRow(icon: icon, title: title, detail: detail, tint: GamePalette.cream) {

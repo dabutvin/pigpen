@@ -68,6 +68,7 @@ struct DressingBarnView: View {
 
             Button {
                 haptics.tap(.light)
+                Sounds.play(.press)
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
@@ -213,9 +214,11 @@ struct DressingBarnView: View {
     private func wear(_ outfit: PigOutfit) {
         guard outfit != wardrobe.outfit else {
             haptics.tap(.light)
+            Sounds.play(.press)
             return
         }
         haptics.tap(.medium)
+        Sounds.play(.callout)
         wardrobe.wear(outfit)
         Analytics.record(.outfitWorn(outfit.rawValue))
     }
