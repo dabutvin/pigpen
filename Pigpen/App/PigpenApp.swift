@@ -195,8 +195,11 @@ struct PigpenApp: App {
         case embers = "-embers"
         case pies = "-pies"
         case map = "-map"
-        case laneMap = "-lane-map"
-        case dressing = "-dressing"
+        case toll = "-toll"
+        case barnMap = "-barn-map"
+        case barn = "-barn"
+        case dressedBoard = "-dressed-board"
+        case dressedTitle = "-dressed-title"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -310,23 +313,41 @@ struct PigpenApp: App {
             )
         case .map:
             WorldMapView(progress: .partWayThrough())
-        case .laneMap:
-            // The fork: the orchard penned, the trail climbing on past it, and the lane off
-            // to one side trodden but unplayed — the one shape on any trail in the game that
-            // is not a line, and the only way to photograph it is to stand a world at it.
-            WorldMapView(progress: .atTheLane())
-        case .dressing:
-            // The room at the end of that lane, with something already on her, since an
-            // undressed pig on the stand says nothing the trail does not say. The wellies
-            // rather than a hat: nine of the eleven pegs are on screen under the mirror
-            // already, and the two that are not are the ones worn lowest — so the shot shows
-            // the most of the room by standing one of those on the mirror, and it is the
-            // furthest-hung garment in the wardrobe that most wants looking at.
-            //
-            // Its wardrobe is held in memory for the same reason the reminder's is: nothing a
-            // screenshot runner does should be left standing on the machine that took the
-            // picture.
-            DressingRoomView(wardrobe: .remembering(.wellies))
+        case .toll:
+            // The meadow run out to the top and stopped there: every pen below Stag Mere
+            // held, on twos and threes, and the stars still short of the twenty-one it
+            // asks for. The card the map puts up in that standing is already on screen,
+            // since what is being photographed is the card and not the trail behind it.
+            WorldMapView(progress: .stoppedAtTheToll(), showsTollNotice: true)
+        case .barnMap:
+            // The fork: the orchard penned, the trail climbing on past it, and the barn
+            // standing open off to one side — the one shape on any trail in the game that is
+            // not a line, and the only way to photograph it is to stand a world at it.
+            WorldMapView(progress: .atTheBarn())
+        case .barn:
+            // The barn itself, with something already on her, since an undressed pig on the
+            // stand says nothing the trail does not say. The wellies rather than a hat: nine
+            // of the eleven pegs are on screen under the mirror already, and the two that are
+            // not are the ones worn lowest — so the shot shows the most of the barn by
+            // standing one of those on the mirror, and it is the furthest-hung garment in the
+            // wardrobe that most wants looking at.
+            DressingBarnView(wardrobe: .remembering(.wellies))
+        case .dressedBoard:
+            // What the barn is for, and the half of it the barn itself cannot show: a board
+            // opened by a pig who has been dressed. The outfit is not a thing she wears in
+            // there — it is a thing she wears, and this is the picture that says so.
+            PuzzleView(game: .partWayThrough(), wardrobe: .remembering(.topHat))
+        case .dressedTitle:
+            // The same again out in front of the title, which is the one pig in the game
+            // painted into a canvas rather than drawn as a glyph on a board — a different
+            // piece of drawing, and so worth its own photograph.
+            TitleScreenView(
+                progress: .partWayThrough(),
+                daily: .partWayThroughTheMonth(today: Self.photographed),
+                today: Self.photographed,
+                wardrobe: .remembering(.crown),
+                rating: .neverAsked()
+            )
         case .universe:
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.

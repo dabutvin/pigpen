@@ -121,7 +121,6 @@ struct TitleScreenView: View {
         self.rating = rating
     }
 
-    private var world: WorldMap { progress.world }
     private var hasADailyPuzzle: Bool { DailyAlmanac.holdsAPuzzle(on: today) }
 
     var body: some View {
@@ -525,11 +524,24 @@ struct TitleScreenView: View {
         .offset(y: arrived ? 0 : 26)
     }
 
-    /// What Play has to say for itself under its own name: the world it walks into while the
-    /// meadow is still being held, and the whole universe once it is. How many puzzles that
-    /// world holds used to be said here too, and the line below says more with the same room.
+    /// What Play has to say for itself under its own name: the world the button walks into.
+    ///
+    /// Always a world's own name, wherever the player has got to. Once the meadow is held Play
+    /// opens the universe map rather than a trail, and the map settles on the frontier — so
+    /// naming that world says where Play is about to put you, which *Worlds to fence* never
+    /// did. How many puzzles the world holds used to be said here too, and the line below says
+    /// more with the same room.
     private var playDetail: String {
-        progress.isTheWorldHeld ? "Worlds to fence" : world.name
+        deepestWorld.theme.name
+    }
+
+    /// The furthest world open to the player: the first one not yet held, or the last stop
+    /// there is once the whole chain has been. Worked out from the stars this screen already
+    /// holds, the same way the tally above is — level ids are unique across worlds, so the
+    /// meadow's store is every world's store.
+    private var deepestWorld: UniverseWorld {
+        let universe = Universe.all
+        return universe[universe.frontier(stars: progress.bestStars)]
     }
 
     /// The line under that one: the stars in hand out of the stars there are, and how much of
@@ -648,7 +660,7 @@ struct TitleScreenView: View {
     private func dailyDetail(stars: Int, streak: Int) -> String {
         guard hasADailyPuzzle else { return "None today — update Pigpen for more" }
         guard streak > 1 else { return today.written }
-        return "\(today.written) · \(streak) days in a row"
+        return "\(today.written) · \(streak) days"
     }
 
     /// Opens a day's board, exactly as it was left.

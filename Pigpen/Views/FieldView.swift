@@ -464,13 +464,17 @@ struct FieldView: View {
     /// between the tiles, and whatever fencing has been laid. All of it is kept inside the
     /// board's rim, so the corners of the map are rounded off rather than cut square.
     private func draw(in context: inout GraphicsContext, board: BoardGeometry) {
-        let lake = run(of: waterTiles, board: board, radius: board.cell * 0.42)
+        let water = waterTiles
+        let lake = run(of: water, board: board, radius: board.cell * 0.42)
+        // The bank is the lake's own edge and nothing else, so that everything drawn along it
+        // follows the shore rather than the tiles the shore happens to be made of.
+        let bank = shore(of: water, board: board, radius: board.cell * 0.42)
 
         var field = context
         field.clip(to: rim(board))
 
         drawGround(in: &field, board: board)
-        drawWater(in: &field, board: board, lake: lake)
+        drawWater(in: &field, board: board, lake: lake, bank: bank)
         drawGridLines(in: &field, board: board, lake: lake)
         drawFences(in: &field, board: board)
 
@@ -514,18 +518,40 @@ struct FieldView: View {
     }
 
     /// The water, drawn as one body of it rather than tile by tile: a lake with its
-    /// outside corners taken off, silt along the bank, and the light on the surface. Water
-    /// is a wall the pen never pays for, so it is worth its looking like one.
-    private func drawWater(in context: inout GraphicsContext, board: BoardGeometry, lake: Path) {
+    /// outside corners taken off, silt along the bank, the bank's own shadow lying across
+    /// the surface, whatever the surface is doing, and a shoreline drawn round the whole of
+    /// it. Water is a wall the pen never pays for, so it is worth its looking like one.
+    ///
+    /// It used to be told apart from the ground by its colour and by the marks scattered on
+    /// it, which is enough on a meadow — blue water in a parchment field — and not nearly
+    /// enough on a world whose water and ground are neighbours: pale ice on paler snow,
+    /// duckweed on peat, a canal between grey setts. So the water is drawn as ground that is
+    /// *not there* rather than as ground of another colour. It sits below the field, the
+    /// bank above it throws a shadow down onto it, only the near shore catches any light, and
+    /// the shore is a line rather than a change of colour. That reads at a glance in any
+    /// palette, which is what a wall the player is being given has to do.
+    private func drawWater(
+        in context: inout GraphicsContext,
+        board: BoardGeometry,
+        lake: Path,
+        bank: Path
+    ) {
         guard !lake.isEmpty else { return }
 
         // Laid on the ground first and then covered over by the water itself, which leaves
         // the silt showing only on the bank.
         context.stroke(
-            lake,
+            bank,
             with: .color(skin.shore.opacity(0.5)),
             lineWidth: board.cell * 0.18
         )
+
+        // What stands on the field rather than lying in it takes no shadow off the bank —
+        // it is the thing casting one — so its shadow goes out onto the ground first, under
+        // where it is about to be drawn.
+        if skin.surface.lie == .standing {
+            drawFootShadow(in: &context, board: board)
+        }
 
         context.fill(
             lake,
@@ -540,12 +566,154 @@ struct FieldView: View {
         var surface = context
         surface.clip(to: lake)
 
-        surface.stroke(
-            lake,
-            with: .color(skin.waterLight.opacity(0.4)),
-            lineWidth: board.cell * 0.16
-        )
+        switch skin.surface.lie {
+        case .sunken:
+            drawBank(in: &surface, board: board)
+        case .standing:
+            // A dune, a ridge and a crowd each paint their own light on their own tops, and
+            // a bank drawn round them would only flatten what they are standing up out of.
+            surface.stroke(
+                bank,
+                with: .color(skin.waterLight.opacity(0.4)),
+                lineWidth: board.cell * 0.16
+            )
+        }
         drawSurface(in: &surface, board: board)
+
+        // The shoreline last, so that nothing drawn on the surface runs out over it: one dark
+        // line right on the edge, which is what tells the eye where the ground stops whatever
+        // the two colours either side of it happen to be doing.
+        context.stroke(
+            bank,
+            with: .color(skin.waterDeep.opacity(0.55)),
+            lineWidth: max(1, board.cell * 0.035)
+        )
+    }
+
+    /// The bank, drawn inside the water: the ground standing above the far shore throwing its
+    /// shadow down across the surface, the two sides shaded more lightly the way the walls of
+    /// any hollow are, and the near shore taking the light all three of them are keeping off.
+    ///
+    /// That is the whole of what says a body of water is *set into* the field rather than
+    /// painted onto it — the same reading as a dent in anything else lit from above — and it
+    /// is done in the water's own colours, so a mountain tarn is banked in its green and a fen
+    /// channel in its olive.
+    ///
+    /// Each band is a wash off one edge of one tile, laid only where that edge has ground on
+    /// the far side of it. Which means a bank is only ever drawn where there is a bank: two
+    /// tiles of water meeting have nothing between them, and the wash on a tile at the turn of
+    /// the shore is cropped by the water's own rounded corner, since all of this is drawn
+    /// inside it.
+    private func drawBank(in context: inout GraphicsContext, board: BoardGeometry) {
+        let water = waterTiles
+
+        for tile in water {
+            let rect = board.rect(for: tile)
+
+            if banked(tile, .up, in: water) {
+                wash(
+                    in: &context, off: .up, of: rect,
+                    reaching: board.cell * 0.34, colour: skin.waterDeep, strength: 0.6
+                )
+            }
+            for side in [Direction.left, .right] where banked(tile, side, in: water) {
+                wash(
+                    in: &context, off: side, of: rect,
+                    reaching: board.cell * 0.2, colour: skin.waterDeep, strength: 0.32
+                )
+            }
+            // The near shore last, so that the light on it is the light and not what is left
+            // of it after the sides have been laid over the top.
+            if banked(tile, .down, in: water) {
+                wash(
+                    in: &context, off: .down, of: rect,
+                    reaching: board.cell * 0.22, colour: skin.waterLight, strength: 0.5
+                )
+            }
+        }
+    }
+
+    /// The shadow a mass standing on the field throws onto the ground below it — a dune, a
+    /// pressure ridge, a crowd. It is the bank the other way up: laid outside the shape rather
+    /// than inside it, and heaviest under the near side, which is the side a shadow falls on
+    /// when the light is where this game always keeps it. What it buys is that the tiles read
+    /// as something standing off the board rather than as ground painted another colour.
+    private func drawFootShadow(in context: inout GraphicsContext, board: BoardGeometry) {
+        let mass = waterTiles
+
+        for tile in mass {
+            let rect = board.rect(for: tile)
+
+            if banked(tile, .down, in: mass) {
+                wash(
+                    in: &context, off: .down, of: rect,
+                    reaching: -board.cell * 0.24, colour: .black, strength: 0.22
+                )
+            }
+            for side in [Direction.left, .right] where banked(tile, side, in: mass) {
+                wash(
+                    in: &context, off: side, of: rect,
+                    reaching: -board.cell * 0.12, colour: .black, strength: 0.12
+                )
+            }
+        }
+    }
+
+    /// Whether one edge of a tile is a bank: ground of the board on the far side of it, rather
+    /// than more of the same water or the world off the edge of the map.
+    private func banked(_ tile: GridPoint, _ edge: Direction, in water: Set<GridPoint>) -> Bool {
+        let step = tile.stepped(edge)
+        return !water.contains(step) && level.contains(step)
+    }
+
+    /// A wash off one edge of a tile: full strength against the edge and gone by the end of its
+    /// reach. A reach over the tile itself lies inside the water; a reach the other way lies out
+    /// on the ground beyond it.
+    private func wash(
+        in context: inout GraphicsContext,
+        off edge: Direction,
+        of rect: CGRect,
+        reaching reach: CGFloat,
+        colour: Color,
+        strength: Double
+    ) {
+        // The edge itself, and the way one unit of reach lies off it.
+        let line: CGRect
+        let across: CGVector
+        switch edge {
+        case .up:
+            line = CGRect(x: rect.minX, y: rect.minY, width: rect.width, height: 0)
+            across = CGVector(dx: 0, dy: 1)
+        case .down:
+            line = CGRect(x: rect.minX, y: rect.maxY, width: rect.width, height: 0)
+            across = CGVector(dx: 0, dy: -1)
+        case .left:
+            line = CGRect(x: rect.minX, y: rect.minY, width: 0, height: rect.height)
+            across = CGVector(dx: 1, dy: 0)
+        case .right:
+            line = CGRect(x: rect.maxX, y: rect.minY, width: 0, height: rect.height)
+            across = CGVector(dx: -1, dy: 0)
+        }
+
+        let far = CGPoint(
+            x: line.midX + across.dx * reach,
+            y: line.midY + across.dy * reach
+        )
+        let band = CGRect(
+            x: min(line.minX, line.minX + across.dx * reach),
+            y: min(line.minY, line.minY + across.dy * reach),
+            width: line.width + abs(across.dx * reach),
+            height: line.height + abs(across.dy * reach)
+        )
+
+        context.fill(
+            Path(band),
+            with: .linearGradient(
+                Gradient(colors: [colour.opacity(strength), colour.opacity(0)]),
+                startPoint: CGPoint(x: line.midX, y: line.midY),
+                endPoint: far
+            )
+        )
     }
 
     /// Every tile the map has water on. They are drawn as one lake, so the shape of the
@@ -1609,6 +1777,32 @@ struct FieldView: View {
     /// the edge of the map counts as part of the run, so a river that reaches the rim of
     /// the board is not rounded away from it.
     private func run(of tiles: Set<GridPoint>, board: BoardGeometry, radius: CGFloat) -> Path {
+        outline(of: tiles, board: board, radius: radius, sidesFacingOut: false)
+    }
+
+    /// The same run, drawn as its shore alone: every side of it that faces something else, and
+    /// none of the sides where one tile of it meets the next.
+    ///
+    /// This is the path to stroke rather than the one to fill. A run is built a tile at a time,
+    /// which fills as one sheet with no seam anywhere in it — but stroking it draws the outline
+    /// of every tile in it, the shared edges in the middle included, and a lake with a line
+    /// ruled across it at every tile boundary is exactly the spreadsheet the run is built to
+    /// avoid. So the bank, its shadow and the shoreline are all laid along this instead, and
+    /// what they follow is the water's own edge.
+    private func shore(of tiles: Set<GridPoint>, board: BoardGeometry, radius: CGFloat) -> Path {
+        outline(of: tiles, board: board, radius: radius, sidesFacingOut: true)
+    }
+
+    /// Walks the edge of a run of tiles, either all the way round each tile — which closes into
+    /// one filled sheet — or along the sides that face out of the run only, which leaves the
+    /// shore and nothing else. Both take the corner off wherever the run actually turns, so a
+    /// line laid along the shore sits on the shape the fill makes.
+    private func outline(
+        of tiles: Set<GridPoint>,
+        board: BoardGeometry,
+        radius: CGFloat,
+        sidesFacingOut: Bool
+    ) -> Path {
         func belongs(_ row: Int, _ column: Int) -> Bool {
             let tile = GridPoint(row: row, column: column)
             return tiles.contains(tile) || !level.contains(tile)
@@ -1627,36 +1821,69 @@ struct FieldView: View {
             let bottomRight = down || right ? 0 : radius
             let bottomLeft = down || left ? 0 : radius
 
-            path.move(to: CGPoint(x: rect.minX + topLeft, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.maxX - topRight, y: rect.minY))
-            if topRight > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.maxX, y: rect.minY + topRight),
-                    control: CGPoint(x: rect.maxX, y: rect.minY)
-                )
+            // Where the pen is, if it is down. A side the run carries on through lifts it, and
+            // the next side that is drawn puts it down again where that side starts — which is
+            // what leaves the shared edges out without breaking the ones either side of them.
+            var pen: CGPoint?
+
+            /// One side of the tile and the corner it turns at the end of it. `facing` is what
+            /// is on the far side of it: another tile of the run, or something else.
+            func side(
+                facing neighbour: Bool,
+                from start: CGPoint,
+                to end: CGPoint,
+                corner: CGFloat,
+                turning pivot: CGPoint,
+                onto next: CGPoint
+            ) {
+                guard !(sidesFacingOut && neighbour) else {
+                    pen = nil
+                    return
+                }
+                if pen != start { path.move(to: start) }
+                path.addLine(to: end)
+                if corner > 0 {
+                    path.addQuadCurve(to: next, control: pivot)
+                    pen = next
+                } else {
+                    pen = end
+                }
             }
-            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - bottomRight))
-            if bottomRight > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY),
-                    control: CGPoint(x: rect.maxX, y: rect.maxY)
-                )
-            }
-            path.addLine(to: CGPoint(x: rect.minX + bottomLeft, y: rect.maxY))
-            if bottomLeft > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft),
-                    control: CGPoint(x: rect.minX, y: rect.maxY)
-                )
-            }
-            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + topLeft))
-            if topLeft > 0 {
-                path.addQuadCurve(
-                    to: CGPoint(x: rect.minX + topLeft, y: rect.minY),
-                    control: CGPoint(x: rect.minX, y: rect.minY)
-                )
-            }
-            path.closeSubpath()
+
+            side(
+                facing: up,
+                from: CGPoint(x: rect.minX + topLeft, y: rect.minY),
+                to: CGPoint(x: rect.maxX - topRight, y: rect.minY),
+                corner: topRight,
+                turning: CGPoint(x: rect.maxX, y: rect.minY),
+                onto: CGPoint(x: rect.maxX, y: rect.minY + topRight)
+            )
+            side(
+                facing: right,
+                from: CGPoint(x: rect.maxX, y: rect.minY + topRight),
+                to: CGPoint(x: rect.maxX, y: rect.maxY - bottomRight),
+                corner: bottomRight,
+                turning: CGPoint(x: rect.maxX, y: rect.maxY),
+                onto: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY)
+            )
+            side(
+                facing: down,
+                from: CGPoint(x: rect.maxX - bottomRight, y: rect.maxY),
+                to: CGPoint(x: rect.minX + bottomLeft, y: rect.maxY),
+                corner: bottomLeft,
+                turning: CGPoint(x: rect.minX, y: rect.maxY),
+                onto: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft)
+            )
+            side(
+                facing: left,
+                from: CGPoint(x: rect.minX, y: rect.maxY - bottomLeft),
+                to: CGPoint(x: rect.minX, y: rect.minY + topLeft),
+                corner: topLeft,
+                turning: CGPoint(x: rect.minX, y: rect.minY),
+                onto: CGPoint(x: rect.minX + topLeft, y: rect.minY)
+            )
+
+            if !sidesFacingOut { path.closeSubpath() }
         }
         return path
     }

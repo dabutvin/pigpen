@@ -390,6 +390,18 @@ extension AnalyticsSignal {
         )
     }
 
+    /// A player stopped at the top of a world by a toll they cannot pay: every pen below the
+    /// boss held, and not the stars to open it. The other end of the same funnel `World.held`
+    /// closes — how many players get all the way up a trail and are turned back at the gate,
+    /// and by how much — which is the one number that says whether a toll is set right.
+    static func tollShort(_ world: String, stars: Int, of toll: Int) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "World.tollShort",
+            ["world": world, "stars": String(stars), "of": String(toll)],
+            value: Double(max(toll - stars, 0))
+        )
+    }
+
     /// Every pen in a world held. The end of the funnel, and the rarest signal the game has.
     static func worldHeld(_ world: String, stars: Int, of total: Int) -> AnalyticsSignal {
         AnalyticsSignal(

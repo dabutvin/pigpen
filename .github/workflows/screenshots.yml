@@ -154,11 +154,19 @@ jobs:
           # at the end of the gallery rather than renumbering every shot above it.
           capture 69 universe_locked -universe-locked
 
-          # The lane off the orchard — the one fork on any trail in the game — and the
-          # dressing room at the end of it, with something already on the pig. Numbered high
-          # for the same reason the shot above is: so nothing already in the gallery shifts.
-          capture 71 lane_map -lane-map
-          capture 73 dressing -dressing
+          # The word the map gives a player who has run the trail out and cannot pay the
+          # boss's price. Numbered high for the same reason as the shot above it.
+          capture 71 toll -toll
+
+          # The fork off the orchard — the one branch on any trail in the game — and the
+          # dressing barn at the end of it, with something already on the pig. Then the two
+          # that prove an outfit is not only worn in the barn: a board and the title screen,
+          # both opened on a pig who has been dressed. Numbered high for the same reason the
+          # shots above are, so nothing already in the gallery shifts.
+          capture 73 barn_map -barn-map
+          capture 75 barn -barn
+          capture 77 dressed_board -dressed-board
+          capture 79 dressed_title -dressed-title
 
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock
