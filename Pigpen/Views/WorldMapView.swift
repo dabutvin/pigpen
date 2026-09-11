@@ -430,6 +430,7 @@ struct WorldMapView: View {
     private func visit(_ index: Int) {
         guard progress.isUnlocked(index), !walking else { return }
         Haptics.tap(.medium)
+        Sounds.play(.press)
 
         Task {
             await walk(to: Double(index), secondsPerStop: 0.3)
@@ -452,6 +453,7 @@ struct WorldMapView: View {
     private func openTheBarn(_ spur: WorldSpur) {
         guard progress.isOpen(spur) else { return }
         Haptics.tap(.medium)
+        Sounds.play(.press)
         isDressingUp = true
     }
 
@@ -563,6 +565,7 @@ struct WorldMapView: View {
     private func celebrate(_ index: Int) {
         guard progress.isUnlocked(index), !progress.isCleared(index) else { return }
         Haptics.buzz(.success)
+        Sounds.play(.callout)
 
         guard !reduceMotion else { return }
         withAnimation(.spring(duration: 0.45, bounce: 0.55)) { unveiled = index }

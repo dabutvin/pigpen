@@ -215,11 +215,13 @@ struct TutorialView: View {
             Button {
                 if lesson.step == .finished {
                     Haptics.tap(.medium)
+                    Sounds.play(.press)
                     reachedTheMeadow = true
                     Analytics.record(.tutorialFinished)
                     dismiss()
                 } else if lesson.continueTapped() {
                     Haptics.tap(.light)
+                    Sounds.play(.press)
                 }
             } label: {
                 Text(lesson.step == .finished ? "Play" : "Continue")
@@ -273,6 +275,7 @@ struct TutorialView: View {
             return
         }
         Haptics.tap(.rigid)
+        Sounds.play(.fenceIn)
     }
 
     /// One refusal per press, whichever thing is doing the shaking: a drag that crosses six
@@ -282,6 +285,7 @@ struct TutorialView: View {
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { shake() }
         Haptics.buzz(.warning)
+        Sounds.play(.refusal)
     }
 
     private func reactToPhase() async {
@@ -295,6 +299,7 @@ struct TutorialView: View {
             // somehow opened early — walk the pig out and leave the coach where it is.
             guard await walk(escapes.first?.route ?? []) else { return }
             Haptics.buzz(.error)
+            Sounds.play(.pigAway)
         case .penned:
             lesson.reconsider()
             await celebrate()
@@ -302,6 +307,7 @@ struct TutorialView: View {
             // The practice pen has one animal and no rule to break, so this cannot happen
             // here; the switch is whole so that a new rule cannot pass through unnoticed.
             Haptics.buzz(.error)
+            Sounds.play(.pigAway)
         }
     }
 
@@ -311,6 +317,7 @@ struct TutorialView: View {
         guard !reduceMotion else {
             guard await Task.pausing(for: .milliseconds(350)) else { return }
             Haptics.buzz(.success)
+            Sounds.play(.heldThreeStars)
             return
         }
 
@@ -319,6 +326,9 @@ struct TutorialView: View {
 
         guard await cheer.waitOut() else { return }
         Haptics.buzz(.success)
+        // The practice pen is scripted to hold and holds well, and it is the first pen a
+        // new player hears: the full climb, so the sound of a third star is learned here.
+        Sounds.play(.heldThreeStars)
 
         await cheer.waitForTheConfetti()
         celebration = nil

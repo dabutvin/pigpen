@@ -483,6 +483,7 @@ struct PuzzleView: View {
         Button {
             action()
             Haptics.tap(.soft)
+            Sounds.play(.press)
         } label: {
             Label(title, systemImage: systemImage)
                 .labelStyle(.iconOnly)
@@ -813,7 +814,9 @@ struct PuzzleView: View {
                 // apple that is the whole lesson in one tap: the ground is not refusing the
                 // player, it is telling them there are five points here to shut in.
                 if let treat = level.treat(at: stroke.tile) {
-                    say(treat.pointsSaid, at: stroke.tile)
+                    // Said in its own voice as well as its own words: an apple dings and a
+                    // skull bonks, so the sign is heard before the number is read.
+                    say(treat.pointsSaid, at: stroke.tile, sounding: .tapped(treat))
                 } else if let animal = level.animals.first(where: { $0.tile == stroke.tile }) {
                     // Nor does an animal, and an animal can answer for itself: it hops where
                     // it stands and calls back, rather than the rack shaking at a player who
@@ -825,9 +828,11 @@ struct PuzzleView: View {
                 return
             }
             Haptics.tap(.rigid)
+            Sounds.play(.fenceIn)
         case .clearing:
             guard game.clearFence(on: stroke.tile) else { return }
             Haptics.tap(.light)
+            Sounds.play(.fenceOut)
         }
     }
 
@@ -841,6 +846,7 @@ struct PuzzleView: View {
             clock?.setElapsed(heldIn)
         }
         Haptics.tap(.soft)
+        Sounds.play(.press)
     }
 
     /// Says no to a tile the map or the budget will not take, once per press: a finger
@@ -850,16 +856,18 @@ struct PuzzleView: View {
         refusedThisPress = true
         withAnimation(.easeInOut(duration: 0.4)) { budgetShake += 1 }
         Haptics.buzz(.warning)
+        Sounds.play(.refusal)
     }
 
     /// Floats a word off the tile a finger just landed on, once per press: a drag that
     /// crosses two treats should not stack the same five points twice, and one that crosses
     /// the pig and the deer should not have them both shouting at once.
-    private func say(_ words: String, at tile: GridPoint) {
+    private func say(_ words: String, at tile: GridPoint, sounding sound: Sound = .callout) {
         guard !refusedThisPress else { return }
         refusedThisPress = true
         callout = FieldCallout(tile: tile, said: words)
         Haptics.tap(.soft)
+        Sounds.play(sound)
         UIAccessibility.post(notification: .announcement, argument: words)
     }
 
@@ -907,6 +915,7 @@ struct PuzzleView: View {
             guard !Task.isCancelled else { return }
             reveal()
             Haptics.buzz(.error)
+            Sounds.play(.pigAway)
         case .refused(_, let refusal):
             // Which rule was broken rather than only that one was: a briefing nobody takes
             // in reads on the charts as the same refusal over and over on the same board.
@@ -919,6 +928,7 @@ struct PuzzleView: View {
             guard !Task.isCancelled else { return }
             reveal()
             Haptics.buzz(.error)
+            Sounds.play(.pigAway)
         case .penned(let pen):
             // The clock stops on the pen holding rather than on the card coming up, so the
             // lap of honour is not charged to the player.
@@ -952,7 +962,7 @@ struct PuzzleView: View {
             // the mark's own opacity.
             sendHome()
             showEveryone()
-            await celebrate()
+            await celebrate(verdict)
         }
     }
 
@@ -962,11 +972,15 @@ struct PuzzleView: View {
     ///
     /// A player who would rather the board kept still gets the beat of nothing the pen's
     /// wash used to have to itself, and no confetti.
-    private func celebrate() async {
+    ///
+    /// The verdict picks the tune: a pen that only held gets two notes, and the best pen
+    /// there is gets the whole rainbow, so the ear knows before the card comes up.
+    private func celebrate(_ verdict: PenVerdict) async {
         guard !reduceMotion else {
             guard await Task.pausing(for: .milliseconds(350)) else { return }
             reveal()
             Haptics.buzz(.success)
+            Sounds.play(.held(verdict))
             return
         }
 
@@ -976,6 +990,7 @@ struct PuzzleView: View {
         guard await cheer.waitOut() else { return }
         reveal()
         Haptics.buzz(.success)
+        Sounds.play(.held(verdict))
 
         await cheer.waitForTheConfetti()
         celebration = nil

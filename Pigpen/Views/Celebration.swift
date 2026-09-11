@@ -177,6 +177,7 @@ extension Celebration {
 
             if index < landings.count - 1 {
                 Haptics.tap(.soft)
+                Sounds.play(.hop)
             }
         }
         return true

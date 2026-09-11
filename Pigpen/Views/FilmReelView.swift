@@ -142,6 +142,7 @@ struct FilmReelView: View {
                 HStack(alignment: .top, spacing: 10) {
                     Button {
                         Haptics.tap(.light)
+                        Sounds.play(.press)
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
@@ -218,12 +219,14 @@ struct FilmReelView: View {
     /// move the player made should be felt, where one the reel made itself should not.
     private func moveOn() {
         Haptics.tap(.light)
+        Sounds.play(.press)
         advance()
     }
 
     /// The same, backwards.
     private func moveBack() {
         Haptics.tap(.light)
+        Sounds.play(.press)
         back()
     }
 

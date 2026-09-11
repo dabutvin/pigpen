@@ -55,6 +55,7 @@ struct TollNoticeView: View {
 
             Button {
                 Haptics.tap(.light)
+                Sounds.play(.press)
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
@@ -86,6 +87,7 @@ struct TollNoticeView: View {
 
             Button {
                 Haptics.tap(.medium)
+                Sounds.play(.press)
                 dismiss()
             } label: {
                 Label("Back to the trail", systemImage: "signpost.right.fill")
