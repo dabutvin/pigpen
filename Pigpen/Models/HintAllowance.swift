@@ -119,8 +119,9 @@ final class HintAllowance {
 
     /// How long until `until`, said the way a notice board says it: *in about three hours*,
     /// *in about an hour*, *in twenty minutes*, *in a minute*. Never a clock time, since a
-    /// board in the meadow does not know what time zone the meadow is in.
-    static func said(until: Date, from now: Date) -> String {
+    /// board in the meadow does not know what time zone the meadow is in. Off the main actor,
+    /// since it is arithmetic on two dates and Hamish's lines are put together off it.
+    nonisolated static func said(until: Date, from now: Date) -> String {
         let seconds = max(60, until.timeIntervalSince(now))
         let minutes = Int((seconds / 60).rounded(.up))
         let hours = Int((seconds / 3600).rounded())
@@ -137,7 +138,7 @@ final class HintAllowance {
 
     /// A count in words, up to ninety-nine: *three*, *twenty-four*, *forty-four*. Anything a
     /// day's wait could come to, and digits past that, which nothing here ever asks for.
-    private static func spelled(_ number: Int) -> String {
+    private nonisolated static func spelled(_ number: Int) -> String {
         let ones = [
             "no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
             "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",

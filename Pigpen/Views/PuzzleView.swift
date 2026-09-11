@@ -237,10 +237,10 @@ struct PuzzleView: View {
                     animals: marks,
                     celebration: celebration,
                     callout: callout,
-                    suitor: suitor,
                     onCalloutFinished: { id in
                         if callout?.id == id { callout = nil }
                     },
+                    suitor: suitor,
                     treatSkin: treatSkin,
                     skin: skin,
                     outfit: wardrobe.outfit,
