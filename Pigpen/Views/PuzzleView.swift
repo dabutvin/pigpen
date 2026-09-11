@@ -102,11 +102,10 @@ struct PuzzleView: View {
     /// how solid he is. Nothing until a rose is asked for, and nothing again once the piece
     /// is laid where he stood.
     @State private var suitor: SuitorMark?
-    /// What Hamish said last, on the board above the rack, until it is tapped away or the
-    /// piece is laid. Nothing until he has been asked.
-    @State private var suitorSays: String?
-    /// How many roses he has given on this visit, which picks his line.
-    @State private var rosesGiven = 0
+    /// What Hamish has to say, and what it is about: a bubble over the tile he is standing on
+    /// when he has come out to point at one, and a bubble over his own corner when he has not —
+    /// nothing to add, or no roses left to add it with. Nothing at all until he is asked.
+    @State private var suitorSays: SuitorWord?
     /// His walk onto the board, or his fading off it, so a second rose asked for mid-trot
     /// starts a fresh walk rather than two.
     @State private var suitorWalk: Task<Void, Never>?
@@ -184,7 +183,34 @@ struct PuzzleView: View {
         _roses = State(initialValue: roses)
     }
 
+    /// A word from Hamish, and the thing it is about. Both are said in the same bubble; all
+    /// that differs is what the tail is pointing at.
+    private enum SuitorWord: Equatable {
+        /// Said over the tile he is standing on.
+        case overTheTile(String)
+        /// Said over his own corner, for the words he has no tile to say them on.
+        case byHisCorner(String)
+
+        var words: String {
+            switch self {
+            case .overTheTile(let words), .byHisCorner(let words): words
+            }
+        }
+    }
+
     private var level: PuzzleLevel { game.level }
+
+    /// What he is saying over a tile, when that is where he is saying it.
+    private var saidOverTheTile: String? {
+        if case .overTheTile(let words) = suitorSays { return words }
+        return nil
+    }
+
+    /// What he is saying over his own corner, when he has no tile to say it on.
+    private var saidByHisCorner: String? {
+        if case .byHisCorner(let words) = suitorSays { return words }
+        return nil
+    }
 
     /// Whether Hamish has anything to point at on this board at all: a best pen authored
     /// beside its map. Every trail stop and every daily has one; the practice pen does not,
@@ -218,9 +244,6 @@ struct PuzzleView: View {
                 bossOrders
                     .padding(.horizontal, 16)
 
-                suitorBoard
-                    .padding(.horizontal, 16)
-
                 FenceRack(
                     used: game.fences.count,
                     budget: level.fenceBudget,
@@ -243,6 +266,7 @@ struct PuzzleView: View {
                         if callout?.id == id { callout = nil }
                     },
                     suitor: suitor,
+                    suitorSays: saidOverTheTile,
                     treatSkin: treatSkin,
                     skin: skin,
                     outfit: wardrobe.outfit,
@@ -340,6 +364,14 @@ struct PuzzleView: View {
                 game.startOver()
             }
         }
+        .overlay(alignment: .topLeading) { suitorsCorner }
+        // A word about the roses is news rather than an instruction, so it goes of its own
+        // accord. What he says over a tile stays up until the piece is laid on it.
+        .task(id: saidByHisCorner) {
+            guard saidByHisCorner != nil else { return }
+            guard await Task.pausing(for: .seconds(5)) else { return }
+            withAnimation(.easeInOut(duration: 0.25)) { suitorSays = nil }
+        }
     }
 
     /// The clock, up in the bar with the day's name rather than down on the board: it is
@@ -418,30 +450,39 @@ struct PuzzleView: View {
         }
     }
 
-    /// What Hamish said, on a second painted board under the orders, from the moment he is
-    /// asked until the piece is laid or the board is tapped away. Nothing until then, and
-    /// nothing ever on a board he cannot help on.
+    /// What Hamish says when he has no tile to say it on: he has nothing left to add, or no
+    /// rose left to add it with.
     ///
-    /// It stands where the orders stand rather than over the field, because it is the same
-    /// kind of thing: a line about the field, worth keeping in view while building. Both
-    /// boards up at once — a boss with Hamish out — squeeze the field rather than pushing
-    /// anything off the screen, since the field is the one thing here that gives.
+    /// The same bubble the board gets, with its tail on him down in the corner rather than on
+    /// a square, so that a word about the roses and a word about a tile are plainly the same
+    /// pig talking. It floats over the bottom of the field rather than moving anything, and
+    /// nothing under it is deaf while it is up.
     @ViewBuilder
-    private var suitorBoard: some View {
-        if let suitorSays {
-            noticeBoard(heading: Suitor.name, saying: suitorSays)
-                .accessibilityLabel("\(Suitor.name) says: \(suitorSays)")
-                .accessibilityAddTraits(.isButton)
-                .accessibilityHint("Puts the board away")
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.25)) { self.suitorSays = nil }
+    private var suitorsCorner: some View {
+        if let words = saidByHisCorner {
+            let width: CGFloat = 250
+            Color.clear
+                .frame(width: 1, height: 1)
+                .overlay(alignment: .bottomLeading) {
+                    SuitorTooltip(
+                        words: words,
+                        width: width,
+                        // He stands half a glyph in from the leading edge of the row, and the
+                        // bubble starts at that edge, so its tail has to lean back to him.
+                        tailOffset: 21 - width / 2
+                    )
                 }
+                .offset(y: -3)
+                .allowsHitTesting(false)
+                .transition(
+                    .opacity.combined(with: .scale(scale: 0.92, anchor: .bottomLeading))
+                )
         }
     }
 
-    /// A small painted board: a heading naming the thing, and a line or two under it.
-    /// The orders and whatever Hamish says are both written on one, so the two things the
-    /// field has to say about itself are said in the same hand.
+    /// A small painted board: a heading naming the thing, and a line or two under it. The
+    /// boss's rule is the one thing written on one — it is about the level rather than about
+    /// a square, and it stays up for as long as the level does.
     private func noticeBoard(heading: String, saying words: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(heading)
@@ -954,33 +995,35 @@ struct PuzzleView: View {
         if let suitor, suitor.opacity > 0,
            level.bestPen?.contains(suitor.bound) == true,
            !game.fences.contains(suitor.bound) {
-            show(Suitor.alreadyShowing)
+            putUp(.overTheTile(Suitor.alreadyShowing))
             return
         }
         guard let tile = Suitor.nextPiece(of: level, given: game.fences) else {
-            show(Suitor.nothingToAdd)
+            putUp(.byHisCorner(Suitor.nothingToAdd))
             return
         }
         guard roses.spend(at: now) else {
-            show(Suitor.outOfRoses(until: roses.nextRose(at: now) ?? now, from: now))
+            putUp(.byHisCorner(Suitor.outOfRoses(until: roses.nextRose(at: now) ?? now, from: now)))
             count(given: false)
             return
         }
 
-        rosesGiven += 1
-        var said = Suitor.line(rose: rosesGiven)
+        var said = Suitor.hint
         if game.fencesRemaining == 0 {
             said += Suitor.rackIsEmpty
         }
-        show(said)
+        putUp(.overTheTile(said))
         count(given: true)
 
         suitorWalk?.cancel()
         suitorWalk = Task { await bringHamish(to: tile) }
     }
 
-    private func show(_ words: String) {
-        withAnimation(.easeInOut(duration: 0.25)) { suitorSays = words }
+    /// Puts a word of his up, and reads it out for anybody listening to the screen rather than
+    /// looking at it: a bubble hung off a square says nothing to VoiceOver on its own.
+    private func putUp(_ word: SuitorWord) {
+        withAnimation(.easeInOut(duration: 0.25)) { suitorSays = word }
+        UIAccessibility.post(notification: .announcement, argument: "\(Suitor.name). \(word.words)")
     }
 
     private func count(given: Bool) {

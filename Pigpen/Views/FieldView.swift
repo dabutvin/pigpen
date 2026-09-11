@@ -90,6 +90,10 @@ struct FieldView: View {
     /// Hamish, if he is on the board: a hint asked for, walking in or standing on the tile
     /// the next piece goes on. Nothing during ordinary play.
     var suitor: SuitorMark? = nil
+    /// What he has come to say, in a bubble with its tail on the tile he is standing on. It
+    /// waits until he is there — a bubble towed across the board says nothing useful about
+    /// where it is going — and there is nothing to say when he is not out here at all.
+    var suitorSays: String? = nil
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -164,6 +168,7 @@ struct FieldView: View {
                 confetti(board: board)
                 herd(board: board)
                 saidBack(board: board)
+                suitorWord(board: board, in: proxy.size)
             }
             .contentShape(Rectangle())
             .gesture(
@@ -341,6 +346,46 @@ struct FieldView: View {
             // settled, so a hop never moves it to another square.
             .offset(y: -board.cell * 0.3 * CGFloat(animal.hop))
             .allowsHitTesting(false)
+    }
+
+    /// What Hamish is saying, in a bubble hung off the tile he is standing on.
+    ///
+    /// Over the tile rather than up under the rack, so that what he says and which square he
+    /// means are one thing rather than two. A bubble with no room to the side of its tile is
+    /// shoved back onto the board and leans its tail over to keep pointing at the right
+    /// square; one over the top of the board hangs underneath its tile instead, since there
+    /// is nothing above those rows to hang in.
+    @ViewBuilder
+    private func suitorWord(board: BoardGeometry, in size: CGSize) -> some View {
+        if let suitor, let suitorSays, suitor.tile == suitor.bound {
+            let width: CGFloat = min(max(size.width * 0.66, 160), 250)
+            let center = board.center(of: suitor.bound)
+            let edge: CGFloat = width / 2 + 6
+            let x: CGFloat = size.width > width + 12
+                ? min(max(center.x, edge), size.width - edge)
+                : size.width / 2
+            let below = center.y < board.cell * 1.6
+            let side: Alignment = below ? .top : .bottom
+            let anchor: UnitPoint = below ? .top : .bottom
+
+            // A point of the board with nothing to it, so that the bubble hung off it can be
+            // as tall as its words need without anything having to work out how tall that is.
+            Color.clear
+                .frame(width: 1, height: 1)
+                .overlay(alignment: side) {
+                    SuitorTooltip(
+                        words: suitorSays,
+                        width: width,
+                        tail: below ? .up : .down,
+                        tailOffset: center.x - x
+                    )
+                }
+                .position(x: x, y: center.y + board.cell * (below ? 0.5 : -0.5))
+                .opacity(suitor.opacity)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+                .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: anchor)))
+        }
     }
 
     /// What a press just got back off a tile, rising off it and fading out. Written onto

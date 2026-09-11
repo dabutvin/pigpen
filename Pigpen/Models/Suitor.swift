@@ -11,8 +11,9 @@ import Foundation
 /// somewhere else, and asking twice on the same board gets the same tile until it is filled.
 ///
 /// He is a suitor rather than a coach because a coach would explain. Hamish does not: he says
-/// something fond, points, and the rest of the pen is still hers to find. What keeps him from
-/// giving the whole board away is `HintAllowance` — three roses a day, and the day rolls.
+/// one fond line in a bubble over the square he is standing on, and the rest of the pen is
+/// still hers to find. What keeps him from giving the whole board away is `HintAllowance` —
+/// three roses a day, and the day rolls.
 enum Suitor {
     static let name = "Hamish"
     /// Drawn side-on, so he is never mistaken for her.
@@ -119,29 +120,25 @@ enum Suitor {
 
     // MARK: - What he says
 
-    /// What he says with the nth rose of a visit. Three lines, in turn, so a player who asks
-    /// three times is not told the same thing three times.
-    static func line(rose number: Int) -> String {
-        let lines = [
-            "A rose for you, and a piece just here. Try it, my petal.",
-            "Psst. I'd lay one right here, sweetheart. Don't tell the farmer.",
-            "Here, my love — this is where I'd put the next one."
-        ]
-        return lines[(max(number, 1) - 1) % lines.count]
-    }
+    /// The hint itself, in the bubble over the square he is standing on.
+    ///
+    /// Short, and in his own voice: it is read at a glance off a tooltip the width of a few
+    /// tiles rather than off a board at the top of the screen, and the tail underneath it has
+    /// already said the only thing that matters, which is *where*.
+    static let hint = "Place a fence here, my love."
 
-    /// Asked again while he is still standing on a tile nothing has been laid on.
-    static let alreadyShowing = "He has shown you already, my dear: it goes where he is standing."
+    /// Asked again while he is still standing on a square nothing has been laid on.
+    static let alreadyShowing = "Still right here, my love."
 
     /// Asked on a board that already has every piece of the best pen in it.
-    static let nothingToAdd = "Nothing to add, my love. Every piece of the best pen is already in the ground."
+    static let nothingToAdd = "Nothing left to add, my love. That is the best pen this map has."
 
-    /// Tacked onto a hint given with the rack empty: the piece cannot go down until one comes up.
-    static let rackIsEmpty = " You will have to take a piece back first — the rack is empty."
+    /// Tacked onto the hint when the rack is empty: the piece cannot go down until one comes up.
+    static let rackIsEmpty = " Take a piece back first — the rack is empty."
 
     /// Asked with no roses left, and when the next one comes.
     static func outOfRoses(until next: Date, from now: Date) -> String {
-        "\(name) has given away all his roses for today. He will be back "
+        "No roses left today, my love. I will be back "
             + "\(HintAllowance.said(until: next, from: now))."
     }
 }

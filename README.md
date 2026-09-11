@@ -75,19 +75,27 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   end of the undo row on every trail stop with a count of the roses he has left. Tap him and
   he trots onto the board from the nearest edge, rose in hand, and stands on the tile the next
   piece of the best pen belongs on — the pen the level was authored around, the one that goes
-  rainbow — with something fond on a painted board over the rack: *A rose for you, and a piece
-  just here. Try it, my petal.* Which piece is next is read off the fencing already down, so a
+  rainbow — and a little cream bubble opens over his head with its tail on that very square:
+  *Place a fence here, my love.* Which piece is next is read off the fencing already down, so a
   wall half built is extended rather than started again somewhere else, and asking again
   before the piece is laid gets no new tile and costs no rose. Lay the piece where he stands
   and he blows a kiss off the tile and fades. He never says what to tear out, and he never
   explains: the rest of the pen is still yours to find.
+  What he says is a tooltip rather than a notice: it used to go on the same painted board the
+  boss's rule goes on, up above the rack, which read as a second announcement and left you to
+  work out which square the sentence was about — the pig was on the board and the words were
+  at the top of the screen. The bubble says it where it applies. One with no room beside its
+  tile is shoved back onto the board and leans its tail over to keep pointing; one over the
+  top rows hangs underneath instead.
   **Three roses a day.** Counted from when each was given rather than from midnight — a rose
   given at nine in the evening is back at nine the next evening — so there is no hour at which
   the count snaps back and no clock to game, and the count is yours rather than a level's.
-  With none left he goes dim, and a tap on him says when the next one comes: *He will be back
-  in about three hours.* The daily has him too, since each day's line of the almanac carries
-  the wall of its best pen beside the map; only the practice pen does not, being a lesson.
-  *Clear all game data* gives the roses back with everything else.
+  With none left he goes dim, and a tap on him opens the same bubble over his own corner,
+  since there is no square for it to point at: *No roses left today, my love. I will be back
+  in about three hours.* That one takes itself down after a moment, being news rather than an
+  instruction. The daily has him too, since each day's line of the almanac carries the wall of
+  its best pen beside the map; only the practice pen does not, being a lesson. *Clear all game
+  data* gives the roses back with everything else.
 - **The animals answer.** Nothing takes a fence where an animal is standing, so a tap on one
   used to be turned down the way a spent budget is. Now it hops where it stands and calls back
   — *Oink!*, *Snort!*, *Ta-da!* — off its own tile, the way a tap on an apple says what the
@@ -2188,6 +2196,7 @@ Pigpen/
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
+│   ├── SuitorTooltip.swift      # The cream bubble Hamish speaks in, and the tail that says which square he means
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing
 │   ├── ChromeSkin.swift         # A world's paintwork: the bar over a board, the button that ends a go

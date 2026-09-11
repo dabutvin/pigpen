@@ -201,6 +201,7 @@ struct PigpenApp: App {
         case dressedBoard = "-dressed-board"
         case dressedTitle = "-dressed-title"
         case suitor = "-suitor"
+        case noRoses = "-no-roses"
         case dailySuitor = "-daily-suitor"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
@@ -399,6 +400,16 @@ struct PigpenApp: App {
                     progress: DailyProgress(store: RememberedDailyRecords())
                 )
             }
+        case .noRoses:
+            // The other half of what Hamish has to say: the same bubble, with its tail on him
+            // down in his corner rather than on a square, telling a player who has spent the
+            // day's three roses when the next one comes. The three are handed in already
+            // given, and held in memory, so the runner spends nobody's.
+            PuzzleView(
+                game: .partWayThrough(),
+                roses: .remembering([.now, .now, .now]),
+                askingHamish: true
+            )
         case .dailySuitor:
             // The same day's board with Hamish asked for a rose as it opens: the proof that
             // a daily is a board he helps on like any other, off the wall its line of the
