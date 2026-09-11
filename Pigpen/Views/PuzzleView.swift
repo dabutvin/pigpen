@@ -56,16 +56,18 @@ struct PuzzleView: View {
     /// — and handed in by the screenshot runs, which dress her in memory to photograph a board
     /// that proves an outfit is worn out here and not only in the barn.
     private let wardrobe: PigWardrobe
-    /// Where Hamish's roses are counted. The one count the game keeps, by default — three a
-    /// day is three a day whichever board they are asked for on — and one held in memory by
-    /// the previews and the screenshot runs, so a photograph of him spends nobody's.
-    private let roses: HintAllowance
     /// Whether to ask Hamish for a rose the moment the board opens, which is how the
     /// screenshot runs photograph him standing on a tile rather than the button that sends
     /// him there.
     private let asksHamishOnOpening: Bool
 
     @State private var game: PuzzleGame
+    /// Where Hamish's roses are counted. The one count the game keeps, by default — three a
+    /// day is three a day whichever board they are asked for on — and one held in memory by
+    /// the previews and the screenshot runs, so a photograph of him spends nobody's. Kept as
+    /// state the way the game is, so a screen above this one re-drawing itself with a fresh
+    /// allowance in hand does not put the roses back after one has been given.
+    @State private var roses: HintAllowance
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
     /// puzzle nobody is timing. The meadow is not timed — a level there is worth going back
     /// to and taking apart — but a daily is a day's go at one board, and how long it took
@@ -165,7 +167,6 @@ struct PuzzleView: View {
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
-        self.roses = roses
         self.asksHamishOnOpening = askingHamish
         self.onPenned = onPenned
         self.onLeave = onLeave
@@ -180,6 +181,7 @@ struct PuzzleView: View {
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
         _clock = State(initialValue: clock)
+        _roses = State(initialValue: roses)
     }
 
     private var level: PuzzleLevel { game.level }
