@@ -326,7 +326,7 @@ struct WorldMapView: View {
                     openTheBarn(spur)
                 } label: {
                     LevelSignpost(
-                        sign: .door(spur.glyph),
+                        sign: .door(spur.mark),
                         name: spur.name,
                         stars: 0,
                         standing: progress.isOpen(spur) ? .open : .shut

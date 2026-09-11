@@ -245,8 +245,9 @@ the first line.
 ### The dressing barn
 
 Pen the seventh stop — Windfall Orchard — and a **dressing barn** opens beside it: a narrower
-path west of the signpost, and a sign with a washing basket on it where a stop carries its
-number. Tap it and you are inside. There is no puzzle between a player and their hats.
+path west of the signpost, and a sign with the barn painted on it — the same red walls and dark
+gable the map stands at the foot of the trail, drawn small — where a stop carries its number. Tap
+it and you are inside. There is no puzzle between a player and their hats.
 
 It is the only thing on any trail in the game that is not a stop, and the only sign that carries
 no stars, because there is nothing behind it to earn them at:
@@ -1787,7 +1788,7 @@ Then work out where on the trail it belongs. `--demand` squares the map off as w
 A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
 Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the glyph painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
+A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -2133,7 +2134,7 @@ Pigpen/
 │   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
 │   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
 │   ├── PigOutfit.swift          # The ten outfits, and where each one hangs on the pig
-│   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing room
+│   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing barn
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 │   └── SupportLinks.swift       # The support page, the privacy policy and the address behind them, in one place
@@ -2152,7 +2153,7 @@ Pigpen/
 │   │   └── ThornwoodFilm.swift  # Thornwood Thicket's nine, and the canopy, trunks, shafts and mountain it wanted
 │   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
 │   ├── FullGameOffer.swift      # The offer of the full game: what it opens, the price, the buy and the restore
-│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the way back into the dressing room, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the way into the dressing barn, the haptics switch, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
@@ -2163,6 +2164,7 @@ Pigpen/
 │   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and how many more you need
 │   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and eleven pegs
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
+│   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing

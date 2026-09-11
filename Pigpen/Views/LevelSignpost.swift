@@ -20,13 +20,13 @@ struct LevelSignpost: View {
 
     /// What this signpost is standing at: a numbered stop on the trail, or a door beside it.
     ///
-    /// A door has no number, because it is not one of the world's nine — it carries a glyph in
-    /// place of one and says what it is rather than where it comes. It has no stars either: it
-    /// is somewhere to go rather than something to beat, and three hollow stars over a door
-    /// would be three promises nothing behind it can keep.
+    /// A door has no number, because it is not one of the world's nine — it carries a small
+    /// painting in place of one and says what it is rather than where it comes. It has no stars
+    /// either: it is somewhere to go rather than something to beat, and three hollow stars over a
+    /// door would be three promises nothing behind it can keep.
     enum Sign: Equatable {
         case stop(Int)
-        case door(String)
+        case door(DoorMark)
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -201,9 +201,10 @@ struct LevelSignpost: View {
                 Text("\(number)")
                     .font(.system(size: 26, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.post)
-            case .door(let glyph):
-                Text(glyph)
-                    .font(.system(size: 24))
+            case .door(.barn):
+                // Painted, not set as a glyph: the sign carries the barn standing at the foot of
+                // the trail, drawn small. See `Barn`.
+                BarnMark(walls: 30)
             }
         }
     }
@@ -289,9 +290,9 @@ struct SignpostButtonStyle: ButtonStyle {
         LevelSignpost(sign: .stop(3), name: "Horseshoe Lake", stars: 0, standing: .open)
         LevelSignpost(sign: .stop(4), name: "The Narrows", stars: 0, standing: .shut)
         LevelSignpost(sign: .stop(9), name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
-        // The dressing barn beside the orchard, which carries a washing basket where a stop
+        // The dressing barn beside the orchard, which carries a painting of itself where a stop
         // carries its number, and no stars at all.
-        LevelSignpost(sign: .door("🧺"), name: "Dressing Barn", stars: 0, standing: .open)
+        LevelSignpost(sign: .door(.barn), name: "Dressing Barn", stars: 0, standing: .open)
     }
     .padding(40)
     .background(GamePalette.beyond)

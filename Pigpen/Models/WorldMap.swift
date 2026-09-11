@@ -26,6 +26,16 @@ struct WorldNode: Identifiable, Sendable {
     }
 }
 
+/// What is painted on a door's sign, where a stop carries its number.
+///
+/// Named rather than given as a glyph, because the game paints its own scenery: the mark on the
+/// dressing barn's sign is the barn standing at the foot of the meadow — the same red walls, the
+/// same dark gable — drawn small, and there is no emoji in the world for that.
+enum DoorMark: Hashable, Sendable {
+    /// The barn itself, as the map draws it at the bottom of the trail.
+    case barn
+}
+
 /// Somewhere off the side of a trail that is not a puzzle: a door the trail passes.
 ///
 /// A stop is the way on — beat it and the next one opens — which is why the trail is a line and
@@ -49,9 +59,9 @@ struct WorldSpur: Identifiable, Hashable, Sendable {
     /// Where the sign stands, on the same fractions the stops are placed by.
     let across: Double
     let up: Double
-    /// The glyph painted on that sign, where a stop carries its number. A door has no number —
+    /// What is painted on that sign, where a stop carries its number. A door has no number —
     /// it is not one of the nine — so it shows what it is instead.
-    let glyph: String
+    let mark: DoorMark
 
     var id: String { name }
 }
@@ -137,8 +147,9 @@ extension WorldMap {
             // It keeps beside the seventh stop and stands away west of it, far enough off the
             // path that the two signs never crowd one another and low enough that the mist over
             // the unearned meadow still covers it until the orchard has been penned. It is not
-            // a puzzle and never was: pen the orchard and the doors are open.
-            WorldSpur(name: "Dressing Barn", junction: 6, across: 0.04, up: 6.70, glyph: "🧺")
+            // a puzzle and never was: pen the orchard and the doors are open. Its sign carries a
+            // small painting of the barn at the foot of the trail, so the two read as one building.
+            WorldSpur(name: "Dressing Barn", junction: 6, across: 0.04, up: 6.70, mark: .barn)
         ]
     )
 }

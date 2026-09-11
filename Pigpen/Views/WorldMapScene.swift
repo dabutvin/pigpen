@@ -1825,38 +1825,24 @@ private struct Meadow {
         )
     }
 
+    /// The building itself is painted by `Barn`, which the dressing barn's signpost draws the same
+    /// barn out of at a quarter the size. What belongs to the meadow rather than to the barn — the
+    /// shadow it throws on the grass, and where it stands — stays here.
     private func drawBarn(in context: inout GraphicsContext) {
         let centre = landmarkStand
         let wide: CGFloat = 78
-        let tall: CGFloat = 50
+        let span = Barn.span(walls: wide)
+        let foot = CGPoint(x: centre.x, y: centre.y + 25)
 
-        shadow(in: &context, at: CGPoint(x: centre.x, y: centre.y + tall / 2), width: wide * 0.9)
+        shadow(in: &context, at: foot, width: wide * 0.9)
 
-        let walls = CGRect(x: centre.x - wide / 2, y: centre.y - tall * 0.1, width: wide, height: tall * 0.6)
-        context.fill(Path(walls), with: .color(GamePalette.barn))
-
-        var roof = Path()
-        roof.move(to: CGPoint(x: walls.minX - 7, y: walls.minY))
-        roof.addLine(to: CGPoint(x: centre.x, y: walls.minY - tall * 0.5))
-        roof.addLine(to: CGPoint(x: walls.maxX + 7, y: walls.minY))
-        roof.closeSubpath()
-        context.fill(roof, with: .color(GamePalette.post))
-
-        let door = CGRect(
-            x: centre.x - wide * 0.15, y: walls.minY + walls.height * 0.24,
-            width: wide * 0.3, height: walls.height * 0.76
+        Barn.paint(
+            in: &context,
+            bounds: CGRect(
+                x: foot.x - span.width / 2, y: foot.y - span.height,
+                width: span.width, height: span.height
+            )
         )
-        context.fill(
-            Path(roundedRect: door, cornerRadius: 3),
-            with: .color(GamePalette.post.opacity(0.85))
-        )
-
-        var trim = Path()
-        trim.move(to: CGPoint(x: walls.minX + 6, y: walls.minY + walls.height * 0.34))
-        trim.addLine(to: CGPoint(x: door.minX - 4, y: walls.minY + walls.height * 0.34))
-        trim.move(to: CGPoint(x: door.maxX + 4, y: walls.minY + walls.height * 0.34))
-        trim.addLine(to: CGPoint(x: walls.maxX - 6, y: walls.minY + walls.height * 0.34))
-        context.stroke(trim, with: .color(GamePalette.cream.opacity(0.8)), lineWidth: 3)
     }
 
     /// A hollow stump at the foot of the thicket trail — the woods' answer to the barn the

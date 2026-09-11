@@ -13,7 +13,7 @@ struct TitleSceneView: View {
     @State private var opened = Date()
 
     /// What the pig out in the pasture has on. Handed in by the screen that owns the wardrobe,
-    /// so that a hat chosen in the dressing room is on her the next time the title comes up —
+    /// so that a hat chosen in the dressing barn is on her the next time the title comes up —
     /// which is the most conspicuous place in the game to be wearing one.
     var outfit: PigOutfit = .asSheComes
 
