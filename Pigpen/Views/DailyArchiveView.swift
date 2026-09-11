@@ -232,8 +232,12 @@ struct DailyArchiveView: View {
         .padding(.top, 2)
     }
 
+    // The gap between one week and the next. Wider than the 6 points between columns, and
+    // wider than it was: every square now carries a plaque of stars under its number, and a
+    // row that ends in one needs air beneath it or the stars of one week read as though they
+    // belonged to the squares of the next.
     private func grid(for page: DailyMonth) -> some View {
-        LazyVGrid(columns: columns, spacing: 10) {
+        LazyVGrid(columns: columns, spacing: 18) {
             ForEach(0..<page.openingBlanks, id: \.self) { _ in
                 Color.clear
                     .frame(height: 1)
