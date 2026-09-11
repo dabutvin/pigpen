@@ -294,6 +294,7 @@ struct FullGameOffer: View {
 
     private func purchase() async {
         Haptics.tap(.medium)
+        Sounds.play(.press)
         note = nil
         let outcome = await fullGame.buy()
         Analytics.record(.purchaseFinished(outcome: outcome.word))
@@ -302,6 +303,7 @@ struct FullGameOffer: View {
             // The onChange on `isUnlocked` closes the sheet and the world behind it is open;
             // a buzz to mark the fence coming down.
             Haptics.buzz(.success)
+            Sounds.play(.fanfare)
         case .cancelled:
             break
         case .pending:
@@ -315,11 +317,13 @@ struct FullGameOffer: View {
 
     private func restore() async {
         Haptics.tap(.light)
+        Sounds.play(.press)
         note = nil
         let restored = await fullGame.restore()
         Analytics.record(.restoreFinished(restored: restored))
         if restored {
             Haptics.buzz(.success)
+            Sounds.play(.fanfare)
         } else {
             note = .nothingToRestore
         }

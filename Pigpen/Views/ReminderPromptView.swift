@@ -72,6 +72,7 @@ struct ReminderPromptView: View {
 
             Button {
                 Haptics.tap(.light)
+                Sounds.play(.press)
                 onDecline()
                 dismiss()
             } label: {
@@ -136,6 +137,7 @@ struct ReminderPromptView: View {
         VStack(spacing: 6) {
             Button {
                 Haptics.tap(.medium)
+                Sounds.play(.press)
                 onAccept()
                 dismiss()
             } label: {
@@ -151,6 +153,7 @@ struct ReminderPromptView: View {
 
             Button {
                 Haptics.tap(.light)
+                Sounds.play(.press)
                 onDecline()
                 dismiss()
             } label: {

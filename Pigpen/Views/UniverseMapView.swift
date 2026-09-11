@@ -291,6 +291,7 @@ struct UniverseMapView: View {
         // universe map, raised on the very world the player reached for.
         if progress.isBehindTheWall(index) {
             Haptics.tap(.medium)
+            Sounds.play(.press)
             Analytics.record(.offerShown(from: FullGameOfferSource.map.rawValue))
             isOffering = true
             return
@@ -299,9 +300,11 @@ struct UniverseMapView: View {
         guard let game = progress.universe.game(at: index) else {
             // A silhouette: nothing to drop into yet, but say it was heard.
             Haptics.tap(.rigid)
+            Sounds.play(.press)
             return
         }
         Haptics.tap(.medium)
+        Sounds.play(.press)
 
         if let opening = game.opening,
            let world = progress.progress(for: index),
@@ -350,6 +353,7 @@ struct UniverseMapView: View {
         guard now > frontierWhenLeft else { return }
 
         Haptics.buzz(.success)
+        Sounds.play(.fanfare)
         guard !reduceMotion else { return }
         withAnimation(.spring(duration: 0.5, bounce: 0.5)) { unveiled = now }
         Task {

@@ -98,6 +98,7 @@ struct DailyArchiveView: View {
         .onAppear { progress.reload() }
         .onChange(of: month) { _, _ in
             Haptics.tap(.light)
+            Sounds.play(.press)
         }
     }
 
@@ -291,11 +292,13 @@ struct DailyArchiveView: View {
         // wall, on the very day the player reached for.
         if date != today, !fullGame.isUnlocked {
             Haptics.tap(.medium)
+            Sounds.play(.press)
             Analytics.record(.offerShown(from: FullGameOfferSource.archive.rawValue))
             isOffering = true
             return
         }
         Haptics.tap(.medium)
+        Sounds.play(.press)
         // A day out of the archive rather than this morning's, which is the difference
         // between somebody catching up and somebody browsing.
         Analytics.record(.dailyOpened(isToday: date == today))

@@ -184,6 +184,7 @@ struct CutSceneView: View {
 
                 Button {
                     Haptics.tap(.light)
+                    Sounds.play(.press)
                     finish(watched: false)
                 } label: {
                     HStack(spacing: 5) {

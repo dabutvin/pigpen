@@ -248,6 +248,12 @@ struct PigpenApp: App {
                 }
             }
             .task {
+                // Readied now rather than on the first fence, so that the first fence goes
+                // in with its knock rather than a beat behind it while the files open. The
+                // tune is told the game is up here as well as on the phase change below,
+                // since the first screen is up before the phase has settled.
+                _ = Sounds.shared
+                Music.resume()
                 guard !Self.isPhotographing(launch) else { return }
                 Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
                 // Reconcile the full game with the App Store and then listen for anything it
@@ -257,10 +263,17 @@ struct PigpenApp: App {
             }
         }
         .onChange(of: scenePhase) { _, phase in
+            // The tune plays while the game is up and stops the moment it is not: a
+            // locked phone, a call, the app switcher. It picks up where it left off on
+            // the way back.
+            guard phase != .active else {
+                Music.resume()
+                return
+            }
+            Music.pause()
             // Anything counted since the last batch goes the moment the game is put down.
             // A phone in a pocket is where most sessions end, and a batch still in hand
             // when the system reclaims the app is a batch nobody ever sees.
-            guard phase != .active else { return }
             Analytics.flush()
         }
     }
