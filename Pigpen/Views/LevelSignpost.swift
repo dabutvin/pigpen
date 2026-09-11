@@ -18,12 +18,15 @@ struct LevelSignpost: View {
         case tolled(have: Int, need: Int)
     }
 
-    /// What this signpost is standing at: a numbered stop on the trail, or the sign at the end
-    /// of a lane off it. A lane has no number because it is not one of the world's nine, so it
-    /// carries a glyph in place of one, and says what it is rather than where it comes.
+    /// What this signpost is standing at: a numbered stop on the trail, or a door beside it.
+    ///
+    /// A door has no number, because it is not one of the world's nine — it carries a glyph in
+    /// place of one and says what it is rather than where it comes. It has no stars either: it
+    /// is somewhere to go rather than something to beat, and three hollow stars over a door
+    /// would be three promises nothing behind it can keep.
     enum Sign: Equatable {
         case stop(Int)
-        case lane(String)
+        case door(String)
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -82,8 +85,15 @@ struct LevelSignpost: View {
             starRow()
                 .overlay { if showsRainbow { rainbow } }
                 .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
-                .opacity(standing == .shut ? 0 : 1)
+                // Kept in place but unpainted over a door and over a stop nobody can play yet,
+                // so that every sign in the meadow stands at the same height whatever it is.
+                .opacity(standing == .shut || !hasStars ? 0 : 1)
         }
+    }
+
+    /// Whether there are stars to show at all. A door is not a puzzle and has none.
+    private var hasStars: Bool {
+        if case .door = sign { false } else { true }
     }
 
     /// Whether this stop's stars are the rainbow sort: the best pen found, and the level
@@ -129,7 +139,9 @@ struct LevelSignpost: View {
 
     private var face: some View {
         ZStack {
-            if standing == .open, !reduceMotion {
+            // Never over a door: the ring means *play me*, and a door that has nothing to play
+            // would pulse for the rest of the game without ever being satisfied.
+            if standing == .open, hasStars, !reduceMotion {
                 beckoning
             }
 
@@ -189,7 +201,7 @@ struct LevelSignpost: View {
                 Text("\(number)")
                     .font(.system(size: 26, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.post)
-            case .lane(let glyph):
+            case .door(let glyph):
                 Text(glyph)
                     .font(.system(size: 24))
             }
@@ -226,18 +238,22 @@ struct LevelSignpost: View {
         }
     }
 
-    /// How the sign names itself out loud. A stop is called by its number and its name; a lane
-    /// has only its name, and says that it is optional — which is the one thing about it a
-    /// player cannot see from the shape of the trail if they cannot see the trail.
+    /// How the sign names itself out loud. A stop is called by its number and its name; a door
+    /// has only its name, which is already the whole of what is behind it.
     private var called: String {
         switch sign {
         case .stop(let number): "Level \(number), \(name)"
-        case .lane: "\(name), an optional lane off the trail"
+        case .door: name
         }
     }
 
     private var spokenLabel: String {
         let spelled = ["no", "one", "two", "three"]
+        // A door is open or it is not. Nothing has been played there and nothing ever will be,
+        // so the words a stop uses — *not yet played*, a count of stars — would all be wrong.
+        guard hasStars else {
+            return standing == .shut ? "\(called), locked" : "\(called), open"
+        }
         switch standing {
         case .shut:
             return "\(called), locked"
@@ -273,9 +289,9 @@ struct SignpostButtonStyle: ButtonStyle {
         LevelSignpost(sign: .stop(3), name: "Horseshoe Lake", stars: 0, standing: .open)
         LevelSignpost(sign: .stop(4), name: "The Narrows", stars: 0, standing: .shut)
         LevelSignpost(sign: .stop(9), name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
-        // The lane off the orchard, which carries a washing basket where a stop carries
-        // its number.
-        LevelSignpost(sign: .lane("🧺"), name: "Washday Lane", stars: 2, standing: .cleared)
+        // The dressing barn beside the orchard, which carries a washing basket where a stop
+        // carries its number, and no stars at all.
+        LevelSignpost(sign: .door("🧺"), name: "Dressing Barn", stars: 0, standing: .open)
     }
     .padding(40)
     .background(GamePalette.beyond)

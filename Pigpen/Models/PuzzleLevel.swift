@@ -622,48 +622,6 @@ extension PuzzleLevel {
             """
     )
 
-    /// The lane off the orchard, and the one level in the game that is not on a trail: it
-    /// hangs off the meadow's seventh stop as a junction rather than standing in the line of
-    /// nine, so it is played by a player who went looking rather than by one walking past.
-    /// What is at the end of it is the dressing room rather than the way on — see
-    /// `WorldSpur` and `DressingRoom`.
-    ///
-    /// A lane walls itself. Water runs the whole length of both sides, so nothing along it
-    /// costs a piece; the only place it touches the rim of the map is the top end, and three
-    /// pieces shut that. The six left over are spent at the other end, where the lane opens
-    /// out onto the drying green — and that is the whole puzzle, because the mouth is three
-    /// tiles wide and plugging it flat holds nothing but the lane itself.
-    ///
-    /// Three windfalls have rolled down off the orchard onto the green. The nearest of them
-    /// lies one tile west of the mouth, and the best pen leans out sideways to swallow it:
-    /// 21 tiles and the one apple come to 26, where plugging the mouth and squaring a block
-    /// off the end of it is worth 19. The other two apples are further out than nine pieces
-    /// can reach, which is what makes the near one a choice rather than a formality.
-    ///
-    /// It carries no `question`: the questions are the order a trail is built in, and a lane
-    /// stands beside that order rather than in it.
-    static let washdayLane = authored(
-        id: "washday-lane",
-        name: "Washday Lane",
-        fenceBudget: 9,
-        twoStarScore: 15,
-        threeStarScore: 24,
-        maximumScore: 26,
-        map: """
-            ~~~...~~~~
-            ~~~...~~~~
-            ~~~.P.~~~~
-            ~~~...~~~~
-            ~~~...~~~~
-            ~~~...~~~~
-            ..........
-            ..a....a..
-            ..........
-            ....a.....
-            ..........
-            """
-    )
-
     /// A level written into the game itself, where a malformed map is a mistake in the
     /// source rather than anything a player could bring about.
     ///

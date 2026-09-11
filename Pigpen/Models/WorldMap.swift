@@ -26,47 +26,43 @@ struct WorldNode: Identifiable, Sendable {
     }
 }
 
-/// A level off the side of a trail: a lane the trail passes rather than a stop on it.
+/// Somewhere off the side of a trail that is not a puzzle: a door the trail passes.
 ///
-/// A stop is the way on — beat it and the next one opens — which is why the trail is a line
-/// and why the nine of them are ordered by what they ask. A lane is none of that. It leaves
-/// the trail at a junction, it leads nowhere, nothing behind it is waiting on it, and a player
-/// who never turns down it finishes the world without knowing it was there.
+/// A stop is the way on — beat it and the next one opens — which is why the trail is a line and
+/// why the nine of them are ordered by what they ask. A door is none of that. It stands beside
+/// a stop, it leads nowhere, nothing behind it is waiting on it, and a player who never turns
+/// aside finishes the world without opening it.
 ///
-/// So a lane stays out of the world's arithmetic. Its stars are its own: they do not swell the
-/// tally across the top of the map, they do not pay a boss its toll, and they are not part of
-/// what *the world held* means. A level that opens nothing may not quietly loosen a gate the
-/// game has already set, and the nine pens of the meadow are still nine.
+/// It is not a level either. It has no board, no budget, no stars and no rainbow: it opens when
+/// the stop it stands beside has been penned, and tapping it takes you straight through. A world
+/// counts itself in the nine pens of its trail, and a door changes none of that arithmetic —
+/// not the tally across the top of the map, not what a boss's toll costs, not what *the world
+/// held* means.
 ///
-/// What a lane has instead of a way on is something at the end of it. There is one in the game
-/// — the lane off the meadow's orchard, which opens the dressing room.
+/// There is one in the game: the dressing barn beside the meadow's orchard.
 struct WorldSpur: Identifiable, Hashable, Sendable {
-    let level: PuzzleLevel
-    /// The stop the lane leaves the trail at, as an index into the trail's own stops.
+    /// What the sign says, which is the whole of what is behind it.
+    let name: String
+    /// The stop it stands beside, as an index into the trail's own stops. Penning that stop is
+    /// what opens the door, and nothing else bears on it.
     let junction: Int
-    /// Where the sign at the end of it stands, on the same fractions the stops are placed by.
+    /// Where the sign stands, on the same fractions the stops are placed by.
     let across: Double
     let up: Double
-    /// The glyph painted on that sign, where a stop carries its number. A lane has no number
-    /// — it is not one of the nine — so it says what it is instead.
+    /// The glyph painted on that sign, where a stop carries its number. A door has no number —
+    /// it is not one of the nine — so it shows what it is instead.
     let glyph: String
 
-    var id: String { level.id }
-
-    /// A lane is its level, for the purposes of being pushed onto a navigation stack: two lanes
-    /// are the same lane when they are the same puzzle. Written out rather than synthesised
-    /// because a level is a board and a board is not worth hashing.
-    static func == (lhs: WorldSpur, rhs: WorldSpur) -> Bool { lhs.id == rhs.id }
-
-    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+    var id: String { name }
 }
 
-/// The levels of one world: the stops in the order the pig walks them, and any lanes hanging
+/// The levels of one world: the stops in the order the pig walks them, and any doors standing
 /// off the side of that trail.
 struct WorldMap: Sendable {
     let name: String
     let nodes: [WorldNode]
-    /// The optional lanes off the trail. Empty for every world but the meadow.
+    /// The doors standing off the trail, which are not levels. Empty for every world but the
+    /// meadow, which keeps the dressing barn beside its orchard.
     let spurs: [WorldSpur]
 
     init(name: String, nodes: [WorldNode], spurs: [WorldSpur] = []) {
@@ -75,29 +71,19 @@ struct WorldMap: Sendable {
         self.spurs = spurs
     }
 
-    /// How many stops the trail has. Lanes are not stops, so they are not counted here, nor
+    /// How many stops the trail has. A door is not a stop, so it is not counted here, nor
     /// anywhere else the world counts itself.
     var count: Int { nodes.count }
 
     subscript(index: Int) -> WorldNode { nodes[index] }
 
     /// How far up the meadow the furthest thing in the world stands, which is how tall the
-    /// map has to be drawn. The last stop, usually — but a lane hanging higher than the stop
-    /// it leaves still has to fit on the hillside.
+    /// map has to be drawn. The last stop, usually — but a door standing higher than the stop
+    /// it keeps beside still has to fit on the hillside.
     var reach: Double { (nodes.map(\.up) + spurs.map(\.up)).max() ?? 0 }
 
     func index(of levelID: String) -> Int? {
         nodes.firstIndex { $0.id == levelID }
-    }
-
-    /// Every level the world holds, the trail and the lanes off it, in that order.
-    var levels: [PuzzleLevel] { nodes.map(\.level) + spurs.map(\.level) }
-
-    /// The level with this id, wherever in the world it stands — on the trail or down a lane.
-    /// What the progress store asks before it writes a rating down, since a lane's stars are
-    /// kept beside the trail's however little they count towards it.
-    func level(withID id: String) -> PuzzleLevel? {
-        levels.first { $0.id == id }
     }
 
     func spur(withID id: String) -> WorldSpur? {
@@ -105,7 +91,7 @@ struct WorldMap: Sendable {
     }
 
     /// Every star the world has in it, for a player who takes all of them. The trail's, and
-    /// only the trail's: see `WorldSpur`.
+    /// only the trail's — a door has none to give: see `WorldSpur`.
     var starTotal: Int { count * 3 }
 }
 
@@ -129,10 +115,10 @@ extension WorldMap {
     /// harder thing about them: apples, then skulls to build around as well, then a second
     /// animal and one budget to split between the two.
     ///
-    /// There is one thing in the meadow that is not one of the nine: a lane hanging off the
-    /// seventh stop, with a washing line at the end of it. Penning it opens the dressing room
-    /// and nothing else — it is not on the way anywhere, and the arithmetic of the world does
-    /// not know it exists. See `WorldSpur`.
+    /// There is one thing in the meadow that is not one of the nine, and not a puzzle at all:
+    /// the dressing barn, standing off the trail beside the seventh stop. Penning the orchard
+    /// opens its doors and tapping it walks you in — it is not on the way anywhere, and the
+    /// arithmetic of the world does not know it exists. See `WorldSpur`.
     static let mudlarkMeadow = WorldMap(
         name: "Mudlark Meadow",
         nodes: [
@@ -147,12 +133,12 @@ extension WorldMap {
             WorldNode(level: .stagMere, across: 0.28, up: 8.06, starToll: 21)
         ],
         spurs: [
-            // The washing line, strung down a lane the orchard backs onto. It leaves the trail
-            // at the seventh stop and climbs away west of it, far enough off the path that the
-            // two signs never crowd one another and low enough that the mist over the unearned
-            // meadow still covers it until the orchard has been penned. Nothing waits on it,
-            // and what is at the end of it is the dressing room.
-            WorldSpur(level: .washdayLane, junction: 6, across: 0.04, up: 6.70, glyph: "🧺")
+            // The dressing barn, standing in the corner of the field the orchard backs onto.
+            // It keeps beside the seventh stop and stands away west of it, far enough off the
+            // path that the two signs never crowd one another and low enough that the mist over
+            // the unearned meadow still covers it until the orchard has been penned. It is not
+            // a puzzle and never was: pen the orchard and the doors are open.
+            WorldSpur(name: "Dressing Barn", junction: 6, across: 0.04, up: 6.70, glyph: "🧺")
         ]
     )
 }

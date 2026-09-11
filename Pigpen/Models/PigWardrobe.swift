@@ -1,7 +1,7 @@
 import Foundation
 import Observation
 
-/// Where the one thing the dressing room remembers is kept: which peg the pig is wearing.
+/// Where the one thing the dressing barn remembers is kept: which peg the pig is wearing.
 ///
 /// A protocol rather than `UserDefaults` outright, for the same reason the stars and the
 /// buzzing go through one: a preview, a test or a screenshot run can dress the pig without
@@ -58,17 +58,17 @@ final class RememberedWardrobe: WardrobeStore {
 ///
 /// Everything that draws her — the board, the trail, the pasture behind the title — reads this
 /// one switch, the way everything that shakes the phone goes through `Haptics`. So a hat chosen
-/// in the dressing room is on her head on the next board without a single screen having to be
-/// told about it, and there is nowhere for two drawings of the same pig to disagree.
+/// in the barn is on her head on the next board without a single screen having to be told about
+/// it, and there is nowhere for two drawings of the same pig to disagree.
 ///
 /// It is a preference rather than progress: it survives a world being reset on its own, and is
 /// only let go when a player asks for the whole game back as they found it — at which point the
-/// pig is undressed along with everything else, since the lane that opened the room has gone
+/// pig is undressed along with everything else, since the stop that opened the barn has gone
 /// with the stars.
 @MainActor
 @Observable
 final class PigWardrobe {
-    /// The one the game draws through, and the one the dressing room dresses.
+    /// The one the game draws through, and the one the dressing barn dresses.
     static let shared = PigWardrobe()
 
     /// The peg with the tick beside it. Written the moment it changes: a player who puts a
@@ -97,7 +97,7 @@ final class PigWardrobe {
         outfit = store.loadOutfit()
     }
 
-    /// Hangs it all back up. Called only by the button that throws every star away: the room
+    /// Hangs it all back up. Called only by the button that throws every star away: the barn
     /// itself has the bare peg for a player who simply wants the hats off.
     func eraseEverything() {
         outfit = .asSheComes
@@ -113,32 +113,32 @@ extension PigWardrobe {
     }
 }
 
-/// The room at the end of the lane, and the one thing in the game that is opened by a level off
-/// a trail rather than by one on it.
+/// The barn beside the orchard, and the one thing in the game that is opened by standing next
+/// to a level rather than by playing one.
 ///
-/// Which level that is lives here rather than in the room's own screen, because three places
+/// Which stop opens it lives here rather than in the barn's own screen, because three places
 /// need the answer and none of them should be the one that knows it: the settings card that
-/// offers the way in, the map that throws the doors open the first time the lane gives, and the
-/// tests that pin the two together.
-enum DressingRoom {
+/// offers the way in, the map that draws the doors open, and the tests that pin the two
+/// together.
+enum DressingBarn {
     /// The two ways in, named so that what is counted cannot drift from what opened.
     enum Door: String, Sendable {
-        /// The lane giving way, which throws the doors open on the spot.
-        case lane
-        /// The card in settings, which is the way back in afterwards.
+        /// The barn on the map, tapped.
+        case map
+        /// The card in settings, which is the way in from anywhere else.
         case settings
     }
 
-    /// The lane that opens it.
-    static var lane: PuzzleLevel { .washdayLane }
+    /// The stop it stands beside. Pen this and the doors are open.
+    static var beside: PuzzleLevel { .windfallOrchard }
 
     /// Where to tell a player to go looking, said the way the map would say it.
-    static let directions = "Win the lane off Windfall Orchard, the seventh stop in Mudlark Meadow."
+    static let directions = "Pen Windfall Orchard, the seventh stop in Mudlark Meadow, and the barn opens beside the trail."
 
-    /// Whether the doors are open, read off the ratings the game has kept. Any pen at all does
-    /// it — one star down the lane is the whole price — so a player is never asked to be good
-    /// at the side trip, only to take it.
+    /// Whether the doors are open, read off the ratings the game has kept. Any pen at all on the
+    /// stop beside it does it, so a player is never asked to be good at the orchard — only to
+    /// have got there.
     static func isOpen(stars: [String: Int]) -> Bool {
-        (stars[lane.id] ?? 0) > 0
+        (stars[beside.id] ?? 0) > 0
     }
 }

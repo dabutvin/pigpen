@@ -520,12 +520,12 @@ extension AnalyticsSignal {
         AnalyticsSignal("Settings.pageOpened", ["page": page])
     }
 
-    // MARK: The dressing room
+    // MARK: The dressing barn
 
-    /// The room at the end of the meadow's lane opened, and which door it was opened through:
+    /// The barn at the end of the meadow's lane opened, and which door it was opened through:
     /// the lane itself giving way, or the card in settings. The two say different things — one
     /// is how many players ever find the lane at all, the other is whether anybody goes back.
-    static func dressingRoomOpened(from door: String) -> AnalyticsSignal {
+    static func dressingBarnOpened(from door: String) -> AnalyticsSignal {
         AnalyticsSignal("Dressing.opened", ["from": door])
     }
 

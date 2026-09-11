@@ -5,11 +5,11 @@ import Foundation
 /// Every measure is a fraction of the size the pig herself is drawn at rather than a number of
 /// points, so one set of numbers dresses her everywhere she appears: on a board tile the size
 /// of a fingernail, trotting along the fence on the title screen, and standing full height on
-/// the dressing-room mirror. A hat that was measured in points would slide off the back of her
+/// the dressing-barn mirror. A hat that was measured in points would slide off the back of her
 /// head the first time the board got bigger.
 ///
 /// They are measured against the pig glyph rather than guessed at, off the screenshots CI takes
-/// of the dressing room. She fills her box: the tips of her ears are at `-0.5` and her chin at
+/// of the dressing barn. She fills her box: the tips of her ears are at `-0.5` and her chin at
 /// `+0.5`, her eyes sit at about `-0.05`, and her snout — which is the trap — is only at `+0.16`,
 /// so anything meant for her neck has to be put a long way further down than it looks.
 ///
@@ -66,7 +66,7 @@ struct OutfitFit: Equatable, Sendable {
 /// about clothes to draw her in them. It also means an outfit costs nothing to carry about:
 /// a string in the defaults, and two numbers and a turn at the moment of drawing.
 ///
-/// Ten of them hang in the dressing room, and `asSheComes` is the eleventh peg: the pig as the
+/// Ten of them hang in the dressing barn, and `asSheComes` is the eleventh peg: the pig as the
 /// game has always shipped her, which is where a player who has had enough of hats goes.
 ///
 /// The raw values are what the choice is kept under on the phone, so they are not to be
@@ -87,9 +87,9 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
-    /// The ten outfits, in the order the dressing room hangs them up: the hats together, then
+    /// The ten outfits, in the order the dressing barn hangs them up: the hats together, then
     /// what goes on the face, then what is tucked behind an ear, then what hangs at the neck,
-    /// and the boots last. `asSheComes` is not one of them — it is the bare peg the room keeps
+    /// and the boots last. `asSheComes` is not one of them — it is the bare peg the barn keeps
     /// at the front, and a player wearing nothing is not wearing an outfit.
     static var wardrobe: [PigOutfit] { allCases.filter { $0 != .asSheComes } }
 
@@ -155,16 +155,16 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
     ///
     /// The overlay that draws it takes up no room on purpose — a dressed pig has to measure
     /// exactly what an undressed one does, or a board would shift under a hat. Out on the mud
-    /// that costs nothing, since there is ground under her. A room that stands her on a shelf
+    /// that costs nothing, since there is ground under her. A screen that stands her on a shelf
     /// with her name written under it has to leave the room for it itself.
     var overhang: Double {
         guard let fit else { return 0 }
         return max(0, fit.down + fit.scale / 2 - 0.5)
     }
 
-    /// The deepest anything in the wardrobe hangs. The dressing room leaves this much space
-    /// under every pig it draws rather than under the ones that need it, so a peg is the same
-    /// size whatever is on it and the wall does not shuffle as outfits are tried on.
+    /// The deepest anything in the wardrobe hangs. The dressing barn leaves this much space
+    /// under every pig it draws rather than under only the ones that need it, so a peg is the
+    /// same size whatever is on it and the wall does not shuffle as outfits are tried on.
     static var deepestOverhang: Double { allCases.map(\.overhang).max() ?? 0 }
 
     /// How the pig is described out loud while she is wearing it, for a screen reader that

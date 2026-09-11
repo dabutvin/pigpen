@@ -1,19 +1,19 @@
 import SwiftUI
 
-/// The dressing room: the pig on a stand in the middle of it, and eleven pegs round the walls —
+/// The dressing barn: the pig on a stand in the middle of it, and eleven pegs round the walls —
 /// ten outfits and the bare one she arrived in.
 ///
 /// It is the one screen in the game that changes nothing about playing it. There is no budget
 /// here, nothing to hold and nothing to lose: tap a peg and the pig is wearing it, everywhere,
-/// from the next board onwards. So it is built like a room rather than like a board — the mirror
+/// from the next board onwards. So it is built like a barn rather than like a board — the mirror
 /// first and big, the pegs under it, and the only way out a cross in the corner.
 ///
-/// It is reached two ways, and both of them matter. Penning the lane off the orchard throws the
-/// doors open there and then, which is the whole reward for having gone down a lane that leads
-/// nowhere; after that the card in settings is the way back in, because a reward a player cannot
-/// find again is a reward they had once.
+/// It is reached two ways. The barn stands on the meadow's map beside the orchard, and once that
+/// stop has been penned, tapping it walks straight in — there is no puzzle between a player and
+/// their hats. The card in settings is the other way, for a player who is nowhere near the
+/// meadow's map when the urge takes them.
 @MainActor
-struct DressingRoomView: View {
+struct DressingBarnView: View {
     @Environment(\.dismiss) private var dismiss
 
     /// What the pig is wearing. The shared one by default — dressing her here is meant to dress
@@ -21,9 +21,6 @@ struct DressingRoomView: View {
     /// whoever is running them.
     var wardrobe: PigWardrobe = .shared
     var haptics: Haptics = .shared
-    /// Whether the room was opened by the lane giving way rather than out of settings, which is
-    /// the one time it has something to say for itself.
-    var hasJustOpened = false
 
     /// The pegs, in the order the wardrobe hangs them, with the bare one at the front.
     private var pegs: [PigOutfit] { [.asSheComes] + PigOutfit.wardrobe }
@@ -55,7 +52,7 @@ struct DressingRoomView: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
         }
-        // The room is painted in one light, the way every board in the game is.
+        // The barn is painted in one light, the way every board in the game is.
         .staysInDaylight()
     }
 
@@ -63,7 +60,7 @@ struct DressingRoomView: View {
 
     private var header: some View {
         HStack(spacing: 12) {
-            Text("Dressing Room")
+            Text("Dressing Barn")
                 .font(.system(size: 22, weight: .black, design: .rounded))
                 .foregroundStyle(GamePalette.post)
 
@@ -79,7 +76,7 @@ struct DressingRoomView: View {
                     .frame(width: 34, height: 34)
                     .contentShape(Rectangle())
             }
-            .accessibilityLabel("Close the dressing room")
+            .accessibilityLabel("Close the dressing barn")
         }
         .padding(.horizontal, 20)
         .padding(.top, 22)
@@ -109,33 +106,12 @@ struct DressingRoomView: View {
                 Text(wardrobe.outfit.name)
                     .font(.system(size: 19, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.post)
-
-                if hasJustOpened {
-                    welcome
-                }
             }
             .frame(maxWidth: .infinity)
         }
     }
 
-    /// The one line of writing the room keeps, and only the once: a player who has just walked
-    /// down a lane that leads nowhere is owed a word about what they found at the end of it.
-    /// Every other visit says nothing — the pig in the thing is the whole of what a peg has to
-    /// tell anybody, and eleven captions under eleven pictures of her say it eleven times worse.
-    private var welcome: some View {
-        Text(
-            """
-            The washing line at the end of the lane is yours. Pick a peg and she wears it \
-            everywhere — up the trail, on the board, and out in front of the title.
-            """
-        )
-        .font(.footnote.weight(.semibold))
-        .foregroundStyle(GamePalette.post.opacity(0.7))
-        .multilineTextAlignment(.center)
-        .fixedSize(horizontal: false, vertical: true)
-    }
-
-    /// Every peg in the room. Each one is the pig in that outfit rather than the garment on its
+    /// Every peg in the barn. Each one is the pig in that outfit rather than the garment on its
     /// own, because what a player is choosing between is eleven pigs and not eleven hats — and
     /// each says nothing but its name, since a picture of the pig in the thing is a better
     /// account of it than a line of writing under the picture.
@@ -194,7 +170,7 @@ struct DressingRoomView: View {
                         lineWidth: worn ? 3 : 1
                     )
             )
-            // The tick, where a signpost would carry its stars: the one peg in the room that
+            // The tick, where a signpost would carry its stars: the one peg in the barn that
             // is already on her.
             .overlay(alignment: .topTrailing) {
                 if worn {
@@ -245,10 +221,10 @@ struct DressingRoomView: View {
     }
 }
 
-#Preview("Opened from settings") {
-    DressingRoomView(wardrobe: .remembering(.topHat))
+#Preview("Wearing something") {
+    DressingBarnView(wardrobe: .remembering(.topHat))
 }
 
-#Preview("The lane has just given") {
-    DressingRoomView(wardrobe: .remembering(), hasJustOpened: true)
+#Preview("Nothing on her yet") {
+    DressingBarnView(wardrobe: .remembering())
 }

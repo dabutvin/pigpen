@@ -135,8 +135,8 @@ Play leads into **Mudlark Meadow** until that world is held, and only then opens
 with the pig standing at the furthest one it has reached and mist over everything past that.
 The first six are fencing and water alone and climb in what they ask of you, the next two
 scatter apples and skulls as well, and the last is the boss. Every world in the game is a
-trail like this one — and one stop in the meadow has a lane off it, which is the only thing
-in the game you can finish a world without ever having seen.
+trail like this one — and one stop in the meadow has a barn beside it, which is the only thing
+in the game you can finish a world without ever having opened.
 
 - **Beating a level opens the next one.** Any pen at all is enough — one star will do it.
 - **The boss is paid for in stars.** Stag Mere wants 21 of the 24 the eight levels below it
@@ -166,10 +166,9 @@ in the game you can finish a world without ever having seen.
 - **You can go back down the trail** to any level already open, and the pig trots down to
   it before the puzzle opens — and stays there when you come back out. Only something newly
   opened moves the pig on its own, so a replay leaves you standing where you chose to be.
-- **One stop has a lane off it.** Pen the seventh — Windfall Orchard — and a side path
-  opens west of the signpost, with a tenth puzzle at the end of it: Washday Lane. Nothing
-  waits on it and nothing behind it needs it. What is down there is
-  [the dressing room](#the-dressing-room).
+- **One stop has a barn beside it.** Pen the seventh — Windfall Orchard — and a side path
+  opens west of the signpost with the [dressing barn](#the-dressing-barn) at the end of it.
+  It is not a puzzle: tap it and you are in.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
@@ -243,56 +242,26 @@ for less than the last one did.
 Each of those pens is drawn out in [`solutions/`](solutions/), which is spoilers from
 the first line.
 
-### The lane off the orchard
+### The dressing barn
 
-| Level | Pieces | On the ground | Squared off | Best pen | Asks |
-|---|---|---|---|---|---|
-| Washday Lane | 9 | 3 apples | 19 | 26 | 26% |
+Pen the seventh stop — Windfall Orchard — and a **dressing barn** opens beside it: a narrower
+path west of the signpost, and a sign with a washing basket on it where a stop carries its
+number. Tap it and you are inside. There is no puzzle between a player and their hats.
 
-Washday Lane is the one puzzle in the game that is not a stop on a trail. It hangs off the
-meadow's seventh signpost as a **junction**: the trail carries on up to Sour Ground as it
-always did, and a narrower path leaves it west for a sign with a washing basket on it instead
-of a number. It opens as soon as the orchard has been penned at all, and it can be walked past
-forever — a player who never turns down it holds the meadow, sees its send-off and goes out to
-the universe without ever knowing it was there.
+It is the only thing on any trail in the game that is not a stop, and the only sign that carries
+no stars, because there is nothing behind it to earn them at:
 
-A lane walls itself, which is why it is the gentlest kind of board to hand somebody who went
-looking rather than somebody who was sent. Water runs the whole length of both sides, so
-nothing along it costs a piece; the only place it touches the rim is the top end, and three
-pieces shut that. The puzzle is the other end, where the lane opens onto the drying green:
-plugging the three-tile mouth flat holds the lane and nothing else, and the six pieces left
-over are worth more leaned out sideways. Three windfalls have rolled down off the orchard onto
-the green, the nearest of them one tile west of the mouth, and taking that one is worth more
-than the ground the wall gives up bending round to it. 21 tiles and one apple come to 26.
-
-Because a lane is not a stop, it stays out of the world's arithmetic entirely — and that is
-deliberate rather than incidental:
-
-- The tally across the top of the map is still 27 stars over nine puzzles, and the banner still
-  counts nine.
-- Its stars do not pay Stag Mere its toll. The boss asks for 21 of the 24 the trail below it
-  holds, and an optional level may not quietly make a gate the game already set cheaper.
-- Holding the meadow means its nine pens held. The send-off plays, the universe opens, and the
-  lane can still be lying there unplayed.
-- It has no **question** and no floor, because those are the order a trail is built in, and the
-  lane stands beside that order rather than in it. `DifficultyTests` measures the nine.
-
-What it does keep is everything a level keeps for its own sake: its own stars on its own sign,
-its own rainbow for the best pen there is, and the wall that held it, so *Put it back* works
-down the lane like anywhere else.
-
-### The dressing room
-
-Pen Washday Lane — one star is the whole price — and the washing line at the end of it is
-yours. The doors open there and then, on the way back out to the map, and after that the card
-in **Settings** is the way back in: a reward you cannot find twice is a reward you had once.
+- The banner still counts **nine puzzles and 27 stars**.
+- Stag Mere still wants **21 of the 24** the trail below it holds.
+- **Holding the meadow is still its nine pens.** A player who never turns aside finishes the
+  world, sees its send-off and goes out to the universe without ever opening the doors.
+- Nothing is recorded against it: no stars, no rainbow, no wall on file. A door is somewhere to
+  go, not something to beat.
 
 Inside is the pig on a stand and eleven pegs: **ten outfits**, and the bare one she arrived on.
 A peg is the pig wearing the thing, with its name under her and nothing else — a picture of her
 in it is a better account of an outfit than a line of writing beneath the picture, and eleven
-captions under eleven pictures of the same pig say it eleven times worse. The only writing the
-room keeps is one line the first time the doors open, which is the only visit that has anything
-to say.
+captions under eleven pictures of the same pig say it eleven times worse.
 
 | Peg | Where it hangs |
 |---|---|
@@ -313,14 +282,18 @@ the signpost trail, in the practice pen, and out in front of the title. The game
 as one glyph since the first build and an outfit does not change that — it is a second glyph
 hung on the first at a fixed place, size and angle, all three measured as fractions of the pig
 herself, so the same hat sits right on a board tile the size of a fingernail and on the
-dressing-room mirror. Everything already done to the pig — squashed flat on a landing, leaned
+dressing-barn mirror. Everything already done to the pig — squashed flat on a landing, leaned
 into a trot, a shadow under her, a hop when a finger lands on her — is done to the whole of
 her, clothes included. The painted films keep their own pig: a cut scene is a still, not the
 board.
 
+The **Settings** card is the other way in, for a player who is nowhere near the meadow's map
+when the urge takes them. It is drawn locked rather than hidden, and says which stop opens the
+barn.
+
 The choice is a preference rather than progress, kept under one key on the phone, and it is
-the only thing the dressing room remembers. It survives everything except **Clear all game
-data**, which shuts the lane that opened the room and so takes the hats with it.
+the only thing the dressing barn remembers. It survives everything except **Clear all game
+data**, which shuts the stop that opened the barn and so takes the hats with it.
 
 ## The Universe
 
@@ -1814,7 +1787,7 @@ Then work out where on the trail it belongs. `--demand` squares the map off as w
 A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
 Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A stop is not the only thing a level can be. A **lane** — a `WorldSpur` — hangs off a stop as a junction instead of standing in the line, and the meadow's Washday Lane is the one the game has: it carries a level, the index of the stop it leaves, where its sign stands and the glyph painted on that sign in place of a number. A lane is optional by construction, so it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and a level down one needs no baseline in `DifficultyTests` and no `question`. What it does need is its best pen pinned in `shipped` like any other, and something at the end of it worth the walk: the lane is the door to the dressing room, and `DressingRoom` is where the game asks whether that door is open.
+A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the glyph painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 

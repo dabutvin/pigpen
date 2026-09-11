@@ -79,8 +79,10 @@ struct TitleScreenView: View {
     /// root of the stack, and so the one screen that is always there to be asked — opens it.
     private let taps: TappedReminder
     /// What the pig in the pasture has on. The shared wardrobe, read here so that coming back
-    /// from the dressing room puts the new outfit straight on the pig behind the name.
-    private let wardrobe: PigWardrobe = .shared
+    /// from the barn puts the new outfit straight on the pig behind the name — and handed in by
+    /// the screenshot runs, which dress her in memory to photograph the one pig in the game that
+    /// is painted into a canvas rather than drawn as a glyph.
+    private let wardrobe: PigWardrobe
 
     /// - Parameters:
     ///   - today: The day the game is being played on, or nothing at all to ask the phone.
@@ -107,6 +109,7 @@ struct TitleScreenView: View {
         showsReminderPrompt: Bool = false,
         taps: TappedReminder = .shared,
         fullGame: FullGame = .shared,
+        wardrobe: PigWardrobe = .shared,
         rating: RatingPrompt = .shared
     ) {
         _progress = State(initialValue: progress)
@@ -118,6 +121,7 @@ struct TitleScreenView: View {
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
         self.taps = taps
         self.fullGame = fullGame
+        self.wardrobe = wardrobe
         self.rating = rating
     }
 
@@ -173,6 +177,7 @@ struct TitleScreenView: View {
                 progress: progress,
                 daily: daily,
                 reminder: reminder,
+                wardrobe: wardrobe,
                 fullGame: fullGame,
                 onWalkthrough: { wantsWalkthrough = true }
             )

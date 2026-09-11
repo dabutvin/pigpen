@@ -35,7 +35,7 @@ struct SettingsView: View {
     /// The switch everything the game counts goes through, on the same terms as the
     /// buzzing: the shared one, so the toggle moves the thing it names.
     @Bindable var analytics: Analytics = .shared
-    /// What the pig is wearing, so that the card below can show her in it and the dressing room
+    /// What the pig is wearing, so that the card below can show her in it and the dressing barn
     /// this sheet opens is dressing the same pig the boards are drawing.
     var wardrobe: PigWardrobe = .shared
     /// Whether the full game has been bought. The card it draws is the third door to the
@@ -49,7 +49,7 @@ struct SettingsView: View {
 
     /// Whether the projection room is up: every film in the game, one after another.
     @State private var isWatchingFilms = false
-    /// Whether the dressing room is up.
+    /// Whether the dressing barn is up.
     @State private var isDressingUp = false
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
@@ -91,7 +91,7 @@ struct SettingsView: View {
                         tutorial
                         rate
                         films
-                        dressingRoom
+                        dressingBarn
                         feel
                         reminders
                         counting
@@ -116,12 +116,12 @@ struct SettingsView: View {
         .fullScreenCover(isPresented: $isWatchingFilms) {
             FilmReelView(reel: reel)
         }
-        // A page of its own, like this sheet and the reel: the room is a pig on a stand and
+        // A page of its own, like this sheet and the reel: the barn is a pig on a stand and
         // eleven pegs, and a half screen would have the player choosing through a letterbox.
         .fullScreenCover(isPresented: $isDressingUp) {
-            DressingRoomView(wardrobe: wardrobe, haptics: haptics)
+            DressingBarnView(wardrobe: wardrobe, haptics: haptics)
                 .onAppear {
-                    Analytics.record(.dressingRoomOpened(from: DressingRoom.Door.settings.rawValue))
+                    Analytics.record(.dressingBarnOpened(from: DressingBarn.Door.settings.rawValue))
                 }
         }
         .sheet(isPresented: $isOffering) {
@@ -573,21 +573,20 @@ struct SettingsView: View {
         }
     }
 
-    /// The way back into the dressing room.
+    /// The way back into the dressing barn.
     ///
-    /// The room is opened by penning the lane off the meadow's orchard, and it throws its own
-    /// doors open there and then — but that is one moment, down a lane a player may never walk
-    /// again, and a reward you cannot find twice is a reward you had once. So this is the door
-    /// that is always in the same place, beside the rest of what a player goes looking for.
+    /// The barn stands on the meadow's own map, beside the orchard, and that is where a player
+    /// meets it — but the map is a long way from here if the urge takes them anywhere else in
+    /// the game. So this is the door that is always in the same place, beside the rest of what a
+    /// player goes looking for.
     ///
     /// It is drawn locked rather than hidden. A card that is not there says nothing; a card that
-    /// says where the lane is turns the room into something to go and find, which is the whole
-    /// point of hanging it off an optional level. The pig on it is wearing whatever is on the
-    /// peg, so the card says what the room is for without a word.
-    private var dressingRoom: some View {
+    /// says which stop opens the barn turns it into something to go and find. The pig on it is
+    /// wearing whatever is on the peg, so the card says what the barn is for without a word.
+    private var dressingBarn: some View {
         card {
             HStack(spacing: 10) {
-                Text("The dressing room")
+                Text("The dressing barn")
                     .font(.headline.weight(.heavy))
                     .foregroundStyle(GamePalette.post)
 
@@ -597,7 +596,7 @@ struct SettingsView: View {
                     .accessibilityHidden(true)
             }
 
-            Text(dressingRoomBlurb)
+            Text(dressingBarnBlurb)
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(GamePalette.post.opacity(0.7))
                 .fixedSize(horizontal: false, vertical: true)
@@ -606,36 +605,37 @@ struct SettingsView: View {
                 haptics.tap(.medium)
                 isDressingUp = true
             } label: {
-                Label("Open the dressing room", systemImage: "tshirt.fill")
+                Label("Open the dressing barn", systemImage: "tshirt.fill")
                     .font(.subheadline.weight(.heavy))
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
-            .disabled(!isDressingRoomOpen)
-            .opacity(isDressingRoomOpen ? 1 : 0.45)
+            .disabled(!isDressingBarnOpen)
+            .opacity(isDressingBarnOpen ? 1 : 0.45)
             .padding(.top, 4)
 
-            if !isDressingRoomOpen {
-                Label(DressingRoom.directions, systemImage: "lock.fill")
+            if !isDressingBarnOpen {
+                Label(DressingBarn.directions, systemImage: "lock.fill")
                     .font(.caption2)
                     .foregroundStyle(GamePalette.post.opacity(0.55))
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: isDressingRoomOpen)
+        .animation(.easeInOut(duration: 0.25), value: isDressingBarnOpen)
     }
 
-    /// Whether the lane has been penned. Asked of the stars rather than of the world the sheet
-    /// happens to be standing in, so the answer is the same whichever trail opened settings.
-    private var isDressingRoomOpen: Bool {
-        DressingRoom.isOpen(stars: progress.bestStars)
+    /// Whether the stop the barn stands beside has been penned. Asked of the stars rather than
+    /// of the world the sheet happens to be standing in, so the answer is the same whichever
+    /// trail opened settings.
+    private var isDressingBarnOpen: Bool {
+        DressingBarn.isOpen(stars: progress.bestStars)
     }
 
-    private var dressingRoomBlurb: String {
-        guard isDressingRoomOpen else {
+    private var dressingBarnBlurb: String {
+        guard isDressingBarnOpen else {
             return """
-                There is a washing line down a lane off the meadow. Pen the pig in it and \
+                There is a barn beside the meadow's orchard. Get the pig that far and \
                 \(PigOutfit.wardrobe.count) outfits are hers to try on.
                 """
         }
@@ -805,7 +805,7 @@ struct SettingsView: View {
         progress.eraseEverything()
         daily.eraseEverything()
         analytics.eraseEverything()
-        // The hats go with the stars. The lane that opened the dressing room has just been shut
+        // The hats go with the stars. The stop that opened the dressing barn has just been shut
         // again, so a pig still wearing a crown would be wearing something the game no longer
         // admits she has been given.
         wardrobe.eraseEverything()
