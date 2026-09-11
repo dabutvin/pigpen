@@ -152,6 +152,10 @@ jobs:
           # at the end of the gallery rather than renumbering every shot above it.
           capture 69 universe_locked -universe-locked
 
+          # The word the map gives a player who has run the trail out and cannot pay the
+          # boss's price. Numbered high for the same reason as the shot above it.
+          capture 71 toll -toll
+
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock
           # that does not move, and a gallery that size is a worse way to look at them than
