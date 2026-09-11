@@ -200,13 +200,9 @@ struct PuzzleView: View {
 
     private var level: PuzzleLevel { game.level }
 
-    /// What he is saying over a tile, when that is where he is saying it.
-    private var saidOverTheTile: String? {
-        if case .overTheTile(let words) = suitorSays { return words }
-        return nil
-    }
-
-    /// What he is saying over his own corner, when he has no tile to say it on.
+    /// What he is saying from his own corner, when he has no tile to say it on. A word about
+    /// the roses is news rather than an instruction, so it goes of its own accord after a
+    /// beat; what he says over a tile stays up until the piece is laid on it.
     private var saidByHisCorner: String? {
         if case .byHisCorner(let words) = suitorSays { return words }
         return nil
@@ -266,7 +262,7 @@ struct PuzzleView: View {
                         if callout?.id == id { callout = nil }
                     },
                     suitor: suitor,
-                    suitorSays: saidOverTheTile,
+                    suitorSays: suitorSays?.words,
                     treatSkin: treatSkin,
                     skin: skin,
                     outfit: wardrobe.outfit,
@@ -277,6 +273,11 @@ struct PuzzleView: View {
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 // The board is the screen, so it is given all the width there is to give.
                 .padding(.horizontal, 6)
+                .task(id: saidByHisCorner) {
+                    guard saidByHisCorner != nil else { return }
+                    guard await Task.pausing(for: .seconds(8)) else { return }
+                    withAnimation(.easeInOut(duration: 0.25)) { suitorSays = nil }
+                }
 
                 fieldCorrections
                     // Right aligned to the same margin the button below keeps, so the row of
@@ -364,14 +365,6 @@ struct PuzzleView: View {
                 game.startOver()
             }
         }
-        .overlay(alignment: .topLeading) { suitorsCorner }
-        // A word about the roses is news rather than an instruction, so it goes of its own
-        // accord. What he says over a tile stays up until the piece is laid on it.
-        .task(id: saidByHisCorner) {
-            guard saidByHisCorner != nil else { return }
-            guard await Task.pausing(for: .seconds(5)) else { return }
-            withAnimation(.easeInOut(duration: 0.25)) { suitorSays = nil }
-        }
     }
 
     /// The clock, up in the bar with the day's name rather than down on the board: it is
@@ -447,36 +440,6 @@ struct PuzzleView: View {
         if let orders = level.orders {
             noticeBoard(heading: "What to do", saying: orders)
                 .accessibilityLabel("What to do on this level. \(orders)")
-        }
-    }
-
-    /// What Hamish says when he has no tile to say it on: he has nothing left to add, or no
-    /// rose left to add it with.
-    ///
-    /// The same bubble the board gets, with its tail on him down in the corner rather than on
-    /// a square, so that a word about the roses and a word about a tile are plainly the same
-    /// pig talking. It floats over the bottom of the field rather than moving anything, and
-    /// nothing under it is deaf while it is up.
-    @ViewBuilder
-    private var suitorsCorner: some View {
-        if let words = saidByHisCorner {
-            let width: CGFloat = 250
-            Color.clear
-                .frame(width: 1, height: 1)
-                .overlay(alignment: .bottomLeading) {
-                    SuitorTooltip(
-                        words: words,
-                        width: width,
-                        // He stands half a glyph in from the leading edge of the row, and the
-                        // bubble starts at that edge, so its tail has to lean back to him.
-                        tailOffset: 21 - width / 2
-                    )
-                }
-                .offset(y: -3)
-                .allowsHitTesting(false)
-                .transition(
-                    .opacity.combined(with: .scale(scale: 0.92, anchor: .bottomLeading))
-                )
         }
     }
 

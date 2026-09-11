@@ -90,9 +90,10 @@ struct FieldView: View {
     /// Hamish, if he is on the board: a hint asked for, walking in or standing on the tile
     /// the next piece goes on. Nothing during ordinary play.
     var suitor: SuitorMark? = nil
-    /// What he has come to say, in a bubble with its tail on the tile he is standing on. It
-    /// waits until he is there — a bubble towed across the board says nothing useful about
-    /// where it is going — and there is nothing to say when he is not out here at all.
+    /// What he has come to say, in a bubble with its tail on whatever he is talking about:
+    /// the tile he is standing on, or himself down under the corner of the board when he is
+    /// not out here. It waits while he is walking in — a bubble towed across the board says
+    /// nothing useful about where it is going.
     var suitorSays: String? = nil
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
@@ -348,25 +349,23 @@ struct FieldView: View {
             .allowsHitTesting(false)
     }
 
-    /// What Hamish is saying, in a bubble hung off the tile he is standing on.
+    /// What Hamish is saying, in a bubble hung off whatever he is saying it about.
     ///
-    /// Over the tile rather than up under the rack, so that what he says and which square he
-    /// means are one thing rather than two. A bubble with no room to the side of its tile is
-    /// shoved back onto the board and leans its tail over to keep pointing at the right
-    /// square; one over the top of the board hangs underneath its tile instead, since there
-    /// is nothing above those rows to hang in.
+    /// On the board rather than up under the rack, so that what he says and what he means are
+    /// one thing rather than two. A bubble with no room to the side of its mark is shoved back
+    /// onto the board and leans its tail over to keep pointing at the right spot; one over the
+    /// top of the board hangs underneath its tile instead, since there is nothing above those
+    /// rows to hang in.
     @ViewBuilder
     private func suitorWord(board: BoardGeometry, in size: CGSize) -> some View {
-        if let suitor, let suitorSays, suitor.tile == suitor.bound {
+        if let suitorSays, let spot = suitorSpot(board: board, in: size) {
             let width: CGFloat = min(max(size.width * 0.66, 160), 250)
-            let center = board.center(of: suitor.bound)
             let edge: CGFloat = width / 2 + 6
             let x: CGFloat = size.width > width + 12
-                ? min(max(center.x, edge), size.width - edge)
+                ? min(max(spot.at.x, edge), size.width - edge)
                 : size.width / 2
-            let below = center.y < board.cell * 1.6
-            let side: Alignment = below ? .top : .bottom
-            let anchor: UnitPoint = below ? .top : .bottom
+            let side: Alignment = spot.below ? .top : .bottom
+            let anchor: UnitPoint = spot.below ? .top : .bottom
 
             // A point of the board with nothing to it, so that the bubble hung off it can be
             // as tall as its words need without anything having to work out how tall that is.
@@ -376,16 +375,35 @@ struct FieldView: View {
                     SuitorTooltip(
                         words: suitorSays,
                         width: width,
-                        tail: below ? .up : .down,
-                        tailOffset: center.x - x
+                        tail: spot.below ? .up : .down,
+                        tailOffset: spot.at.x - x
                     )
                 }
-                .position(x: x, y: center.y + board.cell * (below ? 0.5 : -0.5))
-                .opacity(suitor.opacity)
+                .position(x: x, y: spot.at.y)
+                .opacity(spot.fade)
                 .allowsHitTesting(false)
                 .accessibilityHidden(true)
                 .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: anchor)))
         }
+    }
+
+    /// Where his bubble belongs: the edge of the tile he is standing on, or — when he is not
+    /// on the board at all — the bottom corner of it, with the tail pointing down at him
+    /// standing under there beside the undo row. Nothing at all while he is still walking in.
+    private func suitorSpot(
+        board: BoardGeometry,
+        in size: CGSize
+    ) -> (at: CGPoint, below: Bool, fade: Double)? {
+        guard let suitor else {
+            return (CGPoint(x: min(31, size.width / 2), y: size.height - 2), false, 1)
+        }
+        guard suitor.tile == suitor.bound else { return nil }
+        let center = board.center(of: suitor.bound)
+        // A bubble over the top rows would hang off the board and over the rack, so those
+        // hang under their tile instead.
+        let below = center.y < board.cell * 1.6
+        let edge = center.y + board.cell * (below ? 0.5 : -0.5)
+        return (CGPoint(x: center.x, y: edge), below, suitor.opacity)
     }
 
     /// What a press just got back off a tile, rising off it and fading out. Written onto
