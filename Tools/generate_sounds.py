@@ -15,8 +15,9 @@ under a game played on a train, and that nothing here sounds like it is trying t
 Usage:
     python3 Tools/generate_sounds.py
 
-Writes one file per sound into Pigpen/Resources/Sounds/. Commit the WAVs — the build reads
-them, not the script. Only the standard library is needed.
+Writes one file per sound into Pigpen/Resources/Sounds/, and the music — a sixteen-bar
+waltz that loops without a seam — into Pigpen/Resources/Music/. Commit the WAVs — the build
+reads them, not the script. Only the standard library is needed.
 """
 
 from __future__ import annotations
@@ -29,15 +30,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "Pigpen/Resources/Sounds"
+MUSIC = ROOT / "Pigpen/Resources/Music/meadow-waltz.wav"
 
 RATE = 44_100
 TAU = 2 * math.pi
 
 # Note names, for the jingles. Concert pitch, equal temperament, nothing fancy.
 NOTES = {
-    "B3": 246.94, "C4": 261.63, "E4": 329.63, "G4": 392.00,
-    "C5": 523.25, "E5": 659.25, "G5": 783.99, "A5": 880.00,
-    "C6": 1046.50, "D6": 1174.66, "E6": 1318.51, "G6": 1567.98,
+    "C3": 130.81, "D3": 146.83, "E3": 164.81, "F3": 174.61, "G3": 196.00, "A3": 220.00,
+    "B3": 246.94, "C4": 261.63, "D4": 293.66, "E4": 329.63, "F4": 349.23, "G4": 392.00,
+    "A4": 440.00, "B4": 493.88,
+    "C5": 523.25, "D5": 587.33, "E5": 659.25, "F5": 698.46, "G5": 783.99, "A5": 880.00,
+    "B5": 987.77,
+    "C6": 1046.50, "D6": 1174.66, "E6": 1318.51, "G6": 1567.98, "C7": 2093.00,
 }
 
 
@@ -151,18 +156,24 @@ def normalised(track: list[float], peak: float) -> list[float]:
     return [s * peak / loudest for s in track]
 
 
-def write(name: str, track: list[float]) -> None:
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    path = OUTPUT / f"{name}.wav"
+def halved(track: list[float]) -> list[float]:
+    """The same track at half the sample rate, each pair of samples averaged. The music is
+    written this way: it is a minute long, nothing in it goes above what half the rate can
+    carry, and a file half the size is a repository half as heavy."""
+    return [(track[i] + track[i + 1]) / 2 for i in range(0, len(track) - 1, 2)]
+
+
+def write(path: Path, track: list[float], rate: int = RATE) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     with wave.open(str(path), "wb") as out:
         out.setnchannels(1)
         out.setsampwidth(2)
-        out.setframerate(RATE)
+        out.setframerate(rate)
         frames = b"".join(
             struct.pack("<h", int(max(-1.0, min(1.0, s)) * 32767)) for s in track
         )
         out.writeframes(frames)
-    print(f"{path.relative_to(ROOT)}  {len(track) / RATE:.2f}s")
+    print(f"{path.relative_to(ROOT)}  {len(track) / rate:.2f}s")
 
 
 # MARK: - The sounds
@@ -223,8 +234,55 @@ def bell(note: str, seconds: float, decay: float) -> list[float]:
     return layered((body, 0), (gain(shine, 0.3), 0))
 
 
-def pen_held() -> list[float]:
-    """The gate shut on a pen that holds: four notes climbing to the octave."""
+def bonus() -> list[float]:
+    """An apple tapped: two quick bright dings, the second a third up, the sound of five
+    points being good news."""
+    return normalised(
+        layered(
+            (bell("E6", 0.16, 0.05), 0.0),
+            (bell("G6", 0.24, 0.08), 0.08),
+        ),
+        0.6,
+    )
+
+
+def penalty() -> list[float]:
+    """A skull tapped: one low bonk sliding downwards, the sound of five points being bad
+    news. The same soft sawtooth as the pig getting away, so the ear files it with that."""
+    bonk = shaped(tone(NOTES["G3"], 0.22, shape="soft-saw", glide_to=NOTES["E3"]),
+                  attack=0.006, decay=0.07, release=0.03)
+    return normalised(bonk, 0.6)
+
+
+# The four verdicts on a pen that holds are the same climb cut at different heights: the
+# further the pen got, the further the notes go. A player hears how well they did before
+# the card says it, and the best pen there is gets a run right up through the rainbow.
+
+def held_one_star() -> list[float]:
+    """Held, and no more than held: two notes, a third apart."""
+    return normalised(
+        layered(
+            (bell("C5", 0.35, 0.12), 0.0),
+            (bell("E5", 0.6, 0.22), 0.12),
+        ),
+        0.75,
+    )
+
+
+def held_two_stars() -> list[float]:
+    """A good pen: the triad, three notes up."""
+    return normalised(
+        layered(
+            (bell("C5", 0.35, 0.12), 0.0),
+            (bell("E5", 0.35, 0.12), 0.11),
+            (bell("G5", 0.65, 0.25), 0.22),
+        ),
+        0.8,
+    )
+
+
+def held_three_stars() -> list[float]:
+    """The level's third star: four notes climbing to the octave."""
     return normalised(
         layered(
             (bell("C5", 0.35, 0.12), 0.0),
@@ -234,6 +292,21 @@ def pen_held() -> list[float]:
         ),
         0.8,
     )
+
+
+def held_best_pen() -> list[float]:
+    """The best pen the map allows — the rainbow: the climb carried on up through a second
+    octave, and the top note left ringing with the chord under it."""
+    steps = ["C5", "E5", "G5", "C6", "E6", "G6", "C7"]
+    climb = [(bell(note, 0.3, 0.1), i * 0.085) for i, note in enumerate(steps)]
+    top_at = (len(steps) - 1) * 0.085
+    ring = [
+        (bell("C7", 1.0, 0.4), top_at),
+        (gain(bell("C6", 1.0, 0.45), 0.5), top_at),
+        (gain(bell("E6", 1.0, 0.45), 0.4), top_at),
+        (gain(bell("G6", 1.0, 0.45), 0.4), top_at),
+    ]
+    return normalised(layered(*climb, *ring), 0.85)
 
 
 def pig_away() -> list[float]:
@@ -271,17 +344,109 @@ SOUNDS = {
     "fence-out": fence_out,
     "refusal": refusal,
     "callout": callout,
+    "bonus": bonus,
+    "penalty": penalty,
     "press": press,
     "hop": hop,
-    "pen-held": pen_held,
+    "held-one-star": held_one_star,
+    "held-two-stars": held_two_stars,
+    "held-three-stars": held_three_stars,
+    "held-best-pen": held_best_pen,
     "pig-away": pig_away,
     "fanfare": fanfare,
 }
 
 
+# MARK: - The music
+
+# A waltz for the meadow: sixteen bars in C, a music box over an oom-pah-pah, that comes
+# round to its own beginning so the phone can loop it without a seam. The tune is two
+# eight-bar phrases, the first left hanging on the five chord and the second brought home.
+WALTZ_BPM = 96
+WALTZ_BEAT = 60 / WALTZ_BPM
+WALTZ_BARS = 16
+
+# One bar to a line: the chord under it, and the tune over it as (note, beats) pairs that
+# add up to three. A None is a beat of rest.
+WALTZ = [
+    ("C", [("C5", 2), ("D5", 1)]),
+    ("C", [("E5", 2), ("G5", 1)]),
+    ("F", [("A5", 2), ("F5", 1)]),
+    ("G", [("G5", 3)]),
+    ("C", [("E5", 2), ("D5", 1)]),
+    ("Am", [("C5", 2), ("E5", 1)]),
+    ("Dm", [("D5", 1), ("E5", 1), ("F5", 1)]),
+    ("G", [("G5", 2), (None, 1)]),
+    ("C", [("C5", 2), ("D5", 1)]),
+    ("Em", [("E5", 2), ("G5", 1)]),
+    ("F", [("A5", 2), ("F5", 1)]),
+    ("C", [("E5", 3)]),
+    ("Am", [("A5", 2), ("G5", 1)]),
+    ("Dm", [("F5", 1), ("E5", 1), ("D5", 1)]),
+    ("G", [("D5", 2), ("B4", 1)]),
+    ("C", [("C5", 3)]),
+]
+
+# Each chord as the bass note that goes under it and the three notes the pah-pah plays.
+CHORDS = {
+    "C": ("C3", ["C4", "E4", "G4"]),
+    "F": ("F3", ["F4", "A4", "C5"]),
+    "G": ("G3", ["G4", "B4", "D5"]),
+    "Am": ("A3", ["A4", "C5", "E5"]),
+    "Dm": ("D3", ["D4", "F4", "A4"]),
+    "Em": ("E3", ["E4", "G4", "B4"]),
+}
+
+
+def music_box(note: str, seconds: float) -> list[float]:
+    """The tune's instrument: the bell again, softer and longer, with a touch of the
+    twelfth in it the way a plucked tine has."""
+    body = shaped(tone(NOTES[note], seconds, shape="triangle"), attack=0.003, decay=0.28)
+    shine = shaped(tone(NOTES[note] * 2, seconds), attack=0.003, decay=0.15)
+    tine = shaped(tone(NOTES[note] * 3, seconds), attack=0.003, decay=0.08)
+    return layered((body, 0), (gain(shine, 0.25), 0), (gain(tine, 0.08), 0))
+
+
+def meadow_waltz() -> list[float]:
+    """The whole loop, rendered into a buffer exactly as long as the sixteen bars, with
+    every note's tail wrapped round to the start — which is what makes the seam silent."""
+    length = samples(WALTZ_BARS * 3 * WALTZ_BEAT)
+    out = [0.0] * length
+
+    def put(track: list[float], at: float, level: float) -> None:
+        start = samples(at)
+        for i, s in enumerate(track):
+            out[(start + i) % length] += s * level
+
+    for bar, (chord, tune) in enumerate(WALTZ):
+        bar_at = bar * 3 * WALTZ_BEAT
+        bass, triad = CHORDS[chord]
+
+        # Oom: the root on the first beat, on a sine that sits under everything.
+        put(shaped(tone(NOTES[bass], 0.9, shape="sine"), attack=0.01, decay=0.35), bar_at, 0.42)
+        # Pah, pah: the triad on the second and third, quietly.
+        for beat in (1, 2):
+            for note in triad:
+                put(
+                    shaped(tone(NOTES[note], 0.45, shape="triangle"), attack=0.01, decay=0.16),
+                    bar_at + beat * WALTZ_BEAT,
+                    0.09,
+                )
+
+        # The tune.
+        beat_at = bar_at
+        for note, beats in tune:
+            if note is not None:
+                put(music_box(note, beats * WALTZ_BEAT + 0.4), beat_at, 0.5)
+            beat_at += beats * WALTZ_BEAT
+
+    return normalised(out, 0.6)
+
+
 def main() -> None:
     for name, make in SOUNDS.items():
-        write(name, make())
+        write(OUTPUT / f"{name}.wav", make())
+    write(MUSIC, halved(meadow_waltz()), rate=RATE // 2)
 
 
 if __name__ == "__main__":

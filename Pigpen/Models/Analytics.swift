@@ -516,6 +516,12 @@ extension AnalyticsSignal {
         AnalyticsSignal("Settings.soundsSwitched", ["on": String(on)])
     }
 
+    /// The tune's switch, counted apart from the noises for the same reason: a waltz most
+    /// players turn off is a waltz worth replacing.
+    static func musicSwitched(on: Bool) -> AnalyticsSignal {
+        AnalyticsSignal("Settings.musicSwitched", ["on": String(on)])
+    }
+
     static func analyticsSwitched(on: Bool) -> AnalyticsSignal {
         AnalyticsSignal("Settings.analyticsSwitched", ["on": String(on)])
     }

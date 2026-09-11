@@ -317,7 +317,7 @@ struct TutorialView: View {
         guard !reduceMotion else {
             guard await Task.pausing(for: .milliseconds(350)) else { return }
             Haptics.buzz(.success)
-            Sounds.play(.penHeld)
+            Sounds.play(.heldThreeStars)
             return
         }
 
@@ -326,7 +326,9 @@ struct TutorialView: View {
 
         guard await cheer.waitOut() else { return }
         Haptics.buzz(.success)
-        Sounds.play(.penHeld)
+        // The practice pen is scripted to hold and holds well, and it is the first pen a
+        // new player hears: the full climb, so the sound of a third star is learned here.
+        Sounds.play(.heldThreeStars)
 
         await cheer.waitForTheConfetti()
         celebration = nil

@@ -29,8 +29,10 @@ targets:
     resources:
       - path: Pigpen/Resources/Assets.xcassets
       - path: Pigpen/Resources/PrivacyInfo.xcprivacy
-      # Every noise the game makes, written by Tools/generate_sounds.py and played by name.
+      # Every noise the game makes, written by Tools/generate_sounds.py and played by name,
+      # and the one tune it loops under them.
       - path: Pigpen/Resources/Sounds
+      - path: Pigpen/Resources/Music
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pigpen.app

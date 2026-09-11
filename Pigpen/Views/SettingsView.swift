@@ -34,6 +34,8 @@ struct SettingsView: View {
     @Bindable var haptics: Haptics = .shared
     /// The switch the whole game is heard through, on the same terms.
     @Bindable var sounds: Sounds = .shared
+    /// The switch the tune under it all is heard through, on the same terms again.
+    @Bindable var music: Music = .shared
     /// The switch everything the game counts goes through, on the same terms as the
     /// buzzing: the shared one, so the toggle moves the thing it names.
     @Bindable var analytics: Analytics = .shared
@@ -418,11 +420,12 @@ struct SettingsView: View {
     /// so the switch answers in the thing it governs rather than in words. Turning it off
     /// says nothing, which is the whole point of turning it off.
     ///
-    /// Two switches rather than one, because the two reasons are two: a phone on a table
-    /// wants the buzz off and the sound on, and a quiet carriage wants it the other way
-    /// round. The sound also follows the phone's own ring/silent switch, and the line under
-    /// it says so, since a switch that is on and a phone that is silent would otherwise
-    /// look like a game that has gone quiet.
+    /// Three switches rather than one, because the three reasons are three: a phone on a
+    /// table wants the buzz off and the sound on, a quiet carriage wants it the other way
+    /// round, and a player who likes the knock of the fencing and not a tune under it is
+    /// not a strange one. The sound and the music also follow the phone's own ring/silent
+    /// switch, and the line under them says so, since a switch that is on and a phone that
+    /// is silent would otherwise look like a game that has gone quiet.
     private var feel: some View {
         card {
             Text("Sound and feel")
@@ -440,6 +443,18 @@ struct SettingsView: View {
                 Analytics.record(.soundsSwitched(on: on))
             }
 
+            // The tune answers for itself: on, and the waltz picks up where it left off;
+            // off, and it stops — which is the thing it governs, and needs no tick.
+            Toggle(isOn: $music.isOn) {
+                Text("Music")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+            }
+            .tint(GamePalette.clover)
+            .onChange(of: music.isOn) { _, on in
+                Analytics.record(.musicSwitched(on: on))
+            }
+
             Toggle(isOn: $haptics.isOn) {
                 Text("Haptics")
                     .font(.subheadline.weight(.heavy))
@@ -454,7 +469,9 @@ struct SettingsView: View {
             Text(
                 """
                 The knock and the little buzz as fencing goes in, a pen holds, or the pig \
-                gets away. Sounds follow the ring/silent switch on the side of the phone.
+                gets away, and the waltz under it all. Sounds and music follow the \
+                ring/silent switch on the side of the phone, and the music stays out of \
+                the way of anything you already have playing.
                 """
             )
             .font(.caption2)
@@ -870,6 +887,12 @@ private func previewSounds(isOn: Bool = true) -> Sounds {
     Sounds(store: RememberedSounds(isOn: isOn), engine: RecordedSounds())
 }
 
+/// And for the tune.
+@MainActor
+private func previewMusic(isOn: Bool = true) -> Music {
+    Music(store: RememberedMusic(isOn: isOn), engine: RecordedMusic())
+}
+
 /// Counting held in memory and going nowhere, so that flicking the toggle in a preview
 /// neither changes the setting on this machine nor puts a preview on the charts.
 @MainActor
@@ -886,6 +909,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 reminder: .reminding(),
                 haptics: previewHaptics(),
                 sounds: previewSounds(),
+                music: previewMusic(),
                 analytics: previewAnalytics(),
                 wardrobe: .remembering(.sunHat),
                 fullGame: .locked()
@@ -903,6 +927,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 reminder: .reminding(),
                 haptics: previewHaptics(),
                 sounds: previewSounds(),
+                music: previewMusic(),
                 analytics: previewAnalytics(),
                 wardrobe: .remembering(.crown),
                 fullGame: .unlocked()
@@ -918,6 +943,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         reminder: .neverAsked(),
         haptics: previewHaptics(),
         sounds: previewSounds(),
+        music: previewMusic(),
         analytics: previewAnalytics(),
         wardrobe: .remembering()
     )
@@ -930,18 +956,20 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         reminder: .refused(),
         haptics: previewHaptics(),
         sounds: previewSounds(),
+        music: previewMusic(),
         analytics: previewAnalytics(),
         wardrobe: .remembering()
     )
 }
 
-#Preview("Sounds and haptics off") {
+#Preview("Sounds, music and haptics off") {
     SettingsView(
         progress: .partWayThrough(),
         daily: DailyProgress(store: RememberedDailyRecords()),
         reminder: .reminding(),
         haptics: previewHaptics(isOn: false),
         sounds: previewSounds(isOn: false),
+        music: previewMusic(isOn: false),
         analytics: previewAnalytics(),
         wardrobe: .remembering(.wellies)
     )

@@ -15,14 +15,24 @@ enum Sound: String, CaseIterable, Equatable {
     case fenceOut = "fence-out"
     /// The field or the budget saying no.
     case refusal
-    /// A word floating off a tile: a treat's points, an animal's call.
+    /// A word floating off a tile: an animal's call, a signpost unveiled.
     case callout
+    /// An apple tapped: five points of good news.
+    case bonus
+    /// A skull tapped: five points of bad news.
+    case penalty
     /// A button taking a press, a page turning, a peg tapped on the barn wall.
     case press
     /// An animal landing after a hop on its lap of honour.
     case hop
-    /// The gate shut on a pen that holds.
-    case penHeld = "pen-held"
+    /// The gate shut on a pen that holds, and no more than holds.
+    case heldOneStar = "held-one-star"
+    /// The gate shut on a good pen.
+    case heldTwoStars = "held-two-stars"
+    /// The gate shut on a pen worth the level's third star.
+    case heldThreeStars = "held-three-stars"
+    /// The gate shut on the best pen the map allows — the rainbow.
+    case heldBestPen = "held-best-pen"
     /// The gate opened on a gap, or a boss's rule broken.
     case pigAway = "pig-away"
     /// A world held, a new one opening, the whole game bought.
@@ -31,6 +41,24 @@ enum Sound: String, CaseIterable, Equatable {
     /// The file this sound is kept in, if the bundle asked has it.
     func file(in bundle: Bundle = .main) -> URL? {
         bundle.url(forResource: rawValue, withExtension: "wav")
+    }
+
+    /// What a pen that holds sounds like, by how well it held. The four are the same climb
+    /// cut at different heights, so a player hears how they did before the card says it —
+    /// and the best pen there is gets the run right up through the rainbow, whatever the
+    /// star count beside it.
+    static func held(_ verdict: PenVerdict) -> Sound {
+        if verdict.isAsGoodAsItGets { return .heldBestPen }
+        switch verdict.stars {
+        case ...1: return .heldOneStar
+        case 2: return .heldTwoStars
+        default: return .heldThreeStars
+        }
+    }
+
+    /// What tapping a treat sounds like: by its sign, since that is the whole of the news.
+    static func tapped(_ treat: Treat) -> Sound {
+        treat.worth > 0 ? .bonus : .penalty
     }
 }
 
@@ -48,7 +76,7 @@ protocol SoundEngine {
 ///
 /// Every file is opened and readied once, when the engine is made, so the first fence of a
 /// game goes in with its knock rather than a beat behind it. The players are then kept for
-/// the life of the app: nine short clips is a few hundred kilobytes, and a player asked for
+/// the life of the app: fourteen short clips is under a megabyte, and a player asked for
 /// on every tile of a drag is not one to be opened on every tile of a drag.
 @MainActor
 final class SpeakerSounds: SoundEngine {
