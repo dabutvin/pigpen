@@ -21,6 +21,9 @@ struct TutorialView: View {
     @State private var continueShake: CGFloat = 0
     @State private var refusedThisPress = false
 
+    /// What the pig has on, read off the one wardrobe the game keeps.
+    private let wardrobe: PigWardrobe = .shared
+
     /// The height of the one slot the walkthrough's button stands in: the button's own
     /// lettering and padding plus the depth it sinks through when pressed.
     private static let actionSlotHeight: CGFloat = 58
@@ -71,6 +74,9 @@ struct TutorialView: View {
                     highlightedTiles: lesson.highlightedTiles,
                     highlightShake: targetShake,
                     pricedTiles: lesson.pricedTiles,
+                    // The walkthrough can be read again at any point from settings, and a player
+                    // who has dressed the pig should not meet an undressed one in it.
+                    outfit: wardrobe.outfit,
                     onStroke: { build($0) },
                     onStrokeEnd: { lesson.endStroke() }
                 )

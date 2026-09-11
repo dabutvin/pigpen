@@ -26,23 +26,82 @@ struct WorldNode: Identifiable, Sendable {
     }
 }
 
-/// The levels of one world, in the order the pig walks them.
+/// What is painted on a door's sign, where a stop carries its number.
+///
+/// Named rather than given as a glyph, because the game paints its own scenery: the mark on the
+/// dressing barn's sign is the barn standing at the foot of the meadow — the same red walls, the
+/// same dark gable — drawn small, and there is no emoji in the world for that.
+enum DoorMark: Hashable, Sendable {
+    /// The barn itself, as the map draws it at the bottom of the trail.
+    case barn
+}
+
+/// Somewhere off the side of a trail that is not a puzzle: a door the trail passes.
+///
+/// A stop is the way on — beat it and the next one opens — which is why the trail is a line and
+/// why the nine of them are ordered by what they ask. A door is none of that. It stands beside
+/// a stop, it leads nowhere, nothing behind it is waiting on it, and a player who never turns
+/// aside finishes the world without opening it.
+///
+/// It is not a level either. It has no board, no budget, no stars and no rainbow: it opens when
+/// the stop it stands beside has been penned, and tapping it takes you straight through. A world
+/// counts itself in the nine pens of its trail, and a door changes none of that arithmetic —
+/// not the tally across the top of the map, not what a boss's toll costs, not what *the world
+/// held* means.
+///
+/// There is one in the game: the dressing barn beside the meadow's orchard.
+struct WorldSpur: Identifiable, Hashable, Sendable {
+    /// What the sign says, which is the whole of what is behind it.
+    let name: String
+    /// The stop it stands beside, as an index into the trail's own stops. Penning that stop is
+    /// what opens the door, and nothing else bears on it.
+    let junction: Int
+    /// Where the sign stands, on the same fractions the stops are placed by.
+    let across: Double
+    let up: Double
+    /// What is painted on that sign, where a stop carries its number. A door has no number —
+    /// it is not one of the nine — so it shows what it is instead.
+    let mark: DoorMark
+
+    var id: String { name }
+}
+
+/// The levels of one world: the stops in the order the pig walks them, and any doors standing
+/// off the side of that trail.
 struct WorldMap: Sendable {
     let name: String
     let nodes: [WorldNode]
+    /// The doors standing off the trail, which are not levels. Empty for every world but the
+    /// meadow, which keeps the dressing barn beside its orchard.
+    let spurs: [WorldSpur]
 
+    init(name: String, nodes: [WorldNode], spurs: [WorldSpur] = []) {
+        self.name = name
+        self.nodes = nodes
+        self.spurs = spurs
+    }
+
+    /// How many stops the trail has. A door is not a stop, so it is not counted here, nor
+    /// anywhere else the world counts itself.
     var count: Int { nodes.count }
 
     subscript(index: Int) -> WorldNode { nodes[index] }
 
-    /// How far up the trail the last stop stands, which is the length of the world.
-    var reach: Double { nodes.map(\.up).max() ?? 0 }
+    /// How far up the meadow the furthest thing in the world stands, which is how tall the
+    /// map has to be drawn. The last stop, usually — but a door standing higher than the stop
+    /// it keeps beside still has to fit on the hillside.
+    var reach: Double { (nodes.map(\.up) + spurs.map(\.up)).max() ?? 0 }
 
     func index(of levelID: String) -> Int? {
         nodes.firstIndex { $0.id == levelID }
     }
 
-    /// Every star the world has in it, for a player who takes all of them.
+    func spur(withID id: String) -> WorldSpur? {
+        spurs.first { $0.id == id }
+    }
+
+    /// Every star the world has in it, for a player who takes all of them. The trail's, and
+    /// only the trail's — a door has none to give: see `WorldSpur`.
     var starTotal: Int { count * 3 }
 }
 
@@ -65,6 +124,11 @@ extension WorldMap {
     /// The last three are ordered by what they put on the ground instead, since that is the
     /// harder thing about them: apples, then skulls to build around as well, then a second
     /// animal and one budget to split between the two.
+    ///
+    /// There is one thing in the meadow that is not one of the nine, and not a puzzle at all:
+    /// the dressing barn, standing off the trail beside the seventh stop. Penning the orchard
+    /// opens its doors and tapping it walks you in — it is not on the way anywhere, and the
+    /// arithmetic of the world does not know it exists. See `WorldSpur`.
     static let mudlarkMeadow = WorldMap(
         name: "Mudlark Meadow",
         nodes: [
@@ -77,6 +141,15 @@ extension WorldMap {
             WorldNode(level: .windfallOrchard, across: 0.24, up: 6.06),
             WorldNode(level: .sourGround, across: 0.74, up: 7.00),
             WorldNode(level: .stagMere, across: 0.28, up: 8.06, starToll: 21)
+        ],
+        spurs: [
+            // The dressing barn, standing in the corner of the field the orchard backs onto.
+            // It keeps beside the seventh stop and stands away west of it, far enough off the
+            // path that the two signs never crowd one another and low enough that the mist over
+            // the unearned meadow still covers it until the orchard has been penned. It is not
+            // a puzzle and never was: pen the orchard and the doors are open. Its sign carries a
+            // small painting of the barn at the foot of the trail, so the two read as one building.
+            WorldSpur(name: "Dressing Barn", junction: 6, across: 0.04, up: 6.70, mark: .barn)
         ]
     )
 }

@@ -202,6 +202,14 @@ final class WorldProgress {
 
     func isCleared(_ index: Int) -> Bool { stars(at: index) > 0 }
 
+    /// Whether a door off the trail is open: the stop it stands beside has to have been penned,
+    /// and that is the whole of it. A door is never on the way to anything, so there is no toll
+    /// on one and nothing past it has any say in it.
+    func isOpen(_ spur: WorldSpur) -> Bool { isCleared(spur.junction) }
+
+    /// Whether the dressing barn is open, which is the one thing in the game a door decides.
+    var isDressingBarnOpen: Bool { DressingBarn.isOpen(stars: bestStars) }
+
     /// How far along the trail play has got: the first level still to be cleared, or the
     /// last stop on the map once the whole world is done. A stop with a star toll on it
     /// can still be shut inside that.
@@ -498,6 +506,26 @@ extension WorldProgress {
             // A trail rushed and then part-way bettered: within sight of the gate, and not
             // through it.
             stars[node.id] = index < 3 ? 3 : 2
+        }
+        return WorldProgress(
+            world: world,
+            store: RememberedProgress(
+                stars: stars,
+                scenesPlayed: [CutScene.Name.opening.rawValue, TutorialLesson.seenKey]
+            )
+        )
+    }
+
+    /// The meadow as far as the orchard, which is the stop the dressing barn stands beside and
+    /// so the moment its doors are first open.
+    ///
+    /// Seven stops held, so a preview or a screenshot shows the fork as a player meets it: the
+    /// trail climbing on past the orchard, and a path off to one side with the barn at the end
+    /// of it.
+    static func atTheBarn(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
+        var stars: [String: Int] = [:]
+        for node in world.nodes.prefix(7) {
+            stars[node.id] = 3
         }
         return WorldProgress(
             world: world,

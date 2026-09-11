@@ -18,9 +18,20 @@ struct LevelSignpost: View {
         case tolled(have: Int, need: Int)
     }
 
+    /// What this signpost is standing at: a numbered stop on the trail, or a door beside it.
+    ///
+    /// A door has no number, because it is not one of the world's nine — it carries a small
+    /// painting in place of one and says what it is rather than where it comes. It has no stars
+    /// either: it is somewhere to go rather than something to beat, and three hollow stars over a
+    /// door would be three promises nothing behind it can keep.
+    enum Sign: Equatable {
+        case stop(Int)
+        case door(DoorMark)
+    }
+
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    let number: Int
+    let sign: Sign
     let name: String
     let stars: Int
     let standing: Standing
@@ -74,8 +85,15 @@ struct LevelSignpost: View {
             starRow()
                 .overlay { if showsRainbow { rainbow } }
                 .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
-                .opacity(standing == .shut ? 0 : 1)
+                // Kept in place but unpainted over a door and over a stop nobody can play yet,
+                // so that every sign in the meadow stands at the same height whatever it is.
+                .opacity(standing == .shut || !hasStars ? 0 : 1)
         }
+    }
+
+    /// Whether there are stars to show at all. A door is not a puzzle and has none.
+    private var hasStars: Bool {
+        if case .door = sign { false } else { true }
     }
 
     /// Whether this stop's stars are the rainbow sort: the best pen found, and the level
@@ -121,7 +139,9 @@ struct LevelSignpost: View {
 
     private var face: some View {
         ZStack {
-            if standing == .open, !reduceMotion {
+            // Never over a door: the ring means *play me*, and a door that has nothing to play
+            // would pulse for the rest of the game without ever being satisfied.
+            if standing == .open, hasStars, !reduceMotion {
                 beckoning
             }
 
@@ -176,9 +196,16 @@ struct LevelSignpost: View {
                 .font(.system(size: 21, weight: .black))
                 .foregroundStyle(GamePalette.cream.opacity(0.85))
         case .open, .cleared:
-            Text("\(number)")
-                .font(.system(size: 26, weight: .black, design: .rounded))
-                .foregroundStyle(GamePalette.post)
+            switch sign {
+            case .stop(let number):
+                Text("\(number)")
+                    .font(.system(size: 26, weight: .black, design: .rounded))
+                    .foregroundStyle(GamePalette.post)
+            case .door(.barn):
+                // Painted, not set as a glyph: the sign carries the barn standing at the foot of
+                // the trail, drawn small. See `Barn`.
+                BarnMark(walls: 30)
+            }
         }
     }
 
@@ -212,18 +239,32 @@ struct LevelSignpost: View {
         }
     }
 
+    /// How the sign names itself out loud. A stop is called by its number and its name; a door
+    /// has only its name, which is already the whole of what is behind it.
+    private var called: String {
+        switch sign {
+        case .stop(let number): "Level \(number), \(name)"
+        case .door: name
+        }
+    }
+
     private var spokenLabel: String {
         let spelled = ["no", "one", "two", "three"]
+        // A door is open or it is not. Nothing has been played there and nothing ever will be,
+        // so the words a stop uses — *not yet played*, a count of stars — would all be wrong.
+        guard hasStars else {
+            return standing == .shut ? "\(called), locked" : "\(called), open"
+        }
         switch standing {
         case .shut:
-            return "Level \(number), \(name), locked"
+            return "\(called), locked"
         case .tolled(let have, let need):
-            return "Level \(number), \(name), locked until \(need) stars, \(have) so far"
+            return "\(called), locked until \(need) stars, \(have) so far"
         case .open:
-            return "Level \(number), \(name), not yet played"
+            return "\(called), not yet played"
         case .cleared:
             let count = spelled[min(max(stars, 0), 3)]
-            let earned = "Level \(number), \(name), \(count) star\(stars == 1 ? "" : "s")"
+            let earned = "\(called), \(count) star\(stars == 1 ? "" : "s")"
             // Worth saying out loud as well as showing: it is the one thing three stars
             // does not already say.
             return hasTheBestPen ? earned + ", the best pen there is" : earned
@@ -242,13 +283,16 @@ struct SignpostButtonStyle: ButtonStyle {
 
 #Preview {
     HStack(spacing: 18) {
-        LevelSignpost(number: 1, name: "River Bend", stars: 3, standing: .cleared, hasTheBestPen: true)
+        LevelSignpost(sign: .stop(1), name: "River Bend", stars: 3, standing: .cleared, hasTheBestPen: true)
         // Three stars and still something left in the map, which is what the rainbow is
         // there to tell apart from the one beside it.
-        LevelSignpost(number: 2, name: "Puddle Corner", stars: 3, standing: .cleared)
-        LevelSignpost(number: 3, name: "Horseshoe Lake", stars: 0, standing: .open)
-        LevelSignpost(number: 4, name: "The Narrows", stars: 0, standing: .shut)
-        LevelSignpost(number: 9, name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
+        LevelSignpost(sign: .stop(2), name: "Puddle Corner", stars: 3, standing: .cleared)
+        LevelSignpost(sign: .stop(3), name: "Horseshoe Lake", stars: 0, standing: .open)
+        LevelSignpost(sign: .stop(4), name: "The Narrows", stars: 0, standing: .shut)
+        LevelSignpost(sign: .stop(9), name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
+        // The dressing barn beside the orchard, which carries a painting of itself where a stop
+        // carries its number, and no stars at all.
+        LevelSignpost(sign: .door(.barn), name: "Dressing Barn", stars: 0, standing: .open)
     }
     .padding(40)
     .background(GamePalette.beyond)

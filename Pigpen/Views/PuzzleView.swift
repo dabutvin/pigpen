@@ -51,6 +51,11 @@ struct PuzzleView: View {
     /// mean nothing on a chart. A preview, a screenshot run and the practice pen pass
     /// nothing and are counted as nothing, which is what they are.
     private let trail: (world: String, stop: Int)?
+    /// What the pig has on, handed to the field. The one wardrobe the game keeps, by default —
+    /// there is one pig and she is dressed in one place, so a board has no opinion about her hat
+    /// — and handed in by the screenshot runs, which dress her in memory to photograph a board
+    /// that proves an outfit is worn out here and not only in the barn.
+    private let wardrobe: PigWardrobe
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -100,6 +105,7 @@ struct PuzzleView: View {
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
+        wardrobe: PigWardrobe = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
@@ -113,6 +119,7 @@ struct PuzzleView: View {
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
             trail: trail,
+            wardrobe: wardrobe,
             onPenned: onPenned,
             onLeave: onLeave
         )
@@ -130,6 +137,7 @@ struct PuzzleView: View {
         wayOutTitle: String = "Continue",
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
+        wardrobe: PigWardrobe = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
@@ -142,6 +150,7 @@ struct PuzzleView: View {
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
         self.trail = trail
+        self.wardrobe = wardrobe
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
         _clock = State(initialValue: clock)
@@ -199,6 +208,7 @@ struct PuzzleView: View {
                     },
                     treatSkin: treatSkin,
                     skin: skin,
+                    outfit: wardrobe.outfit,
                     onStroke: { build($0) },
                     onStrokeEnd: { game.endStroke() }
                 )

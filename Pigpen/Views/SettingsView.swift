@@ -35,6 +35,9 @@ struct SettingsView: View {
     /// The switch everything the game counts goes through, on the same terms as the
     /// buzzing: the shared one, so the toggle moves the thing it names.
     @Bindable var analytics: Analytics = .shared
+    /// What the pig is wearing, so that the card below can show her in it and the dressing barn
+    /// this sheet opens is dressing the same pig the boards are drawing.
+    var wardrobe: PigWardrobe = .shared
     /// Whether the full game has been bought. The card it draws is the third door to the
     /// offer — beside the locked worlds on the map and the shut days in the archive — and
     /// the one place a player who already owns it can be told so.
@@ -46,6 +49,8 @@ struct SettingsView: View {
 
     /// Whether the projection room is up: every film in the game, one after another.
     @State private var isWatchingFilms = false
+    /// Whether the dressing barn is up.
+    @State private var isDressingUp = false
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
     /// Whether the offer of the full game is up, raised by the card's own button.
@@ -86,6 +91,7 @@ struct SettingsView: View {
                         tutorial
                         rate
                         films
+                        dressingBarn
                         feel
                         reminders
                         counting
@@ -109,6 +115,14 @@ struct SettingsView: View {
         // between black bars with nothing else on the glass, and a reel of them is no different.
         .fullScreenCover(isPresented: $isWatchingFilms) {
             FilmReelView(reel: reel)
+        }
+        // A page of its own, like this sheet and the reel: the barn is a pig on a stand and
+        // eleven pegs, and a half screen would have the player choosing through a letterbox.
+        .fullScreenCover(isPresented: $isDressingUp) {
+            DressingBarnView(wardrobe: wardrobe, haptics: haptics)
+                .onAppear {
+                    Analytics.record(.dressingBarnOpened(from: DressingBarn.Door.settings.rawValue))
+                }
         }
         .sheet(isPresented: $isOffering) {
             FullGameOffer(fullGame: fullGame, source: .settings)
@@ -559,6 +573,78 @@ struct SettingsView: View {
         }
     }
 
+    /// The way back into the dressing barn.
+    ///
+    /// The barn stands on the meadow's own map, beside the orchard, and that is where a player
+    /// meets it — but the map is a long way from here if the urge takes them anywhere else in
+    /// the game. So this is the door that is always in the same place, beside the rest of what a
+    /// player goes looking for.
+    ///
+    /// It is drawn locked rather than hidden. A card that is not there says nothing; a card that
+    /// says which stop opens the barn turns it into something to go and find. The pig on it is
+    /// wearing whatever is on the peg, so the card says what the barn is for without a word.
+    private var dressingBarn: some View {
+        card {
+            HStack(spacing: 10) {
+                Text("The dressing barn")
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+
+                Spacer(minLength: 0)
+
+                DressedAnimal(animal: .pig, size: 34, outfit: wardrobe.outfit)
+                    .accessibilityHidden(true)
+            }
+
+            Text(dressingBarnBlurb)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(GamePalette.post.opacity(0.7))
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                haptics.tap(.medium)
+                isDressingUp = true
+            } label: {
+                Label("Open the dressing barn", systemImage: "tshirt.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
+            .disabled(!isDressingBarnOpen)
+            .opacity(isDressingBarnOpen ? 1 : 0.45)
+            .padding(.top, 4)
+
+            if !isDressingBarnOpen {
+                Label(DressingBarn.directions, systemImage: "lock.fill")
+                    .font(.caption2)
+                    .foregroundStyle(GamePalette.post.opacity(0.55))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: isDressingBarnOpen)
+    }
+
+    /// Whether the stop the barn stands beside has been penned. Asked of the stars rather than
+    /// of the world the sheet happens to be standing in, so the answer is the same whichever
+    /// trail opened settings.
+    private var isDressingBarnOpen: Bool {
+        DressingBarn.isOpen(stars: progress.bestStars)
+    }
+
+    private var dressingBarnBlurb: String {
+        guard isDressingBarnOpen else {
+            return """
+                There is a barn beside the meadow's orchard. Get the pig that far and \
+                \(PigOutfit.wardrobe.count) outfits are hers to try on.
+                """
+        }
+        return """
+            \(PigOutfit.wardrobe.count) outfits on the wall, and the bare peg she arrived on. \
+            Whatever is on her in there, she wears it on every board.
+            """
+    }
+
     /// Everything the game has kept, and the way to be rid of it.
     private var gameData: some View {
         card {
@@ -719,6 +805,10 @@ struct SettingsView: View {
         progress.eraseEverything()
         daily.eraseEverything()
         analytics.eraseEverything()
+        // The hats go with the stars. The stop that opened the dressing barn has just been shut
+        // again, so a pig still wearing a crown would be wearing something the game no longer
+        // admits she has been given.
+        wardrobe.eraseEverything()
         hasCleared = true
         haptics.buzz(.success)
         // The reminder is a preference rather than progress, so it survives — but what it had
@@ -765,6 +855,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 reminder: .reminding(),
                 haptics: previewHaptics(),
                 analytics: previewAnalytics(),
+                wardrobe: .remembering(.sunHat),
                 fullGame: .locked()
             )
             .presentationDetents([.medium, .large])
@@ -780,6 +871,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
                 reminder: .reminding(),
                 haptics: previewHaptics(),
                 analytics: previewAnalytics(),
+                wardrobe: .remembering(.crown),
                 fullGame: .unlocked()
             )
             .presentationDetents([.medium, .large])
@@ -792,7 +884,8 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         daily: DailyProgress(store: RememberedDailyRecords()),
         reminder: .neverAsked(),
         haptics: previewHaptics(),
-        analytics: previewAnalytics()
+        analytics: previewAnalytics(),
+        wardrobe: .remembering()
     )
 }
 
@@ -802,7 +895,8 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         daily: .partWayThroughTheMonth(today: DailyDate(year: 2026, month: 4, day: 22)),
         reminder: .refused(),
         haptics: previewHaptics(),
-        analytics: previewAnalytics()
+        analytics: previewAnalytics(),
+        wardrobe: .remembering()
     )
 }
 
@@ -812,6 +906,7 @@ private func previewAnalytics(isOn: Bool = true) -> Analytics {
         daily: DailyProgress(store: RememberedDailyRecords()),
         reminder: .reminding(),
         haptics: previewHaptics(isOn: false),
-        analytics: previewAnalytics()
+        analytics: previewAnalytics(),
+        wardrobe: .remembering(.wellies)
     )
 }

@@ -10,7 +10,8 @@ struct PigpenApp: App {
 
     /// CI launches the app with one of the arguments in `Photograph` below, or one of the
     /// film arguments in `stills`, so the pull request screenshots can show the boards, the
-    /// universe map, each world's trail, the practice pen, the daily puzzle and its archive,
+    /// universe map, each world's trail, the dressing barn beside the meadow's orchard and a
+    /// pig wearing what she found in it, the practice pen, the daily puzzle and its archive,
     /// the settings sheet, the offer of a daily reminder and every shot of every cut scene
     /// rather than only the title screen.
     ///
@@ -195,6 +196,10 @@ struct PigpenApp: App {
         case pies = "-pies"
         case map = "-map"
         case toll = "-toll"
+        case barnMap = "-barn-map"
+        case barn = "-barn"
+        case dressedBoard = "-dressed-board"
+        case dressedTitle = "-dressed-title"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -314,6 +319,39 @@ struct PigpenApp: App {
             // asks for. The card the map puts up in that standing is already on screen,
             // since what is being photographed is the card and not the trail behind it.
             WorldMapView(progress: .stoppedAtTheToll(), showsTollNotice: true)
+        case .barnMap:
+            // The fork: the orchard penned, the trail climbing on past it, and the barn
+            // standing open off to one side — the one shape on any trail in the game that is
+            // not a line, and the only way to photograph it is to stand a world at it.
+            WorldMapView(progress: .atTheBarn())
+        case .barn:
+            // The barn itself, with something already on her, since an undressed pig on the
+            // stand says nothing the trail does not say. The wellies rather than a hat: nine
+            // of the eleven pegs are on screen under the mirror already, and the two that are
+            // not are the ones worn lowest — so the shot shows the most of the barn by
+            // standing one of those on the mirror, and it is the furthest-hung garment in the
+            // wardrobe that most wants looking at.
+            DressingBarnView(wardrobe: .remembering(.wellies))
+        case .dressedBoard:
+            // What the barn is for, and the half of it the barn itself cannot show: a board
+            // opened by a pig who has been dressed. The outfit is not a thing she wears in
+            // there — it is a thing she wears, and this is the picture that says so.
+            PuzzleView(game: .partWayThrough(), wardrobe: .remembering(.topHat))
+        case .dressedTitle:
+            // The same again out in front of the title, which is the one pig in the game
+            // painted into a canvas rather than drawn as a glyph on a board — a different
+            // piece of drawing, and so worth its own photograph.
+            TitleScreenView(
+                progress: .partWayThrough(),
+                daily: .partWayThroughTheMonth(today: Self.photographed, includingToday: true),
+                // Already offered, and held in memory. A fortnight of days behind the player is
+                // exactly the standing the game's own reminder offer watches for, and a sheet
+                // over the pasture is a photograph of a sheet: the pig is the whole subject here.
+                reminder: .reminding(),
+                today: Self.photographed,
+                wardrobe: .remembering(.crown),
+                rating: .neverAsked()
+            )
         case .universe:
             // The meadow held, the thicket open and beckoning, and the worlds past it
             // still silhouettes — the map with something to show at every standing.
