@@ -88,6 +88,14 @@ struct PuzzleView: View {
     /// Whether the pen has held at any point on this board, so that leaving is counted as
     /// giving up only when there was nothing to give up on.
     @State private var hasHeld = false
+    /// Whether the bulb has been tapped and its board is up above the rack: the hint itself
+    /// once the lock is off, and until then what the lock wants. Tapping the bulb again
+    /// takes it down.
+    @State private var showsHint = false
+    /// Which of the two things the bulb can say have been counted this visit — the hint
+    /// given, and the lock met — so each is one signal per board and not one per tap.
+    @State private var countedHintGiven = false
+    @State private var countedHintLocked = false
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -158,6 +166,13 @@ struct PuzzleView: View {
 
     private var level: PuzzleLevel { game.level }
 
+    /// The nudge this field has to offer, in this world's own words for its treats — and
+    /// nothing on a board with no question, which keeps the bulb off a daily altogether.
+    private var hint: String? { level.hint(naming: treatSkin) }
+
+    /// Whether the gate has been opened often enough on this visit for the bulb to light.
+    private var hintIsUnlocked: Bool { PuzzleLevel.hintIsUnlocked(afterGoes: attempts) }
+
     /// What the screen calls whatever it is holding: the pig on every map but the last,
     /// where a stag stands on the other shore.
     private var quarry: String {
@@ -183,6 +198,9 @@ struct PuzzleView: View {
 
             VStack(spacing: 12) {
                 bossOrders
+                    .padding(.horizontal, 16)
+
+                hintBoard
                     .padding(.horizontal, 16)
 
                 FenceRack(
@@ -279,6 +297,10 @@ struct PuzzleView: View {
     /// act on, and a row that came and went would move the board it is pinned to.
     private var fieldCorrections: some View {
         HStack(spacing: 2) {
+            if hint != nil {
+                hintBulb
+            }
+
             Spacer(minLength: 0)
 
             fieldIcon("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
@@ -320,6 +342,10 @@ struct PuzzleView: View {
     private var buildingControls: some View {
         VStack(spacing: 10) {
             Button {
+                // A go taken while the lock note is up takes the note down with it: the
+                // bulb lighting on the second go is the cue, and a note still saying "one
+                // more" under a lit bulb would be a board contradicting itself.
+                if !hintIsUnlocked { showsHint = false }
                 attempts += 1
                 game.openTheGate()
             } label: {
@@ -368,33 +394,89 @@ struct PuzzleView: View {
     @ViewBuilder
     private var bossOrders: some View {
         if let orders = level.orders {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("What to do")
-                    .font(.caption2.weight(.black))
-                    .foregroundStyle(GamePalette.post.opacity(0.55))
-                    .textCase(.uppercase)
-
-                Text(orders)
-                    .font(.subheadline)
-                    .foregroundStyle(GamePalette.post.opacity(0.9))
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 11)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                GamePalette.cream.opacity(0.95),
-                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
-            }
-            .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("What to do on this level. \(orders)")
+            noticeBoard(heading: "What to do", saying: orders)
+                .accessibilityLabel("What to do on this level. \(orders)")
         }
+    }
+
+    /// The hint, on a second painted board under the orders — or, until the lock is off,
+    /// what the lock wants. Nothing at all until the bulb is tapped, and nothing ever on a
+    /// board with no hint in it.
+    ///
+    /// It stands where the orders stand rather than over the field, because it is the same
+    /// kind of thing: a line about the field that is worth keeping in view while building
+    /// against it. Both boards up at once — a boss with its hint out — squeeze the field
+    /// rather than pushing anything off the screen, since the field is the one thing on it
+    /// that gives.
+    @ViewBuilder
+    private var hintBoard: some View {
+        if showsHint, let hint {
+            if let lockNote = PuzzleLevel.hintLockNote(afterGoes: attempts) {
+                noticeBoard(heading: "A hint, locked", saying: lockNote)
+                    .accessibilityLabel("The hint is locked. \(lockNote)")
+            } else {
+                noticeBoard(heading: "A hint", saying: hint)
+                    .accessibilityLabel("A hint. \(hint)")
+            }
+        }
+    }
+
+    /// A small painted board: a heading naming the thing, and a line or two under it.
+    /// The orders and the hint are both written on one, so the two things the field has to
+    /// say about itself are said in the same hand.
+    private func noticeBoard(heading: String, saying words: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(heading)
+                .font(.caption2.weight(.black))
+                .foregroundStyle(GamePalette.post.opacity(0.55))
+                .textCase(.uppercase)
+
+            Text(words)
+                .font(.subheadline)
+                .foregroundStyle(GamePalette.post.opacity(0.9))
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 11)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            GamePalette.cream.opacity(0.95),
+            in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+        .accessibilityElement(children: .ignore)
+    }
+
+    /// The bulb at the left end of the corrections row: lit once the gate has been opened
+    /// twice, dim until then. It is painted the way undo and redo are, since it is one more
+    /// thing that works on the field rather than the move that ends a go — and unlike them
+    /// it stays live while dim, so a tap on it can say why it is dim rather than doing
+    /// nothing at all.
+    private var hintBulb: some View {
+        Button {
+            askForAHint()
+        } label: {
+            Label("Hint", systemImage: hintIsUnlocked ? "lightbulb.fill" : "lightbulb")
+                .labelStyle(.iconOnly)
+                .font(.system(size: 17, weight: .heavy))
+                .foregroundStyle(chrome.groundInk)
+                .opacity(hintIsUnlocked ? 1 : 0.35)
+                .frame(width: 42, height: 38)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .animation(.easeInOut(duration: 0.25), value: hintIsUnlocked)
+        .accessibilityLabel(hintIsUnlocked ? "Hint" : "Hint, locked")
+        .accessibilityHint(
+            hintIsUnlocked
+                ? "Shows a nudge towards the idea this field is built on"
+                : (PuzzleLevel.hintLockNote(afterGoes: attempts) ?? "")
+        )
     }
 
     /// What the field is holding, set against the most it has held, and the way back to it.
@@ -829,6 +911,23 @@ struct PuzzleView: View {
             guard game.clearFence(on: stroke.tile) else { return }
             Haptics.tap(.light)
         }
+    }
+
+    /// Puts the hint's board up or takes it down, and counts the first of each thing it
+    /// can say per visit: the hint given, and the lock met. Only a trail stop is counted,
+    /// the same way every other signal off this screen is.
+    private func askForAHint() {
+        withAnimation(.easeInOut(duration: 0.25)) { showsHint.toggle() }
+        Haptics.tap(.soft)
+        guard showsHint, trail != nil else { return }
+        if hintIsUnlocked {
+            guard !countedHintGiven else { return }
+            countedHintGiven = true
+        } else {
+            guard !countedHintLocked else { return }
+            countedHintLocked = true
+        }
+        Analytics.record(.levelHintAsked(level, attempt: attempts, unlocked: hintIsUnlocked))
     }
 
     /// Puts the fencing back the way it stood on the best pen of the session, and — when

@@ -380,6 +380,20 @@ extension AnalyticsSignal {
         )
     }
 
+    /// The bulb tapped, and after how many goes. Against `Level.opened` it says which fields
+    /// send players looking for help, which is the other half of which fields are the wall.
+    /// `unlocked` false is a tap on the dim bulb — somebody who wanted the hint before the
+    /// lock would let them have it — and how often that happens is the one number that says
+    /// whether two goes is the right price. Counted once each per visit, so a player who
+    /// opens and closes the board is one player and not a dozen.
+    static func levelHintAsked(_ level: PuzzleLevel, attempt: Int, unlocked: Bool) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Level.hintAsked",
+            ["level": level.id, "attempt": String(attempt), "unlocked": String(unlocked)],
+            value: Double(attempt)
+        )
+    }
+
     /// Walked away from a board without ever holding it, and how many goes they had first.
     /// A high count here is a player who tried; a zero is a level whose look put them off.
     static func levelLeftUnheld(_ level: PuzzleLevel, attempts: Int) -> AnalyticsSignal {

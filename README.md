@@ -70,6 +70,20 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   is never building against a rule they have to remember. It says what the board will accept
   and nothing about where the fencing goes. Every other level leaves that strip of grass empty,
   because the ground says everything there is to say about it.
+- **A hint, when the field has beaten you.** A bulb sits at the left end of the undo row on
+  every trail stop, dim until the gate has been opened twice on that visit and lit from then
+  on. Tap it lit and a second painted board goes up above the rack — *A hint* — with the idea
+  the field is built on, in two sentences: that the water is a wall you already own, that a
+  staircase holds twice what a box does, that a skull is a tile no piece will lie on. It says
+  the idea and never a tile, never a count and never the pen, so the finding is still yours;
+  the same hint serves River Bend and every shore a later world asks harder, and on a boss it
+  is about the trick rather than the rule, which the orders above it already say. Tap it dim
+  and the board says how many goes the lock still wants, and a go taken with that note up
+  takes the note down — the bulb lighting is the cue. The lock is two goes so that the first
+  thing tapped on a fresh board is never the answer, and it resets with the board, so a level
+  come back to a week later asks for two goes again. Dailies and the practice pen have no
+  bulb: a daily is generated, has no question to hint at and is a day's go against the clock
+  besides, and the practice pen is a lesson that says everything it has to say already.
 - **The animals answer.** Nothing takes a fence where an animal is standing, so a tap on one
   used to be turned down the way a spent budget is. Now it hops where it stands and calls back
   — *Oink!*, *Snort!*, *Ta-da!* — off its own tile, the way a tap on an apple says what the
@@ -1452,7 +1466,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Thirty signals, all of them written out in one place —
+**What goes out.** Thirty-one signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1464,6 +1478,7 @@ is filling in Apple's privacy questionnaire.
 | `Level.opened` | A trail board opened, which world and how far up it |
 | `Level.held` | A pen that held: stars, score against the map's best, pieces against the budget, goes taken |
 | `Level.escaped` / `.refused` | The gate opened on a pen with a gap in it, or a boss rule broken — and which rule |
+| `Level.hintAsked` | The bulb tapped, after how many goes, and whether the lock had let it light yet |
 | `Level.leftUnheld` | A board walked away from, and the goes they had at it first |
 | `World.tollShort` | A player stopped at the top of a world by a boss's toll, and how many stars short |
 | `World.held` | Every pen in a world held |
@@ -1480,8 +1495,9 @@ is filling in Apple's privacy questionnaire.
 | `Rating.pageOpened` | The listing opened from behind the gear by a player who went looking for it |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
-the wall, whether the dailies bring anybody back, whether the films are worth what they
-cost to draw, which of the three high points a rating actually gets asked for on — a
+the wall and which sends players to the bulb — a tap on the dim bulb is a player who wanted
+help before two goes were up, which is what says whether two goes is the right price —
+whether the dailies bring anybody back, whether the films are worth what they cost to draw, which of the three high points a rating actually gets asked for on — a
 moment that never appears there is a bar set too high — and how many players who accept a
 morning reminder are then let through by their phone.
 
@@ -2086,6 +2102,7 @@ Pigpen/
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── BossOrders.swift         # The rule a boss adds, in the one line the board keeps on screen
+│   ├── Hint.swift               # The idea a field turns on, said without a tile, and the two goes that unlock it
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # A painted film, as a clock: which shot is up when, and for how long — and the meadow's three
 │   ├── CutScene+Thornwood.swift # The thicket's three, and the shots they are cut from
