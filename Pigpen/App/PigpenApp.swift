@@ -10,8 +10,8 @@ struct PigpenApp: App {
 
     /// CI launches the app with one of the arguments in `Photograph` below, or one of the
     /// film arguments in `stills`, so the pull request screenshots can show the boards, the
-    /// universe map, each world's trail, the lane off the meadow's orchard and the dressing
-    /// room at the end of it, the practice pen, the daily puzzle and its archive,
+    /// universe map, each world's trail, the dressing barn beside the meadow's orchard and a
+    /// pig wearing what she found in it, the practice pen, the daily puzzle and its archive,
     /// the settings sheet, the offer of a daily reminder and every shot of every cut scene
     /// rather than only the title screen.
     ///
@@ -343,7 +343,11 @@ struct PigpenApp: App {
             // piece of drawing, and so worth its own photograph.
             TitleScreenView(
                 progress: .partWayThrough(),
-                daily: .partWayThroughTheMonth(today: Self.photographed),
+                daily: .partWayThroughTheMonth(today: Self.photographed, includingToday: true),
+                // Already offered, and held in memory. A fortnight of days behind the player is
+                // exactly the standing the game's own reminder offer watches for, and a sheet
+                // over the pasture is a photograph of a sheet: the pig is the whole subject here.
+                reminder: .reminding(),
                 today: Self.photographed,
                 wardrobe: .remembering(.crown),
                 rating: .neverAsked()
