@@ -85,9 +85,9 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   given at nine in the evening is back at nine the next evening — so there is no hour at which
   the count snaps back and no clock to game, and the count is yours rather than a level's.
   With none left he goes dim, and a tap on him says when the next one comes: *He will be back
-  in about three hours.* Dailies and the practice pen have no Hamish: a daily's almanac carries
-  its best score but not its pen, and the practice pen is a lesson. *Clear all game data*
-  gives the roses back with everything else.
+  in about three hours.* The daily has him too, since each day's line of the almanac carries
+  the wall of its best pen beside the map; only the practice pen does not, being a lesson.
+  *Clear all game data* gives the roses back with everything else.
 - **The animals answer.** Nothing takes a fence where an animal is standing, so a tap on one
   used to be turned down the way a spent budget is. Now it hops where it stands and calls back
   — *Oink!*, *Snort!*, *Ta-da!* — off its own tile, the way a tap on an apple says what the
@@ -1968,10 +1968,10 @@ Because a shape is a claim about the board a player is handed, and a claim nobod
 
 It writes two files, both generated and both committed:
 
-- `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, one line to a day: the date, the fence budget, the two star thresholds, the best pen the map has in it, and the map itself with its rows run together by `/`.
+- `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, one line to a day: the date, the fence budget, the two star thresholds, the best pen the map has in it, the map itself with its rows run together by `/`, and the wall of that best pen the same way — which is what Hamish reads when he is asked for a hint on a daily.
 - `PigpenTests/DailyAlmanacFixtures.swift` — what each day asks, the shape its water was laid in, and the wall of the pen its `maximumScore` was measured on.
 
-`DailyAlmanacTests` lays every one of those walls out on its day's board and lets the pig go, so a day that promised a pen its map does not hold fails in CI rather than withholding the "best pen there is" verdict from a player forever. It checks the rest of what the almanac claims too: that the book runs from New Year's Day to New Year's Eve without a gap, that every day falls in its weekday's band, that every week climbs from Monday to Sunday, that the book still holds every shape of water the generator knows how to lay, and that four pieces round the pig hold on every board in it.
+`DailyAlmanacTests` lays every one of those walls out on its day's board and lets the pig go, and holds the wall the almanac ships to the one the fixtures measured, so a day that promised a pen its map does not hold fails in CI rather than withholding the "best pen there is" verdict from a player forever. It checks the rest of what the almanac claims too: that the book runs from New Year's Day to New Year's Eve without a gap, that every day falls in its weekday's band, that every week climbs from Monday to Sunday, that the book still holds every shape of water the generator knows how to lay, and that four pieces round the pig hold on every board in it.
 
 Everything a day is made of comes out of a generator seeded from that date alone, so days are independent, the work spreads over as many cores as there are, and the same run of the tool produces the same year twice over. Running it takes the better part of an hour across four cores, which is the price of measuring what a puzzle asks rather than declaring it.
 

@@ -23,8 +23,9 @@ enum Suitor {
     static let kiss = "💕"
 
     /// The tile the next piece of the best pen goes on, or nothing when every piece of that
-    /// pen is already in the ground — or the level has no best pen authored, which is every
-    /// daily and the practice pen.
+    /// pen is already in the ground — or the level has no best pen authored, which is only
+    /// the practice pen: every trail stop carries one beside its map and every daily in its
+    /// line of the almanac.
     ///
     /// A piece that extends the wall already down is preferred to one that starts a new run,
     /// and among those the one nearest the pig, then the first in reading order, so the same

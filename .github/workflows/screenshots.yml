@@ -96,7 +96,7 @@ jobs:
           # `-woods-map`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`, `-orchard`,
           # `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`, `-archive`,
           # `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`, `-barn`,
-          # `-dressed-board`, `-dressed-title` and `-suitor` are launch
+          # `-dressed-board`, `-dressed-title`, `-suitor` and `-daily-suitor` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
           # settings sheet, the offer of a daily reminder, the card over a shut boss,
@@ -174,6 +174,9 @@ jobs:
           # next piece of the wall goes on. Numbered high for the same reason the shots above
           # are.
           capture 81 suitor -suitor
+
+          # And the same on a daily, off the wall its line of the almanac carries.
+          capture 83 daily_suitor -daily-suitor
 
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock

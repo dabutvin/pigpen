@@ -51,15 +51,18 @@ enum DailyAlmanac {
         date <= today && holdsAPuzzle(on: date)
     }
 
-    /// The puzzle for a day, built from the line the almanac keeps it on.
+    /// The puzzle for a day, built from the line the almanac keeps it on: its numbers, its
+    /// map, and the wall of the best pen its `maximumScore` was measured on, which is what
+    /// Hamish reads when he is asked for a hint on a daily.
     ///
     /// A malformed line is a mistake in generated source rather than anything a player can
     /// bring about, so it comes back as `nil` and the screen that asked says there is no
-    /// puzzle — `DailyAlmanacTests` walks every day in the book so that never ships.
+    /// puzzle — `DailyAlmanacTests` walks every day in the book so that never ships. A wall
+    /// that does not fit its map is malformed the same way, since `PuzzleLevel` refuses it.
     static func level(on date: DailyDate) -> PuzzleLevel? {
         guard let entry = entries[date.id] else { return nil }
         let fields = entry.split(separator: " ")
-        guard fields.count == 5,
+        guard fields.count == 6,
               let budget = Int(fields[0]),
               let twoStar = Int(fields[1]),
               let threeStar = Int(fields[2]),
@@ -73,6 +76,7 @@ enum DailyAlmanac {
             twoStarScore: twoStar,
             threeStarScore: threeStar,
             maximumScore: maximum,
+            bestPen: fields[5].split(separator: "/").joined(separator: "\n"),
             map: fields[4].split(separator: "/").joined(separator: "\n")
         )
     }

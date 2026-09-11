@@ -185,8 +185,8 @@ struct PuzzleView: View {
     private var level: PuzzleLevel { game.level }
 
     /// Whether Hamish has anything to point at on this board at all: a best pen authored
-    /// beside its map. Every trail stop has one; a daily and the practice pen do not, and he
-    /// stays off those boards altogether.
+    /// beside its map. Every trail stop and every daily has one; the practice pen does not,
+    /// and he stays off it altogether.
     private var suitorCanHelp: Bool { level.bestPen != nil }
 
     /// What the screen calls whatever it is holding: the pig on every map but the last,

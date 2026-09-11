@@ -196,8 +196,8 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// The best pen this map and budget allow, as the fencing that holds it: the `#` tiles of
     /// the plan `Tools/level_search.py --plan` prints, authored beside the map. It is what
     /// `maximumScore` is a score *of*, what each world's tests replay to prove the number can
-    /// be reached, and where Hamish looks when he is asked for a hint. Nothing for a daily,
-    /// whose almanac carries only the score, or for the practice pen.
+    /// be reached, and where Hamish looks when he is asked for a hint. Every trail stop and
+    /// every daily carries one; only the practice pen, which is a lesson, does not.
     let bestPen: Set<GridPoint>?
 
     var rowCount: Int { terrain.count }

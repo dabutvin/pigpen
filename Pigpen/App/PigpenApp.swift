@@ -201,6 +201,7 @@ struct PigpenApp: App {
         case dressedBoard = "-dressed-board"
         case dressedTitle = "-dressed-title"
         case suitor = "-suitor"
+        case dailySuitor = "-daily-suitor"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -392,6 +393,23 @@ struct PigpenApp: App {
             // runner got round to it, the same way a film does.
             if let day = DailyAlmanac.level(on: Self.photographed) {
                 PuzzleView(game: .aDayPartWayThrough(day), clock: .showing(227))
+            } else {
+                DailyPuzzleView(
+                    date: Self.photographed,
+                    progress: DailyProgress(store: RememberedDailyRecords())
+                )
+            }
+        case .dailySuitor:
+            // The same day's board with Hamish asked for a rose as it opens: the proof that
+            // a daily is a board he helps on like any other, off the wall its line of the
+            // almanac carries. The roses are held in memory so the runner spends none.
+            if let day = DailyAlmanac.level(on: Self.photographed) {
+                PuzzleView(
+                    game: .aDayPartWayThrough(day),
+                    clock: .showing(227),
+                    roses: .remembering(),
+                    askingHamish: true
+                )
             } else {
                 DailyPuzzleView(
                     date: Self.photographed,
