@@ -193,6 +193,12 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// The question this field is built around, for a level on a world trail. Nothing for a
     /// daily, which is generated, or the practice pen, which is a lesson.
     let question: Question?
+    /// The best pen this map and budget allow, as the fencing that holds it: the `#` tiles of
+    /// the plan `Tools/level_search.py --plan` prints, authored beside the map. It is what
+    /// `maximumScore` is a score *of*, what each world's tests replay to prove the number can
+    /// be reached, and where Hamish looks when he is asked for a hint. Nothing for a daily,
+    /// whose almanac carries only the score, or for the practice pen.
+    let bestPen: Set<GridPoint>?
 
     var rowCount: Int { terrain.count }
     var columnCount: Int { terrain.first?.count ?? 0 }
@@ -260,6 +266,17 @@ struct PuzzleLevel: Identifiable, Sendable {
         score >= maximumScore
     }
 
+    /// The best pen written back out as the plan it was authored from, `#` for a piece and
+    /// `.` for everything else — or nothing for a level without one.
+    var bestPenPlan: String? {
+        guard let bestPen else { return nil }
+        return (0..<rowCount).map { row in
+            String((0..<columnCount).map { column -> Character in
+                bestPen.contains(GridPoint(row: row, column: column)) ? "#" : "."
+            })
+        }.joined(separator: "\n")
+    }
+
     /// Everything the map has to say about a pen worth `score`, in one piece so that the
     /// stars and the rainbow are never carried about apart from one another.
     func verdict(forScore score: Int) -> PenVerdict {
@@ -273,7 +290,12 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// ringmaster, a scorpion, a crab, a bull seal, an old croc or an eagle.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
-    /// same animal on it twice, or has no pig on it at all.
+    /// same animal on it twice, or has no pig on it at all — or if the plan of the best pen,
+    /// when one is given, is the wrong shape for the map, stands a piece where none can be
+    /// built, or overspends the budget.
+    ///
+    /// - Parameter bestPen: The best pen the map and budget allow, as a plan the shape of the
+    ///   map with `#` on every fenced tile, or nothing for a level that has none authored.
     init?(
         id: String,
         name: String,
@@ -282,6 +304,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         threeStarScore: Int,
         maximumScore: Int,
         question: Question? = nil,
+        bestPen: String? = nil,
         map: String
     ) {
         let lines = map.split(whereSeparator: \.isNewline)
@@ -312,6 +335,25 @@ struct PuzzleLevel: Identifiable, Sendable {
 
         guard let pigStart = animals.first(where: { $0.kind == .pig })?.tile else { return nil }
 
+        var best: Set<GridPoint>?
+        if let bestPen {
+            let rows = bestPen.split(whereSeparator: \.isNewline)
+            guard rows.count == terrain.count, rows.allSatisfy({ $0.count == width }) else { return nil }
+            var tiles: Set<GridPoint> = []
+            for (row, line) in rows.enumerated() {
+                for (column, character) in line.enumerated() where character == "#" {
+                    let tile = GridPoint(row: row, column: column)
+                    guard terrain[row][column] == .mud,
+                          treats[tile] == nil,
+                          !animals.contains(where: { $0.tile == tile })
+                    else { return nil }
+                    tiles.insert(tile)
+                }
+            }
+            guard tiles.count <= fenceBudget else { return nil }
+            best = tiles
+        }
+
         self.id = id
         self.name = name
         self.terrain = terrain
@@ -323,6 +365,7 @@ struct PuzzleLevel: Identifiable, Sendable {
         self.threeStarScore = threeStarScore
         self.maximumScore = maximumScore
         self.question = question
+        self.bestPen = best
     }
 }
 
@@ -372,6 +415,19 @@ extension PuzzleLevel {
         threeStarScore: 33,
         maximumScore: 35,
         question: .shore,
+        bestPen: """
+            .........
+            .........
+            .........
+            #........
+            #........
+            #........
+            #........
+            #........
+            #........
+            #........
+            .#####...
+            """,
         map: """
             .........
             .........
@@ -402,6 +458,16 @@ extension PuzzleLevel {
         threeStarScore: 24,
         maximumScore: 26,
         question: .corner,
+        bestPen: """
+            ........
+            .......#
+            .......#
+            ......#.
+            .....#..
+            ....#...
+            ...#....
+            .##.....
+            """,
         map: """
             ~~~~~~~~
             ~.......
@@ -430,6 +496,18 @@ extension PuzzleLevel {
         threeStarScore: 23,
         maximumScore: 24,
         question: .basin,
+        bestPen: """
+            ..........
+            ..........
+            ..........
+            ..........
+            ..........
+            ..........
+            ..........
+            ..........
+            ..#....#..
+            ...####...
+            """,
         map: """
             ..........
             ..~~~~~~..
@@ -455,6 +533,18 @@ extension PuzzleLevel {
         threeStarScore: 21,
         maximumScore: 22,
         question: .span,
+        bestPen: """
+            ..........
+            ......#...
+            .......#..
+            #.......#.
+            #........#
+            #.......#.
+            #......#..
+            ..........
+            ..........
+            ..........
+            """,
         map: """
             ..........
             ..~~~.....
@@ -480,6 +570,18 @@ extension PuzzleLevel {
         threeStarScore: 23,
         maximumScore: 24,
         question: .gap,
+        bestPen: """
+            ....#....
+            .....#...
+            ......#..
+            .......#.
+            ........#
+            ..#.....#
+            ........#
+            .......#.
+            ......#..
+            ....##...
+            """,
         map: """
             ...~.....
             ...~.....
@@ -511,6 +613,18 @@ extension PuzzleLevel {
         threeStarScore: 41,
         maximumScore: 44,
         question: .constellation,
+        bestPen: """
+            ...#......
+            ..#.......
+            .#........
+            #.........
+            #.........
+            #.........
+            #.........
+            #.........
+            .#........
+            ..##.#....
+            """,
         map: """
             ....~.....
             .....~....
@@ -538,6 +652,18 @@ extension PuzzleLevel {
         threeStarScore: 35,
         maximumScore: 37,
         question: .detour,
+        bestPen: """
+            ..........
+            ..........
+            ..........
+            #........#
+            #.......#.
+            #......#..
+            .#....#...
+            ..#..#....
+            ...##.....
+            ..........
+            """,
         map: """
             ..........
             .~~~~~~~~.
@@ -575,6 +701,18 @@ extension PuzzleLevel {
         threeStarScore: 27,
         maximumScore: 29,
         question: .obstruction,
+        bestPen: """
+            ...###....
+            ..#...#...
+            .#.....#..
+            #.......#.
+            #......#..
+            .#....#...
+            .....#....
+            ..........
+            ..........
+            ..........
+            """,
         map: """
             ..........
             ....a.....
@@ -607,6 +745,19 @@ extension PuzzleLevel {
         threeStarScore: 36,
         maximumScore: 38,
         question: .herd,
+        bestPen: """
+            ...###....
+            ..#...#...
+            .#.....#..
+            #......#..
+            ..........
+            .......#..
+            #.......#.
+            .#......#.
+            ..#....#..
+            ...#..#...
+            ....##....
+            """,
         map: """
             ..........
             .....a....
@@ -627,7 +778,8 @@ extension PuzzleLevel {
     ///
     /// `maximumScore` is the one number here that cannot be worked out by eye. It comes
     /// from `Tools/level_search.py`, which searches a map for the best pen its budget
-    /// can hold, and `PuzzleLevelTests` pins each one to a pen that actually holds it.
+    /// can hold; that pen is authored beside the map as `bestPen`, and `PuzzleLevelTests`
+    /// replays it to prove the number is one a player can reach.
     private static func authored(
         id: String,
         name: String,
@@ -636,6 +788,7 @@ extension PuzzleLevel {
         threeStarScore: Int,
         maximumScore: Int,
         question: Question? = nil,
+        bestPen: String? = nil,
         map: String
     ) -> PuzzleLevel {
         guard let level = PuzzleLevel(
@@ -646,6 +799,7 @@ extension PuzzleLevel {
             threeStarScore: threeStarScore,
             maximumScore: maximumScore,
             question: question,
+            bestPen: bestPen,
             map: map
         ) else {
             preconditionFailure("The built-in \(name) map is malformed")

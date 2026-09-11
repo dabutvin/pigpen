@@ -47,6 +47,17 @@ struct AnimalMark: Equatable, Identifiable {
     var id: Animal { kind }
 }
 
+/// Hamish as the field draws him: the tile he is making for, the tile he is on this instant,
+/// how solid he is — he fades in off the edge of the map and out again once the piece is laid
+/// where he stood — and whether he is mid-hop.
+struct SuitorMark: Equatable {
+    /// The tile the piece goes on, which is where he stands once he has arrived.
+    let bound: GridPoint
+    var tile: GridPoint
+    var opacity: Double
+    var hop: Double = 0
+}
+
 extension Array where Element == AnimalMark {
     /// Every animal a level stands on its ground, on the tile the map puts it.
     static func standing(on level: PuzzleLevel) -> [AnimalMark] {
@@ -76,6 +87,9 @@ struct FieldView: View {
     var callout: FieldCallout? = nil
     /// Told when a callout has finished rising, so the field can put it away.
     var onCalloutFinished: ((FieldCallout.ID) -> Void)? = nil
+    /// Hamish, if he is on the board: a hint asked for, walking in or standing on the tile
+    /// the next piece goes on. Nothing during ordinary play.
+    var suitor: SuitorMark? = nil
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -250,7 +264,48 @@ struct FieldView: View {
                     mark(animal, board: board, pose: nil)
                 }
             }
+
+            if let suitor {
+                visitor(suitor, board: board)
+            }
         }
+    }
+
+    /// Hamish, rose in hand, wherever he is on his way in or standing once he is there. Drawn
+    /// the way an animal is — shadowed, hopped, faded — but never posed by a celebration,
+    /// since he is off the board before a pen is let loose in.
+    private func visitor(_ suitor: SuitorMark, board: BoardGeometry) -> some View {
+        let size = board.cell * 0.78
+        return Text(Suitor.glyph)
+            .font(.system(size: size))
+            .overlay {
+                Text(Suitor.rose)
+                    .font(.system(size: size * 0.5))
+                    .rotationEffect(.degrees(-25))
+                    .offset(x: size * 0.34, y: size * 0.08)
+                    .allowsHitTesting(false)
+            }
+            .scaleEffect(
+                x: CGFloat(1 - 0.06 * suitor.hop),
+                y: CGFloat(1 + 0.1 * suitor.hop),
+                anchor: .bottom
+            )
+            .shadow(
+                color: .black.opacity(0.3),
+                radius: board.cell * (0.04 + 0.075 * suitor.hop),
+                y: board.cell * (0.03 + 0.13 * suitor.hop)
+            )
+            .opacity(suitor.opacity)
+            .position(
+                board.center(
+                    atRow: Double(suitor.tile.row),
+                    column: Double(suitor.tile.column),
+                    lift: 0
+                )
+            )
+            .offset(y: -board.cell * 0.3 * CGFloat(suitor.hop))
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 
     /// One animal, standing on its own tile or held in the pose a celebration puts it in.

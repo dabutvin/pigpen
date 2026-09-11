@@ -56,6 +56,14 @@ struct PuzzleView: View {
     /// — and handed in by the screenshot runs, which dress her in memory to photograph a board
     /// that proves an outfit is worn out here and not only in the barn.
     private let wardrobe: PigWardrobe
+    /// Where Hamish's roses are counted. The one count the game keeps, by default — three a
+    /// day is three a day whichever board they are asked for on — and one held in memory by
+    /// the previews and the screenshot runs, so a photograph of him spends nobody's.
+    private let roses: HintAllowance
+    /// Whether to ask Hamish for a rose the moment the board opens, which is how the
+    /// screenshot runs photograph him standing on a tile rather than the button that sends
+    /// him there.
+    private let asksHamishOnOpening: Bool
 
     @State private var game: PuzzleGame
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
@@ -88,14 +96,18 @@ struct PuzzleView: View {
     /// Whether the pen has held at any point on this board, so that leaving is counted as
     /// giving up only when there was nothing to give up on.
     @State private var hasHeld = false
-    /// Whether the bulb has been tapped and its board is up above the rack: the hint itself
-    /// once the lock is off, and until then what the lock wants. Tapping the bulb again
-    /// takes it down.
-    @State private var showsHint = false
-    /// Which of the two things the bulb can say have been counted this visit — the hint
-    /// given, and the lock met — so each is one signal per board and not one per tap.
-    @State private var countedHintGiven = false
-    @State private var countedHintLocked = false
+    /// Hamish, when he is on the board: the tile he is making for, where he is standing and
+    /// how solid he is. Nothing until a rose is asked for, and nothing again once the piece
+    /// is laid where he stood.
+    @State private var suitor: SuitorMark?
+    /// What Hamish said last, on the board above the rack, until it is tapped away or the
+    /// piece is laid. Nothing until he has been asked.
+    @State private var suitorSays: String?
+    /// How many roses he has given on this visit, which picks his line.
+    @State private var rosesGiven = 0
+    /// His walk onto the board, or his fading off it, so a second rose asked for mid-trot
+    /// starts a fresh walk rather than two.
+    @State private var suitorWalk: Task<Void, Never>?
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -114,6 +126,7 @@ struct PuzzleView: View {
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
+        roses: HintAllowance = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
@@ -128,6 +141,7 @@ struct PuzzleView: View {
             wayOutImage: wayOutImage,
             trail: trail,
             wardrobe: wardrobe,
+            roses: roses,
             onPenned: onPenned,
             onLeave: onLeave
         )
@@ -146,9 +160,13 @@ struct PuzzleView: View {
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
+        roses: HintAllowance = .shared,
+        askingHamish: Bool = false,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
+        self.roses = roses
+        self.asksHamishOnOpening = askingHamish
         self.onPenned = onPenned
         self.onLeave = onLeave
         self.treatSkin = treatSkin
@@ -166,12 +184,10 @@ struct PuzzleView: View {
 
     private var level: PuzzleLevel { game.level }
 
-    /// The nudge this field has to offer, in this world's own words for its treats — and
-    /// nothing on a board with no question, which keeps the bulb off a daily altogether.
-    private var hint: String? { level.hint(naming: treatSkin) }
-
-    /// Whether the gate has been opened often enough on this visit for the bulb to light.
-    private var hintIsUnlocked: Bool { PuzzleLevel.hintIsUnlocked(afterGoes: attempts) }
+    /// Whether Hamish has anything to point at on this board at all: a best pen authored
+    /// beside its map. Every trail stop has one; a daily and the practice pen do not, and he
+    /// stays off those boards altogether.
+    private var suitorCanHelp: Bool { level.bestPen != nil }
 
     /// What the screen calls whatever it is holding: the pig on every map but the last,
     /// where a stag stands on the other shore.
@@ -200,7 +216,7 @@ struct PuzzleView: View {
                 bossOrders
                     .padding(.horizontal, 16)
 
-                hintBoard
+                suitorBoard
                     .padding(.horizontal, 16)
 
                 FenceRack(
@@ -221,6 +237,7 @@ struct PuzzleView: View {
                     animals: marks,
                     celebration: celebration,
                     callout: callout,
+                    suitor: suitor,
                     onCalloutFinished: { id in
                         if callout?.id == id { callout = nil }
                     },
@@ -273,8 +290,12 @@ struct PuzzleView: View {
             if let trail {
                 Analytics.record(.levelOpened(level, world: trail.world, stop: trail.stop))
             }
+            if asksHamishOnOpening {
+                askHamish()
+            }
         }
         .onDisappear {
+            suitorWalk?.cancel()
             onLeave?(game, clock)
             // A board walked away from without ever holding, and the goes they had at it
             // first. The pair is the difference between a puzzle that beat somebody and
@@ -297,8 +318,8 @@ struct PuzzleView: View {
     /// act on, and a row that came and went would move the board it is pinned to.
     private var fieldCorrections: some View {
         HStack(spacing: 2) {
-            if hint != nil {
-                hintBulb
+            if suitorCanHelp {
+                suitorButton
             }
 
             Spacer(minLength: 0)
@@ -342,10 +363,6 @@ struct PuzzleView: View {
     private var buildingControls: some View {
         VStack(spacing: 10) {
             Button {
-                // A go taken while the lock note is up takes the note down with it: the
-                // bulb lighting on the second go is the cue, and a note still saying "one
-                // more" under a lit bulb would be a board contradicting itself.
-                if !hintIsUnlocked { showsHint = false }
                 attempts += 1
                 game.openTheGate()
             } label: {
@@ -399,31 +416,30 @@ struct PuzzleView: View {
         }
     }
 
-    /// The hint, on a second painted board under the orders — or, until the lock is off,
-    /// what the lock wants. Nothing at all until the bulb is tapped, and nothing ever on a
-    /// board with no hint in it.
+    /// What Hamish said, on a second painted board under the orders, from the moment he is
+    /// asked until the piece is laid or the board is tapped away. Nothing until then, and
+    /// nothing ever on a board he cannot help on.
     ///
     /// It stands where the orders stand rather than over the field, because it is the same
-    /// kind of thing: a line about the field that is worth keeping in view while building
-    /// against it. Both boards up at once — a boss with its hint out — squeeze the field
-    /// rather than pushing anything off the screen, since the field is the one thing on it
-    /// that gives.
+    /// kind of thing: a line about the field, worth keeping in view while building. Both
+    /// boards up at once — a boss with Hamish out — squeeze the field rather than pushing
+    /// anything off the screen, since the field is the one thing here that gives.
     @ViewBuilder
-    private var hintBoard: some View {
-        if showsHint, let hint {
-            if let lockNote = PuzzleLevel.hintLockNote(afterGoes: attempts) {
-                noticeBoard(heading: "A hint, locked", saying: lockNote)
-                    .accessibilityLabel("The hint is locked. \(lockNote)")
-            } else {
-                noticeBoard(heading: "A hint", saying: hint)
-                    .accessibilityLabel("A hint. \(hint)")
-            }
+    private var suitorBoard: some View {
+        if let suitorSays {
+            noticeBoard(heading: Suitor.name, saying: suitorSays)
+                .accessibilityLabel("\(Suitor.name) says: \(suitorSays)")
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint("Puts the board away")
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.25)) { self.suitorSays = nil }
+                }
         }
     }
 
     /// A small painted board: a heading naming the thing, and a line or two under it.
-    /// The orders and the hint are both written on one, so the two things the field has to
-    /// say about itself are said in the same hand.
+    /// The orders and whatever Hamish says are both written on one, so the two things the
+    /// field has to say about itself are said in the same hand.
     private func noticeBoard(heading: String, saying words: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(heading)
@@ -452,31 +468,38 @@ struct PuzzleView: View {
         .accessibilityElement(children: .ignore)
     }
 
-    /// The bulb at the left end of the corrections row: lit once the gate has been opened
-    /// twice, dim until then. It is painted the way undo and redo are, since it is one more
-    /// thing that works on the field rather than the move that ends a go — and unlike them
-    /// it stays live while dim, so a tap on it can say why it is dim rather than doing
-    /// nothing at all.
-    private var hintBulb: some View {
-        Button {
-            askForAHint()
+    /// Hamish, at the left end of the corrections row: tap him and he comes onto the board to
+    /// point at a piece. He wears the roses he has left today as a small count, and goes dim
+    /// with none — though he still answers a tap, with when the next one comes. He is only
+    /// ever here on a board with a best pen authored for it, which is every trail stop and
+    /// nothing else.
+    private var suitorButton: some View {
+        let left = roses.remaining()
+        return Button {
+            askHamish()
         } label: {
-            Label("Hint", systemImage: hintIsUnlocked ? "lightbulb.fill" : "lightbulb")
-                .labelStyle(.iconOnly)
-                .font(.system(size: 17, weight: .heavy))
-                .foregroundStyle(chrome.groundInk)
-                .opacity(hintIsUnlocked ? 1 : 0.35)
-                .frame(width: 42, height: 38)
-                .contentShape(Rectangle())
+            ZStack(alignment: .topTrailing) {
+                Text(Suitor.glyph)
+                    .font(.system(size: 22))
+                    .opacity(left > 0 ? 1 : 0.35)
+
+                Text("\(left)")
+                    .font(.system(size: 11, weight: .black, design: .rounded))
+                    .foregroundStyle(GamePalette.cream)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(
+                        left > 0 ? GamePalette.barn : GamePalette.post.opacity(0.5),
+                        in: Capsule()
+                    )
+                    .offset(x: 6, y: -4)
+            }
+            .frame(width: 42, height: 38)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .animation(.easeInOut(duration: 0.25), value: hintIsUnlocked)
-        .accessibilityLabel(hintIsUnlocked ? "Hint" : "Hint, locked")
-        .accessibilityHint(
-            hintIsUnlocked
-                ? "Shows a nudge towards the idea this field is built on"
-                : (PuzzleLevel.hintLockNote(afterGoes: attempts) ?? "")
-        )
+        .accessibilityLabel("Ask \(Suitor.name) for a hint")
+        .accessibilityValue(left == 1 ? "One rose left today" : "\(left) roses left today")
     }
 
     /// What the field is holding, set against the most it has held, and the way back to it.
@@ -907,27 +930,105 @@ struct PuzzleView: View {
                 return
             }
             Haptics.tap(.rigid)
+            if let suitor, suitor.bound == stroke.tile {
+                sendHamishOff(from: stroke.tile)
+            }
         case .clearing:
             guard game.clearFence(on: stroke.tile) else { return }
             Haptics.tap(.light)
         }
     }
 
-    /// Puts the hint's board up or takes it down, and counts the first of each thing it
-    /// can say per visit: the hint given, and the lock met. Only a trail stop is counted,
-    /// the same way every other signal off this screen is.
-    private func askForAHint() {
-        withAnimation(.easeInOut(duration: 0.25)) { showsHint.toggle() }
+    /// Puts a rose in Hamish's hand, if there is one left today, and sends him onto the board.
+    ///
+    /// Asked again while he is still standing on a tile nothing has been laid on, he says so
+    /// and no rose is spent; asked on a board with every piece of the best pen already in it,
+    /// likewise. Asked with none left, he says when the next one comes. Only a trail stop is
+    /// counted, the same way every other signal off this screen is.
+    private func askHamish() {
         Haptics.tap(.soft)
-        guard showsHint, trail != nil else { return }
-        if hintIsUnlocked {
-            guard !countedHintGiven else { return }
-            countedHintGiven = true
-        } else {
-            guard !countedHintLocked else { return }
-            countedHintLocked = true
+        let now = Date()
+
+        if let suitor, suitor.opacity > 0,
+           level.bestPen?.contains(suitor.bound) == true,
+           !game.fences.contains(suitor.bound) {
+            show(Suitor.alreadyShowing)
+            return
         }
-        Analytics.record(.levelHintAsked(level, attempt: attempts, unlocked: hintIsUnlocked))
+        guard let tile = Suitor.nextPiece(of: level, given: game.fences) else {
+            show(Suitor.nothingToAdd)
+            return
+        }
+        guard roses.spend(at: now) else {
+            show(Suitor.outOfRoses(until: roses.nextRose(at: now) ?? now, from: now))
+            count(given: false)
+            return
+        }
+
+        rosesGiven += 1
+        var said = Suitor.line(rose: rosesGiven)
+        if game.fencesRemaining == 0 {
+            said += Suitor.rackIsEmpty
+        }
+        show(said)
+        count(given: true)
+
+        suitorWalk?.cancel()
+        suitorWalk = Task { await bringHamish(to: tile) }
+    }
+
+    private func show(_ words: String) {
+        withAnimation(.easeInOut(duration: 0.25)) { suitorSays = words }
+    }
+
+    private func count(given: Bool) {
+        guard trail != nil else { return }
+        Analytics.record(
+            .levelHintAsked(level, attempt: attempts, given: given, left: roses.remaining())
+        )
+    }
+
+    /// Walks Hamish in from the nearest edge to the tile a step at a time, the way an animal
+    /// walks off, and lands him on it with a hop. Straight onto it, and no hop, for a player
+    /// who would rather the board kept still.
+    private func bringHamish(to tile: GridPoint) async {
+        let route = Suitor.approach(to: tile, on: level)
+        guard let start = route.first else { return }
+        guard !reduceMotion else {
+            suitor = SuitorMark(bound: tile, tile: tile, opacity: 1)
+            return
+        }
+
+        suitor = SuitorMark(bound: tile, tile: start, opacity: 0)
+        withAnimation(.easeOut(duration: 0.2)) { suitor?.opacity = 1 }
+        for step in route.dropFirst() {
+            guard await Task.pausing(for: .milliseconds(200)) else { return }
+            withAnimation(.easeInOut(duration: 0.2)) { suitor?.tile = step }
+        }
+        guard await Task.pausing(for: .milliseconds(220)) else { return }
+        withAnimation(.spring(response: 0.2, dampingFraction: 0.55)) { suitor?.hop = 1 }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.6).delay(0.16)) { suitor?.hop = 0 }
+    }
+
+    /// The piece laid where he stood: a kiss off the tile, his board put away, and he fades
+    /// out where he is standing.
+    private func sendHamishOff(from tile: GridPoint) {
+        suitorWalk?.cancel()
+        callout = FieldCallout(tile: tile, said: Suitor.kiss)
+        withAnimation(.easeInOut(duration: 0.25)) { suitorSays = nil }
+        withAnimation(.easeIn(duration: 0.45)) { suitor?.opacity = 0 }
+        suitorWalk = Task {
+            guard await Task.pausing(for: .milliseconds(500)) else { return }
+            suitor = nil
+        }
+    }
+
+    /// Takes him off the board at once, for a pen that held with him still standing on it:
+    /// the lap of honour is the animals' and he is not one of them.
+    private func dismissHamish() {
+        suitorWalk?.cancel()
+        suitor = nil
+        suitorSays = nil
     }
 
     /// Puts the fencing back the way it stood on the best pen of the session, and — when
@@ -1019,6 +1120,7 @@ struct PuzzleView: View {
             reveal()
             Haptics.buzz(.error)
         case .penned(let pen):
+            dismissHamish()
             // The clock stops on the pen holding rather than on the card coming up, so the
             // lap of honour is not charged to the player.
             clock?.stop()
@@ -1198,6 +1300,12 @@ private struct StopwatchFace: View {
 #Preview("The boss") {
     NavigationStack {
         PuzzleView(level: .stagMere)
+    }
+}
+
+#Preview("Hamish out on the board") {
+    NavigationStack {
+        PuzzleView(game: .partWayThrough(), roses: .remembering(), askingHamish: true)
     }
 }
 

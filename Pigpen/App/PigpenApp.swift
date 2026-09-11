@@ -200,6 +200,7 @@ struct PigpenApp: App {
         case barn = "-barn"
         case dressedBoard = "-dressed-board"
         case dressedTitle = "-dressed-title"
+        case suitor = "-suitor"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -270,6 +271,12 @@ struct PigpenApp: App {
         switch photograph {
         case .puzzle:
             PuzzleView(game: .partWayThrough())
+        case .suitor:
+            // River Bend part way through with Hamish already out on it: asked for a rose as
+            // the board opens, so he is photographed standing on the tile the next piece of
+            // the wall goes on, his line on the board over the rack and one rose gone from
+            // his count. The roses are held in memory so the runner spends none.
+            PuzzleView(game: .partWayThrough(), roses: .remembering(), askingHamish: true)
         case .beaten:
             PuzzleView(game: .pickedBackUp())
         case .orchard:

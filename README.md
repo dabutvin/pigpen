@@ -70,20 +70,24 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   is never building against a rule they have to remember. It says what the board will accept
   and nothing about where the fencing goes. Every other level leaves that strip of grass empty,
   because the ground says everything there is to say about it.
-- **A hint, when the field has beaten you.** A bulb sits at the left end of the undo row on
-  every trail stop, dim until the gate has been opened twice on that visit and lit from then
-  on. Tap it lit and a second painted board goes up above the rack — *A hint* — with the idea
-  the field is built on, in two sentences: that the water is a wall you already own, that a
-  staircase holds twice what a box does, that a skull is a tile no piece will lie on. It says
-  the idea and never a tile, never a count and never the pen, so the finding is still yours;
-  the same hint serves River Bend and every shore a later world asks harder, and on a boss it
-  is about the trick rather than the rule, which the orders above it already say. Tap it dim
-  and the board says how many goes the lock still wants, and a go taken with that note up
-  takes the note down — the bulb lighting is the cue. The lock is two goes so that the first
-  thing tapped on a fresh board is never the answer, and it resets with the board, so a level
-  come back to a week later asks for two goes again. Dailies and the practice pen have no
-  bulb: a daily is generated, has no question to hint at and is a day's go against the clock
-  besides, and the practice pen is a lesson that says everything it has to say already.
+- **A hint is a piece, and a pig brings it.** Hamish is a pig from the next farm over, sweet
+  on her, and the one soul in the game who will say where a piece goes. He stands at the left
+  end of the undo row on every trail stop with a count of the roses he has left. Tap him and
+  he trots onto the board from the nearest edge, rose in hand, and stands on the tile the next
+  piece of the best pen belongs on — the pen the level was authored around, the one that goes
+  rainbow — with something fond on a painted board over the rack: *A rose for you, and a piece
+  just here. Try it, my petal.* Which piece is next is read off the fencing already down, so a
+  wall half built is extended rather than started again somewhere else, and asking again
+  before the piece is laid gets no new tile and costs no rose. Lay the piece where he stands
+  and he blows a kiss off the tile and fades. He never says what to tear out, and he never
+  explains: the rest of the pen is still yours to find.
+  **Three roses a day.** Counted from when each was given rather than from midnight — a rose
+  given at nine in the evening is back at nine the next evening — so there is no hour at which
+  the count snaps back and no clock to game, and the count is yours rather than a level's.
+  With none left he goes dim, and a tap on him says when the next one comes: *He will be back
+  in about three hours.* Dailies and the practice pen have no Hamish: a daily's almanac carries
+  its best score but not its pen, and the practice pen is a lesson. *Clear all game data*
+  gives the roses back with everything else.
 - **The animals answer.** Nothing takes a fence where an animal is standing, so a tap on one
   used to be turned down the way a spent budget is. Now it hops where it stands and calls back
   — *Oink!*, *Snort!*, *Ta-da!* — off its own tile, the way a tap on an apple says what the
@@ -1478,7 +1482,7 @@ is filling in Apple's privacy questionnaire.
 | `Level.opened` | A trail board opened, which world and how far up it |
 | `Level.held` | A pen that held: stars, score against the map's best, pieces against the budget, goes taken |
 | `Level.escaped` / `.refused` | The gate opened on a pen with a gap in it, or a boss rule broken — and which rule |
-| `Level.hintAsked` | The bulb tapped, after how many goes, and whether the lock had let it light yet |
+| `Level.hintAsked` | Hamish asked for a rose, after how many goes, whether he had one to give, and how many he had left |
 | `Level.leftUnheld` | A board walked away from, and the goes they had at it first |
 | `World.tollShort` | A player stopped at the top of a world by a boss's toll, and how many stars short |
 | `World.held` | Every pen in a world held |
@@ -1495,8 +1499,8 @@ is filling in Apple's privacy questionnaire.
 | `Rating.pageOpened` | The listing opened from behind the gear by a player who went looking for it |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
-the wall and which sends players to the bulb — a tap on the dim bulb is a player who wanted
-help before two goes were up, which is what says whether two goes is the right price —
+the wall and which sends players to Hamish — a rose asked for with none left is a player
+who wanted a fourth that day, which is what says whether three a day is the right price —
 whether the dailies bring anybody back, whether the films are worth what they cost to draw, which of the three high points a rating actually gets asked for on — a
 moment that never appears there is a bar set too high — and how many players who accept a
 morning reminder are then let through by their phone.
@@ -1795,7 +1799,7 @@ Tools/level_search.py --budget 12 --plan <<'MAP'
 MAP
 ```
 
-It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: nothing lying on the ground takes fencing, apple or skull, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in that world's tests, which replays the pen and fails if the level stops giving up what it claims.
+It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: nothing lying on the ground takes fencing, apple or skull, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and author its plan — the `#` tiles `--plan` prints on their own — as `bestPen` beside the map. A plan the wrong shape, standing a piece where none can go or overspending the budget is a malformed level and fails to build; the world's tests replay every plan and fail if a level stops giving up what it claims. The plan is also what Hamish reads when he is asked for a hint, so a level without one is a level he cannot help on.
 
 The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with anything lying on it — a treat in the way moves a plain block and a shaped pen by different amounts, and the second star has to stay under what the block is worth.
 
@@ -1804,7 +1808,7 @@ Then work out where on the trail it belongs. `--demand` squares the map off as w
 A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
 Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
+A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no `bestPen`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -2099,10 +2103,11 @@ Pigpen/
 │   └── ReminderTapListener.swift # Hears a tapped reminder at launch and writes down the morning it asks for
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
-│   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
+│   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, every shipped map and the best pen on each
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── BossOrders.swift         # The rule a boss adds, in the one line the board keeps on screen
-│   ├── Hint.swift               # The idea a field turns on, said without a tile, and the two goes that unlock it
+│   ├── Suitor.swift             # Hamish: which piece of the best pen he points at, the way he walks in, and what he says
+│   ├── HintAllowance.swift      # Three roses a day, counted from when each was given, and where that is kept
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # A painted film, as a clock: which shot is up when, and for how long — and the meadow's three
 │   ├── CutScene+Thornwood.swift # The thicket's three, and the shots they are cut from

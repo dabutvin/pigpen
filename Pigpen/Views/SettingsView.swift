@@ -38,6 +38,7 @@ struct SettingsView: View {
     /// What the pig is wearing, so that the card below can show her in it and the dressing barn
     /// this sheet opens is dressing the same pig the boards are drawing.
     var wardrobe: PigWardrobe = .shared
+    var roses: HintAllowance = .shared
     /// Whether the full game has been bought. The card it draws is the third door to the
     /// offer — beside the locked worlds on the map and the shut days in the archive — and
     /// the one place a player who already owns it can be told so.
@@ -809,6 +810,9 @@ struct SettingsView: View {
         // again, so a pig still wearing a crown would be wearing something the game no longer
         // admits she has been given.
         wardrobe.eraseEverything()
+        // Hamish's roses go too. A count of hints given is a count of play, and a player
+        // asking for the game back as they found it is asking for a full hand.
+        roses.eraseEverything()
         hasCleared = true
         haptics.buzz(.success)
         // The reminder is a preference rather than progress, so it survives — but what it had
