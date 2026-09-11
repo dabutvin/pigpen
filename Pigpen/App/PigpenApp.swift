@@ -203,6 +203,7 @@ struct PigpenApp: App {
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
+        case woodsRationed = "-woods-rationed"
         case peakMap = "-peak-map"
         case cityMap = "-city-map"
         case tutorial = "-tutorial"
@@ -358,23 +359,41 @@ struct PigpenApp: App {
             UniverseMapView(progress: .partWayThrough())
         case .universeLocked:
             // The same map as a player sees it before they pay: the meadow held and free,
-            // and every world past it for sale — each in colour with a gold lock, the
-            // thicket beckoning at the head of them. Tapping any one opens the offer.
+            // the thicket open and beckoning — theirs a level a day — and every world past
+            // it for sale, each in colour with a gold lock. Tapping one of those opens the
+            // offer.
             UniverseMapView(progress: .partWayThrough(forSale: true))
         case .woodsMap:
+            // Every trail past the meadow is photographed bought, so the shot is the trail
+            // and not whatever the runner's free-game clock happened to say. The one shot
+            // of that clock is `-woods-rationed`, below.
             WorldMapView(
                 world: .thornwoodThicket,
-                progress: .partWayThrough(world: .thornwoodThicket)
+                progress: .partWayThrough(world: .thornwoodThicket),
+                fullGame: .unlocked()
+            )
+        case .woodsRationed:
+            // The thicket as a player who has not paid finds it the morning after their
+            // first day in it: two stops held, and the third under a lock with the rest of
+            // the free game's day counted down over it. The ration is held in memory, so
+            // the wait photographs the same whatever day the runner is having.
+            WorldMapView(
+                world: .thornwoodThicket,
+                progress: .partWayThrough(world: .thornwoodThicket),
+                fullGame: .locked(),
+                ration: .partWayThrough(world: .thornwoodThicket)
             )
         case .peakMap:
             WorldMapView(
                 world: .emberpeak,
-                progress: .partWayThrough(world: .emberpeak)
+                progress: .partWayThrough(world: .emberpeak),
+                fullGame: .unlocked()
             )
         case .cityMap:
             WorldMapView(
                 world: .cogsworthCity,
-                progress: .partWayThrough(world: .cogsworthCity)
+                progress: .partWayThrough(world: .cogsworthCity),
+                fullGame: .unlocked()
             )
         case .tutorial:
             TutorialView()

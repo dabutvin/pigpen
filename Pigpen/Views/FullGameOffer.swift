@@ -5,6 +5,9 @@ import SwiftUI
 enum FullGameOfferSource: String {
     /// A locked world on the universe map.
     case map
+    /// A level on a world's trail that the free game has not handed over yet — the next one
+    /// past the meadow, with the day's wait still on it.
+    case trail
     /// A day out of the archive that is not today.
     case archive
     /// The upgrade card behind the gear.
@@ -14,10 +17,11 @@ enum FullGameOfferSource: String {
 /// The offer of the full game: what buying it opens, what it costs, and the one button that
 /// buys it — with the restore every store makes an app keep beside it.
 ///
-/// One sheet, raised from all three places the wall stands: a locked world on the map, a shut
-/// day in the archive, and the card in settings. It says the same thing in each, because the
-/// purchase is the same purchase — the meadow and the day are free, and this opens the rest of
-/// the map and the rest of the book of days, once, for good.
+/// One sheet, raised from all four places the wall stands: a locked world on the map, a level
+/// still waiting on the free game's clock up a trail, a shut day in the archive, and the card in
+/// settings. It says the same thing in each, because the purchase is the same purchase — the
+/// meadow and the day are free, the worlds past the meadow come a level a day, and this opens
+/// the whole map at once and the rest of the book of days, once, for good.
 ///
 /// It closes itself the moment the game is unlocked, whichever way that happened: the player
 /// bought it here, restored it here, or an approval the store was waiting on came through while
@@ -32,6 +36,10 @@ struct FullGameOffer: View {
     var fullGame: FullGame = .shared
     /// Where the offer was raised from, counted so the funnel knows which wall does the work.
     let source: FullGameOfferSource
+    /// How long the trail is making the player wait for their next free level, when that is
+    /// the wall they walked into. Said on the first perk, so the offer answers the thing the
+    /// player just met: the wait, and the fact that buying the game ends it.
+    var wait: LevelWait? = nil
 
     /// What the last purchase or restore had to say for itself, once it has said anything —
     /// a pending ask, a restore that found nothing, or something gone wrong. Held so the
@@ -151,8 +159,8 @@ struct FullGameOffer: View {
     private var pitch: some View {
         perk(
             icon: "globe.americas.fill",
-            title: "Every level",
-            detail: "Help Pig explore the whole universe. Eleven more worlds await you."
+            title: "Every level, right away",
+            detail: everyLevel
         )
         perk(
             icon: "calendar",
@@ -164,6 +172,18 @@ struct FullGameOffer: View {
             title: "Never any ads",
             detail: "Pigpen will never have any ads. Buy it once, it is yours forever."
         )
+    }
+
+    /// What the first perk says. The free game already reaches every world, one level a day,
+    /// so what the money buys there is the waiting taken away — and a player who has just been
+    /// told how long the wait is has that said back to them, with the way round it.
+    private var everyLevel: String {
+        if let wait {
+            return "Your next free level opens in \(wait.spoken). Unlock the full game and "
+                + "there is no waiting — every level in every world, today."
+        }
+        return "Help Pig explore the whole universe with no waiting. The free game opens one "
+            + "level a day past the meadow; this opens all of them at once."
     }
 
     private func perk(icon: String, title: String, detail: String) -> some View {
@@ -351,6 +371,14 @@ extension PurchaseOutcome {
     Color.clear
         .sheet(isPresented: .constant(true)) {
             FullGameOffer(fullGame: .locked(price: nil), source: .archive)
+                .presentationDetents([.medium, .large])
+        }
+}
+
+#Preview("Up a trail, mid-wait") {
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            FullGameOffer(fullGame: .locked(), source: .trail, wait: LevelWait(minutes: 14 * 60))
                 .presentationDetents([.medium, .large])
         }
 }

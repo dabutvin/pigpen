@@ -33,19 +33,25 @@ struct GameWorld: Sendable {
     /// a boss stands a second animal on the board and puts one budget on the pair, and a rule is
     /// worth stopping nine seconds for.
     let briefings: [String: WorldFilmSpec]
+    /// Whether the download holds the whole world for nothing. True of the meadow alone: every
+    /// world past it is walked a level a day by a player who has not bought the game — see
+    /// `LevelRation` — and stands for sale on the universe map until the trail has reached it.
+    let isFree: Bool
 
     init(
         theme: WorldTheme,
         map: WorldMap,
         opening: WorldFilmSpec? = nil,
         farewell: WorldFilmSpec? = nil,
-        briefings: [String: WorldFilmSpec] = [:]
+        briefings: [String: WorldFilmSpec] = [:],
+        isFree: Bool = false
     ) {
         self.theme = theme
         self.map = map
         self.opening = opening
         self.farewell = farewell
         self.briefings = briefings
+        self.isFree = isFree
     }
 
     var name: String { theme.name }
@@ -58,6 +64,9 @@ extension GameWorld {
     /// Mudlark Meadow: the world the game has always shipped, now the first stop of many. Its
     /// films stay the meadow's own painted ones, and keyed exactly as before — the boss briefing
     /// included — so a player who has already seen one is not sat back down in front of it.
+    ///
+    /// The one world that comes whole with the download. Everything past it is the free game's
+    /// a-level-a-day, or the purchase.
     static let mudlarkMeadow = GameWorld(
         theme: .meadow,
         map: .mudlarkMeadow,
@@ -69,7 +78,8 @@ extension GameWorld {
             PuzzleLevel.stagMere.id: WorldFilmSpec(key: CutScene.Name.stagMere.rawValue) {
                 .stagMere(start: $0)
             }
-        ]
+        ],
+        isFree: true
     )
 
     /// Thornwood Thicket: the second world, and the first after the meadow to be painted. Every

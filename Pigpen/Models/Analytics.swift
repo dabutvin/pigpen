@@ -330,6 +330,18 @@ extension AnalyticsSignal {
         )
     }
 
+    /// A level past the meadow handed to a player who has not paid, by the free game's ration
+    /// of one a day. Counted on the tap that takes it, so the run of these for one player is
+    /// how many days the free game held them — and against `Store.offerShown` from the trail,
+    /// how many of those days ended at the wall rather than at a board.
+    static func levelReleased(_ level: PuzzleLevel, world: String, stop: Int) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Level.released",
+            ["level": level.id, "world": world, "stop": String(stop)],
+            value: Double(stop)
+        )
+    }
+
     /// A pen that held. The score is the number worth charting: how close players get to
     /// the best pen a map has in it says more about a level than its star count does.
     static func levelHeld(
@@ -538,8 +550,9 @@ extension AnalyticsSignal {
     // MARK: The full game
 
     /// The offer of the full game put in front of somebody. `from` is where it was raised —
-    /// the map, the archive, or the settings sheet — which is the whole point of counting it:
-    /// which wall a player actually hits is what says where the free game runs out for them.
+    /// the map, a trail, the archive, or the settings sheet — which is the whole point of
+    /// counting it: which wall a player actually hits is what says where the free game runs
+    /// out for them.
     static func offerShown(from source: String) -> AnalyticsSignal {
         AnalyticsSignal("Store.offerShown", ["from": source])
     }
