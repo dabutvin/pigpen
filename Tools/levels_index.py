@@ -31,7 +31,7 @@ SOURCES = [
 
 # The questions that name a rule of their own. Every other question is an ordinary board,
 # which the search calls `herd` whether there is a second animal on it or not.
-BOSSLY = ("apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow", "stoop", "herd")
+BOSSLY = ("apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow", "stoop", "courting", "herd")
 
 CALL = re.compile(
     r"static let (?P<name>\w+) = \w+\(\n(?P<body>.*?)\n    \)\n",

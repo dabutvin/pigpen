@@ -361,7 +361,9 @@ Thicket**, **Emberpeak**, **Cogsworth City**, **Starfall Reaches**, **Gloamdeep 
 ending at a silhouette now runs all the way out, and past the heights is nothing but sky.
 Adding a world is a matter of authoring its levels and its theme — its light, its treat skin
 and the skin its board is painted in — since the map, the unlocking and the films are already
-there.
+there. One animal is already written into the rules ahead of the world that will stand it on
+its ground: [the sweetheart](#the-sweetheart), the first one the pig is not being kept away
+from.
 
 ### Thornwood Thicket
 
@@ -1039,6 +1041,69 @@ board in the game leaves, and the game saves it for last. It charges the same 21
 stars below it that every boss charges, and stops for the same briefing on the way in. Every
 pen is drawn out in
 [`solutions/12-cloudspire-heights.md`](solutions/12-cloudspire-heights.md).
+
+### The sweetheart
+
+Not a world — not yet — but the animal at the end of one, and the rule that animal asks,
+both in the game ahead of the trail that will lead to them, the way every world past the
+meadow was a silhouette on the map before it was nine fields.
+
+Every animal the pig has met so far is somebody to be kept apart from, kept in with, walled
+round or kept out of sight of. The sweetheart is another pig — drawn as one, `🐖` beside the
+pig's own `🐷`, so a player can tell which of the two is theirs to fence first — and the
+first one the pig is *courting*. Tap the sweetheart and it hops and says *Swoon!*, the way
+the deer snorts and the eagle cries.
+
+Its rule is **`courting`**, and it is the scorpion's rule turned inside out. Scorpion Flats
+asks for two pens that share no wall, because a sting goes straight through a fence. The
+sweetheart's board asks for two pens that **do**: the pig and the sweetheart held apart —
+Pig is taking it slow — and somewhere one piece of fence with the pig's ground on one side
+of it and the sweetheart's on the other. A party wall. The orders the board keeps under the
+field are the scorpion's, word for word, with the one word turned round:
+
+> Build Pig and the sweetheart separate pens. And make sure they share a fence. Adjoining
+> properties were specifically requested.
+
+Two things are refused. One pen round the pair is the thicket's refusal — *the sweetheart
+wants its own place* — and two pens that never meet is the new one, **aloof**: *nothing to
+lean over*. What makes the second a boss rule rather than the thicket again is what does not
+count as meeting. Every wet world in the game has taught the same lesson — build against the
+water, it walls a pen for nothing — and two pens facing each other across a river have each
+done exactly that and have not met, because a river is not a fence anybody can lean over.
+The water between the pair, which every other two-animal board hands over free, is here the
+one thing they may not meet across.
+
+The board it was proven on is **The Party Wall**, and it is the shape the rule wants: a river
+across the whole map with a single ford in it, the pig on one bank and the sweetheart on the
+other, and a skull staked either side of the ford. The ford is the only tile on the board a
+fence can stand on with both banks beside it, so the pens have to come to it, and coming to
+it costs each of them a skull.
+
+| Level | Pieces | On the ground | Squared off | Best pen | Asks |
+|---|---|---|---|---|---|
+| The Party Wall | 18 | a river, one ford, 2 apples, 2 skulls | 10 | 28 | 64% |
+
+The answer eleven worlds have drilled — box each of them where they stand, eight pieces —
+holds both and is sent back, aloof. Two pens leaning on the river from either bank, the whole
+budget spent, hold sixteen tiles and are sent back the same way: worth more than the tidy
+pair, and no pen at all. The tidy pair itself is a block on each bank meeting at the ford,
+both skulls swallowed, worth 10 and the second star. The best pen takes the north skull to
+reach the ford from the pig's side, takes the whole south bank — its apple and its skull —
+from the sweetheart's, and meets at one piece of fence beside the ford: 33 tiles and an
+apple, less two skulls, which is 28. Held apart with no rule on the board the same budget is
+worth 32, which is the four points the courtship costs. `CourtingTests` replays every one of
+those walls, and `Tools/level_search.py --rule courting` searches a board for the best pen
+under the rule the way it does for every other boss.
+
+What the game has of the sweetheart, then, is the animal, the rule in `PenOutcome`, the
+orders, the verdict card for a pair held at arm's length, the word the charts file that
+refusal under, and the search. What it does not have is the world: a name and a ground and a
+water, a treat skin and a board skin and a light, eight fields climbing to the ninth, three
+films and a medallion — and a place on the map, which the heights' send-off says there is
+not, since past the heights is nothing but sky. Where the sweetheart lives is the story's
+call before it is the map's. One answer worth weighing: the one place in the game the pig
+has never been *back* to is the farm it left in the opening, the poky pen it had outgrown —
+which is not so poky with two in it.
 
 ## The Daily Puzzle
 
@@ -1827,9 +1892,12 @@ than the last time the universe asked it.
 | `hole` | Two pens, and the seal's must lie against the water | The water — it is where his pen has to go |
 | `wallow` | Two pens, and the croc's must hold every bank of one whole channel | The sister channels — their banks wall his ring |
 | `stoop` | Hold the pig nowhere the eagle can see: he looks along his row and his column | Nothing — but a fence is a sightbreak as well as a wall |
+| `courting` | Two pens that have to meet at a fence: a party wall, with the pig on one side of it and the sweetheart on the other | The water between them — which is the one thing they may not meet across |
 
 `herd`, `apart`, `exclude`, `together`, `even`, `roost`, `ring`, `berth`, `moat`, `hole`,
-`wallow` and `stoop` are the **boss rules**, and a field never asks one.
+`wallow`, `stoop` and `courting` are the **boss rules**, and a field never asks one.
+`courting` is the one rule no world stands on its ground yet — see
+[the sweetheart](#the-sweetheart).
 
 #### The shape of a world
 
@@ -1885,6 +1953,7 @@ is nudged out over what it cannot stand on, it asks 24% and sits where it belong
 | `roost` | Running the free wall *between* the two that must share, so joining them is the expensive part |
 | `ring` | Standing him further off centre, so the ring has to be lopsided to close |
 | `berth` | Standing the two so close that the cheap wall between them is the one that serves both |
+| `courting` | Standing the two further apart, or staking hazards where the party wall wants to go, so meeting costs ground |
 
 #### Authoring one
 

@@ -123,10 +123,17 @@ enum Question: String, Sendable, CaseIterable {
     /// in his line of sight, which runs four ways from his perch, straight along his row and
     /// his column, over mud and sky alike. Only a fence breaks it. A boss, and nothing else.
     case stoop
+    /// One budget, two pens, and a party wall between them: the pig and the sweetheart are
+    /// held apart — Pig is taking it slow — and somewhere one piece of fence has to have
+    /// the pig's ground on one side of it and the sweetheart's on the other. The dunes'
+    /// rule turned inside out: there a shared wall is the one thing refused, here it is the
+    /// one thing asked for. Water between the two is no good — a river is not a fence
+    /// anybody can lean over. A boss, and nothing else.
+    case courting
 
     /// The questions only a boss asks. A world's last field adds a rule its other eight do
     /// not use, and no two worlds add the same one.
-    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .moat, .hole, .wallow, .stoop] }
+    static var bossly: [Question] { [.herd, .apart, .exclude, .together, .even, .roost, .ring, .berth, .moat, .hole, .wallow, .stoop, .courting] }
 }
 
 /// What a pen is worth: the ground it holds, what was lying on that ground, and the score
@@ -269,8 +276,9 @@ struct PuzzleLevel: Identifiable, Sendable {
     /// Builds a level from an ASCII map, one line per row: `.` mud, `~` water, `a` an
     /// apple and `x` a skull — both of which lie on mud — a single `P` for the mud tile
     /// the pig starts on, and an optional `D`, `B`, `W`, `R`, `V`, `T`, `U`, `M`, `S`, `C`,
-    /// `L`, `G` or `E` for a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup, the
-    /// ringmaster, a scorpion, a crab, a bull seal, an old croc or an eagle.
+    /// `L`, `G`, `E` or `H` for a deer, a boar, a wyrm, a rat king, a visitor, a bat, its pup,
+    /// the ringmaster, a scorpion, a crab, a bull seal, an old croc, an eagle or the
+    /// sweetheart.
     ///
     /// Returns `nil` if the map is empty, ragged, holds an unknown character, stands the
     /// same animal on it twice, or has no pig on it at all.

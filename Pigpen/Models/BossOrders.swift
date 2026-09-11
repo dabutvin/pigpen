@@ -71,6 +71,11 @@ extension PuzzleLevel {
         case .stoop:
             return "Fence in Pig. Keep every tile of his pen out of the \(boss.name)'s line "
                 + "of sight. The homeowners association is watching."
+        case .courting:
+            // The scorpion's orders, word for word, with the one word turned round: there
+            // adjoining properties were not approved, and here they are the whole point.
+            return "Build Pig and the \(boss.name) separate pens. And make sure they share a "
+                + "fence. Adjoining properties were specifically requested."
         case .shore, .basin, .span, .gap, .corner, .constellation, .detour, .obstruction, .bare:
             // The game's own question, asked on new ground. There is nothing to say about it
             // that the ground does not say itself.

@@ -556,6 +556,7 @@ struct PuzzleView: View {
         case .landlocked(let animal): "No water for the \(animal.name)"
         case .parched(let animal): "The \(animal.name) is sharing the water"
         case .spotted: "Pig has no privacy"
+        case .aloof: "Nothing to lean over"
         }
     }
 
@@ -581,6 +582,8 @@ struct PuzzleView: View {
             "Both of them have a place, but no channel is wholly the \(animal.name)'s. Every bank of one channel has to be his own ground — half a wallow is nobody's."
         case .spotted(let animal):
             "The pen is shut, but the \(animal.name) can see into it. He looks along his row and his column, and only a fence blocks the view — a wall of the pen's own, or one piece planted in his way."
+        case .aloof(let animal):
+            "Both of them have a place, but nothing joins the two. One piece of fence has to have Pig on one side of it and the \(animal.name) on the other — water between them is not a fence anybody can lean over."
         }
     }
 

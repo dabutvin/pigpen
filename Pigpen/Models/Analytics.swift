@@ -593,6 +593,7 @@ extension Refusal {
         case .landlocked: "landlocked"
         case .parched: "parched"
         case .spotted: "spotted"
+        case .aloof: "aloof"
         }
     }
 }

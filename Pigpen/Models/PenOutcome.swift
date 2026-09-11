@@ -36,6 +36,10 @@ enum Refusal: Equatable, Sendable {
     /// The pen is shut, and some of its ground stands in the eagle's line of sight: held,
     /// and held where he can see her, which is one stoop away from not being held at all.
     case spotted(Animal)
+    /// Two pens that should have met at a fence are standing with nothing but ground or
+    /// water between them: both held, and held at arm's length, which for a courtship is no
+    /// holding at all.
+    case aloof(Animal)
 }
 
 /// What happens when the animals are let loose on a field fenced a particular way.
@@ -207,6 +211,24 @@ extension PuzzleLevel {
             }
         }
 
+        // The sweetheart asks for the dunes' rule turned inside out: two pens rather than one,
+        // since Pig is taking it slow, and somewhere a piece of fence with the pig's ground on
+        // one side of it and the sweetheart's on the other — a party wall, which is the one
+        // thing the scorpion will not have and the one thing this board will not do without.
+        // Water between the two runs is no good to it: a river is not a fence anybody can
+        // lean over, so two pens facing each other across one have not met.
+        if question == .courting, let pigGround = ground[.pig] {
+            for animal in animals where animal.kind != .pig {
+                if pigGround.contains(animal.tile) {
+                    return .refused(pen: held, refusal: .together(animal.kind))
+                }
+                guard let theirs = ground[animal.kind] else { continue }
+                if !sharesAWall(pigGround, theirs, fences: fences) {
+                    return .refused(pen: held, refusal: .aloof(animal.kind))
+                }
+            }
+        }
+
         // The tundra asks for two pens and is particular about one of them: the bull seal will
         // not stand in with the pig, and the ground he is given has to lie against the water,
         // because a seal hauls out beside his breathing hole and nowhere else. The pressure
@@ -268,6 +290,9 @@ extension PuzzleLevel {
     /// reaches across one — and the two runs cannot be touching without a wall between them in
     /// any case, since ground the pig could walk into would be her own ground and not a second
     /// pen at all.
+    ///
+    /// The sweetheart's board asks the same question and wants the other answer: there the
+    /// fence is a party wall, and the one thing the pair may not be without.
     private func sharesAWall(
         _ mine: Set<GridPoint>,
         _ theirs: Set<GridPoint>,

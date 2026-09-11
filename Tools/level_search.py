@@ -6,8 +6,8 @@ nothing left to beat. It cannot be derived with a sum — it is a search — so 
 authored, and this is what authors it. Feed it an ASCII map (`.` mud, `~` water, `a`
 an apple, `x` a skull, `P` the pig's tile, `D` a deer's, `B` a boar's, `W` a wyrm's, `R` a
 rat's, `V` a visitor's, `T` a bat's, `U` its pup's, `M` the ringmaster's, `S` the
-scorpion's, `C` the crab's, `L` the bull seal's, `G` the old croc's and `E` the eagle's) and
-a budget and it prints the best pen,
+scorpion's, `C` the crab's, `L` the bull seal's, `G` the old croc's, `E` the eagle's and `H`
+the sweetheart's) and a budget and it prints the best pen,
 an example of it,
 and star thresholds in the proportions the shipped levels use.
 
@@ -29,8 +29,8 @@ five against for the skull — which is what makes a treat a fork rather than a 
 tax: the pen can never simply ignore one it is standing next to.
 
 A map with more on it than the pig — a deer, a boar, a wyrm, a rat, a visitor, a bat and its
-pup, a ringmaster, a scorpion, a crab, a bull seal, an old croc, or an eagle — is held by
-ground in two pieces just as happily as by one,
+pup, a ringmaster, a scorpion, a crab, a bull seal, an old croc, an eagle, or the sweetheart
+— is held by ground in two pieces just as happily as by one,
 since what has to hold is each animal rather than the pen: the search grows out from every
 animal at once and the ground it ends up with is connected to one or another of them, so a wall
 shared between two enclosures is paid for once, like any other. `--rule berth` is the one board
@@ -51,6 +51,13 @@ perch, straight along his row and his column, over mud and sky alike. Only a fen
 it: the pen's own wall where the wall faces him, or a piece planted on its own with no pen
 anywhere near it, which is a thing no other board in the game has a use for. `--prefence`
 stands such a piece before the search begins.
+
+`--rule courting` is the sweetheart's: the dunes' rule turned inside out. Two pens, the
+pig's and the sweetheart's, and somewhere one piece of fence has to have the pig's ground on
+one side of it and the sweetheart's on the other — a party wall. Water between the two is
+no good to this rule: a river is not a fence anybody can lean over, so two pens facing each
+other across one have not met, and one pen round the pair is refused the way the thicket
+refuses it.
 
 A pen scores a point per tile of ground, five more for an apple shut in with an animal
 and five fewer for a skull, and never less than a point however sour the ground. The
@@ -79,7 +86,7 @@ SKULL = "x"
 STAKED = (APPLE, SKULL)
 # The animals a map can stand on its ground, and the tile each one starts on. `T` and `U` are
 # the caverns' bat and its pup, which are two animals to the board and one roost to the rule.
-ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C", "L", "G", "E")
+ANIMALS = ("P", "D", "B", "W", "R", "V", "T", "U", "M", "S", "C", "L", "G", "E", "H")
 # The roost: the animals the `roost` rule wants in one pen, with the pig kept out of it.
 ROOST = ("T", "U")
 
@@ -236,6 +243,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefen
         raise SystemExit("--rule wallow wants a croc on the board")
     if rule == "stoop" and "E" not in starts:
         raise SystemExit("--rule stoop wants an eagle on the board")
+    if rule == "courting" and "H" not in starts:
+        raise SystemExit("--rule courting wants the sweetheart on the board")
 
     # The ground lying against the water, for the board whose seal must keep a breathing hole.
     lapped = 0
@@ -422,6 +431,22 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefen
         # scorpion refuses. Sand between them is another matter: a dune is not a fence.
         return not (spilling(mine) & spilling(theirs) & ground & ~pen)
 
+    def courting_holds(pen):
+        """Whether the pen gives the pig and the sweetheart a party wall: two pens, and one
+        piece of fence doing for both.
+
+        The dunes' rule turned inside out. The pair may not share ground — one pen round the
+        two of them is the thicket's refusal — and somewhere a mud tile outside the pen has
+        to touch both runs, which is exactly the shared wall the scorpion refuses. Water
+        between the two runs is no good to this rule: a river is not a fence anybody can
+        lean over, so two pens facing each other across one have not met.
+        """
+        mine = run_of(starts["P"], pen)
+        if mine & bit(starts["H"]):
+            return False
+        theirs = run_of(starts["H"], pen)
+        return bool(spilling(mine) & spilling(theirs) & ground & ~pen)
+
     def keeps_the_rule(pen):
         """Whether a pen that holds is one this board will actually accept."""
         if rule == "stoop":
@@ -447,6 +472,8 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefen
             return bool(run_of(starts["L"], pen) & lapped)
         if rule == "berth":
             return berth_holds(pen)
+        if rule == "courting":
+            return courting_holds(pen)
         if rule in ("ring", "moat"):
             return ring_holds(pen)
         if rule == "roost":
@@ -710,6 +737,11 @@ def search(mud, treats, starts, rows, columns, budget, beam, rule="herd", prefen
             keeping = wading(grown, cost)
         if rule == "berth":
             keeping = spaced(grown, cost)
+        if rule == "courting":
+            # The sweetheart's board has `divided`'s problem and no more: a pen the pig can
+            # already walk out of into the sweetheart is impossible rather than slow, while
+            # a pair of pens that have not met yet still can, on the next tile grown.
+            keeping = divided(grown, cost)
         live = {pen: grown[pen] for pen in keeping}
 
     return best[0], spread(best[1], columns)
@@ -984,6 +1016,15 @@ def squared_off(mud, treats, starts, rows, columns, budget, rule="herd", prefenc
                 continue
             if wall_between(mine, run_of_ground(pen, starts["S"]), mud, pen):
                 continue
+        # And the sweetheart's board wants the opposite of the dunes: two blocks rather than
+        # one, and a piece of fence somewhere with the pig on one side of it and the
+        # sweetheart on the other. Two blocks facing each other over water have not met.
+        if rule == "courting":
+            mine = run_of_ground(pen, starts["P"])
+            if starts["H"] in mine:
+                continue
+            if not wall_between(mine, run_of_ground(pen, starts["H"]), mud, pen):
+                continue
         # And the fen will not have the croc short-changed: his block only counts if one
         # whole channel lies against his ground, every wet tile of it.
         if rule == "wallow" and others:
@@ -1048,7 +1089,7 @@ def main():
     parser.add_argument("--beam", type=int, default=6000, help="Pens of each size kept while searching")
     parser.add_argument(
         "--rule",
-        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow", "stoop"),
+        choices=("herd", "apart", "exclude", "together", "even", "roost", "ring", "berth", "moat", "hole", "wallow", "stoop", "courting"),
         default="herd",
         help="What a board with more than the pig on it asks: hold both, hold them apart, "
              "hold the pig and shut the other one out, hold the pair in a single pen, "
@@ -1057,8 +1098,9 @@ def main():
              "pig's own ring, hold the two in pens that share no wall, close the "
              "pig's ground round the crab's whole pool, hold the pair apart with "
              "the seal's ground lying against the water, hold the pair apart with "
-             "one whole channel's every bank held as the croc's own ground, or hold "
-             "the pig nowhere the eagle can see her",
+             "one whole channel's every bank held as the croc's own ground, hold "
+             "the pig nowhere the eagle can see her, or hold the pig and the sweetheart "
+             "in two pens that share a fence",
     )
     parser.add_argument(
         "--prefence",

@@ -39,6 +39,14 @@
 /// no tile of the pig's pen may stand anywhere his eye reaches. Only a fence breaks his line
 /// of sight, which makes a fence two tools in one world — a wall, and an eyelid pulled down
 /// over somebody else's eye.
+///
+/// And then there is the sweetheart: the one animal in the game the pig is not being kept
+/// away from, kept in with, or kept out of sight of, but is *courting*. Another pig, and the
+/// first one that is neither a neighbour to be tolerated nor a hazard to be planned round.
+/// The sweetheart's board asks for two pens that meet — a party wall, one piece of fence
+/// with the pig on one side of it and the sweetheart on the other — because Pig is taking
+/// it slow. The sweetheart is written into the rules and the search before any world stands
+/// them on its ground, the way every world was a silhouette before it was a trail.
 enum Animal: Character, CaseIterable, Sendable {
     case pig = "P"
     case deer = "D"
@@ -54,6 +62,7 @@ enum Animal: Character, CaseIterable, Sendable {
     case seal = "L"
     case croc = "G"
     case eagle = "E"
+    case sweetheart = "H"
 
     /// What the field draws it as.
     var glyph: String {
@@ -71,6 +80,9 @@ enum Animal: Character, CaseIterable, Sendable {
         case .seal: "🦭"
         case .croc: "🐊"
         case .eagle: "🦅"
+        // Another pig, and drawn as one — but not the same glyph as the pig, since what a
+        // player has to read off the floor is *which* of the two is theirs to fence first.
+        case .sweetheart: "🐖"
         }
     }
 
@@ -96,6 +108,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .seal: "Arf!"
         case .croc: "Snap!"
         case .eagle: "Kree!"
+        case .sweetheart: "Swoon!"
         }
     }
 
@@ -116,6 +129,7 @@ enum Animal: Character, CaseIterable, Sendable {
         case .seal: "bull seal"
         case .croc: "old croc"
         case .eagle: "eagle"
+        case .sweetheart: "sweetheart"
         }
     }
 }
