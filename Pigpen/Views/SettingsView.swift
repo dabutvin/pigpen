@@ -91,13 +91,18 @@ struct SettingsView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         about
+                        // Straight under the version, above everything else on the sheet.
+                        // It is the one card a player comes in here in a hurry for — a game
+                        // that has started talking on a quiet train is a game being turned
+                        // off unless the switch is the first thing under the thumb — where
+                        // the rest of this sheet is read once and then not again.
+                        feel
                         fullGameCard
                         help
                         tutorial
                         rate
                         films
                         dressingBarn
-                        feel
                         reminders
                         counting
                         gameData
@@ -225,8 +230,9 @@ struct SettingsView: View {
 
                 Text(
                     """
-                    The meadow and today's daily puzzle are free. Unlock the rest of the \
-                    worlds and the whole archive — once, for good.
+                    The meadow and today's daily puzzle are free, and every world past the \
+                    meadow opens a level a day. Unlock all of them at once, and the whole \
+                    archive — once, for good.
                     """
                 )
                 .font(.footnote.weight(.semibold))
@@ -415,11 +421,15 @@ struct SettingsView: View {
         .padding(.top, 2)
     }
 
-    /// The noises and the buzzing, and the two switches that stop them.
+    /// The noises, the music and the buzzing, and the three switches that stop them.
     ///
-    /// Turning either on gives the thing it is promising straight away — a knock, a tick —
-    /// so the switch answers in the thing it governs rather than in words. Turning it off
-    /// says nothing, which is the whole point of turning it off.
+    /// First on the sheet under the version, because it is the card somebody opens settings
+    /// *for*: the rest of what is in here is read once, and this is the one a player reaches
+    /// for in a hurry, with the sound already coming out of the phone.
+    ///
+    /// Turning any of them on gives the thing it is promising straight away — a knock, a
+    /// tick, the waltz picking up — so the switch answers in the thing it governs rather
+    /// than in words. Turning it off says nothing, which is the whole point of turning it off.
     ///
     /// Three switches rather than one, because the three reasons are three: a phone on a
     /// table wants the buzz off and the sound on, a quiet carriage wants it the other way

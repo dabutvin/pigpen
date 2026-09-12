@@ -93,10 +93,11 @@ jobs:
           # read the colour scheme out of the environment, so flipping the
           # simulator under a running app re-draws it, and the two shots then show
           # the same board rather than two rolls of the dice. `-universe`, `-map`,
-          # `-woods-map`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`, `-orchard`,
-          # `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`, `-archive`,
-          # `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`, `-barn`,
-          # `-dressed-board`, `-dressed-title`, `-suitor`, `-daily-suitor` and `-no-roses` are launch
+          # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
+          # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
+          # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
+          # `-barn`, `-dressed-board`, `-dressed-title`, `-suitor`, `-daily-suitor` and
+          # `-no-roses` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
           # settings sheet, the offer of a daily reminder, the card over a shut boss,
@@ -159,6 +160,11 @@ jobs:
           # boss's price. Numbered high for the same reason as the shot above it.
           capture 71 toll -toll
 
+          # The thicket's trail as a player who has not paid finds it the day after their
+          # first free level there: the next stop under a lock, with the rest of the free
+          # game's day counted down over it. Numbered high for the same reason.
+          capture 81 woods_rationed -woods-rationed
+
           # The fork off the orchard — the one branch on any trail in the game — and the
           # dressing barn at the end of it, with something already on the pig. Then the two
           # that prove an outfit is not only worn in the barn: a board and the title screen,
@@ -173,14 +179,14 @@ jobs:
           # count, his line on the board over the rack, and himself standing on the tile the
           # next piece of the wall goes on. Numbered high for the same reason the shots above
           # are.
-          capture 81 suitor -suitor
+          capture 83 suitor -suitor
 
           # And the same on a daily, off the wall its line of the almanac carries.
-          capture 83 daily_suitor -daily-suitor
+          capture 85 daily_suitor -daily-suitor
 
           # The other half of what he has to say: the day's three roses spent, and the bubble
           # over his own corner saying when the next one comes.
-          capture 85 no_roses -no-roses
+          capture 87 no_roses -no-roses
 
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock

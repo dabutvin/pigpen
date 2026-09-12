@@ -53,9 +53,9 @@ policy page than in prose here:
 > changes a rule. Past those, a new puzzle every morning: the same board for everybody, with
 > an archive that keeps every day so far.
 >
-> Free to start: the download holds the whole first world and today's daily puzzle. One
-> purchase opens every world and every day, for good — a single one-time payment, no
-> subscription.
+> Free to start: the download holds the whole first world and today's daily puzzle, and every
+> world after the first opens one new level a day. One purchase opens every level at once and
+> every day, for good — a single one-time payment, no subscription.
 
 **Keywords** — 100 characters, commas and all; this is 86. The name and subtitle are already
 searched, so `pigpen`, `cozy` and `puzzle` are not spent again here:
@@ -92,13 +92,16 @@ Sign-in required: **off** — there is no account in the game. Notes, as pasted:
 > Pigpen needs no account and no sign-in — there is nothing to log into, so there are no demo
 > credentials to give. Every world is in the build.
 >
-> The free part is the first world (Mudlark Meadow, nine puzzles and its boss) and today's
-> daily puzzle. One non-consumable purchase, The Full Game (com.pigpen.app.fullgame), opens
-> every other world and every past day in the archive.
+> The free part is the first world (Mudlark Meadow, nine puzzles and its boss), today's
+> daily puzzle, and one new level a day in every world after the first — a level opened
+> starts a 24-hour clock on the next. One non-consumable purchase, The Full Game
+> (com.pigpen.app.fullgame), removes the wait — every level in every world at once — and
+> opens every past day in the archive.
 >
 > The quickest way to the purchase sheet on a fresh install: press Archive on the title
-> screen, then tap any day but today. (It is also raised by tapping a locked world on the
-> universe map, but the universe map only opens once the meadow's boss is beaten.)
+> screen, then tap any day but today. (It is also raised by tapping a level still on its
+> 24-hour clock up a world's trail, and by tapping a world on the universe map the trail
+> has not yet reached — but the universe map only opens once the meadow's boss is beaten.)
 >
 > The game plays offline. Analytics are anonymous (TelemetryDeck), can be turned off under
 > Settings → Privacy, and the app never tracks — which is why it asks for no tracking

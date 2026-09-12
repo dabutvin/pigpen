@@ -16,6 +16,11 @@ struct LevelSignpost: View {
         /// running count against the price is the one thing worth knowing about a level
         /// nobody can open yet, and says plainly that stars are what unlock it.
         case tolled(have: Int, need: Int)
+        /// Reached, and shut only by the free game's clock: the next level past the meadow
+        /// is a day after the last, and this is how long is left of the day. Shown where the
+        /// stars would go, the way a toll is, since when it opens is the one thing worth
+        /// knowing about it — and tapping it says what buying the game would do about that.
+        case rationed(wait: LevelWait)
     }
 
     /// What this signpost is standing at: a numbered stop on the trail, or a door beside it.
@@ -70,17 +75,15 @@ struct LevelSignpost: View {
     @ViewBuilder
     private var tally: some View {
         if case .tolled(let have, let need) = standing {
-            HStack(spacing: 3) {
+            price("\(have)/\(need)") {
                 Image(systemName: "star.fill")
-                Text("\(have)/\(need)")
-                    .monospacedDigit()
             }
-            .font(.system(size: 11, weight: .black, design: .rounded))
-            .foregroundStyle(GamePalette.pen)
-            .padding(.horizontal, 7)
-            .padding(.vertical, 1)
-            .background(Capsule().fill(.black.opacity(0.28)))
-            .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
+        } else if case .rationed(let wait) = standing {
+            // The same capsule a toll wears, with an hourglass on it instead of a star: what
+            // this stop costs is a wait rather than stars, and the count is how much of it is
+            // left. The sand runs while there is still time, and stands still when the player
+            // has asked for less movement.
+            price(wait.short) { hourglass }
         } else {
             starRow()
                 .overlay { if showsRainbow { rainbow } }
@@ -88,6 +91,39 @@ struct LevelSignpost: View {
                 // Kept in place but unpainted over a door and over a stop nobody can play yet,
                 // so that every sign in the meadow stands at the same height whatever it is.
                 .opacity(standing == .shut || !hasStars ? 0 : 1)
+        }
+    }
+
+    /// What a shut stop costs, written over it where its stars would go: a star and a count
+    /// against a toll, or an hourglass and the time left on the free game's day.
+    private func price<Icon: View>(_ words: String, @ViewBuilder icon: () -> Icon) -> some View {
+        HStack(spacing: 3) {
+            icon()
+            Text(words)
+                .monospacedDigit()
+        }
+        .font(.system(size: 11, weight: .black, design: .rounded))
+        .foregroundStyle(GamePalette.pen)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 1)
+        .background(Capsule().fill(.black.opacity(0.28)))
+        .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
+    }
+
+    /// The free game's day made visible: sand in the top half, then the bottom, trading places
+    /// once a second — slow enough to read as waiting, not as a loader. A player who has asked
+    /// for less movement gets the glass standing still.
+    @ViewBuilder
+    private var hourglass: some View {
+        if reduceMotion {
+            Image(systemName: "hourglass")
+        } else {
+            TimelineView(.periodic(from: .now, by: 1.0)) { context in
+                let topHeavy = Int(context.date.timeIntervalSinceReferenceDate) % 2 == 0
+                Image(systemName: topHeavy ? "hourglass.tophalf.filled" : "hourglass.bottomhalf.filled")
+                    .contentTransition(.symbolEffect(.replace))
+                    .animation(.easeInOut(duration: 0.45), value: topHeavy)
+            }
         }
     }
 
@@ -191,7 +227,7 @@ struct LevelSignpost: View {
     @ViewBuilder
     private var emblem: some View {
         switch standing {
-        case .shut, .tolled:
+        case .shut, .tolled, .rationed:
             Image(systemName: "lock.fill")
                 .font(.system(size: 21, weight: .black))
                 .foregroundStyle(GamePalette.cream.opacity(0.85))
@@ -226,7 +262,7 @@ struct LevelSignpost: View {
     /// Whether the level is one nobody can play yet, whatever is keeping it shut.
     private var isShut: Bool {
         switch standing {
-        case .shut, .tolled: true
+        case .shut, .tolled, .rationed: true
         case .open, .cleared: false
         }
     }
@@ -235,7 +271,7 @@ struct LevelSignpost: View {
         switch standing {
         case .cleared: GamePalette.pen
         case .open: GamePalette.cream
-        case .shut, .tolled: GamePalette.stone
+        case .shut, .tolled, .rationed: GamePalette.stone
         }
     }
 
@@ -260,6 +296,8 @@ struct LevelSignpost: View {
             return "\(called), locked"
         case .tolled(let have, let need):
             return "\(called), locked until \(need) stars, \(have) so far"
+        case .rationed(let wait):
+            return "\(called), your next free level, opens in \(wait.spoken)"
         case .open:
             return "\(called), not yet played"
         case .cleared:
@@ -290,6 +328,9 @@ struct SignpostButtonStyle: ButtonStyle {
         LevelSignpost(sign: .stop(3), name: "Horseshoe Lake", stars: 0, standing: .open)
         LevelSignpost(sign: .stop(4), name: "The Narrows", stars: 0, standing: .shut)
         LevelSignpost(sign: .stop(9), name: "Stag Mere", stars: 0, standing: .tolled(have: 13, need: 21))
+        // The free game's clock over a stop the trail has reached: the next level past the
+        // meadow, a day after the last one, with most of the day still to run.
+        LevelSignpost(sign: .stop(5), name: "Bramble Run", stars: 0, standing: .rationed(wait: LevelWait(minutes: 14 * 60)))
         // The dressing barn beside the orchard, which carries a painting of itself where a stop
         // carries its number, and no stars at all.
         LevelSignpost(sign: .door(.barn), name: "Dressing Barn", stars: 0, standing: .open)

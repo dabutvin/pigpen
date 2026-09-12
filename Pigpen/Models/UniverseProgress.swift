@@ -13,8 +13,9 @@ final class UniverseProgress {
     let universe: Universe
     @ObservationIgnored private let store: any ProgressStore
     /// Whether the full game has been bought. The map reads it to tell a world shut for want
-    /// of stars from one shut for want of the purchase: the meadow is free, and everything
-    /// past it stands behind the wall until this opens.
+    /// of stars from one shut for want of the purchase: the meadow is free, the world the
+    /// trail has reached is walked a level a day, and everything past that stands behind the
+    /// wall until this opens.
     let fullGame: FullGame
     /// Every best star rating in every world, by level id. Held here so the map redraws the
     /// instant it changes and re-read from the store each time the map comes back.
@@ -41,19 +42,24 @@ final class UniverseProgress {
 
     func isCleared(_ index: Int) -> Bool { universe.isCleared(index, stars: stars) }
 
-    /// Whether a world is shown for sale rather than played: any world past the free meadow,
-    /// while the full game is not yet bought. Every one of them, not only the next — so the
-    /// whole universe is a shop window before a player pays, each world in colour and each tap
-    /// on one an offer, rather than a single wall at the thicket with silhouettes behind it.
+    /// Whether a world is shown for sale rather than played: a world past the free meadow that
+    /// the trail has not yet reached, while the full game is not yet bought. Every one of those,
+    /// not only the next — so the universe ahead is a shop window before a player pays, each
+    /// world in colour and each tap on one an offer, rather than silhouettes.
+    ///
+    /// The world the chain has reached is not for sale, because it is not shut: a player who
+    /// has not paid walks it a level a day — see `LevelRation` — and the wall they meet is on
+    /// its trail, not on the map. The meadow is never for sale at all.
     ///
     /// It is kept apart from `WorldState`, which stays a reading of stars alone: a world can be
-    /// `.playable` or `.locked` by progress and for sale at the same time, and the map draws the
-    /// second over the first. Once the full game is bought, this is false everywhere and the map
-    /// is nothing but the star chain again — the worlds ahead going back to silhouettes the
-    /// player earns their way to.
+    /// `.locked` by progress and for sale at the same time, and the map draws the second over
+    /// the first. Once the full game is bought, this is false everywhere and the map is nothing
+    /// but the star chain again — the worlds ahead going back to silhouettes the player earns
+    /// their way to.
     func isForSale(_ index: Int) -> Bool {
-        guard !fullGame.isUnlocked else { return false }
-        return universe.worlds.indices.contains(index) && index > 0
+        guard !fullGame.isUnlocked, universe.worlds.indices.contains(index) else { return false }
+        guard !(universe.game(at: index)?.isFree ?? false) else { return false }
+        return !universe.isUnlocked(index, stars: stars)
     }
 
     /// Whether entering a world means being shown the offer rather than dropping into its
@@ -99,8 +105,8 @@ extension UniverseProgress {
     ///
     /// The full game is bought by default, so the map shows its worlds as the star chain the
     /// screenshots have always shown rather than as a run of price tags. `forSale` stands the
-    /// same progress up unbought, so the wall — the thicket for sale, the rest still shut — can
-    /// be drawn and photographed too.
+    /// same progress up unbought, so the wall — the thicket open on its ration, the rest for
+    /// sale — can be drawn and photographed too.
     static func partWayThrough(
         universe: Universe = .all,
         forSale: Bool = false

@@ -890,17 +890,19 @@ struct PuzzleView: View {
     /// The pen's gold and the cream the card is painted on are only a shade apart, so three
     /// filled stars on it read as one gold smudge and a player has to stop and count them.
     /// The outline is the hollow star laid over the filled one — the two symbols share an
-    /// edge, so it lands exactly on the rim — in the same brown the fencing and the
-    /// lettering are drawn in. It gives every star its own line to be seen against, and a
-    /// star not won keeps that line at the weight it always had, so filled and empty are
-    /// still told apart by the gold rather than by which of them has an edge.
+    /// edge, so it lands exactly on the rim — in the brown the fencing and the lettering are
+    /// drawn in, laid on lightly enough that it reads as a grey line round the gold rather
+    /// than as ink. All a star needs is its own edge to be seen against; drawn any darker and
+    /// the line is the thing on the card the eye goes to instead of the gold inside it. A star
+    /// not won keeps the same faint line it always had, so filled and empty are still told
+    /// apart by the gold rather than by which of them has an edge.
     private func verdictStar(won: Bool) -> some View {
         Image(systemName: won ? "star.fill" : "star")
             .foregroundStyle(won ? GamePalette.pen : GamePalette.post.opacity(0.3))
             .overlay {
                 if won {
                     Image(systemName: "star")
-                        .foregroundStyle(GamePalette.post.opacity(0.85))
+                        .foregroundStyle(GamePalette.post.opacity(0.5))
                 }
             }
     }
