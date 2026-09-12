@@ -753,6 +753,10 @@ struct PuzzleView: View {
                 .font(.title3.weight(.black))
                 .foregroundStyle(tint)
                 .multilineTextAlignment(.center)
+                // Same vertical claim the detail already makes: without it, a long three-star
+                // line ("Now this is a pen worth bragging about") wraps in theory and still
+                // gets clipped to one truncated line when the field above the card is tall.
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(detail)
                 .font(.footnote.weight(.medium))
