@@ -75,11 +75,15 @@ struct LevelSignpost: View {
     @ViewBuilder
     private var tally: some View {
         if case .tolled(let have, let need) = standing {
-            price(systemImage: "star.fill", "\(have)/\(need)")
+            price("\(have)/\(need)") {
+                Image(systemName: "star.fill")
+            }
         } else if case .rationed(let wait) = standing {
-            // The same capsule a toll wears, with a clock on it instead of a star: what this
-            // stop costs is a wait rather than stars, and the count is how much of it is left.
-            price(systemImage: "clock.fill", wait.short)
+            // The same capsule a toll wears, with an hourglass on it instead of a star: what
+            // this stop costs is a wait rather than stars, and the count is how much of it is
+            // left. The sand runs while there is still time, and stands still when the player
+            // has asked for less movement.
+            price(wait.short) { hourglass }
         } else {
             starRow()
                 .overlay { if showsRainbow { rainbow } }
@@ -91,10 +95,10 @@ struct LevelSignpost: View {
     }
 
     /// What a shut stop costs, written over it where its stars would go: a star and a count
-    /// against a toll, or a clock and the time left on the free game's day.
-    private func price(systemImage: String, _ words: String) -> some View {
+    /// against a toll, or an hourglass and the time left on the free game's day.
+    private func price<Icon: View>(_ words: String, @ViewBuilder icon: () -> Icon) -> some View {
         HStack(spacing: 3) {
-            Image(systemName: systemImage)
+            icon()
             Text(words)
                 .monospacedDigit()
         }
@@ -104,6 +108,23 @@ struct LevelSignpost: View {
         .padding(.vertical, 1)
         .background(Capsule().fill(.black.opacity(0.28)))
         .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
+    }
+
+    /// The free game's day made visible: sand in the top half, then the bottom, trading places
+    /// once a second — slow enough to read as waiting, not as a loader. A player who has asked
+    /// for less movement gets the glass standing still.
+    @ViewBuilder
+    private var hourglass: some View {
+        if reduceMotion {
+            Image(systemName: "hourglass")
+        } else {
+            TimelineView(.periodic(from: .now, by: 1.0)) { context in
+                let topHeavy = Int(context.date.timeIntervalSinceReferenceDate) % 2 == 0
+                Image(systemName: topHeavy ? "hourglass.tophalf.filled" : "hourglass.bottomhalf.filled")
+                    .contentTransition(.symbolEffect(.replace))
+                    .animation(.easeInOut(duration: 0.45), value: topHeavy)
+            }
+        }
     }
 
     /// Whether there are stars to show at all. A door is not a puzzle and has none.
