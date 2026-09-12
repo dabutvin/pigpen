@@ -1199,10 +1199,13 @@ one star anywhere in the world is the game saying they can already lay a fence. 
 opening film is owed separately and still plays on the first **Play**, so the walkthrough
 teaches the fencing and the film says what the fencing is for.
 
-A gear in the corner opens settings, which holds the version number, every film in the game,
-a switch for the noises, a switch for the music, a switch for the buzzing, a switch for the
-daily reminder and one red button. **Watch every cut scene** plays the lot end to end, a tap
-for the next and a swipe back for the one before — see [the cut scenes](#the-cut-scenes).
+A gear in the corner opens settings, which holds the version number, a switch for the
+noises, a switch for the music, a switch for the buzzing, every film in the game, a switch
+for the daily reminder and one red button. The three sound switches sit first, directly
+under the version: everything else on that sheet is read once, and they are what somebody
+opens settings for with the sound already coming out of the phone. **Watch every cut scene**
+plays the lot end to end, a tap for the next and a swipe back for the one before — see
+[the cut scenes](#the-cut-scenes).
 **Sounds** turns off every noise in the game — the knock as a post goes into the ground, the
 pop as one comes back up, the hum of the rack refusing a piece, the ding of an apple and the
 bonk of a skull, the notes climbing when a pen holds (two for a pen that only held, the whole
@@ -2213,7 +2216,7 @@ Pigpen/
 │   │   └── ThornwoodFilm.swift  # Thornwood Thicket's nine, and the canopy, trunks, shafts and mountain it wanted
 │   ├── FilmReelView.swift       # The projection room: every film end to end, tapped on and swiped back through
 │   ├── FullGameOffer.swift      # The offer of the full game: what it opens, the price, the buy and the restore
-│   ├── SettingsView.swift       # Behind the gear: the version, help and the support page, the way to the listing, every cut scene end to end, the way into the dressing barn, the sound, music and haptics switches, the daily reminder, the counting switch and its policy, clearing all game data
+│   ├── SettingsView.swift       # Behind the gear: the version, the sound, music and haptics switches first under it, then help and the support page, the way to the listing, every cut scene end to end, the way into the dressing barn, the daily reminder, the counting switch and its policy, clearing all game data
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── Sounds.swift             # Every noise in the game, named for its moment, and the one switch that stops them
 │   ├── Music.swift              # The waltz under the game: on while the game is up and the switch says so
