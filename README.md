@@ -148,11 +148,11 @@ in the game you can finish a world without ever having opened.
   cannot afford and a card comes up over the map once the pig has settled: the padlock its
   signpost is wearing, your stars against its price, and one line — *You need two more stars
   to play this level.* Nothing else, because there is nothing else to say: the trail behind
-  you is all open and every stop on it is worth another go. It is raised on a star being won
-  rather than on the map coming back, which keeps it a nudge and not a nag — and again on a
-  tap of the boss itself, so a player who dismissed the card can ask for it back. A level
-  opened for another look and backed out of says nothing, a replay that does no better says
-  nothing, and every star that leaves you still short says how much closer you are.
+  you is all open and every stop on it is worth another go. It is raised once — the moment
+  you would walk on to the boss and cannot — and again on a tap of the boss itself, so a
+  player who dismissed the card can ask for it back. Going back down the trail to better
+  old pens while still short does not put it up again. A level opened for another look and
+  backed out of says nothing, and neither does a replay that does no better.
 - **The pig walks there.** Come back from a level you have just beaten and it sets off up
   a length of trail that was not there before, the map scrolling along behind it, and the
   mist pulls back off the signpost it arrives at.

@@ -13,11 +13,12 @@ import Foundation
 /// once the pig has settled: the price, what they hold against it, and where the rest is to
 /// be found.
 ///
-/// It is raised on a star being won rather than on the map coming back, which is what keeps
-/// it a nudge and not a nag — and again on a tap of the boss itself, so a player who
-/// dismissed the card can ask for it back. A level opened for another look and backed out
-/// of says nothing, and neither does a replay that does no better; a player who bettered an
-/// old pen and is still short is told how much closer they are.
+/// It is raised once — the moment the trail under the boss is held and the stars are still
+/// short, which is when the player would otherwise walk on to the boss and cannot — and
+/// again on a tap of the boss itself, so a player who dismissed the card can ask for it
+/// back. Going back down the trail to better old pens while still short does not raise it
+/// again: that would turn a nudge into a nag. A level opened for another look and backed
+/// out of says nothing, and neither does a replay that does no better.
 struct TollNotice: Identifiable, Equatable {
     /// The stop the stars are for, by name — *Stag Mere*, not *the boss*.
     let boss: String
@@ -43,14 +44,22 @@ struct TollNotice: Identifiable, Equatable {
     ///   - isTheTrailBelowHeld: Whether every stop under the boss has been beaten, which is
     ///     what makes the toll the only thing left in the player's way. Short of that there
     ///     is a level to go and play, and a player with somewhere to go is not stuck.
+    ///   - wasTheTrailBelowHeld: Whether the trail under the boss was already held when the
+    ///     level was opened. The card goes up only on the level that first runs the trail
+    ///     out — the moment you would advance to the boss and cannot. A later star won on
+    ///     an old pen leaves this true both before and after, so bettering your way toward
+    ///     the toll does not keep putting the card back up; tapping the boss does that.
     static func afterALevel(
         boss: String,
         toll: Int,
         starsBefore: Int,
         starsNow: Int,
-        isTheTrailBelowHeld: Bool
+        isTheTrailBelowHeld: Bool,
+        wasTheTrailBelowHeld: Bool
     ) -> TollNotice? {
-        guard isTheTrailBelowHeld, starsNow > starsBefore, starsNow < toll else { return nil }
+        guard isTheTrailBelowHeld, !wasTheTrailBelowHeld,
+              starsNow > starsBefore, starsNow < toll
+        else { return nil }
         return TollNotice(boss: boss, have: starsNow, need: toll)
     }
 }
