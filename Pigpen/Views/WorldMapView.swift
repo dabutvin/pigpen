@@ -37,6 +37,10 @@ struct WorldMapView: View {
     /// How many stars the world held when that puzzle was started, so that coming back
     /// tells the map whether a star was won as well as whether a stop was opened.
     @State private var starsWhenOpened = 0
+    /// Whether the trail under the boss was already held when that puzzle was started, so
+    /// that coming back can tell a first arrival at the gate from a later star won on an
+    /// old pen — only the arrival raises the toll card on its own.
+    @State private var trailBelowHeldWhenOpened = false
     /// The word owed to a player stopped at the top of the trail by a toll they cannot pay,
     /// while that card is up.
     @State private var tollNotice: TollNotice?
@@ -531,6 +535,13 @@ struct WorldMapView: View {
             await walk(to: Double(index), secondsPerStop: 0.3)
             frontierWhenOpened = progress.frontier
             starsWhenOpened = progress.totalStars
+            // The boss's trail as it stood before this level: held already means any star
+            // won here is a bettering, not the arrival that first runs the trail out.
+            if let toll = progress.tolledStop {
+                trailBelowHeldWhenOpened = progress.isEverythingBelowHeld(toll)
+            } else {
+                trailBelowHeldWhenOpened = false
+            }
 
             // A map with something to say about itself says it before the board comes up,
             // not over the top of one.
@@ -594,7 +605,8 @@ struct WorldMapView: View {
 
     /// The word owed to a player who has just run the trail out under a boss they cannot pay
     /// for: what it is asking, what they hold against it, and where the rest of it is to be
-    /// won. Every other go up the trail this is nothing at all.
+    /// won. Raised on that first arrival only — going back to better old pens while still
+    /// short does not put the card up again; tapping the boss does.
     ///
     /// Raised after the walk and on the same beat the send-off would take, so it lands on a
     /// map at rest rather than over the top of a puzzle screen still sliding away. The two
@@ -606,7 +618,8 @@ struct WorldMapView: View {
             toll: world[stop].starToll,
             starsBefore: starsWhenOpened,
             starsNow: progress.totalStars,
-            isTheTrailBelowHeld: progress.isEverythingBelowHeld(stop)
+            isTheTrailBelowHeld: progress.isEverythingBelowHeld(stop),
+            wasTheTrailBelowHeld: trailBelowHeldWhenOpened
         ) else { return }
 
         // Counted where it is raised rather than where it is read: how many players run the
