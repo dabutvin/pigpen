@@ -149,9 +149,10 @@ in the game you can finish a world without ever having opened.
   signpost is wearing, your stars against its price, and one line — *You need two more stars
   to play this level.* Nothing else, because there is nothing else to say: the trail behind
   you is all open and every stop on it is worth another go. It is raised on a star being won
-  rather than on the map coming back, which keeps it a nudge and not a nag: a level opened
-  for another look and backed out of says nothing, a replay that does no better says nothing,
-  and every star that leaves you still short says how much closer you are.
+  rather than on the map coming back, which keeps it a nudge and not a nag — and again on a
+  tap of the boss itself, so a player who dismissed the card can ask for it back. A level
+  opened for another look and backed out of says nothing, a replay that does no better says
+  nothing, and every star that leaves you still short says how much closer you are.
 - **The pig walks there.** Come back from a level you have just beaten and it sets off up
   a length of trail that was not there before, the map scrolling along behind it, and the
   mist pulls back off the signpost it arrives at.
