@@ -14,9 +14,10 @@ import Foundation
 /// be found.
 ///
 /// It is raised on a star being won rather than on the map coming back, which is what keeps
-/// it a nudge and not a nag. A level opened for another look and backed out of says nothing,
-/// and neither does a replay that does no better; a player who bettered an old pen and is
-/// still short is told how much closer they are.
+/// it a nudge and not a nag — and again on a tap of the boss itself, so a player who
+/// dismissed the card can ask for it back. A level opened for another look and backed out
+/// of says nothing, and neither does a replay that does no better; a player who bettered an
+/// old pen and is still short is told how much closer they are.
 struct TollNotice: Identifiable, Equatable {
     /// The stop the stars are for, by name — *Stag Mere*, not *the boss*.
     let boss: String
