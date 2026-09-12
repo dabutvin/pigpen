@@ -87,7 +87,7 @@ struct WorldMapView: View {
 
     /// - Parameter showsTollNotice: Opens with the boss's price already up, which is how CI
     ///   photographs that card. Nothing else passes it: in a game being played the notice is
-    ///   raised by a level coming back, and this is the camera's way in.
+    ///   raised by a level coming back or by a tap on the boss, and this is the camera's way in.
     init(
         world game: GameWorld = .mudlarkMeadow,
         progress: WorldProgress = WorldProgress(),
@@ -360,7 +360,10 @@ struct WorldMapView: View {
                     )
                 }
                 .buttonStyle(SignpostButtonStyle())
-                .disabled(!progress.isUnlocked(index))
+                // A boss shut behind a toll is tappable even where the stars have not opened
+                // it — the tap is what raises the notice again. Only stops that are neither
+                // open nor waiting on stars are dead to the touch.
+                .disabled(!progress.isUnlocked(index) && progress.isTollPaid(index))
                 .id(index)
             }
 
@@ -483,11 +486,28 @@ struct WorldMapView: View {
     /// down the trail for a level they have already beaten — it trots over there first,
     /// so the map never cuts to a puzzle the pig is not standing at.
     private func visit(_ index: Int) {
-        guard progress.isUnlocked(index), !walking else { return }
+        guard !walking else { return }
+
+        // A boss whose stars are not in opens the notice rather than its board — checked
+        // before the progress gate, since a toll unpaid is one the player has not yet
+        // earned their way past and would otherwise be turned away from. Same card the map
+        // puts up on its own when the trail runs out under one; raised again here so a
+        // player who dismissed it can ask for it back.
+        if !progress.isUnlocked(index) {
+            guard !progress.isTollPaid(index) else { return }
+            Haptics.tap(.medium)
+            Sounds.play(.press)
+            tollNotice = TollNotice(
+                boss: world[index].level.name,
+                have: progress.totalStars,
+                need: world[index].starToll
+            )
+            return
+        }
 
         switch rationStanding(at: index) {
         case .waiting(let due):
-            // The one tap on a trail that meets the wall: a stop the stars have opened and
+            // A tap on a trail that meets the wall: a stop the stars have opened and
             // the free game's day has not. The offer says how long the wait is and what
             // buying the game does about it, raised on the very stop the player reached for.
             Haptics.tap(.medium)
