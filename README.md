@@ -313,9 +313,12 @@ off on its own. A level once opened is theirs for good, to walk back down to and
 as often as they like, and nothing banks up: a week away comes back to one level, not seven.
 Tapping a stop still on the clock raises the offer of the full game, which says how long the
 wait is and that buying the game ends it — every level in every world, at once, the way it
-always has. On the universe map, the world the chain has reached is a world to walk into;
-the worlds past it stand for sale until the trail earns its way to them. `LevelRation` keeps
-the clock and the list, and `LevelRationTests` pins the rule.
+always has. Closing that offer without buying puts up one more card: the free game's rule
+said plainly — one new level every twenty-four hours — and how much of this day is left, so
+a player looking at a locked sign with `14h` on it knows what those hours are. On the
+universe map, the world the chain has reached is a world to walk into; the worlds past it
+stand for sale until the trail earns its way to them. `LevelRation` keeps the clock and the
+list, and `LevelRationTests` pins the rule.
 
 - **Every world is the meadow's game on new ground.** Fence in the pig, the biggest pen the
   pieces will reach round, shut or it is no pen at all. What a theme changes is only the
@@ -2167,6 +2170,7 @@ Pigpen/
 │   ├── WorldMap.swift           # The levels of a world, the lanes off its trail, and where every sign stands
 │   ├── WorldProgress.swift      # Best stars, best pens and the walls that held them, what that unlocks, which films are owed
 │   ├── TollNotice.swift         # The word a player gets when the trail runs out under a boss they cannot pay for
+│   ├── WaitNotice.swift         # The word a player gets after waving away the full-game offer: the free game's one-a-day clock
 │   ├── WorldTheme.swift         # A world's look: its light, its ground, its treat skin, its board skin, its paintwork, its boss silhouette
 │   ├── GameWorld.swift          # A world bundled: its map, its theme, the films that wrap it and the boss it briefs
 │   ├── Woodland.swift           # Thornwood Thicket: its nine levels and the trail through them
@@ -2227,6 +2231,7 @@ Pigpen/
 │   ├── WorldTrail.swift         # Stops and the barn ↔ points on screen, and the curves between them
 │   ├── LevelSignpost.swift      # One sign on the map: a numbered stop with its stars, or the door to the barn
 │   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and how many more you need
+│   ├── WaitNoticeView.swift     # The card after declining the full-game offer: one level a day, and how long is left
 │   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and eleven pegs
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign

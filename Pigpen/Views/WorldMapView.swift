@@ -64,6 +64,9 @@ struct WorldMapView: View {
     @State private var isOffering = false
     /// How long that stop had left to wait when it was tapped, for the offer to say back.
     @State private var wait: LevelWait?
+    /// The word owed after that offer comes down without a purchase: the free game's
+    /// one-a-day rule, and how long is left of this day — while that card is up.
+    @State private var waitNotice: WaitNotice?
 
     /// The world this trail belongs to: the look that dresses it, the film that sees it out, and
     /// the briefings it stops for. Held apart from `world` below, which is the trail itself —
@@ -211,8 +214,13 @@ struct WorldMapView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $isOffering) {
+        .sheet(isPresented: $isOffering, onDismiss: { explainTheWait() }) {
             FullGameOffer(fullGame: fullGame, source: .trail, wait: wait)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
+        .sheet(item: $waitNotice) { notice in
+            WaitNoticeView(notice: notice)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
@@ -569,6 +577,29 @@ struct WorldMapView: View {
             onWorldHeld()
         } else {
             dismiss()
+        }
+    }
+
+    /// The word owed after the full-game offer comes down empty: the free game's one-a-day
+    /// rule, and how long is left on the stop they just reached for. Buying, restoring, or an
+    /// approval coming through while the sheet was up leaves nothing to say — the clock is
+    /// gone. A day that ran out under the offer is the same: there is no wait left to name.
+    ///
+    /// Raised a beat after the offer settles, so the two sheets never fight over the screen
+    /// the way a second sheet opened in `onDismiss` would. The time is read afresh rather
+    /// than taken from the moment the stop was tapped, so a player who sat with the offer up
+    /// is told what is left now and not what was left then.
+    private func explainTheWait() {
+        let now = Date()
+        let currentWait = ration.nextRelease(now: now).map { LevelWait(until: $0, now: now) }
+        guard let notice = WaitNotice.afterDecliningTheOffer(
+            isUnlocked: fullGame.isUnlocked,
+            wait: currentWait
+        ) else { return }
+
+        Task {
+            try? await Task.sleep(for: .milliseconds(350))
+            waitNotice = notice
         }
     }
 
