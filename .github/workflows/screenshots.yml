@@ -96,13 +96,14 @@ jobs:
           # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
-          # `-barn`, `-dressed-board` and `-dressed-title` are launch
+          # `-barn`, `-dressed-board`, `-dressed-title`, `-suitor`, `-daily-suitor` and
+          # `-no-roses` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
           # settings sheet, the offer of a daily reminder, the card over a shut boss,
           # the fork off the orchard, the dressing barn at the end of it and a chosen
-          # hat still on her on a board and out in the pasture can be captured without
-          # tapping through the title screen. The reminder screens are handed a
+          # hat still on her on a board and out in the pasture, and Hamish out on a board
+          # with a rose, can be captured without tapping through the title screen. The reminder screens are handed a
           # reminder held in memory, so nothing on the runner is ever asked for
           # permission to post a notification.
           # The daily screens open on a fixed square of the calendar with a stopped
@@ -173,6 +174,19 @@ jobs:
           capture 75 barn -barn
           capture 77 dressed_board -dressed-board
           capture 79 dressed_title -dressed-title
+
+          # Hamish out on the board: a hint asked for on River Bend, one rose gone from his
+          # count, his line on the board over the rack, and himself standing on the tile the
+          # next piece of the wall goes on. Numbered high for the same reason the shots above
+          # are.
+          capture 83 suitor -suitor
+
+          # And the same on a daily, off the wall its line of the almanac carries.
+          capture 85 daily_suitor -daily-suitor
+
+          # The other half of what he has to say: the day's three roses spent, and the bubble
+          # over his own corner saying when the next one comes.
+          capture 87 no_roses -no-roses
 
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock

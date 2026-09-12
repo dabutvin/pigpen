@@ -200,6 +200,9 @@ struct PigpenApp: App {
         case barn = "-barn"
         case dressedBoard = "-dressed-board"
         case dressedTitle = "-dressed-title"
+        case suitor = "-suitor"
+        case noRoses = "-no-roses"
+        case dailySuitor = "-daily-suitor"
         case universe = "-universe"
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
@@ -284,6 +287,12 @@ struct PigpenApp: App {
         switch photograph {
         case .puzzle:
             PuzzleView(game: .partWayThrough())
+        case .suitor:
+            // River Bend part way through with Hamish already out on it: asked for a rose as
+            // the board opens, so he is photographed standing on the tile the next piece of
+            // the wall goes on, his line on the board over the rack and one rose gone from
+            // his count. The roses are held in memory so the runner spends none.
+            PuzzleView(game: .partWayThrough(), roses: .remembering(), askingHamish: true)
         case .beaten:
             PuzzleView(game: .pickedBackUp())
         case .orchard:
@@ -417,6 +426,33 @@ struct PigpenApp: App {
             // runner got round to it, the same way a film does.
             if let day = DailyAlmanac.level(on: Self.photographed) {
                 PuzzleView(game: .aDayPartWayThrough(day), clock: .showing(227))
+            } else {
+                DailyPuzzleView(
+                    date: Self.photographed,
+                    progress: DailyProgress(store: RememberedDailyRecords())
+                )
+            }
+        case .noRoses:
+            // The other half of what Hamish has to say: the same bubble, with its tail on him
+            // down in his corner rather than on a square, telling a player who has spent the
+            // day's three roses when the next one comes. The three are handed in already
+            // given, and held in memory, so the runner spends nobody's.
+            PuzzleView(
+                game: .partWayThrough(),
+                roses: .remembering([.now, .now, .now]),
+                askingHamish: true
+            )
+        case .dailySuitor:
+            // The same day's board with Hamish asked for a rose as it opens: the proof that
+            // a daily is a board he helps on like any other, off the wall its line of the
+            // almanac carries. The roses are held in memory so the runner spends none.
+            if let day = DailyAlmanac.level(on: Self.photographed) {
+                PuzzleView(
+                    game: .aDayPartWayThrough(day),
+                    clock: .showing(227),
+                    roses: .remembering(),
+                    askingHamish: true
+                )
             } else {
                 DailyPuzzleView(
                     date: Self.photographed,

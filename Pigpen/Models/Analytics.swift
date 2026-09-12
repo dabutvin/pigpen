@@ -392,6 +392,30 @@ extension AnalyticsSignal {
         )
     }
 
+    /// Hamish asked for a rose, after how many goes, and whether he had one to give. Against
+    /// `Level.opened` it says which fields send players to him, which is the other half of
+    /// which fields are the wall. `given` false is a player who wanted a fourth that day, and
+    /// how often that happens is the one number that says whether three a day is the right
+    /// price; `left` is what he had after. A rose that was not asked for — he is already
+    /// standing on the piece, or there is nothing left to point at — is not counted at all.
+    static func levelHintAsked(
+        _ level: PuzzleLevel,
+        attempt: Int,
+        given: Bool,
+        left: Int
+    ) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Level.hintAsked",
+            [
+                "level": level.id,
+                "attempt": String(attempt),
+                "given": String(given),
+                "left": String(left)
+            ],
+            value: Double(attempt)
+        )
+    }
+
     /// Walked away from a board without ever holding it, and how many goes they had first.
     /// A high count here is a player who tried; a zero is a level whose look put them off.
     static func levelLeftUnheld(_ level: PuzzleLevel, attempts: Int) -> AnalyticsSignal {

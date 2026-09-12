@@ -47,6 +47,17 @@ struct AnimalMark: Equatable, Identifiable {
     var id: Animal { kind }
 }
 
+/// Hamish as the field draws him: the tile he is making for, the tile he is on this instant,
+/// how solid he is — he fades in off the edge of the map and out again once the piece is laid
+/// where he stood — and whether he is mid-hop.
+struct SuitorMark: Equatable {
+    /// The tile the piece goes on, which is where he stands once he has arrived.
+    let bound: GridPoint
+    var tile: GridPoint
+    var opacity: Double
+    var hop: Double = 0
+}
+
 extension Array where Element == AnimalMark {
     /// Every animal a level stands on its ground, on the tile the map puts it.
     static func standing(on level: PuzzleLevel) -> [AnimalMark] {
@@ -76,6 +87,14 @@ struct FieldView: View {
     var callout: FieldCallout? = nil
     /// Told when a callout has finished rising, so the field can put it away.
     var onCalloutFinished: ((FieldCallout.ID) -> Void)? = nil
+    /// Hamish, if he is on the board: a hint asked for, walking in or standing on the tile
+    /// the next piece goes on. Nothing during ordinary play.
+    var suitor: SuitorMark? = nil
+    /// What he has come to say, in a bubble with its tail on whatever he is talking about:
+    /// the tile he is standing on, or himself down under the corner of the board when he is
+    /// not out here. It waits while he is walking in — a bubble towed across the board says
+    /// nothing useful about where it is going.
+    var suitorSays: String? = nil
     /// Tiles the coach is pointing at — drawn with a soft pulse so a tutorial can say
     /// "this one" without covering the board in labels. Empty during ordinary play.
     var highlightedTiles: Set<GridPoint> = []
@@ -150,6 +169,7 @@ struct FieldView: View {
                 confetti(board: board)
                 herd(board: board)
                 saidBack(board: board)
+                suitorWord(board: board, in: proxy.size)
             }
             .contentShape(Rectangle())
             .gesture(
@@ -250,7 +270,48 @@ struct FieldView: View {
                     mark(animal, board: board, pose: nil)
                 }
             }
+
+            if let suitor {
+                visitor(suitor, board: board)
+            }
         }
+    }
+
+    /// Hamish, rose in hand, wherever he is on his way in or standing once he is there. Drawn
+    /// the way an animal is — shadowed, hopped, faded — but never posed by a celebration,
+    /// since he is off the board before a pen is let loose in.
+    private func visitor(_ suitor: SuitorMark, board: BoardGeometry) -> some View {
+        let size = board.cell * 0.78
+        return Text(Suitor.glyph)
+            .font(.system(size: size))
+            .overlay {
+                Text(Suitor.rose)
+                    .font(.system(size: size * 0.5))
+                    .rotationEffect(.degrees(-25))
+                    .offset(x: size * 0.34, y: size * 0.08)
+                    .allowsHitTesting(false)
+            }
+            .scaleEffect(
+                x: CGFloat(1 - 0.06 * suitor.hop),
+                y: CGFloat(1 + 0.1 * suitor.hop),
+                anchor: .bottom
+            )
+            .shadow(
+                color: .black.opacity(0.3),
+                radius: board.cell * (0.04 + 0.075 * suitor.hop),
+                y: board.cell * (0.03 + 0.13 * suitor.hop)
+            )
+            .opacity(suitor.opacity)
+            .position(
+                board.center(
+                    atRow: Double(suitor.tile.row),
+                    column: Double(suitor.tile.column),
+                    lift: 0
+                )
+            )
+            .offset(y: -board.cell * 0.3 * CGFloat(suitor.hop))
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
     }
 
     /// One animal, standing on its own tile or held in the pose a celebration puts it in.
@@ -286,6 +347,63 @@ struct FieldView: View {
             // settled, so a hop never moves it to another square.
             .offset(y: -board.cell * 0.3 * CGFloat(animal.hop))
             .allowsHitTesting(false)
+    }
+
+    /// What Hamish is saying, in a bubble hung off whatever he is saying it about.
+    ///
+    /// On the board rather than up under the rack, so that what he says and what he means are
+    /// one thing rather than two. A bubble with no room to the side of its mark is shoved back
+    /// onto the board and leans its tail over to keep pointing at the right spot; one over the
+    /// top of the board hangs underneath its tile instead, since there is nothing above those
+    /// rows to hang in.
+    @ViewBuilder
+    private func suitorWord(board: BoardGeometry, in size: CGSize) -> some View {
+        if let suitorSays, let spot = suitorSpot(board: board, in: size) {
+            let width: CGFloat = min(max(size.width * 0.66, 160), 250)
+            let edge: CGFloat = width / 2 + 6
+            let x: CGFloat = size.width > width + 12
+                ? min(max(spot.at.x, edge), size.width - edge)
+                : size.width / 2
+            let side: Alignment = spot.below ? .top : .bottom
+            let anchor: UnitPoint = spot.below ? .top : .bottom
+
+            // A point of the board with nothing to it, so that the bubble hung off it can be
+            // as tall as its words need without anything having to work out how tall that is.
+            Color.clear
+                .frame(width: 1, height: 1)
+                .overlay(alignment: side) {
+                    SuitorTooltip(
+                        words: suitorSays,
+                        width: width,
+                        tail: spot.below ? .up : .down,
+                        tailOffset: spot.at.x - x
+                    )
+                }
+                .position(x: x, y: spot.at.y)
+                .opacity(spot.fade)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+                .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: anchor)))
+        }
+    }
+
+    /// Where his bubble belongs: the edge of the tile he is standing on, or — when he is not
+    /// on the board at all — the bottom corner of it, with the tail pointing down at him
+    /// standing under there beside the undo row. Nothing at all while he is still walking in.
+    private func suitorSpot(
+        board: BoardGeometry,
+        in size: CGSize
+    ) -> (at: CGPoint, below: Bool, fade: Double)? {
+        guard let suitor else {
+            return (CGPoint(x: min(31, size.width / 2), y: size.height - 2), false, 1)
+        }
+        guard suitor.tile == suitor.bound else { return nil }
+        let center = board.center(of: suitor.bound)
+        // A bubble over the top rows would hang off the board and over the rack, so those
+        // hang under their tile instead.
+        let below = center.y < board.cell * 1.6
+        let edge = center.y + board.cell * (below ? 0.5 : -0.5)
+        return (CGPoint(x: center.x, y: edge), below, suitor.opacity)
     }
 
     /// What a press just got back off a tile, rising off it and fading out. Written onto

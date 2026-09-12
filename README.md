@@ -70,6 +70,32 @@ fence pieces. Pen the pig in — and pen in as much mud as you can while you are
   is never building against a rule they have to remember. It says what the board will accept
   and nothing about where the fencing goes. Every other level leaves that strip of grass empty,
   because the ground says everything there is to say about it.
+- **A hint is a piece, and a pig brings it.** Hamish is a pig from the next farm over, sweet
+  on her, and the one soul in the game who will say where a piece goes. He stands at the left
+  end of the undo row on every trail stop with a count of the roses he has left. Tap him and
+  he trots onto the board from the nearest edge, rose in hand, and stands on the tile the next
+  piece of the best pen belongs on — the pen the level was authored around, the one that goes
+  rainbow — and a little cream bubble opens over his head with its tail on that very square:
+  *Place a fence here, my love.* Which piece is next is read off the fencing already down, so a
+  wall half built is extended rather than started again somewhere else, and asking again
+  before the piece is laid gets no new tile and costs no rose. Lay the piece where he stands
+  and he blows a kiss off the tile and fades. He never says what to tear out, and he never
+  explains: the rest of the pen is still yours to find.
+  What he says is a tooltip rather than a notice: it used to go on the same painted board the
+  boss's rule goes on, up above the rack, which read as a second announcement and left you to
+  work out which square the sentence was about — the pig was on the board and the words were
+  at the top of the screen. The bubble says it where it applies. One with no room beside its
+  tile is shoved back onto the board and leans its tail over to keep pointing; one over the
+  top rows hangs underneath instead.
+  **Three roses a day.** Counted from when each was given rather than from midnight — a rose
+  given at nine in the evening is back at nine the next evening — so there is no hour at which
+  the count snaps back and no clock to game, and the count is yours rather than a level's.
+  With none left he goes dim, and a tap on him opens the same bubble over his own corner,
+  since there is no square for it to point at: *No roses left today, my love. I will be back
+  in about three hours.* That one takes itself down after a moment, being news rather than an
+  instruction. The daily has him too, since each day's line of the almanac carries the wall of
+  its best pen beside the map; only the practice pen does not, being a lesson. *Clear all game
+  data* gives the roses back with everything else.
 - **The animals answer.** Nothing takes a fence where an animal is standing, so a tap on one
   used to be turned down the way a spent budget is. Now it hops where it stands and calls back
   — *Oink!*, *Snort!*, *Ta-da!* — off its own tile, the way a tap on an apple says what the
@@ -1480,7 +1506,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Thirty-five signals, all of them written out in one place —
+**What goes out.** Thirty-seven signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1492,6 +1518,7 @@ is filling in Apple's privacy questionnaire.
 | `Level.opened` | A trail board opened, which world and how far up it |
 | `Level.held` | A pen that held: stars, score against the map's best, pieces against the budget, goes taken |
 | `Level.escaped` / `.refused` | The gate opened on a pen with a gap in it, or a boss rule broken — and which rule |
+| `Level.hintAsked` | Hamish asked for a rose, after how many goes, whether he had one to give, and how many he had left |
 | `Level.leftUnheld` | A board walked away from, and the goes they had at it first |
 | `Level.released` | A level past the meadow handed to a player who has not paid, by the free game's one a day |
 | `World.tollShort` | A player stopped at the top of a world by a boss's toll, and how many stars short |
@@ -1510,8 +1537,9 @@ is filling in Apple's privacy questionnaire.
 | `Rating.pageOpened` | The listing opened from behind the gear by a player who went looking for it |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
-the wall, whether the dailies bring anybody back, whether the films are worth what they
-cost to draw, which of the three high points a rating actually gets asked for on — a
+the wall and which sends players to Hamish — a rose asked for with none left is a player
+who wanted a fourth that day, which is what says whether three a day is the right price —
+whether the dailies bring anybody back, whether the films are worth what they cost to draw, which of the three high points a rating actually gets asked for on — a
 moment that never appears there is a bar set too high — and how many players who accept a
 morning reminder are then let through by their phone.
 
@@ -1842,7 +1870,7 @@ Tools/level_search.py --budget 12 --plan <<'MAP'
 MAP
 ```
 
-It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: nothing lying on the ground takes fencing, apple or skull, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and add its plan — the `#` tiles `--plan` prints on their own — to `shipped` in that world's tests, which replays the pen and fails if the level stops giving up what it claims.
+It prints the best pen it found, marked out on the map, along with `maximumScore` and star thresholds in the proportions the shipped levels use. It knows what the game knows: nothing lying on the ground takes fencing, apple or skull, so a pen whose wall would have to stand on one is never offered as an answer. Add the level to `PuzzleLevel` — beside the meadow's in `PuzzleLevel.swift`, or in its own world's file, the way `Woodland.swift` and `Emberpeak.swift` do — hang it on that world's trail, and author its plan — the `#` tiles `--plan` prints on their own — as `bestPen` beside the map. A plan the wrong shape, standing a piece where none can go or overspending the budget is a malformed level and fails to build; the world's tests replay every plan and fail if a level stops giving up what it claims. The plan is also what Hamish reads when he is asked for a hint, so a level without one is a level he cannot help on.
 
 The star thresholds are the judgement call, but not a free one: `DifficultyTests` holds every level to a second star for the pen a player gets by squaring the map off, so `--demand` is worth running on any map with anything lying on it — a treat in the way moves a plain block and a shaped pen by different amounts, and the second star has to stay under what the block is worth.
 
@@ -1851,7 +1879,7 @@ Then work out where on the trail it belongs. `--demand` squares the map off as w
 A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
 Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
+A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no `bestPen`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -2011,10 +2039,10 @@ Because a shape is a claim about the board a player is handed, and a claim nobod
 
 It writes two files, both generated and both committed:
 
-- `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, one line to a day: the date, the fence budget, the two star thresholds, the best pen the map has in it, and the map itself with its rows run together by `/`.
+- `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, one line to a day: the date, the fence budget, the two star thresholds, the best pen the map has in it, the map itself with its rows run together by `/`, and the wall of that best pen the same way — which is what Hamish reads when he is asked for a hint on a daily.
 - `PigpenTests/DailyAlmanacFixtures.swift` — what each day asks, the shape its water was laid in, and the wall of the pen its `maximumScore` was measured on.
 
-`DailyAlmanacTests` lays every one of those walls out on its day's board and lets the pig go, so a day that promised a pen its map does not hold fails in CI rather than withholding the "best pen there is" verdict from a player forever. It checks the rest of what the almanac claims too: that the book runs from New Year's Day to New Year's Eve without a gap, that every day falls in its weekday's band, that every week climbs from Monday to Sunday, that the book still holds every shape of water the generator knows how to lay, and that four pieces round the pig hold on every board in it.
+`DailyAlmanacTests` lays every one of those walls out on its day's board and lets the pig go, and holds the wall the almanac ships to the one the fixtures measured, so a day that promised a pen its map does not hold fails in CI rather than withholding the "best pen there is" verdict from a player forever. It checks the rest of what the almanac claims too: that the book runs from New Year's Day to New Year's Eve without a gap, that every day falls in its weekday's band, that every week climbs from Monday to Sunday, that the book still holds every shape of water the generator knows how to lay, and that four pieces round the pig hold on every board in it.
 
 Everything a day is made of comes out of a generator seeded from that date alone, so days are independent, the work spreads over as many cores as there are, and the same run of the tool produces the same year twice over. Running it takes the better part of an hour across four cores, which is the price of measuring what a puzzle asks rather than declaring it.
 
@@ -2146,9 +2174,11 @@ Pigpen/
 │   └── ReminderTapListener.swift # Hears a tapped reminder at launch and writes down the morning it asks for
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
-│   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
+│   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, every shipped map and the best pen on each
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── BossOrders.swift         # The rule a boss adds, in the one line the board keeps on screen
+│   ├── Suitor.swift             # Hamish: which piece of the best pen he points at, the way he walks in, and what he says
+│   ├── HintAllowance.swift      # Three roses a day, counted from when each was given, and where that is kept
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
 │   ├── CutScene.swift           # A painted film, as a clock: which shot is up when, and for how long — and the meadow's three
 │   ├── CutScene+Thornwood.swift # The thicket's three, and the shots they are cut from
@@ -2232,6 +2262,7 @@ Pigpen/
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
+│   ├── SuitorTooltip.swift      # The cream bubble Hamish speaks in, and the tail that says which square he means
 │   ├── FieldView.swift          # Draws the field and turns taps into fenced tiles
 │   ├── FieldSkin.swift          # How a world paints its board: its ground, its water and its fencing
 │   ├── ChromeSkin.swift         # A world's paintwork: the bar over a board, the button that ends a go

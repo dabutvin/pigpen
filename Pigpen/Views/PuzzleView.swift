@@ -56,8 +56,18 @@ struct PuzzleView: View {
     /// — and handed in by the screenshot runs, which dress her in memory to photograph a board
     /// that proves an outfit is worn out here and not only in the barn.
     private let wardrobe: PigWardrobe
+    /// Whether to ask Hamish for a rose the moment the board opens, which is how the
+    /// screenshot runs photograph him standing on a tile rather than the button that sends
+    /// him there.
+    private let asksHamishOnOpening: Bool
 
     @State private var game: PuzzleGame
+    /// Where Hamish's roses are counted. The one count the game keeps, by default — three a
+    /// day is three a day whichever board they are asked for on — and one held in memory by
+    /// the previews and the screenshot runs, so a photograph of him spends nobody's. Kept as
+    /// state the way the game is, so a screen above this one re-drawing itself with a fresh
+    /// allowance in hand does not put the roses back after one has been given.
+    @State private var roses: HintAllowance
     /// The clock over the board, counting up from the moment it opened, and `nil` for a
     /// puzzle nobody is timing. The meadow is not timed — a level there is worth going back
     /// to and taking apart — but a daily is a day's go at one board, and how long it took
@@ -88,6 +98,17 @@ struct PuzzleView: View {
     /// Whether the pen has held at any point on this board, so that leaving is counted as
     /// giving up only when there was nothing to give up on.
     @State private var hasHeld = false
+    /// Hamish, when he is on the board: the tile he is making for, where he is standing and
+    /// how solid he is. Nothing until a rose is asked for, and nothing again once the piece
+    /// is laid where he stood.
+    @State private var suitor: SuitorMark?
+    /// What Hamish has to say, and what it is about: a bubble over the tile he is standing on
+    /// when he has come out to point at one, and a bubble over his own corner when he has not —
+    /// nothing to add, or no roses left to add it with. Nothing at all until he is asked.
+    @State private var suitorSays: SuitorWord?
+    /// His walk onto the board, or his fading off it, so a second rose asked for mid-trot
+    /// starts a fresh walk rather than two.
+    @State private var suitorWalk: Task<Void, Never>?
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -106,6 +127,7 @@ struct PuzzleView: View {
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
+        roses: HintAllowance = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
@@ -120,6 +142,7 @@ struct PuzzleView: View {
             wayOutImage: wayOutImage,
             trail: trail,
             wardrobe: wardrobe,
+            roses: roses,
             onPenned: onPenned,
             onLeave: onLeave
         )
@@ -138,9 +161,12 @@ struct PuzzleView: View {
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
+        roses: HintAllowance = .shared,
+        askingHamish: Bool = false,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
         onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
     ) {
+        self.asksHamishOnOpening = askingHamish
         self.onPenned = onPenned
         self.onLeave = onLeave
         self.treatSkin = treatSkin
@@ -154,9 +180,38 @@ struct PuzzleView: View {
         _game = State(initialValue: game)
         _marks = State(initialValue: .standing(on: game.level))
         _clock = State(initialValue: clock)
+        _roses = State(initialValue: roses)
+    }
+
+    /// A word from Hamish, and the thing it is about. Both are said in the same bubble; all
+    /// that differs is what the tail is pointing at.
+    private enum SuitorWord: Equatable {
+        /// Said over the tile he is standing on.
+        case overTheTile(String)
+        /// Said over his own corner, for the words he has no tile to say them on.
+        case byHisCorner(String)
+
+        var words: String {
+            switch self {
+            case .overTheTile(let words), .byHisCorner(let words): words
+            }
+        }
     }
 
     private var level: PuzzleLevel { game.level }
+
+    /// What he is saying from his own corner, when he has no tile to say it on. A word about
+    /// the roses is news rather than an instruction, so it goes of its own accord after a
+    /// beat; what he says over a tile stays up until the piece is laid on it.
+    private var saidByHisCorner: String? {
+        if case .byHisCorner(let words) = suitorSays { return words }
+        return nil
+    }
+
+    /// Whether Hamish has anything to point at on this board at all: a best pen authored
+    /// beside its map. Every trail stop and every daily has one; the practice pen does not,
+    /// and he stays off it altogether.
+    private var suitorCanHelp: Bool { level.bestPen != nil }
 
     /// What the screen calls whatever it is holding: the pig on every map but the last,
     /// where a stag stands on the other shore.
@@ -206,6 +261,8 @@ struct PuzzleView: View {
                     onCalloutFinished: { id in
                         if callout?.id == id { callout = nil }
                     },
+                    suitor: suitor,
+                    suitorSays: suitorSays?.words,
                     treatSkin: treatSkin,
                     skin: skin,
                     outfit: wardrobe.outfit,
@@ -216,6 +273,11 @@ struct PuzzleView: View {
                 .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
                 // The board is the screen, so it is given all the width there is to give.
                 .padding(.horizontal, 6)
+                .task(id: saidByHisCorner) {
+                    guard saidByHisCorner != nil else { return }
+                    guard await Task.pausing(for: .seconds(8)) else { return }
+                    withAnimation(.easeInOut(duration: 0.25)) { suitorSays = nil }
+                }
 
                 fieldCorrections
                     // Right aligned to the same margin the button below keeps, so the row of
@@ -255,8 +317,12 @@ struct PuzzleView: View {
             if let trail {
                 Analytics.record(.levelOpened(level, world: trail.world, stop: trail.stop))
             }
+            if asksHamishOnOpening {
+                askHamish()
+            }
         }
         .onDisappear {
+            suitorWalk?.cancel()
             onLeave?(game, clock)
             // A board walked away from without ever holding, and the goes they had at it
             // first. The pair is the difference between a puzzle that beat somebody and
@@ -279,6 +345,10 @@ struct PuzzleView: View {
     /// act on, and a row that came and went would move the board it is pinned to.
     private var fieldCorrections: some View {
         HStack(spacing: 2) {
+            if suitorCanHelp {
+                suitorButton
+            }
+
             Spacer(minLength: 0)
 
             fieldIcon("Undo", systemImage: "arrow.uturn.backward", enabled: game.canUndo) {
@@ -368,33 +438,74 @@ struct PuzzleView: View {
     @ViewBuilder
     private var bossOrders: some View {
         if let orders = level.orders {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("What to do")
-                    .font(.caption2.weight(.black))
-                    .foregroundStyle(GamePalette.post.opacity(0.55))
-                    .textCase(.uppercase)
-
-                Text(orders)
-                    .font(.subheadline)
-                    .foregroundStyle(GamePalette.post.opacity(0.9))
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 11)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                GamePalette.cream.opacity(0.95),
-                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
-            }
-            .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("What to do on this level. \(orders)")
+            noticeBoard(heading: "What to do", saying: orders)
+                .accessibilityLabel("What to do on this level. \(orders)")
         }
+    }
+
+    /// A small painted board: a heading naming the thing, and a line or two under it. The
+    /// boss's rule is the one thing written on one — it is about the level rather than about
+    /// a square, and it stays up for as long as the level does.
+    private func noticeBoard(heading: String, saying words: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(heading)
+                .font(.caption2.weight(.black))
+                .foregroundStyle(GamePalette.post.opacity(0.55))
+                .textCase(.uppercase)
+
+            Text(words)
+                .font(.subheadline)
+                .foregroundStyle(GamePalette.post.opacity(0.9))
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 11)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            GamePalette.cream.opacity(0.95),
+            in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+        .accessibilityElement(children: .ignore)
+    }
+
+    /// Hamish, at the left end of the corrections row: tap him and he comes onto the board to
+    /// point at a piece. He wears the roses he has left today as a small count, and goes dim
+    /// with none — though he still answers a tap, with when the next one comes. He is only
+    /// ever here on a board with a best pen authored for it, which is every trail stop and
+    /// nothing else.
+    private var suitorButton: some View {
+        let left = roses.remaining()
+        return Button {
+            askHamish()
+        } label: {
+            ZStack(alignment: .topTrailing) {
+                Text(Suitor.glyph)
+                    .font(.system(size: 22))
+                    .opacity(left > 0 ? 1 : 0.35)
+
+                Text("\(left)")
+                    .font(.system(size: 11, weight: .black, design: .rounded))
+                    .foregroundStyle(GamePalette.cream)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(
+                        left > 0 ? GamePalette.barn : GamePalette.post.opacity(0.5),
+                        in: Capsule()
+                    )
+                    .offset(x: 6, y: -4)
+            }
+            .frame(width: 42, height: 38)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Ask \(Suitor.name) for a hint")
+        .accessibilityValue(left == 1 ? "One rose left today" : "\(left) roses left today")
     }
 
     /// What the field is holding, set against the most it has held, and the way back to it.
@@ -835,11 +946,115 @@ struct PuzzleView: View {
             }
             Haptics.tap(.rigid)
             Sounds.play(.fenceIn)
+            if let suitor, suitor.bound == stroke.tile {
+                sendHamishOff(from: stroke.tile)
+            }
         case .clearing:
             guard game.clearFence(on: stroke.tile) else { return }
             Haptics.tap(.light)
             Sounds.play(.fenceOut)
         }
+    }
+
+    /// Puts a rose in Hamish's hand, if there is one left today, and sends him onto the board.
+    ///
+    /// Asked again while he is still standing on a tile nothing has been laid on, he says so
+    /// and no rose is spent; asked on a board with every piece of the best pen already in it,
+    /// likewise. Asked with none left, he says when the next one comes. Only a trail stop is
+    /// counted, the same way every other signal off this screen is.
+    private func askHamish() {
+        Haptics.tap(.soft)
+        let now = Date()
+
+        if let suitor, suitor.opacity > 0,
+           level.bestPen?.contains(suitor.bound) == true,
+           !game.fences.contains(suitor.bound) {
+            putUp(.overTheTile(Suitor.alreadyShowing))
+            return
+        }
+        guard let tile = Suitor.nextPiece(of: level, given: game.fences) else {
+            putUp(.byHisCorner(Suitor.nothingToAdd))
+            return
+        }
+        guard roses.spend(at: now) else {
+            putUp(.byHisCorner(Suitor.outOfRoses(until: roses.nextRose(at: now) ?? now, from: now)))
+            count(given: false)
+            return
+        }
+
+        var said = Suitor.hint
+        if game.fencesRemaining == 0 {
+            said += Suitor.rackIsEmpty
+        }
+        putUp(.overTheTile(said))
+        count(given: true)
+
+        suitorWalk?.cancel()
+        suitorWalk = Task { await bringHamish(to: tile) }
+    }
+
+    /// Puts a word of his up, and reads it out for anybody listening to the screen rather than
+    /// looking at it: a bubble hung off a square says nothing to VoiceOver on its own.
+    ///
+    /// A word over a tile is a word floating off a tile, which the game already has a noise
+    /// for; one he cannot grant is the board saying no, which has its own.
+    private func putUp(_ word: SuitorWord) {
+        withAnimation(.easeInOut(duration: 0.25)) { suitorSays = word }
+        switch word {
+        case .overTheTile: Sounds.play(.callout)
+        case .byHisCorner: Sounds.play(.refusal)
+        }
+        UIAccessibility.post(notification: .announcement, argument: "\(Suitor.name). \(word.words)")
+    }
+
+    private func count(given: Bool) {
+        guard trail != nil else { return }
+        Analytics.record(
+            .levelHintAsked(level, attempt: attempts, given: given, left: roses.remaining())
+        )
+    }
+
+    /// Walks Hamish in from the nearest edge to the tile a step at a time, the way an animal
+    /// walks off, and lands him on it with a hop. Straight onto it, and no hop, for a player
+    /// who would rather the board kept still.
+    private func bringHamish(to tile: GridPoint) async {
+        let route = Suitor.approach(to: tile, on: level)
+        guard let start = route.first else { return }
+        guard !reduceMotion else {
+            suitor = SuitorMark(bound: tile, tile: tile, opacity: 1)
+            return
+        }
+
+        suitor = SuitorMark(bound: tile, tile: start, opacity: 0)
+        withAnimation(.easeOut(duration: 0.2)) { suitor?.opacity = 1 }
+        for step in route.dropFirst() {
+            guard await Task.pausing(for: .milliseconds(200)) else { return }
+            withAnimation(.easeInOut(duration: 0.2)) { suitor?.tile = step }
+        }
+        guard await Task.pausing(for: .milliseconds(220)) else { return }
+        withAnimation(.spring(response: 0.2, dampingFraction: 0.55)) { suitor?.hop = 1 }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.6).delay(0.16)) { suitor?.hop = 0 }
+    }
+
+    /// The piece laid where he stood: a kiss off the tile, his board put away, and he fades
+    /// out where he is standing.
+    private func sendHamishOff(from tile: GridPoint) {
+        suitorWalk?.cancel()
+        callout = FieldCallout(tile: tile, said: Suitor.kiss)
+        withAnimation(.easeInOut(duration: 0.25)) { suitorSays = nil }
+        withAnimation(.easeIn(duration: 0.45)) { suitor?.opacity = 0 }
+        suitorWalk = Task {
+            guard await Task.pausing(for: .milliseconds(500)) else { return }
+            suitor = nil
+        }
+    }
+
+    /// Takes him off the board at once, for a pen that held with him still standing on it:
+    /// the lap of honour is the animals' and he is not one of them.
+    private func dismissHamish() {
+        suitorWalk?.cancel()
+        suitor = nil
+        suitorSays = nil
     }
 
     /// Puts the fencing back the way it stood on the best pen of the session, and — when
@@ -936,6 +1151,7 @@ struct PuzzleView: View {
             Haptics.buzz(.error)
             Sounds.play(.pigAway)
         case .penned(let pen):
+            dismissHamish()
             // The clock stops on the pen holding rather than on the card coming up, so the
             // lap of honour is not charged to the player.
             clock?.stop()
@@ -1120,6 +1336,12 @@ private struct StopwatchFace: View {
 #Preview("The boss") {
     NavigationStack {
         PuzzleView(level: .stagMere)
+    }
+}
+
+#Preview("Hamish out on the board") {
+    NavigationStack {
+        PuzzleView(game: .partWayThrough(), roses: .remembering(), askingHamish: true)
     }
 }
 

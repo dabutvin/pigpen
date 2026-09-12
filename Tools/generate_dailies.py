@@ -27,10 +27,13 @@ build on, which after seven hundred boards of one arrangement is worth something
 
 It writes two files, both generated and both committed:
 
-  * `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, as one line per day.
-  * `PigpenTests/DailyAlmanacFixtures.swift` — the pen each day's `maximumScore` was
-    measured on, and what the day asks. `DailyAlmanacTests` replays every one of them, so a
-    day can never promise a pen the map does not actually hold.
+  * `Pigpen/Models/DailyAlmanacData.swift` — the puzzles, as one line per day, each with
+    the wall of the best pen its `maximumScore` was measured on: the app reads that wall
+    when Hamish is asked for a hint, the same way a trail level's `bestPen` is read.
+  * `PigpenTests/DailyAlmanacFixtures.swift` — what the day asks and the shape of its water,
+    and that same wall again. `DailyAlmanacTests` replays every one of them and holds the
+    almanac's wall to the fixture's, so a day can never promise a pen the map does not
+    actually hold.
 
 Everything about a day comes out of `random.Random` seeded from the date, so days are
 independent and the work can be spread over as many cores as there are.
@@ -619,7 +622,7 @@ def days_of(year):
 def almanac_line(entry):
     return (
         f"{entry['day']} {entry['budget']} {entry['two']} {entry['three']} "
-        f"{entry['best']} {'/'.join(entry['map'])}"
+        f"{entry['best']} {'/'.join(entry['map'])} {'/'.join(entry['plan'])}"
     )
 
 
@@ -646,8 +649,9 @@ def write_almanac(path, years, entries):
     parts = [BANNER.format(years=" ".join(str(year) for year in years))]
     parts.append(
         "/// The daily puzzles, one line to a day: the date, the fence budget, the scores the\n"
-        "/// second and third stars are worth, the best pen the map has in it, and the map with\n"
-        "/// its rows run together by `/`.\n"
+        "/// second and third stars are worth, the best pen the map has in it, the map with\n"
+        "/// its rows run together by `/`, and the wall of that best pen as a grid of `#` with\n"
+        "/// its rows run together the same way — what Hamish reads when asked for a hint.\n"
         "extension DailyAlmanac {\n"
     )
     parts.append(

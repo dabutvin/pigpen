@@ -41,6 +41,17 @@ extension PuzzleLevel {
         threeStarScore: 24,
         maximumScore: 26,
         question: .shore,
+        bestPen: """
+            ..##....
+            ....#...
+            .....#..
+            ......#.
+            .......#
+            .......#
+            ......#.
+            .....#..
+            ........
+            """,
         map: """
             .~......
             .~......
@@ -73,6 +84,17 @@ extension PuzzleLevel {
         threeStarScore: 23,
         maximumScore: 24,
         question: .detour,
+        bestPen: """
+            ........
+            #.....#.
+            .#.....#
+            ..#....#
+            ...#...#
+            ....#..#
+            .....##.
+            ........
+            ........
+            """,
         map: """
             ~~~~~~..
             ........
@@ -101,6 +123,17 @@ extension PuzzleLevel {
         threeStarScore: 17,
         maximumScore: 18,
         question: .bare,
+        bestPen: """
+            ........
+            ....#...
+            ...#.#..
+            ..#...#.
+            .#.....#
+            #.....#.
+            .#...#..
+            ..#.#...
+            ...#....
+            """,
         map: """
             ........
             ........
@@ -131,6 +164,17 @@ extension PuzzleLevel {
         threeStarScore: 21,
         maximumScore: 22,
         question: .gap,
+        bestPen: """
+            ..###...
+            .....#..
+            ......#.
+            .......#
+            #......#
+            ......#.
+            .....#..
+            ....#...
+            ..##....
+            """,
         map: """
             .~......
             .~......
@@ -161,6 +205,17 @@ extension PuzzleLevel {
         threeStarScore: 25,
         maximumScore: 27,
         question: .span,
+        bestPen: """
+            ....#...
+            .....#..
+            #.....#.
+            #......#
+            #......#
+            .#.....#
+            ..#....#
+            ...#....
+            ........
+            """,
         map: """
             ........
             ~~~~....
@@ -191,6 +246,17 @@ extension PuzzleLevel {
         threeStarScore: 24,
         maximumScore: 26,
         question: .obstruction,
+        bestPen: """
+            ........
+            .##.....
+            #..#....
+            #...#...
+            #....#..
+            #.....#.
+            #......#
+            #......#
+            ........
+            """,
         map: """
             ........
             ........
@@ -221,6 +287,17 @@ extension PuzzleLevel {
         threeStarScore: 25,
         maximumScore: 27,
         question: .corner,
+        bestPen: """
+            ........
+            .......#
+            .......#
+            .......#
+            ......#.
+            .....#..
+            ....#...
+            ...#....
+            .##.....
+            """,
         map: """
             ~~~~~~~.
             ~.......
@@ -252,6 +329,17 @@ extension PuzzleLevel {
         threeStarScore: 38,
         maximumScore: 40,
         question: .detour,
+        bestPen: """
+            .....#...
+            #.....#..
+            #......#.
+            #.......#
+            #.......#
+            #......#.
+            .#....#..
+            ..#.##...
+            ...#.....
+            """,
         map: """
             ~~~~~....
             ....~....
@@ -293,6 +381,17 @@ extension PuzzleLevel {
         threeStarScore: 40,
         maximumScore: 43,
         question: .together,
+        bestPen: """
+            .#####...
+            #........
+            #........
+            #......#.
+            #.......#
+            ........#
+            ...#....#
+            ....#...#
+            .....###.
+            """,
         map: """
             .........
             .a....~..
@@ -319,6 +418,7 @@ private func cogsworth(
     threeStarScore: Int,
     maximumScore: Int,
     question: Question? = nil,
+    bestPen: String,
     map: String
 ) -> PuzzleLevel {
     guard let level = PuzzleLevel(
@@ -329,6 +429,7 @@ private func cogsworth(
         threeStarScore: threeStarScore,
         maximumScore: maximumScore,
         question: question,
+        bestPen: bestPen,
         map: map
     ) else {
         preconditionFailure("The built-in \(name) map is malformed")
