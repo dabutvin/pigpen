@@ -224,8 +224,9 @@ struct SettingsView: View {
 
                 Text(
                     """
-                    The meadow and today's daily puzzle are free. Unlock the rest of the \
-                    worlds and the whole archive — once, for good.
+                    The meadow and today's daily puzzle are free, and every world past the \
+                    meadow opens a level a day. Unlock all of them at once, and the whole \
+                    archive — once, for good.
                     """
                 )
                 .font(.footnote.weight(.semibold))

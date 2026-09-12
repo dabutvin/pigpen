@@ -9,6 +9,9 @@ import UIKit
 /// the world just finished behind you, the next one lit up ahead, and the rest standing out past
 /// them as silhouettes to go on for. A world opens once the one before it is held; tapping an
 /// open one drops into its trail, playing the world's own opening film first if it is owed.
+/// That is so whether or not the game has been bought: a player who has not paid walks the
+/// same chain, a level a day, and meets the wall on the trail rather than here. What this map
+/// puts up for sale is the worlds past the one they have reached.
 @MainActor
 struct UniverseMapView: View {
     @Environment(\.dismiss) private var dismiss
@@ -69,7 +72,9 @@ struct UniverseMapView: View {
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(item: $entering) { index in
             if let game = progress.universe.game(at: index), let world = progress.progress(for: index) {
-                WorldMapView(world: game, progress: world)
+                // The same purchase switch this map reads, so a trail entered from a map stood
+                // up for sale is walked a level a day, the way the map said it would be.
+                WorldMapView(world: game, progress: world, fullGame: progress.fullGame)
             }
         }
         .fullScreenCover(item: $openingFilm, onDismiss: { openPendingWorld() }) { film in
@@ -163,27 +168,30 @@ struct UniverseMapView: View {
         }
     }
 
-    /// Which world pulses its ring: the frontier alone, whether that is the next world to play
-    /// or — before a player pays — the thicket at the head of everything for sale. One world
-    /// moving on a map where all the rest past the meadow are for sale, rather than eleven.
+    /// Which world pulses its ring: the frontier alone, which is the next world to play — bought
+    /// or not, since the free game walks the chain too. One world moving on a map where all the
+    /// rest past it may be for sale, rather than eleven.
     private func beckons(for index: Int) -> Bool {
         guard index == progress.frontier else { return false }
         return progress.isForSale(index) || progress.state(of: index) == .playable
     }
 
-    /// A line under a world's name: how much of it is sold, or what is keeping it shut. A
-    /// world behind the wall says so over whatever its stars would — it is not locked for
-    /// want of play, it is waiting on the full game.
+    /// A line under a world's name: whether it is locked, unlocked or complete, and how far
+    /// through it the player is once they have started. A world behind the wall says so over
+    /// whatever its stars would — it is not locked for want of play, it is waiting on the
+    /// full game.
     ///
-    /// Sold rather than held. A world is nine lots to find somebody a home on, and the films
-    /// have called them that from the first one — so the count under the name counts the same
-    /// way the story does.
+    /// Locked, unlocked and complete, in the plain words of the banner across the top: the
+    /// line used to count lots sold, the way the films tell it, and read as a shop on a map
+    /// that already has a shop on it.
     private func subtitle(for index: Int) -> String {
         if progress.isForSale(index) { return "Unlock the full game" }
         switch progress.state(of: index) {
-        case .cleared: return "Every lot sold"
+        case .cleared: return "Complete"
         case .playable:
-            return progress.isCleared(index) ? "Every lot sold" : "\(heldCount(index)) of \(worldCount(index)) sold"
+            if progress.isCleared(index) { return "Complete" }
+            let held = heldCount(index)
+            return held == 0 ? "Unlocked" : "\(held) of \(worldCount(index)) complete"
         case .comingSoon: return "Coming soon"
         case .locked: return "Locked"
         }
@@ -599,8 +607,8 @@ private struct WorldPlanet: View {
             standing = "unlock the full game to play it"
         } else {
             switch state {
-            case .cleared: standing = "every lot sold"
-            case .playable: standing = "open, \(subtitle)"
+            case .cleared: standing = "complete"
+            case .playable: standing = subtitle.lowercased()
             case .comingSoon: standing = "coming soon"
             case .locked: standing = "locked"
             }

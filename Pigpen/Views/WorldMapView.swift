@@ -14,6 +14,10 @@ import UIKit
 struct WorldMapView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Read so the free game's clock is looked at again when the app comes back to the front:
+    /// a day can pass with the trail on screen in the background, and a stop shut when the
+    /// phone went in a pocket may be open by the time it comes out.
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var progress: WorldProgress
     /// Where the pig is standing, counted in stops along the trail.
@@ -50,6 +54,16 @@ struct WorldMapView: View {
     /// brings the map back on screen, which is not an arrival — it is a return to a map the
     /// player left mid-trail.
     @State private var arrived = false
+    /// The moment the free game's clock is read against. Held as state rather than asked of
+    /// the phone on every draw, so the countdown over a shut stop moves on a beat of its own
+    /// — a minute at a time, and the moment the day is up — instead of whenever the map
+    /// happened to redraw for some other reason.
+    @State private var now = Date()
+    /// Whether the offer of the full game is up, raised by tapping a stop the free game has
+    /// not handed over yet.
+    @State private var isOffering = false
+    /// How long that stop had left to wait when it was tapped, for the offer to say back.
+    @State private var wait: LevelWait?
 
     /// The world this trail belongs to: the look that dresses it, the film that sees it out, and
     /// the briefings it stops for. Held apart from `world` below, which is the trail itself —
@@ -64,6 +78,12 @@ struct WorldMapView: View {
     /// than from the universe. The title uses it to reveal the universe map; when the map was
     /// itself opened from the universe, this is empty and `dismiss` is enough to go back.
     private let onWorldHeld: (() -> Void)?
+    /// Whether the full game has been bought. A bought game never meets the ration below;
+    /// handed in so a preview or a screenshot can stand the trail up owned or not.
+    private let fullGame: FullGame
+    /// The free game's ration of levels past the meadow — one a day — which is the only thing
+    /// on a trail that can shut a stop the stars have opened. Handed in for the same reason.
+    private let ration: LevelRation
 
     /// - Parameter showsTollNotice: Opens with the boss's price already up, which is how CI
     ///   photographs that card. Nothing else passes it: in a game being played the notice is
@@ -72,10 +92,14 @@ struct WorldMapView: View {
         world game: GameWorld = .mudlarkMeadow,
         progress: WorldProgress = WorldProgress(),
         showsTollNotice: Bool = false,
+        fullGame: FullGame = .shared,
+        ration: LevelRation = .shared,
         onWorldHeld: (() -> Void)? = nil
     ) {
         self.game = game
         self.onWorldHeld = onWorldHeld
+        self.fullGame = fullGame
+        self.ration = ration
         _progress = State(initialValue: progress)
         _pigStop = State(initialValue: Double(progress.frontier))
         // Nothing but the camera opens with the card already up, and a world that charges
@@ -100,6 +124,12 @@ struct WorldMapView: View {
     /// How much of the trail is the player's, which is as far as the pig has ever stood
     /// — walking back down to an old level does not shut the meadow behind you.
     private var opened: Double { max(pigStop, Double(progress.frontier)) }
+    /// Whether the free game's clock runs on this trail at all: it does for a player who has
+    /// not paid, on every world but the meadow, and for nobody who has.
+    private var isRationed: Bool { !fullGame.isUnlocked && !game.isFree }
+    /// When the next free level on this trail is due, or nothing while none is owed — because
+    /// the clock has stopped, or because it never ran here.
+    private var nextRelease: Date? { isRationed ? ration.nextRelease(now: now) : nil }
 
     var body: some View {
         GeometryReader { proxy in
@@ -181,6 +211,19 @@ struct WorldMapView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $isOffering) {
+            FullGameOffer(fullGame: fullGame, source: .trail, wait: wait)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
+        // The clock is read afresh whenever the map comes back — from a puzzle, or from the
+        // phone's pocket — and kept by a task of its own in between, so a stop shut on the
+        // free game's day opens on the map the moment the day is up.
+        .onAppear { now = Date() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { now = Date() }
+        }
+        .task(id: nextRelease) { await keepTheClock() }
     }
 
     /// The board a stop opens on: bare mud, with the best pen ever won there remembered
@@ -347,19 +390,31 @@ struct WorldMapView: View {
             .accessibilityHidden(true)
     }
 
+    /// Where the free game's ration stands on a stop, before the stars are asked: free on a
+    /// bought game and on the meadow, and otherwise whatever the ration says. A stop the
+    /// trail has not reached is never asked about — the stars shut it first.
+    private func rationStanding(at index: Int) -> LevelRation.Standing {
+        guard isRationed else { return .free }
+        return ration.standing(of: world[index].id, isCleared: progress.isCleared(index), now: now)
+    }
+
     private func standing(at index: Int) -> LevelSignpost.Standing {
-        if progress.isCleared(index) {
-            .cleared
-        } else if progress.isUnlocked(index) {
-            .open
-        } else if !progress.isTollPaid(index) {
+        if progress.isCleared(index) { return .cleared }
+        if progress.isUnlocked(index) {
+            // The stars have opened it; the one thing that can still shut it is the free
+            // game's clock, and then the sign says how long is left on the day.
+            if case .waiting(let due) = rationStanding(at: index) {
+                return .rationed(wait: LevelWait(until: due, now: now))
+            }
+            return .open
+        }
+        if !progress.isTollPaid(index) {
             // Shown from the off, before the trail has even got there: a boss the player
             // can see the price of — and how close they are to it — is one worth going back
             // down the trail for.
-            .tolled(have: progress.totalStars, need: world[index].starToll)
-        } else {
-            .shut
+            return .tolled(have: progress.totalStars, need: world[index].starToll)
         }
+        return .shut
     }
 
     // MARK: - The banner across the top
@@ -429,6 +484,26 @@ struct WorldMapView: View {
     /// so the map never cuts to a puzzle the pig is not standing at.
     private func visit(_ index: Int) {
         guard progress.isUnlocked(index), !walking else { return }
+
+        switch rationStanding(at: index) {
+        case .waiting(let due):
+            // The one tap on a trail that meets the wall: a stop the stars have opened and
+            // the free game's day has not. The offer says how long the wait is and what
+            // buying the game does about it, raised on the very stop the player reached for.
+            Haptics.tap(.medium)
+            wait = LevelWait(until: due, now: now)
+            Analytics.record(.offerShown(from: FullGameOfferSource.trail.rawValue))
+            isOffering = true
+            return
+        case .ready:
+            // Today's free level, taken on the tap that opens it. It is the player's from
+            // here on — walked back down to as often as they like — and the day's clock
+            // starts on the next.
+            ration.release(world[index].id, now: now)
+            Analytics.record(.levelReleased(world[index].level, world: world.name, stop: index))
+        case .free:
+            break
+        }
         Haptics.tap(.medium)
         Sounds.play(.press)
 
@@ -561,19 +636,42 @@ struct WorldMapView: View {
         walking = false
     }
 
-    /// The signpost the pig has just walked up to takes a bow.
+    /// The signpost the pig has just walked up to takes a bow — unless the free game's clock
+    /// is still on it, in which case the pig arrives, the buzz says a pen was held, and the
+    /// sign stays put: a lock bouncing to be played would be promising something it cannot
+    /// give until tomorrow.
     private func celebrate(_ index: Int) {
         guard progress.isUnlocked(index), !progress.isCleared(index) else { return }
         Haptics.buzz(.success)
         Sounds.play(.callout)
 
         guard !reduceMotion else { return }
+        if case .waiting = rationStanding(at: index) { return }
         withAnimation(.spring(duration: 0.45, bounce: 0.55)) { unveiled = index }
         Task {
             try? await Task.sleep(for: .milliseconds(750))
             withAnimation(.spring(duration: 0.4, bounce: 0.3)) { unveiled = nil }
         }
     }
+
+    // MARK: - The free game's clock
+
+    /// Keeps `now` moving while a stop on this trail is waiting on the day: a minute at a
+    /// time, so the count on its sign is never far out, and once more the moment the day
+    /// is up, so the lock comes off without the player having to leave and come back.
+    /// Nothing at all on a bought game, on the meadow, or with no level waiting.
+    private func keepTheClock() async {
+        while !Task.isCancelled, let due = nextRelease {
+            let remaining = due.timeIntervalSince(Date())
+            if remaining > 0 {
+                try? await Task.sleep(for: .seconds(min(remaining, 60)))
+            }
+            guard !Task.isCancelled else { return }
+            now = Date()
+        }
+    }
+
+    // MARK: - Coming and going
 
     /// Brings the pig into view when the map opens. A world already part-way through runs
     /// up the trail from the barn, which says where the player is and how far there is to go.
@@ -760,6 +858,32 @@ private struct TrailWalk: GeometryEffect {
 #Preview {
     NavigationStack {
         WorldMapView(progress: .partWayThrough())
+    }
+}
+
+#Preview("Free game, level due tomorrow") {
+    // The thicket as a player who has not paid finds it the morning after their first day
+    // in it: two stops held, and the third under a lock with the rest of the day on it.
+    NavigationStack {
+        WorldMapView(
+            world: .thornwoodThicket,
+            progress: .partWayThrough(world: .thornwoodThicket),
+            fullGame: .locked(),
+            ration: .partWayThrough(world: .thornwoodThicket)
+        )
+    }
+}
+
+#Preview("Free game, level ready") {
+    // The same trail a day later: the clock has stopped and the third stop is open, the
+    // ring on it the only thing on the map that moves.
+    NavigationStack {
+        WorldMapView(
+            world: .thornwoodThicket,
+            progress: .partWayThrough(world: .thornwoodThicket),
+            fullGame: .locked(),
+            ration: .partWayThrough(world: .thornwoodThicket, hoursAgo: 30)
+        )
     }
 }
 
