@@ -236,8 +236,10 @@ jobs:
           }
 
           # Numbered past every phone shot, so the tablet's sit together at the end of
-          # the gallery.
-          capture 83 title -title
+          # the gallery. The title is the dressed one: it opens on the same held game as
+          # `-title` with the reminder's offer already made, so the shot is the pasture
+          # and the run of boards rather than a sheet standing over both.
+          capture 83 title -dressed-title
           capture 85 universe -universe
           capture 87 map -map
           capture 89 puzzle -puzzle
