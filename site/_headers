@@ -1,0 +1,4 @@
+# Apple fetches the association file through its own CDN and will only read it as JSON.
+# The file has no extension for Netlify to guess a type from, so the type is said here.
+/.well-known/apple-app-site-association
+  Content-Type: application/json

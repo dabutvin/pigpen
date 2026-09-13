@@ -459,6 +459,11 @@ extension AnalyticsSignal {
         AnalyticsSignal("Daily.shared", ["fencing": String(fencing)])
     }
 
+    /// A day's own address followed into the game, and its board opened. The other end of
+    /// `Daily.shared`: whether the postcards bring anybody in, which is the one number that
+    /// says whether sharing is worth the button.
+    static let dayLinkFollowed = AnalyticsSignal("Daily.linkFollowed")
+
     // MARK: The morning reminder
 
     /// The game's own offer of a reminder, put up once to somebody who has held a day and so

@@ -6,8 +6,9 @@ import Foundation
 ///
 /// Text rather than a picture, because text is what a group chat is made of: it lands as
 /// a message rather than an attachment, it is quoted and replied to like one, and a friend
-/// who has not played can read the day off it and go and have their own go. The game's
-/// own address stands at the bottom for that friend.
+/// who has not played can read the day off it and go and have their own go. The day's own
+/// address stands at the bottom for that friend — `DayLink` — which opens the game on that
+/// day's board on a phone that has it, and the site on one that does not.
 ///
 /// The fencing is a choice rather than a given. Everybody gets the same board on a given
 /// day, which is the whole of what makes a daily worth comparing, and a card with the wall
@@ -54,11 +55,11 @@ struct DailyPostcard: Identifiable, Sendable {
 
     // MARK: - The card
 
-    /// The whole card, top to bottom: the day, the verdict, the board, the address.
+    /// The whole card, top to bottom: the day, the verdict, the board, the day's address.
     func text(showingFencing: Bool) -> String {
         var lines = [heading, summary, remark, ""]
         lines += board(showingFencing: showingFencing)
-        lines += ["", SupportLinks.host]
+        lines += ["", DayLink.url(for: date).absoluteString]
         return lines.joined(separator: "\n")
     }
 

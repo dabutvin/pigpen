@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.com.pigpen.app"],
+        "components": [
+          { "/": "/day/*", "comment": "A day of the almanac, opened on its board" }
+        ]
+      }
+    ]
+  }
+}

@@ -1112,7 +1112,9 @@ A puzzle a day, on its own board, with a clock running on it.
   of: the day, the stars and the rainbow a best pen keeps, the clock, the run of days, what
   the pen came to and the pig's word on it — *Pig has no notes* — and under all that the
   board itself, a tile to an emoji: cream mud, blue water, the pig, and whatever was lying
-  on the ground. The game's address stands at the bottom for the friend who has not played.
+  on the ground. The day's own address stands at the bottom — `pigpen.app/day/2026-04-22` —
+  which on a phone with the game on it opens that day's board, and on one without it opens
+  the site, where the App Store button is. See [A link into the app](#a-link-into-the-app).
   The card is held up on a cream board of its own before it goes, so the pen can be admired
   in emoji first and the whole thing copied by hand by anybody who would rather.
   The fencing is a switch on that card, and it comes up off. Everybody gets the same board
@@ -1497,7 +1499,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Thirty-eight signals, all of them written out in one place —
+**What goes out.** Thirty-nine signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1515,6 +1517,7 @@ is filling in Apple's privacy questionnaire.
 | `World.held` | Every pen in a world held |
 | `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
 | `Daily.postcardOpened` / `.shared` | A held day's postcard held up, and handed to the share sheet — with the fencing on it or without |
+| `Daily.linkFollowed` | A day's address followed into the game and its board opened: the other end of a share |
 | `Reminder.offered` / `.answered` | The morning reminder offered, and taken or waved away — with the phone's answer beside the player's |
 | `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
 | `Reminder.followed` | A reminder tapped, and the morning's board it opened |
@@ -1668,6 +1671,9 @@ there is no state anywhere else to keep in step with it.
 | `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
 | `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
 | `404.html` | Whatever the host points at it | Somewhere to land other than the host's own grey page |
+| `.well-known/apple-app-site-association` | `pigpen.app/.well-known/apple-app-site-association` | The site vouching for the app, so a day's address opens the game rather than the page — see [A link into the app](#a-link-into-the-app) |
+| `_headers` | Netlify reads it | Serves that file as JSON, which is the only way Apple will read it |
+| `_redirects` | Netlify reads it | Sends `/day/*` to the front page for a phone without the game, so a day's address is never a 404 |
 | `img/` | `pigpen.app/img/…` | The two shots on the front page, cut down from a run of the **App Store Assets** workflow, and the wordmark above them — `wordmark.png`, which `Tools/generate_wordmark.py` draws from the same numbers the title screen's own sticker is built from |
 
 The front page is the marketing URL and the other two are the ones on the app's information
@@ -1683,6 +1689,41 @@ root because a host can serve it from any depth.
 App Store* chip rather than a link, since a dead button on the page that vouches for the app
 is worse than no button. The line above it in `index.html` is the anchor to put in its place,
 with the Apple ID out of App Store Connect.
+
+### A link into the app
+
+`pigpen.app/day/2026-04-22` is a day's own address, and it is what the bottom of a postcard
+says. On a phone with the game on it the address opens the game on that day's board; on a
+phone without it, it opens the front page, where the App Store button is — and the front page
+carries Apple's smart banner, so Safari offers the app across the top of it. One link, and the
+best thing it can do for whoever taps it. It is a universal link, which is three things
+agreeing with each other:
+
+- **The app claims the domain.** `Pigpen/Resources/Pigpen.entitlements` carries
+  `applinks:pigpen.app`, and `DayLink` reads the day back out of the path when the phone
+  hands the address over. It comes in by the same door a tapped reminder does — written down
+  as a knock, and opened by the title screen — so a link opens a day exactly the way a
+  reminder does, a day already held offering its wall back first. Only `https`, only the
+  game's host, only `/day/<date>`: anything else is let go.
+- **The site vouches for the app.** `site/.well-known/apple-app-site-association` names the
+  app — `<Team ID>.com.pigpen.app` — and the path it may claim. Apple fetches it through its
+  own CDN when the app is installed, which is why the file has to be served as JSON with no
+  redirect in front of it: `site/_headers` sets the content type, since the file has no
+  extension for Netlify to guess from. The Team ID is written into that file in plain text.
+  Every app's association file is public by construction, so it is not a secret there,
+  although the same number is kept as a secret in CI. Apple's CDN caches the file, so a
+  change to it takes a while to reach phones, and a fresh install is what picks it up.
+- **The App ID allows it.** A provisioning profile only carries the entitlements the App ID
+  has switched on, so `Tools/bootstrap_signing.py create` switches Associated Domains on for
+  `com.pigpen.app` before it mints a profile. Per-build certificates pick that up on the next
+  build with nothing to do. A [stored certificate](#one-stored-certificate) made before this
+  was here has a profile without it, and the archive fails at signing with a message naming
+  the entitlement: re-run **Signing Setup** → `create` once.
+
+`site/_redirects` sends `/day/*` to the front page for anybody without the app, so the
+address is never a 404 — and a chat shows the front page's preview for it. `DayLinkTests`
+pins all of it: the address, what reads back out of it, and that the entitlement, the
+association file, the headers and the redirect all name the same host and path.
 
 **Publishing.** Netlify does it. The `pigpenapp` project builds from this repository with
 `site/` as its publish directory, so a merge to `main` is a deploy — nothing to upload,
@@ -2100,13 +2141,15 @@ Set these in GitHub repo settings → Secrets and variables → Actions.
 
 The App Store Connect app record must exist with bundle ID `com.pigpen.app` (see `project.yml`) before the first TestFlight upload.
 
+The Team ID is also written, in plain text, into `site/.well-known/apple-app-site-association`, which is the file that lets a day's address open the game — see [A link into the app](#a-link-into-the-app). It is public there by construction.
+
 ## Signing
 
 A distribution certificate is only usable together with the private key it was created from, and Apple caps each account at a couple of certificates — so a build cannot just ask for a fresh one each time, which is what broke this repo's first few TestFlight runs. Apple's instructions have you make the key in Keychain Access on a Mac, but nothing requires that: the key can be generated anywhere, the signing request submitted over the App Store Connect API, and the `.p12` assembled with openssl. `Tools/bootstrap_signing.py` does that, so none of what follows needs a Mac.
 
 ### Per-build certificates
 
-This is what happens by default, with no setup beyond the App Store Connect API key. Each release build creates its own certificate and profile, signs, uploads, and a later build retires them, so the account holds one certificate at rest and never approaches the limit.
+This is what happens by default, with no setup beyond the App Store Connect API key. Each release build creates its own certificate and profile, signs, uploads, and a later build retires them, so the account holds one certificate at rest and never approaches the limit. On the way it switches on, for the App ID, whatever capabilities the app's entitlements claim — associated domains, for the day links — so a profile is never minted short of what the archive asks for.
 
 The sweep runs at the *start* of a build rather than the end of the previous one. That keeps revocation well away from App Store Connect still processing an upload, and it collects anything a cancelled run left behind, so the account cannot silently fill up again. Profiles are named after the workflow that minted them, which is how a sweep tells one kind of certificate from another — and from a person's: a certificate survives as long as some profile references it, and if you have one with no profile at all, add `--keep-serial <serial>` to the cleanup step.
 
@@ -2209,7 +2252,8 @@ Pigpen/
 │   ├── DailyPostcard.swift      # A held day as a chat message: the verdict, and the board in emoji, fencing optional
 │   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
-│   ├── TappedReminder.swift     # Which morning a tapped reminder is asking for, until a screen is up to open it
+│   ├── TappedReminder.swift     # Which day a tapped reminder, or a followed link, is asking for, until a screen is up to open it
+│   ├── DayLink.swift            # A day's own address on the web, and the day read back out of one
 │   ├── FullGame.swift           # Whether the full game has been bought, and the one purchase that buys it
 │   ├── LevelRation.swift        # The free game's one level a day past the meadow: the clock, and the list of what it has handed out
 │   ├── AppStoreStorefront.swift # The App Store on the other end of that purchase, in the one file that sells
@@ -2275,6 +2319,9 @@ site/                            # Served at pigpen.app by Netlify on every merg
 ├── privacy.html                 # The privacy policy, at the address beside it
 ├── pigpen.css                   # The cream and post-brown the pages share
 ├── 404.html                     # Somewhere to land that is not the host's grey page
+├── .well-known/                 # apple-app-site-association: the site vouching for the app, so a day's address opens it
+├── _headers                     # Serves that file as JSON
+├── _redirects                   # Sends /day/* to the front page for a phone without the game
 └── img/                         # The two shots the front page stands on
 docs/                            # The shots at the top of this README
 Tools/

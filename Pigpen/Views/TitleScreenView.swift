@@ -74,9 +74,10 @@ struct TitleScreenView: View {
     /// on a fixed square of the calendar, and must not have the screen quietly put it back
     /// to whatever day the runner is having.
     private let dayWasGiven: Bool
-    /// Where a tapped reminder leaves the morning it is asking for. The notification centre
-    /// has nowhere to push a board from, so it writes the day down and this screen — the
-    /// root of the stack, and so the one screen that is always there to be asked — opens it.
+    /// Where a tapped reminder, or a followed link to a day, leaves the day it is asking for.
+    /// Neither the notification centre nor the phone's URL handler has anywhere to push a
+    /// board from, so each writes the day down and this screen — the root of the stack, and
+    /// so the one screen that is always there to be asked — opens it.
     private let taps: TappedReminder
     /// What the pig in the pasture has on. The shared wardrobe, read here so that coming back
     /// from the barn puts the new outfit straight on the pig behind the name — and handed in by
@@ -93,9 +94,9 @@ struct TitleScreenView: View {
     ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
     ///     for the same reason — and handed in rather than waited for, since the offer's own
     ///     rule is that it only appears to somebody who has held a day and never been asked.
-    ///   - taps: Where tapped reminders are written down. The shared one the phone writes
-    ///     into, save where a preview or a test wants a tap of its own without one having to
-    ///     arrive on the machine.
+    ///   - taps: Where tapped reminders and followed links are written down. The shared one
+    ///     the phone writes into, save where a preview or a test wants a tap of its own
+    ///     without one having to arrive on the machine.
     ///   - rating: When the game may ask what the player thinks of it. Handed in by the
     ///     screenshot runs, which open onto a player with a world held and a fortnight of days
     ///     behind them — exactly the standing the prompt watches for — and must never put
@@ -305,27 +306,30 @@ struct TitleScreenView: View {
         isOfferingReminders = true
     }
 
-    /// Opens the morning a tapped reminder is asking for.
+    /// Opens the day a tapped reminder, or a followed link, is asking for.
     ///
     /// A reminder that puts the player down here, with the board still a tap away, has spent
     /// its one interruption on nothing — so whatever else is up comes down and the day it
     /// names goes up instead. A player who taps *Pig's waiting* has said where they want
-    /// to be, and a world map they left an hour ago is not an answer to it.
+    /// to be, and a world map they left an hour ago is not an answer to it. A friend's
+    /// postcard tapped in a chat is the same thing said by somebody else.
     ///
-    /// The tap is taken rather than read, so one tap opens one board and coming back here
-    /// later does not open it again. A morning the almanac has nothing for, or one still to
+    /// The knock is taken rather than read, so one tap opens one board and coming back here
+    /// later does not open it again. A day the almanac has nothing for, or one still to
     /// come, is let go rather than opened onto an empty field — neither should ever have had
     /// a reminder laid down for it, and a day cannot be played merely because something on
-    /// the lock screen said so.
+    /// the lock screen, or in a chat, said so.
     private func answerAnyTappedReminder() {
-        guard let day = taps.take(), DailyAlmanac.isOpen(day, today: today) else { return }
-        Analytics.record(.reminderFollowed)
+        guard let knock = taps.take(), DailyAlmanac.isOpen(knock.day, today: today) else { return }
+        // Counted by the door it came in through: the mornings and the postcards are each
+        // trying to bring somebody to this board, and the charts want to know which does.
+        Analytics.record(knock.wayIn == .link ? .dayLinkFollowed : .reminderFollowed)
         playDestination = nil
         isTutorial = false
         isArchiveOpen = false
         showsSettings = false
         isOfferingReminders = false
-        open(day)
+        open(knock.day)
     }
 
     // MARK: - Being rated
