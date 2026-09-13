@@ -68,11 +68,11 @@ jobs:
 
       # After the build rather than beside it: booting takes every core a runner
       # has, and sharing them made the build four times slower for no gain.
-      - name: Wake up the simulator
+      - name: Wake up the iPhone simulator
         id: simulator
         uses: ./.github/actions/simulator
 
-      - name: Capture screenshots
+      - name: Capture iPhone screenshots
         env:
           UDID: ${{ steps.simulator.outputs.udid }}
         run: |
@@ -180,6 +180,71 @@ jobs:
           # opening the film in a preview or in the projection room behind the gear. The
           # launch arguments that stop each shot are still there — `PigpenApp.stills` — for
           # anyone who wants to photograph one.
+
+          xcrun simctl status_bar "$UDID" clear
+          # Put away before the tablet is woken, so the two are never sharing the
+          # runner's cores.
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+
+          echo "Phone screenshots captured:"
+          ls -la screenshots/
+
+      # The same screens again on a tablet, for the handful whose layout is not the
+      # phone's stretched: the board and the lists keep to a phone's width in the
+      # middle of the glass, and the trails wind up the middle of their maps. A
+      # tablet on its side lays the board beside its furniture, but the simulator
+      # cannot be turned on its side from the command line, so that layout is the
+      # one thing here that has to be looked at by hand.
+      - name: Wake up the iPad simulator
+        id: ipad
+        uses: ./.github/actions/simulator
+        with:
+          family: iPad
+
+      - name: Capture iPad screenshots
+        env:
+          UDID: ${{ steps.ipad.outputs.udid }}
+        run: |
+          set -euo pipefail
+
+          BUNDLE_ID="com.pigpen.app"
+          APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
+          xcrun simctl install "$UDID" "$APP_PATH"
+
+          # The same two shots off one launch the phone gets, named `ipad_<screen>` so
+          # the gallery files them under their own heading.
+          capture() {
+            local order="$1"
+            local screen="$2"
+            shift 2
+
+            local light dark
+            light=$(printf 'screenshots/%02d_ipad_%s_light.png' "$order" "$screen")
+            dark=$(printf 'screenshots/%02d_ipad_%s_dark.png' "$((order + 1))" "$screen")
+
+            xcrun simctl ui "$UDID" appearance light
+            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
+            sleep 3
+            xcrun simctl io "$UDID" screenshot "$light"
+
+            xcrun simctl ui "$UDID" appearance dark
+            sleep 2
+            xcrun simctl io "$UDID" screenshot "$dark"
+
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            echo "Captured: $light, $dark"
+          }
+
+          # Numbered past every phone shot, so the tablet's sit together at the end of
+          # the gallery.
+          capture 83 title -title
+          capture 85 universe -universe
+          capture 87 map -map
+          capture 89 puzzle -puzzle
+          capture 91 boss -boss
+          capture 93 archive -archive
+          capture 95 settings -settings
+          capture 97 barn -barn
 
           xcrun simctl status_bar "$UDID" clear
 
@@ -350,9 +415,15 @@ jobs:
               body += `> The cut scenes are lit by the shot rather than by the phone, so each is shown once.\n\n`;
             }
 
+            // A tablet's shot is headed "iPad …" rather than "Ipad …".
+            const heading = (name) => {
+              const label = name.replace(/_/g, ' ');
+              if (label.startsWith('ipad ')) return `iPad ${label.slice(5)}`;
+              return `${label.charAt(0).toUpperCase()}${label.slice(1)}`;
+            };
+
             for (const screen of screens) {
-              const label = screen.name.replace(/_/g, ' ');
-              body += `### ${label.charAt(0).toUpperCase()}${label.slice(1)}\n\n`;
+              body += `### ${heading(screen.name)}\n\n`;
               if (screen.scene) {
                 body += `${shot(screen.scene)}\n\n`;
                 continue;
