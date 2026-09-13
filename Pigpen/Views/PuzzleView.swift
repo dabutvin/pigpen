@@ -20,6 +20,11 @@ struct PuzzleView: View {
     /// fencing even if the animals were never released. Meadow levels leave this unset —
     /// a trail stop starts from bare mud every time.
     private let onLeave: ((PuzzleGame, Stopwatch?) -> Void)?
+    /// Writes the postcard a held pen is shared from — the day's board in emoji, with the
+    /// stars, the clock and the run of days over it — given the wall that held and how long
+    /// it took. Only a daily hands one in: a day is the same board for everybody, which is
+    /// what makes it worth sending, and a trail stop is nobody else's morning.
+    private let postcard: ((Set<GridPoint>, TimeInterval?) -> DailyPostcard?)?
     /// What that way back is called, and the glyph it wears. The meadow's is Continue with
     /// a signpost, because the trail is waiting; a day's is Done with a seal, because the
     /// day is finished and the title is what sits behind it.
@@ -88,6 +93,8 @@ struct PuzzleView: View {
     /// Whether the pen has held at any point on this board, so that leaving is counted as
     /// giving up only when there was nothing to give up on.
     @State private var hasHeld = false
+    /// The postcard being held up to share, while its sheet is over the board.
+    @State private var sharing: DailyPostcard?
 
     /// - Parameter clock: A stopwatch for a board that is being timed, and nothing at all
     ///   for one that is not. A clock handed in already stopped — `Stopwatch.showing(_:)` —
@@ -107,7 +114,8 @@ struct PuzzleView: View {
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
-        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
+        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil,
+        postcard: ((Set<GridPoint>, TimeInterval?) -> DailyPostcard?)? = nil
     ) {
         self.init(
             game: PuzzleGame(level: level),
@@ -121,7 +129,8 @@ struct PuzzleView: View {
             trail: trail,
             wardrobe: wardrobe,
             onPenned: onPenned,
-            onLeave: onLeave
+            onLeave: onLeave,
+            postcard: postcard
         )
     }
 
@@ -139,10 +148,12 @@ struct PuzzleView: View {
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
-        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil
+        onLeave: ((PuzzleGame, Stopwatch?) -> Void)? = nil,
+        postcard: ((Set<GridPoint>, TimeInterval?) -> DailyPostcard?)? = nil
     ) {
         self.onPenned = onPenned
         self.onLeave = onLeave
+        self.postcard = postcard
         self.treatSkin = treatSkin
         self.skin = skin
         self.day = day
@@ -249,6 +260,10 @@ struct PuzzleView: View {
         .keepsSwipeFromPopping()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) { clockFace }
+        }
+        .sheet(item: $sharing) { card in
+            DailyPostcardView(postcard: card)
+                .presentationDragIndicator(.visible)
         }
         .onAppear {
             clock?.start()
@@ -610,11 +625,19 @@ struct PuzzleView: View {
                     }
                 }
 
-                Button { dismiss() } label: {
-                    Label(wayOutTitle, systemImage: wayOutImage)
-                        .frame(maxWidth: .infinity)
+                // The way out shares its row with the way to tell somebody, on a board
+                // that has somebody to tell: a day is shared and a trail stop is not.
+                HStack(spacing: 10) {
+                    if postcard != nil {
+                        share.buttonStyle(.bordered)
+                    }
+
+                    Button { dismiss() } label: {
+                        Label(wayOutTitle, systemImage: wayOutImage)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
             }
         }
     }
@@ -638,6 +661,22 @@ struct PuzzleView: View {
             game.resumeBuilding()
         } label: {
             Label("Go bigger", systemImage: "arrow.up.left.and.arrow.down.right")
+        }
+    }
+
+    /// The way a held day leaves the phone: a postcard with the board on it in emoji, held
+    /// up on a sheet before it goes so the fencing can be kept off it or put on. The wall
+    /// the animals were let loose in is the wall on the card, and the clock as it stood
+    /// when the pen held is the time on it.
+    private var share: some View {
+        Button {
+            guard let card = postcard?(game.fences, heldIn) else { return }
+            Haptics.tap(.light)
+            Sounds.play(.press)
+            Analytics.record(.dailyPostcardOpened)
+            sharing = card
+        } label: {
+            Label("Share", systemImage: "square.and.arrow.up")
         }
     }
 

@@ -448,6 +448,17 @@ extension AnalyticsSignal {
 
     static let dailyArchiveOpened = AnalyticsSignal("Daily.archiveOpened")
 
+    /// A held day's postcard held up — the card with the board on it in emoji that a day is
+    /// shared from. The top of the sharing funnel: how many players so much as look.
+    static let dailyPostcardOpened = AnalyticsSignal("Daily.postcardOpened")
+
+    /// The postcard handed to the phone's share sheet, and whether the fencing went on it.
+    /// Where it went from there is the sheet's business and nothing comes back to say; what
+    /// does come back is whether players pass the day on or hand over the answer to it.
+    static func dailyShared(fencing: Bool) -> AnalyticsSignal {
+        AnalyticsSignal("Daily.shared", ["fencing": String(fencing)])
+    }
+
     // MARK: The morning reminder
 
     /// The game's own offer of a reminder, put up once to somebody who has held a day and so

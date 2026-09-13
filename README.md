@@ -1107,6 +1107,23 @@ A puzzle a day, on its own board, with a clock running on it.
   hour you started it, so a day left in the morning and picked up at night comes back on
   two minutes rather than on fourteen hours. Clearing the game's data forgets those drafts
   with everything else.
+- **A held day goes on a postcard.** Once the pen holds, the verdict card offers *Share*,
+  and what goes is text rather than a picture, because text is what a group chat is made
+  of: the day, the stars and the rainbow a best pen keeps, the clock, the run of days, what
+  the pen came to and the pig's word on it — *Pig has no notes* — and under all that the
+  board itself, a tile to an emoji: cream mud, blue water, the pig, and whatever was lying
+  on the ground. The game's address stands at the bottom for the friend who has not played.
+  The card is held up on a cream board of its own before it goes, so the pen can be admired
+  in emoji first and the whole thing copied by hand by anybody who would rather.
+  The fencing is a switch on that card, and it comes up off. Everybody gets the same board
+  on a given day, which is what makes a daily worth comparing at all, and a card sent to
+  somebody who has not had their go should not hand them the answer. Flick it on for the
+  friend who has, and the wall goes on as logs with the ground it holds washed gold, as on
+  the field. Only a day is shared — a trail stop is nobody else's morning — and only a pen
+  that held: a pig that walked out gets no postcard. The run of days is written on today's
+  card and no other, since a run counted back from a day dug out of the archive is not a
+  run anybody is on. `DailyPostcardTests` pins the card line by line, and holds the board
+  to going without its answer unless asked.
 
 The almanac is generated rather than authored — `Tools/generate_dailies.py` writes it, and
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
@@ -1480,7 +1497,7 @@ waiting for somebody to write in about it. What is counted is anonymous, the swi
 stops it is one screen away behind the gear, and nothing about it is a condition of
 playing.
 
-**What goes out.** Thirty-five signals, all of them written out in one place —
+**What goes out.** Thirty-eight signals, all of them written out in one place —
 `AnalyticsSignal` in `Pigpen/Models/Analytics.swift` — so the list of what this game knows
 about its players can be read end to end, by whoever is reading the charts and by whoever
 is filling in Apple's privacy questionnaire.
@@ -1497,6 +1514,7 @@ is filling in Apple's privacy questionnaire.
 | `World.tollShort` | A player stopped at the top of a world by a boss's toll, and how many stars short |
 | `World.held` | Every pen in a world held |
 | `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
+| `Daily.postcardOpened` / `.shared` | A held day's postcard held up, and handed to the share sheet — with the fencing on it or without |
 | `Reminder.offered` / `.answered` | The morning reminder offered, and taken or waved away — with the phone's answer beside the player's |
 | `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
 | `Reminder.followed` | A reminder tapped, and the morning's board it opened |
@@ -2188,6 +2206,7 @@ Pigpen/
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
 │   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
+│   ├── DailyPostcard.swift      # A held day as a chat message: the verdict, and the board in emoji, fencing optional
 │   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 │   ├── TappedReminder.swift     # Which morning a tapped reminder is asking for, until a screen is up to open it
@@ -2209,6 +2228,7 @@ Pigpen/
 │   ├── DailyArchiveView.swift   # The calendar of every daily there has been
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
+│   ├── DailyPostcardView.swift  # The postcard held up before it goes: the card, the fencing switch, the share button
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Plays a painted film: the bars, the type, the way out
 │   ├── Film/
