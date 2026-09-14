@@ -258,6 +258,12 @@ struct PuzzleView: View {
             endOfGo
                 .padding(.horizontal, 16)
         }
+        .overlay(alignment: .bottom) {
+            verdictOverlay
+                // The margin the button it stands in for keeps, so the card is exactly as wide
+                // as the button and hangs off the same line.
+                .padding(.horizontal, 16)
+        }
         // The rack is the first thing under the title bar, so it is given room to stand
         // clear of it rather than being pressed up against the bar's underside.
         .padding(.top, 22)
@@ -289,6 +295,7 @@ struct PuzzleView: View {
                 endOfGo
             }
             .frame(width: Tablet.aside)
+            .overlay(alignment: .bottom) { verdictOverlay }
         }
         .padding(.horizontal, 24)
         .padding(.top, 22)
@@ -326,36 +333,40 @@ struct PuzzleView: View {
         .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
     }
 
-    /// What ends a go, or what the last one came to: the button that opens the gate while the
-    /// field is being built, and the verdict card once it has been opened.
+    /// What ends a go: the button that opens the gate, in the room it keeps the whole game.
     ///
-    /// The card is hung off the bottom of the button's own room rather than put in its place.
-    /// A verdict is three or four times the button's height — stars, a headline that wraps, a
-    /// couple of lines saying why, and up to three things to do next — and a card that stood
-    /// in the column swapped all of that height in where the button had been, which came off
-    /// the one thing above it that gives: the board. So opening the gate shrank the field by a
-    /// third at the exact moment the player had finished building it, the animals and the pen
-    /// they had just been shut into went small with it, and closing the card grew the lot back.
+    /// It used to give that room up to the verdict card, and the card is three or four times
+    /// its height — stars, a headline that wraps, a couple of lines saying why, and up to three
+    /// things to do next. All of that height came off the one thing above it that gives, which
+    /// is the board: opening the gate shrank the field by about a third each way at the exact
+    /// moment the player had finished building it, the animals and the pen they had just been
+    /// shut into went small with it, and closing the card grew the lot back.
     ///
-    /// The button keeps its room instead — invisible and untouchable while the verdict is up,
-    /// the way the empty plaque under it holds a line of its own — and the card grows upwards
-    /// out of that room: into the bare ground under the board first, then over the corrections
-    /// that are fading out anyway, and over the foot of the field itself only on a screen with
-    /// nothing else left to give. Which means the board is the same size, in the same place,
-    /// before the gate opens and after.
+    /// So the button stays where it is and keeps its room, invisible and untouchable while the
+    /// verdict is up — the way the empty plaque under it already holds a line of its own — and
+    /// the card is hung over the screen instead. See `verdictOverlay`.
     private var endOfGo: some View {
         buildingControls
             .opacity(showsVerdict ? 0 : 1)
             .allowsHitTesting(!showsVerdict)
             .accessibilityHidden(showsVerdict)
-            // An overlay is laid out against the room the button already has and never asks
-            // for any of its own, so a longer verdict than the last one moves nothing.
-            .overlay(alignment: .bottom) {
-                if showsVerdict {
-                    verdict
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
-                }
-            }
+    }
+
+    /// The verdict, hung over the foot of the screen rather than stood in the column.
+    ///
+    /// An overlay is laid out against the room the screen already has and asks for none of its
+    /// own, so no verdict, however long its writing runs, takes a point of height off anything
+    /// underneath it — the board included. It hangs from the bottom, where the button it stands
+    /// in for is, and grows upwards from there: over the bare ground under the board first, then
+    /// over the corrections that are fading out anyway, and over the foot of the field itself
+    /// only on a screen with nothing else left to give. Which means the board is the same size,
+    /// in the same place, before the gate opens and after.
+    @ViewBuilder
+    private var verdictOverlay: some View {
+        if showsVerdict {
+            verdict
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+        }
     }
 
     /// Undo, redo and clear, tucked under the right-hand corner of the board.
