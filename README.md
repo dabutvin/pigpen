@@ -1786,14 +1786,20 @@ open Pigpen.xcodeproj
 
 ### App icon
 
-The icon is a pig face drawn in code, so it can be tweaked without a design tool. `Tools/generate_app_icon.py` writes the three PNGs the asset catalog expects — the standard icon, the dark variant, and the grayscale tinted variant:
+The shipped icon is the painted pig — the face in its own field, under its own sun — squared off from the rounded tile it was made on, since iOS rounds the corners itself. The asset catalog holds three tiles: the standard one, the dark one, and the grayscale tinted one.
+
+The dark tile is made from the standard one rather than painted separately. It used to be the whole painting turned down, pig and all, which left a grey pig on a grey field — the icon with the lights off. `Tools/generate_dark_app_icon.py` cuts the pig out of `AppIcon.png` by colour and treats the two halves apart: the field goes to night, deep and blue, and the pig keeps the light it was painted with, with a little of it spilling onto the field around it.
 
 ```bash
-pip install cairosvg pillow
-python3 Tools/generate_app_icon.py
+pip install pillow
+python3 Tools/generate_dark_app_icon.py
 ```
 
-Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the script; the shapes are one SVG shared by all three. Commit the regenerated PNGs — the build reads them, not the script.
+The cut is colour, not a stencil: red-minus-green finds the one pink thing in the tile, a second rule about brightness keeps the fence rail that touches the pig's cheek out of it, a flood fill from inside the pig keeps only that patch, and a second fill from the corners hands back the eyes and the nostrils, which are holes in a pink mask. How dark the night gets, how much light the pig keeps and how far it spills are the constants at the top of the script. The tile is written without an alpha channel: it carries its own night sky rather than leaning on whatever iOS would draw behind a transparent one.
+
+The icon's first form was a pig face drawn in code, and `Tools/generate_app_icon.py` still holds it — three PNGs from one shared SVG, with the colors in its `LIGHT`, `DARK` and `TINTED` palettes. It is the thing to reach for if the painting ever has to go, but running it writes over the painting, so run it only meaning to.
+
+Commit the regenerated PNGs whichever script wrote them — the build reads them, not the scripts.
 
 ### Sounds
 
@@ -2258,7 +2264,8 @@ site/                            # Served at pigpen.app by Netlify on every merg
 └── img/                         # The two shots the front page stands on
 docs/                            # The shots at the top of this README
 Tools/
-├── generate_app_icon.py         # Redraws the app icon PNGs
+├── generate_app_icon.py         # Redraws the app icon's first form, the pig face in code
+├── generate_dark_app_icon.py    # Puts the painted icon's field at night and leaves the pig lit
 ├── generate_wordmark.py         # Draws the title screen's sticker as a PNG for the website
 ├── generate_sounds.py           # Synthesises every noise the game makes, and its one tune, and writes the WAVs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks
