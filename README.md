@@ -1713,6 +1713,9 @@ agreeing with each other:
   Every app's association file is public by construction, so it is not a secret there,
   although the same number is kept as a secret in CI. Apple's CDN caches the file, so a
   change to it takes a while to reach phones, and a fresh install is what picks it up.
+  `DayLinkTests` holds that line to a real Team ID rather than a word standing in for one:
+  a placeholder left in is a file Apple will not honour and a link that quietly opens the
+  website instead of the board, which is a failure nothing on a phone reports.
 - **The App ID allows it.** A provisioning profile only carries the entitlements the App ID
   has switched on, so `Tools/bootstrap_signing.py create` switches Associated Domains on for
   `com.pigpen.app` before it mints a profile. Per-build certificates pick that up on the next
