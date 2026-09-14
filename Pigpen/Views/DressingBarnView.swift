@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// The dressing barn: the pig on a stand in the middle of it, and eleven pegs round the walls —
-/// ten outfits and the bare one she arrived in.
+/// The dressing barn: the pig on a stand in the middle of it, and thirteen pegs round the walls
+/// — twelve outfits and the bare one she arrived in.
 ///
 /// It is the one screen in the game that changes nothing about playing it. There is no budget
 /// here, nothing to hold and nothing to lose: tap a peg and the pig is wearing it, everywhere,

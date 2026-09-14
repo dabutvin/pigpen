@@ -131,7 +131,7 @@ struct SettingsView: View {
             FilmReelView(reel: reel)
         }
         // A page of its own, like this sheet and the reel: the barn is a pig on a stand and
-        // eleven pegs, and a half screen would have the player choosing through a letterbox.
+        // thirteen pegs, and a half screen would have the player choosing through a letterbox.
         .fullScreenCover(isPresented: $isDressingUp) {
             DressingBarnView(wardrobe: wardrobe, haptics: haptics)
                 .onAppear {

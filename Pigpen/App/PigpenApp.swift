@@ -340,11 +340,11 @@ struct PigpenApp: App {
             WorldMapView(progress: .atTheBarn())
         case .barn:
             // The barn itself, with something already on her, since an undressed pig on the
-            // stand says nothing the trail does not say. The wellies rather than a hat: nine
-            // of the eleven pegs are on screen under the mirror already, and the two that are
-            // not are the ones worn lowest — so the shot shows the most of the barn by
-            // standing one of those on the mirror, and it is the furthest-hung garment in the
-            // wardrobe that most wants looking at.
+            // stand says nothing the trail does not say. The wellies rather than a hat: most
+            // of the thirteen pegs are on screen under the mirror already, and the ones that
+            // are not are those worn lowest — so the shot shows the most of the barn by
+            // standing one of those on the mirror, and a pair of boots, being the one garment
+            // hung twice, is what most wants looking at large.
             DressingBarnView(wardrobe: .remembering(.wellies))
         case .dressedBoard:
             // What the barn is for, and the half of it the barn itself cannot show: a board
