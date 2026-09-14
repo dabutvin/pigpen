@@ -724,26 +724,59 @@ struct PuzzleView: View {
             }
         } else {
             VStack(spacing: 10) {
-                HStack(spacing: 10) {
-                    startOver.buttonStyle(.bordered)
-                    if !game.isPenAsGoodAsItGets {
-                        goBigger.buttonStyle(.bordered)
-                    }
+                // Everything that keeps the player on this board stands together on the
+                // line above the way out: build it again, go back out for more ground,
+                // tell somebody. Three of those will not always fit a phone's width with
+                // their glyphs on, so the glyphs come off before the line breaks in two —
+                // a row of three words reads as three things to do, where a row and a half
+                // reads as a list with an odd one at the end of it.
+                ViewThatFits(in: .horizontal) {
+                    staying
+                    staying.labelStyle(.titleOnly)
+                    stayingStacked
                 }
 
-                // The way out shares its row with the way to tell somebody, on a board
-                // that has somebody to tell: a day is shared and a trail stop is not.
-                HStack(spacing: 10) {
-                    if postcard != nil {
-                        share.buttonStyle(.bordered)
-                    }
-
-                    Button { dismiss() } label: {
-                        Label(wayOutTitle, systemImage: wayOutImage)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
+                // And the way out on a line of its own, the width of the card. It is the
+                // one thing on here that ends the go, so nothing shares its line.
+                Button { dismiss() } label: {
+                    Label(wayOutTitle, systemImage: wayOutImage)
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+    }
+
+    /// The ways to stay: start the field again, go back out for more ground, and tell
+    /// somebody. *Go bigger* is gone on a pen the map has nothing above, and *Share* only
+    /// stands on a board somebody else is playing too — so this row is three buttons on a
+    /// day still worth bettering, and two on a trail stop or a day that cannot be bettered.
+    private var staying: some View {
+        HStack(spacing: 10) {
+            startOver.buttonStyle(.bordered)
+            if !game.isPenAsGoodAsItGets {
+                goBigger.buttonStyle(.bordered)
+            }
+            if postcard != nil {
+                share.buttonStyle(.bordered)
+            }
+        }
+    }
+
+    /// The same three where one line will not hold them even in words alone, which is the
+    /// largest text sizes: the two that are about this board on one line, and the one that
+    /// is about somebody else under them.
+    private var stayingStacked: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                startOver.buttonStyle(.bordered)
+                if !game.isPenAsGoodAsItGets {
+                    goBigger.buttonStyle(.bordered)
+                }
+            }
+
+            if postcard != nil {
+                share.buttonStyle(.bordered)
             }
         }
     }
@@ -1251,5 +1284,32 @@ private struct StopwatchFace: View {
 #Preview("A pen ready to be released") {
     NavigationStack {
         PuzzleView(game: .theOrchardsBestPen())
+    }
+}
+
+/// A day one press from its verdict, which is the card with the most on it: a pen that holds,
+/// is worth two stars, and could still be widened — so *Start over*, *Go bigger* and *Share*
+/// all stand on the line above *Done*. Release the pig to bring the card up.
+#Preview("A day ready to be released") {
+    let day = DailyDate(year: 2026, month: 4, day: 22)
+    if let level = DailyAlmanac.level(on: day) {
+        NavigationStack {
+            PuzzleView(
+                game: .aDayHeld(level),
+                clock: .showing(134),
+                wayOutTitle: "Done",
+                wayOutImage: "checkmark.seal.fill",
+                onPenned: { _, _, _ in },
+                postcard: { fences, seconds in
+                    DailyPostcard(
+                        date: day,
+                        level: level,
+                        fences: fences,
+                        seconds: seconds,
+                        streak: 6
+                    )
+                }
+            )
+        }
     }
 }
