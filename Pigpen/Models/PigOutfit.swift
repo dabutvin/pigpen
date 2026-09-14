@@ -1,5 +1,44 @@
 import Foundation
 
+/// The parts of the pig herself that something worn on her has to be measured against, as
+/// fractions of the size she is drawn at and taken from the middle of the box she is drawn in.
+///
+/// Only her eyes are written down, because they are the only part of her a garment has ever had
+/// to *cover* rather than merely sit near: a hat an eighth of her too high is a hat at a jaunty
+/// angle, and a pair of sunglasses an eighth of her too high is a mistake anybody can see.
+///
+/// They are measured off the screenshots CI takes of the board and of the dressing barn, against
+/// the middle of the text box the glyph is drawn in — which is what an overlay hangs from, and
+/// which is *not* the middle of the pig. Her eyes are below it, not above it, and reading them
+/// as above it is what once hung both pairs of glasses on her forehead.
+enum PigFace {
+    /// The top and the bottom of the dark of an eye.
+    static let eyeTop = -0.058
+    static let eyeBottom = 0.111
+    /// How far the outer corner of an eye is from the middle of her — which is further out than
+    /// a pair of glasses narrow enough to fit between her cheeks looks like it needs to reach.
+    static let eyeReach = 0.283
+    /// The line the pair of them sit on, which is what glasses are hung from.
+    static var eyeLine: Double { (eyeTop + eyeBottom) / 2 }
+}
+
+/// Where the lenses are inside a pair of glasses, as a fraction of the size that glyph is set
+/// at — measured the same way, off the pegs in the barn.
+///
+/// Glasses are drawn as a band across the middle of a picture that is empty above and below it,
+/// so a pair set large enough to reach past her eyes is nothing like as big on her face as its
+/// `scale` reads: at `0.72` the lenses themselves are a quarter of her deep. The sunglasses and
+/// the spectacles are drawn within a few thousandths of each other, so one band covers both,
+/// taken each way from whichever of the two covers less.
+enum Lenses {
+    static let top = -0.16
+    static let bottom = 0.19
+    /// How far the outside of a lens is from the middle of the glyph.
+    static let reach = 0.46
+    /// The middle of the band, which is what is put on her eye line.
+    static var middle: Double { (top + bottom) / 2 }
+}
+
 /// Where a garment hangs on the pig, and how it sits there.
 ///
 /// Every measure is a fraction of the size the pig herself is drawn at rather than a number of
@@ -9,9 +48,12 @@ import Foundation
 /// head the first time the board got bigger.
 ///
 /// They are measured against the pig glyph rather than guessed at, off the screenshots CI takes
-/// of the dressing barn. She fills her box: the tips of her ears are at `-0.5` and her chin at
-/// `+0.5`, her eyes sit at about `-0.05`, and her snout — which is the trap — is only at `+0.16`,
-/// so anything meant for her neck has to be put a long way further down than it looks.
+/// of the dressing barn. She does not sit in the middle of the box she is drawn in: her ears are
+/// pulled up into the top of it and the weight of her face hangs under them, so her ear tips
+/// reach only about `-0.42` while her chin goes down to `+0.51`. Everything on her is low —
+/// her eyes are *below* the middle of the box rather than above it (`PigFace`), and her snout
+/// is lower again — so anything placed by eye against the middle of the picture lands high,
+/// and anything meant for her neck has to be put a long way further down than it looks.
 ///
 /// `down` is measured to the middle of the garment's own box, and a garment is rarely in the
 /// middle of its picture: a scarf carries its knot high and hangs tassels below it, a rosette
@@ -34,9 +76,21 @@ struct OutfitFit: Equatable, Sendable {
         OutfitFit(scale: scale, across: 0.02, down: down, lean: lean)
     }
 
-    /// Something worn across the eyes.
+    /// Something worn across the eyes — which means the eyes and not the middle of her face.
+    ///
+    /// It is the one place in the wardrobe where a garment has a job beyond looking like
+    /// something: a pair of glasses that sits a little high is not a pair of glasses worn a
+    /// little high, it is a pig looking over the top of them with both eyes showing under the
+    /// lenses. So this one is not a number somebody liked the look of — it is worked out, from
+    /// the line her eyes are actually drawn on and from where the lenses sit inside the glyph
+    /// they are drawn in, and it moves with `scale` because the lenses do.
     static func onTheFace(scale: Double) -> OutfitFit {
-        OutfitFit(scale: scale, across: 0, down: -0.06, lean: 0)
+        OutfitFit(
+            scale: scale,
+            across: 0,
+            down: PigFace.eyeLine - scale * Lenses.middle,
+            lean: 0
+        )
     }
 
     /// Something tucked behind one ear.
@@ -135,8 +189,13 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .sunHat: OutfitFit.hat(scale: 0.60, down: -0.41, lean: -12)
         case .topHat: OutfitFit.hat(scale: 0.56, down: -0.46)
         case .crown: OutfitFit.hat(scale: 0.48, down: -0.47, lean: 0)
-        case .shades: OutfitFit.onTheFace(scale: 0.54)
-        case .spectacles: OutfitFit.onTheFace(scale: 0.52)
+        // Both are set to bury her eyes rather than to look like glasses and no more: the
+        // lenses are a shallow band inside their own picture, and her eyes are wide-set and
+        // nearly as deep as they are apart, so a pair small enough to look neat between her
+        // cheeks leaves the bottom of both eyes hanging below the lenses. `PigOutfitTests`
+        // holds the two of them to covering her.
+        case .shades: OutfitFit.onTheFace(scale: 0.72)
+        case .spectacles: OutfitFit.onTheFace(scale: 0.72)
         case .ribbon: OutfitFit.behindTheEar(scale: 0.36)
         case .sunflower: OutfitFit.behindTheEar(scale: 0.38)
         // Lower than the rosette, because the knot a scarf is worn by sits high in its own

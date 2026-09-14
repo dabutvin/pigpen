@@ -284,7 +284,11 @@ the signpost trail, in the practice pen, and out in front of the title. The game
 as one glyph since the first build and an outfit does not change that — it is a second glyph
 hung on the first at a fixed place, size and angle, all three measured as fractions of the pig
 herself, so the same hat sits right on a board tile the size of a fingernail and on the
-dressing-barn mirror. Everything already done to the pig — squashed flat on a landing, leaned
+dressing-barn mirror. The two pairs of glasses are the one thing in the barn measured rather
+than eyed: they hang off the line her eyes are actually drawn on — which is *below* the middle
+of the picture she is drawn in, where a hat placed by eye assumes it is above — and they are set
+wide enough to bury both eyes, or she wears them on her forehead with the bottom of each eye
+showing under the lenses. Everything already done to the pig — squashed flat on a landing, leaned
 into a trot, a shadow under her, a hop when a finger lands on her — is done to the whole of
 her, clothes included. The painted films keep their own pig: a cut scene is a still, not the
 board.
