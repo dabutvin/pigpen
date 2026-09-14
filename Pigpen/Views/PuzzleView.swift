@@ -597,7 +597,7 @@ struct PuzzleView: View {
         case .penned(let pen):
             verdictCard(
                 headline: pennedHeadline(tally: level.tally(for: pen)),
-                detail: pennedDetail(tally: level.tally(for: pen)),
+                detail: nil,
                 tint: GamePalette.clover
             ) {
                 pennedActions
@@ -754,45 +754,6 @@ struct PuzzleView: View {
         return "\(name.prefix(1).uppercased())\(name.dropFirst()) has no notes"
     }
 
-    /// What the pen came to, under the verdict.
-    ///
-    /// A pen that can still be bettered gets the whole account of itself: the ground, what it
-    /// cost, what was standing on it and how that came out — because every one of those is a
-    /// thing the next go could change. A pen there is nothing above gets one line, because
-    /// there is no next go to inform. The card already says there are no notes on it over the
-    /// top; spending three more sentences on the arithmetic behind a verdict the player has
-    /// just been given is reading them the receipt for a thing they have already won.
-    private func pennedDetail(tally: PenTally) -> String {
-        var detail: String
-
-        if game.isPenAsGoodAsItGets {
-            detail = "The biggest lot on this map — \(scored(tally.score))."
-        } else {
-            detail = "\(counted(tally.area, "mud tile")) held with \(counted(game.fences.count, "fence piece"))"
-            if let spoils = spoils(in: tally) {
-                detail += ", and \(spoils) shut in with \(quarry) — \(counted(tally.score, "point"))."
-            } else {
-                detail += "."
-            }
-        }
-
-        if let heldIn {
-            detail += " \(Stopwatch.face(heldIn)) on the clock."
-        }
-
-        guard !game.isPenAsGoodAsItGets, game.bestScore > tally.score else { return detail }
-        return detail + " Your best so far is \(game.bestScore)."
-    }
-
-    /// What a pen caught besides ground: windfall worth having in it, hazards worth keeping out —
-    /// named the way this world names them, an apple and a skull or a mushroom and a wilted flower.
-    private func spoils(in tally: PenTally) -> String? {
-        var caught: [String] = []
-        if tally.apples > 0 { caught.append(counted(tally.apples, treatSkin.name(for: .apple))) }
-        if tally.skulls > 0 { caught.append(counted(tally.skulls, treatSkin.name(for: .skull))) }
-        return caught.isEmpty ? nil : caught.joined(separator: " and ")
-    }
-
     /// A score reads as ground on a map with nothing lying about on it, since that is all
     /// it counts, and as points on one where an apple or a skull is worth more or less than
     /// the tile it sits on.
@@ -809,7 +770,7 @@ struct PuzzleView: View {
     /// the same hand that made the level.
     private func verdictCard<Actions: View>(
         headline: String,
-        detail: String,
+        detail: String?,
         tint: Color,
         @ViewBuilder actions: () -> Actions
     ) -> some View {
@@ -828,20 +789,26 @@ struct PuzzleView: View {
                 .font(.title3.weight(.black))
                 .foregroundStyle(tint)
                 .multilineTextAlignment(.center)
-                // Same vertical claim the detail already makes: without it, a long three-star
-                // line ("Now this is a pen worth bragging about") wraps in theory and still
-                // gets clipped to one truncated line when the field above the card is tall.
+                // Claims the height its wrapping needs: without it, a long three-star line
+                // ("Now this is a pen worth bragging about") wraps in theory and still gets
+                // clipped to one truncated line when the field above the card is tall.
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(detail)
-                .font(.footnote.weight(.medium))
-                .foregroundStyle(GamePalette.post.opacity(0.78))
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
+            if let detail {
+                Text(detail)
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(GamePalette.post.opacity(0.78))
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
+            // A card with nothing under its headline would otherwise stand the buttons
+            // straight beneath the line they answer, so the room the detail used to take
+            // is given back as space: enough for the headline to read as a headline and
+            // not as a label on the button below it.
             actions()
                 .tint(GamePalette.rail)
-                .padding(.top, 2)
+                .padding(.top, detail == nil ? 14 : 2)
         }
         .padding(14)
         .frame(maxWidth: .infinity)
