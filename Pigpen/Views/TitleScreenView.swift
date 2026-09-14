@@ -140,6 +140,9 @@ struct TitleScreenView: View {
                 Spacer(minLength: 12)
 
                 playBlock
+                    // A phone's run of boards in the middle of a tablet's pasture, rather than
+                    // four planks the width of the glass. The gear above keeps its corner.
+                    .keptToAColumn()
             }
             .padding(.horizontal, 24)
             .padding(.top, 18)

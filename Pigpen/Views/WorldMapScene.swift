@@ -1817,10 +1817,14 @@ private struct Meadow {
     /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
     /// stump in the thicket, a cairn on the mountain, a clocktower in the city, the first
     /// crater out in the reaches, the mouth of the cave down in the caverns — below the first
-    /// signpost, on whichever side of the world the trail does not start on.
+    /// signpost, on whichever side of the world the trail does not start on — and beside the
+    /// trail rather than at the edge of the screen, since on a tablet the two are not the
+    /// same place.
     private var landmarkStand: CGPoint {
         CGPoint(
-            x: trail.point(of: 0).x < size.width / 2 ? size.width - 74 : 74,
+            x: trail.point(of: 0).x < size.width / 2
+                ? size.width - trail.margin - 74
+                : trail.margin + 74,
             y: size.height - WorldTrail.apron * 0.42
         )
     }

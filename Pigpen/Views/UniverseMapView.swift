@@ -214,10 +214,14 @@ struct UniverseMapView: View {
     // MARK: - Where a world stands
 
     private func position(of index: Int, width: CGFloat) -> CGPoint {
-        let verge = max(width * 0.24, 54)
+        // A phone's width of sway in the middle of the map, however wide the map is: the
+        // worlds wind up a tablet's starfield the way they wind up a phone's, rather than
+        // swinging from one edge of the glass to the other.
+        let spread = min(width, Tablet.trail)
+        let verge = max(spread * 0.24, 54)
         let sway = sin(Double(index) * 0.9 + 0.7)
         return CGPoint(
-            x: width / 2 + CGFloat(sway) * (width / 2 - verge),
+            x: width / 2 + CGFloat(sway) * (spread / 2 - verge),
             y: height - Self.apron - CGFloat(index) * Self.spacing
         )
     }

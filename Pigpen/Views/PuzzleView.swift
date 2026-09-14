@@ -7,6 +7,9 @@ import UIKit
 struct PuzzleView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Whether the screen is a tablet's or a phone's — which is a question of width rather
+    /// than of device, since a tablet in a narrow split is a phone for the duration.
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     /// Told what a pen was worth — its stars, whether it was the best pen the map has in
     /// it, how long it took, and the fencing that held it — every time one holds.
@@ -181,66 +184,24 @@ struct PuzzleView: View {
             MeadowBackdrop(day: day)
                 .ignoresSafeArea()
 
-            VStack(spacing: 12) {
-                bossOrders
-                    .padding(.horizontal, 16)
-
-                FenceRack(
-                    used: game.fences.count,
-                    budget: level.fenceBudget,
-                    shake: budgetShake
+            // The screen is measured rather than asked what it is: a tablet on its side lays
+            // the board beside its furniture, and everything else stacks the two the way a
+            // phone always has. See `BoardLayout` for where the line falls.
+            GeometryReader { proxy in
+                let layout = BoardLayout.fitting(
+                    proxy.size,
+                    regularWidth: horizontalSizeClass == .regular
                 )
-                .padding(.horizontal, 16)
 
-                Spacer(minLength: 0)
-
-                FieldView(
-                    level: level,
-                    fences: game.fences,
-                    penTiles: game.penTiles,
-                    penGlow: penGlow,
-                    isAsGoodAsItGets: game.isPenAsGoodAsItGets,
-                    animals: marks,
-                    celebration: celebration,
-                    callout: callout,
-                    onCalloutFinished: { id in
-                        if callout?.id == id { callout = nil }
-                    },
-                    treatSkin: treatSkin,
-                    skin: skin,
-                    outfit: wardrobe.outfit,
-                    onStroke: { build($0) },
-                    onStrokeEnd: { game.endStroke() }
-                )
-                // Standing on the meadow rather than pasted onto it.
-                .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
-                // The board is the screen, so it is given all the width there is to give.
-                .padding(.horizontal, 6)
-
-                fieldCorrections
-                    // Right aligned to the same margin the button below keeps, so the row of
-                    // glyphs and the end of the button stand on one line.
-                    .padding(.horizontal, 16)
-                    .opacity(showsVerdict ? 0 : 1)
-                    .allowsHitTesting(!showsVerdict)
-
-                Spacer(minLength: 0)
-
-                Group {
-                    if showsVerdict {
-                        verdict
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                ZStack {
+                    if layout == .beside {
+                        beside
                     } else {
-                        buildingControls
-                            .transition(.opacity)
+                        stacked
                     }
                 }
-                .padding(.horizontal, 16)
+                .frame(width: proxy.size.width, height: proxy.size.height)
             }
-            // The rack is the first thing under the title bar, so it is given room to stand
-            // clear of it rather than being pressed up against the bar's underside.
-            .padding(.top, 22)
-            .padding(.bottom, 12)
         }
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -266,6 +227,117 @@ struct PuzzleView: View {
             }
         }
         .task(id: game.phase) { await reactToPhase() }
+    }
+
+    /// The phone's screen, and a tablet held upright: the rack over the field, the
+    /// corrections under it, and the button that ends the go at the foot — one column, no
+    /// wider than a board wants to be however wide the glass is.
+    private var stacked: some View {
+        VStack(spacing: 12) {
+            bossOrders
+                .padding(.horizontal, 16)
+
+            rack
+                .padding(.horizontal, 16)
+
+            Spacer(minLength: 0)
+
+            field
+                // The board is the screen, so it is given all the width there is to give.
+                .padding(.horizontal, 6)
+
+            fieldCorrections
+                // Right aligned to the same margin the button below keeps, so the row of
+                // glyphs and the end of the button stand on one line.
+                .padding(.horizontal, 16)
+                .opacity(showsVerdict ? 0 : 1)
+                .allowsHitTesting(!showsVerdict)
+
+            Spacer(minLength: 0)
+
+            endOfGo
+                .padding(.horizontal, 16)
+        }
+        // The rack is the first thing under the title bar, so it is given room to stand
+        // clear of it rather than being pressed up against the bar's underside.
+        .padding(.top, 22)
+        .padding(.bottom, 12)
+        .keptToAColumn(Tablet.board)
+    }
+
+    /// A tablet on its side: the field on the left with the whole height to itself, and
+    /// everything that used to stand over and under it in a phone-wide column on the right —
+    /// the boss's orders and the rack at the top, and the corrections over the button that
+    /// ends the go at the foot, where a thumb resting on the edge of the glass can reach them.
+    /// Stacked, a board on a tablet turned sideways was left the height the furniture did not
+    /// take, which is a small board on a large screen.
+    private var beside: some View {
+        HStack(alignment: .center, spacing: 24) {
+            field
+
+            VStack(spacing: 12) {
+                bossOrders
+
+                rack
+
+                Spacer(minLength: 0)
+
+                fieldCorrections
+                    .opacity(showsVerdict ? 0 : 1)
+                    .allowsHitTesting(!showsVerdict)
+
+                endOfGo
+            }
+            .frame(width: Tablet.aside)
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 22)
+        .padding(.bottom, 12)
+    }
+
+    private var rack: some View {
+        FenceRack(
+            used: game.fences.count,
+            budget: level.fenceBudget,
+            shake: budgetShake
+        )
+    }
+
+    private var field: some View {
+        FieldView(
+            level: level,
+            fences: game.fences,
+            penTiles: game.penTiles,
+            penGlow: penGlow,
+            isAsGoodAsItGets: game.isPenAsGoodAsItGets,
+            animals: marks,
+            celebration: celebration,
+            callout: callout,
+            onCalloutFinished: { id in
+                if callout?.id == id { callout = nil }
+            },
+            treatSkin: treatSkin,
+            skin: skin,
+            outfit: wardrobe.outfit,
+            onStroke: { build($0) },
+            onStrokeEnd: { game.endStroke() }
+        )
+        // Standing on the meadow rather than pasted onto it.
+        .shadow(color: .black.opacity(0.3), radius: 10, y: 6)
+    }
+
+    /// What ends a go, or what the last one came to: the button that opens the gate while the
+    /// field is being built, and the verdict card once it has been opened.
+    private var endOfGo: some View {
+        Group {
+            if showsVerdict {
+                verdict
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            } else {
+                buildingControls
+                    .transition(.opacity)
+            }
+        }
     }
 
     /// Undo, redo and clear, tucked under the right-hand corner of the board.
@@ -339,6 +411,9 @@ struct PuzzleView: View {
             // its own shadow and sinks onto it when pressed. This is the one press on the
             // screen that ends a go, so it is the one that is worth hitting.
             .buttonStyle(ChunkyButtonStyle(tint: chrome.paint, depth: 6))
+            // Return, on a tablet with a keyboard under it: the corrections answer to ⌘Z, so
+            // the one move that is not a correction gets the one key that means "go".
+            .keyboardShortcut(.defaultAction)
             // Live on an empty field too. Opening the gate with nothing in the ground is a
             // legal go — the pig walks straight off the map and the verdict says so — and a
             // button greyed out until some unstated amount of work is done says less about

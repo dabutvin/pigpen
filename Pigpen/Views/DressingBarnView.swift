@@ -40,6 +40,8 @@ struct DressingBarnView: View {
 
             VStack(spacing: 0) {
                 header
+                    // One column with the mirror and the pegs, the way the settings page is.
+                    .keptToAColumn()
 
                 ScrollView {
                     VStack(spacing: 16) {
@@ -48,6 +50,7 @@ struct DressingBarnView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 28)
+                    .keptToAColumn()
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
