@@ -246,11 +246,18 @@ def ensure_bundle_id(api: AppStoreConnect, identifier: str, name: str) -> str:
 
 
 def ensure_capabilities(api: AppStoreConnect, bundle_id: str, identifier: str) -> None:
-    """Switch on, for the App ID, every capability the app's entitlements claim."""
+    """Switch on, for the App ID, every capability the app's entitlements claim.
+
+    The capabilities are read off the App ID's own relationship, which takes no
+    parameters at all — asking it for a `limit` the way the flat collections above are
+    asked is an HTTP 400, and was: "The parameter 'limit' can not be used with this
+    request". There is nothing to page through in any case, since an App ID has a
+    couple of dozen capabilities at the outside and Apple hands back all of them.
+    """
     enabled = {
         capability["attributes"]["capabilityType"]
         for capability in api.request(
-            "GET", f"/v1/bundleIds/{bundle_id}/bundleIdCapabilities", params={"limit": "200"}
+            "GET", f"/v1/bundleIds/{bundle_id}/bundleIdCapabilities"
         ).get("data", [])
     }
     for capability in CAPABILITIES:
@@ -461,6 +468,14 @@ def command_cleanup(api: AppStoreConnect, args: argparse.Namespace) -> None:
 
 
 def command_create(api: AppStoreConnect, args: argparse.Namespace) -> None:
+    # The App ID first, and the certificate only once it is settled. Apple caps the
+    # account at a couple of certificates and a minted one cannot be handed back, so
+    # anything that might fail belongs in front of the minting rather than behind it:
+    # a run that died between the two left a certificate nobody holds the key to, and
+    # the next build's sweep had to clear it away.
+    bundle_id = ensure_bundle_id(api, args.bundle_id, args.app_name)
+    ensure_capabilities(api, bundle_id, args.bundle_id)
+
     key_path, certificate = create_certificate(api, args.common_name)
     attributes = certificate["attributes"]
     print(
@@ -469,8 +484,6 @@ def command_create(api: AppStoreConnect, args: argparse.Namespace) -> None:
         f"expires {attributes.get('expirationDate')})"
     )
 
-    bundle_id = ensure_bundle_id(api, args.bundle_id, args.app_name)
-    ensure_capabilities(api, bundle_id, args.bundle_id)
     profile = replace_profile(api, args.profile_name, bundle_id, certificate["id"])
     print(
         f"Created profile {profile['attributes']['name']} "
