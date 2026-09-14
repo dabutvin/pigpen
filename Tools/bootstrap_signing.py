@@ -42,6 +42,11 @@ from pathlib import Path
 API_ROOT = "https://api.appstoreconnect.apple.com"
 CERTIFICATE_TYPE = "DISTRIBUTION"  # yields an "Apple Distribution" identity
 PROFILE_TYPE = "IOS_APP_STORE"
+# What the app's entitlements claim, so the App ID allows it before a profile is minted:
+# a profile only carries the capabilities the App ID has switched on, and an archive whose
+# entitlements ask for one the profile lacks fails at signing. Mirrors
+# Pigpen/Resources/Pigpen.entitlements — associated domains, for the day links.
+CAPABILITIES = ["ASSOCIATED_DOMAINS"]
 
 
 class Failure(Exception):
@@ -238,6 +243,33 @@ def ensure_bundle_id(api: AppStoreConnect, identifier: str, name: str) -> str:
     )
     print(f"Registered App ID {identifier}")
     return created["data"]["id"]
+
+
+def ensure_capabilities(api: AppStoreConnect, bundle_id: str, identifier: str) -> None:
+    """Switch on, for the App ID, every capability the app's entitlements claim."""
+    enabled = {
+        capability["attributes"]["capabilityType"]
+        for capability in api.request(
+            "GET", f"/v1/bundleIds/{bundle_id}/bundleIdCapabilities", params={"limit": "200"}
+        ).get("data", [])
+    }
+    for capability in CAPABILITIES:
+        if capability in enabled:
+            continue
+        api.request(
+            "POST",
+            "/v1/bundleIdCapabilities",
+            {
+                "data": {
+                    "type": "bundleIdCapabilities",
+                    "attributes": {"capabilityType": capability},
+                    "relationships": {
+                        "bundleId": {"data": {"type": "bundleIds", "id": bundle_id}}
+                    },
+                }
+            },
+        )
+        print(f"Enabled {capability} on App ID {identifier}")
 
 
 def replace_profile(
@@ -438,6 +470,7 @@ def command_create(api: AppStoreConnect, args: argparse.Namespace) -> None:
     )
 
     bundle_id = ensure_bundle_id(api, args.bundle_id, args.app_name)
+    ensure_capabilities(api, bundle_id, args.bundle_id)
     profile = replace_profile(api, args.profile_name, bundle_id, certificate["id"])
     print(
         f"Created profile {profile['attributes']['name']} "

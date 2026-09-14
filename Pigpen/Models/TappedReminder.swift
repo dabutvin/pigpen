@@ -19,12 +19,29 @@ extension ScheduledReminder {
     }
 }
 
-/// The morning a tapped reminder is asking for, written down until a screen is up to open it.
+/// How a day came to be asked for from outside the game: a reminder tapped on the lock
+/// screen, or a link to the day followed from somewhere else — the bottom of a postcard, in
+/// a chat. The two open the same board and are counted apart, since one says whether the
+/// mornings bring anybody back and the other whether the postcards bring anybody in.
+enum WayIn: Equatable, Sendable {
+    case reminder
+    case link
+}
+
+/// A day asked for from outside, and how.
+struct Knock: Equatable, Sendable {
+    let day: DailyDate
+    let wayIn: WayIn
+}
+
+/// The day a tapped reminder — or a followed link — is asking for, written down until a
+/// screen is up to open it.
 ///
 /// A reminder that lands the player on the title screen with the board still a tap away has
 /// spent its one interruption on nothing: they were told the day's puzzle is up, they said
 /// yes, and the game answered by showing them the front door. So the tap is written down
-/// here and the title screen opens the morning it names.
+/// here and the title screen opens the morning it names. A link to a day is the same knock
+/// from a different direction, and comes in by the same door.
 ///
 /// It is written down rather than acted on because the two happen in the wrong order. A tap
 /// on a cold launch is handed over while the app is still standing its first screen up —
@@ -40,27 +57,34 @@ final class TappedReminder {
     /// system owns and nothing in the game gets to hand anything to.
     static let shared = TappedReminder()
 
-    /// The morning waiting to be opened: a reminder has been tapped and nothing has
-    /// answered it yet.
-    private(set) var waiting: DailyDate?
+    /// The day waiting to be opened, and how it was asked for: a reminder has been tapped or
+    /// a link followed, and nothing has answered it yet.
+    private(set) var waiting: Knock?
 
-    /// - Parameter waiting: A tap already made, which is what a test hands in rather than
+    /// - Parameter waiting: A knock already made, which is what a test hands in rather than
     ///   trying to make the notification centre deliver one.
-    init(waiting: DailyDate? = nil) {
+    init(waiting: Knock? = nil) {
         self.waiting = waiting
     }
 
     /// A reminder of ours has been tapped. Anything else the phone hands over is left alone.
     func tapped(_ identifier: String) {
         guard let day = ScheduledReminder.day(ofID: identifier) else { return }
-        waiting = day
+        waiting = Knock(day: day, wayIn: .reminder)
     }
 
-    /// Takes the morning to open and leaves nothing behind, so one tap opens one board.
+    /// An address has been handed to the game. A day's own address — `DayLink` — is written
+    /// down like a tap; anything else the phone opens the game with is left alone.
+    func followed(_ url: URL) {
+        guard let day = DayLink.day(in: url) else { return }
+        waiting = Knock(day: day, wayIn: .link)
+    }
+
+    /// Takes the day to open and leaves nothing behind, so one knock opens one board.
     /// A tap left lying about would open the day's puzzle again the next time the title
     /// screen came back, which is a game deciding where a player goes on the strength of
     /// something they did an hour ago.
-    func take() -> DailyDate? {
+    func take() -> Knock? {
         defer { waiting = nil }
         return waiting
     }

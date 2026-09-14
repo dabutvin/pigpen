@@ -1,0 +1,4 @@
+# A day's address — the bottom of a postcard — opens the game on a phone that has it. On
+# one that does not, it lands here, and the front page is where the App Store button is.
+# A redirect rather than a rewrite, so the front page's relative links still resolve.
+/day/*  /  302

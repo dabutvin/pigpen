@@ -45,6 +45,18 @@ struct DailyPuzzleView: View {
                 },
                 onLeave: { game, clock in
                     progress.saveDraft(from: game, clock: clock, on: date)
+                },
+                postcard: { fences, seconds in
+                    DailyPostcard(
+                        date: date,
+                        level: level,
+                        fences: fences,
+                        seconds: seconds,
+                        // Written after the day is recorded, so the run counts this one.
+                        // Only today's card carries it: a run counted back from a day dug
+                        // out of the archive is not a run anybody is on.
+                        streak: date == DailyDate.today() ? progress.streak(upTo: date) : 0
+                    )
                 }
             )
         } else {

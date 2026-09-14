@@ -259,6 +259,13 @@ struct PigpenApp: App {
                 // another device. The cache has already gated the first frame; this corrects it.
                 FullGame.shared.watch()
             }
+            // A day's own address — the bottom of a postcard, tapped in a chat — comes in
+            // here and is written down the way a tapped reminder is, for the title screen
+            // to open. Nothing is decided here: whether the day can be played is a question
+            // with a screen's worth of context behind it, and this has none.
+            .onOpenURL { url in
+                TappedReminder.shared.followed(url)
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             // The tune plays while the game is up and stops the moment it is not: a
