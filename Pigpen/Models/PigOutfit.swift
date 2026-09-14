@@ -70,6 +70,22 @@ struct OutfitFit: Equatable, Sendable {
     /// How far it is tipped, in degrees. A hat worn dead straight is a hat nobody had any fun
     /// with.
     let lean: Double
+    /// How far out each way a *pair* of them is worn, and nothing at all for the eleven things
+    /// she wears one of.
+    ///
+    /// Boots are the only thing in the barn that comes in twos, and one boot hung under a pig
+    /// is not a small pair of boots — it is a boot somebody has dropped. A pair is the same
+    /// glyph drawn twice, the second one mirrored, so the two are a left and a right rather
+    /// than the same foot standing beside itself.
+    let apart: Double?
+
+    init(scale: Double, across: Double, down: Double, lean: Double, apart: Double? = nil) {
+        self.scale = scale
+        self.across = across
+        self.down = down
+        self.lean = lean
+        self.apart = apart
+    }
 
     /// Something worn on top of the head.
     static func hat(scale: Double, down: Double = -0.44, lean: Double = -10) -> OutfitFit {
@@ -106,8 +122,12 @@ struct OutfitFit: Equatable, Sendable {
 
     /// Something worn on the feet, which on a pig drawn as a face means under her: clear of her
     /// chin rather than across her mouth, or it reads as something she is eating.
-    static func onTheFeet(scale: Double) -> OutfitFit {
-        OutfitFit(scale: scale, across: 0, down: 0.62, lean: 0)
+    ///
+    /// And worn two at a time, `apart` to each side of her, because feet are. One boot under
+    /// her chin was a boot she had dropped; two, the second one mirrored, are a pig standing
+    /// in her wellies.
+    static func onTheFeet(scale: Double, apart: Double) -> OutfitFit {
+        OutfitFit(scale: scale, across: 0, down: 0.62, lean: 0, apart: apart)
     }
 }
 
@@ -120,8 +140,8 @@ struct OutfitFit: Equatable, Sendable {
 /// about clothes to draw her in them. It also means an outfit costs nothing to carry about:
 /// a string in the defaults, and two numbers and a turn at the moment of drawing.
 ///
-/// Ten of them hang in the dressing barn, and `asSheComes` is the eleventh peg: the pig as the
-/// game has always shipped her, which is where a player who has had enough of hats goes.
+/// Twelve of them hang in the dressing barn, and `asSheComes` is the thirteenth peg: the pig
+/// as the game has always shipped her, which is where a player who has had enough of hats goes.
 ///
 /// The raw values are what the choice is kept under on the phone, so they are not to be
 /// renamed — a player who has put a crown on her is entitled to find it there next week.
@@ -131,6 +151,8 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
     case sunHat
     case topHat
     case crown
+    case baseballCap
+    case graduationCap
     case shades
     case spectacles
     case ribbon
@@ -141,8 +163,8 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
-    /// The ten outfits, in the order the dressing barn hangs them up: the hats together, then
-    /// what goes on the face, then what is tucked behind an ear, then what hangs at the neck,
+    /// The twelve outfits, in the order the dressing barn hangs them up: the hats together,
+    /// then what goes on the face, then what is tucked behind an ear, then what hangs at the neck,
     /// and the boots last. `asSheComes` is not one of them — it is the bare peg the barn keeps
     /// at the front, and a player wearing nothing is not wearing an outfit.
     static var wardrobe: [PigOutfit] { allCases.filter { $0 != .asSheComes } }
@@ -154,6 +176,8 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .sunHat: "Sun Hat"
         case .topHat: "Top Hat"
         case .crown: "Crown"
+        case .baseballCap: "Baseball Cap"
+        case .graduationCap: "Graduation Cap"
         case .shades: "Sunglasses"
         case .spectacles: "Spectacles"
         case .ribbon: "Ribbon"
@@ -171,6 +195,8 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .sunHat: "👒"
         case .topHat: "🎩"
         case .crown: "👑"
+        case .baseballCap: "🧢"
+        case .graduationCap: "🎓"
         case .shades: "🕶️"
         case .spectacles: "👓"
         case .ribbon: "🎀"
@@ -189,6 +215,13 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .sunHat: OutfitFit.hat(scale: 0.60, down: -0.41, lean: -12)
         case .topHat: OutfitFit.hat(scale: 0.56, down: -0.46)
         case .crown: OutfitFit.hat(scale: 0.48, down: -0.47, lean: 0)
+        // A cap is worn low and at an angle, the way a cap is: wider than the top hat because
+        // the glyph is mostly peak, and hung so the peak comes down over her brow rather than
+        // floating over it.
+        case .baseballCap: OutfitFit.hat(scale: 0.58, down: -0.44, lean: -8)
+        // Wider again and barely leaning, because a mortarboard is a flat board: it wants to
+        // sit square on her head with the tassel off one corner, not rakishly.
+        case .graduationCap: OutfitFit.hat(scale: 0.62, down: -0.47, lean: -6)
         // Both are set to bury her eyes rather than to look like glasses and no more: the
         // lenses are a shallow band inside their own picture, and her eyes are wide-set and
         // nearly as deep as they are apart, so a pair small enough to look neat between her
@@ -199,13 +232,22 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .ribbon: OutfitFit.behindTheEar(scale: 0.36)
         case .sunflower: OutfitFit.behindTheEar(scale: 0.38)
         // Lower than the rosette, because the knot a scarf is worn by sits high in its own
-        // picture: at 0.58 the knot lands on her jaw and the tassels hang under it.
-        case .scarf: OutfitFit.atTheNeck(scale: 0.40, down: 0.58)
+        // picture — and lower than it used to be. At 0.58 that knot landed across the end of
+        // her smile, which is not a scarf worn high, it is a scarf worn on her mouth: her chin
+        // is at +0.51 and her smile only ends at +0.47, so the room between the two is almost
+        // none, and a scarf has to be dropped nearly to her chin to tuck under her jaw instead
+        // of over her lip. At 0.70 the loop crosses the last of her chin and the tassels hang
+        // clear below — which is the deepest anything in the barn hangs, and so what the room
+        // leaves space for. It goes no lower than that: a garment that hangs much further past
+        // her chin is out of the tile she is standing on and into the one below it.
+        case .scarf: OutfitFit.atTheNeck(scale: 0.42, down: 0.68)
         // Lower again, and for the scarf's reason: a medal is a ribbon over a disc, and the
         // ribbon it hangs by is the top of its picture. At 0.60 the ribbon crosses her jaw and
         // the disc hangs under it, where a rosette is worn.
         case .rosette: OutfitFit.atTheNeck(scale: 0.36, down: 0.60)
-        case .wellies: OutfitFit.onTheFeet(scale: 0.34)
+        // A pair, and a little smaller each than the single boot they replace, so the two of
+        // them together stand no wider under her than she is.
+        case .wellies: OutfitFit.onTheFeet(scale: 0.30, apart: 0.17)
         }
     }
 

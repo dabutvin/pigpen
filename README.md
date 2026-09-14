@@ -260,23 +260,25 @@ no stars, because there is nothing behind it to earn them at:
 - Nothing is recorded against it: no stars, no rainbow, no wall on file. A door is somewhere to
   go, not something to beat.
 
-Inside is the pig on a stand and eleven pegs: **ten outfits**, and the bare one she arrived on.
+Inside is the pig on a stand and thirteen pegs: **twelve outfits**, and the bare one she arrived on.
 A peg is the pig wearing the thing, with its name under her and nothing else — a picture of her
-in it is a better account of an outfit than a line of writing beneath the picture, and eleven
-captions under eleven pictures of the same pig say it eleven times worse.
+in it is a better account of an outfit than a line of writing beneath the picture, and thirteen
+captions under thirteen pictures of the same pig say it thirteen times worse.
 
 | Peg | Where it hangs |
 |---|---|
 | Sun Hat 👒 | On top of her head, at an angle |
 | Top Hat 🎩 | Likewise, straighter |
 | Crown 👑 | Likewise, and smaller |
+| Baseball Cap 🧢 | Likewise, low and at an angle |
+| Graduation Cap 🎓 | Likewise, square on, tassel off one corner |
 | Sunglasses 🕶️ | Across her eyes |
 | Spectacles 👓 | Likewise |
 | Ribbon 🎀 | Behind one ear |
 | Sunflower 🌻 | Likewise |
-| Scarf 🧣 | Knotted at her jaw, hanging below it |
+| Scarf 🧣 | Knotted under her jaw, hanging below it |
 | Rosette 🏅 | At her neck, hanging below it |
-| Wellies 🥾 | Under her, clear of her chin |
+| Wellies 🥾 | A pair, under her, clear of her chin |
 | Just the pig | Nothing at all, which is where she starts |
 
 Whatever is on the peg with the tick beside it, she wears **everywhere**: on every board, on
@@ -288,7 +290,10 @@ dressing-barn mirror. The two pairs of glasses are the one thing in the barn mea
 than eyed: they hang off the line her eyes are actually drawn on — which is *below* the middle
 of the picture she is drawn in, where a hat placed by eye assumes it is above — and they are set
 wide enough to bury both eyes, or she wears them on her forehead with the bottom of each eye
-showing under the lenses. Everything already done to the pig — squashed flat on a landing, leaned
+showing under the lenses. The wellies are the one peg that hangs **two** glyphs rather than one,
+since boots come in twos: the same boot drawn either side of her and the second one mirrored, so
+she stands in a left and a right instead of dangling a single boot under her chin. Everything
+already done to the pig — squashed flat on a landing, leaned
 into a trot, a shadow under her, a hop when a finger lands on her — is done to the whole of
 her, clothes included. The painted films keep their own pig: a cut scene is a still, not the
 board.
@@ -2238,7 +2243,7 @@ Pigpen/
 │   ├── RatingPrompt.swift       # When the game asks what a player thinks of it, and how rarely it may
 │   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
 │   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
-│   ├── PigOutfit.swift          # The ten outfits, and where each one hangs on the pig
+│   ├── PigOutfit.swift          # The twelve outfits, and where each one hangs on the pig
 │   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing barn
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
@@ -2269,7 +2274,7 @@ Pigpen/
 │   ├── WorldTrail.swift         # Stops and the barn ↔ points on screen, and the curves between them
 │   ├── LevelSignpost.swift      # One sign on the map: a numbered stop with its stars, or the door to the barn
 │   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and how many more you need
-│   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and eleven pegs
+│   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and thirteen pegs
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
