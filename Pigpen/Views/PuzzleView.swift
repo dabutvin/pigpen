@@ -328,16 +328,34 @@ struct PuzzleView: View {
 
     /// What ends a go, or what the last one came to: the button that opens the gate while the
     /// field is being built, and the verdict card once it has been opened.
+    ///
+    /// The card is hung off the bottom of the button's own room rather than put in its place.
+    /// A verdict is three or four times the button's height — stars, a headline that wraps, a
+    /// couple of lines saying why, and up to three things to do next — and a card that stood
+    /// in the column swapped all of that height in where the button had been, which came off
+    /// the one thing above it that gives: the board. So opening the gate shrank the field by a
+    /// third at the exact moment the player had finished building it, the animals and the pen
+    /// they had just been shut into went small with it, and closing the card grew the lot back.
+    ///
+    /// The button keeps its room instead — invisible and untouchable while the verdict is up,
+    /// the way the empty plaque under it holds a line of its own — and the card grows upwards
+    /// out of that room: into the bare ground under the board first, then over the corrections
+    /// that are fading out anyway, and over the foot of the field itself only on a screen with
+    /// nothing else left to give. Which means the board is the same size, in the same place,
+    /// before the gate opens and after.
     private var endOfGo: some View {
-        Group {
-            if showsVerdict {
-                verdict
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            } else {
-                buildingControls
-                    .transition(.opacity)
+        buildingControls
+            .opacity(showsVerdict ? 0 : 1)
+            .allowsHitTesting(!showsVerdict)
+            .accessibilityHidden(showsVerdict)
+            // An overlay is laid out against the room the button already has and never asks
+            // for any of its own, so a longer verdict than the last one moves nothing.
+            .overlay(alignment: .bottom) {
+                if showsVerdict {
+                    verdict
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
             }
-        }
     }
 
     /// Undo, redo and clear, tucked under the right-hand corner of the board.
@@ -347,8 +365,10 @@ struct PuzzleView: View {
     /// button that ends the turn — and each keeps a finger's worth of room around it
     /// whatever the glyph inside is doing.
     ///
-    /// They fade rather than vanish when the verdict is up: the card below covers what they
-    /// act on, and a row that came and went would move the board it is pinned to.
+    /// They fade rather than vanish when the verdict is up: the card standing over them has
+    /// the last word on what they act on, and a row that came and went would move the board it
+    /// is pinned to. Fading and staying put is also what leaves the card its first bit of room
+    /// to grow into — it reaches over a row nobody can see before it reaches over the field.
     private var fieldCorrections: some View {
         HStack(spacing: 2) {
             Spacer(minLength: 0)
@@ -850,6 +870,10 @@ struct PuzzleView: View {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(GamePalette.post.opacity(0.2), lineWidth: 1)
         }
+        // The card stands over the foot of the board on a screen with no room to spare, so it
+        // takes the whole of its own face: a finger that lands on the card, or drags across it
+        // on the way to a button, must not plant fencing on the field behind it.
+        .contentShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.22), radius: 7, y: 4)
     }
 
@@ -1201,5 +1225,14 @@ private struct StopwatchFace: View {
 #Preview("On the clock") {
     NavigationStack {
         PuzzleView(game: .partWayThrough(), clock: Stopwatch())
+    }
+}
+
+/// A pen already closed and waiting on the gate, which is the one press away from the verdict:
+/// release the pig, watch the lap of honour, and the card comes up over a board that is exactly
+/// the size it was while the wall was being built.
+#Preview("A pen ready to be released") {
+    NavigationStack {
+        PuzzleView(game: .theOrchardsBestPen())
     }
 }
