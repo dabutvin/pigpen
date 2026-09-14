@@ -1,7 +1,7 @@
-name: Wake up an iPhone simulator
+name: Wake up a simulator
 description: >
-  Pick an iPhone simulator and get it to the point where it can install, run and
-  photograph an app. A simulator that has never been booted on a fresh runner
+  Pick an iPhone or iPad simulator and get it to the point where it can install,
+  run and photograph an app. A simulator that has never been booted on a fresh runner
   spends five or six minutes getting there, and almost none of that is the app's
   doing: it is installd starting up, the runtime's shared cache being built the
   first time anything launches, and a display being attached the first time
@@ -9,6 +9,13 @@ description: >
   arriving to a simulator that has done it once already.
 
 inputs:
+  family:
+    description: >
+      Which kind of device to wake: `iPhone` or `iPad`. The tests and most of the
+      screenshots want a phone; the handful of shots that show the tablet's
+      layouts want a tablet.
+    required: false
+    default: 'iPhone'
   display:
     description: >
       Whether the simulator is going to be photographed. Sets the status bar to
@@ -34,16 +41,24 @@ runs:
         set -euo pipefail
 
         AVAILABLE=$(xcrun simctl list devices available)
+        FAMILY="${{ inputs.family }}"
+        if [ "$FAMILY" = "iPad" ]; then
+          # The 13-inch is the one App Review asks for, so it is the one the tablet's
+          # layouts are photographed on when the runner has it.
+          NAMES=("iPad Pro 13-inch (M5)" "iPad Pro 13-inch (M4)" "iPad Air 13-inch (M3)" "iPad Air 13-inch (M2)" "iPad Pro (12.9-inch) (6th generation)")
+        else
+          NAMES=("iPhone 17 Pro" "iPhone 17" "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15")
+        fi
         LINE=""
-        for NAME in "iPhone 17 Pro" "iPhone 17" "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15"; do
-          LINE=$(grep -m1 "^ *$NAME (" <<< "$AVAILABLE" || true)
+        for NAME in "${NAMES[@]}"; do
+          LINE=$(grep -m1 -F "$NAME (" <<< "$AVAILABLE" || true)
           [ -n "$LINE" ] && break
         done
         if [ -z "$LINE" ]; then
-          LINE=$(grep -m1 -E "^ *iPhone .*\([0-9A-Fa-f-]{36}\)" <<< "$AVAILABLE" || true)
+          LINE=$(grep -m1 -E "^ *$FAMILY .*\([0-9A-Fa-f-]{36}\)" <<< "$AVAILABLE" || true)
         fi
         if [ -z "$LINE" ]; then
-          echo "ERROR: No iPhone simulator available"
+          echo "ERROR: No $FAMILY simulator available"
           echo "$AVAILABLE"
           exit 1
         fi

@@ -86,6 +86,10 @@ struct SettingsView: View {
 
             VStack(spacing: 0) {
                 header
+                    // The name and the cross keep to the same column the cards do, so on a
+                    // tablet the page reads as one sheet standing in the middle of the glass
+                    // rather than a heading the width of the screen over a list that is not.
+                    .keptToAColumn()
 
                 ScrollView {
                     VStack(spacing: 14) {
@@ -108,6 +112,7 @@ struct SettingsView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 28)
+                    .keptToAColumn()
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
@@ -126,7 +131,7 @@ struct SettingsView: View {
             FilmReelView(reel: reel)
         }
         // A page of its own, like this sheet and the reel: the barn is a pig on a stand and
-        // eleven pegs, and a half screen would have the player choosing through a letterbox.
+        // thirteen pegs, and a half screen would have the player choosing through a letterbox.
         .fullScreenCover(isPresented: $isDressingUp) {
             DressingBarnView(wardrobe: wardrobe, haptics: haptics)
                 .onAppear {

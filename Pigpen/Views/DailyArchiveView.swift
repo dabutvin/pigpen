@@ -60,6 +60,8 @@ struct DailyArchiveView: View {
 
             VStack(spacing: 0) {
                 monthBar
+                    // Over the calendar and no wider than it, on a tablet as on a phone.
+                    .keptToAColumn()
 
                 // One page per month the archive offers. A swipe left turns to the month
                 // after, a swipe right to the one before — the same doors the chevrons open,
@@ -75,7 +77,10 @@ struct DailyArchiveView: View {
                             }
                             .padding(.horizontal, 14)
                             .padding(.bottom, 26)
-                            .frame(maxWidth: .infinity)
+                            // A month of squares a phone's width across, in the middle of a
+                            // tablet's meadow: seven squares stretched across a tablet are seven
+                            // fields, not a calendar.
+                            .keptToAColumn()
                         }
                         .scrollBounceBehavior(.basedOnSize)
                         .tag(page)

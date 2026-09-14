@@ -17,6 +17,12 @@ struct WorldTrail {
     static let headroom: CGFloat = 168
     /// How close to the side of the screen a signpost may stand.
     static let verge: CGFloat = 62
+    /// How far across the screen the trail may wander. A phone's width is the whole of it; a
+    /// tablet gets a phone's width of trail in the middle of its meadow, since a trail spread
+    /// across the whole of a tablet stands its signposts so far apart the pig spends its time
+    /// walking between them, and the map reads as a few signs in a field rather than a way
+    /// through one. The meadow itself is still painted to the edges.
+    static let widest: CGFloat = Tablet.trail
     /// How far a length of trail bows out to the side, as a fraction of its own length.
     static let bow: CGFloat = 0.16
 
@@ -37,9 +43,17 @@ struct WorldTrail {
         place(across: spur.across, up: spur.up)
     }
 
+    /// The width the stops are actually spread across: the whole width on a phone, and a
+    /// phone's worth of it on anything wider.
+    var spread: CGFloat { min(width, Self.widest) }
+    /// The meadow either side of that spread, which is nothing on a phone. Scenery that
+    /// wants to stand beside the trail rather than at the edge of the world measures from
+    /// here rather than from the screen.
+    var margin: CGFloat { (width - spread) / 2 }
+
     private func place(across: Double, up: Double) -> CGPoint {
         CGPoint(
-            x: Self.verge + CGFloat(across) * max(width - Self.verge * 2, 1),
+            x: margin + Self.verge + CGFloat(across) * max(spread - Self.verge * 2, 1),
             y: height - Self.apron - CGFloat(up) * Self.climb
         )
     }

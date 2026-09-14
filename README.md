@@ -260,23 +260,25 @@ no stars, because there is nothing behind it to earn them at:
 - Nothing is recorded against it: no stars, no rainbow, no wall on file. A door is somewhere to
   go, not something to beat.
 
-Inside is the pig on a stand and eleven pegs: **ten outfits**, and the bare one she arrived on.
+Inside is the pig on a stand and thirteen pegs: **twelve outfits**, and the bare one she arrived on.
 A peg is the pig wearing the thing, with its name under her and nothing else — a picture of her
-in it is a better account of an outfit than a line of writing beneath the picture, and eleven
-captions under eleven pictures of the same pig say it eleven times worse.
+in it is a better account of an outfit than a line of writing beneath the picture, and thirteen
+captions under thirteen pictures of the same pig say it thirteen times worse.
 
 | Peg | Where it hangs |
 |---|---|
 | Sun Hat 👒 | On top of her head, at an angle |
 | Top Hat 🎩 | Likewise, straighter |
 | Crown 👑 | Likewise, and smaller |
+| Baseball Cap 🧢 | Likewise, low and at an angle |
+| Graduation Cap 🎓 | Likewise, square on, tassel off one corner |
 | Sunglasses 🕶️ | Across her eyes |
 | Spectacles 👓 | Likewise |
 | Ribbon 🎀 | Behind one ear |
 | Sunflower 🌻 | Likewise |
-| Scarf 🧣 | Knotted at her jaw, hanging below it |
+| Scarf 🧣 | Knotted under her jaw, hanging below it |
 | Rosette 🏅 | At her neck, hanging below it |
-| Wellies 🥾 | Under her, clear of her chin |
+| Wellies 🥾 | A pair, under her, clear of her chin |
 | Just the pig | Nothing at all, which is where she starts |
 
 Whatever is on the peg with the tick beside it, she wears **everywhere**: on every board, on
@@ -284,7 +286,14 @@ the signpost trail, in the practice pen, and out in front of the title. The game
 as one glyph since the first build and an outfit does not change that — it is a second glyph
 hung on the first at a fixed place, size and angle, all three measured as fractions of the pig
 herself, so the same hat sits right on a board tile the size of a fingernail and on the
-dressing-barn mirror. Everything already done to the pig — squashed flat on a landing, leaned
+dressing-barn mirror. The two pairs of glasses are the one thing in the barn measured rather
+than eyed: they hang off the line her eyes are actually drawn on — which is *below* the middle
+of the picture she is drawn in, where a hat placed by eye assumes it is above — and they are set
+wide enough to bury both eyes, or she wears them on her forehead with the bottom of each eye
+showing under the lenses. The wellies are the one peg that hangs **two** glyphs rather than one,
+since boots come in twos: the same boot drawn either side of her and the second one mirrored, so
+she stands in a left and a right instead of dangling a single boot under her chin. Everything
+already done to the pig — squashed flat on a landing, leaned
 into a trot, a shadow under her, a hop when a finger lands on her — is done to the whole of
 her, clothes included. The painted films keep their own pig: a cut scene is a still, not the
 board.
@@ -1492,7 +1501,38 @@ a worse way to look at a film than opening it in a preview or in the projection 
 than the phone: the opening is at sunrise and the send-off opens on the same gold, so the
 world is always shown at its best whatever the system appearance says.
 
-## Counting
+## On a tablet
+
+The game ships on iPad, and every screen was laid out for a phone: one column, the width of
+the glass, with the board or the list taking all of it. An iPad's glass is two and a half
+phones wide, and a phone's column stretched across the lot of it is a Release button you
+cannot reach the end of, a rack of twelve pickets huddled at one end of a board two feet
+long, and a trail whose signposts stand so far apart the pig spends its time walking between
+them. So each kind of screen has a width it stops at, and stands in the middle of whatever is
+left — the meadow, the starfield or the cream page behind it is painted to the edges either
+way, so a screen is a phone's worth of furniture standing in a tablet's worth of ground
+rather than a phone's screen with a border round it. `Tablet` in `Pigpen/Views/Tablet.swift`
+holds the widths: one for a list of cards, a calendar or the run of boards on the title
+screen; a wider one for a board, since a tablet's board deserves tiles a tablet's finger can
+use; and one for how far across a map a trail may wander between one signpost and the next,
+which is what keeps the trail winding up the middle of a tablet's meadow rather than swinging
+from one edge of the glass to the other.
+
+A tablet on its side gets a layout of its own. Stacked, a board on a tablet turned sideways
+was left the height the rack, the corrections and the button did not take, which is a small
+board on a large screen — so there the field stands on the left with the whole height to
+itself, and everything that used to stand over and under it goes into a phone-wide column
+on the right: the boss's orders and the rack at the top, and the corrections over the button
+that ends the go at the foot, where a thumb resting on the edge of the glass can reach them.
+`BoardLayout` decides between the two, and it decides from the size of the screen rather than
+from what the device calls itself: a tablet upright stacks, a tablet in a narrow split beside
+another app is a phone for the duration, and a window under Stage Manager is whichever shape
+it happens to be that moment. The walkthrough stays one column whichever way a tablet is
+held, since the coach is read under the ground it is talking about. Nothing on a phone reaches
+any of these widths, so a phone is laid out exactly as it was.
+
+A tablet with a keyboard under it can play from the keys: ⌘Z and ⇧⌘Z walk the fencing back
+and forth, and Return opens the gate.
 
 The game counts how it is played, so that a level nobody can beat can be found without
 waiting for somebody to write in about it. What is counted is anonymous, the switch that
@@ -1848,14 +1888,20 @@ open Pigpen.xcodeproj
 
 ### App icon
 
-The icon is a pig face drawn in code, so it can be tweaked without a design tool. `Tools/generate_app_icon.py` writes the three PNGs the asset catalog expects — the standard icon, the dark variant, and the grayscale tinted variant:
+The shipped icon is the painted pig — the face in its own field, under its own sun — squared off from the rounded tile it was made on, since iOS rounds the corners itself. The asset catalog holds three tiles: the standard one, the dark one, and the grayscale tinted one.
+
+The dark tile is made from the standard one rather than painted separately. It used to be the whole painting turned down, pig and all, which left a grey pig on a grey field — the icon with the lights off. `Tools/generate_dark_app_icon.py` cuts the pig out of `AppIcon.png` by colour and treats the two halves apart: the field goes to night, deep and blue, and the pig keeps the light it was painted with, with a little of it spilling onto the field around it.
 
 ```bash
-pip install cairosvg pillow
-python3 Tools/generate_app_icon.py
+pip install pillow
+python3 Tools/generate_dark_app_icon.py
 ```
 
-Colors live in the `LIGHT`, `DARK` and `TINTED` palettes at the top of the script; the shapes are one SVG shared by all three. Commit the regenerated PNGs — the build reads them, not the script.
+The cut is colour, not a stencil: red-minus-green finds the one pink thing in the tile, a second rule about brightness keeps the fence rail that touches the pig's cheek out of it, a flood fill from inside the pig keeps only that patch, and a second fill from the corners hands back the eyes and the nostrils, which are holes in a pink mask. How dark the night gets, how much light the pig keeps and how far it spills are the constants at the top of the script. The tile is written without an alpha channel: it carries its own night sky rather than leaning on whatever iOS would draw behind a transparent one.
+
+The icon's first form was a pig face drawn in code, and `Tools/generate_app_icon.py` still holds it — three PNGs from one shared SVG, with the colors in its `LIGHT`, `DARK` and `TINTED` palettes. It is the thing to reach for if the painting ever has to go, but running it writes over the painting, so run it only meaning to.
+
+Commit the regenerated PNGs whichever script wrote them — the build reads them, not the scripts.
 
 ### Sounds
 
@@ -2104,7 +2150,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | Workflow | Trigger | Action |
 |---|---|---|
 | `ci.yml` | PR to main, push to main | Build for simulator, no signing, then run the unit tests |
-| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of mushrooms and wilted flowers and a mountain board of coins and flames), the settings sheet, a daily board and its archive, post/update a PR comment |
+| `screenshots.yml` | PR to main | Build, wake a simulator, capture the title screen, the tutorial, the universe map, all three world trails, six boards (including a thicket board of mushrooms and wilted flowers and a mountain board of coins and flames), the settings sheet, a daily board and its archive; then wake an iPad and capture eight of those again at a tablet's size; post/update a PR comment |
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
@@ -2114,7 +2160,7 @@ Notes on the details:
 
 - **Signing.** Runners are wiped after every job, so `testflight.yml` and `release.yml` import a distribution certificate and App Store profile into a throwaway keychain (`.github/actions/setup-signing`) and archive with `CODE_SIGN_STYLE=Manual`. They deliberately do *not* pass `-allowProvisioningUpdates`: with an empty keychain that flag makes Xcode ask Apple for a **brand new certificate on every run** and abandon it, so after a handful of builds the account hits its certificate limit and every archive fails with "Your account has reached the maximum number of certificates." Where the certificate comes from is covered under [Signing](#signing) below.
 - **Versioning.** `MARKETING_VERSION` lives in `project.yml`; the build number is a `YYYYMMDDHHMM` timestamp injected at archive time, so it always increases. A release tag overrides the marketing version, so `v0.2.0` ships as version `0.2.0`.
-- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The app takes `-universe`, `-map`, `-toll`, `-woods-map`, `-woods-rationed`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-mushrooms`, `-flames`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's — both photographed bought, so the shot is the trail and not whatever the runner's free-game clock says — where `-woods-rationed` opens the thicket as a player who has not paid finds it the day after their first free level there, the next stop under a lock with the rest of the day counted down over it, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-mushrooms` opens Nettle Bank dressed for the woods, where a mushroom and a wilted flower sit on the ground in place of an apple and a skull, and `-flames` opens Smoulder Ridge dressed for the mountain, on ash and cinder with coins and flames on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-toll` opens the meadow's trail run out to the top and stopped there — every pen below Stag Mere held and the stars still short of the twenty-one it wants — with the card the map puts up in that standing already on screen, since what is being photographed is the card rather than the trail behind it. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The films are not photographed here. `PigpenApp.stills` still names a launch argument per shot — a hundred and fourteen of them, each stopping a film on one shot rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it — but they are for looking at a shot while it is being painted, not for a gallery on every pull request. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
+- **Screenshots.** The PR screenshot images are committed to an orphan-ish `ci-screenshots` branch under `pr-<number>/` and hot-linked into a single PR comment that gets updated in place on each push. That branch is CI-only — never merge it. Files are named `<order>_<screen>_<light|dark>.png`, and each screen gets its own row in the comment. The tablet's shots are named `<order>_ipad_<screen>_<light|dark>.png` and numbered past every phone shot, so they sit together at the end of the gallery under their own headings: the title, the universe map, the meadow's trail, a plain board and the boss's, the archive, the settings page and the dressing barn, on the 13-inch iPad the runner has, held upright — the simulator cannot be turned on its side from the command line, so the landscape layout of a board is the one screen in the game that has to be looked at by hand. The app takes `-universe`, `-map`, `-toll`, `-woods-map`, `-woods-rationed`, `-peak-map`, `-puzzle`, `-beaten`, `-orchard`, `-sour`, `-boss`, `-mushrooms`, `-flames`, `-tutorial`, `-daily`, `-archive`, `-title`, `-title-fresh` and `-settings` launch arguments so the universe map, each world's trail, the boards, the practice pen and the settings sheet can be captured without tapping through the title screen; `-universe` opens the cosmic map with the meadow held and the thicket open, `-woods-map` opens the thicket's trail and `-peak-map` the mountain's — both photographed bought, so the shot is the trail and not whatever the runner's free-game clock says — where `-woods-rationed` opens the thicket as a player who has not paid finds it the day after their first free level there, the next stop under a lock with the rest of the day counted down over it, and the meadow map and plain board open part way through, since an untouched world has nothing on it to look at and an untouched field has no fencing and not a control on it lit. `-beaten` opens that same first level as somebody who has already held it finds it: bare mud, with the tally up before a piece is laid — the score their best pen there was worth, and the trophy offering the whole wall back. `-mushrooms` opens Nettle Bank dressed for the woods, where a mushroom and a wilted flower sit on the ground in place of an apple and a skull, and `-flames` opens Smoulder Ridge dressed for the mountain, on ash and cinder with coins and flames on it. The next two are the boards with something lying on the ground: `-orchard` opens Windfall Orchard with its best pen closed, where an apple shut in and an apple left standing outside the wall can be seen at once, and `-sour` opens Sour Ground with a pen holding one apple and one skull, which cancel each other out. `-boss` opens Stag Mere with the best pen it has in it standing, which is the one board with two animals on it and two enclosures holding them. `-toll` opens the meadow's trail run out to the top and stopped there — every pen below Stag Mere held and the stars still short of the twenty-one it wants — with the card the map puts up in that standing already on screen, since what is being photographed is the card rather than the trail behind it. `-tutorial` opens the practice pen on its first coach card. `-settings` opens the title screen with the sheet already up, over a world part way through and held in memory, so the clear button in the screenshot has something to say and nothing on the device to say it to. `-daily` and `-archive` open the daily board and the calendar behind it on a fixed square of the calendar rather than on whatever day the runner is having, so the archive shows the same month of finished and shut days every time; the clock over that board is handed over already stopped, for the same reason a film is photographed a shot at a time. `-title` is the title screen with a fortnight of dailies behind it, so the card under Play has its stars, its clock and its run of days on it, where `-title-fresh` has the card as a new player finds it. That shot takes an argument of its own rather than being what a bare launch gives you: a bare launch on a device nobody has played opens the walkthrough over the top of the title screen, which is the point of the walkthrough and no use as a photograph of the screen underneath it. `-title-fresh` hands over a world held in memory with its walkthrough already spent, so the empty title screen photographs as the empty title screen however far up the meadow the runner got before it. The films are not photographed here. `PigpenApp.stills` still names a launch argument per shot — a hundred and fourteen of them, each stopping a film on one shot rather than playing it, since a screenshot of something on a clock is a screenshot of whenever the runner got round to it — but they are for looking at a shot while it is being painted, not for a gallery on every pull request. Each screen is shot in both appearances off one launch: the views read the colour scheme out of the environment, so flipping the simulator under a running app re-draws it, and the pair then shows the same board rather than two rolls of the dice. The shots at the top of this README are two of those — the light `-title` frame and the light `-orchard` frame, scaled down and committed as `docs/title-screen.png` and `docs/screenshot.png`, since a README cannot hot-link a branch that is never meant to be merged. Replacing either is a matter of taking the frame out of the newest `pr-<number>/` and putting it back at the same path.
 - **The simulator is the slow part.** Not the build. A simulator that has never been booted on a fresh runner spends five or six minutes getting to the point where it can install, run and photograph an app: booting, starting installd, building the runtime's shared cache the first time anything launches, attaching a display the first time anything is photographed. That, not compiling, was where all but a minute of a twelve-minute check went. `.github/actions/simulator` hands the expensive firsts to a stub app — five lines of C linked against UIKit and SwiftUI, never called, only loaded — and to one throwaway screen grab, so the real app arrives to a simulator that has done all of it once already. Installing and launching the app for real then takes seconds instead of four minutes. Only the boot can fail the job; if the rest of the warm-up does not happen the job simply pays for it itself, later, which is where it was paying before.
 - **Waking the simulator is not worth overlapping with the build.** It looks like free parallelism and it is not: a runner has three cores, the boot wants all of them, and running the two together made a 30-second build take two to five minutes — more than the overlap ever saved. So the build finishes first and the simulator is woken after it. For the same reason the builds ask for a generic simulator destination rather than naming the device: naming it makes xcodebuild ask CoreSimulator about a device that is still booting, and it will sit there for minutes waiting for an answer.
 - **Concurrency.** CI and screenshots cancel superseded runs per branch. Everything that signs shares one `apple-signing` group and never cancels, so two merges in quick succession both ship, one after the other, and no two runs touch the account's certificates at the same time.
@@ -2263,7 +2309,7 @@ Pigpen/
 │   ├── RatingPrompt.swift       # When the game asks what a player thinks of it, and how rarely it may
 │   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
 │   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
-│   ├── PigOutfit.swift          # The ten outfits, and where each one hangs on the pig
+│   ├── PigOutfit.swift          # The twelve outfits, and where each one hangs on the pig
 │   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing barn
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
@@ -2295,7 +2341,7 @@ Pigpen/
 │   ├── WorldTrail.swift         # Stops and the barn ↔ points on screen, and the curves between them
 │   ├── LevelSignpost.swift      # One sign on the map: a numbered stop with its stars, or the door to the barn
 │   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and how many more you need
-│   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and eleven pegs
+│   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and thirteen pegs
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict
@@ -2306,6 +2352,7 @@ Pigpen/
 │   ├── FenceRack.swift          # The budget as a rack of pieces, spent ones taken off it
 │   ├── Celebration.swift        # The lap of honour, as a clock: where an animal is at any moment of it
 │   ├── BoardGeometry.swift      # Tiles ↔ points on screen
+│   ├── Tablet.swift             # How wide a screen may grow on an iPad, and when a board goes beside its furniture
 │   ├── ChunkyButtonStyle.swift  # The wooden buttons: the title screen's, and the board's
 │   ├── GamePalette.swift        # Colours: the pasture's day, dusk and sunrise, and the forest, flame and city sets
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
@@ -2328,7 +2375,8 @@ site/                            # Served at pigpen.app by Netlify on every merg
 └── img/                         # The two shots the front page stands on
 docs/                            # The shots at the top of this README
 Tools/
-├── generate_app_icon.py         # Redraws the app icon PNGs
+├── generate_app_icon.py         # Redraws the app icon's first form, the pig face in code
+├── generate_dark_app_icon.py    # Puts the painted icon's field at night and leaves the pig lit
 ├── generate_wordmark.py         # Draws the title screen's sticker as a PNG for the website
 ├── generate_sounds.py           # Synthesises every noise the game makes, and its one tune, and writes the WAVs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks

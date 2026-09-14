@@ -16,8 +16,8 @@ struct DressedAnimal: View {
     /// game wears the same hat at the same angle.
     let size: CGFloat
     /// What she has on. Handed in rather than asked of the wardrobe here, so the dressing
-    /// room can draw ten pigs in ten outfits at once and a preview can dress her without a
-    /// choice saved on the machine.
+    /// room can draw twelve pigs in twelve outfits at once and a preview can dress her without
+    /// a choice saved on the machine.
     var outfit: PigOutfit = .asSheComes
 
     var body: some View {
@@ -36,21 +36,40 @@ struct DressedAnimal: View {
     /// The garment, laid over the glyph without taking up any room of its own — an overlay
     /// rather than a stack, so a dressed pig measures exactly the same as an undressed one and
     /// nothing on a board moves when a hat goes on.
+    ///
+    /// One of it, or two for the boots: a pair is the same glyph drawn twice, `apart` to each
+    /// side of her, with the second one turned over so the two are a left and a right.
     @ViewBuilder
     private var garment: some View {
         if let worn {
-            Text(outfit.glyph)
-                .font(.system(size: size * worn.scale))
-                .rotationEffect(.degrees(worn.lean))
-                .offset(x: size * worn.across, y: size * worn.down)
-                .allowsHitTesting(false)
+            if let apart = worn.apart {
+                piece(worn, across: worn.across + apart)
+                piece(worn, across: worn.across - apart, mirrored: true)
+            } else {
+                piece(worn, across: worn.across)
+            }
         }
+    }
+
+    /// One garment, hung where it is worn. The turn comes before the mirroring so that a pair
+    /// leans away from each other rather than both the same way, which is what a left and a
+    /// right do.
+    private func piece(_ worn: OutfitFit, across: Double, mirrored: Bool = false) -> some View {
+        Text(outfit.glyph)
+            .font(.system(size: size * worn.scale))
+            .rotationEffect(.degrees(worn.lean))
+            .scaleEffect(x: mirrored ? -1 : 1, y: 1)
+            .offset(x: size * across, y: size * worn.down)
+            .allowsHitTesting(false)
     }
 }
 
 #Preview {
     VStack(spacing: 20) {
-        ForEach([PigOutfit.asSheComes, .topHat, .shades, .scarf, .wellies]) { outfit in
+        let showing: [PigOutfit] = [
+            .asSheComes, .baseballCap, .graduationCap, .shades, .scarf, .wellies
+        ]
+        ForEach(showing) { outfit in
             HStack(spacing: 24) {
                 DressedAnimal(animal: .pig, size: 28, outfit: outfit)
                 DressedAnimal(animal: .pig, size: 64, outfit: outfit)

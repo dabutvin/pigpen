@@ -97,6 +97,11 @@ struct TutorialView: View {
             // board's own spacing rather than on a tighter version of it.
             .padding(.top, 22)
             .padding(.bottom, 12)
+            // And the same width a board keeps on a tablet. The walkthrough stays one column
+            // whichever way a tablet is held: the coach is read under the ground it is talking
+            // about, and a column of the coach's words beside the board would put the reading
+            // furthest from the thing being read.
+            .keptToAColumn(Tablet.board)
         }
         .navigationTitle(level.name)
         .navigationBarTitleDisplayMode(.inline)

@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// The dressing barn: the pig on a stand in the middle of it, and eleven pegs round the walls —
-/// ten outfits and the bare one she arrived in.
+/// The dressing barn: the pig on a stand in the middle of it, and thirteen pegs round the walls
+/// — twelve outfits and the bare one she arrived in.
 ///
 /// It is the one screen in the game that changes nothing about playing it. There is no budget
 /// here, nothing to hold and nothing to lose: tap a peg and the pig is wearing it, everywhere,
@@ -40,6 +40,8 @@ struct DressingBarnView: View {
 
             VStack(spacing: 0) {
                 header
+                    // One column with the mirror and the pegs, the way the settings page is.
+                    .keptToAColumn()
 
                 ScrollView {
                     VStack(spacing: 16) {
@@ -48,6 +50,7 @@ struct DressingBarnView: View {
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 28)
+                    .keptToAColumn()
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
