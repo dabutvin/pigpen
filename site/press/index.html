@@ -17,9 +17,18 @@
      facts table, a gallery of clean screens, and download rows that say what a file is
      and how big it is before it is fetched. */
   .facts { width: 100%; border-collapse: collapse; }
-  .facts th, .facts td { text-align: left; vertical-align: top; padding: 7px 0; border-top: 1px solid rgba(69, 44, 26, 0.12); }
+  .facts th, .facts td { text-align: left; vertical-align: top; padding: 7px 0; border-top: 1px solid rgba(69, 44, 26, 0.12); overflow-wrap: anywhere; }
   .facts tr:first-child th, .facts tr:first-child td { border-top: 0; }
   .facts th { width: 9.5rem; font-weight: 800; padding-right: 12px; }
+  /* A phone has no room for a label column beside its value — the App Store URL alone is
+     wider than what a 9.5rem label leaves — so below this the rows stack and each label
+     sits on its own line above the thing it labels. */
+  @media (max-width: 34rem) {
+    .facts, .facts tbody, .facts tr, .facts th, .facts td { display: block; width: auto; }
+    .facts th { padding: 12px 0 0; border-top: 1px solid rgba(69, 44, 26, 0.12); }
+    .facts td { padding: 1px 0 4px; border-top: 0; }
+    .facts tr:first-child th { padding-top: 0; border-top: 0; }
+  }
   .permission { font-weight: 800; }
   .kit { list-style: none; padding: 0; margin: 0; }
   .kit li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 9px 0; border-top: 1px solid rgba(69, 44, 26, 0.12); margin: 0; }
@@ -48,7 +57,6 @@
 <nav>
   <a href="../index.html">About</a>
   <a href="../support.html">Support</a>
-  <a href="index.html">Press</a>
   <a href="../privacy.html">Privacy Policy</a>
 </nav>
 
