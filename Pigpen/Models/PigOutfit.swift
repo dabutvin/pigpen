@@ -217,10 +217,15 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
         case .crown: OutfitFit.hat(scale: 0.48, down: -0.47, lean: 0)
         // A cap is worn low and at an angle, the way a cap is: wider than the top hat because
         // the glyph is mostly peak, and hung so the peak comes down over her brow rather than
-        // floating over it.
-        case .baseballCap: OutfitFit.hat(scale: 0.58, down: -0.44, lean: -8)
+        // sitting on top of her head. Which is where it first landed — at -0.44 the band
+        // stopped at -0.26 and the crown of her head is -0.34, so the cap was perched on the
+        // last eighth of her rather than pulled on. Photographed, measured off the peg, and
+        // dropped the difference.
+        case .baseballCap: OutfitFit.hat(scale: 0.58, down: -0.36, lean: -8)
         // Wider again and barely leaning, because a mortarboard is a flat board: it wants to
-        // sit square on her head with the tassel off one corner, not rakishly.
+        // sit square on her head with the tassel off one corner, not rakishly. This one landed
+        // where it was meant to: the board stands over her, its cap covers her forehead to
+        // -0.20, and the tassel hangs past her ear.
         case .graduationCap: OutfitFit.hat(scale: 0.62, down: -0.47, lean: -6)
         // Both are set to bury her eyes rather than to look like glasses and no more: the
         // lenses are a shallow band inside their own picture, and her eyes are wide-set and
