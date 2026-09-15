@@ -170,6 +170,18 @@ in the game you can finish a world without ever having opened.
 - **One stop has a barn beside it.** Pen the seventh — Windfall Orchard — and a side path
   opens west of the signpost with the [dressing barn](#the-dressing-barn) at the end of it.
   It is not a puzzle: tap it and you are in.
+- **The landmark at the foot of the trail keeps your record.** Every world stands something
+  at the bottom of its hill — the barn in the meadow, a cairn on the mountain, a clocktower
+  in the city — and tapping it opens what that world has given up to you: stops held, stars
+  won, and best pens found. Under that, where enough people have been up there to make it
+  mean anything, is what everybody else made of the same stops — how many of them get three
+  stars out of a level, and how many ever find the pen it has in it. Those figures are
+  counted off the same signals the game already sends and baked into the build, so nothing
+  is fetched and nothing is asked about anybody while you play. A world too few players have
+  reached says so plainly rather than quoting a share of two people, which means the late
+  worlds show your own record and nothing else for a long while yet. It is the one place in
+  the game that looks sideways at other people; everywhere else you are only ever asked to
+  beat a map.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|

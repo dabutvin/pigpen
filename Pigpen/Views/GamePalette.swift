@@ -121,6 +121,31 @@ enum GamePalette {
         /// Heights: turf terraces on the tops of spires that stand up out of a sea of cloud,
         /// with wind-bent pines holding on where they can and nothing below the edge but air.
         case cloudtop
+
+        /// What the thing standing at the foot of this world's trail is called.
+        ///
+        /// Every world keeps one, `WorldMapScene` paints a different one for each kind of
+        /// ground, and tapping it opens that world's record. The name is for the words around
+        /// that: what VoiceOver announces the button as, and what the panel says the player is
+        /// standing at. Written the way the rest of the game writes scenery — a thing in a
+        /// place, not a feature — so the button reads as the cairn on the mountain rather
+        /// than as a statistics icon that happens to be stone.
+        var landmark: String {
+            switch self {
+            case .pasture: "the barn"
+            case .woodland: "the hollow stump"
+            case .scree: "the cairn"
+            case .cobbles: "the clocktower"
+            case .dust: "the first crater"
+            case .flowstone: "the cave mouth"
+            case .sawdust: "the big top"
+            case .sand: "the rock arch"
+            case .shingle: "the wreck"
+            case .snowfield: "the igloo"
+            case .marsh: "the stilt hut"
+            case .cloudtop: "the bridge head"
+            }
+        }
     }
 }
 

@@ -516,6 +516,34 @@ extension WorldProgress {
         )
     }
 
+    /// A meadow with a record worth reading, for the camera and for previews of the panel the
+    /// landmark opens.
+    ///
+    /// Eight of the nine held on a spread of ratings, and two best pens rather than one —
+    /// Horseshoe Lake, which most players who hold it also hold, and Sour Ground, which is the
+    /// meadow's outlier: the counting has twenty-three players on it and one who ever found
+    /// the pen it has in it. Between them the shot shows both things the panel can say about a
+    /// stop, and the line it closes on when a player is holding something rare.
+    static func withARecordWorthReading() -> WorldProgress {
+        WorldProgress(
+            world: .mudlarkMeadow,
+            store: RememberedProgress(
+                stars: [
+                    "river-bend": 3,
+                    "horseshoe-lake": 3,
+                    "the-narrows": 2,
+                    "dew-ponds": 3,
+                    "otter-ford": 1,
+                    "puddle-corner": 3,
+                    "windfall-orchard": 2,
+                    "sour-ground": 3
+                ],
+                bestPens: ["horseshoe-lake", "sour-ground"],
+                scenesPlayed: [CutScene.Name.opening.rawValue, TutorialLesson.seenKey]
+            )
+        )
+    }
+
     /// The meadow as far as the orchard, which is the stop the dressing barn stands beside and
     /// so the moment its doors are first open.
     ///

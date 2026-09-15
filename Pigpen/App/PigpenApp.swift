@@ -196,6 +196,8 @@ struct PigpenApp: App {
         case pies = "-pies"
         case map = "-map"
         case toll = "-toll"
+        case record = "-record"
+        case peakRecord = "-peak-record"
         case barnMap = "-barn-map"
         case barn = "-barn"
         case dressedBoard = "-dressed-board"
@@ -340,6 +342,24 @@ struct PigpenApp: App {
             // asks for. The card the map puts up in that standing is already on screen,
             // since what is being photographed is the card and not the trail behind it.
             WorldMapView(progress: .stoppedAtTheToll(), showsTollNotice: true)
+        case .record:
+            // What the barn at the foot of the meadow has been keeping count of, for a player
+            // with something worth reading in it: eight of the nine held, and one of the two
+            // best pens they hold the meadow's rarest. The meadow is the one trail the
+            // counting is thick enough to speak for, so it is the only world that can be
+            // photographed with the second card on it.
+            WorldMapView(progress: .withARecordWorthReading(), showsRecord: true)
+        case .peakRecord:
+            // The same panel on a world almost nobody has climbed, which is every world but
+            // the meadow and will be for years: the player's own record, and one line saying
+            // why there is nothing beside it. The quiet case is the common one, so it is worth
+            // a shot of its own rather than being left to be imagined.
+            WorldMapView(
+                world: .emberpeak,
+                progress: .partWayThrough(world: .emberpeak),
+                showsRecord: true,
+                fullGame: .unlocked()
+            )
         case .barnMap:
             // The fork: the orchard penned, the trail climbing on past it, and the barn
             // standing open off to one side — the one shape on any trail in the game that is

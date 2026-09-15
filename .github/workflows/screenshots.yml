@@ -96,7 +96,7 @@ jobs:
           # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
-          # `-barn`, `-dressed-board` and `-dressed-title` are launch
+          # `-barn`, `-dressed-board`, `-dressed-title`, `-record` and `-peak-record` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
           # settings sheet, the offer of a daily reminder, the card over a shut boss,
@@ -169,6 +169,14 @@ jobs:
           # that prove an outfit is not only worn in the barn: a board and the title screen,
           # both opened on a pig who has been dressed. Numbered high for the same reason the
           # shots above are, so nothing already in the gallery shifts.
+          # What the landmark at the foot of a trail has been keeping count of. Two shots,
+          # because the panel has two quite different things to be: the meadow, which enough
+          # people have played for it to say how a player compares, and the mountain, which
+          # almost nobody has climbed and which says so instead. The second is the common case
+          # and will be for years. Numbered high for the same reason as the shots above.
+          capture 99 record -record
+          capture 101 peak_record -peak-record
+
           capture 73 barn_map -barn-map
           capture 75 barn -barn
           capture 77 dressed_board -dressed-board
