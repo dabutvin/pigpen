@@ -48,12 +48,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "Pigpen/Models/LevelBenchmarks.swift"
 
-# How old the table may be before a release refuses to go out with it. A quarter, which is
-# about one release cycle: long enough that regenerating is not busywork, short enough that
-# no build ships with a table from a different year. The figures move slowly — most levels
-# are nowhere near the quorum and will not cross it in a season — so this is a nag rather
-# than a deadline, and `ALLOW_STALE_BENCHMARKS=1` gets a hotfix past it.
-MAX_AGE_DAYS = 90
+# How old the table may be before a release refuses to go out with it.
+#
+# A week, which is shorter than the gap between any two releases — so in practice this does
+# not catch a table that has drifted, it makes regenerating part of cutting a release. That
+# is the point: the alternative is a threshold generous enough to pass most of the time,
+# which is a check that only fires when somebody has already forgotten for a season.
+#
+# `ALLOW_STALE_BENCHMARKS=1` is the way past it for a release that cannot wait on the
+# dashboard — a hotfix, or a day when TelemetryDeck is unreachable.
+MAX_AGE_DAYS = 7
 
 # The one query the table comes out of. `thetaSketch` on `clientUser` counts players and
 # not signals, and the two filtered copies of it count the players inside that set who
