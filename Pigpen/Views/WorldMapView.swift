@@ -44,6 +44,11 @@ struct WorldMapView: View {
     /// The word owed to a player stopped at the top of the trail by a toll they cannot pay,
     /// while that card is up.
     @State private var tollNotice: TollNotice?
+    /// Whether the landmark at the foot of the trail has been tapped open. Held as a flag
+    /// rather than as the record itself so the panel is worked out from the progress as it
+    /// stands when it opens: a player who comes back to the map having just won a star
+    /// should not be shown the tally they had before they went.
+    @State private var isShowingRecord = false
     /// The stop the map has been asked to bring into view, and how long it has to do it in.
     @State private var scrollOrder: ScrollOrder?
     @State private var ordersGiven = 0
@@ -215,6 +220,18 @@ struct WorldMapView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
+        .sheet(isPresented: $isShowingRecord) {
+            WorldRecordView(
+                record: WorldRecord(
+                    world: world,
+                    stars: progress.bestStars,
+                    bestPens: progress.bestPens
+                ),
+                landmark: colors.cover.landmark
+            )
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
         .sheet(isPresented: $isOffering) {
             FullGameOffer(fullGame: fullGame, source: .trail, wait: wait)
                 .presentationDetents([.medium, .large])
@@ -256,6 +273,7 @@ struct WorldMapView: View {
     private func meadow(trail: WorldTrail) -> some View {
         ZStack(alignment: .topLeading) {
             WorldMapScene(trail: trail, colors: colors)
+            landmark(trail: trail)
             ribbon(trail: trail)
             haze(trail: trail)
             signposts(trail: trail)
@@ -387,6 +405,32 @@ struct WorldMapView: View {
                 .id(spur.id)
             }
         }
+    }
+
+    /// The thing standing at the foot of the trail, made tappable: the barn in the meadow,
+    /// the cairn on the mountain, the clocktower in the city.
+    ///
+    /// The landmark is painted into `WorldMapScene`, which is one `Canvas` with no gestures
+    /// in it, so what stands here is the tap and nothing else — a square of clear over the
+    /// stones, in the same place `WorldTrail` tells the scene to paint them. Keeping the art
+    /// where it is matters: the scenery around it is scattered by seed and already knows to
+    /// leave the landmark room, and lifting the drawing out into a view would mean two things
+    /// that both think they own that patch of ground.
+    ///
+    /// It sits under the signposts in the stack, so a stop that ever comes to stand over the
+    /// landmark keeps the tap. A level is always the more important of the two.
+    private func landmark(trail: WorldTrail) -> some View {
+        Button {
+            openTheRecord()
+        } label: {
+            Color.clear
+                .frame(width: WorldTrail.landmark, height: WorldTrail.landmark)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(SignpostButtonStyle())
+        .position(trail.landmarkStand)
+        .accessibilityLabel("\(world.name): your record")
+        .accessibilityHint("How this world has gone for you, and for everybody else")
     }
 
     private func pig(trail: WorldTrail) -> some View {
@@ -561,6 +605,18 @@ struct WorldMapView: View {
         Haptics.tap(.medium)
         Sounds.play(.press)
         isDressingUp = true
+    }
+
+    /// The landmark tapped. Nothing is ever shut here — a player who has held nothing yet is
+    /// shown an empty record, which is a truthful thing to be shown and a better greeting than
+    /// a dead patch of scenery.
+    private func openTheRecord() {
+        Haptics.tap(.light)
+        Sounds.play(.press)
+        Analytics.record(
+            .recordOpened(world.name, solved: progress.clearedCount, of: world.count)
+        )
+        isShowingRecord = true
     }
 
     /// The briefing is over, watched or skipped. It has had its one showing either way.

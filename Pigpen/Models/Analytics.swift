@@ -423,6 +423,18 @@ extension AnalyticsSignal {
         )
     }
 
+    /// The landmark at the foot of a trail tapped open — the barn, the cairn, the clocktower.
+    /// Nothing signposts it and nothing in the game asks for it, so counted against
+    /// `Level.opened` this is the one question worth asking about it: whether anybody ever
+    /// finds out it is a button at all.
+    static func recordOpened(_ world: String, solved: Int, of total: Int) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Record.opened",
+            ["world": world, "solved": String(solved), "of": String(total)],
+            value: Double(solved)
+        )
+    }
+
     // MARK: The book of days
 
     /// A day's board opened. Whether it was today or one out of the archive is the
