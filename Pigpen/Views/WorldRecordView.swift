@@ -49,6 +49,20 @@ struct WorldRecordView: View {
             }
         }
         .staysInDaylight()
+        .presentationDetents(detents)
+        .presentationDragIndicator(.visible)
+    }
+
+    /// How far up the sheet comes, which depends on how much there is to read.
+    ///
+    /// A world with a field behind it has two cards and nine stops in the second of them, and
+    /// at the middle height the line the whole panel is building to — the one about what you
+    /// hold that most players do not — sits below the fold with nothing to say it is there. A
+    /// world without one has three figures and a sentence, which does not want the whole
+    /// screen. So the long version opens tall and the short one opens the way the game's other
+    /// sheets do.
+    private var detents: Set<PresentationDetent> {
+        record.hasField ? [.large] : [.medium, .large]
     }
 
     // MARK: - Pieces
@@ -223,7 +237,7 @@ struct WorldRecordView: View {
     /// else is told what the third star is worth, which is the thing still in front of them.
     private func field(_ row: WorldRecord.Row, _ benchmark: LevelBenchmark) -> String {
         row.hasTheBestPen
-            ? "\(percent(benchmark.bestPenShare)) of players have ever found this pen"
+            ? "\(percent(benchmark.bestPenShare)) of players have found this pen"
             : "\(percent(benchmark.threeStarShare)) of players get three stars here"
     }
 
@@ -277,8 +291,6 @@ struct WorldRecordView: View {
                 ),
                 landmark: "the barn"
             )
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
         }
 }
 
@@ -296,7 +308,5 @@ struct WorldRecordView: View {
                 ),
                 landmark: "the cairn"
             )
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
         }
 }

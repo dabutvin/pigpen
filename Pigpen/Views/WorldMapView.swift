@@ -233,8 +233,6 @@ struct WorldMapView: View {
                 ),
                 landmark: colors.cover.landmark
             )
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $isOffering) {
             FullGameOffer(fullGame: fullGame, source: .trail, wait: wait)
