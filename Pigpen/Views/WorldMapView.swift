@@ -97,10 +97,13 @@ struct WorldMapView: View {
     /// - Parameter showsTollNotice: Opens with the boss's price already up, which is how CI
     ///   photographs that card. Nothing else passes it: in a game being played the notice is
     ///   raised by a level coming back or by a tap on the boss, and this is the camera's way in.
+    /// - Parameter showsRecord: Opens with the landmark's record already up, for the same
+    ///   reason and by the same arrangement — a player gets there by tapping the stones.
     init(
         world game: GameWorld = .mudlarkMeadow,
         progress: WorldProgress = WorldProgress(),
         showsTollNotice: Bool = false,
+        showsRecord: Bool = false,
         fullGame: FullGame = .shared,
         ration: LevelRation = .shared,
         onWorldHeld: (() -> Void)? = nil
@@ -111,6 +114,7 @@ struct WorldMapView: View {
         self.ration = ration
         _progress = State(initialValue: progress)
         _pigStop = State(initialValue: Double(progress.frontier))
+        _isShowingRecord = State(initialValue: showsRecord)
         // Nothing but the camera opens with the card already up, and a world that charges
         // nothing for its last stop has no card to open with at all.
         let waiting = showsTollNotice ? progress.tolledStop : nil
