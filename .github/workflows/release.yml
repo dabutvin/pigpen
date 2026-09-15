@@ -37,6 +37,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Before the signing and the hour of building it fronts, because this is the one
+      # check here that can fail on something a person forgot rather than on something
+      # broken, and finding that out at the end would be finding it out late.
+      #
+      # It is the table's age and not its accuracy: what the record panel says about other
+      # players is baked in at build time, and asking whether those figures have moved means
+      # asking TelemetryDeck, which wants a read token this repository does not carry. Age
+      # catches what actually goes wrong, which is a release going out with a table nobody
+      # remembered to regenerate. A stale table is never wrong — a level below the quorum
+      # simply stays quiet — so `ALLOW_STALE_BENCHMARKS=1` is there for a hotfix that should
+      # not wait on a statistics table.
+      - name: Check the benchmark table is not stale
+        run: Tools/generate_benchmarks.py --check
+
       - name: Select Xcode
         run: |
           XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1 || true)
