@@ -1129,13 +1129,12 @@ A puzzle a day, on its own board, with a clock running on it.
   two minutes rather than on fourteen hours. Clearing the game's data forgets those drafts
   with everything else.
 - **A held day goes on a postcard.** Once the pen holds, the verdict card offers *Share*,
-  and what goes is a picture: a cream card nailed up on the grass, lying on its side. The
-  day's board is on the left of it — the same mud with the same stones in it, the same water,
-  the same pig in whatever she has on this week, and the wall she was shut in with — and
-  beside it the game's own name painted the way the title screen plants it, the day under
-  that, then the stars it gave up, what the pen came to and what it cost, the clock and the
-  run of days on tags of their own, and the pig's word on it: *Pig has no notes*. At the foot
-  of that column the day's own address,
+  and what goes is a picture: a cream card nailed up on the grass with the game's own name
+  painted across the top — the same lettering the title screen plants, at a size a card can
+  hold — the day under it, and under that the day's own board — the same mud with the same stones in
+  it, the same water, the same pig in whatever she has on this week — then the stars it
+  gave up, what the pen came to and what it cost, the clock, the run of days, and the pig's
+  word on it: *Pig has no notes*. Along the bottom the day's own address,
   `pigpen.app/day/2026-04-22`, which on a phone with the game on it opens that day's board
   and on one without it opens the site, where the App Store button is. See
   [A link into the app](#a-link-into-the-app). The words beside the picture carry that
@@ -1150,13 +1149,7 @@ A puzzle a day, on its own board, with a clock running on it.
   the website, under a picture of the card, under the words. The board on the card is a real `FieldView` rather than a drawing of one —
   nothing here knows how to paint a field, so a world repainted repaints every card with
   it — and `ImageRenderer` takes the whole card at three times over, which is what the
-  share sheet carries. It lies on its side because a chat does not scale a tall picture down
-  to fit its bubble, it *crops* it: the card was two hundred points taller than it was wide
-  and arrived in iMessage with the top of its own name cut off and the address gone from
-  under it. The card is a fixed size both ways round now, half again as wide as it is tall,
-  which no bubble crops — and the board comes out bigger for it than it would on any portrait
-  card short enough to survive, since across a bubble the words sit beside the board rather
-  than under it and the board gets the whole height. It is painted when the sheet asks rather than up front: a thousand
+  share sheet carries. It is painted when the sheet asks rather than up front: a thousand
   pixels drawn on the way in left the share button waiting on a picture nobody had asked
   for yet, and dead altogether on a phone that could not draw one. The card is held up before it goes, and what is held up is the card
   itself rather than a likeness of it.
