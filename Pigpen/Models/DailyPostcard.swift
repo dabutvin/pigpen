@@ -116,12 +116,16 @@ struct DailyPostcard: Identifiable, Sendable {
     /// out stuttering its own date, twice over: taking the subject off the share sheet did not
     /// fix it, because the preview's title becomes the subject when nothing else is given.
     ///
-    /// The address goes above the tally rather than under it, since a chat that finds a link
-    /// on the last line of a message builds a second bubble out of it — a picture of the
-    /// website, under a picture of the card, under the words. Standing it in the middle gives
-    /// the line something to be part of.
+    /// The address goes above the tally rather than under it, and stands between two dots,
+    /// for the same reason twice: a chat that decides a message *is* a link builds a second
+    /// bubble out of it — a picture of the website, under a picture of the card, under the
+    /// words — and what it goes on to show there is the front page, since a day's address
+    /// sends a browser to the front page. The dots are the cheap half of the experiment. They
+    /// have a space either side of them, which matters: a dot up against the address would be
+    /// read as part of it or as the end of it, and the thing has to stay a link that a finger
+    /// can land on.
     var caption: String {
-        "\(link.absoluteString)\n\(starsInWriting) \(remark)"
+        ". \(link.absoluteString) .\n\(starsInWriting) \(remark)"
     }
 
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
