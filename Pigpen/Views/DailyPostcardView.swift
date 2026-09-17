@@ -1,24 +1,41 @@
 import SwiftUI
 
-/// The postcard held up before it goes: the day's board drawn in emoji on a cream card, a
-/// switch for whether the fencing goes with it, and the button that hands the lot to the
-/// phone's share sheet.
+/// The postcard held up before it goes: the day's card as it will arrive, a switch for
+/// whether the fencing goes with it, and the button that hands the picture to the phone's
+/// share sheet.
 ///
-/// A preview rather than straight to the sheet, because the card is the thing being sent
-/// and the sheet shows a line of it at most. Seeing the pen in emoji before it goes is half
-/// the fun, and the other half is choosing whether the friend on the far end gets the
-/// answer with it.
+/// A preview rather than straight to the sheet, because the card is the thing being sent and
+/// the sheet shows a thumbnail of it at most. What is held up here is the card itself — the
+/// same view that is painted into the picture — so what is admired is what arrives.
 @MainActor
 struct DailyPostcardView: View {
     @Environment(\.dismiss) private var dismiss
 
     let postcard: DailyPostcard
-    /// Whether the fencing is drawn on. Off as the card comes up: everybody gets the same
-    /// board, and a card sent to somebody who has not had their go should not hand them
+    /// What the pig has on, so she is dressed on the card the way she was on the board. The
+    /// one wardrobe the game keeps, by default; a preview hands in its own.
+    var wardrobe: PigWardrobe = .shared
+
+    /// Whether the fencing is standing on the card. Off as it comes up: everybody gets the
+    /// same board, and a card sent to somebody who has not had their go should not hand them
     /// the answer. The switch is for the friend who has.
     @State private var showsFencing = false
+    /// The card as a picture, painted whenever the card changes. Nothing until the first one
+    /// is drawn, which is the same instant the screen appears.
+    @State private var drawn: Drawn?
 
-    private var text: String { postcard.text(showingFencing: showsFencing) }
+    /// The picture, and the same picture again as something the share sheet can show in its
+    /// own header.
+    private struct Drawn {
+        let picture: PostcardPicture
+        let thumbnail: Image
+    }
+
+    /// The card itself, drawn once and used twice: held up on this screen, and painted into
+    /// the picture that goes.
+    private var card: DailyPostcardCard {
+        DailyPostcardCard(postcard: postcard, showsFencing: showsFencing, outfit: wardrobe.outfit)
+    }
 
     var body: some View {
         ZStack {
@@ -35,7 +52,11 @@ struct DailyPostcardView: View {
 
                 ScrollView {
                     VStack(spacing: 14) {
-                        card
+                        // The card is one fixed width whatever is holding it, so it is
+                        // centred rather than stretched — and the page is padded narrowly
+                        // enough that the whole of it stands on the narrowest phone.
+                        card.frame(maxWidth: .infinity)
+
                         fencingSwitch
                         shareButton
 
@@ -45,13 +66,25 @@ struct DailyPostcardView: View {
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 16)
                     .padding(.bottom, 28)
                 }
                 .scrollBounceBehavior(.basedOnSize)
             }
         }
         .staysInDaylight()
+        .task { paint() }
+        .onChange(of: showsFencing) { _, _ in
+            Haptics.tap(.light)
+            paint()
+        }
+    }
+
+    /// Paints the card as it stands. Once when the screen comes up and once more each time
+    /// the fencing goes on or comes off, rather than every time the screen is laid out: the
+    /// picture is a thousand pixels across and a share sheet wants it ready before it opens.
+    private func paint() {
+        drawn = card.painted().map { Drawn(picture: $0.picture, thumbnail: $0.thumbnail) }
     }
 
     // MARK: - Pieces
@@ -84,32 +117,6 @@ struct DailyPostcardView: View {
         .padding(.bottom, 16)
     }
 
-    /// The card itself, word for word what goes into the chat, so what is admired here is
-    /// what arrives there. Selectable, for anybody who would rather copy it by hand.
-    private var card: some View {
-        Text(text)
-            .font(.system(size: 15, weight: .semibold, design: .rounded))
-            .foregroundStyle(GamePalette.post)
-            .multilineTextAlignment(.center)
-            .lineSpacing(3)
-            .fixedSize(horizontal: false, vertical: true)
-            .textSelection(.enabled)
-            .frame(maxWidth: .infinity)
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(GamePalette.cream)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1)
-            )
-            // A darker, longer drop than a card on timber needed: on a cream page the shadow
-            // is the whole of what lifts a cream card off it.
-            .shadow(color: .black.opacity(0.3), radius: 10, y: 5)
-            .accessibilityLabel(postcard.spoken)
-    }
-
     /// The one choice on the card: whether the wall goes on it.
     private var fencingSwitch: some View {
         Toggle(isOn: $showsFencing) {
@@ -134,28 +141,51 @@ struct DailyPostcardView: View {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(GamePalette.cream.opacity(0.7))
         )
-        .onChange(of: showsFencing) { _, _ in
-            Haptics.tap(.light)
+    }
+
+    /// Hands the picture to the phone, with the day's address as the words that go with it —
+    /// a chat that takes both gets something to look at and something to tap. Counted on the
+    /// way, with whether the fencing went.
+    @ViewBuilder
+    private var shareButton: some View {
+        if let drawn {
+            ShareLink(
+                item: drawn.picture,
+                subject: Text(postcard.title),
+                message: Text(postcard.caption),
+                preview: SharePreview(postcard.title, image: drawn.thumbnail)
+            ) {
+                shareLabel
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
+            .simultaneousGesture(
+                TapGesture().onEnded {
+                    Haptics.tap(.medium)
+                    Sounds.play(.press)
+                    Analytics.record(.dailyShared(fencing: showsFencing))
+                }
+            )
+            .padding(.top, 4)
+        } else {
+            // The instant before the first card is painted, and whatever is left of a phone
+            // that could not paint one at all.
+            shareLabel
+                .padding(.vertical, 14)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(GamePalette.clay.opacity(0.45))
+                )
+                .padding(.top, 4)
+                .accessibilityHidden(true)
         }
     }
 
-    /// Hands the card to the phone. Counted on the way, with whether the fencing went.
-    private var shareButton: some View {
-        ShareLink(item: text) {
-            Label("Share", systemImage: "square.and.arrow.up")
-                .font(.system(size: 16, weight: .black, design: .rounded))
-                .foregroundStyle(GamePalette.cream)
-                .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
-        .simultaneousGesture(
-            TapGesture().onEnded {
-                Haptics.tap(.medium)
-                Sounds.play(.press)
-                Analytics.record(.dailyShared(fencing: showsFencing))
-            }
-        )
-        .padding(.top, 4)
+    private var shareLabel: some View {
+        Label("Share the card", systemImage: "square.and.arrow.up")
+            .font(.system(size: 16, weight: .black, design: .rounded))
+            .foregroundStyle(GamePalette.cream)
+            .frame(maxWidth: .infinity)
     }
 }
 

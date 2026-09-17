@@ -1117,24 +1117,30 @@ A puzzle a day, on its own board, with a clock running on it.
   two minutes rather than on fourteen hours. Clearing the game's data forgets those drafts
   with everything else.
 - **A held day goes on a postcard.** Once the pen holds, the verdict card offers *Share*,
-  and what goes is text rather than a picture, because text is what a group chat is made
-  of: the day, the stars and the rainbow a best pen keeps, the clock, the run of days, what
-  the pen came to and the pig's word on it — *Pig has no notes* — and under all that the
-  board itself, a tile to an emoji: cream mud, blue water, the pig, and whatever was lying
-  on the ground. The day's own address stands at the bottom — `pigpen.app/day/2026-04-22` —
-  which on a phone with the game on it opens that day's board, and on one without it opens
-  the site, where the App Store button is. See [A link into the app](#a-link-into-the-app).
-  The card is held up on a cream board of its own before it goes, so the pen can be admired
-  in emoji first and the whole thing copied by hand by anybody who would rather.
+  and what goes is a picture: a cream card nailed up on the grass with the game's name
+  across the top, and under it the day's own board — the same mud with the same stones in
+  it, the same water, the same pig in whatever she has on this week — then the stars it
+  gave up, what the pen came to and what it cost, the clock, the run of days, and the pig's
+  word on it: *Pig has no notes*. Along the bottom the day's own address,
+  `pigpen.app/day/2026-04-22`, which on a phone with the game on it opens that day's board
+  and on one without it opens the site, where the App Store button is. See
+  [A link into the app](#a-link-into-the-app). The same address rides along as the words
+  beside the picture, so a chat that takes both has something to tap as well as something
+  to look at. The board on the card is a real `FieldView` rather than a drawing of one —
+  nothing here knows how to paint a field, so a world repainted repaints every card with
+  it — and `ImageRenderer` takes the whole card at three times over, which is what the
+  share sheet carries. The card is held up before it goes, and what is held up is the card
+  itself rather than a likeness of it.
   The fencing is a switch on that card, and it comes up off. Everybody gets the same board
   on a given day, which is what makes a daily worth comparing at all, and a card sent to
   somebody who has not had their go should not hand them the answer. Flick it on for the
-  friend who has, and the wall goes on as logs with the ground it holds washed gold, as on
-  the field. Only a day is shared — a trail stop is nobody else's morning — and only a pen
-  that held: a pig that walked out gets no postcard. The run of days is written on today's
-  card and no other, since a run counted back from a day dug out of the archive is not a
-  run anybody is on. `DailyPostcardTests` pins the card line by line, and holds the board
-  to going without its answer unless asked.
+  friend who has, and the wall is built on the board with the ground it holds washed gold,
+  as on the field — and a pen with nothing left to beat keeps its drifting rainbow. Only a
+  day is shared — a trail stop is nobody else's morning — and only a pen that held: a pig
+  that walked out gets no postcard. The run of days is written on today's card and no
+  other, since a run counted back from a day dug out of the archive is not a run anybody is
+  on. `DailyPostcardTests` pins every word on the card, and holds the board to going
+  without its answer unless asked.
 
 The almanac is generated rather than authored — `Tools/generate_dailies.py` writes it, and
 `DailyAlmanacTests` replays the best pen of every single day so that no day can promise a
@@ -2298,7 +2304,7 @@ Pigpen/
 │   ├── DailyAlmanac.swift       # The book of daily puzzles, and which of them are open yet
 │   ├── DailyAlmanacData.swift   # Generated: every daily puzzle, one line to a day
 │   ├── DailyProgress.swift      # Days done: stars, times, best pens, walls, drafts, streaks
-│   ├── DailyPostcard.swift      # A held day as a chat message: the verdict, and the board in emoji, fencing optional
+│   ├── DailyPostcard.swift      # What a held day's card says: the verdict, the clock, the run, the day's address
 │   ├── DailyReminder.swift      # The reminder each morning: whether, at what hour, and what it says
 │   ├── ReminderScheduler.swift  # The phone's notification centre, behind a protocol a test can stand in for
 │   ├── TappedReminder.swift     # Which day a tapped reminder, or a followed link, is asking for, until a screen is up to open it
@@ -2321,6 +2327,7 @@ Pigpen/
 │   ├── DailyArchiveView.swift   # The calendar of every daily there has been
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
 │   ├── DailyPuzzleView.swift    # One day's board: clock, draft kept on the way out, record on a pen
+│   ├── DailyPostcardCard.swift  # The card a held day is sent as: the wordmark, the board, the stars, the address
 │   ├── DailyPostcardView.swift  # The postcard held up before it goes: the card, the fencing switch, the share button
 │   ├── StarRow.swift            # Three stars, and the rainbow a best pen keeps
 │   ├── CutSceneView.swift       # Plays a painted film: the bars, the type, the way out
