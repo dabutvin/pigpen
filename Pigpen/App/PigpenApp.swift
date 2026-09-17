@@ -210,6 +210,7 @@ struct PigpenApp: App {
         case cityMap = "-city-map"
         case tutorial = "-tutorial"
         case daily = "-daily"
+        case postcard = "-postcard"
         case archive = "-archive"
         case settings = "-settings"
         case reminder = "-reminder"
@@ -449,6 +450,24 @@ struct PigpenApp: App {
                     date: Self.photographed,
                     progress: DailyProgress(store: RememberedDailyRecords())
                 )
+            }
+        case .postcard:
+            // The card a held day is sent as, held up the way it is held up before it goes.
+            // The best pen the day has in it, so the card is photographed carrying everything
+            // it can carry — three stars drifting through the spectrum, a gold tally, a clock
+            // and a run of days — and the pig in a cap, since what she has on goes on the card
+            // twice and that is worth being able to see.
+            if let day = DailyAlmanac.level(on: Self.photographed),
+               let card = DailyPostcard(
+                   date: Self.photographed,
+                   level: day,
+                   fences: PuzzleGame.aDayAtItsBest(day).fences,
+                   seconds: 134,
+                   streak: 6
+               ) {
+                DailyPostcardView(postcard: card, wardrobe: .remembering(.baseballCap))
+            } else {
+                NoPuzzleView(date: Self.photographed)
             }
         case .archive:
             DailyArchiveView(

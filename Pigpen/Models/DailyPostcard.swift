@@ -1,20 +1,20 @@
 import Foundation
 
-/// A day's pen written out so it can be pasted into a chat: which day it was, what the pen
-/// gave up, how long it took, the run of days behind it — and the board itself, a tile to
-/// an emoji, with or without the fencing drawn on.
+/// A day's pen made into something worth sending: which day it was, what the wall came to,
+/// how long it took, the run of days behind it — and the board itself, which the card draws
+/// the way the game draws it rather than spelling out in coloured squares.
 ///
-/// Text rather than a picture, because text is what a group chat is made of: it lands as
-/// a message rather than an attachment, it is quoted and replied to like one, and a friend
-/// who has not played can read the day off it and go and have their own go. The day's own
-/// address stands at the bottom for that friend — `DayLink` — which opens the game on that
-/// day's board on a phone that has it, and the site on one that does not.
+/// This is only what the card *says*. `DailyPostcardCard` paints it, and what goes to the
+/// chat is a picture of that painting: the game's own ground, its own water, its own pig,
+/// with the day's address printed along the bottom. A grid of emoji was the first way this
+/// went out and it was legible rather than lovely — the board every player is handed that
+/// morning is a drawn thing, and a card that stands for it should be a drawn thing too.
 ///
 /// The fencing is a choice rather than a given. Everybody gets the same board on a given
 /// day, which is the whole of what makes a daily worth comparing, and a card with the wall
-/// drawn on it hands over the answer to anybody it reaches. So the board goes as it was
-/// opened — the water, the pig, whatever was lying on the mud — and the fencing is put on
-/// only when asked for, for the friend who has already had their go.
+/// standing on it hands over the answer to anybody it reaches. So the board goes as it was
+/// opened — the water, the pig, whatever was lying on the mud — and the fencing is built on
+/// it only when asked for, for the friend who has already had their go.
 struct DailyPostcard: Identifiable, Sendable {
     let date: DailyDate
     let level: PuzzleLevel
@@ -53,38 +53,20 @@ struct DailyPostcard: Identifiable, Sendable {
         self.streak = streak
     }
 
-    // MARK: - The card
+    // MARK: - What the card says
 
-    /// The whole card, top to bottom: the day, the verdict, the board, the day's address.
-    func text(showingFencing: Bool) -> String {
-        var lines = [heading, summary, remark, ""]
-        lines += board(showingFencing: showingFencing)
-        lines += ["", DayLink.url(for: date).absoluteString]
-        return lines.joined(separator: "\n")
-    }
+    /// The game's name and the day's, across the top of the card and on the share sheet's
+    /// own preview of it.
+    var title: String { "Pigpen · \(date.title)" }
 
-    /// The game's name and the day's, the way the day names itself as a puzzle.
-    var heading: String { "\(Self.pig) Pigpen · \(date.title)" }
+    /// What the pen came to and what it cost: points on a board with apples or skulls lying
+    /// on it, tiles on one with nothing but ground to count, the way the verdict card reads
+    /// a score.
+    var ground: String { counted(tally.score, level.holdsTreats ? "point" : "tile") }
+    var wall: String { counted(fences.count, "piece") }
 
-    /// The stars, the rainbow a best pen keeps, the clock and the run of days — each of
-    /// them only when there is one to say.
-    var summary: String {
-        var stars = String(repeating: "⭐", count: verdict.stars)
-        if verdict.isAsGoodAsItGets { stars += "🌈" }
-
-        var parts = [stars]
-        if let seconds { parts.append("⏱️ \(Stopwatch.face(TimeInterval(seconds)))") }
-        if streak > 1 { parts.append("🔥 \(streak) days in a row") }
-        return parts.joined(separator: " · ")
-    }
-
-    /// What the pen came to, and what the pig makes of it. Points on a board with apples
-    /// or skulls lying on it, tiles on one with nothing but ground to count, the way the
-    /// verdict card reads a score.
-    var remark: String {
-        let ground = counted(tally.score, level.holdsTreats ? "point" : "tile")
-        return "\(ground) with \(counted(fences.count, "piece")). \(pigSays)"
-    }
+    /// The clock, as a clock shows it, and nothing for a board nobody timed.
+    var clock: String? { seconds.map { Stopwatch.face(TimeInterval($0)) } }
 
     /// The pig's word on the pen, in the voice the verdict card uses: nothing to add to the
     /// best pen there is, and a little more to say the further below it the pen stands.
@@ -97,19 +79,28 @@ struct DailyPostcard: Identifiable, Sendable {
         }
     }
 
-    /// The board, a row to a line and a tile to an emoji. With the fencing off it is the
-    /// board every player was handed that morning; with it on, the wall stands as logs
-    /// and the ground it holds is washed gold, as on the field.
-    func board(showingFencing: Bool) -> [String] {
-        (0..<level.rowCount).map { row in
-            (0..<level.columnCount)
-                .map { tile(GridPoint(row: row, column: $0), showingFencing: showingFencing) }
-                .joined()
-        }
-    }
+    /// The two together, for a screen reader and for anywhere a card has one line to say
+    /// what happened rather than a card's worth of room.
+    var remark: String { "\(ground) with \(wall). \(pigSays)" }
 
-    /// The card said aloud, for a screen reader that would otherwise read the board out a
-    /// square at a time: the day, the stars, the clock, the run and the pig's word.
+    // MARK: - Where it points
+
+    /// The day's own address, which opens the game on that board on a phone that has it and
+    /// the site on one that does not.
+    var link: URL { DayLink.url(for: date) }
+
+    /// The same address as it is printed along the bottom of the card. No scheme in front of
+    /// it: nothing taps an address in a picture, so what is printed there is what somebody
+    /// would type, and `https://` is four words of nothing to read.
+    var address: String { DayLink.address(for: date) }
+
+    /// The words that go with the picture — what a chat puts in the message field while the
+    /// card goes up as the attachment. The day, and the address as an address, so the friend
+    /// on the far end has something to tap as well as something to look at.
+    var caption: String { "\(title)\n\(link.absoluteString)" }
+
+    /// The card said aloud, for a screen reader that would otherwise have nothing to read at
+    /// all: the day, the stars, the clock, the run and the pig's word.
     var spoken: String {
         let spelled = ["No", "One", "Two", "Three"]
         let stars = min(max(verdict.stars, 0), 3)
@@ -121,37 +112,6 @@ struct DailyPostcard: Identifiable, Sendable {
         if streak > 1 { said.append("\(streak) days in a row.") }
         said.append(remark)
         return said.joined(separator: " ")
-    }
-
-    // MARK: - The tiles
-
-    /// Open ground. The field's mud is cream rather than brown, and the pale square is the
-    /// one the keyboard has that reads as it.
-    static let mud = "⬜"
-    static let water = "🟦"
-    /// Ground the pen holds, washed gold as it is on the field.
-    static let held = "🟨"
-    /// A fence piece. A log is the nearest thing a keyboard has to a picket.
-    static let fence = "🪵"
-    static let pig = "🐷"
-    /// Any other animal, should a day ever stand one on the board. None does yet.
-    static let somebodyElse = "🐾"
-    static let apple = "🍎"
-    static let skull = "💀"
-
-    private func tile(_ point: GridPoint, showingFencing: Bool) -> String {
-        if let animal = level.animals.first(where: { $0.tile == point }) {
-            return animal.kind == .pig ? Self.pig : Self.somebodyElse
-        }
-        if let treat = level.treat(at: point) {
-            return treat == .apple ? Self.apple : Self.skull
-        }
-        if level.terrain(at: point) == .water { return Self.water }
-        if showingFencing {
-            if fences.contains(point) { return Self.fence }
-            if pen.contains(point) { return Self.held }
-        }
-        return Self.mud
     }
 
     private func counted(_ number: Int, _ noun: String) -> String {
