@@ -94,10 +94,26 @@ struct DailyPostcard: Identifiable, Sendable {
     /// would type, and `https://` is four words of nothing to read.
     var address: String { DayLink.address(for: date) }
 
+    /// The stars as a chat can print them, and the rainbow a best pen keeps. The card draws
+    /// them; the words beside it have to say them, since a message is read before a picture
+    /// loads and a good few chats show the words and nothing else.
+    var starsInWriting: String {
+        let won = min(max(verdict.stars, 0), 3)
+        return String(repeating: "⭐", count: won) + (verdict.isAsGoodAsItGets ? "🌈" : "")
+    }
+
     /// The words that go with the picture — what a chat puts in the message field while the
-    /// card goes up as the attachment. The day, and the address as an address, so the friend
-    /// on the far end has something to tap as well as something to look at.
-    var caption: String { "\(title)\n\(link.absoluteString)" }
+    /// card goes up as the attachment: the day, what the pen was worth, and the day's own
+    /// address, so the friend on the far end has something to tap as well as something to
+    /// look at, and knows what the brag is before the picture has finished loading.
+    ///
+    /// The day is said once here, and this is the only place it is said. The share sheet
+    /// used to be handed a subject as well, and a chat with no subject line of its own —
+    /// which is every chat — prints the subject and the message one after the other, so
+    /// every card went out stuttering its own date.
+    var caption: String {
+        "\(title)\n\(starsInWriting) \(remark)\n\(link.absoluteString)"
+    }
 
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
     /// all: the day, the stars, the clock, the run and the pig's word.
