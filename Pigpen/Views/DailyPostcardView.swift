@@ -130,13 +130,17 @@ struct DailyPostcardView: View {
         )
     }
 
-    /// Hands the picture to the phone, with the day's address as the words that go with it —
-    /// a chat that takes both gets something to look at and something to tap. Counted on the
-    /// way, with whether the fencing went.
+    /// Hands the picture to the phone, with the day, what the pen was worth and the day's
+    /// address as the words that go with it — a chat that takes both gets something to look
+    /// at and something to tap. Counted on the way, with whether the fencing went.
+    ///
+    /// No subject. A subject is a thing Mail has and a chat has not, and a chat handed one
+    /// prints it above the message rather than dropping it: the day came out twice, once
+    /// from the subject and once from the top of the caption. The caption says everything
+    /// now, and says it once.
     private var shareButton: some View {
         ShareLink(
             item: picture,
-            subject: Text(postcard.title),
             message: Text(postcard.caption),
             preview: SharePreview(postcard.title)
         ) {
@@ -154,7 +158,7 @@ struct DailyPostcardView: View {
     }
 
     private var shareLabel: some View {
-        Label("Share the card", systemImage: "square.and.arrow.up")
+        Label("Share your score", systemImage: "square.and.arrow.up")
             .font(.system(size: 16, weight: .black, design: .rounded))
             .foregroundStyle(GamePalette.cream)
             .frame(maxWidth: .infinity)
