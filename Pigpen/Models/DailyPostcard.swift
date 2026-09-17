@@ -125,7 +125,7 @@ struct DailyPostcard: Identifiable, Sendable {
     /// read as part of it or as the end of it, and the thing has to stay a link that a finger
     /// can land on.
     var caption: String {
-        "· \(link.absoluteString) ·\n\(starsInWriting) \(remark)"
+        ". \(link.absoluteString) .\n\(starsInWriting) \(remark)"
     }
 
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
