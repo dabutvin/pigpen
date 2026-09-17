@@ -13,36 +13,44 @@ import UniformTypeIdentifiers
 /// from the board it stands for the first time a world was repainted.
 ///
 /// It is laid out to be *rendered*: handed to `ImageRenderer`, it comes out a picture a chat
-/// can carry. So it is always exactly `width` across, on screen as well as in the picture —
-/// the card held up before it goes is the card that goes, down to the pixel — and everything
-/// on it is measured in points off that rather than left to the room it is given.
+/// can carry. So it is always exactly `width` by `height`, on screen as well as in the
+/// picture — the card held up before it goes is the card that goes, down to the pixel — and
+/// everything on it is measured in points off those rather than left to the room it is given.
+///
+/// It lies on its side, and that is not a taste. A chat does not scale a tall picture down to
+/// fit its bubble, it *crops* it: a card two hundred points taller than it was wide arrived in
+/// iMessage with the top of its own name cut off and the day's address gone from under it,
+/// which is the one line on it that a friend without the game can do anything with. Lying on
+/// its side the whole card is shown — and the board comes out larger than it would on any
+/// portrait card short enough to survive the crop, because across the bubble the words sit
+/// beside the board rather than under it, and the board gets the whole height instead.
 struct DailyPostcardCard: View {
     let postcard: DailyPostcard
-    /// Whether the wall is standing on the board. Off is the day as everybody was handed it
-    /// that morning, which is the card that can be sent to somebody who has not played yet.
-    var showsFencing = false
+    /// Whether the wall is standing on the board. On is the pen that was built, which is the
+    /// whole of what a card has to say; off is the day as everybody was handed it that
+    /// morning, which is the card for somebody who has not played yet.
+    var showsFencing = true
     /// What the pig has on. Handed in rather than asked of the wardrobe here, so a preview
     /// can dress her without a choice saved on the machine it is running on.
     var outfit: PigOutfit = .asSheComes
 
-    /// How wide the card is, always. Narrow enough to stand inside the narrowest phone the
-    /// game runs on with room either side, wide enough that a nine by nine board drawn on it
-    /// has tiles a friend can count.
-    static let width: CGFloat = 340
+    /// How big the card is, always — both ways round. A picture that is fixed in one dimension
+    /// and left to grow in the other cannot be promised an aspect, and the aspect is the whole
+    /// of what keeps a chat from taking a knife to it. Half again as wide as it is tall, which
+    /// no bubble crops.
+    static let width: CGFloat = 560
+    static let height: CGFloat = 360
     /// The grass round the card, and the card's own margin inside that.
     private static let verge: CGFloat = 14
     private static let margin: CGFloat = 15
-    /// What is left across the middle for the board and everything written under it.
-    private static var span: CGFloat { width - 2 * verge - 2 * margin }
+    /// What is left down the middle of it: the board's height, and the height the words beside
+    /// the board have to keep inside.
+    private static var span: CGFloat { height - 2 * verge - 2 * margin }
 
     var body: some View {
-        VStack(spacing: 11) {
-            masthead
+        HStack(spacing: 16) {
             field
-            stars
-            chips
-            saying
-            address
+            column
         }
         .padding(Self.margin)
         .background(plank)
@@ -50,9 +58,26 @@ struct DailyPostcardCard: View {
         .shadow(color: .black.opacity(0.28), radius: 7, y: 4)
         .padding(Self.verge)
         .background(pasture)
-        .frame(width: Self.width)
+        .frame(width: Self.width, height: Self.height)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(postcard.spoken)
+    }
+
+    /// Everything that is not the board, in the column beside it. Held apart top and bottom so
+    /// the writing sits in the middle of the board's height however much of it there is — a
+    /// two-line verdict and a one-line verdict both come out centred rather than both hanging
+    /// from the top.
+    private var column: some View {
+        VStack(spacing: 9) {
+            Spacer(minLength: 0)
+            masthead
+            stars
+            chips
+            saying
+            Spacer(minLength: 0)
+            address
+        }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Up the card
@@ -65,15 +90,15 @@ struct DailyPostcardCard: View {
     /// Centred, like everything under it. The one row that was not was the only thing on the
     /// card reading as a form rather than as a card.
     private var masthead: some View {
-        VStack(spacing: 6) {
-            PlantedWord(word: "PIGPEN", size: 30, planted: 1)
+        VStack(spacing: 5) {
+            PlantedWord(word: "PIGPEN", size: 28, planted: 1)
 
             Text(postcard.date.title.uppercased())
-                .font(.system(size: 12, weight: .black, design: .rounded))
-                .tracking(1.6)
+                .font(.system(size: 11, weight: .black, design: .rounded))
+                .tracking(1.1)
                 .foregroundStyle(GamePalette.post.opacity(0.55))
                 .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(0.55)
         }
     }
 
@@ -100,22 +125,23 @@ struct DailyPostcardCard: View {
             onStrokeEnd: {}
         )
         .allowsHitTesting(false)
-        // Measured rather than proposed. A field lays itself out inside whatever height it is
-        // handed, and a card being painted into a picture is handed none at all — so the board
-        // is given the span across and as many tiles down as the day has rows, which is the
-        // same arithmetic the board would have done for itself.
-        .frame(width: Self.span, height: boardHeight)
+        // Measured rather than proposed. A field lays itself out inside whatever it is handed,
+        // and a card being painted into a picture is handed nothing at all — so the board is
+        // given the whole height of the card and as many tiles across as the day has columns,
+        // which is the same arithmetic the board would have done for itself.
+        .frame(width: boardWidth, height: Self.span)
         // Standing on the card rather than printed onto it, the same as the board standing
         // on the meadow.
         .shadow(color: .black.opacity(0.28), radius: 5, y: 3)
     }
 
-    /// The span across, cut into as many tiles as the day has columns, as many times down as
-    /// it has rows — which is the same arithmetic `BoardGeometry` would have done for itself
-    /// had anything told it how tall it was allowed to be.
-    private var boardHeight: CGFloat {
-        let cell = Self.span / CGFloat(max(postcard.level.columnCount, 1))
-        return cell * CGFloat(postcard.level.rowCount)
+    /// The span down, cut into as many tiles as the day has rows, as many times across as it
+    /// has columns — which is the same arithmetic `BoardGeometry` would have done for itself
+    /// had anything told it how wide it was allowed to be. A day squarer than the card leaves
+    /// the words the room it does not take.
+    private var boardWidth: CGFloat {
+        let cell = Self.span / CGFloat(max(postcard.level.rowCount, 1))
+        return cell * CGFloat(postcard.level.columnCount)
     }
 
     /// What the day gave up, big enough to read at the size a chat shows a picture. Empty
@@ -139,20 +165,28 @@ struct DailyPostcardCard: View {
         let quiet = GamePalette.post.opacity(0.08)
         let quietInk = GamePalette.post.opacity(0.72)
 
-        return HStack(spacing: 6) {
-            chip(postcard.ground, on: GamePalette.pen, ink: GamePalette.post)
-            chip(postcard.wall, on: quiet, ink: quietInk)
-
-            if let clock = postcard.clock {
-                chip(clock, icon: "stopwatch", on: quiet, ink: quietInk)
+        // Two and two rather than four across: a column beside a board is not a card's width,
+        // and four tags in a row came out either squashed or hanging off the edge of it.
+        return VStack(spacing: 6) {
+            HStack(spacing: 6) {
+                chip(postcard.ground, on: GamePalette.pen, ink: GamePalette.post)
+                chip(postcard.wall, on: quiet, ink: quietInk)
             }
-            if postcard.streak > 1 {
-                chip(
-                    "\(postcard.streak)",
-                    icon: "flame.fill",
-                    on: GamePalette.barn.opacity(0.12),
-                    ink: GamePalette.barn
-                )
+
+            if postcard.clock != nil || postcard.streak > 1 {
+                HStack(spacing: 6) {
+                    if let clock = postcard.clock {
+                        chip(clock, icon: "stopwatch", on: quiet, ink: quietInk)
+                    }
+                    if postcard.streak > 1 {
+                        chip(
+                            "\(postcard.streak)",
+                            icon: "flame.fill",
+                            on: GamePalette.barn.opacity(0.12),
+                            ink: GamePalette.barn
+                        )
+                    }
+                }
             }
         }
     }
@@ -176,7 +210,7 @@ struct DailyPostcardCard: View {
     /// The pig's word on the pen, which is the line a friend actually reads.
     private var saying: some View {
         Text("“\(postcard.pigSays)”")
-            .font(.system(size: 14, weight: .heavy, design: .rounded))
+            .font(.system(size: 13, weight: .heavy, design: .rounded))
             .foregroundStyle(GamePalette.post.opacity(0.8))
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
@@ -335,8 +369,8 @@ struct CouldNotPaint: Error {}
     return ScrollView {
         VStack(spacing: 20) {
             if let card {
-                DailyPostcardCard(postcard: card, showsFencing: true, outfit: .baseballCap)
-                DailyPostcardCard(postcard: card)
+                DailyPostcardCard(postcard: card, outfit: .baseballCap)
+                DailyPostcardCard(postcard: card, showsFencing: false)
             }
         }
         .frame(maxWidth: DailyPostcardCard.width)

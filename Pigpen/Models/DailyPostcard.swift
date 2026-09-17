@@ -10,11 +10,14 @@ import Foundation
 /// went out and it was legible rather than lovely — the board every player is handed that
 /// morning is a drawn thing, and a card that stands for it should be a drawn thing too.
 ///
-/// The fencing is a choice rather than a given. Everybody gets the same board on a given
-/// day, which is the whole of what makes a daily worth comparing, and a card with the wall
-/// standing on it hands over the answer to anybody it reaches. So the board goes as it was
-/// opened — the water, the pig, whatever was lying on the mud — and the fencing is built on
-/// it only when asked for, for the friend who has already had their go.
+/// The fencing goes on the card, and there is a switch for taking it off. Everybody is
+/// handed the same board on a given day — the water, the pig, whatever is lying on the mud —
+/// so the wall is the only part of the card that belongs to whoever built it, and a card
+/// without it is a picture of somebody else's morning. It goes on.
+///
+/// Switching it off leaves the board as it opened, which is the card for the friend who has
+/// not had their go yet: the same ground everybody else got that morning and none of the
+/// answer to it.
 struct DailyPostcard: Identifiable, Sendable {
     let date: DailyDate
     let level: PuzzleLevel
@@ -103,16 +106,22 @@ struct DailyPostcard: Identifiable, Sendable {
     }
 
     /// The words that go with the picture — what a chat puts in the message field while the
-    /// card goes up as the attachment: the day, what the pen was worth, and the day's own
-    /// address, so the friend on the far end has something to tap as well as something to
-    /// look at, and knows what the brag is before the picture has finished loading.
+    /// card goes up as the attachment: the day's own address, so the friend on the far end
+    /// has something to tap as well as something to look at, and what the pen was worth, so
+    /// they know what the brag is before the picture has finished loading.
     ///
-    /// The day is said once here, and this is the only place it is said. The share sheet
-    /// used to be handed a subject as well, and a chat with no subject line of its own —
-    /// which is every chat — prints the subject and the message one after the other, so
-    /// every card went out stuttering its own date.
+    /// The day is not in here, and that is deliberate. It is the share sheet's own title for
+    /// the card — `title`, handed over as the preview — and a chat with no title line of its
+    /// own prints that above the message. Saying it here as well is what had every card going
+    /// out stuttering its own date, twice over: taking the subject off the share sheet did not
+    /// fix it, because the preview's title becomes the subject when nothing else is given.
+    ///
+    /// The address goes above the tally rather than under it, since a chat that finds a link
+    /// on the last line of a message builds a second bubble out of it — a picture of the
+    /// website, under a picture of the card, under the words. Standing it in the middle gives
+    /// the line something to be part of.
     var caption: String {
-        "\(title)\n\(starsInWriting) \(remark)\n\(link.absoluteString)"
+        "\(link.absoluteString)\n\(starsInWriting) \(remark)"
     }
 
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
