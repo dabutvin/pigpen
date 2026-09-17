@@ -3,9 +3,9 @@ import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
 
-/// A held day painted onto a card: the game's wordmark across the top, the day's own board
-/// drawn the way the game draws it, the stars it gave up, what the pen came to, the pig's
-/// word on it, and the day's address along the bottom.
+/// A held day painted onto a card: the game's own wordmark across the top, the day under
+/// it, the day's own board drawn the way the game draws it, the stars it gave up, what the
+/// pen came to, the pig's word on it, and the day's address along the bottom.
 ///
 /// The board is a real `FieldView` rather than a picture of one — the same mud with the same
 /// stones in it, the same water, the same pig in whatever she has on this week. Nothing here
@@ -30,14 +30,14 @@ struct DailyPostcardCard: View {
     /// has tiles a friend can count.
     static let width: CGFloat = 340
     /// The grass round the card, and the card's own margin inside that.
-    private static let verge: CGFloat = 13
+    private static let verge: CGFloat = 14
     private static let margin: CGFloat = 15
     /// What is left across the middle for the board and everything written under it.
     private static var span: CGFloat { width - 2 * verge - 2 * margin }
 
     var body: some View {
         VStack(spacing: 11) {
-            heading
+            masthead
             field
             stars
             chips
@@ -57,24 +57,23 @@ struct DailyPostcardCard: View {
 
     // MARK: - Up the card
 
-    /// The game's name, and the day's beside it. The pig stands in for a logo, dressed as she
-    /// is on the board below, so a card from somebody in a party hat says so twice.
-    private var heading: some View {
-        HStack(spacing: 7) {
-            DressedAnimal(animal: .pig, size: 17, outfit: outfit)
+    /// The game's own name over the day it is a card for, painted the way the title screen
+    /// paints it rather than typed in capitals: `PlantedWord`, the same letters cut out on
+    /// the same white, at a size a card can hold. A card is the game turning up in somebody
+    /// else's chat, and it should turn up under its own name.
+    ///
+    /// Centred, like everything under it. The one row that was not was the only thing on the
+    /// card reading as a form rather than as a card.
+    private var masthead: some View {
+        VStack(spacing: 6) {
+            PlantedWord(word: "PIGPEN", size: 30, planted: 1)
 
-            Text("PIGPEN")
-                .font(.system(size: 14, weight: .black, design: .rounded))
-                .tracking(2.2)
-                .foregroundStyle(GamePalette.post)
-
-            Spacer(minLength: 4)
-
-            Text(postcard.date.title)
-                .font(.system(size: 12.5, weight: .heavy, design: .rounded))
-                .foregroundStyle(GamePalette.post.opacity(0.62))
+            Text(postcard.date.title.uppercased())
+                .font(.system(size: 12, weight: .black, design: .rounded))
+                .tracking(1.6)
+                .foregroundStyle(GamePalette.post.opacity(0.55))
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(0.6)
         }
     }
 
@@ -209,7 +208,7 @@ struct DailyPostcardCard: View {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [.white.opacity(0.55), .clear],
+                            colors: [.white.opacity(0.32), .clear],
                             startPoint: .top,
                             endPoint: .center
                         )
@@ -247,9 +246,14 @@ struct DailyPostcardCard: View {
     /// The grass the card is standing on, which is also what keeps it a card: a cream page
     /// sent bare into a chat is a cream page on a white bubble, with nothing to say where it
     /// stops.
+    ///
+    /// Open country's green rather than the pasture's. The backdrop on the title screen is
+    /// greyed on purpose — it is the thing behind everything else, and it has all day to be
+    /// looked past — but a border has one job, and a border a quarter of the way to grey did
+    /// not do it: the card came out looking unfinished at the edges rather than mounted.
     private var pasture: some View {
         LinearGradient(
-            colors: [GamePalette.Pasture.day.ground, GamePalette.Pasture.day.foreground],
+            colors: [GamePalette.beyond, GamePalette.clover],
             startPoint: .top,
             endPoint: .bottom
         )

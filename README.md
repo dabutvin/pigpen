@@ -1117,8 +1117,9 @@ A puzzle a day, on its own board, with a clock running on it.
   two minutes rather than on fourteen hours. Clearing the game's data forgets those drafts
   with everything else.
 - **A held day goes on a postcard.** Once the pen holds, the verdict card offers *Share*,
-  and what goes is a picture: a cream card nailed up on the grass with the game's name
-  across the top, and under it the day's own board — the same mud with the same stones in
+  and what goes is a picture: a cream card nailed up on the grass with the game's own name
+  painted across the top — the same lettering the title screen plants, at a size a card can
+  hold — the day under it, and under that the day's own board — the same mud with the same stones in
   it, the same water, the same pig in whatever she has on this week — then the stars it
   gave up, what the pen came to and what it cost, the clock, the run of days, and the pig's
   word on it: *Pig has no notes*. Along the bottom the day's own address,
