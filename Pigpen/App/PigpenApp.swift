@@ -454,9 +454,11 @@ struct PigpenApp: App {
         case .postcard:
             // The card a held day is sent as, held up the way it is held up before it goes.
             // The best pen the day has in it, so the card is photographed carrying everything
-            // it can carry — three stars drifting through the spectrum, a gold tally, a clock
-            // and a run of days — and the pig in a cap, since what she has on goes on the card
-            // twice and that is worth being able to see.
+            // it can carry — the wall standing on gold ground, three stars drifting through
+            // the spectrum, a gold tally, a clock and a run of days — and the pig in a cap,
+            // since what she has on goes on the card twice and that is worth being able to
+            // see. The fencing is on because the switch comes up on; a shot of the card with
+            // it off is a shot of the board, which `-daily` already takes.
             if let day = DailyAlmanac.level(on: Self.photographed),
                let card = DailyPostcard(
                    date: Self.photographed,

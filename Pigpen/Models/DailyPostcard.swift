@@ -10,11 +10,14 @@ import Foundation
 /// went out and it was legible rather than lovely — the board every player is handed that
 /// morning is a drawn thing, and a card that stands for it should be a drawn thing too.
 ///
-/// The fencing is a choice rather than a given. Everybody gets the same board on a given
-/// day, which is the whole of what makes a daily worth comparing, and a card with the wall
-/// standing on it hands over the answer to anybody it reaches. So the board goes as it was
-/// opened — the water, the pig, whatever was lying on the mud — and the fencing is built on
-/// it only when asked for, for the friend who has already had their go.
+/// The fencing goes on the card, and there is a switch for taking it off. Everybody is
+/// handed the same board on a given day — the water, the pig, whatever is lying on the mud —
+/// so the wall is the only part of the card that belongs to whoever built it, and a card
+/// without it is a picture of somebody else's morning. It goes on.
+///
+/// Switching it off leaves the board as it opened, which is the card for the friend who has
+/// not had their go yet: the same ground everybody else got that morning and none of the
+/// answer to it.
 struct DailyPostcard: Identifiable, Sendable {
     let date: DailyDate
     let level: PuzzleLevel

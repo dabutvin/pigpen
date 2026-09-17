@@ -18,9 +18,10 @@ import UniformTypeIdentifiers
 /// on it is measured in points off that rather than left to the room it is given.
 struct DailyPostcardCard: View {
     let postcard: DailyPostcard
-    /// Whether the wall is standing on the board. Off is the day as everybody was handed it
-    /// that morning, which is the card that can be sent to somebody who has not played yet.
-    var showsFencing = false
+    /// Whether the wall is standing on the board. On is the pen that was built, which is the
+    /// whole of what a card has to say; off is the day as everybody was handed it that
+    /// morning, which is the card for somebody who has not played yet.
+    var showsFencing = true
     /// What the pig has on. Handed in rather than asked of the wardrobe here, so a preview
     /// can dress her without a choice saved on the machine it is running on.
     var outfit: PigOutfit = .asSheComes
@@ -335,8 +336,8 @@ struct CouldNotPaint: Error {}
     return ScrollView {
         VStack(spacing: 20) {
             if let card {
-                DailyPostcardCard(postcard: card, showsFencing: true, outfit: .baseballCap)
-                DailyPostcardCard(postcard: card)
+                DailyPostcardCard(postcard: card, outfit: .baseballCap)
+                DailyPostcardCard(postcard: card, showsFencing: false)
             }
         }
         .frame(maxWidth: DailyPostcardCard.width)

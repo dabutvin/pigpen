@@ -16,10 +16,14 @@ struct DailyPostcardView: View {
     /// one wardrobe the game keeps, by default; a preview hands in its own.
     var wardrobe: PigWardrobe = .shared
 
-    /// Whether the fencing is standing on the card. Off as it comes up: everybody gets the
-    /// same board, and a card sent to somebody who has not had their go should not hand them
-    /// the answer. The switch is for the friend who has.
-    @State private var showsFencing = false
+    /// Whether the fencing is standing on the card. On as it comes up: the wall is the whole
+    /// of what a player did with the day — everybody was handed the same board, and the pen
+    /// is the only part of the card that is theirs — so a card that went without it was a
+    /// card of somebody else's morning.
+    ///
+    /// The switch is still there, and switching it off still takes the wall and the gold off
+    /// the board, which is the card to send to somebody who has not had their go yet.
+    @State private var showsFencing = true
 
     /// The card itself, held up on this screen.
     private var card: DailyPostcardCard {

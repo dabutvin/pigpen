@@ -1148,11 +1148,13 @@ A puzzle a day, on its own board, with a clock running on it.
   pixels drawn on the way in left the share button waiting on a picture nobody had asked
   for yet, and dead altogether on a phone that could not draw one. The card is held up before it goes, and what is held up is the card
   itself rather than a likeness of it.
-  The fencing is a switch on that card, and it comes up off. Everybody gets the same board
-  on a given day, which is what makes a daily worth comparing at all, and a card sent to
-  somebody who has not had their go should not hand them the answer. Flick it on for the
-  friend who has, and the wall is built on the board with the ground it holds washed gold,
-  as on the field — and a pen with nothing left to beat keeps its drifting rainbow. Only a
+  The fencing is a switch on that card, and it comes up **on**: everybody is handed the same
+  board on a given day, so the wall is the only part of the card that belongs to whoever
+  built it, and a card without it is a picture of somebody else's morning. The wall stands
+  with the ground it holds washed gold, as on the field, and a pen with nothing left to beat
+  keeps its drifting rainbow. Flick the switch off and the board goes back to the way the day
+  opened, which is the card for the friend who has not had their go yet — the same ground
+  everybody got that morning and none of the answer to it. Only a
   day is shared — a trail stop is nobody else's morning — and only a pen that held: a pig
   that walked out gets no postcard. The run of days is written on today's card and no
   other, since a run counted back from a day dug out of the archive is not a run anybody is
