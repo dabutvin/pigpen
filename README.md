@@ -1144,9 +1144,12 @@ A puzzle a day, on its own board, with a clock running on it.
   chat with no title line of its own prints the title above the message — saying it in both
   places had every card stuttering its own date. Taking the *subject* off the share sheet is
   not enough on its own, either, since the preview's title becomes the subject when nothing
-  else is given. The address stands above the tally rather than under it, because a chat that
-  finds a link on the last line of a message builds a second bubble out of it: a picture of
-  the website, under a picture of the card, under the words. The board on the card is a real `FieldView` rather than a drawing of one —
+  else is given. The address stands above the tally rather than under it, and between two
+  dots, for the same reason twice: a chat that decides a message *is* a link builds a second
+  bubble out of it — a picture of the website, under a picture of the card, under the words,
+  and the front page at that, since a day's address sends a browser to the front page. The
+  dots keep a space either side of them, since a dot up against the address would be read as
+  part of it, and a link a finger cannot land on is the same as no link at all. The board on the card is a real `FieldView` rather than a drawing of one —
   nothing here knows how to paint a field, so a world repainted repaints every card with
   it — and `ImageRenderer` takes the whole card at three times over, which is what the
   share sheet carries. It is painted when the sheet asks rather than up front: a thousand
