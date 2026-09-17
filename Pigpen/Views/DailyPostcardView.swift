@@ -138,10 +138,12 @@ struct DailyPostcardView: View {
     /// address as the words that go with it — a chat that takes both gets something to look
     /// at and something to tap. Counted on the way, with whether the fencing went.
     ///
-    /// No subject. A subject is a thing Mail has and a chat has not, and a chat handed one
-    /// prints it above the message rather than dropping it: the day came out twice, once
-    /// from the subject and once from the top of the caption. The caption says everything
-    /// now, and says it once.
+    /// The preview's title is the day, and it is the only place the day is said. There is no
+    /// subject here, and taking the subject away was not enough on its own: with nothing else
+    /// given, the share sheet uses the preview's title as the subject, and a chat with no
+    /// title line of its own prints it above the message — so the day arrived twice, from two
+    /// places that both looked innocent. The caption says the address and the tally and
+    /// leaves the day to the title.
     private var shareButton: some View {
         ShareLink(
             item: picture,

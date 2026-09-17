@@ -1137,11 +1137,16 @@ A puzzle a day, on its own board, with a clock running on it.
   word on it: *Pig has no notes*. Along the bottom the day's own address,
   `pigpen.app/day/2026-04-22`, which on a phone with the game on it opens that day's board
   and on one without it opens the site, where the App Store button is. See
-  [A link into the app](#a-link-into-the-app). The words beside the picture say the day, the
-  stars and what the pen came to, and end on that address, so a chat that takes both has
-  something to tap as well as something to look at and says what happened before the picture
-  has loaded. Nothing is handed over as a *subject*: a chat has no subject line of its own
-  and prints one above the message instead, which had every card stuttering its own date. The board on the card is a real `FieldView` rather than a drawing of one —
+  [A link into the app](#a-link-into-the-app). The words beside the picture carry that
+  address and the stars and the tally under it, so a chat that takes both has something to
+  tap as well as something to look at and says what happened before the picture has loaded.
+  The day is not among those words: it is the share sheet's own title for the card, and a
+  chat with no title line of its own prints the title above the message — saying it in both
+  places had every card stuttering its own date. Taking the *subject* off the share sheet is
+  not enough on its own, either, since the preview's title becomes the subject when nothing
+  else is given. The address stands above the tally rather than under it, because a chat that
+  finds a link on the last line of a message builds a second bubble out of it: a picture of
+  the website, under a picture of the card, under the words. The board on the card is a real `FieldView` rather than a drawing of one —
   nothing here knows how to paint a field, so a world repainted repaints every card with
   it — and `ImageRenderer` takes the whole card at three times over, which is what the
   share sheet carries. It is painted when the sheet asks rather than up front: a thousand
