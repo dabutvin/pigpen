@@ -9,8 +9,8 @@ import SwiftUI
 /// what the field has done from a table baked in when the build was cut, and that table is
 /// thin at the top of the game and will stay thin for years: the meadow has been played by
 /// everybody and the tundra by almost nobody. So the field is a card that comes and goes
-/// rather than a column that is sometimes blank, and where it cannot speak it says so in one
-/// line instead of printing nine stops' worth of shrugging.
+/// rather than a column that is sometimes blank — and when it goes it goes quietly, leaving
+/// the record above it, rather than standing there to say it has nothing to say.
 ///
 /// Nothing here is a leaderboard and nothing here is a percentile. A percentile off fifty-odd
 /// players is a decimal point pretending to be a fact, and a game about taking a map apart
@@ -58,9 +58,9 @@ struct WorldRecordView: View {
     /// A world with a field behind it has two cards and nine stops in the second of them, and
     /// at the middle height the line the whole panel is building to — the one about what you
     /// hold that most players do not — sits below the fold with nothing to say it is there. A
-    /// world without one has three figures and a sentence, which does not want the whole
-    /// screen. So the long version opens tall and the short one opens the way the game's other
-    /// sheets do.
+    /// world without one is three figures and nothing else, which wants a good deal less than
+    /// the whole screen. So the long version opens tall and the short one opens the way the
+    /// game's other sheets do.
     private var detents: Set<PresentationDetent> {
         record.hasField ? [.large] : [.medium, .large]
     }
@@ -127,8 +127,8 @@ struct WorldRecordView: View {
             card {
                 VStack(alignment: .leading, spacing: 12) {
                     // A label and not a headcount. How many players stand behind these shares
-                    // is what the quorum is for, and it is answered by the card existing at
-                    // all: a world too thin to speak for shows the other card instead.
+                    // is what the quorum is for, and it is answered by the card being here at
+                    // all: on a world too thin to speak for, there is no card.
                     Text("Everybody else")
                         .font(.system(size: 13, weight: .black))
                         .foregroundStyle(GamePalette.post.opacity(0.55))
@@ -147,18 +147,11 @@ struct WorldRecordView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-        } else {
-            card {
-                Text(
-                    "Too few players have been this far up for the counting to say how you "
-                        + "compare. Your own record stands above either way."
-                )
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(GamePalette.post.opacity(0.75))
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
         }
+        // No else. A world the counting cannot speak for shows the record above and stops,
+        // rather than opening a card to announce that it has nothing to say — which is a
+        // sentence nobody needs and, on eleven of the twelve worlds, the only sentence there
+        // would be. The absence says it.
     }
 
     /// One stop: its number and name, the stars you have off it, and underneath, the one

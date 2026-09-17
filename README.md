@@ -178,10 +178,10 @@ in the game you can finish a world without ever having opened.
   stars out of a level, and how many ever find the pen it has in it. Those figures are
   counted off the same signals the game already sends and baked into the build, so nothing
   is fetched and nothing is asked about anybody while you play. A world too few players have
-  reached says so plainly rather than quoting a share of two people, which means the late
-  worlds show your own record and nothing else for a long while yet. It is the one place in
-  the game that looks sideways at other people; everywhere else you are only ever asked to
-  beat a map.
+  reached simply says nothing about them — no card, no apology for the absence of one — so
+  the late worlds show your own record and stop there, and will for a long while yet. It is
+  the one place in the game that looks sideways at other people; everywhere else you are only
+  ever asked to beat a map.
 
 | # | Level | Pieces | On the ground | Squared off | Best pen | Asks |
 |---|---|---|---|---|---|---|
