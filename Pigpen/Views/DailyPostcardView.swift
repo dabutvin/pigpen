@@ -25,26 +25,6 @@ struct DailyPostcardView: View {
     /// the board, which is the card to send to somebody who has not had their go yet.
     @State private var showsFencing = true
 
-    /// The card at whatever size the page can give it.
-    ///
-    /// It is one fixed size wherever it is drawn — that is the whole of what lets the picture
-    /// be promised an aspect, and the aspect is what keeps a chat from cropping it — so a page
-    /// narrower than the card scales the whole of it down rather than laying it out again at
-    /// another width. What is held up is the card that goes, to the proportion as well as to
-    /// the pixel. `scaleEffect` leaves the layout believing the card is its full size, so the
-    /// frame after it is what gives the page back the room the scaling saved.
-    private func heldUp(across available: CGFloat) -> some View {
-        let scale = min(1, max(available, 1) / DailyPostcardCard.width)
-
-        return card
-            .scaleEffect(scale)
-            .frame(
-                width: DailyPostcardCard.width * scale,
-                height: DailyPostcardCard.height * scale
-            )
-            .frame(maxWidth: .infinity)
-    }
-
     /// The card itself, held up on this screen.
     private var card: DailyPostcardCard {
         DailyPostcardCard(postcard: postcard, showsFencing: showsFencing, outfit: wardrobe.outfit)
@@ -67,30 +47,29 @@ struct DailyPostcardView: View {
             )
             .ignoresSafeArea()
 
-            // The page is measured once, at the top, because the card below has to be told
-            // how much of itself will fit. Everything under here lays out against a width
-            // that is already known rather than one it has to ask for.
-            GeometryReader { page in
-                VStack(spacing: 0) {
-                    header
+            VStack(spacing: 0) {
+                header
 
-                    ScrollView {
-                        VStack(spacing: 14) {
-                            heldUp(across: page.size.width - 32)
-                            fencingSwitch
-                            shareButton
+                ScrollView {
+                    VStack(spacing: 14) {
+                        // The card is one fixed width whatever is holding it, so it is
+                        // centred rather than stretched — and the page is padded narrowly
+                        // enough that the whole of it stands on the narrowest phone.
+                        card.frame(maxWidth: .infinity)
 
-                            Text("Everybody gets the same board. The fencing is your answer to it.")
-                                .font(.caption2)
-                                .foregroundStyle(GamePalette.post.opacity(0.5))
-                                .multilineTextAlignment(.center)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 28)
+                        fencingSwitch
+                        shareButton
+
+                        Text("Everybody gets the same board. The fencing is your answer to it.")
+                            .font(.caption2)
+                            .foregroundStyle(GamePalette.post.opacity(0.5))
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    .scrollBounceBehavior(.basedOnSize)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 28)
                 }
+                .scrollBounceBehavior(.basedOnSize)
             }
         }
         .staysInDaylight()
