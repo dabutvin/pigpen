@@ -84,12 +84,6 @@ struct WorldRecord {
     /// Whether there is anything to say about anybody but the player.
     var hasField: Bool { !measured.isEmpty }
 
-    /// How many players have been up here at all: the busiest stop on the trail, since a
-    /// player who reached the second stop reached the first. The first stop is usually the
-    /// busiest, but not always — a stop can be gone back to by people who hurried past it —
-    /// so this takes the largest rather than assuming.
-    var reach: Int { measured.map(\.benchmark.held).max() ?? 0 }
-
     /// Stops the player three-starred that most players do not. The one figure here worth
     /// calling a ranking, and deliberately a count rather than a percentile: a percentile off
     /// fifty-odd players would be a decimal point pretending to be a fact.

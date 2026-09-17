@@ -126,9 +126,10 @@ struct WorldRecordView: View {
         if record.hasField {
             card {
                 VStack(alignment: .leading, spacing: 12) {
-                    // Players, not other players: the count is everybody the table has seen
-                    // on the busiest stop up here, and a player reading this is one of them.
-                    Text("Measured against \(record.reach) players")
+                    // A label and not a headcount. How many players stand behind these shares
+                    // is what the quorum is for, and it is answered by the card existing at
+                    // all: a world too thin to speak for shows the other card instead.
+                    Text("Everybody else")
                         .font(.system(size: 13, weight: .black))
                         .foregroundStyle(GamePalette.post.opacity(0.55))
 
