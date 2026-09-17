@@ -765,7 +765,13 @@ struct TitleScreenView: View {
 
 /// The name, set a letter at a time like a run of fence posts: each letter drops in, turns
 /// straight and settles, and the one to its right follows it into the ground.
-private struct PlantedWord: View {
+///
+/// The title screen plants it at seventy points and the postcard prints it at thirty, which
+/// is the whole reason it is not private to this file: the name a card turns up under in
+/// somebody else's chat should be the name on the front of the game, painted rather than
+/// typed. Every measurement in here is taken off `size`, so the small one is the large one
+/// and nothing about it had to be drawn twice.
+struct PlantedWord: View {
     let word: String
     let size: CGFloat
     /// How much of the word is in the ground, 0 to 1. Values a little over 1 let the last
@@ -799,7 +805,15 @@ private struct PlantedWord: View {
         // A soft grey under the whole name, rather than the name's own colour: the sticker
         // is lifted off the sky by a shadow, and a shadow is not pink. Mid grey rather than
         // black, which under a white keyline read as a smudge.
-        .shadow(color: Color(white: 0.4).opacity(0.5), radius: 10, y: 8)
+        //
+        // Measured off the size, at the fractions the seventy-point name was tuned to, so
+        // the shadow that lifts the big one off a sky does not smother a small one on a
+        // card. The title screen's is to the point what it always was.
+        .shadow(
+            color: Color(white: 0.4).opacity(0.5),
+            radius: size * (10.0 / 70),
+            y: size * (8.0 / 70)
+        )
     }
 
     /// One pass along the word: each letter placed on the curve and carrying whatever it is

@@ -96,7 +96,7 @@ jobs:
           # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
-          # `-barn`, `-dressed-board` and `-dressed-title` are launch
+          # `-barn`, `-dressed-board`, `-dressed-title` and `-postcard` are launch
           # arguments the app understands, so the universe map, every world's trail,
           # the boards, the practice pen, the daily puzzle and its archive, the
           # settings sheet, the offer of a daily reminder, the card over a shut boss,
@@ -158,6 +158,12 @@ jobs:
           # The word the map gives a player who has run the trail out and cannot pay the
           # boss's price. Numbered high for the same reason as the shot above it.
           capture 71 toll -toll
+
+          # The card a held day is sent as, held up the way it is held up before it goes —
+          # the one screen in the game that is also a picture somebody else receives, so it
+          # is worth looking at every time it changes. Numbered past the tablet's shots so
+          # nothing already in the gallery moves.
+          capture 99 postcard -postcard
 
           # The thicket's trail as a player who has not paid finds it the day after their
           # first free level there: the next stop under a lock, with the rest of the free

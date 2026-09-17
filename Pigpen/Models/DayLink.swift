@@ -22,6 +22,14 @@ enum DayLink {
         URL(string: "\(SupportLinks.host)/\(folder)/\(date.id)")!
     }
 
+    /// The same address with the scheme taken off the front — `pigpen.app/day/2026-04-22` —
+    /// which is how it is printed along the bottom of a postcard. Nothing taps an address in
+    /// a picture, so what is printed there is what somebody would type.
+    static func address(for date: DailyDate) -> String {
+        let written = url(for: date).absoluteString
+        return written.hasPrefix("https://") ? String(written.dropFirst("https://".count)) : written
+    }
+
     /// The day an address is asking for, and nothing for an address that is not one of
     /// ours: another host, another path, another scheme, or a day that is not a day. Only
     /// `https` is honoured, since that is the only kind of address the phone will ever hand

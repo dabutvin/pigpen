@@ -803,10 +803,10 @@ struct PuzzleView: View {
         }
     }
 
-    /// The way a held day leaves the phone: a postcard with the board on it in emoji, held
-    /// up on a sheet before it goes so the fencing can be kept off it or put on. The wall
-    /// the animals were let loose in is the wall on the card, and the clock as it stood
-    /// when the pen held is the time on it.
+    /// The way a held day leaves the phone: a postcard with the day's own board painted on
+    /// it, held up on a sheet before it goes so the fencing can be kept off it or put on.
+    /// The wall the animals were let loose in is the wall on the card, and the clock as it
+    /// stood when the pen held is the time on it.
     private var share: some View {
         Button {
             guard let card = postcard?(game.fences, heldIn) else { return }
