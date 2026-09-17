@@ -57,13 +57,21 @@ struct WorldRecordView: View {
     ///
     /// A world with a field behind it has two cards and nine stops in the second of them, and
     /// at the middle height the line the whole panel is building to — the one about what you
-    /// hold that most players do not — sits below the fold with nothing to say it is there. A
-    /// world without one is three figures and nothing else, which wants a good deal less than
-    /// the whole screen. So the long version opens tall and the short one opens the way the
-    /// game's other sheets do.
+    /// hold that most players do not — sits below the fold with nothing to say it is there. So
+    /// it opens tall.
+    ///
+    /// A world without one is a heading and three figures. The middle height was built for two
+    /// cards and leaves most of itself empty under one, which reads as a page still loading
+    /// rather than a page that has said its piece — so the short version asks for about what it
+    /// occupies instead. `.large` stays on both, since a sheet a player cannot drag feels stuck.
     private var detents: Set<PresentationDetent> {
-        record.hasField ? [.large] : [.medium, .large]
+        record.hasField ? [.large] : [.height(Self.shortSheet), .large]
     }
+
+    /// What the short version comes to: the header, one card, and the padding around them.
+    /// Measured rather than guessed, and generous by a little, so the card still has room at a
+    /// larger text size before the sheet starts scrolling instead of growing.
+    private static let shortSheet: CGFloat = 300
 
     // MARK: - Pieces
 
