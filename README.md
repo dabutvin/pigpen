@@ -1130,7 +1130,9 @@ A puzzle a day, on its own board, with a clock running on it.
   to look at. The board on the card is a real `FieldView` rather than a drawing of one —
   nothing here knows how to paint a field, so a world repainted repaints every card with
   it — and `ImageRenderer` takes the whole card at three times over, which is what the
-  share sheet carries. The card is held up before it goes, and what is held up is the card
+  share sheet carries. It is painted when the sheet asks rather than up front: a thousand
+  pixels drawn on the way in left the share button waiting on a picture nobody had asked
+  for yet, and dead altogether on a phone that could not draw one. The card is held up before it goes, and what is held up is the card
   itself rather than a likeness of it.
   The fencing is a switch on that card, and it comes up off. Everybody gets the same board
   on a given day, which is what makes a daily worth comparing at all, and a card sent to
