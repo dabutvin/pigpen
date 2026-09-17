@@ -69,9 +69,12 @@ struct WorldRecordView: View {
     }
 
     /// What the short version comes to: the header, one card, and the padding around them.
-    /// Measured rather than guessed, and generous by a little, so the card still has room at a
-    /// larger text size before the sheet starts scrolling instead of growing.
-    private static let shortSheet: CGFloat = 300
+    ///
+    /// Taken off the screenshot rather than guessed at — the header and card run to about 190
+    /// points, and the sheet adds the home indicator's strip under that. Slack enough that a
+    /// step or two of larger text still fits before it starts scrolling instead of growing,
+    /// and no slacker, since every point past the card is empty cream.
+    private static let shortSheet: CGFloat = 210
 
     // MARK: - Pieces
 
