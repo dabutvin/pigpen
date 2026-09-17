@@ -51,6 +51,28 @@ struct WorldTrail {
     /// here rather than from the screen.
     var margin: CGFloat { (width - spread) / 2 }
 
+    /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
+    /// stump in the thicket, a cairn on the mountain, a clocktower in the city — below the
+    /// first signpost, on whichever side of the world the trail does not start on, and beside
+    /// the trail rather than at the edge of the screen, since on a tablet the two are not the
+    /// same place.
+    ///
+    /// It lives here rather than with the painting of it because two things want it now: the
+    /// scene, which draws the landmark and keeps its scenery clear of it, and the map, which
+    /// stands a button on it. One of them moving it and the other not would put the tap
+    /// somewhere off to the side of the stones.
+    var landmarkStand: CGPoint {
+        CGPoint(
+            x: point(of: 0).x < width / 2 ? width - margin - 74 : margin + 74,
+            y: height - Self.apron * 0.42
+        )
+    }
+
+    /// How big a square the landmark answers to. Wider than the widest of them is drawn —
+    /// the barn is the biggest at 78 across — because it is a tap target on scenery rather
+    /// than a button with an edge to aim at, and a thumb is blunter than a cursor.
+    static let landmark: CGFloat = 88
+
     private func place(across: Double, up: Double) -> CGPoint {
         CGPoint(
             x: margin + Self.verge + CGFloat(across) * max(spread - Self.verge * 2, 1),

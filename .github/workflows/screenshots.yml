@@ -96,11 +96,12 @@ jobs:
           # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
-          # `-barn`, `-dressed-board`, `-dressed-title` and `-postcard` are launch
-          # arguments the app understands, so the universe map, every world's trail,
-          # the boards, the practice pen, the daily puzzle and its archive, the
-          # settings sheet, the offer of a daily reminder, the card over a shut boss,
-          # the fork off the orchard, the dressing barn at the end of it and a chosen
+          # `-barn`, `-dressed-board`, `-dressed-title`, `-postcard`, `-record` and
+          # `-peak-record` are launch arguments the app understands, so the universe map,
+          # every world's trail, the boards, the practice pen, the daily puzzle and its
+          # archive, the settings sheet, the offer of a daily reminder, the card over a
+          # shut boss, the fork off the orchard, the dressing barn at the end of it, what
+          # the landmark at the foot of a trail keeps, and a chosen
           # hat still on her on a board and out in the pasture can be captured without
           # tapping through the title screen. The reminder screens are handed a
           # reminder held in memory, so nothing on the runner is ever asked for
@@ -179,6 +180,15 @@ jobs:
           capture 75 barn -barn
           capture 77 dressed_board -dressed-board
           capture 79 dressed_title -dressed-title
+
+          # What the landmark at the foot of a trail has been keeping count of. Two shots,
+          # because the panel has two quite different things to be: the meadow, which enough
+          # people have played for it to say how a player compares, and the mountain, which
+          # almost nobody has climbed and which therefore shows a record and nothing beside it.
+          # The second is the common case and will be for years. Numbered past the postcard,
+          # which took 99 and 100 while this branch was open.
+          capture 101 record -record
+          capture 103 peak_record -peak-record
 
           # The cut scenes are not photographed here. There are a hundred and fourteen
           # shots across the game's thirty-six films, every one of them stopped on a clock

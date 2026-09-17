@@ -1816,18 +1816,11 @@ private struct Meadow {
 
     /// Where the landmark at the foot of the trail stands: the barn in a meadow, a hollow
     /// stump in the thicket, a cairn on the mountain, a clocktower in the city, the first
-    /// crater out in the reaches, the mouth of the cave down in the caverns — below the first
-    /// signpost, on whichever side of the world the trail does not start on — and beside the
-    /// trail rather than at the edge of the screen, since on a tablet the two are not the
-    /// same place.
-    private var landmarkStand: CGPoint {
-        CGPoint(
-            x: trail.point(of: 0).x < size.width / 2
-                ? size.width - trail.margin - 74
-                : trail.margin + 74,
-            y: size.height - WorldTrail.apron * 0.42
-        )
-    }
+    /// crater out in the reaches, the mouth of the cave down in the caverns.
+    ///
+    /// Worked out by `WorldTrail` rather than here, because the map stands a button on the
+    /// same spot and the two have to agree about where it is.
+    private var landmarkStand: CGPoint { trail.landmarkStand }
 
     /// The building itself is painted by `Barn`, which the dressing barn's signpost draws the same
     /// barn out of at a quarter the size. What belongs to the meadow rather than to the barn — the
