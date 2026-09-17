@@ -124,7 +124,7 @@ struct DailyPostcardCard: View {
     private var stars: some View {
         StarRow(
             stars: postcard.verdict.stars,
-            size: 19,
+            size: 21,
             hasTheBestPen: postcard.verdict.isAsGoodAsItGets,
             hollow: GamePalette.post.opacity(0.17)
         )
@@ -204,13 +204,18 @@ struct DailyPostcardCard: View {
     private var plank: some View {
         RoundedRectangle(cornerRadius: 18, style: .continuous)
             .fill(GamePalette.cream)
+            // Lit along its top edge, the way every painted thing in the game is. It used to
+            // run to the middle of the plank, which on a card this tall is half of it: the
+            // masthead came out on cold grey-white and the tally under the board on cream,
+            // with the seam between them across the middle. A hand's breadth of light at the
+            // top does what the light was for and leaves the cream alone.
             .overlay {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [.white.opacity(0.32), .clear],
+                            colors: [.white.opacity(0.45), .clear],
                             startPoint: .top,
-                            endPoint: .center
+                            endPoint: UnitPoint(x: 0.5, y: 0.15)
                         )
                     )
             }
@@ -247,13 +252,16 @@ struct DailyPostcardCard: View {
     /// sent bare into a chat is a cream page on a white bubble, with nothing to say where it
     /// stops.
     ///
-    /// Open country's green rather than the pasture's. The backdrop on the title screen is
-    /// greyed on purpose — it is the thing behind everything else, and it has all day to be
-    /// looked past — but a border has one job, and a border a quarter of the way to grey did
-    /// not do it: the card came out looking unfinished at the edges rather than mounted.
+    /// Grass in the shade, which took two goes to find. The pasture's own two lightest greens
+    /// left the card looking unfinished at the edges rather than mounted; open country's
+    /// green, which came next, is a summer green at full strength and read as a slab of
+    /// colour somebody had dropped the card onto — it shouted across a board painted in muds
+    /// and creams. What a border is for is to say where the card stops, and these are the
+    /// greens the meadow keeps for ground the light is off: dark enough against cream to be
+    /// a mount, quiet enough to let the board be the thing looked at.
     private var pasture: some View {
         LinearGradient(
-            colors: [GamePalette.beyond, GamePalette.clover],
+            colors: [GamePalette.Pasture.day.foreground, GamePalette.Pasture.day.blade],
             startPoint: .top,
             endPoint: .bottom
         )
