@@ -30,4 +30,30 @@ enum SupportLinks {
     /// support button as well as being what the page hands over, so a player with no
     /// connection still has somewhere to write to.
     static let email = "support@pigpen.app"
+
+    /// A mail draft already addressed, titled and stamped with the build: what the game hands
+    /// a player who has just said they are not enjoying it.
+    ///
+    /// The address printed on a card is a thing to copy out somewhere else. This is the same
+    /// address with the typing already started — which is the difference between a player who
+    /// meant to say something and a player who said it. The subject is fixed so the replies
+    /// land in one pile, and the build rides in the body because the first thing any answer
+    /// needs is which version they are holding, and nobody should have to go behind the gear
+    /// to find that out.
+    ///
+    /// Optional because a mail draft is an address like any other and this builds one out of
+    /// pieces — a draft that cannot be built is a button that is not drawn, the same call the
+    /// settings card makes about the listing.
+    static func feedback(from version: String = AppRelease.full) -> URL? {
+        var draft = URLComponents()
+        draft.scheme = "mailto"
+        draft.path = email
+        draft.queryItems = [
+            URLQueryItem(name: "subject", value: "Pigpen feedback"),
+            // Two lines of room above it, so the build is a footnote under what they came to
+            // say rather than the first thing in the box.
+            URLQueryItem(name: "body", value: "\n\n\(version)"),
+        ]
+        return draft.url
+    }
 }

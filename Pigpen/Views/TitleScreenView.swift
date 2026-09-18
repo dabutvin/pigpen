@@ -65,6 +65,17 @@ struct TitleScreenView: View {
     /// where a player is standing the moment after they have done something worth asking about
     /// — and the one place the ask can be made over nothing at all.
     private let rating: RatingPrompt
+    /// Whether the game's own question — *are you enjoying Pigpen?* — is up.
+    @State private var isAskingAboutTheGame = false
+    /// The high point it is being asked on, held apart from the sheet's own flag so that it
+    /// survives the sheet coming down: what a chart wants to know about an answer is which
+    /// high point the player was given it on, and by the time the answer is counted the sheet
+    /// is already gone.
+    @State private var askingAbout: RatingMoment?
+    /// What the player said, if they said anything. Kept here rather than inside the sheet so
+    /// that a swipe down — a dismissal nothing in the sheet is ever told about — is counted
+    /// as the non-answer it is.
+    @State private var ratingAnswer: RatingAnswer?
     /// Which square of the calendar the game is standing on. Read once when the screen
     /// arrives rather than on every redraw, so the card cannot change under a finger — and
     /// read again every time the screen comes back, which is what carries a player over
@@ -94,6 +105,10 @@ struct TitleScreenView: View {
     ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
     ///     for the same reason — and handed in rather than waited for, since the offer's own
     ///     rule is that it only appears to somebody who has held a day and never been asked.
+    ///   - showsRatingPrompt: Opens with the game's own question — *are you enjoying Pigpen?*
+    ///     — already up, for the same reason as the offer above: its own rule is that it
+    ///     appears only to somebody who has just reached a high point, which is nothing a
+    ///     preview or a photograph can arrange.
     ///   - taps: Where tapped reminders and followed links are written down. The shared one
     ///     the phone writes into, save where a preview or a test wants a tap of its own
     ///     without one having to arrive on the machine.
@@ -108,6 +123,7 @@ struct TitleScreenView: View {
         today: DailyDate? = nil,
         showsSettings: Bool = false,
         showsReminderPrompt: Bool = false,
+        showsRatingPrompt: Bool = false,
         taps: TappedReminder = .shared,
         fullGame: FullGame = .shared,
         wardrobe: PigWardrobe = .shared,
@@ -120,6 +136,8 @@ struct TitleScreenView: View {
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
+        _isAskingAboutTheGame = State(initialValue: showsRatingPrompt)
+        _askingAbout = State(initialValue: showsRatingPrompt ? .worldHeld : nil)
         self.taps = taps
         self.fullGame = fullGame
         self.wardrobe = wardrobe
@@ -215,6 +233,24 @@ struct TitleScreenView: View {
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
+        // The game's own question, and Apple's prompt raised as it comes down rather than from
+        // under it — see `theyAnswered()`, which is where every ending of this sheet lands.
+        .sheet(isPresented: $isAskingAboutTheGame, onDismiss: { theyAnswered() }) {
+            RatingPromptView(
+                onEnjoying: { ratingAnswer = .enjoying },
+                onDisappointed: { ratingAnswer = .disappointed },
+                onWritingIn: { Analytics.record(.ratingFeedbackOpened) },
+                onClose: { ratingAnswer = .closed }
+            )
+            .onAppear {
+                guard let askingAbout else { return }
+                Analytics.record(.ratingAsked(at: askingAbout))
+            }
+            // The same half screen the reminder's offer gets, and for the same reason: the
+            // game is asking a question over its own title screen, not barring the way.
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
         // The meadow is pushed as the film comes down rather than from inside it, so the
         // two never fight over the screen.
         .fullScreenCover(isPresented: $showsOpening, onDismiss: { openTheMeadow() }) {
@@ -303,7 +339,7 @@ struct TitleScreenView: View {
         // offer sheet arriving over a practice pen pushing itself onto the stack would be
         // two screens fighting over the same moment. The offer keeps — it is made the
         // next time they come back here, which is on the way out of the walkthrough.
-        guard !progress.isTheTutorialDue, !isTutorial,
+        guard !progress.isTheTutorialDue, !isTutorial, !isAskingAboutTheGame,
               !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
         else { return }
         isOfferingReminders = true
@@ -332,6 +368,7 @@ struct TitleScreenView: View {
         isArchiveOpen = false
         showsSettings = false
         isOfferingReminders = false
+        isAskingAboutTheGame = false
         open(knock.day)
     }
 
@@ -339,25 +376,49 @@ struct TitleScreenView: View {
 
     /// Puts what the player has to show for themselves in front of the rating prompt, which
     /// decides whether any of it is worth asking about — see `RatingPrompt`, which holds the
-    /// whole of that decision and every reason for it.
+    /// whole of that decision and every reason for it — and puts the question up when it is.
     ///
     /// What this screen owns is the *where*: the title screen, at rest, with the board finished
-    /// and the map behind them. Apple's prompt cannot be taken back down and cannot be aimed,
-    /// so it must never arrive over something a player is in the middle of — and it must never
-    /// arrive over the one sheet that offers the morning reminder, which is a question the game
-    /// gets asked once ever and this one is not.
+    /// and the map behind them. Nothing about the question is worth asking in the middle of
+    /// something, and what stands behind a yes cannot be taken back down or aimed — so it must
+    /// never arrive over something a player is part way through, and never over the one sheet
+    /// that offers the morning reminder, which is a question the game gets asked once ever and
+    /// this one is not.
     ///
     /// A visit with anything up is left alone entirely rather than merely kept quiet: the
     /// prompt writes down what it has looked at, so looking now would spend the moment on a
     /// screen that could not have shown anything.
     private func askForARatingIfItIsDue() {
-        guard !isOfferingReminders, !progress.isTheTutorialDue, !isTutorial, !showsOpening,
-              !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
+        guard !isOfferingReminders, !isAskingAboutTheGame, !progress.isTheTutorialDue,
+              !isTutorial, !showsOpening, !showsSettings, playDestination == nil,
+              playingDaily == nil, !isArchiveOpen
         else { return }
 
         let moment = rating.look(at: .read(from: progress, daily: daily, today: today))
         guard let moment else { return }
-        Analytics.record(.ratingAsked(at: moment))
+        askingAbout = moment
+        ratingAnswer = nil
+        isAskingAboutTheGame = true
+    }
+
+    /// What the question came down with, once the sheet is all the way down.
+    ///
+    /// Every ending lands here, the pressed ones and the swiped one alike — which is the whole
+    /// reason the counting is not done under the buttons. A sheet dragged off the screen tells
+    /// nothing inside it anything, and a player who did that has still been asked.
+    ///
+    /// Apple's prompt is raised from here for a related reason, and the same one the meadow is
+    /// pushed from under its film rather than inside it: a prompt that cannot be taken back
+    /// down must not arrive over a sheet still on its way out.
+    private func theyAnswered() {
+        guard let moment = askingAbout else { return }
+        let answer = ratingAnswer ?? .closed
+        askingAbout = nil
+        ratingAnswer = nil
+
+        Analytics.record(.ratingAnswered(answer, at: moment))
+        guard answer == .enjoying else { return }
+        rating.askForAReview()
     }
 
     // MARK: - The bar across the top
@@ -1128,6 +1189,22 @@ private struct MenuRowButtonStyle: ButtonStyle {
             reminder: .neverAsked(),
             today: DailyDate(year: 2026, month: 4, day: 22),
             showsReminderPrompt: true
+        )
+    }
+}
+
+#Preview("Asked about the game") {
+    NavigationStack {
+        TitleScreenView(
+            progress: .partWayThrough(),
+            daily: .partWayThroughTheMonth(
+                today: DailyDate(year: 2026, month: 4, day: 22),
+                includingToday: true
+            ),
+            reminder: .reminding(),
+            today: DailyDate(year: 2026, month: 4, day: 22),
+            showsRatingPrompt: true,
+            rating: .neverAsked()
         )
     }
 }
