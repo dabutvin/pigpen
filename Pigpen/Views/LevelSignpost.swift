@@ -306,8 +306,9 @@ struct LevelSignpost: View {
             // Worth saying out loud as well as showing: it is the one thing three stars
             // does not already say.
             return hasTheBestPen
-                ? String(localized: "\(called), \(count), the best pen there is")
-                : String(localized: "\(called), \(count)")
+                ? String(localized: "signpost.cleared.bestPen",
+                         defaultValue: "\(called), \(count), the best pen there is")
+                : String(localized: "signpost.cleared", defaultValue: "\(called), \(count)")
         }
     }
 }

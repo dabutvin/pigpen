@@ -139,7 +139,14 @@ struct TollNoticeView: View {
         }
         .font(.system(size: 27, weight: .black, design: .rounded))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(notice.have) stars of the \(notice.need) it wants")
+        .accessibilityLabel(held)
+    }
+
+    /// The tally said out loud. The stars in hand are counted out through the same words the
+    /// rest of the game counts stars with, so that one star is one star here too.
+    private var held: String {
+        let stars = String(localized: "\(notice.have) stars")
+        return String(localized: "\(stars) of the \(notice.need) it wants")
     }
 
     // MARK: - Words

@@ -88,7 +88,10 @@ struct DailyPostcard: Identifiable, Sendable {
 
     /// The two together, for a screen reader and for anywhere a card has one line to say
     /// what happened rather than a card's worth of room.
-    var remark: String { "\(String(localized: "\(ground) with \(wall).")) \(pigSays)" }
+    var remark: String {
+        let tally = String(localized: "\(ground) with \(wall).")
+        return "\(tally) \(pigSays)"
+    }
 
     // MARK: - Where it points
 

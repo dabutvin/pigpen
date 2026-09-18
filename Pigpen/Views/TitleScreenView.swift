@@ -563,7 +563,11 @@ struct TitleScreenView: View {
     /// percentage counts the rainbow over each board as well — so both are worth saying.
     private var playTally: String {
         let earned = String(localized: "\(starsHeld) stars earned")
-        return String(localized: "\(earned) · \(completion.percent)% complete")
+        // The percent sign goes in as part of an argument rather than as a letter of the
+        // line. A literal % in a localised format is read as the start of a specifier, and
+        // what comes out the other side is not a percentage.
+        let share = "\(completion.percent)%"
+        return String(localized: "\(earned) · \(share) complete")
     }
 
     /// Play read out in full, since the percent it wears sits in the row as a badge VoiceOver

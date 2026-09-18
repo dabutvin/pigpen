@@ -217,7 +217,8 @@ struct WorldRecordView: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(figure) \(caption)")
+        .accessibilityLabel(String(localized: "record.tally.spoken",
+                                   defaultValue: "\(figure) \(caption)"))
     }
 
     private var divider: some View {

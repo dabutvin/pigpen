@@ -622,7 +622,8 @@ private struct WorldPlanet: View {
             case .locked: standing = String(localized: "locked")
             }
         }
-        return String(localized: "\(theme.name), \(boss.name). \(standing).")
+        return String(localized: "universe.planet.spoken",
+                      defaultValue: "\(theme.name), \(boss.name). \(standing).")
     }
 }
 
