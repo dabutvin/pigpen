@@ -141,7 +141,7 @@ struct DailyPostcard: Identifiable, Sendable {
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
     /// all: the day, the stars, the clock, the run and the pig's word.
     var spoken: String {
-        let stars = Self.spelled(min(max(verdict.stars, 0), 3))
+        let stars = StarsInWords.saidFirst(verdict.stars)
         let starsSaid = verdict.isAsGoodAsItGets
             ? String(localized: "\(stars), the best pen there is")
             : stars
@@ -153,14 +153,4 @@ struct DailyPostcard: Identifiable, Sendable {
         return said.joined(separator: " ")
     }
 
-    /// The stars in words, because a screen reader reading a card out reads a lone digit as
-    /// one more number in a line of them.
-    private static func spelled(_ stars: Int) -> String {
-        switch stars {
-        case 3: String(localized: "Three stars")
-        case 2: String(localized: "Two stars")
-        case 1: String(localized: "One star")
-        default: String(localized: "No stars")
-        }
-    }
 }

@@ -145,6 +145,14 @@ enum Animal: Character, CaseIterable, Sendable {
         }
     }
 
+    /// `subject` with a capital on the front, for the head of a sentence — "The deer walked
+    /// out". Every language the game speaks starts a sentence with one, so this is a turn of
+    /// the crank rather than another fourteen lines for a translator to keep.
+    var subjectCapitalized: String {
+        let phrase = subject
+        return phrase.prefix(1).uppercased() + phrase.dropFirst()
+    }
+
     /// And again for the middle of a sentence, where something is being done to it — "Fence in
     /// Pig and the deer separately". English cannot tell this apart from `subject`; German can,
     /// and says "der Hirsch" in one and "den Hirsch" in the other.

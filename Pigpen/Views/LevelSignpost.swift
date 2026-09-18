@@ -234,7 +234,7 @@ struct LevelSignpost: View {
         case .open, .cleared:
             switch sign {
             case .stop(let number):
-                Text("\(number)")
+                Text(verbatim: "\(number)")
                     .font(.system(size: 26, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.post)
             case .door(.barn):
@@ -279,33 +279,35 @@ struct LevelSignpost: View {
     /// has only its name, which is already the whole of what is behind it.
     private var called: String {
         switch sign {
-        case .stop(let number): "Level \(number), \(name)"
+        case .stop(let number): String(localized: "Level \(number), \(name)")
         case .door: name
         }
     }
 
     private var spokenLabel: String {
-        let spelled = ["no", "one", "two", "three"]
         // A door is open or it is not. Nothing has been played there and nothing ever will be,
         // so the words a stop uses — *not yet played*, a count of stars — would all be wrong.
         guard hasStars else {
-            return standing == .shut ? "\(called), locked" : "\(called), open"
+            return standing == .shut
+                ? String(localized: "\(called), locked")
+                : String(localized: "\(called), open")
         }
         switch standing {
         case .shut:
-            return "\(called), locked"
+            return String(localized: "\(called), locked")
         case .tolled(let have, let need):
-            return "\(called), locked until \(need) stars, \(have) so far"
+            return String(localized: "\(called), locked until \(need) stars, \(have) so far")
         case .rationed(let wait):
-            return "\(called), your next free level, opens in \(wait.spoken)"
+            return String(localized: "\(called), your next free level, opens in \(wait.spoken)")
         case .open:
-            return "\(called), not yet played"
+            return String(localized: "\(called), not yet played")
         case .cleared:
-            let count = spelled[min(max(stars, 0), 3)]
-            let earned = "\(called), \(count) star\(stars == 1 ? "" : "s")"
+            let count = StarsInWords.said(stars)
             // Worth saying out loud as well as showing: it is the one thing three stars
             // does not already say.
-            return hasTheBestPen ? earned + ", the best pen there is" : earned
+            return hasTheBestPen
+                ? String(localized: "\(called), \(count), the best pen there is")
+                : String(localized: "\(called), \(count)")
         }
     }
 }
