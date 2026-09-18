@@ -108,6 +108,25 @@ jobs:
           # permission to post a notification.
           # The daily screens open on a fixed square of the calendar with a stopped
           # clock, since a running one photographs as whenever the runner got round to it.
+          # A screen photographed before it has finished painting comes back as an
+          # empty white room, and a white room is almost nothing to compress: the
+          # blank ones weigh well under a hundred kilobytes where the thinnest real
+          # screen weighs nine hundred. So every shot is weighed, and a light one is
+          # taken again after a longer wait rather than published as the truth.
+          shoot() {
+            local into="$1"
+            local attempt
+            for attempt in 1 2 3; do
+              xcrun simctl io "$UDID" screenshot "$into"
+              if [ "$(stat -f%z "$into" 2>/dev/null || echo 0)" -ge 400000 ]; then
+                return 0
+              fi
+              echo "Shot $into came back empty on attempt $attempt; giving it longer."
+              sleep 4
+            done
+            echo "::warning::$into still looks blank after three attempts."
+          }
+
           capture() {
             local order="$1"
             local screen="$2"
@@ -119,12 +138,12 @@ jobs:
 
             xcrun simctl ui "$UDID" appearance light
             xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
-            sleep 3
-            xcrun simctl io "$UDID" screenshot "$light"
+            sleep 6
+            shoot "$light"
 
             xcrun simctl ui "$UDID" appearance dark
             sleep 2
-            xcrun simctl io "$UDID" screenshot "$dark"
+            shoot "$dark"
 
             xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
             echo "Captured: $light, $dark"
@@ -227,6 +246,22 @@ jobs:
           APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
           xcrun simctl install "$UDID" "$APP_PATH"
 
+          # The same weighing the phone's shots get: a screen caught mid-paint is a
+          # white room, and a white room weighs nothing.
+          shoot() {
+            local into="$1"
+            local attempt
+            for attempt in 1 2 3; do
+              xcrun simctl io "$UDID" screenshot "$into"
+              if [ "$(stat -f%z "$into" 2>/dev/null || echo 0)" -ge 400000 ]; then
+                return 0
+              fi
+              echo "Shot $into came back empty on attempt $attempt; giving it longer."
+              sleep 4
+            done
+            echo "::warning::$into still looks blank after three attempts."
+          }
+
           # The same two shots off one launch the phone gets, named `ipad_<screen>` so
           # the gallery files them under their own heading.
           capture() {
@@ -240,12 +275,12 @@ jobs:
 
             xcrun simctl ui "$UDID" appearance light
             xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
-            sleep 3
-            xcrun simctl io "$UDID" screenshot "$light"
+            sleep 6
+            shoot "$light"
 
             xcrun simctl ui "$UDID" appearance dark
             sleep 2
-            xcrun simctl io "$UDID" screenshot "$dark"
+            shoot "$dark"
 
             xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
             echo "Captured: $light, $dark"
