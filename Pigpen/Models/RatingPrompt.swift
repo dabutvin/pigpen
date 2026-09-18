@@ -77,6 +77,27 @@ enum RatingMoment: String, CaseIterable, Sendable {
     }
 }
 
+extension RatingMoment: Identifiable {
+    /// Its own word, so the moment can be what a sheet is raised on rather than a flag beside
+    /// one — the title screen holds the moment for as long as the asking lasts, since what a
+    /// chart wants to know about an answer is which high point it was given on.
+    var id: String { rawValue }
+}
+
+/// What the game's own question got back.
+///
+/// Three answers rather than two, because the cross is not a no. Somebody who shuts the sheet
+/// has said they did not want to be asked; somebody who presses *Not really* has said the game
+/// is letting them down, which is a different thing and the one worth acting on.
+enum RatingAnswer: String, CaseIterable, Sendable {
+    /// Yes — and so on to Apple's prompt, which is the whole reason for asking.
+    case enjoying
+    /// No — and so on to the door that reaches a person, which is what they were asking for.
+    case disappointed
+    /// Neither, and the sheet gone: the cross, or a swipe down.
+    case closed
+}
+
 /// Where what the game has already asked, and what it last saw, are kept.
 ///
 /// A protocol rather than `UserDefaults` outright, for the same reason the reminder's settings
@@ -185,14 +206,22 @@ final class RememberedReviews: ReviewRequester {
 
 /// When the game asks a player what they think of it, and how rarely.
 ///
-/// Apple's prompt is the only way an app is allowed to ask. *Guideline 5.6.1* says to use the
-/// provided API and that custom review prompts are disallowed, which is why there is no
-/// `RatingPromptView` beside `ReminderPromptView`. That is the opposite of the reminder's shape
-/// and for a good reason: the reminder asks in its own words first because the phone's
-/// permission sheet is one-shot forever, while the rating prompt may not be dressed up at all
-/// and is shown three times a year at most whatever the game does.
+/// The asking is in two steps. First the game asks in its own words, on its own boards, whether
+/// the player is enjoying Pigpen — that is `RatingPromptView`. Only a player who says yes is
+/// handed on to Apple's prompt; a player who says no is handed the door that reaches a person,
+/// which is what somebody who is not enjoying the game was actually asking for.
 ///
-/// So the only decision left to the game is *when*, and it is made here:
+/// The rating itself stays Apple's and only Apple's. *Guideline 5.6.1* says to use the provided
+/// API, so nothing in the game draws a star, takes a review, or dresses the prompt up as
+/// something of its own: the question in front of it decides only whether it is raised at all,
+/// and raising it is `AppStore`'s own call made from `SystemReviews` and nowhere else.
+///
+/// That is the same shape the reminder has, for a related reason. The phone shows the prompt
+/// three times a year at the very outside, says nothing either way, and cannot be asked again
+/// once it has decided — so an allowance spent on somebody who was about to complain is spent
+/// twice over: the rating that does not come, and the complaint that goes nowhere.
+///
+/// What is left to the game, then, is *when* to ask, and it is decided here:
 ///
 /// - **On a high point.** A world held, a rainbow taken, a week of daily boards in a row —
 ///   `RatingMoment` has the three of them and what each one has to reach.
@@ -209,10 +238,13 @@ final class RememberedReviews: ReviewRequester {
 ///   finished and the map behind them — never over a board, a film, or the one sheet that
 ///   offers the morning reminder.
 ///
-/// Nothing draws this, so unlike the reminder it is not observable: it is asked a question on
-/// the way through the title screen and answers it. And nothing here is game data — clearing
-/// every star leaves it standing, the same way clearing them leaves the reminder's hour and the
-/// counting switch alone. A player who has been asked has been asked.
+/// This is not observable, even though a sheet now draws the first step: nothing here moves
+/// while that sheet is up. The title screen asks a question on the way through, gets back the
+/// moment worth asking on, and hands the answer back down.
+///
+/// And nothing here is game data — clearing every star leaves it standing, the same way
+/// clearing them leaves the reminder's hour and the counting switch alone. A player who has
+/// been asked has been asked.
 @MainActor
 final class RatingPrompt {
     /// The one the title screen looks through, so the game's whole record of having asked is
@@ -280,9 +312,13 @@ final class RatingPrompt {
 
     // MARK: - Looking
 
-    /// Looks at where a player stands, writes it down, and raises Apple's prompt if this is a
-    /// moment worth raising it on. Answers with the moment it asked on, so the caller can count
-    /// it — and with nothing at all when it kept quiet, which is nearly always.
+    /// Looks at where a player stands, writes it down, and answers with the moment worth asking
+    /// on if this is one — and with nothing at all when it is not, which is nearly always.
+    ///
+    /// Putting the question up is the caller's to do, since the caller is the screen that knows
+    /// what else is on it. What is settled by the time this answers is that the asking is
+    /// allowed and has now been spent: see `markAsked(now:)` for why it is spent here rather
+    /// than when an answer comes back.
     ///
     /// The standing is written down whichever way it goes, and that is the point: a rise the
     /// game has looked at is a rise it has had its chance at. Anything else would leave a
@@ -298,20 +334,37 @@ final class RatingPrompt {
         guard let seen else { return nil }
         guard let moment = Self.moment(from: seen, to: standing), isDue(now: now) else { return nil }
 
-        ask(at: moment, now: now)
+        markAsked(now: now)
         return moment
     }
 
-    /// Raises the prompt, and writes the asking down before raising it rather than after.
+    /// Writes the asking down, when the question goes up rather than when an answer comes back.
     ///
-    /// That order is deliberate. The phone may well show nothing — the allowance is spent, or
-    /// Apple simply decides not to — and there is no way to find out which. A game that waited
-    /// to hear back before writing anything down would ask again on the next high point, and
-    /// again on the one after that, on the strength of never having seen a thing.
-    private func ask(at moment: RatingMoment, now: Date) {
+    /// Marked whichever way it is answered, the way the reminder's offer is. A player who says
+    /// they are not enjoying the game has been asked and has said their piece; coming back at
+    /// them on the next world they hold is asking somebody to change their mind about a game
+    /// they have already told the truth about.
+    ///
+    /// And marked before anything is raised rather than after, for the step that follows a yes.
+    /// The phone may well show nothing — the allowance is spent, or Apple simply decides not to
+    /// — and there is no way to find out which. A game that waited to hear back before writing
+    /// anything down would ask again on the next high point, and again on the one after that,
+    /// on the strength of never having seen a thing.
+    private func markAsked(now: Date) {
         askedOnVersion = version
         askedOn = now
         store.save(askedOnVersion: version, on: now)
+    }
+
+    // MARK: - The second step
+
+    /// Apple's own prompt, for a player who has just said they are enjoying it — and the only
+    /// place in the whole game it is ever raised.
+    ///
+    /// Nothing is written down here. The asking was written down when the question went up,
+    /// which is what holds the two steps to one ask however the player answers, and whether
+    /// anything appears at all is Apple's to decide and nothing here can find out.
+    func askForAReview() {
         reviews.request()
     }
 
