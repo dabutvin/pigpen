@@ -44,9 +44,14 @@ extension RatingStanding {
 /// The handful of moments worth asking a player what they think of the game.
 ///
 /// Each of them is something a player would recognise as having just done — a world held, a
-/// rainbow taken, a week of mornings kept — rather than a count of launches or an hour on a
+/// rainbow taken, a run of mornings kept — rather than a count of launches or an hour on a
 /// clock. A game that asks somebody who is losing what they think of it gets the answer it
 /// asked for.
+///
+/// The three of them are meant to catch three different players, and the bars are what keep
+/// them from all catching the same one. Only one ask is ever spent — the first moment to
+/// arrive takes it and the rest are shut out for four months — so a bar set where every
+/// player passes it in their first sitting is a bar that answers for everybody.
 enum RatingMoment: String, CaseIterable, Sendable {
     /// Every pen in a world held. The biggest thing a player does in this game, and the end of
     /// the free half of it.
@@ -54,16 +59,24 @@ enum RatingMoment: String, CaseIterable, Sendable {
     /// The best pen a map has in it, taken — with a few already behind it, since the first
     /// rainbow can come three minutes in on a map that gives one up easily.
     case bestPen
-    /// A week of daily boards in a row: somebody who has come back seven mornings running has
-    /// an opinion about the game and it is not an idle one.
+    /// A run of daily boards: somebody who has come back three mornings running has an opinion
+    /// about the game and it is not an idle one.
     case runOfDays
 
     /// How much of the mark has to be in before a rise in it counts as a moment.
+    ///
+    /// The numbers are not guesses any more; they are what the counting said. Two in five pens
+    /// held are the best pen their map has in it, so a bar of three rainbows was reached around
+    /// the eighth board — inside the free meadow, often on the first day. And a bar of seven
+    /// mornings never once fired in a year of asking: players reach a week and go far past it,
+    /// but the other two always got there first and spent the ask. Three mornings arrives while
+    /// the run is still the thing the player is thinking about, which is the whole point of
+    /// asking on it.
     var bar: Int {
         switch self {
         case .worldHeld: 1
-        case .bestPen: 3
-        case .runOfDays: 7
+        case .bestPen: 5
+        case .runOfDays: 3
         }
     }
 
@@ -223,8 +236,9 @@ final class RememberedReviews: ReviewRequester {
 ///
 /// What is left to the game, then, is *when* to ask, and it is decided here:
 ///
-/// - **On a high point.** A world held, a rainbow taken, a week of daily boards in a row —
-///   `RatingMoment` has the three of them and what each one has to reach.
+/// - **On a high point.** A world held, a handful of rainbows taken, a run of daily boards —
+///   `RatingMoment` has the three of them, what each one has to reach, and why those numbers
+///   and not others.
 /// - **On the moment, not on the standing.** The marks the game saw last time are written down,
 ///   so a rise is a rise once. Somebody who held the meadow a month ago is not asked every time
 ///   they come back to the title screen; somebody who held it on the way to this screen is.

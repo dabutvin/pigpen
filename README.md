@@ -1687,10 +1687,21 @@ game is allowed to ask what a player thinks of it. Once in a while, and at the t
   visibly decided what it wants to hear is worse than not asking.
 - **On a high point.** Three of them, and each is something a player would recognise as having
   just done rather than a count of launches or an hour on a clock: **a world held**, every pen
-  in it taken; **the best pen a map has in it**, once there are three of those rainbows, since
-  the first can come three minutes in on a map that gives one up easily; and **a week of daily
+  in it taken; **the best pen a map has in it**, once there are five of those rainbows, since
+  the first can come three minutes in on a map that gives one up easily; and **three daily
   boards in a row**. A game that asks somebody who is losing what they think of it gets the
   answer it asked for.
+  The three are meant to catch three different players — the one working through the worlds,
+  the one chasing the perfect pen, the one who comes back each morning — and the bars are the
+  whole of what keeps them from all catching the same one. Only one ask is ever spent: the
+  first moment to arrive takes it and the other two are shut out for four months, so a bar
+  every player clears in their first sitting is a bar that answers for everybody. The numbers
+  are what the counting said rather than what seemed right. Two in five pens held are the best
+  their map has in it, so three rainbows was reached around the eighth board, inside the free
+  meadow and often on the first day; it is five now. And seven mornings never once arrived
+  first in a year of asking — players reach a week and go far past it, but a world or a handful
+  of rainbows always got there before them and spent the ask — so the run of days is three,
+  which lands while the run is still the thing the player is thinking about.
 - **On the moment, not the standing.** The game writes down the three marks every time it
   looks, so a rise is a rise once. Somebody who held the meadow last month is not asked again
   every time they come back to the title screen; somebody who held it on the way to this screen
