@@ -65,8 +65,12 @@ struct DailyPostcard: Identifiable, Sendable {
     /// What the pen came to and what it cost: points on a board with apples or skulls lying
     /// on it, tiles on one with nothing but ground to count, the way the verdict card reads
     /// a score.
-    var ground: String { counted(tally.score, level.holdsTreats ? "point" : "tile") }
-    var wall: String { counted(fences.count, "piece") }
+    var ground: String {
+        level.holdsTreats
+            ? String(localized: "\(tally.score) points")
+            : String(localized: "\(tally.score) tiles")
+    }
+    var wall: String { String(localized: "\(fences.count) pieces") }
 
     /// The clock, as a clock shows it, and nothing for a board nobody timed.
     var clock: String? { seconds.map { Stopwatch.face(TimeInterval($0)) } }
@@ -74,17 +78,17 @@ struct DailyPostcard: Identifiable, Sendable {
     /// The pig's word on the pen, in the voice the verdict card uses: nothing to add to the
     /// best pen there is, and a little more to say the further below it the pen stands.
     var pigSays: String {
-        guard !verdict.isAsGoodAsItGets else { return "Pig has no notes." }
+        guard !verdict.isAsGoodAsItGets else { return String(localized: "Pig has no notes.") }
         return switch verdict.stars {
-        case 3: "A pen worth bragging about."
-        case 2: "A great pen. Could be bigger."
-        default: "Held, just about."
+        case 3: String(localized: "A pen worth bragging about.")
+        case 2: String(localized: "A great pen. Could be bigger.")
+        default: String(localized: "Held, just about.")
         }
     }
 
     /// The two together, for a screen reader and for anywhere a card has one line to say
     /// what happened rather than a card's worth of room.
-    var remark: String { "\(ground) with \(wall). \(pigSays)" }
+    var remark: String { "\(String(localized: "\(ground) with \(wall).")) \(pigSays)" }
 
     // MARK: - Where it points
 
@@ -130,25 +134,33 @@ struct DailyPostcard: Identifiable, Sendable {
     /// read as part of it or as the end of it, and the thing has to stay a link that a finger
     /// can land on.
     var caption: String {
-        ". \(link.absoluteString) .\n\(starsInWriting) Check out my Pigpen daily puzzle"
+        let invitation = String(localized: "Check out my Pigpen daily puzzle")
+        return ". \(link.absoluteString) .\n\(starsInWriting) \(invitation)"
     }
 
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
     /// all: the day, the stars, the clock, the run and the pig's word.
     var spoken: String {
-        let spelled = ["No", "One", "Two", "Three"]
-        let stars = min(max(verdict.stars, 0), 3)
-        var starsSaid = "\(spelled[stars]) star\(stars == 1 ? "" : "s")"
-        if verdict.isAsGoodAsItGets { starsSaid += ", the best pen there is" }
+        let stars = Self.spelled(min(max(verdict.stars, 0), 3))
+        let starsSaid = verdict.isAsGoodAsItGets
+            ? String(localized: "\(stars), the best pen there is")
+            : stars
 
-        var said = ["Postcard for \(date.fullTitle).", "\(starsSaid)."]
+        var said = [String(localized: "Postcard for \(date.fullTitle)."), "\(starsSaid)."]
         if let seconds { said.append("\(Stopwatch.spoken(TimeInterval(seconds))).") }
-        if streak > 1 { said.append("\(streak) days in a row.") }
+        if streak > 1 { said.append(String(localized: "\(streak) days in a row.")) }
         said.append(remark)
         return said.joined(separator: " ")
     }
 
-    private func counted(_ number: Int, _ noun: String) -> String {
-        "\(number) \(noun)\(number == 1 ? "" : "s")"
+    /// The stars in words, because a screen reader reading a card out reads a lone digit as
+    /// one more number in a line of them.
+    private static func spelled(_ stars: Int) -> String {
+        switch stars {
+        case 3: String(localized: "Three stars")
+        case 2: String(localized: "Two stars")
+        case 1: String(localized: "One star")
+        default: String(localized: "No stars")
+        }
     }
 }

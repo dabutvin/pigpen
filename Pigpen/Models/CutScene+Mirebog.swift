@@ -86,15 +86,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .mirebog(.waterfrontEverywhere),
-                    caption: "Mirebog Fen. Waterfront property in every direction."
+                    caption: String(localized: "Mirebog Fen. Waterfront property in every direction.")
                 ),
                 Shot(
                     picture: .mirebog(.lotusAndMosquitoes),
-                    caption: "Lotus flowers add a lovely pop of color. The mosquito situation is difficult to overlook."
+                    caption: String(localized: "Lotus flowers add a lovely pop of color. The mosquito situation is difficult to overlook.")
                 ),
                 Shot(
                     picture: .mirebog(.describedAsLush),
-                    caption: "The listing described it as \"lush.\" That was generous."
+                    caption: String(localized: "The listing described it as \"lush.\" That was generous.")
                 )
             ],
             start: start
@@ -114,15 +114,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .mirebog(.oneRequirement),
-                    caption: "The crocodile had one requirement: waterfront."
+                    caption: String(localized: "The crocodile had one requirement: waterfront.")
                 ),
                 Shot(
                     picture: .mirebog(.theWholeThing),
-                    caption: "One waterway is enough. But he wants the whole thing."
+                    caption: String(localized: "One waterway is enough. But he wants the whole thing.")
                 ),
                 Shot(
                     picture: .mirebog(.aWholeWaterway),
-                    caption: "Build separate pens. Fence the crocodile in with one entire waterway."
+                    caption: String(localized: "Build separate pens. Fence the crocodile in with one entire waterway.")
                 )
             ],
             start: start
@@ -142,15 +142,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .mirebog(.veryGreenVeryWet),
-                    caption: "Very green. Very wet."
+                    caption: String(localized: "Very green. Very wet.")
                 ),
                 Shot(
                     picture: .mirebog(.stillNotSatisfied),
-                    caption: "Pig still wasn't quite satisfied."
+                    caption: String(localized: "Pig still wasn't quite satisfied.")
                 ),
                 Shot(
                     picture: .mirebog(.onlyOneDirection),
-                    caption: "There was really only one direction left."
+                    caption: String(localized: "There was really only one direction left.")
                 )
             ],
             start: start

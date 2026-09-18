@@ -99,9 +99,9 @@ struct Stopwatch: Equatable, Sendable {
         let minutes = whole / 60
         let remainder = whole % 60
         var said: [String] = []
-        if minutes > 0 { said.append("\(minutes) minute\(minutes == 1 ? "" : "s")") }
+        if minutes > 0 { said.append(String(localized: "\(minutes) minutes")) }
         if remainder > 0 || minutes == 0 {
-            said.append("\(remainder) second\(remainder == 1 ? "" : "s")")
+            said.append(String(localized: "\(remainder) seconds"))
         }
         return said.joined(separator: " ")
     }

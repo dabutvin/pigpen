@@ -29,14 +29,14 @@ struct LevelWait: Equatable, Sendable {
 
     /// The wait as the signpost writes it: `14h`, `40m`.
     var short: String {
-        if let hours { return "\(hours)h" }
-        return "\(minutes)m"
+        if let hours { return String(localized: "wait.hours.short", defaultValue: "\(hours)h") }
+        return String(localized: "wait.minutes.short", defaultValue: "\(minutes)m")
     }
 
     /// The wait as a sentence says it: `14 hours`, `1 hour`, `40 minutes`, `a minute`.
     var spoken: String {
-        if let hours { return "\(hours) hour\(hours == 1 ? "" : "s")" }
-        return minutes == 1 ? "a minute" : "\(minutes) minutes"
+        if let hours { return String(localized: "\(hours) hours") }
+        return minutes == 1 ? String(localized: "a minute") : String(localized: "\(minutes) minutes")
     }
 }
 
