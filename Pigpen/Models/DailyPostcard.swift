@@ -107,8 +107,13 @@ struct DailyPostcard: Identifiable, Sendable {
 
     /// The words that go with the picture — what a chat puts in the message field while the
     /// card goes up as the attachment: the day's own address, so the friend on the far end
-    /// has something to tap as well as something to look at, and what the pen was worth, so
-    /// they know what the brag is before the picture has finished loading.
+    /// has something to tap as well as something to look at, the stars, so they know what the
+    /// brag is before the picture has finished loading, and an invitation, since the point of
+    /// sending it is that they go and have their own go.
+    ///
+    /// What the stars used to be followed by was the tally and the pig's word on it, which is
+    /// written on the card in larger letters than a chat prints. Saying it twice left nothing
+    /// in the message asking anybody to play.
     ///
     /// The day is not in here, and that is deliberate. It is the share sheet's own title for
     /// the card — `title`, handed over as the preview — and a chat with no title line of its
@@ -125,7 +130,7 @@ struct DailyPostcard: Identifiable, Sendable {
     /// read as part of it or as the end of it, and the thing has to stay a link that a finger
     /// can land on.
     var caption: String {
-        ". \(link.absoluteString) .\n\(starsInWriting) \(remark)"
+        ". \(link.absoluteString) .\n\(starsInWriting) Check out my Pigpen daily puzzle"
     }
 
     /// The card said aloud, for a screen reader that would otherwise have nothing to read at
