@@ -164,6 +164,61 @@ def collapse(literal: str) -> str:
     return "".join(out)
 
 
+def first_argument(text: str, at: int) -> int:
+    """Where the first argument of a call beginning at `at` ends: the top-level comma
+    that starts the second one, or the paren that closes the call."""
+    depth = 0
+    index = at
+    while index < len(text):
+        char = text[index]
+        if char in "([{":
+            depth += 1
+        elif char in ")]}":
+            if depth == 0:
+                return index
+            depth -= 1
+        elif char == "," and depth == 0:
+            return index
+        elif char == '"':
+            _, index = read_literal(text, index)
+            continue
+        index += 1
+    return len(text)
+
+
+def literals_in(text: str, at: int, end: int) -> list[str]:
+    """Every string literal in one argument expression.
+
+    Usually there is one, and it is the whole argument. There is more than one when the
+    argument chooses between them — `Text(finished ? "Play" : "Continue")` — and both are
+    keys the catalog has to carry, which is the whole reason this does not simply read the
+    literal sitting after the bracket.
+
+    A `String(localized:)` nested inside is skipped: its key is found by the pass that
+    looks for those, and the default value beside it is not a key at all.
+    """
+    found = []
+    index = at
+    while index < end:
+        nested = re.compile(r'String\(localized:').match(text, index)
+        if nested:
+            index = first_argument(text, nested.end())
+            while index < end and text[index] != ")":
+                index += 1
+            index += 1
+            continue
+        if text[index] == '"':
+            literal, after = read_literal(text, index)
+            if literal is not None:
+                # `worn ? "Worn" : ""` has one phrase in it and one absence of one.
+                if literal:
+                    found.append(literal)
+                index = after
+                continue
+        index += 1
+    return found
+
+
 def shape(text: str) -> str:
     """A format string with its specifiers reduced to holes, for comparing with a
     literal read out of the source."""
@@ -213,10 +268,8 @@ def keys_in_source(root: Path) -> tuple[dict[str, list[str]], set[str]]:
             # Text(verbatim:) is a number or a mark, never a phrase.
             if text.startswith("verbatim:", at):
                 continue
-            literal, _ = read_literal(text, at)
-            if literal is None:
-                continue
-            note(literal, shape(literal))
+            for literal in literals_in(text, at, first_argument(text, at)):
+                note(literal, shape(literal))
 
     return found, symbolic
 
