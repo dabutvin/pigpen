@@ -571,7 +571,7 @@ struct TitleScreenView: View {
             } label: {
                 MenuRow(
                     icon: "play.fill",
-                    title: "Play",
+                    title: String(localized: "Play"),
                     detail: playDetail,
                     tint: GamePalette.cream,
                     tally: playTally
@@ -587,9 +587,9 @@ struct TitleScreenView: View {
 
             destinationRow(
                 icon: "calendar",
-                title: "Daily puzzle archive",
-                detail: "See past puzzles",
-                hint: "Every daily puzzle there has been, a month at a time"
+                title: String(localized: "Daily puzzle archive"),
+                detail: String(localized: "See past puzzles"),
+                hint: String(localized: "Every daily puzzle there has been, a month at a time")
             ) {
                 isArchiveOpen = true
             }
@@ -623,20 +623,27 @@ struct TitleScreenView: View {
     /// the whole game that adds up to. Two different questions — a star is a star, where the
     /// percentage counts the rainbow over each board as well — so both are worth saying.
     private var playTally: String {
-        "\(starsHeld) star\(starsHeld == 1 ? "" : "s") earned · \(completion.percent)% complete"
+        let earned = String(localized: "\(starsHeld) stars earned")
+        // The percent sign goes in as part of an argument rather than as a letter of the
+        // line. A literal % in a localised format is read as the start of a specifier, and
+        // what comes out the other side is not a percentage.
+        let share = "\(completion.percent)%"
+        return String(localized: "\(earned) · \(share) complete")
     }
 
     /// Play read out in full, since the percent it wears sits in the row as a badge VoiceOver
     /// would otherwise read as a bare number.
     private var playSpoken: String {
-        var said = "Play. \(playDetail)."
-        said += " \(starsHeld) star\(starsHeld == 1 ? "" : "s") earned."
-        guard completion.percent > 0 else { return said }
-        said += " \(completion.percent) per cent of the game held."
+        var said = [
+            String(localized: "Play. \(playDetail)."),
+            String(localized: "\(starsHeld) stars earned.")
+        ]
+        guard completion.percent > 0 else { return said.joined(separator: " ") }
+        said.append(String(localized: "\(completion.percent) per cent of the game held."))
         if completion.isEverything {
-            said += " Every star and every rainbow there is."
+            said.append(String(localized: "Every star and every rainbow there is."))
         }
-        return said
+        return said.joined(separator: " ")
     }
 
     /// How far through the whole game the player is.
@@ -672,7 +679,7 @@ struct TitleScreenView: View {
         } label: {
             MenuRow(
                 icon: dailyIcon(stars: stars),
-                title: "Today's puzzle",
+                title: String(localized: "Today's puzzle"),
                 detail: dailyDetail(stars: stars, streak: streak),
                 tint: GamePalette.cream,
                 dimmed: !hasADailyPuzzle
@@ -707,21 +714,25 @@ struct TitleScreenView: View {
     /// steps past. Everything the old card said aloud is said here instead.
     private func dailySpoken(stars: Int, streak: Int) -> String {
         guard hasADailyPuzzle else {
-            return "Today's puzzle. There is none — update Pigpen to get more daily puzzles."
+            return String(localized: """
+                Today's puzzle. There is none — update Pigpen to get more daily puzzles.
+                """)
         }
-        let spelled = ["no", "one", "two", "three"]
-        var said = "Today's puzzle. \(today.fullTitle)."
+        var said = [String(localized: "Today's puzzle. \(today.fullTitle).")]
         if stars > 0 {
-            said += " Penned, \(spelled[min(max(stars, 0), 3)]) star\(stars == 1 ? "" : "s")."
-            if daily.hasTheBestPen(on: today) { said += " The best pen there is." }
+            said.append(String(localized: "Penned, \(StarsInWords.said(stars))."))
+            if daily.hasTheBestPen(on: today) {
+                said.append(String(localized: "The best pen there is."))
+            }
             if let best = daily.bestTime(on: today) {
-                said += " Best time \(Stopwatch.spoken(TimeInterval(best)))."
+                let clock = Stopwatch.spoken(TimeInterval(best))
+                said.append(String(localized: "Best time \(clock)."))
             }
         } else {
-            said += " Not penned yet."
+            said.append(String(localized: "Not penned yet."))
         }
-        if streak > 1 { said += " \(streak) days in a row." }
-        return said
+        if streak > 1 { said.append(String(localized: "\(streak) days in a row.")) }
+        return said.joined(separator: " ")
     }
 
     /// What the day has to say for itself under its own name: nothing if the book is empty,
@@ -734,9 +745,11 @@ struct TitleScreenView: View {
     /// end of the row, which leaves the run of days as the one thing here with nowhere else
     /// to be said — and it is the thing a player comes back for.
     private func dailyDetail(stars: Int, streak: Int) -> String {
-        guard hasADailyPuzzle else { return "None today — update Pigpen for more" }
+        guard hasADailyPuzzle else {
+            return String(localized: "None today — update Pigpen for more")
+        }
         guard streak > 1 else { return today.written }
-        return "\(today.written) · \(streak) days"
+        return String(localized: "\(today.written) · \(streak) days")
     }
 
     /// Opens a day's board, exactly as it was left.

@@ -1936,6 +1936,7 @@ of the rest, and what remains is the listing agreeing with them:
 | UI | SwiftUI |
 | Min iOS | 17.0 |
 | Project | XcodeGen (no `.xcodeproj` in repo) |
+| Languages | English, German, Spanish, French, Italian, Japanese, Brazilian Portuguese |
 | CI/CD | GitHub Actions |
 | Distribution | TestFlight + App Store |
 
@@ -2004,6 +2005,58 @@ The four verdicts are one climb cut at four heights, so a player hears how well 
 `Sound` in `Pigpen/Views/Sounds.swift` names each one after its moment rather than its noise, and its raw value is the file name, so `SoundsTests` can check that every case has a file in the bundle. The game plays them through the ambient audio session: they sit under whatever the player already has on rather than stopping it, and they go quiet with the ring/silent switch. Commit the regenerated WAVs — the build reads them, not the script.
 
 **The music.** The same script writes the one tune the game has, `Pigpen/Resources/Music/meadow-waltz.wav`: sixteen bars of waltz in C at 96 to the minute, a music box over an oom-pah-pah, two eight-bar phrases with the first left hanging on the five chord and the second brought home. The tune is written as a list of bars — a chord and the notes over it — at the top of the script, so it can be rewritten without touching an instrument. It is rendered into a buffer exactly sixteen bars long with every note's tail wrapped round to the start, which is what makes the loop seamless, and written at half the sample rate, since nothing in it reaches the top of the other half and the file is thirty seconds long. `Music` in `Pigpen/Views/Music.swift` loops it at about a third of the noises' level and only while the game is up: the app tells it as the scene comes to the front and goes away, so a locked phone does not go on playing a waltz, and it never starts over the top of anything the player already has playing. `MusicTests` covers the switch and the two halves of the question.
+
+### The seven languages
+
+The game is written in English and shipped in six more: German, Spanish, French, Italian, Japanese and Brazilian Portuguese. Everything a player reads is translated — the settings sheet and the buttons, but also the hundred and fourteen film captions, the boss's one line on the board, the ten things a morning reminder can say, and every label the screen reader is handed. What is not translated is the map: level names, world names and the pig's own name stay as they are, so a player following `solutions/` or comparing a day's board with somebody in another country is looking at the same words for the same places.
+
+All of it lives in one Xcode string catalog, `Pigpen/Resources/Localizable.xcstrings`. There is no second file to keep in step and no code that picks a language: the system reads the phone's preferred languages, and a phone set to something else falls back to English.
+
+**Writing a string.** SwiftUI localises a literal handed to `Text`, `Label`, `Button`, `.alert` or an accessibility modifier for free, so most of the game says its lines by writing them:
+
+```swift
+Text("Build the perfect pen")
+```
+
+Anywhere the words are worked out rather than written down — a model that hands a screen a `String`, a label built from a count — wrap them:
+
+```swift
+String(localized: "\(progress.clearedCount) of \(world.count) puzzles solved")
+```
+
+The key is the English text, which is Apple's default and gives a useful fallback: a string that somehow misses the catalog shows the English rather than a key. Two cases want a name of their own instead, given with `defaultValue:` so the English is still there in the code:
+
+```swift
+String(localized: "date.title", defaultValue: "\(weekday.name) \(day) \(Self.monthName(month))")
+```
+
+Use one when the English alone would not identify the string — a bare format like `%@ %lld %@` tells a translator nothing — or when two strings that read the same in English have to differ elsewhere. `Weekday.initial` is the second kind: Saturday and Sunday are both `S` in English and the archive has always lived with that, but a language where they are not should not have to.
+
+**Counting.** Nothing in the game decides an ending in code any more. There is no `star\(n == 1 ? "" : "s")`; a counted thing is written plurally and the catalog holds the variations, which is the only way a language with rules English does not have gets them right:
+
+```swift
+String(localized: "\(stars) stars")
+```
+
+One exception, and it is the catalog's rule rather than a choice: a plural variation has to print the number it counts. A caption that reads *best pens* under a figure that already reads *3* cannot be one string with two endings, because `xcstringstool` refuses to compile it — so `WorldRecordView` picks between two strings itself, which is what Apple's own error message tells you to do. Six languages all split one from the rest; a seventh that split them three ways would want a third string.
+
+**Grammar the template cannot see.** An animal's name is composed into sentences the whole game over — the boss's rule, the verdict on a pen that will not hold, the button that releases it. English needs one word for that; a language with genders needs an article it cannot choose from a template shared by fourteen animals. So the article travels with the noun. `Animal` carries `name` (the bare noun), `subject` and `object` (the same with its article, in the two cases German tells apart), `subjectCapitalized` for the head of a sentence, and `plural` for the one rule that fences a flock. A template puts the animal where a preposition will not contract in front of it — never `à %@`, because `à` + `le` is `au` and no format string spells that — and a translation is allowed to use *fewer* arguments than it is given, which is how German says "his pen" where English says "the croc's pen".
+
+**Checking it.** `Tools/check_localization.py` reads every literal out of the Swift and every entry out of the catalog and says whether they agree. It runs on every pull request, ahead of the build, because a missing translation is a one-second answer and the build is a twenty-minute one:
+
+```bash
+python3 Tools/check_localization.py
+```
+
+It fails on a string the source asks for and the catalog has not got, on a key the catalog keeps and nothing asks for any more, on a language missing from any entry, and on a translation whose format specifiers ask for an argument the key cannot hand it. It passes a translation that uses fewer — a language that says *his pen* where English says *the croc's pen* is a better translation, not a broken one.
+
+**Looking at it.** The checker reads words; it cannot see a button. `.github/workflows/screenshots-languages.yml` photographs five text-heavy screens — the title, the settings sheet, a boss board, the toll card and the record card — in all seven languages, and posts them to the pull request four across with English first. It runs when a branch changes `Localizable.xcstrings`, not on every pull request, since a branch that moves a button by three points does not need thirty-five more pictures on it.
+
+What it is for is fit rather than wording. A translation is read in the catalog; what a diff cannot show is German running past the edge of a button, a line cut off mid-sentence, or a font that never loaded. The same hand crank the English gallery has is on this one too, for a run that never arrived.
+
+One thing the checker cannot see, and the reason a year is handed in as `String(year)`: a number interpolated into a localised string is formatted by the locale, so 2026 arrives as "2,026". That is right for a count and wrong for a year, a level number or anything else that is a label. Bare numbers on screen go through `Text(verbatim:)` for the same reason.
+
+Two more rules are there because each one had already gone wrong once. A loose `%` in a string that carries arguments is read by the formatter as the start of a specifier nobody passed, so `%lld% complete` is not a percentage — put the sign in the argument instead. And a plural variation that never says its own number fails the build rather than the tool, on a Mac, after everything else has compiled; the checker says it here in a second.
 
 ### Adding a level
 
@@ -2326,6 +2379,7 @@ Pigpen/
 ├── Models/
 │   ├── GridPoint.swift          # Tile coordinates and the four directions
 │   ├── PuzzleLevel.swift        # Terrain, treats, pig start, budget, scoring, and every shipped map
+│   ├── StarsInWords.swift       # A star count spelled out, for the screens that are read aloud
 │   ├── PenOutcome.swift         # Releases the pig: escape route, or the pen it is stuck in
 │   ├── BossOrders.swift         # The rule a boss adds, in the one line the board keeps on screen
 │   ├── VictoryLap.swift         # The little circle an animal runs when its pen holds
@@ -2429,6 +2483,7 @@ Pigpen/
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
+    ├── Localizable.xcstrings    # Every word the game says, in English and six more
     ├── Sounds/                  # Generated: one short WAV for every noise the game makes
     ├── Music/                   # Generated: the sixteen-bar waltz the game loops
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
@@ -2452,6 +2507,7 @@ Tools/
 ├── generate_sounds.py           # Synthesises every noise the game makes, and its one tune, and writes the WAVs
 ├── level_search.py              # Finds the best pen a map and budget allow, and what it asks
 ├── generate_dailies.py          # Writes a year of daily puzzles, and measures what each asks
+├── check_localization.py        # Reads the Swift and the string catalog and says whether they agree
 ├── bootstrap_signing.py         # Creates/lists/revokes the signing certificate over the API
 └── prepare_signing_secrets.sh   # Checks and encodes a certificate exported from a Mac
 ```
