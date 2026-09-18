@@ -128,9 +128,15 @@ struct WorldRecordView: View {
                     tally(
                         "\(record.bestPens)",
                         // The figure is already above it, so the caption is the noun alone —
-                        // but which noun is a question of how many, which is why the count
-                        // goes in and never comes out.
-                        String(localized: "record.bestPens", defaultValue: "\(record.bestPens) best pens")
+                        // but which noun is a question of how many, and a catalog plural is
+                        // not allowed to answer it: a plural variation has to print the
+                        // number it counts, or `xcstringstool` refuses the build. So the
+                        // choice is made here, between two strings. Every language the game
+                        // speaks splits one from the rest; one that split them three ways
+                        // would want a third string and a third branch.
+                        record.bestPens == 1
+                            ? String(localized: "record.bestPen", defaultValue: "best pen")
+                            : String(localized: "record.bestPens", defaultValue: "best pens")
                     )
                 }
             }

@@ -225,6 +225,26 @@ def catalog_strings(catalog: dict) -> dict:
     return catalog.get("strings", {})
 
 
+def plural_branches(entry: dict, language: str) -> list[tuple[str, str]]:
+    """Every branch of every plural this language has for one key, as (category, value)."""
+    localization = entry.get("localizations", {}).get(language)
+    if not localization:
+        return []
+    out = []
+
+    def walk(node: dict) -> None:
+        for variations in node.get("variations", {}).values():
+            for category, branch in variations.items():
+                if "stringUnit" in branch:
+                    out.append((category, branch["stringUnit"].get("value", "")))
+                walk(branch)
+
+    walk(localization)
+    for substitution in localization.get("substitutions", {}).values():
+        walk(substitution)
+    return out
+
+
 def values_of(entry: dict, language: str) -> list[str]:
     """Every string a language can produce for one key: the plain one, or all the
     branches of a plural, and the same again for each substitution it carries."""
@@ -331,6 +351,19 @@ def check(catalog_path: Path, sources: Path) -> list[str]:
 
         # What the key can hand over is what the English format asks for — which for a
         # symbolic key is written in the English value rather than in the key itself.
+        # `xcstringstool` refuses a plural whose branches do not print the number they
+        # count — a caption that says "best pens" under a figure that says 3 has to be two
+        # strings chosen in code, not one string with two endings. It refuses it at build
+        # time, on a Mac, after everything else has compiled; this says it here.
+        for language in LANGUAGES:
+            for category, value in plural_branches(entry, language):
+                if not specifiers(value):
+                    problems.append(
+                        f"{key!r}: the {language} plural's {category!r} reads {value!r}, "
+                        f"which never says the number it counts"
+                    )
+                    break
+
         allowed = {kind(s) for s in specifiers(english[0])}
         if allowed:
             for loose in stray_percents(key):

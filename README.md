@@ -2004,6 +2004,8 @@ Use one when the English alone would not identify the string — a bare format l
 String(localized: "\(stars) stars")
 ```
 
+One exception, and it is the catalog's rule rather than a choice: a plural variation has to print the number it counts. A caption that reads *best pens* under a figure that already reads *3* cannot be one string with two endings, because `xcstringstool` refuses to compile it — so `WorldRecordView` picks between two strings itself, which is what Apple's own error message tells you to do. Six languages all split one from the rest; a seventh that split them three ways would want a third string.
+
 **Grammar the template cannot see.** An animal's name is composed into sentences the whole game over — the boss's rule, the verdict on a pen that will not hold, the button that releases it. English needs one word for that; a language with genders needs an article it cannot choose from a template shared by fourteen animals. So the article travels with the noun. `Animal` carries `name` (the bare noun), `subject` and `object` (the same with its article, in the two cases German tells apart), `subjectCapitalized` for the head of a sentence, and `plural` for the one rule that fences a flock. A template puts the animal where a preposition will not contract in front of it — never `à %@`, because `à` + `le` is `au` and no format string spells that — and a translation is allowed to use *fewer* arguments than it is given, which is how German says "his pen" where English says "the croc's pen".
 
 **Checking it.** `Tools/check_localization.py` reads every literal out of the Swift and every entry out of the catalog and says whether they agree. It runs on every pull request, ahead of the build, because a missing translation is a one-second answer and the build is a twenty-minute one:
@@ -2012,7 +2014,9 @@ String(localized: "\(stars) stars")
 python3 Tools/check_localization.py
 ```
 
-It fails on a string the source asks for and the catalog has not got, on a key the catalog keeps and nothing asks for any more, on a language missing from any entry, and on a translation whose format specifiers ask for an argument the key cannot hand it. It passes a translation that uses fewer.
+It fails on a string the source asks for and the catalog has not got, on a key the catalog keeps and nothing asks for any more, on a language missing from any entry, and on a translation whose format specifiers ask for an argument the key cannot hand it. It passes a translation that uses fewer — a language that says *his pen* where English says *the croc's pen* is a better translation, not a broken one.
+
+Two more rules are there because each one had already gone wrong once. A loose `%` in a string that carries arguments is read by the formatter as the start of a specifier nobody passed, so `%lld% complete` is not a percentage — put the sign in the argument instead. And a plural variation that never says its own number fails the build rather than the tool, on a Mac, after everything else has compiled; the checker says it here in a second.
 
 ### Adding a level
 

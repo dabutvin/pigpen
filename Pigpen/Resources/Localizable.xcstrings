@@ -27051,127 +27051,96 @@
         }
       }
     },
+    "record.bestPen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "best pen"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bestes Gehege"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mejor corral"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "meilleur enclos"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "recinto migliore"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最高の囲い"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "melhor curral"
+          }
+        }
+      }
+    },
     "record.bestPens": {
       "extractionState": "manual",
       "localizations": {
         "en": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "best pen"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "best pens"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "best pens"
           }
         },
         "de": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "bestes Gehege"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "beste Gehege"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "beste Gehege"
           }
         },
         "es": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "mejor corral"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "mejores corrales"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "mejores corrales"
           }
         },
         "fr": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "meilleur enclos"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "meilleurs enclos"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "meilleurs enclos"
           }
         },
         "it": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "recinto migliore"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "recinti migliori"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "recinti migliori"
           }
         },
         "ja": {
-          "variations": {
-            "plural": {
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "最高の囲い"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "最高の囲い"
           }
         },
         "pt-BR": {
-          "variations": {
-            "plural": {
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "melhor curral"
-                }
-              },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "melhores currais"
-                }
-              }
-            }
+          "stringUnit": {
+            "state": "translated",
+            "value": "melhores currais"
           }
         }
       }
