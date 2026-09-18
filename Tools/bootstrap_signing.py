@@ -52,6 +52,10 @@ CAPABILITIES = ["ASSOCIATED_DOMAINS"]
 class Failure(Exception):
     """Something the user needs to fix, reported without a traceback."""
 
+    def __init__(self, message: str, status: int | None = None) -> None:
+        super().__init__(message)
+        self.status = status
+
 
 def openssl(*args: str, stdin: bytes | None = None) -> bytes:
     result = subprocess.run(
@@ -136,7 +140,7 @@ class AppStoreConnect:
             with urllib.request.urlopen(request, timeout=60) as response:
                 raw = response.read()
         except urllib.error.HTTPError as error:
-            raise Failure(self._describe(error)) from None
+            raise Failure(self._describe(error), status=error.code) from None
         except urllib.error.URLError as error:
             raise Failure(f"could not reach {API_ROOT}: {error.reason}") from None
         return json.loads(raw) if raw else {}
@@ -161,6 +165,27 @@ def distribution_certificates(api: AppStoreConnect) -> list[dict]:
         params={"filter[certificateType]": CERTIFICATE_TYPE, "limit": "200"},
     )
     return response.get("data", [])
+
+
+def retire_certificate(api: AppStoreConnect, certificate_id: str) -> bool:
+    """Ask that a certificate be revoked. True if this call is what revoked it.
+
+    A certificate somebody already deleted by hand stays in the account's list
+    without being issued any more, and asking again answers HTTP 409: "This
+    certificate cannot be revoked because it is not in an issued state." That is
+    the state the caller wanted it in, so it is an outcome, not a failure — the
+    sweep says so and carries on rather than stopping a release over a
+    certificate that is already gone.
+    """
+    try:
+        api.request("DELETE", f"/v1/certificates/{certificate_id}")
+    except Failure as error:
+        # Apple writes the quotes around "issued" as HTML entities, so the match
+        # is on the plain half of the sentence.
+        if error.status == 409 and "cannot be revoked" in str(error).lower():
+            return False
+        raise
+    return True
 
 
 def describe_certificate(certificate: dict) -> str:
@@ -412,8 +437,10 @@ def command_list(api: AppStoreConnect, args: argparse.Namespace) -> None:
 
 def command_revoke(api: AppStoreConnect, args: argparse.Namespace) -> None:
     for certificate_id in args.certificate_id:
-        api.request("DELETE", f"/v1/certificates/{certificate_id}")
-        print(f"Revoked {certificate_id}")
+        if retire_certificate(api, certificate_id):
+            print(f"Revoked {certificate_id}")
+        else:
+            print(f"{certificate_id} was already retired")
     print(
         "\nAny build still signing with a revoked certificate will fail, so re-run "
         "`bootstrap_signing.py create` if you revoked the one CI was using."
@@ -456,14 +483,20 @@ def command_cleanup(api: AppStoreConnect, args: argparse.Namespace) -> None:
             kept += 1
             print(f"Keeping {describe_certificate(certificate)}")
 
+    revoked = 0
+    already = 0
     for certificate_id in sorted(doomed):
-        api.request("DELETE", f"/v1/certificates/{certificate_id}")
-        print(f"Revoked certificate {certificate_id}")
+        if retire_certificate(api, certificate_id):
+            revoked += 1
+            print(f"Revoked certificate {certificate_id}")
+        else:
+            already += 1
+            print(f"Certificate {certificate_id} was already retired by hand")
 
     remaining = distribution_certificates(api)
     print(
-        f"{len(doomed)} certificate(s) revoked, {kept} kept by serial, "
-        f"{len(remaining)} left on the account."
+        f"{revoked} certificate(s) revoked, {already} already retired, "
+        f"{kept} kept by serial, {len(remaining)} left on the account."
     )
 
 
