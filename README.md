@@ -1138,8 +1138,10 @@ A puzzle a day, on its own board, with a clock running on it.
   `pigpen.app/day/2026-04-22`, which on a phone with the game on it opens that day's board
   and on one without it opens the site, where the App Store button is. See
   [A link into the app](#a-link-into-the-app). The words beside the picture carry that
-  address and the stars and the tally under it, so a chat that takes both has something to
-  tap as well as something to look at and says what happened before the picture has loaded.
+  address, the stars, and an invitation — *Check out my Pigpen daily puzzle* — so a chat that
+  takes both has something to tap as well as something to look at, says how the day went
+  before the picture has loaded, and asks the friend on the far end to go and have their own
+  go, which is the point of sending it.
   The day is not among those words: it is the share sheet's own title for the card, and a
   chat with no title line of its own prints the title above the message — saying it in both
   places had every card stuttering its own date. Taking the *subject* off the share sheet is
