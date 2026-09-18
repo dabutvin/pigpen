@@ -5,8 +5,8 @@ import SwiftUI
 /// share sheet.
 ///
 /// A preview rather than straight to the sheet, because the card is the thing being sent and
-/// the sheet shows a thumbnail of it at most. What is held up here is the card itself — the
-/// same view that is painted into the picture — so what is admired is what arrives.
+/// the sheet shows a line of it at most. What is held up here is the card itself — the same
+/// view that is painted into the picture — so what is admired is what arrives.
 @MainActor
 struct DailyPostcardView: View {
     @Environment(\.dismiss) private var dismiss
@@ -16,25 +16,25 @@ struct DailyPostcardView: View {
     /// one wardrobe the game keeps, by default; a preview hands in its own.
     var wardrobe: PigWardrobe = .shared
 
-    /// Whether the fencing is standing on the card. Off as it comes up: everybody gets the
-    /// same board, and a card sent to somebody who has not had their go should not hand them
-    /// the answer. The switch is for the friend who has.
-    @State private var showsFencing = false
-    /// The card as a picture, painted whenever the card changes. Nothing until the first one
-    /// is drawn, which is the same instant the screen appears.
-    @State private var drawn: Drawn?
+    /// Whether the fencing is standing on the card. On as it comes up: the wall is the whole
+    /// of what a player did with the day — everybody was handed the same board, and the pen
+    /// is the only part of the card that is theirs — so a card that went without it was a
+    /// card of somebody else's morning.
+    ///
+    /// The switch is still there, and switching it off still takes the wall and the gold off
+    /// the board, which is the card to send to somebody who has not had their go yet.
+    @State private var showsFencing = true
 
-    /// The picture, and the same picture again as something the share sheet can show in its
-    /// own header.
-    private struct Drawn {
-        let picture: PostcardPicture
-        let thumbnail: Image
-    }
-
-    /// The card itself, drawn once and used twice: held up on this screen, and painted into
-    /// the picture that goes.
+    /// The card itself, held up on this screen.
     private var card: DailyPostcardCard {
         DailyPostcardCard(postcard: postcard, showsFencing: showsFencing, outfit: wardrobe.outfit)
+    }
+
+    /// The same card as the thing that goes — which is the card and not a painting of it,
+    /// since the painting happens when the share sheet asks. So the button below is live the
+    /// moment the screen is, whatever the phone is busy with.
+    private var picture: PostcardPicture {
+        PostcardPicture(postcard: postcard, showsFencing: showsFencing, outfit: wardrobe.outfit)
     }
 
     var body: some View {
@@ -73,18 +73,9 @@ struct DailyPostcardView: View {
             }
         }
         .staysInDaylight()
-        .task { paint() }
         .onChange(of: showsFencing) { _, _ in
             Haptics.tap(.light)
-            paint()
         }
-    }
-
-    /// Paints the card as it stands. Once when the screen comes up and once more each time
-    /// the fencing goes on or comes off, rather than every time the screen is laid out: the
-    /// picture is a thousand pixels across and a share sheet wants it ready before it opens.
-    private func paint() {
-        drawn = card.painted().map { Drawn(picture: $0.picture, thumbnail: $0.thumbnail) }
     }
 
     // MARK: - Pieces
@@ -143,46 +134,37 @@ struct DailyPostcardView: View {
         )
     }
 
-    /// Hands the picture to the phone, with the day's address as the words that go with it —
-    /// a chat that takes both gets something to look at and something to tap. Counted on the
-    /// way, with whether the fencing went.
-    @ViewBuilder
+    /// Hands the picture to the phone, with the day, what the pen was worth and the day's
+    /// address as the words that go with it — a chat that takes both gets something to look
+    /// at and something to tap. Counted on the way, with whether the fencing went.
+    ///
+    /// The preview's title is the day, and it is the only place the day is said. There is no
+    /// subject here, and taking the subject away was not enough on its own: with nothing else
+    /// given, the share sheet uses the preview's title as the subject, and a chat with no
+    /// title line of its own prints it above the message — so the day arrived twice, from two
+    /// places that both looked innocent. The caption says the address and the tally and
+    /// leaves the day to the title.
     private var shareButton: some View {
-        if let drawn {
-            ShareLink(
-                item: drawn.picture,
-                subject: Text(postcard.title),
-                message: Text(postcard.caption),
-                preview: SharePreview(postcard.title, image: drawn.thumbnail)
-            ) {
-                shareLabel
-            }
-            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
-            .simultaneousGesture(
-                TapGesture().onEnded {
-                    Haptics.tap(.medium)
-                    Sounds.play(.press)
-                    Analytics.record(.dailyShared(fencing: showsFencing))
-                }
-            )
-            .padding(.top, 4)
-        } else {
-            // The instant before the first card is painted, and whatever is left of a phone
-            // that could not paint one at all.
+        ShareLink(
+            item: picture,
+            message: Text(postcard.caption),
+            preview: SharePreview(postcard.title)
+        ) {
             shareLabel
-                .padding(.vertical, 14)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(GamePalette.clay.opacity(0.45))
-                )
-                .padding(.top, 4)
-                .accessibilityHidden(true)
         }
+        .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 6))
+        .simultaneousGesture(
+            TapGesture().onEnded {
+                Haptics.tap(.medium)
+                Sounds.play(.press)
+                Analytics.record(.dailyShared(fencing: showsFencing))
+            }
+        )
+        .padding(.top, 4)
     }
 
     private var shareLabel: some View {
-        Label("Share the card", systemImage: "square.and.arrow.up")
+        Label("Share your score", systemImage: "square.and.arrow.up")
             .font(.system(size: 16, weight: .black, design: .rounded))
             .foregroundStyle(GamePalette.cream)
             .frame(maxWidth: .infinity)

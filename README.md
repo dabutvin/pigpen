@@ -1137,18 +1137,32 @@ A puzzle a day, on its own board, with a clock running on it.
   word on it: *Pig has no notes*. Along the bottom the day's own address,
   `pigpen.app/day/2026-04-22`, which on a phone with the game on it opens that day's board
   and on one without it opens the site, where the App Store button is. See
-  [A link into the app](#a-link-into-the-app). The same address rides along as the words
-  beside the picture, so a chat that takes both has something to tap as well as something
-  to look at. The board on the card is a real `FieldView` rather than a drawing of one —
+  [A link into the app](#a-link-into-the-app). The words beside the picture carry that
+  address and the stars and the tally under it, so a chat that takes both has something to
+  tap as well as something to look at and says what happened before the picture has loaded.
+  The day is not among those words: it is the share sheet's own title for the card, and a
+  chat with no title line of its own prints the title above the message — saying it in both
+  places had every card stuttering its own date. Taking the *subject* off the share sheet is
+  not enough on its own, either, since the preview's title becomes the subject when nothing
+  else is given. The address stands above the tally rather than under it, and between two
+  dots, for the same reason twice: a chat that decides a message *is* a link builds a second
+  bubble out of it — a picture of the website, under a picture of the card, under the words,
+  and the front page at that, since a day's address sends a browser to the front page. The
+  dots keep a space either side of them, since a dot up against the address would be read as
+  part of it, and a link a finger cannot land on is the same as no link at all. The board on the card is a real `FieldView` rather than a drawing of one —
   nothing here knows how to paint a field, so a world repainted repaints every card with
   it — and `ImageRenderer` takes the whole card at three times over, which is what the
-  share sheet carries. The card is held up before it goes, and what is held up is the card
+  share sheet carries. It is painted when the sheet asks rather than up front: a thousand
+  pixels drawn on the way in left the share button waiting on a picture nobody had asked
+  for yet, and dead altogether on a phone that could not draw one. The card is held up before it goes, and what is held up is the card
   itself rather than a likeness of it.
-  The fencing is a switch on that card, and it comes up off. Everybody gets the same board
-  on a given day, which is what makes a daily worth comparing at all, and a card sent to
-  somebody who has not had their go should not hand them the answer. Flick it on for the
-  friend who has, and the wall is built on the board with the ground it holds washed gold,
-  as on the field — and a pen with nothing left to beat keeps its drifting rainbow. Only a
+  The fencing is a switch on that card, and it comes up **on**: everybody is handed the same
+  board on a given day, so the wall is the only part of the card that belongs to whoever
+  built it, and a card without it is a picture of somebody else's morning. The wall stands
+  with the ground it holds washed gold, as on the field, and a pen with nothing left to beat
+  keeps its drifting rainbow. Flick the switch off and the board goes back to the way the day
+  opened, which is the card for the friend who has not had their go yet — the same ground
+  everybody got that morning and none of the answer to it. Only a
   day is shared — a trail stop is nobody else's morning — and only a pen that held: a pig
   that walked out gets no postcard. The run of days is written on today's card and no
   other, since a run counted back from a day dug out of the archive is not a run anybody is

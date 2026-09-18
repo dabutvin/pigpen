@@ -18,9 +18,10 @@ import UniformTypeIdentifiers
 /// on it is measured in points off that rather than left to the room it is given.
 struct DailyPostcardCard: View {
     let postcard: DailyPostcard
-    /// Whether the wall is standing on the board. Off is the day as everybody was handed it
-    /// that morning, which is the card that can be sent to somebody who has not played yet.
-    var showsFencing = false
+    /// Whether the wall is standing on the board. On is the pen that was built, which is the
+    /// whole of what a card has to say; off is the day as everybody was handed it that
+    /// morning, which is the card for somebody who has not played yet.
+    var showsFencing = true
     /// What the pig has on. Handed in rather than asked of the wardrobe here, so a preview
     /// can dress her without a choice saved on the machine it is running on.
     var outfit: PigOutfit = .asSheComes
@@ -272,30 +273,45 @@ struct DailyPostcardCard: View {
 
 /// The card as a picture, which is the thing a share sheet actually carries: a PNG, handed
 /// over as one to anything that will take an image.
+///
+/// What is kept here is the card rather than the paint. Painting it was done up front — on
+/// the way in and again each time the fencing switch moved — and the button that shares it
+/// had to wait on that: a thousand pixels across, three times over, drawn on the main thread
+/// while somebody was looking at the screen. A runner photographed the screen mid-paint and
+/// caught *Share the card* sitting there pale and dead, which is what a phone would do too
+/// on a slow morning, and a paint that failed outright left a button that never woke up at
+/// all.
+///
+/// So nothing is painted until something asks for it. The share sheet asks, and waits with
+/// its own spinner while the card is drawn — which is the one moment in the whole business
+/// where waiting is somebody's idea.
 struct PostcardPicture: Transferable, Sendable {
-    let png: Data
+    let postcard: DailyPostcard
+    let showsFencing: Bool
+    let outfit: PigOutfit
 
     static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .png) { $0.png }
+        DataRepresentation(exportedContentType: .png) { try await $0.painted() }
             .suggestedFileName("Pigpen.png")
+    }
+
+    /// Paints the card, three times over, so it arrives on a friend's screen at the size a
+    /// photo does rather than as a card blown up — a phone hands a picture on at the pixels
+    /// it was given and nothing downstream can put back what was never drawn.
+    @MainActor
+    func painted() throws -> Data {
+        let renderer = ImageRenderer(
+            content: DailyPostcardCard(postcard: postcard, showsFencing: showsFencing, outfit: outfit)
+        )
+        renderer.scale = 3
+        guard let drawn = renderer.uiImage, let png = drawn.pngData() else { throw CouldNotPaint() }
+        return png
     }
 }
 
-extension DailyPostcardCard {
-    /// Paints the card and hands back the picture along with the picture as an `Image`, for
-    /// the share sheet's own thumbnail of it.
-    ///
-    /// Three times over, so the card arrives on a friend's screen at the size a photo does
-    /// rather than as a card blown up — a phone hands a picture on at the pixels it was given
-    /// and nothing downstream can put back what was never drawn.
-    @MainActor
-    func painted() -> (picture: PostcardPicture, thumbnail: Image)? {
-        let renderer = ImageRenderer(content: self)
-        renderer.scale = 3
-        guard let drawn = renderer.uiImage, let png = drawn.pngData() else { return nil }
-        return (PostcardPicture(png: png), Image(uiImage: drawn))
-    }
-}
+/// What is left when a phone cannot paint the card at all. Nothing has been seen to do it,
+/// and if one ever does the share sheet says so rather than handing on an empty file.
+struct CouldNotPaint: Error {}
 
 // MARK: - Previews
 
@@ -320,8 +336,8 @@ extension DailyPostcardCard {
     return ScrollView {
         VStack(spacing: 20) {
             if let card {
-                DailyPostcardCard(postcard: card, showsFencing: true, outfit: .baseballCap)
-                DailyPostcardCard(postcard: card)
+                DailyPostcardCard(postcard: card, outfit: .baseballCap)
+                DailyPostcardCard(postcard: card, showsFencing: false)
             }
         }
         .frame(maxWidth: DailyPostcardCard.width)
