@@ -2016,6 +2016,8 @@ python3 Tools/check_localization.py
 
 It fails on a string the source asks for and the catalog has not got, on a key the catalog keeps and nothing asks for any more, on a language missing from any entry, and on a translation whose format specifiers ask for an argument the key cannot hand it. It passes a translation that uses fewer — a language that says *his pen* where English says *the croc's pen* is a better translation, not a broken one.
 
+One thing the checker cannot see, and the reason a year is handed in as `String(year)`: a number interpolated into a localised string is formatted by the locale, so 2026 arrives as "2,026". That is right for a count and wrong for a year, a level number or anything else that is a label. Bare numbers on screen go through `Text(verbatim:)` for the same reason.
+
 Two more rules are there because each one had already gone wrong once. A loose `%` in a string that carries arguments is read by the formatter as the start of a specifier nobody passed, so `%lld% complete` is not a percentage — put the sign in the argument instead. And a plural variation that never says its own number fails the build rather than the tool, on a Mac, after everything else has compiled; the checker says it here in a second.
 
 ### Adding a level

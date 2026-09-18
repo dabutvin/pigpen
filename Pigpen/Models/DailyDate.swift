@@ -103,7 +103,13 @@ struct DailyDate: Hashable, Comparable, Sendable, Identifiable {
     }
 
     /// The day with the year on it, for anywhere the month is not already written down.
-    var fullTitle: String { String(localized: "date.fullTitle", defaultValue: "\(title) \(year)") }
+    ///
+    /// The year goes in as words rather than as a number. A number handed to a localised
+    /// format is grouped by the locale's rules, and 2026 comes back as "2,026"; a year is
+    /// never grouped in any language the game speaks, because it is a label and not a count.
+    var fullTitle: String {
+        String(localized: "date.fullTitle", defaultValue: "\(title) \(String(year))")
+    }
 
     /// The day as a line under a button's own name: `Tue, September 8`. The month comes
     /// before the day and the weekday takes a comma, which is how a date is read rather than
@@ -213,8 +219,11 @@ struct DailyMonth: Hashable, Comparable, Sendable, Identifiable {
         (left.year, left.month) < (right.year, right.month)
     }
 
+    /// The year is written out rather than counted, for the reason `DailyDate.fullTitle`
+    /// gives: a localised format would group it into "2,026".
     var name: String {
-        String(localized: "date.month", defaultValue: "\(DailyDate.monthName(month)) \(year)")
+        String(localized: "date.month",
+               defaultValue: "\(DailyDate.monthName(month)) \(String(year))")
     }
 
     var days: [DailyDate] {

@@ -25177,43 +25177,43 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ %lld"
+            "value": "%@ %@"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ %2$lld"
+            "value": "%1$@ %2$@"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ de %2$lld"
+            "value": "%1$@ de %2$@"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ %2$lld"
+            "value": "%1$@ %2$@"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ %2$lld"
+            "value": "%1$@ %2$@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%2$lld年%1$@"
+            "value": "%2$@年%1$@"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ de %2$lld"
+            "value": "%1$@ de %2$@"
           }
         }
       }
@@ -25224,43 +25224,43 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ %lld"
+            "value": "%@ %@"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ %2$lld"
+            "value": "%1$@ %2$@"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ de %2$lld"
+            "value": "%1$@ de %2$@"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ %2$lld"
+            "value": "%1$@ %2$@"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ %2$lld"
+            "value": "%1$@ %2$@"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%2$lld年%1$@"
+            "value": "%2$@年%1$@"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ de %2$lld"
+            "value": "%1$@ de %2$@"
           }
         }
       }
