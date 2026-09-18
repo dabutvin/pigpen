@@ -59,12 +59,6 @@ struct DailyPostcardView: View {
 
                         fencingSwitch
                         shareButton
-
-                        Text("Everybody gets the same board. The fencing is your answer to it.")
-                            .font(.caption2)
-                            .foregroundStyle(GamePalette.post.opacity(0.5))
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 28)
@@ -108,22 +102,14 @@ struct DailyPostcardView: View {
         .padding(.bottom, 16)
     }
 
-    /// The one choice on the card: whether the wall goes on it.
+    /// The one choice on the card: whether the wall goes on it. Four words and a switch —
+    /// the card is right there above it, and a line under the switch explaining what the
+    /// switch does to the card was telling somebody what they could already see happen.
     private var fencingSwitch: some View {
         Toggle(isOn: $showsFencing) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Show my fencing")
-                    .font(.system(size: 15, weight: .heavy, design: .rounded))
-                    .foregroundStyle(GamePalette.post)
-
-                Text(
-                    showsFencing
-                        ? "The pen goes with it, wall and all."
-                        : "Just the board, the way the day opened."
-                )
-                .font(.caption)
-                .foregroundStyle(GamePalette.post.opacity(0.6))
-            }
+            Text("Show my fencing")
+                .font(.system(size: 15, weight: .heavy, design: .rounded))
+                .foregroundStyle(GamePalette.post)
         }
         .tint(GamePalette.clay)
         .padding(.horizontal, 16)
