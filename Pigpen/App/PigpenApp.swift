@@ -1,4 +1,5 @@
 import Foundation
+import StoreKit
 import SwiftUI
 
 @main
@@ -256,6 +257,17 @@ struct PigpenApp: App {
                 _ = Sounds.shared
                 Music.resume()
                 guard !Self.isPhotographing(launch) else { return }
+                // Tells the phone the game has been opened, which is the one thing an ad
+                // network is told of an install: if an ad led here, Apple sends that network
+                // a postback saying so, with the campaign on it and nothing about the player.
+                // Apple's page on configuring an advertised app says the postback is not
+                // sent unless the app makes one of these calls at first launch, so without
+                // this line no install can be counted against an ad, whatever the ad does.
+                // Every launch rather than the first alone, since a value already registered
+                // is left as it is and a phone that was cleared is a first launch again. No
+                // SDK, no identifier, and none of Apple's tracking permission: these APIs are
+                // open to an app whatever its tracking authorisation.
+                SKAdNetwork.updatePostbackConversionValue(0)
                 Analytics.record(.sessionStarted(isFirstRun: Analytics.shared.isFirstRun))
                 // Reconcile the full game with the App Store and then listen for anything it
                 // pushes afterwards — a family member's approval, a refund, a buy made on
