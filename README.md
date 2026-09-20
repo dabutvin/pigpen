@@ -1775,6 +1775,7 @@ there is no state anywhere else to keep in step with it.
 | `privacy.html` | `pigpen.app/privacy.html` | The policy: what is kept on the phone, what the counting sends, and what the game never asks for |
 | `pigpen.css` | `pigpen.app/pigpen.css` | The cream and post-brown the pages share, so they read as the game rather than as a legal notice. Dark mode included, since half of any review is done on a phone that is in it |
 | `404.html` | Whatever the host points at it | Somewhere to land other than the host's own grey page |
+| `ads.js` | `pigpen.app/ads.js`, from the front page only | Counts an ad's visitor tapping the App Store button, and stamps the button with a campaign token so Apple counts the download — see [Counting the ads](#counting-the-ads). Three blanks at the top, and blank means it does nothing |
 | `.well-known/apple-app-site-association` | `pigpen.app/.well-known/apple-app-site-association` | The site vouching for the app, so a day's address opens the game rather than the page — see [A link into the app](#a-link-into-the-app) |
 | `_headers` | Netlify reads it | Serves that file as JSON, which is the only way Apple will read it |
 | `_redirects` | Netlify reads it | Sends `/day/*` to the front page for a phone without the game, so a day's address is never a 404 |
@@ -1879,6 +1880,82 @@ that both addresses are real HTTPS URLs on the host, that a file exists in `site
 page a button opens, that every page hands over the same email address the game prints, that
 the draft comes out addressed and carrying the build, and
 that all three pages reach each other — so a typo fails the build rather than a submission.
+
+### Counting the ads
+
+An ad for the game can be measured without the game knowing about it, and that is the
+only way it is measured here. Everything an ad network would put in the app — an SDK, a
+click identifier carried through the store, a tracking prompt — is exactly what the game's
+own counting was built not to have, and every one of them is an
+App Store release. What is on the page is enough, because the page is where an ad lands
+and where the App Store button is: three counts, from three places, none of them in the
+app.
+
+| Who counts | What | Where to read it |
+|---|---|---|
+| Google Ads | A visitor its ad sent tapping the App Store button. The click that brought them is in the address it brought them to (`gclid=`), so the tap is joined to the ad, the keyword and the cost | The campaign's conversions column, and everything Google can optimise towards |
+| Apple | First-time downloads within a day of that tap, per campaign. The button carries an App Store Connect campaign token, so the store's own figures say which ad the download followed | App Store Connect → Analytics → Acquisition → Campaigns |
+| TelemetryDeck | First launches (`Session.started` with `firstRun`) and purchases (`Store.purchase`) by day — nothing per ad, since nothing from an ad reaches the phone, but a campaign that works is a step in both lines on the day it starts | The charts the game already fills |
+
+The first two are what the App Store button is now wearing: `site/ads.js`, loaded by the
+front page and nothing else. Its three blanks are the switch, and every one is public by
+construction — a Google tag ID sits in the source of every page that uses one, and a
+campaign token in every link — so they are written into the file rather than kept as
+secrets, the way the Team ID is written into the association file. Blank, the page loads
+nothing from Google and rewrites nothing, and a fork or a deploy preview serves the page
+exactly as it was.
+
+- **`GOOGLE_ADS_ID`** — Google Ads → Goals → Conversions → *New conversion action* →
+  *Website* → *Set up with code*. The Google tag's ID is `AW-` and ten digits.
+- **`STORE_CLICK_LABEL`** — the same screen: a conversion action of the *Click on a link*
+  kind, counted *One* per click, named for the button. Its event snippet's `send_to` is
+  `AW-…/<label>`; the part after the slash goes here.
+- **`APP_STORE_PROVIDER_TOKEN`** — App Store Connect → the app → Analytics → Acquisition →
+  Campaigns → *+*. Any link it generates has `pt=` in it; that number is the account's, the
+  same for every campaign, and it goes here. The `ct=` is written by the page, below.
+
+**Which campaign a tap belongs to.** The page reads the address it was landed on and names
+the campaign in Apple's terms: `utm_campaign` if there is one, `utm_source` failing that,
+`google-ads` for a visitor with a Google click ID and nothing named, and `website` for
+everybody else — so the organic figure is a campaign too, and there is something to compare
+against. The token is cut to Apple's thirty characters and alphabet. A campaign's final URL
+should therefore be the front page with a name on it —
+`https://pigpen.app/?utm_source=google&utm_campaign=<name>` — and Google appends the click
+ID itself. The smart banner across the top of the page gets the same token through
+`affiliate-data`, so a download that starts from Safari's own strip is counted alongside
+one from the button.
+
+**What the tap does.** Nothing to the tap. The listener sends the conversion by beacon and
+lets the click go through untouched — no `preventDefault`, no navigating from script after
+a delay — because a link to `apps.apple.com` on a phone is a universal link into the App
+Store app, and a navigation started from script is not. The price is a conversion that can
+be lost on a browser without `sendBeacon`, which is no browser a phone ships with.
+
+**Consent.** The Google tag runs in consent mode, and the page asks nobody anything. In the
+EU, the rest of the EEA, the UK and Switzerland — the list in the file — advertising
+storage is *denied*, so no cookie is set and Google gets cookieless pings it models from;
+everywhere else it is *granted*, and a tap from an ad is counted in full. Personalisation
+and analytics storage are denied everywhere, since nothing here wants either. That is a
+choice rather than a law: if the ads are ever run into the consent regions and the modelled
+figures are not enough, the next step is a consent banner that calls
+`gtag('consent', 'update', …)`, and it belongs in `ads.js` beside the default.
+
+**Why not TelemetryDeck.** Google Ads can only credit a conversion it can join to a click —
+a click ID from the URL, or a hashed email or phone number for an offline import. The game
+has neither and was written not to: nothing in the store hands the app the address it was
+downloaded from, and a click ID would be tracking, with the prompt and the policy that go
+with it. TelemetryDeck's part is the last step, which nothing on the page can see — did
+installs and purchases move when the campaign ran — and the daily lines it already draws
+answer that without a change.
+
+**Reading it back.** `privacy.html` says the website's front page does these two things,
+in a card of its own, so the policy and the page agree. `SupportLinksTests` checks the
+front page carries the script, that the button opens the listing `AppStoreListing` names,
+and that the three blanks are still there to fill in. To see the script at work before
+the blanks are real, serve the folder locally, fill the blanks in a copy, and open the page
+with `?gclid=test` on it: the button's address should come back with `pt`, `ct` and `mt`,
+and `window.dataLayer` should hold the consent lines first, then `config`, then one
+`conversion` on the tap.
 
 ### Before a submission
 
