@@ -1940,6 +1940,19 @@ choice rather than a law: if the ads are ever run into the consent regions and t
 figures are not enough, the next step is a consent banner that calls
 `gtag('consent', 'update', …)`, and it belongs in `ads.js` beside the default.
 
+**The install itself is not on this list, and cannot be without the app.** Google Ads
+learns of an iOS install one way only: a postback from Apple's attribution framework
+(SKAdNetwork, or AdAttributionKit from iOS 17.4), and Apple's own page on configuring an
+advertised app says that "to register ad attributions, the app needs to call one of the
+methods that update conversion values when the app first launches". The game calls none
+of them, so no ad network is told of an install today, whatever the page does. The day
+that is wanted, it is one line at first launch —
+`SKAdNetwork.updatePostbackConversionValue(0)`, no SDK, no tracking prompt (Apple says
+these APIs need no tracking authorisation), and nothing new in the policy since a postback
+carries no user data — followed by a release, and a Google Ads *App* campaign rather than
+a web one, since App campaigns are the kind Google signs for SKAdNetwork. Until then the
+install is Apple's count on the Campaigns page, and the tap is Google's.
+
 **Why not TelemetryDeck.** Google Ads can only credit a conversion it can join to a click —
 a click ID from the URL, or a hashed email or phone number for an offline import. The game
 has neither and was written not to: nothing in the store hands the app the address it was
