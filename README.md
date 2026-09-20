@@ -1219,6 +1219,21 @@ because the player said it could.
   couplet and neither half stands alone. Only the next reminder can promise the number: it
   is written onto today's or tomorrow's and no further, because the run either survives to
   the next board or it does not, and a reminder four days out cannot know which.
+- **The free game's clock gets the same reminder, on the same switch.** Past the meadow, a
+  player who has not bought the game takes one new level a day, and the next is theirs
+  twenty-four hours after — see [The Universe](#the-universe). The moment
+  the clock stops is worth saying once, so the one other reminder the game ever posts is laid
+  down for it beside the mornings: *Your next free level is ready* / *Pig is waiting for you
+  in Thornwood Thicket.* It goes down only while the clock alone is shutting a level — a stop
+  the stars have opened and the day has not. A level taken and not yet beaten is the player's
+  to play, a boss short of its toll is shut by the toll and not the day, and a bought game
+  never waits, so none of those is reminded about. It is laid down on every return to the
+  title screen with the fortnight, and once more as the game is put down, since the level's
+  whole life is up a trail the title screen never sees; taking the level, or buying the game,
+  takes the reminder back the next time either happens. The same offer sheet is put up to a
+  player who has taken a free level and never held a day, saying what it is offering in that
+  case, since they too now have something to be reminded about — and the switch behind the
+  gear says the level is promised alongside the mornings, to a player who has not paid.
 - **Tapping it opens the board.** A reminder that puts the player down on the title screen
   with the puzzle still a tap away has spent its one interruption on nothing: they were told
   the day's board is up, they said yes, and the game answered by showing them the front
@@ -1229,7 +1244,12 @@ because the player said it could.
   the two could disagree. A reminder read after midnight opens the morning it was posted for
   rather than today's, which is the day it was talking about; one for a day the almanac has
   nothing for, or a day still to come, opens nothing at all. A day already held on the way
-  past offers its wall back first, exactly as the row under Play and the archive do.
+  past offers its wall back first, exactly as the row under Play and the archive do. The
+  level's reminder is filed the same way — `pigpen.daily-reminder.level.thornwood-thicket`,
+  under the same prefix so clearing takes it with the mornings — and a tap on it opens the
+  universe map with that world's trail already up on it, where the stop that was shut is now
+  open. A world the player cannot walk into, because the game has been cleared under it since,
+  is left to the map to turn away.
 
 The reminder is a preference rather than progress, so clearing all game data leaves it
 standing — but every day is unheld again afterwards, so the fortnight is laid down knowing
@@ -1593,9 +1613,9 @@ is filling in Apple's privacy questionnaire.
 | `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
 | `Daily.postcardOpened` / `.shared` | A held day's postcard held up, and handed to the share sheet — with the fencing on it or without |
 | `Daily.linkFollowed` | A day's address followed into the game and its board opened: the other end of a share |
-| `Reminder.offered` / `.answered` | The morning reminder offered, and taken or waved away — with the phone's answer beside the player's |
+| `Reminder.offered` / `.answered` | The reminder offered — over a run of days or a free level a day off — and taken or waved away, with the phone's answer beside the player's |
 | `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
-| `Reminder.followed` | A reminder tapped, and the morning's board it opened |
+| `Reminder.followed` / `.levelFollowed` | A reminder tapped: a morning's, and the board it opened, or the level's, and the trail |
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.soundsSwitched` / `.musicSwitched` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear, and its switches — the noises, the music, the buzzing and the counting |

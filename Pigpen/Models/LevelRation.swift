@@ -217,3 +217,61 @@ extension LevelRation {
         )
     }
 }
+
+/// The level the free game's clock is holding shut, while there is one: which world it stands
+/// in, and the moment the clock stops and it opens.
+///
+/// What the reminder about the clock is written from — see `DailyReminder`, which lays it
+/// down beside the mornings — and so the whole of what that reminder has to know: the world
+/// by its id, which is what a tap on it opens, and by its name, which is what it says.
+struct NextLevel: Equatable, Sendable {
+    /// The world's id on the universe map: `thornwood-thicket`.
+    let world: String
+    /// The world's name, for the line: *Thornwood Thicket*.
+    let worldName: String
+    /// When the clock stops.
+    let due: Date
+}
+
+extension LevelRation {
+    /// The level the clock alone is shutting, if there is one: on a game that has not been
+    /// bought, on the world the trail has reached past the meadow, the stop the stars have
+    /// opened and the day has not.
+    ///
+    /// Nothing at all in every other standing, and each for its own reason. A bought game
+    /// never waits. The meadow is free, so a clock left running from before never shuts a
+    /// stop on it. A clock that has stopped is shutting nothing — the level is there for the
+    /// asking. A level handed out and not yet beaten is the player's to play, and the one
+    /// past it is shut by the pen they have not held rather than by the day. And a boss whose
+    /// stars are not in is shut by the toll, which no amount of waiting pays.
+    ///
+    /// - Parameter stars: Every best rating in every world, by level id — the one store the
+    ///   worlds share — since which world the trail has reached is read off the whole map.
+    func nextLevelWaiting(
+        in universe: Universe = .all,
+        stars: [String: Int],
+        isBought: Bool,
+        now: Date = .now
+    ) -> NextLevel? {
+        guard !isBought, let due = nextRelease(now: now) else { return nil }
+
+        // Only the furthest world open can have a stop the stars have opened and nobody has
+        // held: a world opens once the one before it is held entire.
+        let reached = universe.frontier(stars: stars)
+        guard let game = universe.game(at: reached), !game.isFree,
+              universe.isUnlocked(reached, stars: stars)
+        else { return nil }
+
+        // The trail's own reading of its stops, so the toll on a boss is honoured here the
+        // way the signposts honour it, rather than a second copy of that rule.
+        let trail = WorldProgress(world: game.map, store: RememberedProgress(stars: stars))
+        guard let stop = game.map.nodes.indices.first(where: {
+            trail.isUnlocked($0) && !trail.isCleared($0)
+        }) else { return nil }
+
+        guard case .waiting = standing(of: game.map[stop].id, isCleared: false, now: now) else {
+            return nil
+        }
+        return NextLevel(world: universe[reached].id, worldName: game.name, due: due)
+    }
+}

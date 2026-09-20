@@ -478,9 +478,14 @@ extension AnalyticsSignal {
 
     // MARK: The morning reminder
 
-    /// The game's own offer of a reminder, put up once to somebody who has held a day and so
-    /// has a run to lose. The denominator under everything below it.
-    static let reminderOffered = AnalyticsSignal("Reminder.offered")
+    /// The game's own offer of a reminder, put up once to somebody with something to be
+    /// reminded about: a run of days to lose, or a free level a day off. The denominator
+    /// under everything below it — and which of the two it was made over, since the same
+    /// sheet is put up to two kinds of player and the charts want to know which of them says
+    /// yes.
+    static func reminderOffered(about offer: ReminderOffer) -> AnalyticsSignal {
+        AnalyticsSignal("Reminder.offered", ["about": offer.counted])
+    }
 
     /// What the offer got back.
     ///
@@ -512,6 +517,11 @@ extension AnalyticsSignal {
     /// reminded; this is the only signal that counts who came back because they were, which
     /// is the only question a morning's interruption has to answer for itself.
     static let reminderFollowed = AnalyticsSignal("Reminder.followed")
+
+    /// The reminder that the next free level is ready, tapped, and the trail it opened. The
+    /// same question as the morning's, asked of the other reminder the game posts: whether
+    /// telling somebody the day's wait is up brings them back to the trail.
+    static let levelReminderFollowed = AnalyticsSignal("Reminder.levelFollowed")
 
     /// The hour moved off the one the game picked. Charted as the hour alone, since what is
     /// worth knowing is whether nine in the morning was the right guess — and the hour a
