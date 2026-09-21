@@ -1622,9 +1622,7 @@ is filling in Apple's privacy questionnaire.
 | `Dressing.opened` / `.outfitWorn` | The dressing barn, which door it was opened through, and what the pig was put in |
 | `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
 | `Store.offerShown` / `.purchase` / `.restore` | The offer of the full game, which wall raised it, and how the buying went |
-| `Rating.asked` | The game's own question put up — *are you enjoying Pigpen?* — and which high point it was put up on |
-| `Rating.answered` | What that question got back: enjoying, disappointed, or the sheet shut without either |
-| `Rating.feedbackOpened` | A player who said *not really* and went on to write in |
+| `Rating.asked` | Apple's own rating prompt asked for, and which high point asked for it |
 | `Rating.pageOpened` | The listing opened from behind the gear by a player who went looking for it |
 
 The questions this is here to answer: where the walkthrough loses people, which level is
@@ -1687,24 +1685,16 @@ xcodebuild build -project Pigpen.xcodeproj -scheme Pigpen TELEMETRYDECK_APP_ID=y
 
 An app with four ratings on its listing is one nobody can tell apart from an abandoned one, and
 a puzzle game whose players never say anything about it is a puzzle game nobody finds. So the
-game is allowed to ask what a player thinks of it. Once in a while, and at the top of something.
+game is allowed to ask what a player thinks of it. Once in a while, at the top of something, and
+never in its own words.
 
-- **Two steps, and the second one is Apple's.** The game asks first, in its own words and on a
-  sheet of its own — *are you enjoying Pigpen?* — and that is `RatingPromptView`. **Yes, I am**
-  hands the player on to Apple's prompt; **Not really** swaps the card for the one that reaches
-  a person: a mail draft already addressed, titled and stamped with the build, the support page
-  under it, and the address printed under that. Either way the question has been asked and is
-  not asked again on this version.
-  The rating itself stays Apple's and only Apple's. *Guideline 5.6.1* says to use the provided
-  API, so nothing in the game draws a star, takes a review, or dresses the prompt up as
-  something of its own — the question in front of it decides only whether it is raised, and
-  raising it is `AppStore.requestReview`, called from `SystemReviews` and nowhere else.
-  It is the same shape the morning reminder takes, for a related reason. The phone shows its
-  rating prompt three times a year at the very outside, says nothing either way, and cannot be
-  asked to take it back down — so an allowance spent on somebody who was about to complain is
-  spent twice over: the rating that never comes, and the complaint that goes nowhere. The two
-  answers cost the same to press and look the same on the card, because a sheet that has
-  visibly decided what it wants to hear is worse than not asking.
+- **Apple's prompt, and only Apple's.** *Guideline 5.6.1* says to use the provided API and that
+  custom review prompts are disallowed, so there is no `RatingPromptView` beside
+  `ReminderPromptView`. That is the exact opposite of the shape the morning reminder takes, and
+  for a good reason: the reminder asks in its own words first because the phone's permission
+  sheet is one-shot forever and raising it cold spends that one chance on somebody with nothing
+  yet to be reminded about. The rating prompt may not be dressed up at all, and it is shown
+  three times a year at the outside whatever the game does about it.
 - **On a high point.** Three of them, and each is something a player would recognise as having
   just done rather than a count of launches or an hour on a clock: **a world held**, every pen
   in it taken; **the best pen a map has in it**, once there are five of those rainbows, since
@@ -1719,9 +1709,10 @@ game is allowed to ask what a player thinks of it. Once in a while, and at the t
   are what the counting said rather than what seemed right. Two in five pens held are the best
   their map has in it, so three rainbows was reached around the eighth board, inside the free
   meadow and often on the first day; it is five now. And seven mornings never once arrived
-  first in a year of asking — players reach a week and go far past it, but a world or a handful
-  of rainbows always got there before them and spent the ask — so the run of days is three,
-  which lands while the run is still the thing the player is thinking about.
+  first in a year of asking — players reach a week and go far past it, out past a hundred, but
+  a world or a handful of rainbows always got there before them and spent the ask — so the run
+  of days is three, which lands while the run is still the thing the player is thinking about
+  and is the one moment a player who only ever plays the dailies can reach at all.
 - **On the moment, not the standing.** The game writes down the three marks every time it
   looks, so a rise is a rise once. Somebody who held the meadow last month is not asked again
   every time they come back to the title screen; somebody who held it on the way to this screen
@@ -1733,11 +1724,8 @@ game is allowed to ask what a player thinks of it. Once in a while, and at the t
   asked before the game has drawn twice.
 - **Never twice about one version, and never inside four months.** Apple allows three a year and
   counts them itself; this is the game keeping well inside that rather than spending the
-  allowance on somebody who has already said their piece. The asking is written down when the
-  question goes up rather than when an answer comes back — so a player who said *not really* is
-  not come back at on the next world they hold, which would be asking somebody to change their
-  mind about a game they have already told the truth about. And written down *before* anything
-  is raised, because the phone may well show nothing behind a yes — the allowance is spent, or
+  allowance on somebody who has already said their piece. The asking is written down *before*
+  the prompt is raised, because the phone may well show nothing — the allowance is spent, or
   Apple simply decides not to — and says nothing either way. A game that waited to hear back
   before writing anything down would ask again on the next high point, and the one after that,
   on the strength of never having seen a thing.
@@ -1746,10 +1734,7 @@ game is allowed to ask what a player thinks of it. Once in a while, and at the t
   never over the one sheet that offers the morning reminder, which is a question the game gets
   asked once ever and this one is not. A visit with any of that up is left alone entirely rather
   than merely kept quiet, since looking at all would spend the moment on a screen that could not
-  have shown anything. Apple's prompt, behind a yes, is raised as the game's own sheet comes
-  down rather than from under it — the same hand-off the meadow's opening film makes with the
-  map, and for the same reason: a prompt that cannot be taken back down must not arrive over a
-  sheet still on its way out.
+  have shown anything.
 - **And a door that always opens.** None of the above is any use to a player who has decided on
   their own that they have something to say, so behind the gear there is a **Rate Pigpen** card
   that goes straight to the listing with the review sheet open on it. It is not drawn until
@@ -1764,10 +1749,8 @@ way it leaves the reminder's hour and the counting switch alone. A player who ha
 been asked, and one who cleared their stars did not ask to be asked again.
 
 `RatingPromptTests` pins every one of those rules — which rises count, which are too small, what
-happens when two rise at once, that a clock wound backwards leaves the game quiet rather than
-opening the gate, and that the line between the two steps holds: a moment handed back is the
-game's own question and nothing more, and only a yes ever raises Apple's. Apple's own prompt
-sits behind `ReviewRequester` throughout, so no test,
+happens when two rise at once, and that a clock wound backwards leaves the game quiet rather
+than opening the gate. Apple's own prompt sits behind `ReviewRequester` throughout, so no test,
 preview or screenshot run can raise one on the machine it is running on; the title screen's
 shots are handed a prompt held in memory for that reason, since they open onto exactly the
 standing it watches for and a prompt cannot be asked to keep out of a photograph once it is up.
@@ -1890,15 +1873,10 @@ repository: that one lives in `AppStoreListing`, written in from App Store Conne
 the app was created there. Behind the gear, *Help* opens the support page and prints the address in plain text
 underneath for a phone with no signal, and *Privacy* opens the policy from directly under the
 words that say what is counted. Both go out through
-`Analytics.pageOpened`, which counts which page and nothing else. There is one address here
-that is built rather than written down — `SupportLinks.feedback(from:)`, a mail draft already
-addressed, subject-lined and stamped with the build, handed to a player who says *not really*
-to the question about the game. It is built from the same `email` as everything else, so
-moving the address moves the draft with it. `SupportLinksTests` checks
+`Analytics.pageOpened`, which counts which page and nothing else. `SupportLinksTests` checks
 that both addresses are real HTTPS URLs on the host, that a file exists in `site/` for every
-page a button opens, that every page hands over the same email address the game prints, that
-the draft comes out addressed and carrying the build, and
-that all three pages reach each other — so a typo fails the build rather than a submission.
+page a button opens, that every page hands over the same email address the game prints, and
+that all three reach each other — so a typo fails the build rather than a submission.
 
 ### Before a submission
 
@@ -2456,7 +2434,7 @@ Pigpen/
 │   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing barn
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
-│   └── SupportLinks.swift       # The support page, the privacy policy, the address behind them and the draft it makes, in one place
+│   └── SupportLinks.swift       # The support page, the privacy policy and the address behind them, in one place
 ├── Views/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
@@ -2479,7 +2457,6 @@ Pigpen/
 │   ├── Sounds.swift             # Every noise in the game, named for its moment, and the one switch that stops them
 │   ├── Music.swift              # The waltz under the game: on while the game is up and the switch says so
 │   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
-│   ├── RatingPromptView.swift   # Are you enjoying Pigpen? — and Apple's prompt behind a yes, a way to write in behind a no
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain
