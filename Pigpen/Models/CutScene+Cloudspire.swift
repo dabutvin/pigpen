@@ -103,15 +103,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .cloudspire(.theSpires),
-                    caption: "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk."
+                    caption: String(localized: "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk.")
                 ),
                 Shot(
                     picture: .cloudspire(.rainbowsAndStorms),
-                    caption: "A rainbow adds instant appeal. Severe weather is a notable drawback."
+                    caption: String(localized: "A rainbow adds instant appeal. Severe weather is a notable drawback.")
                 ),
                 Shot(
                     picture: .cloudspire(.offTheGround),
-                    caption: "Pig's property search had officially left the ground."
+                    caption: String(localized: "Pig's property search had officially left the ground.")
                 )
             ],
             start: start
@@ -132,15 +132,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .cloudspire(.strictOversight),
-                    caption: "Unfortunately, the neighborhood had very strict oversight."
+                    caption: String(localized: "Unfortunately, the neighborhood had very strict oversight.")
                 ),
                 Shot(
                     picture: .cloudspire(.theLineOfSight),
-                    caption: "The eagle sees everything directly above, below, and beside it. Everything."
+                    caption: String(localized: "The eagle sees everything directly above, below, and beside it. Everything.")
                 ),
                 Shot(
                     picture: .cloudspire(.outOfSight),
-                    caption: "Fence in Pig. Keep every piece of fence out of the eagle's line of sight. The homeowners association is watching."
+                    caption: String(localized: "Fence in Pig. Keep every piece of fence out of the eagle's line of sight. The homeowners association is watching.")
                 )
             ],
             start: start
@@ -164,31 +164,31 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .cloudspire(.everyMarket),
-                    caption: "And that was it. Pig had toured every market imaginable."
+                    caption: String(localized: "And that was it. Pig had toured every market imaginable.")
                 ),
                 Shot(
                     picture: .cloudspire(.interestingNeighbors),
-                    caption: "He'd met some interesting neighbors. Very interesting neighbors."
+                    caption: String(localized: "He'd met some interesting neighbors. Very interesting neighbors.")
                 ),
                 Shot(
                     picture: .cloudspire(.whatHeWanted),
-                    caption: "After all that, Pig finally knew exactly what he wanted."
+                    caption: String(localized: "After all that, Pig finally knew exactly what he wanted.")
                 ),
                 Shot(
                     picture: .cloudspire(.theBestPen),
-                    caption: "The best pen was already his. Plenty of space. Apples nearby. No fine print."
+                    caption: String(localized: "The best pen was already his. Plenty of space. Apples nearby. No fine print.")
                 ),
                 Shot(
                     picture: .cloudspire(.oneProblem),
-                    caption: "There was just one problem."
+                    caption: String(localized: "There was just one problem.")
                 ),
                 Shot(
                     picture: .cloudspire(.wordOfMouth),
-                    caption: "Apparently the listing had excellent word of mouth."
+                    caption: String(localized: "Apparently the listing had excellent word of mouth.")
                 ),
                 Shot(
                     picture: .cloudspire(.openHouse),
-                    caption: "Open house was a mistake."
+                    caption: String(localized: "Open house was a mistake.")
                 )
             ],
             start: start

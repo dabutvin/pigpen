@@ -84,15 +84,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .cogsworth(.theCityLine),
-                    caption: "Cogsworth City. Walkable. Vibrant. Close to everything."
+                    caption: String(localized: "Cogsworth City. Walkable. Vibrant. Close to everything.")
                 ),
                 Shot(
                     picture: .cogsworth(.pizzaAndTrash),
-                    caption: "Pizza within walking distance is a strong selling point. Trash pickup appears to be… irregular."
+                    caption: String(localized: "Pizza within walking distance is a strong selling point. Trash pickup appears to be… irregular.")
                 ),
                 Shot(
                     picture: .cogsworth(.cityLiving),
-                    caption: "Pig could get used to city living."
+                    caption: String(localized: "Pig could get used to city living.")
                 )
             ],
             start: start
@@ -112,15 +112,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .cogsworth(.theRoommate),
-                    caption: "The apartment came with a roommate."
+                    caption: String(localized: "The apartment came with a roommate.")
                 ),
                 Shot(
                     picture: .cogsworth(.neverLeaving),
-                    caption: "The rat was not leaving. The rat had never considered leaving."
+                    caption: String(localized: "The rat was not leaving. The rat had never considered leaving.")
                 ),
                 Shot(
                     picture: .cogsworth(.onePenRoundBoth),
-                    caption: "Fence them in together. Sometimes real estate is about compromise."
+                    caption: String(localized: "Fence them in together. Sometimes real estate is about compromise.")
                 )
             ],
             start: start
@@ -139,15 +139,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .cogsworth(.cityHeld),
-                    caption: "Great food. Excellent location. Minor rodent situation."
+                    caption: String(localized: "Great food. Excellent location. Minor rodent situation.")
                 ),
                 Shot(
                     picture: .cogsworth(.pastTheRooftops),
-                    caption: "Pig began wondering how far he'd have to go to get away from rats."
+                    caption: String(localized: "Pig began wondering how far he'd have to go to get away from rats.")
                 ),
                 Shot(
                     picture: .cogsworth(.theFallingStar),
-                    caption: "Quite far, apparently."
+                    caption: String(localized: "Quite far, apparently.")
                 )
             ],
             start: start

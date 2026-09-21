@@ -1,3 +1,5 @@
+import Foundation
+
 /// Something that has to be shut in.
 ///
 /// The pig is on every map. The deer turns up on the meadow's last one, the boar on
@@ -82,40 +84,114 @@ enum Animal: Character, CaseIterable, Sendable {
     /// hop, and the tile it was standing on all along.
     var call: String {
         switch self {
-        case .pig: "Oink!"
-        case .deer: "Snort!"
-        case .boar: "Grunt!"
-        case .wyrm: "Rumble!"
-        case .rat: "Squeak!"
-        case .visitor: "Bleep!"
-        case .bat: "Screech!"
-        case .pup: "Peep!"
-        case .ringmaster: "Ta-da!"
-        case .scorpion: "Tik-tik!"
-        case .crab: "Click!"
-        case .seal: "Arf!"
-        case .croc: "Snap!"
-        case .eagle: "Kree!"
+        case .pig: String(localized: "animal.pig.call", defaultValue: "Oink!")
+        case .deer: String(localized: "animal.deer.call", defaultValue: "Snort!")
+        case .boar: String(localized: "animal.boar.call", defaultValue: "Grunt!")
+        case .wyrm: String(localized: "animal.wyrm.call", defaultValue: "Rumble!")
+        case .rat: String(localized: "animal.rat.call", defaultValue: "Squeak!")
+        case .visitor: String(localized: "animal.visitor.call", defaultValue: "Bleep!")
+        case .bat: String(localized: "animal.bat.call", defaultValue: "Screech!")
+        case .pup: String(localized: "animal.pup.call", defaultValue: "Peep!")
+        case .ringmaster: String(localized: "animal.ringmaster.call", defaultValue: "Ta-da!")
+        case .scorpion: String(localized: "animal.scorpion.call", defaultValue: "Tik-tik!")
+        case .crab: String(localized: "animal.crab.call", defaultValue: "Click!")
+        case .seal: String(localized: "animal.seal.call", defaultValue: "Arf!")
+        case .croc: String(localized: "animal.croc.call", defaultValue: "Snap!")
+        case .eagle: String(localized: "animal.eagle.call", defaultValue: "Kree!")
         }
     }
 
-    /// What the game calls it out loud.
+    /// What the game calls it out loud: the bare noun, lower case, for a sentence that
+    /// supplies its own article — "Release the %@", "No water for the %@".
     var name: String {
         switch self {
-        case .pig: "pig"
-        case .deer: "deer"
-        case .boar: "boar"
-        case .wyrm: "wyrm"
-        case .rat: "rat king"
-        case .visitor: "visitor"
-        case .bat: "bat"
-        case .pup: "pup"
-        case .ringmaster: "ringmaster"
-        case .scorpion: "scorpion"
-        case .crab: "crab"
-        case .seal: "bull seal"
-        case .croc: "old croc"
-        case .eagle: "eagle"
+        case .pig: String(localized: "animal.pig.name", defaultValue: "pig")
+        case .deer: String(localized: "animal.deer.name", defaultValue: "deer")
+        case .boar: String(localized: "animal.boar.name", defaultValue: "boar")
+        case .wyrm: String(localized: "animal.wyrm.name", defaultValue: "wyrm")
+        case .rat: String(localized: "animal.rat.name", defaultValue: "rat king")
+        case .visitor: String(localized: "animal.visitor.name", defaultValue: "visitor")
+        case .bat: String(localized: "animal.bat.name", defaultValue: "bat")
+        case .pup: String(localized: "animal.pup.name", defaultValue: "pup")
+        case .ringmaster: String(localized: "animal.ringmaster.name", defaultValue: "ringmaster")
+        case .scorpion: String(localized: "animal.scorpion.name", defaultValue: "scorpion")
+        case .crab: String(localized: "animal.crab.name", defaultValue: "crab")
+        case .seal: String(localized: "animal.seal.name", defaultValue: "bull seal")
+        case .croc: String(localized: "animal.croc.name", defaultValue: "old croc")
+        case .eagle: String(localized: "animal.eagle.name", defaultValue: "eagle")
+        }
+    }
+
+    /// The same animal with its article on the front, for the head of a sentence about it —
+    /// "The deer wants its own place". English only has to choose "the"; a language with
+    /// genders has to choose between two or three articles, and it cannot do that from a
+    /// template that is shared by fourteen animals. So the article travels with the noun.
+    var subject: String {
+        switch self {
+        case .pig: String(localized: "animal.pig.subject", defaultValue: "the pig")
+        case .deer: String(localized: "animal.deer.subject", defaultValue: "the deer")
+        case .boar: String(localized: "animal.boar.subject", defaultValue: "the boar")
+        case .wyrm: String(localized: "animal.wyrm.subject", defaultValue: "the wyrm")
+        case .rat: String(localized: "animal.rat.subject", defaultValue: "the rat king")
+        case .visitor: String(localized: "animal.visitor.subject", defaultValue: "the visitor")
+        case .bat: String(localized: "animal.bat.subject", defaultValue: "the bat")
+        case .pup: String(localized: "animal.pup.subject", defaultValue: "the pup")
+        case .ringmaster: String(localized: "animal.ringmaster.subject", defaultValue: "the ringmaster")
+        case .scorpion: String(localized: "animal.scorpion.subject", defaultValue: "the scorpion")
+        case .crab: String(localized: "animal.crab.subject", defaultValue: "the crab")
+        case .seal: String(localized: "animal.seal.subject", defaultValue: "the bull seal")
+        case .croc: String(localized: "animal.croc.subject", defaultValue: "the old croc")
+        case .eagle: String(localized: "animal.eagle.subject", defaultValue: "the eagle")
+        }
+    }
+
+    /// `subject` with a capital on the front, for the head of a sentence — "The deer walked
+    /// out". Every language the game speaks starts a sentence with one, so this is a turn of
+    /// the crank rather than another fourteen lines for a translator to keep.
+    var subjectCapitalized: String {
+        let phrase = subject
+        return phrase.prefix(1).uppercased() + phrase.dropFirst()
+    }
+
+    /// And again for the middle of a sentence, where something is being done to it — "Fence in
+    /// Pig and the deer separately". English cannot tell this apart from `subject`; German can,
+    /// and says "der Hirsch" in one and "den Hirsch" in the other.
+    var object: String {
+        switch self {
+        case .pig: String(localized: "animal.pig.object", defaultValue: "the pig")
+        case .deer: String(localized: "animal.deer.object", defaultValue: "the deer")
+        case .boar: String(localized: "animal.boar.object", defaultValue: "the boar")
+        case .wyrm: String(localized: "animal.wyrm.object", defaultValue: "the wyrm")
+        case .rat: String(localized: "animal.rat.object", defaultValue: "the rat king")
+        case .visitor: String(localized: "animal.visitor.object", defaultValue: "the visitor")
+        case .bat: String(localized: "animal.bat.object", defaultValue: "the bat")
+        case .pup: String(localized: "animal.pup.object", defaultValue: "the pup")
+        case .ringmaster: String(localized: "animal.ringmaster.object", defaultValue: "the ringmaster")
+        case .scorpion: String(localized: "animal.scorpion.object", defaultValue: "the scorpion")
+        case .crab: String(localized: "animal.crab.object", defaultValue: "the crab")
+        case .seal: String(localized: "animal.seal.object", defaultValue: "the bull seal")
+        case .croc: String(localized: "animal.croc.object", defaultValue: "the old croc")
+        case .eagle: String(localized: "animal.eagle.object", defaultValue: "the eagle")
+        }
+    }
+
+    /// More than one of it, for the one rule that fences a flock — "Both bats share the other".
+    var plural: String {
+        switch self {
+        case .pig: String(localized: "animal.pig.plural", defaultValue: "pigs")
+        case .deer: String(localized: "animal.deer.plural", defaultValue: "deer")
+        case .boar: String(localized: "animal.boar.plural", defaultValue: "boars")
+        case .wyrm: String(localized: "animal.wyrm.plural", defaultValue: "wyrms")
+        case .rat: String(localized: "animal.rat.plural", defaultValue: "rat kings")
+        case .visitor: String(localized: "animal.visitor.plural", defaultValue: "visitors")
+        case .bat: String(localized: "animal.bat.plural", defaultValue: "bats")
+        case .pup: String(localized: "animal.pup.plural", defaultValue: "pups")
+        case .ringmaster: String(localized: "animal.ringmaster.plural", defaultValue: "ringmasters")
+        case .scorpion: String(localized: "animal.scorpion.plural", defaultValue: "scorpions")
+        case .crab: String(localized: "animal.crab.plural", defaultValue: "crabs")
+        case .seal: String(localized: "animal.seal.plural", defaultValue: "bull seals")
+        case .croc: String(localized: "animal.croc.plural", defaultValue: "old crocs")
+        case .eagle: String(localized: "animal.eagle.plural", defaultValue: "eagles")
         }
     }
 }

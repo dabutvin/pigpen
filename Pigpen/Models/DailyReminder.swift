@@ -426,8 +426,8 @@ final class DailyReminder {
             nextLevelIn: level.world,
             due: level.due,
             title: name,
-            subtitle: "Your next free level is ready",
-            body: "Pig is waiting for you in \(level.worldName)."
+            subtitle: String(localized: "Your next free level is ready"),
+            body: String(localized: "Pig is waiting for you in \(level.worldName).")
         )
     }
 
@@ -529,18 +529,20 @@ final class DailyReminder {
     /// rest in plain, and a notification is read at a glance, so the hook goes on top and
     /// the rest underneath that. A line that is one sentence long is all hook and no body,
     /// which is a notification the phone draws perfectly well.
-    static let genericLines: [(title: String, body: String)] = [
-        ("Today's puzzle is ready", "Help Pig build his pen."),
-        ("A new puzzle is waiting for you", ""),
-        ("Today's pen won't build itself", ""),
-        ("Pig needs your help", "Today's puzzle is ready."),
-        ("Your daily puzzle is here", "See how big you can build."),
-        ("New day, new puzzle", "Let's build."),
-        ("Think you can beat today's puzzle?", ""),
-        ("Today's challenge is ready when you are", ""),
-        ("Pig has a fresh puzzle for you", ""),
-        ("Got a minute?", "Today's puzzle is waiting.")
-    ]
+    static var genericLines: [(title: String, body: String)] {
+        [
+            (String(localized: "Today's puzzle is ready"), String(localized: "Help Pig build his pen.")),
+            (String(localized: "A new puzzle is waiting for you"), ""),
+            (String(localized: "Today's pen won't build itself"), ""),
+            (String(localized: "Pig needs your help"), String(localized: "Today's puzzle is ready.")),
+            (String(localized: "Your daily puzzle is here"), String(localized: "See how big you can build.")),
+            (String(localized: "New day, new puzzle"), String(localized: "Let's build.")),
+            (String(localized: "Think you can beat today's puzzle?"), ""),
+            (String(localized: "Today's challenge is ready when you are"), ""),
+            (String(localized: "Pig has a fresh puzzle for you"), ""),
+            (String(localized: "Got a minute?"), String(localized: "Today's puzzle is waiting."))
+        ]
+    }
 
     /// How many things a morning has to say to somebody with a run going. A count rather
     /// than an array, because half of these are written round the number and so cannot be
@@ -556,16 +558,32 @@ final class DailyReminder {
     ///   - index: Which of the ten, picked off the date by `line(on:streak:)`.
     static func streakLine(_ streak: Int, at index: Int) -> (title: String, body: String) {
         switch index % streakLineCount {
-        case 0: ("Don't lose your \(streak)-day streak", "Today's puzzle is ready.")
-        case 1: ("Your \(streak)-day streak is on the line", "")
-        case 2: ("Keep your \(streak)-day streak going", "Play today's puzzle.")
-        case 3: ("One puzzle keeps your \(streak)-day streak alive", "")
-        case 4: ("You've played \(streak) days in a row", "Make it \(streak + 1).")
-        case 5: ("Your streak needs you", "Today's puzzle is waiting.")
-        case 6: ("So close to another streak day", "Don't stop now.")
-        case 7: ("\(streak) days and counting", "Keep it going.")
-        case 8: ("Pig remembers your streak", "Do you?")
-        default: ("Your streak won't save itself", "Play today's puzzle.")
+        case 0:
+            (String(localized: "Don't lose your \(streak)-day streak"),
+             String(localized: "Today's puzzle is ready."))
+        case 1:
+            (String(localized: "Your \(streak)-day streak is on the line"), "")
+        case 2:
+            (String(localized: "Keep your \(streak)-day streak going"),
+             String(localized: "Play today's puzzle."))
+        case 3:
+            (String(localized: "One puzzle keeps your \(streak)-day streak alive"), "")
+        case 4:
+            (String(localized: "You've played \(streak) days in a row"),
+             String(localized: "Make it \(streak + 1)."))
+        case 5:
+            (String(localized: "Your streak needs you"),
+             String(localized: "Today's puzzle is waiting."))
+        case 6:
+            (String(localized: "So close to another streak day"),
+             String(localized: "Don't stop now."))
+        case 7:
+            (String(localized: "\(streak) days and counting"), String(localized: "Keep it going."))
+        case 8:
+            (String(localized: "Pig remembers your streak"), String(localized: "Do you?"))
+        default:
+            (String(localized: "Your streak won't save itself"),
+             String(localized: "Play today's puzzle."))
         }
     }
 }

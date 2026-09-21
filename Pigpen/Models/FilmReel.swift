@@ -30,9 +30,9 @@ struct FilmReel: Sendable {
         /// What the reel calls it out loud.
         var word: String {
             switch self {
-            case .opening: "Opening"
-            case .briefing: "Briefing"
-            case .farewell: "Send-off"
+            case .opening: String(localized: "Opening")
+            case .briefing: String(localized: "Briefing")
+            case .farewell: String(localized: "Send-off")
             }
         }
     }
