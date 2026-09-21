@@ -35,10 +35,22 @@ struct UniverseMapView: View {
     /// Whether the offer of the full game is up, raised by tapping a world that is behind the
     /// wall rather than shut for want of stars.
     @State private var isOffering = false
+    /// The world whose trail this map was asked to open onto, by id, until it has: what the
+    /// reminder that the next free level is ready asks for when it is tapped. Taken the
+    /// moment it is answered, so coming back off that trail lands on the map and not on the
+    /// trail again.
+    @State private var askedFor: String?
 
-    init(progress: UniverseProgress = UniverseProgress()) {
+    /// - Parameter world: A world to drop straight into, by its id, for a player who tapped
+    ///   the reminder that their next free level on it is ready. A reminder that put them
+    ///   down on this map with the trail still a tap away would have spent its interruption
+    ///   on the wrong screen. Only a world they can walk into is opened: one shut for want
+    ///   of stars or standing behind the wall is left to the map to say so, as it would to
+    ///   a tap.
+    init(progress: UniverseProgress = UniverseProgress(), opening world: String? = nil) {
         _progress = State(initialValue: progress)
         _frontierWhenLeft = State(initialValue: progress.frontier)
+        _askedFor = State(initialValue: world)
     }
 
     // The winding path up the map.
@@ -89,6 +101,10 @@ struct UniverseMapView: View {
             progress.reload()
             revealAnyNewWorld()
         }
+        // The push waits for the map to be up rather than going out from inside `onAppear`,
+        // for the reason the title screen's walkthrough does: a stack asked to walk on before
+        // it has finished standing its own screen up does not reliably get there.
+        .task { enterTheWorldAskedFor() }
     }
 
     // MARK: - The map
@@ -328,6 +344,20 @@ struct UniverseMapView: View {
         } else {
             entering = index
         }
+    }
+
+    /// Drops into the world a tapped reminder asked for, once, and only if it can be walked
+    /// into. No film and no press: this is not a tap on the map, it is the map getting out
+    /// of the way of the trail the player already said they wanted — and a world with a free
+    /// level released on it has had its opening long since.
+    private func enterTheWorldAskedFor() {
+        guard let world = askedFor else { return }
+        askedFor = nil
+        guard let index = progress.universe.worlds.firstIndex(where: { $0.id == world }),
+              progress.isUnlocked(index), !progress.isBehindTheWall(index),
+              progress.universe.game(at: index) != nil
+        else { return }
+        entering = index
     }
 
     private func endOpening(_ film: CutScene) {

@@ -46,6 +46,10 @@ struct SettingsView: View {
     /// offer — beside the locked worlds on the map and the shut days in the archive — and
     /// the one place a player who already owns it can be told so.
     var fullGame: FullGame = .shared
+    /// The free game's clock, read so the reminder card can lay the level reminder down
+    /// beside the mornings whenever the switch or the hour moves. The shared one, since there
+    /// is only one clock.
+    var ration: LevelRation = .shared
     /// What to do when the walkthrough is asked for. The practice pen is pushed onto the
     /// title screen rather than raised over this sheet, so the screen behind is told and this
     /// sheet gets out of the way.
@@ -803,12 +807,28 @@ struct SettingsView: View {
     /// What the reminder is going to do, under the hour it is set to. The fortnight is said
     /// out loud because it is the one surprising thing about it: the game lays down every
     /// morning it can see ahead at once, so it goes on reminding through a fortnight the
-    /// player never opens it.
+    /// player never opens it. The level is said too, to a player who has not bought the
+    /// game, since it is the one reminder that comes at no particular o'clock — a bought
+    /// game never waits for a level, so it is never promised one.
     private var planned: String {
-        String(localized: """
+        // Two whole sentences rather than one with a clause bolted on: a language that
+        // moves the verb cannot have a second half appended to a finished first one.
+        guard !fullGame.isUnlocked else {
+            return String(localized: """
+                A reminder at \(reminder.time.face) on any morning you have not yet finished \
+                the day's puzzle.
+                """)
+        }
+        return String(localized: """
             A reminder at \(reminder.time.face) on any morning you have not yet finished the \
-            day's puzzle.
+            day's puzzle, and one the moment your next free level opens.
             """)
+    }
+
+    /// The level the free game's clock is holding shut, if there is one, for the reminder
+    /// about it to be laid down with the rest whenever the fortnight is.
+    private var nextLevel: NextLevel? {
+        ration.nextLevelWaiting(stars: progress.bestStars, isBought: fullGame.isUnlocked)
     }
 
     // MARK: - The switch
@@ -827,7 +847,7 @@ struct SettingsView: View {
                         // on the offer sheet: a switch that comes straight back off is a
                         // refusal, and a refusal counted as an opt-out would read as somebody
                         // changing their mind.
-                        let allowed = await reminder.turnOn(progress: daily)
+                        let allowed = await reminder.turnOn(progress: daily, nextLevel: nextLevel)
                         Analytics.record(.reminderSwitched(on: true, allowed: allowed))
                     } else {
                         await reminder.turnOff()
@@ -851,7 +871,7 @@ struct SettingsView: View {
                 // the way from nine to seven is forty rows saying nothing.
                 guard wanted != reminder.time else { return }
                 Analytics.record(.reminderHourChanged(to: wanted))
-                Task { await reminder.change(to: wanted, progress: daily) }
+                Task { await reminder.change(to: wanted, progress: daily, nextLevel: nextLevel) }
             }
         )
     }
@@ -875,8 +895,9 @@ struct SettingsView: View {
         haptics.buzz(.success)
         // The reminder is a preference rather than progress, so it survives — but what it had
         // planned does not. Every day is unheld again, so every morning is worth reminding
-        // about again, and the fortnight has to be laid down knowing that.
-        Task { await reminder.replan(progress: daily) }
+        // about again, and the fortnight has to be laid down knowing that. The trail is back
+        // at the meadow, which the clock never shuts, so the level reminder comes down.
+        Task { await reminder.replan(progress: daily, nextLevel: nextLevel) }
     }
 
     /// Out to one of the game's own pages on the web. Counted by which page rather than by

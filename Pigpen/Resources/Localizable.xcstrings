@@ -4163,6 +4163,53 @@
         }
       }
     },
+    "A reminder at %@ on any morning you have not yet finished the day's puzzle, and one the moment your next free level opens.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A reminder at %@ on any morning you have not yet finished the day's puzzle, and one the moment your next free level opens."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Erinnerung um %@ an jedem Morgen, an dem du das Tagesrätsel noch nicht gelöst hast, und eine, sobald dein nächstes kostenloses Level öffnet."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un aviso a las %@ cualquier mañana en la que aún no hayas terminado el puzle del día, y otro en cuanto se abra tu próximo nivel gratuito."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un rappel à %@ chaque matin où tu n'as pas encore terminé le puzzle du jour, et un autre dès que ton prochain niveau gratuit s'ouvre."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un promemoria alle %@ ogni mattina in cui non hai ancora finito il puzzle del giorno, e uno appena si apre il tuo prossimo livello gratuito."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "その日のパズルが未完了の朝は%@に、そして次の無料レベルが開いた瞬間にも通知します。"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um lembrete às %@ em toda manhã em que você ainda não tiver terminado o quebra-cabeça do dia, e outro assim que seu próximo nível gratuito abrir."
+          }
+        }
+      }
+    },
     "A reminder at %@ on any morning you have not yet finished the day's puzzle.": {
       "extractionState": "manual",
       "localizations": {
@@ -7308,6 +7355,100 @@
           "stringUnit": {
             "state": "translated",
             "value": "Celeiro de fantasias"
+          }
+        }
+      }
+    },
+    "Enable notifications to get daily reminders that help you build your streak.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable notifications to get daily reminders that help you build your streak."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktiviere Mitteilungen für tägliche Erinnerungen, die dir helfen, deine Serie auszubauen."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activa las notificaciones para recibir avisos diarios que te ayuden a mantener tu racha."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active les notifications pour recevoir des rappels quotidiens qui t'aident à prolonger ta série."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva le notifiche per ricevere promemoria quotidiani che ti aiutano a far crescere la tua serie."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知をオンにすると、連続記録を伸ばすための毎日のお知らせが届きます。"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ative as notificações para receber lembretes diários que ajudam a manter sua sequência."
+          }
+        }
+      }
+    },
+    "Enable notifications to hear the moment your next free level opens in %@, and for a daily puzzle reminder each morning.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable notifications to hear the moment your next free level opens in %@, and for a daily puzzle reminder each morning."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktiviere Mitteilungen, um zu erfahren, sobald dein nächstes kostenloses Level in %@ öffnet, und für eine tägliche Rätselerinnerung an jedem Morgen."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activa las notificaciones para enterarte en cuanto se abra tu próximo nivel gratuito en %@, y para recibir un aviso del puzle cada mañana."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active les notifications pour savoir dès que ton prochain niveau gratuit s'ouvre dans %@, et pour un rappel de puzzle chaque matin."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva le notifiche per sapere appena si apre il tuo prossimo livello gratuito in %@, e per un promemoria del puzzle ogni mattina."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知をオンにすると、%@で次の無料レベルが開いた瞬間と、毎朝のパズルのお知らせが届きます。"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ative as notificações para saber assim que seu próximo nível gratuito abrir em %@, e para um lembrete do quebra-cabeça toda manhã."
           }
         }
       }
@@ -13093,6 +13234,53 @@
         }
       }
     },
+    "Pig is waiting for you in %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig is waiting for you in %@."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig wartet in %@ auf dich."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig te espera en %@."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig t'attend dans %@."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig ti aspetta in %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pigが%@で待っています。"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig está esperando por você em %@."
+          }
+        }
+      }
+    },
     "Pig needs a little more room. Your job is to build him the biggest pen you can. Let's try one.": {
       "extractionState": "manual",
       "localizations": {
@@ -14640,6 +14828,53 @@
           "stringUnit": {
             "state": "translated",
             "value": "Avise-me quando houver um novo quebra-cabeça"
+          }
+        }
+      }
+    },
+    "Reminders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminders"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erinnerungen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recordatorios"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rappels"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promemoria"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lembretes"
           }
         }
       }
@@ -19579,6 +19814,53 @@
         }
       }
     },
+    "Turn on reminders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on reminders"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erinnerungen aktivieren"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activar recordatorios"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activer les rappels"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva i promemoria"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通知をオンにする"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ativar lembretes"
+          }
+        }
+      }
+    },
     "Turns out the mineral rights have their perks. Open flames are a maintenance concern.": {
       "extractionState": "manual",
       "localizations": {
@@ -21783,6 +22065,53 @@
           "stringUnit": {
             "state": "translated",
             "value": "Seu quebra-cabeça diário chegou"
+          }
+        }
+      }
+    },
+    "Your next free level is ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your next free level is ready"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein nächstes kostenloses Level ist bereit"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu próximo nivel gratuito está listo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ton prochain niveau gratuit est prêt"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il tuo prossimo livello gratuito è pronto"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次の無料レベルの準備ができました"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seu próximo nível gratuito está pronto"
           }
         }
       }

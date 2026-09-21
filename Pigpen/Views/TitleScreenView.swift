@@ -14,6 +14,9 @@ import UIKit
 @MainActor
 struct TitleScreenView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Read so the reminders can be laid down again as the game is put down — see
+    /// `keepTheRemindersTrueOnTheWayOut()`.
+    @Environment(\.scenePhase) private var scenePhase
     /// How much of the name has been driven into the ground, 0 to 1.
     @State private var planted: Double = 0
     /// The board under the name, the tally and the buttons all arrive a beat behind the
@@ -58,8 +61,17 @@ struct TitleScreenView: View {
     /// so a preview or a screenshot can stand the game up owned or for sale.
     private let fullGame: FullGame
     /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
-    /// held — never on the way in, when the player has nothing yet to be reminded about.
+    /// held or a free level taken — never on the way in, when the player has nothing yet to
+    /// be reminded about.
     @State private var isOfferingReminders = false
+    /// What that offer is being made over while it is up: the run of days, or the level a
+    /// day away. Decided as the offer goes up, since the sheet says something different
+    /// over each.
+    @State private var offerAbout: ReminderOffer = .theStreak
+    /// The free game's clock. Read here so the reminder about the next level is laid down
+    /// beside the mornings every time they are — and handed in so a preview or a screenshot
+    /// can stand the title up over a clock held in memory.
+    private let ration: LevelRation
     /// When the game asks what a player thinks of it. It lives here for the same reason the
     /// reminder does: every road out of a puzzle comes back through this screen, so this is
     /// where a player is standing the moment after they have done something worth asking about
@@ -116,6 +128,8 @@ struct TitleScreenView: View {
     ///     screenshot runs, which open onto a player with a world held and a fortnight of days
     ///     behind them — exactly the standing the prompt watches for — and must never put
     ///     Apple's own prompt in the photograph.
+    ///   - ration: The free game's clock, for the reminder about the next level. The shared
+    ///     one, since there is only one clock.
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
@@ -127,7 +141,8 @@ struct TitleScreenView: View {
         taps: TappedReminder = .shared,
         fullGame: FullGame = .shared,
         wardrobe: PigWardrobe = .shared,
-        rating: RatingPrompt = .shared
+        rating: RatingPrompt = .shared,
+        ration: LevelRation = .shared
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
@@ -142,9 +157,17 @@ struct TitleScreenView: View {
         self.fullGame = fullGame
         self.wardrobe = wardrobe
         self.rating = rating
+        self.ration = ration
     }
 
     private var hasADailyPuzzle: Bool { DailyAlmanac.holdsAPuzzle(on: today) }
+
+    /// The level the free game's clock is holding shut, if there is one, and when it opens.
+    /// Read off the same stars the tally is, so it is as current as the map was when the
+    /// player left it.
+    private var nextLevel: NextLevel? {
+        ration.nextLevelWaiting(stars: progress.bestStars, isBought: fullGame.isUnlocked)
+    }
 
     var body: some View {
         ZStack {
@@ -178,6 +201,11 @@ struct TitleScreenView: View {
                 }
             case .universe:
                 UniverseMapView()
+            case .trail(let world):
+                // The universe with one trail already up on it: where the reminder that
+                // the next free level is ready lands, since a player who tapped it has
+                // said which trail they want and the map between is not an answer.
+                UniverseMapView(opening: world)
             }
         }
         .navigationDestination(isPresented: $isTutorial) {
@@ -208,6 +236,7 @@ struct TitleScreenView: View {
         .sheet(isPresented: $isOfferingReminders) {
             ReminderPromptView(
                 time: reminder.time,
+                about: offerAbout,
                 onAccept: {
                     // The offer is marked as made whichever way it goes, so the sheet is
                     // never put up twice — the phone's own prompt follows from here, and
@@ -218,7 +247,11 @@ struct TitleScreenView: View {
                         // phone's answer is counted beside the player's. A yes the phone then
                         // refuses is the one outcome this whole sheet exists to avoid, and
                         // the only way to find out it is happening is to count it.
-                        let allowed = await reminder.turnOn(today: today, progress: daily)
+                        let allowed = await reminder.turnOn(
+                            today: today,
+                            progress: daily,
+                            nextLevel: nextLevel
+                        )
                         Analytics.record(.reminderAnswered(taken: true, allowed: allowed))
                     }
                 },
@@ -227,7 +260,7 @@ struct TitleScreenView: View {
                     Analytics.record(.reminderAnswered(taken: false))
                 }
             )
-            .onAppear { Analytics.record(.reminderOffered) }
+            .onAppear { Analytics.record(.reminderOffered(about: offerAbout)) }
             // Half the screen: an offer, made while the title screen is still visible
             // behind it, rather than a wall the player has to get past to carry on.
             .presentationDetents([.medium, .large])
@@ -282,6 +315,13 @@ struct TitleScreenView: View {
         // tap over a moment after the first screen is up, and hands a backgrounded game's
         // over whenever the player gets round to it.
         .onChange(of: taps.waiting) { _, _ in answerAnyTappedReminder() }
+        // This screen is the root of the stack, so it is still standing under whatever the
+        // player had up when the phone went in a pocket — and so still hears the game being
+        // put down.
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .background else { return }
+            keepTheRemindersTrueOnTheWayOut()
+        }
         // The walkthrough asked for from the settings drawer, once the drawer is shut.
         .onChange(of: showsSettings) { _, isUp in
             guard !isUp, wantsWalkthrough else { return }
@@ -314,26 +354,53 @@ struct TitleScreenView: View {
 
     /// Every road out of a puzzle comes back through here, so this is where the fortnight
     /// of reminders is laid down again: what is worth reminding about has just changed, and a
-    /// day held at ten past eight must not be reminded about at nine.
+    /// day held at ten past eight must not be reminded about at nine. The reminder about the
+    /// free game's clock is laid down with them: a level taken up a trail an hour ago has
+    /// started the day on the next, and a game bought up there has ended it.
     ///
     /// The phone is asked where it stands first, because permission is granted and taken
     /// away in the system settings — somewhere neither this screen nor the game behind it
     /// can see into.
     private func keepTheRemindersTrue() async {
         await reminder.readTheStanding()
-        await reminder.replan(today: today, progress: daily)
+        await reminder.replan(today: today, progress: daily, nextLevel: nextLevel)
         offerTheReminderIfItIsDue()
     }
 
+    /// Lays the reminders down again as the game is put down, against whatever the trails
+    /// and the book of days now hold.
+    ///
+    /// The return to this screen is where the fortnight is normally laid down, and for the
+    /// mornings that is enough: a day is held on a board that comes back through here. The
+    /// level reminder is the reason for this second moment. Its whole life is up a trail —
+    /// the day's level taken there, beaten there, and the phone put in a pocket from there
+    /// — and a player who does that has never come back to the title screen to have the
+    /// reminder about the next one laid down. So the stars and the days are read again from
+    /// the store, which the trail has been writing to, and the lot goes to the phone once
+    /// more before it is put away. Nothing here asks the phone anything or puts a sheet up:
+    /// it is the same replan, made at the one other moment it is worth making.
+    private func keepTheRemindersTrueOnTheWayOut() {
+        progress.reload()
+        daily.reload()
+        Task { await reminder.replan(today: today, progress: daily, nextLevel: nextLevel) }
+    }
+
     /// Whether to put the game's own offer up, and the whole of when it is allowed to
-    /// appear: the player has held a daily puzzle, so there is a run of days to lose, and
-    /// neither the game nor the phone has asked them about it before.
+    /// appear: the player has something to be reminded about — a daily puzzle held, so there
+    /// is a run of days to lose, or a free level taken past the meadow, so there is a day's
+    /// wait on the next — and neither the game nor the phone has asked them about it before.
     ///
     /// Never on the way in. A phone shows its permission sheet once and never again, and
     /// spending that on somebody who has not yet found out what a daily puzzle is spends it
     /// for nothing.
+    ///
+    /// The run of days is what the offer is made over when there is one, since it is the
+    /// older promise and the one the sheet was written round; the level is the reason only
+    /// for a player the mornings have nothing to say to yet.
     private func offerTheReminderIfItIsDue() {
-        guard reminder.isDueAnOffer, daily.completedCount > 0 else { return }
+        guard reminder.isDueAnOffer else { return }
+        let hasARunToKeep = daily.completedCount > 0
+        guard hasARunToKeep || nextLevel != nil else { return }
         // Nothing else may be going up or already up. The walkthrough is the one worth
         // naming: a player who has only ever played dailies is owed both at once, and an
         // offer sheet arriving over a practice pen pushing itself onto the stack would be
@@ -342,34 +409,64 @@ struct TitleScreenView: View {
         guard !progress.isTheTutorialDue, !isTutorial, !isAskingAboutTheGame,
               !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
         else { return }
+        if let level = nextLevel, !hasARunToKeep {
+            offerAbout = .theNextLevel(in: level.worldName)
+        } else {
+            offerAbout = .theStreak
+        }
         isOfferingReminders = true
     }
 
-    /// Opens the day a tapped reminder, or a followed link, is asking for.
+    /// Opens what a tapped reminder, or a followed link, is asking for: a day's board, or
+    /// the trail the next free level stands on.
     ///
     /// A reminder that puts the player down here, with the board still a tap away, has spent
     /// its one interruption on nothing — so whatever else is up comes down and the day it
     /// names goes up instead. A player who taps *Pig's waiting* has said where they want
     /// to be, and a world map they left an hour ago is not an answer to it. A friend's
-    /// postcard tapped in a chat is the same thing said by somebody else.
+    /// postcard tapped in a chat is the same thing said by somebody else, and so is the
+    /// reminder that the day's wait on a level is up — it names a trail rather than a
+    /// board, and the trail is what goes up.
     ///
     /// The knock is taken rather than read, so one tap opens one board and coming back here
     /// later does not open it again. A day the almanac has nothing for, or one still to
     /// come, is let go rather than opened onto an empty field — neither should ever have had
     /// a reminder laid down for it, and a day cannot be played merely because something on
-    /// the lock screen, or in a chat, said so.
+    /// the lock screen, or in a chat, said so. A trail the player cannot walk into is the
+    /// universe map's to turn away, since it is the screen that knows why.
     private func answerAnyTappedReminder() {
-        guard let knock = taps.take(), DailyAlmanac.isOpen(knock.day, today: today) else { return }
-        // Counted by the door it came in through: the mornings and the postcards are each
-        // trying to bring somebody to this board, and the charts want to know which does.
-        Analytics.record(knock.wayIn == .link ? .dayLinkFollowed : .reminderFollowed)
+        guard let knock = taps.take() else { return }
+        switch knock {
+        case .day(let day, let wayIn):
+            guard DailyAlmanac.isOpen(day, today: today) else { return }
+            // Counted by the door it came in through: the mornings and the postcards are
+            // each trying to bring somebody to this board, and the charts want to know
+            // which does.
+            Analytics.record(wayIn == .link ? .dayLinkFollowed : .reminderFollowed)
+            putEverythingDown()
+            open(day)
+        case .trail(let world):
+            Analytics.record(.levelReminderFollowed)
+            putEverythingDown()
+            playingDaily = nil
+            // A beat after whatever was on Play's stack has come down rather than in the
+            // same breath: a universe map already up with a trail on it would otherwise
+            // keep that trail, asked to open a different one or not, since the ask is only
+            // ever heard by a map on its way up.
+            Task { playDestination = .trail(world: world) }
+        }
+    }
+
+    /// Takes down everything a knock from outside has to get past — every screen Play,
+    /// the archive, the walkthrough and the gear can have up, and both of the game's own
+    /// sheets — so that what the knock asks for goes up over the title screen alone.
+    private func putEverythingDown() {
         playDestination = nil
         isTutorial = false
         isArchiveOpen = false
         showsSettings = false
         isOfferingReminders = false
         isAskingAboutTheGame = false
-        open(knock.day)
     }
 
     // MARK: - Being rated
@@ -1023,6 +1120,9 @@ private struct Breathing: ViewModifier {
 private enum PlayDestination: Hashable {
     case meadow
     case universe
+    /// The universe with one world's trail already up on it, by the world's id: where a
+    /// tapped reminder about the next free level lands.
+    case trail(world: String)
 }
 
 /// How much of the whole game is in, worn on the right-hand end of Play the way the daily wears

@@ -50,19 +50,41 @@ struct ReminderTime: Hashable, Comparable, Sendable {
     }
 }
 
-/// One reminder: the day it is about, the o'clock it goes off at, and what it says when it
-/// does.
+/// One reminder: what it is about, the day and the o'clock it goes off at, and what it says
+/// when it does.
 ///
 /// Worked out ahead of time rather than at the moment it fires, because nothing of this
 /// game runs while the phone is in a pocket. Every reminder for the fortnight ahead is laid
 /// down at once and laid down again each time the player comes back, which is what keeps a
-/// day already held from being reminded about.
+/// day already held from being reminded about — and the one reminder about the free game's
+/// clock is laid down beside them on the same terms, so a level taken early loses its
+/// reminder the same way a day held early does.
 struct ScheduledReminder: Hashable, Sendable, Identifiable {
     /// What every reminder this game posts is filed under, so clearing them takes ours and
-    /// leaves anything else on the phone alone.
+    /// leaves anything else on the phone alone. The mornings are filed straight under it by
+    /// their day; the level reminder is filed under it too, a step further in.
     static let idPrefix = "pigpen.daily-reminder."
 
+    /// What the reminder about the free game's next level is filed under, inside the same
+    /// prefix as the mornings so that clearing takes it with them:
+    /// `pigpen.daily-reminder.level.thornwood-thicket`. The world is in the name for the
+    /// same reason the morning is in a morning's: a tap hands back nothing but the name,
+    /// and the name has to say what to open.
+    static let levelIDPrefix = idPrefix + "level."
+
+    /// What a reminder is about.
+    enum Occasion: Hashable, Sendable {
+        /// A morning's board, on the day named.
+        case morning(DailyDate)
+        /// The free game's next level, on the trail of the world named by its id — the
+        /// moment the day's wait on it is up.
+        case nextLevel(world: String)
+    }
+
+    let occasion: Occasion
+    /// The day it goes off on.
     let date: DailyDate
+    /// The o'clock it goes off at.
     let time: ReminderTime
     /// The headline: the game's own name on every reminder it posts.
     let title: String
@@ -71,7 +93,69 @@ struct ScheduledReminder: Hashable, Sendable, Identifiable {
     /// The rest of the morning's line, under that.
     let body: String
 
-    var id: String { Self.idPrefix + date.id }
+    /// A morning's reminder, going off at the hour the player chose on the day it is about.
+    init(date: DailyDate, time: ReminderTime, title: String, subtitle: String, body: String) {
+        self.occasion = .morning(date)
+        self.date = date
+        self.time = time
+        self.title = title
+        self.subtitle = subtitle
+        self.body = body
+    }
+
+    /// The reminder about the free game's clock, going off the moment the clock stops.
+    ///
+    /// The phone is asked for a day and a minute rather than a moment, so the moment is
+    /// pushed up to the whole minute after it: a reminder that went off at the top of the
+    /// minute the clock stops inside would be saying the level is ready while the sign on
+    /// the trail still reads a minute to go.
+    init(
+        nextLevelIn world: String,
+        due: Date,
+        calendar: Calendar = .current,
+        title: String,
+        subtitle: String,
+        body: String
+    ) {
+        let minute = Self.wholeMinute(onOrAfter: due)
+        self.occasion = .nextLevel(world: world)
+        self.date = DailyDate.today(minute, calendar: calendar)
+        self.time = ReminderTime(of: minute, calendar: calendar)
+        self.title = title
+        self.subtitle = subtitle
+        self.body = body
+    }
+
+    var id: String {
+        switch occasion {
+        case .morning(let day): Self.idPrefix + day.id
+        case .nextLevel(let world): Self.levelIDPrefix + world
+        }
+    }
+
+    /// The first whole minute that is not before a moment: the moment itself when it falls
+    /// on one, and the next otherwise.
+    static func wholeMinute(onOrAfter moment: Date) -> Date {
+        Date(timeIntervalSince1970: (moment.timeIntervalSince1970 / 60).rounded(.up) * 60)
+    }
+}
+
+/// What the game's own offer of a reminder is made over, which is what it says when it goes
+/// up: a run of days to keep, or a level a day away.
+enum ReminderOffer: Equatable, Sendable {
+    /// The player has held a daily puzzle, and so has a run of days to lose by forgetting.
+    case theStreak
+    /// The player has taken today's free level past the meadow, and the next is a day off —
+    /// in the world named.
+    case theNextLevel(in: String)
+
+    /// The one word the counting files it under.
+    var counted: String {
+        switch self {
+        case .theStreak: "streak"
+        case .theNextLevel: "level"
+        }
+    }
 }
 
 /// Where the player's mind on being reminded is kept: whether they want reminding, what hour
@@ -232,7 +316,11 @@ final class DailyReminder {
     /// A refusal leaves the switch off rather than on-and-silent: a game that says it will
     /// remind and then cannot is worse than one that admits the phone has the last word.
     @discardableResult
-    func turnOn(today: DailyDate = .today(), progress: DailyProgress) async -> Bool {
+    func turnOn(
+        today: DailyDate = .today(),
+        progress: DailyProgress,
+        nextLevel: NextLevel? = nil
+    ) async -> Bool {
         standing = await scheduler.standing()
         if standing == .notAsked {
             let granted = await scheduler.ask()
@@ -246,7 +334,7 @@ final class DailyReminder {
         }
 
         set(isOn: true)
-        await replan(today: today, progress: progress)
+        await replan(today: today, progress: progress, nextLevel: nextLevel)
         return true
     }
 
@@ -260,11 +348,16 @@ final class DailyReminder {
     /// A new hour. The fortnight is laid down again at once rather than at the next
     /// opportunity, so a player who moves the reminder to the evening does not get one
     /// more in the morning first.
-    func change(to newTime: ReminderTime, today: DailyDate = .today(), progress: DailyProgress) async {
+    func change(
+        to newTime: ReminderTime,
+        today: DailyDate = .today(),
+        progress: DailyProgress,
+        nextLevel: NextLevel? = nil
+    ) async {
         guard newTime != time else { return }
         time = newTime
         store.save(time: newTime)
-        await replan(today: today, progress: progress)
+        await replan(today: today, progress: progress, nextLevel: nextLevel)
     }
 
     /// Notes that the offer has been put up, so it is never put up twice. Called whether
@@ -277,15 +370,22 @@ final class DailyReminder {
 
     // MARK: - Laying the reminders down
 
-    /// Works out every reminder due over the fortnight ahead and hands the lot to the phone,
+    /// Works out every reminder due over the fortnight ahead — and the one about the free
+    /// game's clock, when the clock is running on a level — and hands the lot to the phone,
     /// replacing whatever was standing before.
     ///
     /// Called on every return to the title screen, and after any day is held, because what
     /// is worth reminding about changes underneath: a day finished at ten past eight should
-    /// not be reminded about at nine.
+    /// not be reminded about at nine, and a game bought at lunch should not be told at
+    /// teatime that its next free level is ready.
+    ///
+    /// - Parameter nextLevel: The level the clock is holding shut, if there is one, and when
+    ///   it opens — see `LevelRation.nextLevelWaiting`. Nothing lays no level reminder down,
+    ///   and takes down any that was standing.
     func replan(
         today: DailyDate = .today(),
         progress: DailyProgress,
+        nextLevel: NextLevel? = nil,
         now: Date = Date()
     ) async {
         guard isOn, standing == .allowed else {
@@ -293,15 +393,19 @@ final class DailyReminder {
             return
         }
 
-        await scheduler.replace(
-            with: Self.reminders(
-                from: today,
-                now: ReminderTime(of: now),
-                at: time,
-                streak: progress.streak(upTo: today),
-                isComplete: { progress.isComplete($0) }
-            )
+        var planned = Self.reminders(
+            from: today,
+            now: ReminderTime(of: now),
+            at: time,
+            streak: progress.streak(upTo: today),
+            isComplete: { progress.isComplete($0) }
         )
+        // A clock already stopped is shutting nothing, and a reminder for a moment gone by
+        // is one that never arrives — or worse, one that arrives at once.
+        if let nextLevel, nextLevel.due > now {
+            planned.append(Self.levelReminder(for: nextLevel))
+        }
+        await scheduler.replace(with: planned)
     }
 
     private func set(isOn newValue: Bool) {
@@ -310,6 +414,22 @@ final class DailyReminder {
     }
 
     // MARK: - What gets said
+
+    /// The reminder about the free game's clock: laid down for the moment the clock stops,
+    /// on the trail of the world the next level stands in.
+    ///
+    /// One line rather than a pool, because there is only ever one of these standing at a
+    /// time and it is never read twice on the same day: the mornings need a hundred lines so
+    /// that a fortnight of them does not read alike, and this one needs to say which world.
+    static func levelReminder(for level: NextLevel) -> ScheduledReminder {
+        ScheduledReminder(
+            nextLevelIn: level.world,
+            due: level.due,
+            title: name,
+            subtitle: String(localized: "Your next free level is ready"),
+            body: String(localized: "Pig is waiting for you in \(level.worldName).")
+        )
+    }
 
     /// The reminders due over a run of days: one for every morning the almanac has a board
     /// for and the player has not already held.
