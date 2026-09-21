@@ -117,6 +117,9 @@ struct TitleScreenView: View {
     ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
     ///     for the same reason — and handed in rather than waited for, since the offer's own
     ///     rule is that it only appears to somebody who has held a day and never been asked.
+    ///   - offering: What that offer is made over when it is opened up: the run of days, or a
+    ///     free level a day off. The camera's way of photographing the second, since the sheet
+    ///     says something different over each and the second is only ever put up by a trail.
     ///   - showsRatingPrompt: Opens with the game's own question — *are you enjoying Pigpen?*
     ///     — already up, for the same reason as the offer above: its own rule is that it
     ///     appears only to somebody who has just reached a high point, which is nothing a
@@ -137,6 +140,7 @@ struct TitleScreenView: View {
         today: DailyDate? = nil,
         showsSettings: Bool = false,
         showsReminderPrompt: Bool = false,
+        offering: ReminderOffer = .theStreak,
         showsRatingPrompt: Bool = false,
         taps: TappedReminder = .shared,
         fullGame: FullGame = .shared,
@@ -151,6 +155,7 @@ struct TitleScreenView: View {
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
+        _offerAbout = State(initialValue: offering)
         _isAskingAboutTheGame = State(initialValue: showsRatingPrompt)
         _askingAbout = State(initialValue: showsRatingPrompt ? .worldHeld : nil)
         self.taps = taps

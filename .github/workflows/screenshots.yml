@@ -97,8 +97,8 @@ jobs:
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
           # `-barn`, `-woods-barn-map`, `-woods-barn`, `-dressed-board`, `-dressed-title`,
-          # `-postcard`, `-record` and
-          # `-peak-record` are launch arguments the app understands, so the universe map,
+          # `-postcard`, `-record`, `-peak-record` and `-level-reminder` are launch
+          # arguments the app understands, so the universe map,
           # every world's trail, the boards, the practice pen, the daily puzzle and its
           # archive, the settings sheet, the offer of a daily reminder, the card over a
           # shut boss, the fork off the orchard, the dressing barn at the end of it, what
@@ -126,6 +126,30 @@ jobs:
               sleep 4
             done
             echo "::warning::$into still looks blank after three attempts."
+          }
+
+          # A few seconds of the phone, from the launch, as a video: the recorder is
+          # started first and stopped with an interrupt, which is how the simulator is
+          # told to finish writing the file rather than abandon it.
+          record() {
+            local order="$1"
+            local screen="$2"
+            shift 2
+
+            local clip
+            clip=$(printf 'screenshots/%02d_%s.mp4' "$order" "$screen")
+
+            xcrun simctl ui "$UDID" appearance light
+            xcrun simctl io "$UDID" recordVideo --codec h264 --force "$clip" &
+            local recorder=$!
+            sleep 2
+            xcrun simctl launch "$UDID" "$BUNDLE_ID" "$@"
+            sleep 9
+            kill -INT "$recorder"
+            wait "$recorder" || true
+
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            echo "Recorded: $clip ($(stat -f%z "$clip" 2>/dev/null || echo 0) bytes)"
           }
 
           capture() {
@@ -206,6 +230,16 @@ jobs:
           # show is that the two barns compose. Numbered past the record shots.
           capture 105 woods_barn_map -woods-barn-map
           capture 107 woods_barn -woods-barn
+
+          # The reminder offer as the free game's clock puts it up: to a player who has
+          # taken a level in the thicket and has a day to wait for the next. Photographed
+          # like the rest, and then recorded as well — the one screen in the gallery that
+          # is — since what is worth seeing is the sheet rising over the pasture, and a
+          # still of a sheet already up cannot show that. The recording is a few seconds
+          # of the phone from launch, in the light appearance, saved beside the stills
+          # under the same numbering so it lands in the same gallery.
+          capture 109 level_reminder -level-reminder
+          record 111 level_reminder -level-reminder
 
           # What the landmark at the foot of a trail has been keeping count of. Two shots,
           # because the panel has two quite different things to be: the meadow, which enough
@@ -371,7 +405,7 @@ jobs:
             await ensureBranch();
 
             const files = fs.readdirSync(screenshotsDir)
-              .filter(f => f.endsWith('.png'))
+              .filter(f => f.endsWith('.png') || f.endsWith('.mp4'))
               .sort();
 
             // A blob apiece, several at a time, and then one commit holding all of
@@ -453,6 +487,8 @@ jobs:
             // gets its own light/dark row. A cut scene is lit by the shot rather than by
             // the phone, so it is photographed once and named <order>_<screen>_scene.png,
             // and gets a single picture.
+            // A recording is named <order>_<screen>.mp4 and is linked under the screen
+            // it belongs to, since a comment cannot play a video from a branch inline.
             const screens = [];
             const loose = [];
             const screenNamed = (name) => {
@@ -465,6 +501,8 @@ jobs:
               if (pair) { screenNamed(pair[1])[pair[2]] = img.url; continue; }
               const scene = img.name.match(/^\d+_(.+)_scene\.png$/);
               if (scene) { screenNamed(scene[1]).scene = img.url; continue; }
+              const clip = img.name.match(/^\d+_(.+)\.mp4$/);
+              if (clip) { screenNamed(clip[1]).recording = img.url; continue; }
               loose.push(img);
             }
 
@@ -491,6 +529,9 @@ jobs:
               body += `| Light Mode | Dark Mode |\n`;
               body += `|:---:|:---:|\n`;
               body += `| ${cell(screen.light)} | ${cell(screen.dark)} |\n\n`;
+              if (screen.recording) {
+                body += `🎬 [Recording of this screen](${screen.recording}?v=${cacheBust})\n\n`;
+              }
             }
 
             for (const img of loose) {

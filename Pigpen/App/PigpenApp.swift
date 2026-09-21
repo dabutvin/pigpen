@@ -217,6 +217,7 @@ struct PigpenApp: App {
         case archive = "-archive"
         case settings = "-settings"
         case reminder = "-reminder"
+        case levelReminder = "-level-reminder"
         case titleFresh = "-title-fresh"
         case title = "-title"
     }
@@ -537,6 +538,21 @@ struct PigpenApp: App {
                 reminder: .neverAsked(),
                 today: Self.photographed,
                 showsReminderPrompt: true,
+                rating: .neverAsked()
+            )
+        case .levelReminder:
+            // The same offer, made over the other thing the game reminds anybody of: a
+            // player who has taken today's free level in the thicket and has a day to wait
+            // for the next, with no daily held and so no run of days for the sheet to
+            // speak of. The one screen the camera records as well as photographs, since
+            // what is worth seeing is the sheet coming up over the pasture.
+            TitleScreenView(
+                progress: .partWayThrough(),
+                daily: .partWayThroughTheMonth(today: Self.photographed),
+                reminder: .neverAsked(),
+                today: Self.photographed,
+                showsReminderPrompt: true,
+                offering: .theNextLevel(in: "Thornwood Thicket"),
                 rating: .neverAsked()
             )
         case .titleFresh:
