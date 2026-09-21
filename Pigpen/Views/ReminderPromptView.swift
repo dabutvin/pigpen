@@ -1,8 +1,10 @@
 import SwiftUI
 import UIKit
 
-/// The game's own offer of a reminder each morning, put up once, after the player has held a
-/// daily puzzle and so has something to lose by forgetting the next one.
+/// The game's own offer of a reminder, put up once, after the player has held a daily puzzle
+/// and so has something to lose by forgetting the next one — or has taken today's free level
+/// past the meadow and has a day to wait for the next, which is the other thing the game
+/// ever reminds anybody of.
 ///
 /// It stands in front of the phone's prompt rather than instead of it. A phone shows its
 /// permission sheet once and never again, so a game that raises it cold — on a title screen
@@ -19,6 +21,9 @@ struct ReminderPromptView: View {
 
     /// The hour the reminder would come at, in the player's own reckoning of o'clock.
     var time: ReminderTime = .morning
+    /// What the offer is being made over, which decides what it says: the run of days, or
+    /// the level a day away.
+    var about: ReminderOffer = .theStreak
     /// Taken when the player says yes. Raising the phone's prompt is the caller's to do,
     /// since it is the caller that holds the book of days the fortnight is planned against.
     var onAccept: () -> Void
@@ -63,7 +68,7 @@ struct ReminderPromptView: View {
     /// back tomorrow having already been made.
     private var header: some View {
         HStack(spacing: 12) {
-            Text("Daily reminders")
+            Text(heading)
                 .font(.title3.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
                 .fixedSize(horizontal: false, vertical: true)
@@ -141,7 +146,7 @@ struct ReminderPromptView: View {
                 onAccept()
                 dismiss()
             } label: {
-                Label("Remind me at \(time.face)", systemImage: "bell.fill")
+                Label(accept, systemImage: "bell.fill")
                     .font(.system(size: 16, weight: .black, design: .rounded))
                     .foregroundStyle(GamePalette.cream)
                     .frame(maxWidth: .infinity)
@@ -173,13 +178,43 @@ struct ReminderPromptView: View {
 
     // MARK: - Words
 
-    /// What there is to be reminded about. One line for everybody: the offer is the same
-    /// whether or not there is a run going, and a sentence that names the streak reads as a
-    /// bargain struck over something the player already has rather than a plain offer of a
-    /// morning nudge.
-    private let offer = """
-        Enable notifications to get daily reminders that help you build your streak.
-        """
+    /// What the sheet is called: the mornings when it is the mornings being offered, and
+    /// plainly *reminders* when the first one promised is the level's, which comes at no
+    /// particular o'clock.
+    private var heading: String {
+        switch about {
+        case .theStreak: "Daily reminders"
+        case .theNextLevel: "Reminders"
+        }
+    }
+
+    /// What there is to be reminded about.
+    ///
+    /// Over a run of days, one line for everybody: the offer is the same whether or not
+    /// there is a run going, and a sentence that names the streak reads as a bargain struck
+    /// over something the player already has rather than a plain offer of a morning nudge.
+    /// Over a level, the line says the one thing the player is actually waiting on — the
+    /// trail they just left, opening again — and that the mornings come with it, since one
+    /// switch turns both on.
+    private var offer: String {
+        switch about {
+        case .theStreak:
+            "Enable notifications to get daily reminders that help you build your streak."
+        case .theNextLevel(let world):
+            "Enable notifications to hear the moment your next free level opens in \(world), "
+                + "and for a daily puzzle reminder each morning."
+        }
+    }
+
+    /// What the yes says. The hour is on the button when the hour is what is being offered;
+    /// a level opens when its day is up, not at nine, so the button over that promise does
+    /// not name a time.
+    private var accept: String {
+        switch about {
+        case .theStreak: "Remind me at \(time.face)"
+        case .theNextLevel: "Turn on reminders"
+        }
+    }
 }
 
 #Preview("Nine in the morning") {
@@ -187,6 +222,18 @@ struct ReminderPromptView: View {
         .sheet(isPresented: .constant(true)) {
             ReminderPromptView(onAccept: {}, onDecline: {})
                 .presentationDetents([.medium, .large])
+        }
+}
+
+#Preview("The next level, a day off") {
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            ReminderPromptView(
+                about: .theNextLevel(in: "Thornwood Thicket"),
+                onAccept: {},
+                onDecline: {}
+            )
+            .presentationDetents([.medium, .large])
         }
 }
 
