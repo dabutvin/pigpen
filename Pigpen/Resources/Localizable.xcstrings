@@ -4586,53 +4586,6 @@
         }
       }
     },
-    "Are you enjoying Pigpen?": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Are you enjoying Pigpen?"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gefällt dir Pigpen?"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Te está gustando Pigpen?"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Est-ce que Pigpen te plaît ?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ti sta piacendo Pigpen?"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pigpen を楽しんでいますか？"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Você está curtindo o Pigpen?"
-          }
-        }
-      }
-    },
     "At": {
       "extractionState": "manual",
       "localizations": {
@@ -11636,53 +11589,6 @@
         }
       }
     },
-    "Not really": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not really"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nicht wirklich"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La verdad es que no"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pas vraiment"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Non molto"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "あまり"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nem tanto"
-          }
-        }
-      }
-    },
     "Nothing saved yet — %@ is untouched.": {
       "extractionState": "manual",
       "localizations": {
@@ -12196,53 +12102,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abrir o celeiro de fantasias"
-          }
-        }
-      }
-    },
-    "Open the support page": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open the support page"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Support-Seite öffnen"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abrir la página de soporte"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ouvrir la page d'aide"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apri la pagina di assistenza"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "サポートページを開く"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abrir a página de suporte"
           }
         }
       }
@@ -15956,53 +15815,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Um lugar onde o silêncio praticamente se impõe sozinho."
-          }
-        }
-      }
-    },
-    "Sorry to hear it. Tell us what is going wrong and a person will read it — the build you are on goes with the message, so there is nothing to look up.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sorry to hear it. Tell us what is going wrong and a person will read it — the build you are on goes with the message, so there is nothing to look up."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das tut uns leid. Sag uns, was schiefläuft — ein Mensch liest es, und der Build, auf dem du bist, geht mit der Nachricht mit, du musst also nichts nachschlagen."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lamentamos oírlo. Cuéntanos qué va mal y lo leerá una persona: la versión que tienes va con el mensaje, así que no hay nada que buscar."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Désolés de l'apprendre. Dis-nous ce qui ne va pas — une personne le lira, et la version que tu utilises part avec le message, tu n'as donc rien à chercher."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ci dispiace. Raccontaci cosa non va e lo leggerà una persona: la build che stai usando parte insieme al messaggio, quindi non devi cercare nulla."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "申し訳ありません。どこが問題かお知らせください。担当者が読みます。ご利用中のビルド情報はメッセージに添えられるので、お調べいただく必要はありません。"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sentimos muito. Conte o que está dando errado e uma pessoa vai ler: a build que você está usando vai junto com a mensagem, então não há nada para procurar."
           }
         }
       }
@@ -20895,53 +20707,6 @@
         }
       }
     },
-    "What would make it better?": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What would make it better?"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Was würde es besser machen?"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Qué lo mejoraría?"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Qu'est-ce qui l'améliorerait ?"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cosa lo renderebbe migliore?"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "どうすればもっとよくなりますか？"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O que deixaria melhor?"
-          }
-        }
-      }
-    },
     "Where it all began. A pig, an open gate, and nine fields of nothing to stop it.": {
       "extractionState": "manual",
       "localizations": {
@@ -21083,53 +20848,6 @@
         }
       }
     },
-    "Whichever way you answer, we will only ask you this once.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Whichever way you answer, we will only ask you this once."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wie du auch antwortest: Wir fragen dich das nur dieses eine Mal."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Respondas lo que respondas, solo te lo preguntaremos una vez."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quelle que soit ta réponse, nous ne te le demanderons qu'une fois."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Qualunque sia la tua risposta, te lo chiederemo una volta sola."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "どちらを選んでも、おたずねするのはこの一度きりです。"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Responda o que responder, só vamos perguntar isso uma vez."
-          }
-        }
-      }
-    },
     "Worn": {
       "extractionState": "manual",
       "localizations": {
@@ -21173,100 +20891,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vestido"
-          }
-        }
-      }
-    },
-    "Write to us": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Write to us"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Schreib uns"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escríbenos"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Écris-nous"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scrivici"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "メールを書く"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escreva para nós"
-          }
-        }
-      }
-    },
-    "Yes, I am": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yes, I am"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ja, sehr"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sí, mucho"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oui, beaucoup"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sì, molto"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "はい、楽しんでいます"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sim, estou"
           }
         }
       }
