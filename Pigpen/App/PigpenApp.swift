@@ -201,6 +201,8 @@ struct PigpenApp: App {
         case peakRecord = "-peak-record"
         case barnMap = "-barn-map"
         case barn = "-barn"
+        case woodsBarnMap = "-woods-barn-map"
+        case woodsBarn = "-woods-barn"
         case dressedBoard = "-dressed-board"
         case dressedTitle = "-dressed-title"
         case universe = "-universe"
@@ -386,6 +388,21 @@ struct PigpenApp: App {
             // standing one of those on the mirror, and a pair of boots, being the one garment
             // hung twice, is what most wants looking at large.
             DressingBarnView(wardrobe: .remembering(.wellies))
+        case .woodsBarnMap:
+            // The thicket's fork: the fairy ring penned, the trail climbing on past it, and
+            // the woodland barn standing open off to the east. Photographed bought, so the
+            // shot is the fork and not the free game's clock.
+            WorldMapView(
+                world: .thornwoodThicket,
+                progress: .atTheWoodlandBarn(),
+                fullGame: .unlocked()
+            )
+        case .woodsBarn:
+            // The woodland barn, with company already kept and a hat on as well: the shot has
+            // to show that the two barns compose, so the pig on the mirror wears one barn's
+            // choice and keeps the other's. The butterfly on her ear and the sun hat over it,
+            // since that is the pair that sits closest and so the one most worth looking at.
+            DressingBarnView(rack: .companions, wardrobe: .remembering(.sunHat, with: .butterfly))
         case .dressedBoard:
             // What the barn is for, and the half of it the barn itself cannot show: a board
             // opened by a pig who has been dressed. The outfit is not a thing she wears in

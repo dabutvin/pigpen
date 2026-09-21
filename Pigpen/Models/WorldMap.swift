@@ -49,7 +49,8 @@ enum DoorMark: Hashable, Sendable {
 /// not the tally across the top of the map, not what a boss's toll costs, not what *the world
 /// held* means.
 ///
-/// There is one in the game: the dressing barn beside the meadow's orchard.
+/// There are two in the game: the dressing barn beside the meadow's orchard, and the woodland
+/// barn beside the thicket's fairy ring.
 struct WorldSpur: Identifiable, Hashable, Sendable {
     /// What the sign says, which is the whole of what is behind it.
     let name: String
@@ -62,6 +63,18 @@ struct WorldSpur: Identifiable, Hashable, Sendable {
     /// What is painted on that sign, where a stop carries its number. A door has no number —
     /// it is not one of the nine — so it shows what it is instead.
     let mark: DoorMark
+    /// What the barn behind the door hangs on its walls, which is how the map knows which barn
+    /// to open: the two are one screen told two different things.
+    let rack: BarnRack
+
+    init(name: String, junction: Int, across: Double, up: Double, mark: DoorMark, rack: BarnRack = .outfits) {
+        self.name = name
+        self.junction = junction
+        self.across = across
+        self.up = up
+        self.mark = mark
+        self.rack = rack
+    }
 
     var id: String { name }
 }
@@ -72,7 +85,8 @@ struct WorldMap: Sendable {
     let name: String
     let nodes: [WorldNode]
     /// The doors standing off the trail, which are not levels. Empty for every world but the
-    /// meadow, which keeps the dressing barn beside its orchard.
+    /// meadow, which keeps the dressing barn beside its orchard, and the thicket, which keeps
+    /// the woodland barn beside its fairy ring.
     let spurs: [WorldSpur]
 
     init(name: String, nodes: [WorldNode], spurs: [WorldSpur] = []) {

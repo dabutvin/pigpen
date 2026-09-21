@@ -96,7 +96,8 @@ jobs:
           # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
-          # `-barn`, `-dressed-board`, `-dressed-title`, `-postcard`, `-record` and
+          # `-barn`, `-woods-barn-map`, `-woods-barn`, `-dressed-board`, `-dressed-title`,
+          # `-postcard`, `-record` and
           # `-peak-record` are launch arguments the app understands, so the universe map,
           # every world's trail, the boards, the practice pen, the daily puzzle and its
           # archive, the settings sheet, the offer of a daily reminder, the card over a
@@ -199,6 +200,12 @@ jobs:
           capture 75 barn -barn
           capture 77 dressed_board -dressed-board
           capture 79 dressed_title -dressed-title
+
+          # The thicket's fork and the woodland barn at the end of it — the second door in
+          # the game — with a hat on the pig as well as company, since what the shot has to
+          # show is that the two barns compose. Numbered past the record shots.
+          capture 105 woods_barn_map -woods-barn-map
+          capture 107 woods_barn -woods-barn
 
           # What the landmark at the foot of a trail has been keeping count of. Two shots,
           # because the panel has two quite different things to be: the meadow, which enough

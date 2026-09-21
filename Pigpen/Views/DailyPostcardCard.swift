@@ -25,6 +25,9 @@ struct DailyPostcardCard: View {
     /// What the pig has on. Handed in rather than asked of the wardrobe here, so a preview
     /// can dress her without a choice saved on the machine it is running on.
     var outfit: PigOutfit = .asSheComes
+    /// Who is with her, on the same terms: the card carries the pig as she stands, company
+    /// and all.
+    var companion: PigCompanion = .nobody
 
     /// How wide the card is, always. Narrow enough to stand inside the narrowest phone the
     /// game runs on with room either side, wide enough that a nine by nine board drawn on it
@@ -97,6 +100,7 @@ struct DailyPostcardCard: View {
             isAsGoodAsItGets: showsFencing && postcard.verdict.isAsGoodAsItGets,
             animals: .standing(on: postcard.level),
             outfit: outfit,
+            companion: companion,
             onStroke: { _ in },
             onStrokeEnd: {}
         )
@@ -289,6 +293,7 @@ struct PostcardPicture: Transferable, Sendable {
     let postcard: DailyPostcard
     let showsFencing: Bool
     let outfit: PigOutfit
+    let companion: PigCompanion
 
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(exportedContentType: .png) { try await $0.painted() }
@@ -301,7 +306,12 @@ struct PostcardPicture: Transferable, Sendable {
     @MainActor
     func painted() throws -> Data {
         let renderer = ImageRenderer(
-            content: DailyPostcardCard(postcard: postcard, showsFencing: showsFencing, outfit: outfit)
+            content: DailyPostcardCard(
+                postcard: postcard,
+                showsFencing: showsFencing,
+                outfit: outfit,
+                companion: companion
+            )
         )
         renderer.scale = 3
         guard let drawn = renderer.uiImage, let png = drawn.pngData() else { throw CouldNotPaint() }

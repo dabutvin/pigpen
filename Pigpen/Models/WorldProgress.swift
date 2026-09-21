@@ -207,8 +207,12 @@ final class WorldProgress {
     /// on one and nothing past it has any say in it.
     func isOpen(_ spur: WorldSpur) -> Bool { isCleared(spur.junction) }
 
-    /// Whether the dressing barn is open, which is the one thing in the game a door decides.
+    /// Whether the dressing barn is open, which is one of the two things in the game a door
+    /// decides.
     var isDressingBarnOpen: Bool { DressingBarn.isOpen(stars: bestStars) }
+
+    /// Whether the woodland barn is open, which is the other.
+    var isWoodlandBarnOpen: Bool { WoodlandBarn.isOpen(stars: bestStars) }
 
     /// How far along the trail play has got: the first level still to be cleared, or the
     /// last stop on the map once the whole world is done. A stop with a star toll on it
@@ -553,6 +557,27 @@ extension WorldProgress {
     static func atTheBarn(world: WorldMap = .mudlarkMeadow) -> WorldProgress {
         var stars: [String: Int] = [:]
         for node in world.nodes.prefix(7) {
+            stars[node.id] = 3
+        }
+        return WorldProgress(
+            world: world,
+            store: RememberedProgress(
+                stars: stars,
+                scenesPlayed: [CutScene.Name.opening.rawValue, TutorialLesson.seenKey]
+            )
+        )
+    }
+
+    /// The thicket as far as the fairy ring, which is the stop the woodland barn stands beside
+    /// and so the moment its doors are first open: four stops held, the trail climbing on past
+    /// the ring, and a path off to the east with the barn at the end of it. The meadow is held
+    /// entire underneath, since nobody reaches the thicket without.
+    static func atTheWoodlandBarn(world: WorldMap = .thornwoodThicket) -> WorldProgress {
+        var stars: [String: Int] = [:]
+        for node in WorldMap.mudlarkMeadow.nodes {
+            stars[node.id] = 3
+        }
+        for node in world.nodes.prefix(4) {
             stars[node.id] = 3
         }
         return WorldProgress(

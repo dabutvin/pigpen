@@ -341,6 +341,7 @@ struct PuzzleView: View {
             treatSkin: treatSkin,
             skin: skin,
             outfit: wardrobe.outfit,
+            companion: wardrobe.companion,
             onStroke: { build($0) },
             onStrokeEnd: { game.endStroke() }
         )

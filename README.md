@@ -169,7 +169,8 @@ in the game you can finish a world without ever having opened.
   opened moves the pig on its own, so a replay leaves you standing where you chose to be.
 - **One stop has a barn beside it.** Pen the seventh — Windfall Orchard — and a side path
   opens west of the signpost with the [dressing barn](#the-dressing-barn) at the end of it.
-  It is not a puzzle: tap it and you are in.
+  It is not a puzzle: tap it and you are in. The thicket has one too, beside its fourth stop,
+  and what is behind that door is the [woodland barn](#the-woodland-barn).
 - **The landmark at the foot of the trail keeps your record.** Every world stands something
   at the bottom of its hill — the barn in the meadow, a cairn on the mountain, a clocktower
   in the city — and tapping it opens what that world has given up to you: stops held, stars
@@ -317,6 +318,52 @@ barn.
 The choice is a preference rather than progress, kept under one key on the phone, and it is
 the only thing the dressing barn remembers. It survives everything except **Clear all game
 data**, which shuts the stop that opened the barn and so takes the hats with it.
+
+### The woodland barn
+
+Pen the fourth stop of Thornwood Thicket — Fairy Ring — and a **second barn** opens beside it,
+on the same arrangement as the first: a narrower path east of the signpost, a sign with the
+barn painted on it, and nothing between a player and what is inside. What is inside is not
+clothes. It is **company**: nine woodland creatures on perches, and the empty perch for a pig
+who likes her own, and whichever one has the tick beside it rides along with her everywhere.
+
+The two barns compose. A companion is a second glyph again, hung on the pig the way a garment
+is, but it is kept in a slot of its own beside the outfit rather than in place of it — a
+butterfly on her ear under a top hat, a squirrel at her heel over a pair of wellies — and it is
+drawn *over* the outfit, so a bird on her head sits on the hat and nothing she picks up is ever
+lost inside something she has on. The perches keep to the parts of her the wardrobe leaves
+alone: her left ear, her cheeks, the top of her head off to either side, and the ground beside
+her, out past where the boots stand. The mirror in either barn shows the pig as she stands,
+wearing the one barn's choice and keeping the other's, and every peg on the wall shows its own
+thing on top of whatever the other barn put on her, so a hat is chosen under the butterfly and
+a butterfly on the hat.
+
+| Perch | Where it rides |
+|---|---|
+| Butterfly 🦋 | On the tip of her left ear |
+| Bee 🐝 | Hovering off that ear, higher and further out |
+| Ladybird 🐞 | On her left cheek, under her eye |
+| Snail 🐌 | Likewise, a little lower |
+| Caterpillar 🐛 | On her right cheek, leaning up it |
+| Songbird 🐦 | Perched on top of her head, to the left — on the hat when there is one |
+| Frog 🐸 | Sat on the other side of her head, not quite square to it |
+| Squirrel 🐿️ | Standing at her left heel |
+| Hedgehog 🦔 | At her right heel, beside the boot |
+| On her own | Nobody at all, which is where she starts |
+
+None of the nine is anything a board already draws: the thicket's windfall is a mushroom and
+its boss a boar, and a companion that looked like either would be a treat the pig carried onto
+every field. Nothing at her heel stands deeper below her than the scarf hangs, so the barn
+needs no more room under the pig than it already leaves and the mirror stands at one height
+whichever wall is behind it.
+
+It stands further in than the dressing barn on purpose. The thicket is the first world past
+the meadow, so it is the first thing a player who has held the meadow finds that the meadow
+did not have — and it is the world walked a level a day by a player who has not paid, so a
+door four days in is something on that trail worth the four days. The **Settings** card for it
+sits under the dressing barn's, drawn locked with directions in the same way, and the choice is
+kept under a second key beside the outfit's: a preference, not progress, and let go only by
+**Clear all game data**, which shuts the fairy ring along with the orchard.
 
 ## The Universe
 
@@ -1620,6 +1667,7 @@ is filling in Apple's privacy questionnaire.
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.soundsSwitched` / `.musicSwitched` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear, and its switches — the noises, the music, the buzzing and the counting |
 | `Dressing.opened` / `.outfitWorn` | The dressing barn, which door it was opened through, and what the pig was put in |
+| `Woodland.opened` / `.companionKept` | The woodland barn, which door it was opened through, and who was sent along with her |
 | `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
 | `Store.offerShown` / `.purchase` / `.restore` | The offer of the full game, which wall raised it, and how the buying went |
 | `Rating.asked` | The game's own question put up — *are you enjoying Pigpen?* — and which high point it was put up on |
@@ -2048,7 +2096,7 @@ Then work out where on the trail it belongs. `--demand` squares the map off as w
 A whole new world has one more number to author: its **floor**, the least any of its fields may ask, declared in `floors` in `DifficultyTests` beside the world it belongs to — nothing for the meadow, 23% for the thicket, 28% for Emberpeak, 30% for Cogsworth City, 32% for Starfall Reaches, 34% for Gloamdeep Caverns, 37% for Lantern Carnival, 38% for Sunbaked
 Dunes. A world may not floor at or under the floor of the world below it, and its opening field may not ask less than the one below it opened with, so a second world cannot quietly restart the first world's tutorial. Bosses sit outside the floor and are compared to each other instead.
 
-A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The meadow's dressing barn is the one the game has, and `DressingBarn` is where the game asks whether it is open.
+A trail can also carry something that is not a level at all. A **door** — a `WorldSpur` — stands beside a stop instead of in the line: a name, the index of the stop it keeps beside, where its sign stands and the `DoorMark` painted on that sign in place of a number. It has no board, no budget and no stars, it opens when that stop has been penned, and tapping it goes straight through. So it stays out of everything the world counts itself by — `count`, `starTotal`, the boss's toll, whether the world is held, the questions and the floors — and needs no entry in `shipped`, no baseline in `DifficultyTests` and no `question`. The game has two: the meadow's dressing barn and the thicket's woodland barn, told apart by the `BarnRack` each door carries — what the barn behind it hangs — and `DressingBarn` and `WoodlandBarn` are where the game asks whether each is open.
 
 A map with a second or third animal on it as well as a `P` is held by ground in two pieces as happily as by one, and the search knows it: it grows out from both animals at once and prices a wall shared between two enclosures once, like any other. It is a bigger search than a one-animal map, so give it a minute — and check the answer holds with a wider `--beam` before authoring it. A stop on the trail can also be given a `starToll`, which shuts it until the world has that many stars however far the trail has got.
 
@@ -2399,7 +2447,8 @@ Pigpen/
 │   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
 │   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
 │   ├── PigOutfit.swift          # The twelve outfits, and where each one hangs on the pig
-│   ├── PigWardrobe.swift        # What she is wearing, where it is kept, and what opens the dressing barn
+│   ├── PigCompanion.swift       # The nine companions, and where each one rides on her
+│   ├── PigWardrobe.swift        # What she is wearing and who is with her, where that is kept, and what opens each barn
 │   ├── Analytics.swift          # Every signal the game sends, and the one switch that stops them
 │   ├── TelemetryDeckSink.swift  # Puts a batch of signals on the wire, in a dozen lines of URLSession
 │   └── SupportLinks.swift       # The support page, the privacy policy, the address behind them and the draft it makes, in one place
@@ -2432,7 +2481,7 @@ Pigpen/
 │   ├── WorldTrail.swift         # Stops and the barn ↔ points on screen, and the curves between them
 │   ├── LevelSignpost.swift      # One sign on the map: a numbered stop with its stars, or the door to the barn
 │   ├── TollNoticeView.swift     # The card over a shut boss: its price, your stars, and how many more you need
-│   ├── DressingBarnView.swift   # The barn beside the orchard: the pig on a stand, and thirteen pegs
+│   ├── DressingBarnView.swift   # Either barn: the pig on a stand, and a wall of pegs — outfits beside the orchard, company beside the fairy ring
 │   ├── DressedAnimal.swift      # An animal, with whatever the pig is wearing hung on top of her
 │   ├── BarnMark.swift           # The barn, painted once: the landmark on the map, and the mark on the barn's sign
 │   ├── PuzzleView.swift         # A puzzle end to end: build, release, verdict

@@ -171,7 +171,7 @@ struct TitleScreenView: View {
 
     var body: some View {
         ZStack {
-            TitleSceneView(outfit: wardrobe.outfit)
+            TitleSceneView(outfit: wardrobe.outfit, companion: wardrobe.companion)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {

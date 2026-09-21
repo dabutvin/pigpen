@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// An animal as the game draws it: its own glyph, with whatever the pig is wearing hung on top
-/// of her.
+/// of her, and whoever is riding along with her drawn on top of that.
 ///
 /// It stands in for the bare `Text` the field and the trail used to draw, and it is the same
 /// size as that bare text was — the outfit is laid over the glyph rather than beside it, so
@@ -9,7 +9,8 @@ import SwiftUI
 /// already does to the pig — squashing her on a landing, leaning her into a trot, dropping a
 /// shadow under her — is done to the whole of her, clothes included, because it is done to this.
 ///
-/// Only the pig is ever dressed. Every other animal in the game is somebody else's problem.
+/// Only the pig is ever dressed, and only the pig keeps company. Every other animal in the
+/// game is somebody else's problem.
 struct DressedAnimal: View {
     let animal: Animal
     /// The size the glyph is set at. The outfit is measured off it, so a pig anywhere in the
@@ -19,11 +20,17 @@ struct DressedAnimal: View {
     /// room can draw twelve pigs in twelve outfits at once and a preview can dress her without
     /// a choice saved on the machine.
     var outfit: PigOutfit = .asSheComes
+    /// Who is with her, on the same terms.
+    var companion: PigCompanion = .nobody
 
     var body: some View {
         Text(animal.glyph)
             .font(.system(size: size))
             .overlay { garment }
+            // Over the garment rather than under it, so a bird on her head sits on her hat and
+            // a squirrel at her heel is not lost behind a boot: company is never hidden inside
+            // an outfit.
+            .overlay { company }
     }
 
     /// What is actually hanging on her: nothing for an animal that is not the pig, and nothing
@@ -31,6 +38,13 @@ struct DressedAnimal: View {
     private var worn: OutfitFit? {
         guard animal == .pig else { return nil }
         return outfit.fit
+    }
+
+    /// Who is actually with her: nobody for an animal that is not the pig, and nobody for a
+    /// pig on the empty perch.
+    private var riding: OutfitFit? {
+        guard animal == .pig else { return nil }
+        return companion.fit
     }
 
     /// The garment, laid over the glyph without taking up any room of its own — an overlay
@@ -43,19 +57,28 @@ struct DressedAnimal: View {
     private var garment: some View {
         if let worn {
             if let apart = worn.apart {
-                piece(worn, across: worn.across + apart)
-                piece(worn, across: worn.across - apart, mirrored: true)
+                piece(outfit.glyph, worn, across: worn.across + apart)
+                piece(outfit.glyph, worn, across: worn.across - apart, mirrored: true)
             } else {
-                piece(worn, across: worn.across)
+                piece(outfit.glyph, worn, across: worn.across)
             }
         }
     }
 
-    /// One garment, hung where it is worn. The turn comes before the mirroring so that a pair
+    /// The companion, on its perch: one glyph, hung the way a garment is, since a perch is
+    /// measured the way a garment's fit is.
+    @ViewBuilder
+    private var company: some View {
+        if let riding {
+            piece(companion.glyph, riding, across: riding.across)
+        }
+    }
+
+    /// One glyph, hung where it is worn. The turn comes before the mirroring so that a pair
     /// leans away from each other rather than both the same way, which is what a left and a
     /// right do.
-    private func piece(_ worn: OutfitFit, across: Double, mirrored: Bool = false) -> some View {
-        Text(outfit.glyph)
+    private func piece(_ glyph: String, _ worn: OutfitFit, across: Double, mirrored: Bool = false) -> some View {
+        Text(glyph)
             .font(.system(size: size * worn.scale))
             .rotationEffect(.degrees(worn.lean))
             .scaleEffect(x: mirrored ? -1 : 1, y: 1)
@@ -79,6 +102,11 @@ struct DressedAnimal: View {
             }
         }
         DressedAnimal(animal: .deer, size: 64, outfit: .crown)
+        HStack(spacing: 24) {
+            DressedAnimal(animal: .pig, size: 64, outfit: .topHat, companion: .butterfly)
+            DressedAnimal(animal: .pig, size: 64, outfit: .wellies, companion: .squirrel)
+            DressedAnimal(animal: .pig, size: 64, companion: .ladybird)
+        }
     }
     .padding(40)
     .background(GamePalette.beyond)

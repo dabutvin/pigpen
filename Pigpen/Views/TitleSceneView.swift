@@ -16,6 +16,8 @@ struct TitleSceneView: View {
     /// so that a hat chosen in the dressing barn is on her the next time the title comes up —
     /// which is the most conspicuous place in the game to be wearing one.
     var outfit: PigOutfit = .asSheComes
+    /// Who is out there with her, on the same terms.
+    var companion: PigCompanion = .nobody
 
     var body: some View {
         let colors: GamePalette.Pasture = colorScheme == .dark ? .dusk : .day
@@ -24,7 +26,13 @@ struct TitleSceneView: View {
             let elapsed = reduceMotion ? 0 : timeline.date.timeIntervalSince(opened)
 
             Canvas { context, size in
-                TitleScene(size: size, elapsed: elapsed, colors: colors, outfit: outfit)
+                TitleScene(
+                    size: size,
+                    elapsed: elapsed,
+                    colors: colors,
+                    outfit: outfit,
+                    companion: companion
+                )
                     .draw(in: &context)
             }
         }
@@ -40,6 +48,8 @@ private struct TitleScene {
     let colors: GamePalette.Pasture
     /// What the pig is wearing as she trots.
     var outfit: PigOutfit = .asSheComes
+    /// Who is riding along as she does.
+    var companion: PigCompanion = .nobody
 
     /// The pig covers this stretch of the width, out and back, once every `lapDuration`.
     private let trot = (from: 0.14, to: 0.86)
@@ -504,17 +514,26 @@ private struct TitleScene {
         )
 
         // Whatever is on her, drawn inside the same squashed, leaning context as the pig herself,
-        // so the hat lands on the landings with her rather than hovering above the trot.
+        // so the hat lands on the landings with her rather than hovering above the trot — and
+        // whoever is with her drawn after it, so a bird on her head sits on the hat.
         if let worn = outfit.fit {
-            var wornContext = pigContext
-            wornContext.translateBy(x: pig * CGFloat(worn.across), y: pig * CGFloat(worn.down))
-            wornContext.rotate(by: .degrees(worn.lean))
-            wornContext.draw(
-                Text(verbatim: outfit.glyph).font(.system(size: pig * CGFloat(worn.scale))),
-                at: .zero,
-                anchor: .center
-            )
+            draw(outfit.glyph, hung: worn, on: pigContext, pig: pig)
         }
+        if let riding = companion.fit {
+            draw(companion.glyph, hung: riding, on: pigContext, pig: pig)
+        }
+    }
+
+    /// One glyph hung on the pig where its fit says, inside her own context.
+    private func draw(_ glyph: String, hung fit: OutfitFit, on pigContext: GraphicsContext, pig: CGFloat) {
+        var hungContext = pigContext
+        hungContext.translateBy(x: pig * CGFloat(fit.across), y: pig * CGFloat(fit.down))
+        hungContext.rotate(by: .degrees(fit.lean))
+        hungContext.draw(
+            Text(verbatim: glyph).font(.system(size: pig * CGFloat(fit.scale))),
+            at: .zero,
+            anchor: .center
+        )
     }
 
     /// Puffs of dust kicked up where the pig last came down.
