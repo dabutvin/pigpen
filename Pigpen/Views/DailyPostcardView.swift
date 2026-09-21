@@ -27,14 +27,24 @@ struct DailyPostcardView: View {
 
     /// The card itself, held up on this screen.
     private var card: DailyPostcardCard {
-        DailyPostcardCard(postcard: postcard, showsFencing: showsFencing, outfit: wardrobe.outfit)
+        DailyPostcardCard(
+            postcard: postcard,
+            showsFencing: showsFencing,
+            outfit: wardrobe.outfit,
+            companion: wardrobe.companion
+        )
     }
 
     /// The same card as the thing that goes — which is the card and not a painting of it,
     /// since the painting happens when the share sheet asks. So the button below is live the
     /// moment the screen is, whatever the phone is busy with.
     private var picture: PostcardPicture {
-        PostcardPicture(postcard: postcard, showsFencing: showsFencing, outfit: wardrobe.outfit)
+        PostcardPicture(
+            postcard: postcard,
+            showsFencing: showsFencing,
+            outfit: wardrobe.outfit,
+            companion: wardrobe.companion
+        )
     }
 
     var body: some View {

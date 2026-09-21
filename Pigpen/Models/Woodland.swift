@@ -331,6 +331,13 @@ extension WorldMap {
     /// have nowhere that generous on them, and the least any field here asks is well above the
     /// meadow's floor. `DifficultyTests` measures every stop in both worlds and fails if a
     /// world ever opens softer, or floors lower, than the one below it.
+    ///
+    /// One thing in the woods is not one of the nine, and not a puzzle at all: the woodland
+    /// barn, standing off the trail beside the fourth stop. Pen the fairy ring and its doors
+    /// are open, and what is inside is company for the pig rather than clothes — see
+    /// `PigCompanion`. It is the thicket's answer to the meadow's dressing barn, and the same
+    /// arrangement: a door beside a stop, the arithmetic of the world none the wiser. See
+    /// `WorldSpur`.
     static let thornwoodThicket = WorldMap(
         name: "Thornwood Thicket",
         nodes: [
@@ -343,6 +350,15 @@ extension WorldMap {
             WorldNode(level: .nettleBank, across: 0.26, up: 6.06),
             WorldNode(level: .elderwood, across: 0.76, up: 7.00),
             WorldNode(level: .boarHollow, across: 0.30, up: 8.06, starToll: 21)
+        ],
+        spurs: [
+            // The woodland barn, in the clearing past the fairy ring. It keeps beside the
+            // fourth stop and stands away east of it, the mirror of where the meadow's barn
+            // stands off its orchard: far enough off the path that the two signs never crowd
+            // one another, and low enough that the mist over the unearned woods still covers
+            // it until the ring has been penned. Its sign carries the same small painting of
+            // the barn, since it is the same kind of building — what differs is inside.
+            WorldSpur(name: "Woodland Barn", junction: 3, across: 0.96, up: 3.66, mark: .barn, rack: .companions)
         ]
     )
 }

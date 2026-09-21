@@ -59,6 +59,8 @@ struct SettingsView: View {
     @State private var isWatchingFilms = false
     /// Whether the dressing barn is up.
     @State private var isDressingUp = false
+    /// Whether the woodland barn is up.
+    @State private var isKeepingCompany = false
     /// Raised by the clear button. Nothing is erased until the prompt it puts up says so.
     @State private var isAsking = false
     /// Whether the offer of the full game is up, raised by the card's own button.
@@ -110,6 +112,7 @@ struct SettingsView: View {
                         rate
                         films
                         dressingBarn
+                        woodlandBarn
                         reminders
                         counting
                         gameData
@@ -140,6 +143,13 @@ struct SettingsView: View {
             DressingBarnView(wardrobe: wardrobe, haptics: haptics)
                 .onAppear {
                     Analytics.record(.dressingBarnOpened(from: DressingBarn.Door.settings.rawValue))
+                }
+        }
+        // The same page again with the other wall on it, for the same reason.
+        .fullScreenCover(isPresented: $isKeepingCompany) {
+            DressingBarnView(rack: .companions, wardrobe: wardrobe, haptics: haptics)
+                .onAppear {
+                    Analytics.record(.woodlandBarnOpened(from: DressingBarn.Door.settings.rawValue))
                 }
         }
         .sheet(isPresented: $isOffering) {
@@ -652,8 +662,13 @@ struct SettingsView: View {
 
                 Spacer(minLength: 0)
 
-                DressedAnimal(animal: .pig, size: 34, outfit: wardrobe.outfit)
-                    .accessibilityHidden(true)
+                DressedAnimal(
+                    animal: .pig,
+                    size: 34,
+                    outfit: wardrobe.outfit,
+                    companion: wardrobe.companion
+                )
+                .accessibilityHidden(true)
             }
 
             Text(dressingBarnBlurb)
@@ -702,6 +717,80 @@ struct SettingsView: View {
         return """
             \(PigOutfit.wardrobe.count) outfits on the wall, and the bare peg she arrived on. \
             Whatever is on her in there, she wears it on every board.
+            """
+    }
+
+    /// The way back into the woodland barn, on the dressing barn's terms: the barn stands on
+    /// the thicket's own map, beside the fairy ring, and this is the door that is always in the
+    /// same place. Drawn locked rather than hidden for the same reason, so a player who has
+    /// not reached the thicket is told there is something in it worth reaching.
+    ///
+    /// The pig on it is the one on the card above, wearing and keeping whatever she is: the
+    /// two cards are two doors into the same pig.
+    private var woodlandBarn: some View {
+        card {
+            HStack(spacing: 10) {
+                Text("The woodland barn")
+                    .font(.headline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+
+                Spacer(minLength: 0)
+
+                DressedAnimal(
+                    animal: .pig,
+                    size: 34,
+                    outfit: wardrobe.outfit,
+                    companion: wardrobe.companion
+                )
+                .accessibilityHidden(true)
+            }
+
+            Text(woodlandBarnBlurb)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(GamePalette.post.opacity(0.7))
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                haptics.tap(.medium)
+                isKeepingCompany = true
+            } label: {
+                Label("Open the woodland barn", systemImage: "leaf.fill")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.cream)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(ChunkyButtonStyle(tint: GamePalette.clay, depth: 5))
+            .disabled(!isWoodlandBarnOpen)
+            .opacity(isWoodlandBarnOpen ? 1 : 0.45)
+            .padding(.top, 4)
+
+            if !isWoodlandBarnOpen {
+                Label(WoodlandBarn.directions, systemImage: "lock.fill")
+                    .font(.caption2)
+                    .foregroundStyle(GamePalette.post.opacity(0.55))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: isWoodlandBarnOpen)
+    }
+
+    /// Whether the stop the woodland barn stands beside has been penned, asked of the stars
+    /// for the reason the dressing barn's is.
+    private var isWoodlandBarnOpen: Bool {
+        WoodlandBarn.isOpen(stars: progress.bestStars)
+    }
+
+    private var woodlandBarnBlurb: String {
+        guard isWoodlandBarnOpen else {
+            return """
+                There is a second barn in Thornwood Thicket, beside the fairy ring. Get the pig \
+                that far and \(PigCompanion.friends.count) woodland friends will ride along with her.
+                """
+        }
+        return """
+            \(PigCompanion.friends.count) friends on the perches, and the empty one for a pig who \
+            likes her own company. Whoever is with her in there rides along on every board, \
+            whatever she has on.
             """
     }
 

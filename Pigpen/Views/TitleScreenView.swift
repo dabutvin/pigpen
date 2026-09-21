@@ -106,6 +106,9 @@ struct TitleScreenView: View {
     ///   - showsReminderPrompt: Opens with the game's offer of a daily reminder already up,
     ///     for the same reason — and handed in rather than waited for, since the offer's own
     ///     rule is that it only appears to somebody who has held a day and never been asked.
+    ///   - offering: What that offer is made over when it is opened up: the run of days, or a
+    ///     free level a day off. The camera's way of photographing the second, since the sheet
+    ///     says something different over each and the second is only ever put up by a trail.
     ///   - taps: Where tapped reminders and followed links are written down. The shared one
     ///     the phone writes into, save where a preview or a test wants a tap of its own
     ///     without one having to arrive on the machine.
@@ -122,6 +125,7 @@ struct TitleScreenView: View {
         today: DailyDate? = nil,
         showsSettings: Bool = false,
         showsReminderPrompt: Bool = false,
+        offering: ReminderOffer = .theStreak,
         taps: TappedReminder = .shared,
         fullGame: FullGame = .shared,
         wardrobe: PigWardrobe = .shared,
@@ -135,6 +139,7 @@ struct TitleScreenView: View {
         dayWasGiven = today != nil
         _showsSettings = State(initialValue: showsSettings)
         _isOfferingReminders = State(initialValue: showsReminderPrompt)
+        _offerAbout = State(initialValue: offering)
         self.taps = taps
         self.fullGame = fullGame
         self.wardrobe = wardrobe
@@ -153,7 +158,7 @@ struct TitleScreenView: View {
 
     var body: some View {
         ZStack {
-            TitleSceneView(outfit: wardrobe.outfit)
+            TitleSceneView(outfit: wardrobe.outfit, companion: wardrobe.companion)
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {

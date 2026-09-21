@@ -24,9 +24,10 @@ struct WorldMapView: View {
     @State private var pigStop: Double
     /// The stop whose puzzle is on screen, if any. Emptying it pops back to the map.
     @State private var playing: Int?
-    /// Whether the dressing barn is up. There is no puzzle between the sign and the barn —
-    /// tapping the one opens the other.
-    @State private var isDressingUp = false
+    /// The barn that is up, by what it hangs, while one is. There is no puzzle between the
+    /// sign and the barn — tapping the one opens the other — and which barn is which door on
+    /// this trail leads to.
+    @State private var barnOpen: BarnRack?
     /// A stop that has only just opened, so its signpost can make something of itself.
     @State private var unveiled: Int?
     /// Held while the pig is on the move, so a second tap cannot send it two ways at once.
@@ -207,10 +208,15 @@ struct WorldMapView: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $isDressingUp) {
-            DressingBarnView()
+        .fullScreenCover(item: $barnOpen) { rack in
+            DressingBarnView(rack: rack)
                 .onAppear {
-                    Analytics.record(.dressingBarnOpened(from: DressingBarn.Door.map.rawValue))
+                    switch rack {
+                    case .outfits:
+                        Analytics.record(.dressingBarnOpened(from: DressingBarn.Door.map.rawValue))
+                    case .companions:
+                        Analytics.record(.woodlandBarnOpened(from: DressingBarn.Door.map.rawValue))
+                    }
                 }
         }
         .fullScreenCover(item: $briefing, onDismiss: { openTheBriefedLevel() }) { waiting in
@@ -436,7 +442,7 @@ struct WorldMapView: View {
     }
 
     private func pig(trail: WorldTrail) -> some View {
-        DressedAnimal(animal: .pig, size: 36, outfit: wardrobe.outfit)
+        DressedAnimal(animal: .pig, size: 36, outfit: wardrobe.outfit, companion: wardrobe.companion)
             .shadow(color: .black.opacity(0.3), radius: 4, y: 4)
             .modifier(TrailWalk(walked: pigStop, trail: trail))
             .allowsHitTesting(false)
@@ -599,14 +605,15 @@ struct WorldMapView: View {
         }
     }
 
-    /// Opens the dressing barn. There is nothing between the sign and the barn — no board, no
-    /// walk, no waiting on the pig to get there — because the barn is not a stop on the way
-    /// anywhere and a player who taps it has asked for exactly one thing.
+    /// Opens the barn behind a door. There is nothing between the sign and the barn — no board,
+    /// no walk, no waiting on the pig to get there — because a barn is not a stop on the way
+    /// anywhere and a player who taps it has asked for exactly one thing. Which barn is the
+    /// door's to say.
     private func openTheBarn(_ spur: WorldSpur) {
         guard progress.isOpen(spur) else { return }
         Haptics.tap(.medium)
         Sounds.play(.press)
-        isDressingUp = true
+        barnOpen = spur.rack
     }
 
     /// The landmark tapped. Nothing is ever shut here — a player who has held nothing yet is
@@ -989,5 +996,17 @@ private struct TrailWalk: GeometryEffect {
 #Preview("The barn off the orchard") {
     NavigationStack {
         WorldMapView(progress: .atTheBarn())
+    }
+}
+
+/// The thicket's fork: the fairy ring penned, and the woodland barn standing open off to the
+/// east of it.
+#Preview("The barn off the fairy ring") {
+    NavigationStack {
+        WorldMapView(
+            world: .thornwoodThicket,
+            progress: .atTheWoodlandBarn(),
+            fullGame: .unlocked()
+        )
     }
 }

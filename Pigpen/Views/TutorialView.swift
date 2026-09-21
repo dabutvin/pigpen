@@ -77,6 +77,7 @@ struct TutorialView: View {
                     // The walkthrough can be read again at any point from settings, and a player
                     // who has dressed the pig should not meet an undressed one in it.
                     outfit: wardrobe.outfit,
+                    companion: wardrobe.companion,
                     onStroke: { build($0) },
                     onStrokeEnd: { lesson.endStroke() }
                 )

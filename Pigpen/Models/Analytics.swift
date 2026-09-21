@@ -598,6 +598,23 @@ extension AnalyticsSignal {
         AnalyticsSignal("Dressing.outfitWorn", ["outfit": outfit])
     }
 
+    // MARK: The woodland barn
+
+    /// The barn beside the thicket's fairy ring opened, and through which door — the lane off
+    /// the trail, or the card in settings. Counted apart from the dressing barn's, since the
+    /// question it answers is a different one: whether the second door on the second world is
+    /// found at all, by the players who get that far.
+    static func woodlandBarnOpened(from door: String) -> AnalyticsSignal {
+        AnalyticsSignal("Woodland.opened", ["from": door])
+    }
+
+    /// A companion taken off its perch to ride along, by name — or `nobody`, for a pig sent
+    /// back out on her own. Which creature is worth the company is the only question this
+    /// corner of the game has.
+    static func companionKept(_ companion: String) -> AnalyticsSignal {
+        AnalyticsSignal("Woodland.companionKept", ["companion": companion])
+    }
+
     // MARK: The full game
 
     /// The offer of the full game put in front of somebody. `from` is where it was raised —
