@@ -121,23 +121,11 @@ struct WorldRecordView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 HStack(spacing: 0) {
-                    tally("\(record.solved)/\(record.count)", String(localized: "solved"))
+                    tally("\(record.solved)/\(record.count)", "solved")
                     divider
-                    tally("\(record.stars)/\(record.starTotal)", String(localized: "stars"))
+                    tally("\(record.stars)/\(record.starTotal)", "stars")
                     divider
-                    tally(
-                        "\(record.bestPens)",
-                        // The figure is already above it, so the caption is the noun alone —
-                        // but which noun is a question of how many, and a catalog plural is
-                        // not allowed to answer it: a plural variation has to print the
-                        // number it counts, or `xcstringstool` refuses the build. So the
-                        // choice is made here, between two strings. Every language the game
-                        // speaks splits one from the rest; one that split them three ways
-                        // would want a third string and a third branch.
-                        record.bestPens == 1
-                            ? String(localized: "record.bestPen", defaultValue: "best pen")
-                            : String(localized: "record.bestPens", defaultValue: "best pens")
-                    )
+                    tally("\(record.bestPens)", record.bestPens == 1 ? "best pen" : "best pens")
                 }
             }
         }
@@ -181,7 +169,7 @@ struct WorldRecordView: View {
     /// thing the field has to say about it.
     private func line(_ row: WorldRecord.Row, _ benchmark: LevelBenchmark) -> some View {
         HStack(alignment: .top, spacing: 10) {
-            Text(verbatim: "\(row.stop)")
+            Text("\(row.stop)")
                 .font(.system(size: 12, weight: .black, design: .rounded))
                 .foregroundStyle(GamePalette.post.opacity(0.5))
                 .monospacedDigit()
@@ -223,8 +211,7 @@ struct WorldRecordView: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(String(localized: "record.tally.spoken",
-                                   defaultValue: "\(figure) \(caption)"))
+        .accessibilityLabel("\(figure) \(caption)")
     }
 
     private var divider: some View {
@@ -255,20 +242,17 @@ struct WorldRecordView: View {
     /// else is told what the third star is worth, which is the thing still in front of them.
     private func field(_ row: WorldRecord.Row, _ benchmark: LevelBenchmark) -> String {
         row.hasTheBestPen
-            ? String(localized: "\(percent(benchmark.bestPenShare)) of players have found this pen")
-            : String(localized: "\(percent(benchmark.threeStarShare)) of players get three stars here")
+            ? "\(percent(benchmark.bestPenShare)) of players have found this pen"
+            : "\(percent(benchmark.threeStarShare)) of players get three stars here"
     }
 
     /// The same row for VoiceOver, which wants the stars said rather than drawn.
     private func spoken(_ row: WorldRecord.Row, _ benchmark: LevelBenchmark) -> String {
         let stars = row.isSolved
-            ? String(localized: "\(row.stars) stars")
-            : String(localized: "not held yet")
-        let you = row.hasTheBestPen
-            ? String(localized: "You: \(stars), best pen found")
-            : String(localized: "You: \(stars)")
-        let stop = String(localized: "Stop \(row.stop), \(row.name).")
-        return "\(stop) \(you). \(field(row, benchmark))."
+            ? "\(row.stars) star\(row.stars == 1 ? "" : "s")"
+            : "not held yet"
+        let pen = row.hasTheBestPen ? ", best pen found" : ""
+        return "Stop \(row.stop), \(row.name). You: \(stars)\(pen). \(field(row, benchmark))."
     }
 
     /// The line that closes the card: what the player has that most players do not. Said only
@@ -276,14 +260,12 @@ struct WorldRecordView: View {
     /// is a card that would have read better without a last line.
     private var standing: String? {
         if record.rarePens > 0 {
-            return String(localized: """
-                You hold \(record.rarePens) best pens here that most players never find.
-                """)
+            let pens = record.rarePens == 1 ? "pen" : "pens"
+            return "You hold \(record.rarePens) best \(pens) here that most players never find."
         }
         if record.aheadOfMost > 0 {
-            return String(localized: """
-                You have three-starred \(record.aheadOfMost) stops that most players do not.
-                """)
+            let stops = record.aheadOfMost == 1 ? "stop" : "stops"
+            return "You have three-starred \(record.aheadOfMost) \(stops) that most players do not."
         }
         return nil
     }

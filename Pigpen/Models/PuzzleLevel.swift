@@ -1,5 +1,3 @@
-import Foundation
-
 /// What a single tile is made of.
 enum Terrain: Character, CaseIterable, Sendable {
     /// Open ground. The pig walks on it, you may fence it, and it is what scores.
@@ -49,9 +47,7 @@ enum Treat: Character, CaseIterable, Sendable {
     /// treat takes fencing, so a tap that would have planted a post lands on the worth
     /// instead — which is how a player finds out what the ground is carrying without
     /// reading the README.
-    var pointsSaid: String {
-        String(localized: "treat.points", defaultValue: "\(scoreSaid) points")
-    }
+    var pointsSaid: String { "\(scoreSaid) points" }
 }
 
 /// What a field asks of the player — the one question it is built around.

@@ -133,12 +133,7 @@ enum DressingBarn {
     static var beside: PuzzleLevel { .windfallOrchard }
 
     /// Where to tell a player to go looking, said the way the map would say it.
-    static var directions: String {
-        String(localized: """
-            Pen Windfall Orchard, the seventh stop in Mudlark Meadow, and the barn opens \
-            beside the trail.
-            """)
-    }
+    static let directions = "Pen Windfall Orchard, the seventh stop in Mudlark Meadow, and the barn opens beside the trail."
 
     /// Whether the doors are open, read off the ratings the game has kept. Any pen at all on the
     /// stop beside it does it, so a player is never asked to be good at the orchard — only to

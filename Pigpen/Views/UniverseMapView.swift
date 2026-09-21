@@ -201,17 +201,15 @@ struct UniverseMapView: View {
     /// line used to count lots sold, the way the films tell it, and read as a shop on a map
     /// that already has a shop on it.
     private func subtitle(for index: Int) -> String {
-        if progress.isForSale(index) { return String(localized: "Unlock the full game") }
+        if progress.isForSale(index) { return "Unlock the full game" }
         switch progress.state(of: index) {
-        case .cleared: return String(localized: "Complete")
+        case .cleared: return "Complete"
         case .playable:
-            if progress.isCleared(index) { return String(localized: "Complete") }
+            if progress.isCleared(index) { return "Complete" }
             let held = heldCount(index)
-            return held == 0
-                ? String(localized: "Unlocked")
-                : String(localized: "\(held) of \(worldCount(index)) complete")
-        case .comingSoon: return String(localized: "Coming soon")
-        case .locked: return String(localized: "Locked")
+            return held == 0 ? "Unlocked" : "\(held) of \(worldCount(index)) complete"
+        case .comingSoon: return "Coming soon"
+        case .locked: return "Locked"
         }
     }
 
@@ -277,7 +275,7 @@ struct UniverseMapView: View {
             HStack(spacing: 4) {
                 Image(systemName: "globe.americas.fill")
                     .foregroundStyle(GamePalette.pen)
-                Text(verbatim: "\(unlockedWorlds)/\(progress.count)")
+                Text("\(unlockedWorlds)/\(progress.count)")
                     .foregroundStyle(GamePalette.cream)
                     .monospacedDigit()
             }
@@ -638,22 +636,18 @@ private struct WorldPlanet: View {
     }
 
     private var spokenLabel: String {
-        // A world still being played is read out in the banner's own words rather than the
-        // banner taken down to lower case: starting a word with a small letter mid-sentence
-        // is an English habit, and a German noun written that way is a misspelling.
         let standing: String
         if forSale {
-            standing = String(localized: "unlock the full game to play it")
+            standing = "unlock the full game to play it"
         } else {
             switch state {
-            case .cleared: standing = String(localized: "complete")
-            case .playable: standing = subtitle
-            case .comingSoon: standing = String(localized: "coming soon")
-            case .locked: standing = String(localized: "locked")
+            case .cleared: standing = "complete"
+            case .playable: standing = subtitle.lowercased()
+            case .comingSoon: standing = "coming soon"
+            case .locked: standing = "locked"
             }
         }
-        return String(localized: "universe.planet.spoken",
-                      defaultValue: "\(theme.name), \(boss.name). \(standing).")
+        return "\(theme.name), \(boss.name). \(standing)."
     }
 }
 

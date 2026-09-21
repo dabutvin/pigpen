@@ -159,18 +159,18 @@ struct FullGameOffer: View {
     private var pitch: some View {
         perk(
             icon: "globe.americas.fill",
-            title: String(localized: "Every level, right away"),
+            title: "Every level, right away",
             detail: everyLevel
         )
         perk(
             icon: "calendar",
-            title: String(localized: "Every daily puzzle"),
-            detail: String(localized: "Get access to every daily puzzle including all past puzzles.")
+            title: "Every daily puzzle",
+            detail: "Get access to every daily puzzle including all past puzzles."
         )
         perk(
             icon: "hand.raised.slash.fill",
-            title: String(localized: "Never any ads"),
-            detail: String(localized: "Pigpen will never have any ads. Buy it once, it is yours forever.")
+            title: "Never any ads",
+            detail: "Pigpen will never have any ads. Buy it once, it is yours forever."
         )
     }
 
@@ -179,15 +179,11 @@ struct FullGameOffer: View {
     /// told how long the wait is has that said back to them, with the way round it.
     private var everyLevel: String {
         if let wait {
-            return String(localized: """
-                Your next free level opens in \(wait.spoken). Unlock the full game and there \
-                is no waiting — every level in every world, today.
-                """)
+            return "Your next free level opens in \(wait.spoken). Unlock the full game and "
+                + "there is no waiting — every level in every world, today."
         }
-        return String(localized: """
-            Help Pig explore the whole universe with no waiting. The free game opens one level \
-            a day past the meadow; this opens all of them at once.
-            """)
+        return "Help Pig explore the whole universe with no waiting. The free game opens one "
+            + "level a day past the meadow; this opens all of them at once."
     }
 
     private func perk(icon: String, title: String, detail: String) -> some View {
@@ -277,33 +273,21 @@ struct FullGameOffer: View {
     /// invitation when it has not — a button that will not sit there blank while the price
     /// is still on its way.
     private var buyTitle: String {
-        if fullGame.isWorking { return String(localized: "One moment…") }
-        if let price = fullGame.price {
-            return String(localized: "Unlock the full game · \(price)")
-        }
-        return String(localized: "Unlock the full game")
+        if fullGame.isWorking { return "One moment…" }
+        if let price = fullGame.price { return "Unlock the full game · \(price)" }
+        return "Unlock the full game"
     }
 
     private func words(for note: Note) -> String {
         switch note {
         case .pending:
-            String(localized: """
-                Waiting on approval. The full game opens as soon as it comes through — nothing \
-                more to do here.
-                """)
+            "Waiting on approval. The full game opens as soon as it comes through — nothing more to do here."
         case .nothingToRestore:
-            String(localized: """
-                Nothing to restore on this Apple ID yet. Buying it above is what puts it there.
-                """)
+            "Nothing to restore on this Apple ID yet. Buying it above is what puts it there."
         case .failed:
-            String(localized: """
-                That didn't go through, and you have not been charged. Have another go in a \
-                moment.
-                """)
+            "That didn't go through, and you have not been charged. Have another go in a moment."
         case .unavailable:
-            String(localized: """
-                The App Store could not be reached just now. Check the connection and try again.
-                """)
+            "The App Store could not be reached just now. Check the connection and try again."
         }
     }
 

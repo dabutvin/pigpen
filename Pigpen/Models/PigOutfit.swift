@@ -172,19 +172,19 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
     /// What the peg is labelled.
     var name: String {
         switch self {
-        case .asSheComes: String(localized: "Just the pig")
-        case .sunHat: String(localized: "Sun Hat")
-        case .topHat: String(localized: "Top Hat")
-        case .crown: String(localized: "Crown")
-        case .baseballCap: String(localized: "Baseball Cap")
-        case .graduationCap: String(localized: "Graduation Cap")
-        case .shades: String(localized: "Sunglasses")
-        case .spectacles: String(localized: "Spectacles")
-        case .ribbon: String(localized: "Ribbon")
-        case .sunflower: String(localized: "Sunflower")
-        case .scarf: String(localized: "Scarf")
-        case .rosette: String(localized: "Rosette")
-        case .wellies: String(localized: "Wellies")
+        case .asSheComes: "Just the pig"
+        case .sunHat: "Sun Hat"
+        case .topHat: "Top Hat"
+        case .crown: "Crown"
+        case .baseballCap: "Baseball Cap"
+        case .graduationCap: "Graduation Cap"
+        case .shades: "Sunglasses"
+        case .spectacles: "Spectacles"
+        case .ribbon: "Ribbon"
+        case .sunflower: "Sunflower"
+        case .scarf: "Scarf"
+        case .rosette: "Rosette"
+        case .wellies: "Wellies"
         }
     }
 
@@ -277,12 +277,7 @@ enum PigOutfit: String, CaseIterable, Identifiable, Sendable {
     /// has no way of seeing the hat.
     /// *The* rather than *a*, so that one wording covers the sunglasses and the wellies as
     /// well as the top hat.
-    ///
-    /// The peg's own label goes in as it is written. Taking it down to lower case first is an
-    /// English habit that turns a German noun into a misspelling of itself.
     var spoken: String {
-        self == .asSheComes
-            ? String(localized: "The pig, wearing nothing")
-            : String(localized: "The pig wearing the \(name)")
+        self == .asSheComes ? "The pig, wearing nothing" : "The pig wearing the \(name.lowercased())"
     }
 }

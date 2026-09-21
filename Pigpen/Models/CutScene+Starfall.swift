@@ -87,15 +87,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .starfall(.theReaches),
-                    caption: String(localized: "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes.")
+                    caption: "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes."
                 ),
                 Shot(
                     picture: .starfall(.starsAndMeteors),
-                    caption: String(localized: "Stars add a little sparkle. Meteor damage is not covered.")
+                    caption: "Stars add a little sparkle. Meteor damage is not covered."
                 ),
                 Shot(
                     picture: .starfall(.noNeighbors),
-                    caption: String(localized: "Finally. No neighbors.")
+                    caption: "Finally. No neighbors."
                 )
             ],
             start: start
@@ -116,15 +116,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .starfall(.theVisitor),
-                    caption: String(localized: "Turns out, there were neighbors.")
+                    caption: "Turns out, there were neighbors."
                 ),
                 Shot(
                     picture: .starfall(.personalSpace),
-                    caption: String(localized: "Fortunately, both parties valued personal space. And fairness.")
+                    caption: "Fortunately, both parties valued personal space. And fairness."
                 ),
                 Shot(
                     picture: .starfall(.equalSquareFootage),
-                    caption: String(localized: "Build two separate pens. They must be exactly the same size. Equal square footage. No exceptions.")
+                    caption: "Build two separate pens. They must be exactly the same size. Equal square footage. No exceptions."
                 )
             ],
             start: start
@@ -144,15 +144,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .starfall(.reachesHeld),
-                    caption: String(localized: "Remote. Spacious. Peaceful. Mostly.")
+                    caption: "Remote. Spacious. Peaceful. Mostly."
                 ),
                 Shot(
                     picture: .starfall(.belowMarket),
-                    caption: String(localized: "Then Pig found something listed below market.")
+                    caption: "Then Pig found something listed below market."
                 ),
                 Shot(
                     picture: .starfall(.theHole),
-                    caption: String(localized: "Very far below market.")
+                    caption: "Very far below market."
                 )
             ],
             start: start
