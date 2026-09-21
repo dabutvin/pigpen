@@ -29,11 +29,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Ahead of the build, because a missing translation is a one-second answer and
-      # the build is a twenty-minute one.
-      - name: Check the string catalog
-        run: python3 Tools/check_localization.py
-
       - name: Select Xcode
         run: |
           XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1 || true)

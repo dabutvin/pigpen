@@ -88,15 +88,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .lantern(.theFairground),
-                    caption: String(localized: "Lantern Carnival. Bright. Bustling. Absolutely no shortage of entertainment.")
+                    caption: "Lantern Carnival. Bright. Bustling. Absolutely no shortage of entertainment."
                 ),
                 Shot(
                     picture: .lantern(.popcornAndMegaphones),
-                    caption: String(localized: "On-site concessions are a definite perk. The noise alone could sink the deal.")
+                    caption: "On-site concessions are a definite perk. The noise alone could sink the deal."
                 ),
                 Shot(
                     picture: .lantern(.moreLivelyThanTheCave),
-                    caption: String(localized: "It was certainly more lively than the cave.")
+                    caption: "It was certainly more lively than the cave."
                 )
             ],
             start: start
@@ -116,15 +116,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .lantern(.theManagement),
-                    caption: String(localized: "Then Pig met management.")
+                    caption: "Then Pig met management."
                 ),
                 Shot(
                     picture: .lantern(.aTightShip),
-                    caption: String(localized: "The ringmaster runs a tight ship. Keep your construction out of his personal space.")
+                    caption: "The ringmaster runs a tight ship. Keep your construction out of his personal space."
                 ),
                 Shot(
                     picture: .lantern(.theRingAndTheFence),
-                    caption: String(localized: "Fence in Pig, the ringmaster, and his ring. But don't let your fence touch the ring. Apparently it's in the lease.")
+                    caption: "Fence in Pig, the ringmaster, and his ring. But don't let your fence touch the ring. Apparently it's in the lease."
                 )
             ],
             start: start
@@ -145,15 +145,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .lantern(.constantNightlife),
-                    caption: String(localized: "Food. Entertainment. Nightlife. Constant nightlife.")
+                    caption: "Food. Entertainment. Nightlife. Constant nightlife."
                 ),
                 Shot(
                     picture: .lantern(.somewhereMorePeaceful),
-                    caption: String(localized: "Pig decided he wanted somewhere more peaceful.")
+                    caption: "Pig decided he wanted somewhere more peaceful."
                 ),
                 Shot(
                     picture: .lantern(.quietHours),
-                    caption: String(localized: "Somewhere quiet hours practically enforce themselves.")
+                    caption: "Somewhere quiet hours practically enforce themselves."
                 )
             ],
             start: start

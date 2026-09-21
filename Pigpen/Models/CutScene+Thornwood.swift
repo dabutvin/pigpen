@@ -81,15 +81,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .thornwood(.theTreeLine),
-                    caption: String(localized: "Thornwood Thicket. Secluded. Wooded. Very private.")
+                    caption: "Thornwood Thicket. Secluded. Wooded. Very private."
                 ),
                 Shot(
                     picture: .thornwood(.mushroomsAndFlowers),
-                    caption: String(localized: "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal.")
+                    caption: "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal."
                 ),
                 Shot(
                     picture: .thornwood(.offTheBeatenPath),
-                    caption: String(localized: "Pig was warming to the idea of living off the beaten path.")
+                    caption: "Pig was warming to the idea of living off the beaten path."
                 )
             ],
             start: start
@@ -108,15 +108,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .thornwood(.theNeighbor),
-                    caption: String(localized: "Then Pig met the neighbor.")
+                    caption: "Then Pig met the neighbor."
                 ),
                 Shot(
                     picture: .thornwood(.separateUnits),
-                    caption: String(localized: "They agreed immediately on one thing: separate units.")
+                    caption: "They agreed immediately on one thing: separate units."
                 ),
                 Shot(
                     picture: .thornwood(.aPenApiece),
-                    caption: String(localized: "Fence in Pig and the boar separately.")
+                    caption: "Fence in Pig and the boar separately."
                 )
             ],
             start: start
@@ -135,15 +135,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .thornwood(.thicketHeld),
-                    caption: String(localized: "Private. Peaceful. Spacious. Almost perfect.")
+                    caption: "Private. Peaceful. Spacious. Almost perfect."
                 ),
                 Shot(
                     picture: .thornwood(.mountainViews),
-                    caption: String(localized: "Then Pig spotted a listing with spectacular mountain views.")
+                    caption: "Then Pig spotted a listing with spectacular mountain views."
                 ),
                 Shot(
                     picture: .thornwood(.theVolcano),
-                    caption: String(localized: "The description did not mention the volcano.")
+                    caption: "The description did not mention the volcano."
                 )
             ],
             start: start

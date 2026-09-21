@@ -56,7 +56,7 @@ struct DailyCard: View {
             if streak > 1 {
                 HStack(spacing: 3) {
                     Image(systemName: "flame.fill")
-                    Text(verbatim: "\(streak)")
+                    Text("\(streak)")
                         .monospacedDigit()
                 }
                 .font(.system(size: 12, weight: .black, design: .rounded))
@@ -69,7 +69,7 @@ struct DailyCard: View {
     /// day asks of you is for the board to show rather than for the card to promise.
     private var day: some View {
         VStack(alignment: .leading, spacing: 1) {
-            Text(hasAPuzzle ? date.title : String(localized: "No puzzle today"))
+            Text(hasAPuzzle ? date.title : "No puzzle today")
                 .font(.system(size: 19, weight: .black, design: .rounded))
                 .foregroundStyle(GamePalette.post)
                 .lineLimit(1)
@@ -171,24 +171,18 @@ struct DailyCard: View {
     }
 
     private var spokenLabel: String {
-        guard hasAPuzzle else {
-            return String(localized: """
-                Today's puzzle. There is none — update Pigpen to get more daily puzzles.
-                """)
-        }
-        var said = [String(localized: "Today's puzzle. \(date.fullTitle).")]
+        guard hasAPuzzle else { return "Today's puzzle. There is none — update Pigpen to get more daily puzzles." }
+        let spelled = ["no", "one", "two", "three"]
+        var said = "Today's puzzle. \(date.fullTitle)."
         if isComplete {
-            said.append(String(localized: "Complete, \(StarsInWords.said(stars))."))
-            if hasTheBestPen { said.append(String(localized: "The best pen there is.")) }
-            if let bestTime {
-                let clock = Stopwatch.spoken(TimeInterval(bestTime))
-                said.append(String(localized: "Best time \(clock)."))
-            }
+            said += " Complete, \(spelled[min(max(stars, 0), 3)]) star\(stars == 1 ? "" : "s")."
+            if hasTheBestPen { said += " The best pen there is." }
+            if let bestTime { said += " Best time \(Stopwatch.spoken(TimeInterval(bestTime)))." }
         } else {
-            said.append(String(localized: "Not complete yet."))
+            said += " Not complete yet."
         }
-        if streak > 1 { said.append(String(localized: "\(streak) days in a row.")) }
-        return said.joined(separator: " ")
+        if streak > 1 { said += " \(streak) days in a row." }
+        return said
     }
 }
 

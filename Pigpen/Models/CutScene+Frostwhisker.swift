@@ -87,15 +87,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .frostwhisker(.theIceEdge),
-                    caption: String(localized: "Frostwhisker Tundra. Charming. Scenic. Excellent natural refrigeration.")
+                    caption: "Frostwhisker Tundra. Charming. Scenic. Excellent natural refrigeration."
                 ),
                 Shot(
                     picture: .frostwhisker(.skisAndBlackIce),
-                    caption: String(localized: "Slope access is a major amenity. Black ice hurts the walkability score.")
+                    caption: "Slope access is a major amenity. Black ice hurts the walkability score."
                 ),
                 Shot(
                     picture: .frostwhisker(.theSkiTownPremium),
-                    caption: String(localized: "Pig was beginning to understand the ski-town premium.")
+                    caption: "Pig was beginning to understand the ski-town premium."
                 )
             ],
             start: start
@@ -115,15 +115,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .frostwhisker(.theWaterfront),
-                    caption: String(localized: "The waterfront came with a resident.")
+                    caption: "The waterfront came with a resident."
                 ),
                 Shot(
                     picture: .frostwhisker(.waterAccess),
-                    caption: String(localized: "The seal wanted its own place. With water access. Non-negotiable.")
+                    caption: "The seal wanted its own place. With water access. Non-negotiable."
                 ),
                 Shot(
                     picture: .frostwhisker(.aPenOnTheWater),
-                    caption: String(localized: "Build separate pens. The seal's pen must border the water.")
+                    caption: "Build separate pens. The seal's pen must border the water."
                 )
             ],
             start: start
@@ -142,15 +142,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .frostwhisker(.tundraHeld),
-                    caption: String(localized: "Quiet. Beautiful. Very cool. Far too cool.")
+                    caption: "Quiet. Beautiful. Very cool. Far too cool."
                 ),
                 Shot(
                     picture: .frostwhisker(.somewhereWithLessIce),
-                    caption: String(localized: "Pig decided to try somewhere with less ice.")
+                    caption: "Pig decided to try somewhere with less ice."
                 ),
                 Shot(
                     picture: .frostwhisker(.muchLessIce),
-                    caption: String(localized: "Much less.")
+                    caption: "Much less."
                 )
             ],
             start: start

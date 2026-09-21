@@ -183,8 +183,8 @@ struct ReminderPromptView: View {
     /// particular o'clock.
     private var heading: String {
         switch about {
-        case .theStreak: String(localized: "Daily reminders")
-        case .theNextLevel: String(localized: "Reminders")
+        case .theStreak: "Daily reminders"
+        case .theNextLevel: "Reminders"
         }
     }
 
@@ -199,16 +199,10 @@ struct ReminderPromptView: View {
     private var offer: String {
         switch about {
         case .theStreak:
-            String(localized: """
-                Enable notifications to get daily reminders that help you build your streak.
-                """)
+            "Enable notifications to get daily reminders that help you build your streak."
         case .theNextLevel(let world):
-            // One sentence rather than two halves added together: the world lands mid-clause,
-            // and a language that reorders the clause cannot be handed the tail separately.
-            String(localized: """
-                Enable notifications to hear the moment your next free level opens in \(world), \
-                and for a daily puzzle reminder each morning.
-                """)
+            "Enable notifications to hear the moment your next free level opens in \(world), "
+                + "and for a daily puzzle reminder each morning."
         }
     }
 
@@ -217,8 +211,8 @@ struct ReminderPromptView: View {
     /// not name a time.
     private var accept: String {
         switch about {
-        case .theStreak: String(localized: "Remind me at \(time.face)")
-        case .theNextLevel: String(localized: "Turn on reminders")
+        case .theStreak: "Remind me at \(time.face)"
+        case .theNextLevel: "Turn on reminders"
         }
     }
 }

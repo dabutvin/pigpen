@@ -25,7 +25,7 @@ struct DailyPuzzleView: View {
             PuzzleView(
                 game: game(for: level),
                 clock: progress.hasDraft(on: date) ? progress.clock(on: date) : clock,
-                wayOutTitle: String(localized: "Done"),
+                wayOutTitle: "Done",
                 wayOutImage: "checkmark.seal.fill",
                 onPenned: { verdict, seconds, fences in
                     progress.record(verdict, seconds: seconds, fences: fences, on: date)

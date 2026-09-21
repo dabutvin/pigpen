@@ -265,10 +265,8 @@ struct SettingsView: View {
 
     /// The card's button, with the price on it when the store has handed one over.
     private var unlockTitle: String {
-        if let price = fullGame.price {
-            return String(localized: "Unlock the full game · \(price)")
-        }
-        return String(localized: "Unlock the full game")
+        if let price = fullGame.price { return "Unlock the full game · \(price)" }
+        return "Unlock the full game"
     }
 
     /// The way out of the game to a person.
@@ -410,10 +408,7 @@ struct SettingsView: View {
     private var refusal: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label(
-                """
-                Notifications for Pigpen are turned off on this phone, so nothing will come \
-                through.
-                """,
+                "Notifications for Pigpen are turned off on this phone, so nothing will come through.",
                 systemImage: "exclamationmark.triangle.fill"
             )
             .font(.caption.weight(.semibold))
@@ -699,15 +694,15 @@ struct SettingsView: View {
 
     private var dressingBarnBlurb: String {
         guard isDressingBarnOpen else {
-            return String(localized: """
+            return """
                 There is a barn beside the meadow's orchard. Get the pig that far and \
                 \(PigOutfit.wardrobe.count) outfits are hers to try on.
-                """)
+                """
         }
-        return String(localized: """
+        return """
             \(PigOutfit.wardrobe.count) outfits on the wall, and the bare peg she arrived on. \
             Whatever is on her in there, she wears it on every board.
-            """)
+            """
     }
 
     /// Everything the game has kept, and the way to be rid of it.
@@ -777,31 +772,33 @@ struct SettingsView: View {
     /// story of worlds a player may be nowhere near.
     private var runningOrder: String {
         let minutes = max(1, Int((reel.runtime / 60).rounded()))
-        let films = String(localized: "\(reel.count) films")
-        let runtime = String(localized: "\(minutes) minutes")
-        return String(localized: """
-            \(films), about \(runtime) in all — including the worlds you have not reached yet.
-            """)
+        return """
+            \(counted(reel.count, "film")), about \(counted(minutes, "minute")) in all — \
+            including the worlds you have not reached yet.
+            """
     }
 
     private var saved: String {
         if hasCleared {
-            return String(localized: "Cleared. \(world.name) is back to the start.")
+            return "Cleared. \(world.name) is back to the start."
         }
         guard hasSomethingToClear else {
-            return String(localized: "Nothing saved yet — \(world.name) is untouched.")
+            return "Nothing saved yet — \(world.name) is untouched."
         }
         // The whole universe rather than the world the player happens to be standing in.
         // This card counted the meadow's stars out of the meadow's total, under a button
         // that clears every world there is — so a player with stars up the map read a
         // smaller number here than the title screen was showing them.
-        let held = String(localized: """
+        let held = """
             \(starsHeld) of \(Universe.all.starTotal) stars, \
             \(levelsHeld) of \(Universe.all.levelTotal) puzzles complete.
-            """)
+            """
         guard daily.completedCount > 0 else { return held }
-        let dailies = String(localized: "\(daily.completedCount) daily puzzles")
-        return held + " " + String(localized: "\(dailies) as well.")
+        return held + " \(counted(daily.completedCount, "daily puzzle")) as well."
+    }
+
+    private func counted(_ number: Int, _ noun: String) -> String {
+        "\(number) \(noun)\(number == 1 ? "" : "s")"
     }
 
     /// What the reminder is going to do, under the hour it is set to. The fortnight is said
@@ -811,18 +808,10 @@ struct SettingsView: View {
     /// game, since it is the one reminder that comes at no particular o'clock — a bought
     /// game never waits for a level, so it is never promised one.
     private var planned: String {
-        // Two whole sentences rather than one with a clause bolted on: a language that
-        // moves the verb cannot have a second half appended to a finished first one.
-        guard !fullGame.isUnlocked else {
-            return String(localized: """
-                A reminder at \(reminder.time.face) on any morning you have not yet finished \
-                the day's puzzle.
-                """)
-        }
-        return String(localized: """
-            A reminder at \(reminder.time.face) on any morning you have not yet finished the \
-            day's puzzle, and one the moment your next free level opens.
-            """)
+        let mornings = "A reminder at \(reminder.time.face) on any morning you have not yet "
+            + "finished the day's puzzle"
+        guard !fullGame.isUnlocked else { return mornings + "." }
+        return mornings + ", and one the moment your next free level opens."
     }
 
     /// The level the free game's clock is holding shut, if there is one, for the reminder

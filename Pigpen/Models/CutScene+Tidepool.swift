@@ -86,15 +86,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .tidepool(.theCove),
-                    caption: String(localized: "Tidepool Cove. Ocean views. Fresh air. Prime waterfront.")
+                    caption: "Tidepool Cove. Ocean views. Fresh air. Prime waterfront."
                 ),
                 Shot(
                     picture: .tidepool(.shellsAndJellyfish),
-                    caption: String(localized: "Seashells add coastal charm. Jellyfish add coastal hazard.")
+                    caption: "Seashells add coastal charm. Jellyfish add coastal hazard."
                 ),
                 Shot(
                     picture: .tidepool(.puttingInAnOffer),
-                    caption: String(localized: "Pig was ready to put in an offer.")
+                    caption: "Pig was ready to put in an offer."
                 )
             ],
             start: start
@@ -115,15 +115,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .tidepool(.theGuestHouse),
-                    caption: String(localized: "Then Pig discovered the property came with a guest house.")
+                    caption: "Then Pig discovered the property came with a guest house."
                 ),
                 Shot(
                     picture: .tidepool(.theCrabsOwnPen),
-                    caption: String(localized: "Give the crab its own pen. Then build Pig's around it.")
+                    caption: "Give the crab its own pen. Then build Pig's around it."
                 ),
                 Shot(
                     picture: .tidepool(.penWithinAPen),
-                    caption: String(localized: "No shared fences. Everyone likes a little privacy.")
+                    caption: "No shared fences. Everyone likes a little privacy."
                 )
             ],
             start: start
@@ -143,15 +143,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .tidepool(.coveHeld),
-                    caption: String(localized: "Beautiful views. Excellent beach access. One too many uninvited guests.")
+                    caption: "Beautiful views. Excellent beach access. One too many uninvited guests."
                 ),
                 Shot(
                     picture: .tidepool(.enoughOfSandAndSurf),
-                    caption: String(localized: "Pig decided he'd had enough of sand, surf, and surprise crustaceans.")
+                    caption: "Pig decided he'd had enough of sand, surf, and surprise crustaceans."
                 ),
                 Shot(
                     picture: .tidepool(.nearTheSlopes),
-                    caption: String(localized: "A cozy place near the slopes sounded hard to beat.")
+                    caption: "A cozy place near the slopes sounded hard to beat."
                 )
             ],
             start: start

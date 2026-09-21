@@ -158,8 +158,7 @@ struct FilmReelView: View {
                             .font(.system(size: 13, weight: .heavy, design: .rounded))
                             .foregroundStyle(GamePalette.post)
 
-                        Text(String(localized: "film.position",
-                                    defaultValue: "\(index + 1) of \(reel.count)"))
+                        Text("\(index + 1) of \(reel.count)")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
                             .foregroundStyle(GamePalette.post.opacity(0.6))
                     }

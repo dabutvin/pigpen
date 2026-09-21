@@ -132,18 +132,18 @@ enum GamePalette {
         /// than as a statistics icon that happens to be stone.
         var landmark: String {
             switch self {
-            case .pasture: String(localized: "the barn")
-            case .woodland: String(localized: "the hollow stump")
-            case .scree: String(localized: "the cairn")
-            case .cobbles: String(localized: "the clocktower")
-            case .dust: String(localized: "the first crater")
-            case .flowstone: String(localized: "the cave mouth")
-            case .sawdust: String(localized: "the big top")
-            case .sand: String(localized: "the rock arch")
-            case .shingle: String(localized: "the wreck")
-            case .snowfield: String(localized: "the igloo")
-            case .marsh: String(localized: "the stilt hut")
-            case .cloudtop: String(localized: "the bridge head")
+            case .pasture: "the barn"
+            case .woodland: "the hollow stump"
+            case .scree: "the cairn"
+            case .cobbles: "the clocktower"
+            case .dust: "the first crater"
+            case .flowstone: "the cave mouth"
+            case .sawdust: "the big top"
+            case .sand: "the rock arch"
+            case .shingle: "the wreck"
+            case .snowfield: "the igloo"
+            case .marsh: "the stilt hut"
+            case .cloudtop: "the bridge head"
             }
         }
     }

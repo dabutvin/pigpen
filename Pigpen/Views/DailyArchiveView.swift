@@ -136,7 +136,7 @@ struct DailyArchiveView: View {
             HStack(spacing: 4) {
                 Image(systemName: "flame.fill")
                     .foregroundStyle(GamePalette.pen)
-                Text(verbatim: "\(progress.streak(upTo: today))")
+                Text("\(progress.streak(upTo: today))")
                     .foregroundStyle(GamePalette.cream)
                     .monospacedDigit()
             }
@@ -172,7 +172,7 @@ struct DailyArchiveView: View {
     /// down for anybody who would rather tap.
     private var monthBar: some View {
         HStack(spacing: 10) {
-            turn(to: month.previous, systemImage: "chevron.left", label: String(localized: "The month before"))
+            turn(to: month.previous, systemImage: "chevron.left", label: "The month before")
 
             VStack(spacing: 1) {
                 Text(month.name)
@@ -189,7 +189,7 @@ struct DailyArchiveView: View {
             .accessibilityElement(children: .combine)
             .accessibilityHint("Swipe left or right on the calendar to change month")
 
-            turn(to: month.next, systemImage: "chevron.right", label: String(localized: "The month after"))
+            turn(to: month.next, systemImage: "chevron.right", label: "The month after")
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
