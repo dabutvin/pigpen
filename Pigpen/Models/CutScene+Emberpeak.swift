@@ -96,15 +96,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .emberpeak(.theSmokingPeak),
-                    caption: "Welcome to Emberpeak. Dramatic views. Naturally heated."
+                    caption: String(localized: "Welcome to Emberpeak. Dramatic views. Naturally heated.")
                 ),
                 Shot(
                     picture: .emberpeak(.coinsAndFlames),
-                    caption: "Turns out the mineral rights have their perks. Open flames are a maintenance concern."
+                    caption: String(localized: "Turns out the mineral rights have their perks. Open flames are a maintenance concern.")
                 ),
                 Shot(
                     picture: .emberpeak(.theViewFromTheRim),
-                    caption: "Pig was willing to overlook a few issues for the right property."
+                    caption: String(localized: "Pig was willing to overlook a few issues for the right property.")
                 )
             ],
             start: start
@@ -126,15 +126,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .emberpeak(.theLocalWildlife),
-                    caption: "The seller had disclosed some local wildlife. They had undersold it."
+                    caption: String(localized: "The seller had disclosed some local wildlife. They had undersold it.")
                 ),
                 Shot(
                     picture: .emberpeak(.notJoiningTheAssociation),
-                    caption: "This neighbor will not be joining the homeowners association."
+                    caption: String(localized: "This neighbor will not be joining the homeowners association.")
                 ),
                 Shot(
                     picture: .emberpeak(.keepTheWyrmOut),
-                    caption: "Fence in Pig. Keep the wyrm out. Very, very out."
+                    caption: String(localized: "Fence in Pig. Keep the wyrm out. Very, very out.")
                 )
             ],
             start: start
@@ -155,15 +155,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .emberpeak(.theMountainHeld),
-                    caption: "The views were excellent. The heating bill was unbeatable."
+                    caption: String(localized: "The views were excellent. The heating bill was unbeatable.")
                 ),
                 Shot(
                     picture: .emberpeak(.theCityBelow),
-                    caption: "Still, Pig wondered if maybe a city had more to offer."
+                    caption: String(localized: "Still, Pig wondered if maybe a city had more to offer.")
                 ),
                 Shot(
                     picture: .emberpeak(.buildingCodes),
-                    caption: "At least cities had building codes. Probably."
+                    caption: String(localized: "At least cities had building codes. Probably.")
                 )
             ],
             start: start

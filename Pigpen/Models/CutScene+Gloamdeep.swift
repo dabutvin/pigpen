@@ -96,15 +96,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .gloamdeep(.theWayDown),
-                    caption: "Gloamdeep Caverns. Solid construction. No street noise. No street, either."
+                    caption: String(localized: "Gloamdeep Caverns. Solid construction. No street noise. No street, either.")
                 ),
                 Shot(
                     picture: .gloamdeep(.mineralRights),
-                    caption: "Excellent mineral rights. Boulders make expansion difficult."
+                    caption: String(localized: "Excellent mineral rights. Boulders make expansion difficult.")
                 ),
                 Shot(
                     picture: .gloamdeep(.limitedNaturalLight),
-                    caption: "Natural light was admittedly limited."
+                    caption: String(localized: "Natural light was admittedly limited.")
                 )
             ],
             start: start
@@ -127,15 +127,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .gloamdeep(.alreadyOccupied),
-                    caption: "The property was already occupied. Twice."
+                    caption: String(localized: "The property was already occupied. Twice.")
                 ),
                 Shot(
                     picture: .gloamdeep(.happyToShare),
-                    caption: "The bats were happy to share. Pig was not."
+                    caption: String(localized: "The bats were happy to share. Pig was not.")
                 ),
                 Shot(
                     picture: .gloamdeep(.noRoommates),
-                    caption: "Pig gets his own pen. Both bats share the other. Pig was absolutely not accepting roommates."
+                    caption: String(localized: "Pig gets his own pen. Both bats share the other. Pig was absolutely not accepting roommates.")
                 )
             ],
             start: start
@@ -155,15 +155,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .gloamdeep(.cavernsHeld),
-                    caption: "Affordable. Quiet. Extremely dark."
+                    caption: String(localized: "Affordable. Quiet. Extremely dark.")
                 ),
                 Shot(
                     picture: .gloamdeep(.betterLighting),
-                    caption: "Then Pig saw somewhere with better lighting."
+                    caption: String(localized: "Then Pig saw somewhere with better lighting.")
                 ),
                 Shot(
                     picture: .gloamdeep(.muchBetterLighting),
-                    caption: "Much, much better lighting."
+                    caption: String(localized: "Much, much better lighting.")
                 )
             ],
             start: start

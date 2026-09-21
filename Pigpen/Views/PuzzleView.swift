@@ -112,7 +112,7 @@ struct PuzzleView: View {
         skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
         chrome: ChromeSkin = .meadow,
-        wayOutTitle: String = "Continue",
+        wayOutTitle: String = String(localized: "Continue"),
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
@@ -146,7 +146,7 @@ struct PuzzleView: View {
         skin: FieldSkin = .meadow,
         day: GamePalette.Pasture = .day,
         chrome: ChromeSkin = .meadow,
-        wayOutTitle: String = "Continue",
+        wayOutTitle: String = String(localized: "Continue"),
         wayOutImage: String = "signpost.right.fill",
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
@@ -175,7 +175,7 @@ struct PuzzleView: View {
     /// What the screen calls whatever it is holding: the pig on every map but the last,
     /// where a stag stands on the other shore.
     private var quarry: String {
-        level.holdsAHerd ? "the animals" : "the \(level.animals[0].kind.name)"
+        level.holdsAHerd ? String(localized: "the animals") : level.animals[0].kind.object
     }
 
     /// How deep the pen's wash goes. Fencing that closes colours the pen in straight away;
@@ -586,11 +586,11 @@ struct PuzzleView: View {
     /// something other than the best.
     private var tallySummary: String {
         guard let holding = game.penTally?.score else {
-            return "Best so far: \(scored(game.bestScore))"
+            return String(localized: "Best so far: \(scored(game.bestScore))")
         }
         return holding >= game.bestScore
-            ? "Your best yet: \(scored(holding))"
-            : "Holding \(holding), best \(game.bestScore)"
+            ? String(localized: "Your best yet: \(scored(holding))")
+            : String(localized: "Holding \(holding), best \(game.bestScore)")
     }
 
     /// One of the small painted glyphs that work the fencing already down. A button with
@@ -668,41 +668,83 @@ struct PuzzleView: View {
     /// it: the two that will not share are in one pen, or the one that had to stay out is in.
     private func refusedHeadline(_ refusal: Refusal) -> String {
         switch refusal {
-        case .together(let animal): "The \(animal.name) wants its own place"
-        case .apart(let animal): "The \(animal.name) will not live alone"
-        case .uneven(let animal): "The \(animal.name) got the smaller place"
-        case .split(let animal): "The \(animal.name) is on its own"
-        case .shutIn(let animal): "The \(animal.name) came with the place"
-        case .beside: "Pig is next door, not around"
-        case .tooClose: "Too close for comfort"
-        case .landlocked(let animal): "No water for the \(animal.name)"
-        case .parched(let animal): "The \(animal.name) is sharing the water"
-        case .spotted: "Pig has no privacy"
+        case .together(let animal):
+            String(localized: "\(animal.subjectCapitalized) wants its own place")
+        case .apart(let animal):
+            String(localized: "\(animal.subjectCapitalized) will not live alone")
+        case .uneven(let animal):
+            String(localized: "\(animal.subjectCapitalized) got the smaller place")
+        case .split(let animal):
+            String(localized: "\(animal.subjectCapitalized) is on its own")
+        case .shutIn(let animal):
+            String(localized: "\(animal.subjectCapitalized) came with the place")
+        case .beside:
+            String(localized: "Pig is next door, not around")
+        case .tooClose:
+            String(localized: "Too close for comfort")
+        case .landlocked(let animal):
+            String(localized: "No water for \(animal.object)")
+        case .parched(let animal):
+            String(localized: "\(animal.subjectCapitalized) is sharing the water")
+        case .spotted:
+            String(localized: "Pig has no privacy")
         }
     }
 
     private func refusedDetail(_ refusal: Refusal) -> String {
         switch refusal {
         case .together(let animal):
-            "Both of them have a place, but it is the same place. The \(animal.name) wants its own."
+            String(localized: """
+                Both of them have a place, but it is the same place. \
+                \(animal.subjectCapitalized) wants its own.
+                """)
         case .apart(let animal):
-            "Both of them have a place, but one each. The \(animal.name) goes where Pig goes."
+            String(localized: """
+                Both of them have a place, but one each. \(animal.subjectCapitalized) goes \
+                where Pig goes.
+                """)
         case .uneven(let animal):
-            "Both of them have a place, but one is bigger. The \(animal.name) wants ground to match Pig's."
+            String(localized: """
+                Both of them have a place, but one is bigger. \(animal.subjectCapitalized) \
+                wants ground to match Pig's.
+                """)
         case .split(let animal):
-            "Everything is held, but the roost is split between two places. The \(animal.name) lives where the other bat lives."
+            String(localized: """
+                Everything is held, but the roost is split between two places. \
+                \(animal.subjectCapitalized) lives where the other bat lives.
+                """)
         case .shutIn(let animal):
-            "Pig has a place, and the \(animal.name) is on it. Leave that one outside the fence."
+            String(localized: """
+                Pig has a place, and \(animal.subject) is on it. Leave that one outside the \
+                fence.
+                """)
         case .beside(let animal):
-            "Both of them have a place, but side by side. Pig's ground has to go the whole way round the \(animal.name) — and it is ground she walks, so she needs a clear path the whole way round, with nothing she cannot cross breaking it."
+            String(localized: """
+                Both of them have a place, but side by side. Pig's ground has to go the whole \
+                way round \(animal.object) — and it is ground she walks, so she needs a clear \
+                path the whole way round, with nothing she cannot cross breaking it.
+                """)
         case .tooClose(let animal):
-            "Both of them have a place, but one wall does for both — and a \(animal.name) stings straight through a fence. Leave clear ground between them."
+            String(localized: """
+                Both of them have a place, but one wall does for both — and \(animal.subject) \
+                stings straight through a fence. Leave clear ground between them.
+                """)
         case .landlocked(let animal):
-            "Both of them have a place, but the \(animal.name)'s never touches the water. He keeps a breathing hole, so his ground has to lie against it."
+            String(localized: """
+                Both of them have a place, but \(animal.subject)'s never touches the water. He \
+                keeps a breathing hole, so his ground has to lie against it.
+                """)
         case .parched(let animal):
-            "Both of them have a place, but no channel is wholly the \(animal.name)'s. Every bank of one channel has to be his own ground — half a wallow is nobody's."
+            String(localized: """
+                Both of them have a place, but no channel is wholly \(animal.subject)'s. Every \
+                bank of one channel has to be his own ground — half a wallow is nobody's.
+                """)
         case .spotted(let animal):
-            "The pen is shut, but the \(animal.name) can see into it. He looks along his row and his column, and only a fence blocks the view — a wall of the pen's own, or one piece planted in his way."
+            String(localized: """
+                The pen is shut, but \(animal.subject) can see into it. He looks along his row \
+                and his column, and only a fence blocks the view — a wall of the pen's own, or \
+                one piece planted in his way.
+                """)
         }
     }
 
@@ -821,18 +863,26 @@ struct PuzzleView: View {
 
     /// Who got out, which on a boss map may be one of the two rather than both.
     private func escapedHeadline(_ escapes: [Escape]) -> String {
-        guard escapes.count == 1 else { return "They both walked out" }
-        return "The \(escapes[0].animal.kind.name) walked out"
+        guard escapes.count == 1 else { return String(localized: "They both walked out") }
+        return String(localized: "\(escapes[0].animal.kind.subjectCapitalized) walked out")
     }
 
     private func escapedDetail(_ escapes: [Escape]) -> String {
         guard escapes.count == 1 else {
-            return "Both of them found a gap and showed themselves out. Follow the trails and close them."
+            return String(localized: """
+                Both of them found a gap and showed themselves out. Follow the trails and \
+                close them.
+                """)
         }
         guard level.holdsAHerd else {
-            return "It found a gap and showed itself out. Follow the trail and close it."
+            return String(localized: """
+                It found a gap and showed itself out. Follow the trail and close it.
+                """)
         }
-        return "It found a gap and showed itself out while the other stayed put — and both of them need a place. Follow the trail and close it."
+        return String(localized: """
+            It found a gap and showed itself out while the other stayed put — and both of them \
+            need a place. Follow the trail and close it.
+            """)
     }
 
     /// What the field makes of a pen that holds, which is a different thing from what it
@@ -842,9 +892,9 @@ struct PuzzleView: View {
     private func pennedHeadline(tally: PenTally) -> String {
         guard !game.isPenAsGoodAsItGets else { return noNotes }
         return switch level.starRating(forScore: tally.score) {
-        case 3: "Now this is a pen worth bragging about"
-        case 2: "A great pen — can you make it bigger?"
-        default: "Good start — can you make the pen bigger?"
+        case 3: String(localized: "Now this is a pen worth bragging about")
+        case 2: String(localized: "A great pen — can you make it bigger?")
+        default: String(localized: "Good start — can you make the pen bigger?")
         }
     }
 
@@ -852,20 +902,19 @@ struct PuzzleView: View {
     /// it. Named the way the field names what it is holding — Pig on all but the map where
     /// somebody else is being fenced in, and the herd where there is more than one of them.
     private var noNotes: String {
-        guard !level.holdsAHerd else { return "The animals have no notes" }
+        guard !level.holdsAHerd else { return String(localized: "The animals have no notes") }
         let name = level.animals[0].kind.name
-        return "\(name.prefix(1).uppercased())\(name.dropFirst()) has no notes"
+        let called = name.prefix(1).uppercased() + name.dropFirst()
+        return String(localized: "\(called) has no notes")
     }
 
     /// A score reads as ground on a map with nothing lying about on it, since that is all
     /// it counts, and as points on one where an apple or a skull is worth more or less than
     /// the tile it sits on.
     private func scored(_ score: Int) -> String {
-        counted(score, level.holdsTreats ? "point" : "mud tile")
-    }
-
-    private func counted(_ number: Int, _ noun: String) -> String {
-        "\(number) \(noun)\(number == 1 ? "" : "s")"
+        level.holdsTreats
+            ? String(localized: "\(score) points")
+            : String(localized: "\(score) mud tiles")
     }
 
     /// The verdict, on a painted board nailed up over the field: the same cream the rack and
