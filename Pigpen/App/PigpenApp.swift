@@ -543,17 +543,23 @@ struct PigpenApp: App {
         case .levelReminder:
             // The same offer, made over the other thing the game reminds anybody of: a
             // player who has taken today's free level in the thicket and has a day to wait
-            // for the next, with no daily held and so no run of days for the sheet to
-            // speak of. The one screen the camera records as well as photographs, since
-            // what is worth seeing is the sheet coming up over the pasture.
+            // for the next. Stood up as that player rather than told to be: the meadow
+            // held and the thicket part-way through, a clock held in memory that is still
+            // running on the next stop, the game unbought, and no daily held — so the
+            // title screen's own rule finds a level to offer over and no run of days to
+            // prefer to it, and the sheet says what it would say to them. The one screen
+            // the camera records as well as photographs, since what is worth seeing is the
+            // sheet coming up over the pasture.
             TitleScreenView(
-                progress: .partWayThrough(),
-                daily: .partWayThroughTheMonth(today: Self.photographed),
+                progress: .atTheWoodlandBarn(),
+                daily: DailyProgress(store: RememberedDailyRecords()),
                 reminder: .neverAsked(),
                 today: Self.photographed,
                 showsReminderPrompt: true,
                 offering: .theNextLevel(in: "Thornwood Thicket"),
-                rating: .neverAsked()
+                fullGame: .locked(),
+                rating: .neverAsked(),
+                ration: .partWayThrough(world: .thornwoodThicket, released: 4)
             )
         case .titleFresh:
             // The title screen with nothing won on it. It takes an argument of its
