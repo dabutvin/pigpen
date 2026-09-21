@@ -641,10 +641,9 @@ extension AnalyticsSignal {
 
     // MARK: Being rated
 
-    /// The game's own question put up — *are you enjoying Pigpen?* — and the high point it was
-    /// put up on. The first of the two steps, and the only one whose showing the game is sure
-    /// of: whether Apple's prompt appears behind a yes is Apple's to decide and nothing on the
-    /// phone will say.
+    /// Apple's own rating prompt asked for, and the high point it was asked for on. Whether
+    /// the player saw anything is Apple's to decide and nothing on the phone will say — so
+    /// this counts the asking, which is the only half the game knows.
     ///
     /// The moment is the whole point of counting it. The game may ask three times a year at
     /// the outside, so which of the three high points is doing the asking says where players
@@ -652,27 +651,6 @@ extension AnalyticsSignal {
     static func ratingAsked(at moment: RatingMoment) -> AnalyticsSignal {
         AnalyticsSignal("Rating.asked", ["moment": moment.rawValue])
     }
-
-    /// What the question got back, and the high point it was asked on.
-    ///
-    /// One signal with two fields rather than three signals of its own, because the number
-    /// worth reading is the split, and a split is only a split when it is one chart. It is
-    /// also the one number that says whether the moments are chosen right: every *not really*
-    /// is a player the game had judged to be at a high point and was about to spend its whole
-    /// year's allowance of prompts on.
-    static func ratingAnswered(_ answer: RatingAnswer, at moment: RatingMoment) -> AnalyticsSignal {
-        AnalyticsSignal(
-            "Rating.answered",
-            ["answer": answer.rawValue, "moment": moment.rawValue],
-            value: answer == .enjoying ? 1 : 0
-        )
-    }
-
-    /// A player who said *not really* and then went on to write in, out of the card that
-    /// offers it. The other half of that branch, and the half that decides whether the branch
-    /// is worth having: an unhappy answer the game hears nothing more about is one it cannot
-    /// act on, and a door nobody opens is a door in the wrong place.
-    static let ratingFeedbackOpened = AnalyticsSignal("Rating.feedbackOpened")
 
     /// The listing opened from behind the gear. A different question from the prompt above:
     /// that one is the game asking, and this is a player who went looking for the box to type
