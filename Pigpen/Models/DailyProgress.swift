@@ -51,6 +51,11 @@ struct DailyDraft: Equatable, Codable, Sendable {
     /// spent on it, and a day left on Wednesday morning and opened again on Wednesday
     /// night has not been played for fourteen hours.
     var clockElapsed: TimeInterval?
+    /// Whether that clock had stopped for good: it was stopped when the board was put
+    /// away, on a day that had already given up the best pen it has in it. There is
+    /// nothing left on the day to be timed for, so it comes back stopped rather than
+    /// counting on. Optional, so a draft written before this was kept reads as running.
+    var clockSettled: Bool?
 
     var fenceTiles: Set<GridPoint> { Set(fences) }
     var bestPenTiles: Set<GridPoint>? { bestPen.map(Set.init) }
@@ -306,6 +311,10 @@ final class DailyProgress {
     /// clock — so hitting back without releasing the animals does not throw the work out.
     /// An empty field with a clock that never started is forgotten rather than kept.
     func saveDraft(from game: PuzzleGame, clock: Stopwatch?, on date: DailyDate) {
+        // A clock stopped on a day that has given up its best pen has had its last word.
+        // One stopped on a lesser pen is only waiting for *Go bigger*, so it picks back up.
+        let isSettled = clock?.hasStarted == true && clock?.isRunning == false
+            && hasTheBestPen(on: date)
         let draft = DailyDraft(
             fences: game.fences.sorted { ($0.row, $0.column) < ($1.row, $1.column) },
             bestPen: game.bestPen.map {
@@ -313,8 +322,10 @@ final class DailyProgress {
             },
             // Banked as a span on the way out. A running clock left as the instant it
             // started would go on counting in the player's pocket, and a stopped one would
-            // come back with no way of ever starting again.
-            clockElapsed: clock?.hasStarted == true ? clock?.elapsed() : nil
+            // come back with no way of ever starting again — which is only wanted once
+            // the day has nothing left in it, and `clockSettled` says when that is.
+            clockElapsed: clock?.hasStarted == true ? clock?.elapsed() : nil,
+            clockSettled: isSettled ? true : nil
         )
 
         guard draft.hasAnythingOnIt else {
@@ -348,11 +359,15 @@ final class DailyProgress {
     /// when it was put away and running on from there, or a fresh clock when the day has
     /// never been timed. Picking a board back up is the same bargain *Go bigger* offers —
     /// the time already spent stands, and what happens next is charged.
+    ///
+    /// A day that has already given up its best pen, put away with its clock stopped,
+    /// comes back on that stopped clock: there is nothing bigger to go after, so there is
+    /// nothing left to charge for. *Start over* is what puts a fresh clock on it.
     func clock(on date: DailyDate) -> Stopwatch {
         guard let draft = draftsByDay[date.id], let spent = draft.clockElapsed else {
             return Stopwatch()
         }
-        return .resuming(spent)
+        return draft.clockSettled == true ? .showing(spent) : .resuming(spent)
     }
 
     /// Forgets a day's unfinished board, leaving the stars and times alone.
