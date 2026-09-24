@@ -54,10 +54,10 @@ extension RatingStanding {
 /// first moment to arrive takes it and the other two are shut out for four months. So a bar
 /// every player clears in their first sitting is a bar that answers for everybody.
 enum RatingMoment: String, CaseIterable, Sendable {
-    /// Every pen in a world held. The biggest thing a player does in this game, and the end of
-    /// the free half of it.
+    /// Every pen in a world held — the second of them, since the first is where the store
+    /// asks. The biggest thing a player does in this game.
     case worldHeld
-    /// The best pen a map has in it, taken — with a few already behind it, since the first
+    /// The best pen a map has in it, taken — with plenty already behind it, since the first
     /// rainbow can come three minutes in on a map that gives one up easily.
     case bestPen
     /// A run of daily boards: somebody who has come back three mornings running has an opinion
@@ -74,10 +74,16 @@ enum RatingMoment: String, CaseIterable, Sendable {
     /// the run is still the thing the player is thinking about, which is the whole point of
     /// asking on it — and it is the one moment a player who only ever plays the dailies can
     /// reach at all.
+    ///
+    /// The world and the rainbows were moved off the end of the meadow. That is the moment the
+    /// store makes its offer, and the counting found the rating prompt landing in the same few
+    /// minutes as the offer and the reminder's, on players who waved most of them away. The
+    /// second world held is a win of the same size with nothing else asked on it; ten rainbows
+    /// is where the second world gets to at two in five.
     var bar: Int {
         switch self {
-        case .worldHeld: 1
-        case .bestPen: 5
+        case .worldHeld: 2
+        case .bestPen: 10
         case .runOfDays: 3
         }
     }
@@ -224,6 +230,9 @@ final class RememberedReviews: ReviewRequester {
 /// - **Never over anything.** The title screen at rest is where it happens, with the puzzle
 ///   finished and the map behind them — never over a board, a film, or the one sheet that
 ///   offers the morning reminder.
+/// - **Never on top of another ask.** A store offer or a reminder offer made this sitting, or
+///   within the hour, keeps it quiet for the visit without spending the moment — see
+///   `AskLedger`.
 ///
 /// Nothing draws this, so unlike the reminder it is not observable: it is asked a question on
 /// the way through the title screen and answers it. And nothing here is game data — clearing
