@@ -17,6 +17,13 @@ struct DailyPuzzleView: View {
     /// draft with a clock already under way takes its own; a screenshot hands one in
     /// already stopped, which cannot photograph something that is still moving.
     var clock = Stopwatch()
+    /// Where the held day's card sends a player on to — the trail they are on — handed in by
+    /// the title screen, which is the screen that knows where Play goes. Nothing from the
+    /// archive, where a held day goes back to the calendar it came from.
+    var onward: WayOnward? = nil
+    /// The second way on from the held day's card: yesterday's board, when there is one to
+    /// play.
+    var yesterday: WayOnward? = nil
 
     var body: some View {
         if let level = DailyAlmanac.level(on: date) {
@@ -27,6 +34,8 @@ struct DailyPuzzleView: View {
                 clock: progress.hasDraft(on: date) ? progress.clock(on: date) : clock,
                 wayOutTitle: "Done",
                 wayOutImage: "checkmark.seal.fill",
+                onward: onward,
+                aside: yesterday,
                 onPenned: { verdict, seconds, fences in
                     progress.record(verdict, seconds: seconds, fences: fences, on: date)
                     // Counted as a day rather than as a level: a daily's board is generated,
@@ -36,6 +45,8 @@ struct DailyPuzzleView: View {
                     // is bringing anybody back.
                     Analytics.record(
                         .dailyHeld(
+                            date,
+                            isToday: date == DailyDate.today(),
                             stars: verdict.stars,
                             score: score(of: fences, on: level),
                             seconds: seconds,

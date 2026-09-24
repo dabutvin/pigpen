@@ -1128,6 +1128,14 @@ A puzzle a day, on its own board, with a clock running on it.
   hour you started it, so a day left in the morning and picked up at night comes back on
   two minutes rather than on fourteen hours. Clearing the game's data forgets those drafts
   with everything else.
+- **A held day points onward.** The daily is what brings players back, and most of those
+  visits used to end half a minute later on the card that said the day was done; the ones
+  that carried on to the trail were the ones that stayed for an hour. So today's card, opened
+  from the title screen, leads with *Continue* and the name of the world Play would carry on
+  in — the meadow, or the furthest world open — over *Done*. A player who owns the archive and
+  has not held yesterday is offered *Yesterday's puzzle* beside it; one who has not bought
+  the game is not, since yesterday is behind the wall for them and a button that opens an
+  offer on the card that just congratulated them is one ask too many.
 - **A held day goes on a postcard.** Once the pen holds, the verdict card offers *Share*,
   and what goes is a picture: a cream card nailed up on the grass with the game's own name
   painted across the top — the same lettering the title screen plants, at a size a card can
@@ -1184,9 +1192,21 @@ because the player said it could.
 - **It asks in its own words first.** A phone shows its permission sheet once and never
   again, so a game that raises it cold spends that one chance on somebody who has not yet
   found out what a daily puzzle is. Pigpen's own offer goes up instead, on the game's own
-  boards, and only after a day has actually been held — at which point there is a run of
-  days to lose and the offer can say what it is. *Not now* asks the phone nothing, schedules
-  nothing, and is never put up a second time.
+  boards, and only after two days have actually been held — at which point there is a habit
+  and a run of days to lose, and the offer can say what it is. It used to go up after the
+  first, in the same few minutes as the store's offer and the rating prompt, and about five
+  in six players said *Not now*. *Not now* asks the phone nothing, schedules nothing, and is
+  never put up a second time.
+- **It keeps clear of the game's other asks.** The store's offer, the reminder's and Apple's
+  rating prompt are written into one ledger (`AskLedger`) as they are made, and the reminder's
+  offer and the rating prompt wait for a sitting with nothing else asked in it and an hour
+  clear of the last ask. The store's offer never waits: it is only raised by a tap on
+  something shut, and that moment is when players buy.
+- **A run of days is days held on time.** A day held out of the archive more than a day after
+  it was the day's board is gold on the calendar but no part of a run — one player went from
+  a run of one to five in an afternoon by filling in the days behind today. A day held the
+  morning after still counts, since a reminder read after midnight opens the board it was
+  posted about.
 - **It is a switch behind the gear like any other.** Whether it reminds you and at what
   hour, so a player who waved the offer away can find it afterwards and one who took it
   can move it to the evening or stop it. The switch is the player's wish and the phone's
@@ -1230,10 +1250,13 @@ because the player said it could.
   never waits, so none of those is reminded about. It is laid down on every return to the
   title screen with the fortnight, and once more as the game is put down, since the level's
   whole life is up a trail the title screen never sees; taking the level, or buying the game,
-  takes the reminder back the next time either happens. The same offer sheet is put up to a
-  player who has taken a free level and never held a day, saying what it is offering in that
-  case, since they too now have something to be reminded about — and the switch behind the
-  gear says the level is promised alongside the mornings, to a player who has not paid.
+  takes the reminder back the next time either happens. It is offered on its own, at the one
+  moment a player has a reason to want it: the wait itself. Tapping a stop still shut on the
+  day raises a sheet headed *Next level in 14 hours*, with *Remind me* at the top of it —
+  the free way on — and *Unlock everything now* under that as the way to skip the wait. It
+  is offered once, never in the same sitting as the offer over the run of days, and the
+  switch behind the gear says the level is promised alongside the mornings, to a player who
+  has not paid.
 - **Tapping it opens the board.** A reminder that puts the player down on the title screen
   with the puzzle still a tap away has spent its one interruption on nothing: they were told
   the day's board is up, they said yes, and the game answered by showing them the front
@@ -1610,18 +1633,19 @@ is filling in Apple's privacy questionnaire.
 | `Level.released` | A level past the meadow handed to a player who has not paid, by the free game's one a day |
 | `World.tollShort` | A player stopped at the top of a world by a boss's toll, and how many stars short |
 | `World.held` | Every pen in a world held |
-| `Daily.opened` / `.held` / `.archiveOpened` | The book of days, and the run of days behind a held one |
+| `Daily.opened` / `.held` / `.archiveOpened` | The book of days, which day it was and whether it was today's, and the run of days behind a held one |
+| `Daily.onward` | Where a player went from a held day's card: on to the trail, or back to yesterday's board |
 | `Daily.postcardOpened` / `.shared` | A held day's postcard held up, and handed to the share sheet — with the fencing on it or without |
 | `Daily.linkFollowed` | A day's address followed into the game and its board opened: the other end of a share |
-| `Reminder.offered` / `.answered` | The reminder offered — over a run of days or a free level a day off — and taken or waved away, with the phone's answer beside the player's |
+| `Reminder.offered` / `.answered` | The reminder offered — over a run of days on the title screen, or a free level at the trail's wait — and taken or waved away (`notNow`, said outright), with what it was about and the phone's answer beside the player's |
 | `Reminder.switched` / `.hourChanged` | The same switch moved later behind the gear, and the hour it was moved to |
-| `Reminder.followed` / `.levelFollowed` | A reminder tapped: a morning's, and the board it opened, or the level's, and the trail |
+| `Reminder.followed` / `.levelFollowed` | A reminder tapped and what it was about: a morning's, and the board it opened, or the level's, and the trail |
 | `Film.played` | A cut scene, and whether it was watched or skipped |
 | `Film.reelOpened` | Every cut scene asked for end to end, from behind the gear |
 | `Settings.opened` / `.dataCleared` / `.soundsSwitched` / `.musicSwitched` / `.hapticsSwitched` / `.analyticsSwitched` | The sheet behind the gear, and its switches — the noises, the music, the buzzing and the counting |
 | `Dressing.opened` / `.outfitWorn` | The dressing barn, which door it was opened through, and what the pig was put in |
 | `Settings.pageOpened` | The support page or the privacy policy opened from behind the gear |
-| `Store.offerShown` / `.purchase` / `.restore` | The offer of the full game, which wall raised it, and how the buying went |
+| `Store.offerShown` / `.purchase` / `.restore` | The offer of the full game, which wall raised it, and how the buying went — and which wall sold it |
 | `Rating.asked` | Apple's own rating prompt asked for, and which high point asked for it |
 | `Rating.pageOpened` | The listing opened from behind the gear by a player who went looking for it |
 
@@ -1696,10 +1720,10 @@ never in its own words.
   yet to be reminded about. The rating prompt may not be dressed up at all, and it is shown
   three times a year at the outside whatever the game does about it.
 - **On a high point.** Three of them, and each is something a player would recognise as having
-  just done rather than a count of launches or an hour on a clock: **a world held**, every pen
-  in it taken; **the best pen a map has in it**, once there are five of those rainbows, since
-  the first can come three minutes in on a map that gives one up easily; and **three daily
-  boards in a row**. A game that asks somebody who is losing what they think of it gets the
+  just done rather than a count of launches or an hour on a clock: **a second world held**,
+  every pen in it taken; **the best pen a map has in it**, once there are ten of those
+  rainbows, since the first can come three minutes in on a map that gives one up easily; and
+  **three daily boards in a row**. A game that asks somebody who is losing what they think of it gets the
   answer it asked for.
   The three are meant to catch three different players — the one working through the worlds,
   the one chasing the perfect pen, the one who comes back each morning — and the bars are the
@@ -1708,11 +1732,15 @@ never in its own words.
   every player clears in their first sitting is a bar that answers for everybody. The numbers
   are what the counting said rather than what seemed right. Two in five pens held are the best
   their map has in it, so three rainbows was reached around the eighth board, inside the free
-  meadow and often on the first day; it is five now. And seven mornings never once arrived
+  meadow and often on the first day. And seven mornings never once arrived
   first in a year of asking — players reach a week and go far past it, out past a hundred, but
   a world or a handful of rainbows always got there before them and spent the ask — so the run
   of days is three, which lands while the run is still the thing the player is thinking about
-  and is the one moment a player who only ever plays the dailies can reach at all.
+  and is the one moment a player who only ever plays the dailies can reach at all. The first
+  world held and five rainbows were the bars until the counting found them landing at the end
+  of the meadow, in the same few minutes as the store's offer and the reminder's; the second
+  world, and the ten rainbows that come with it at two in five, are wins of the same size with
+  nothing else asked on them.
 - **On the moment, not the standing.** The game writes down the three marks every time it
   looks, so a rise is a rise once. Somebody who held the meadow last month is not asked again
   every time they come back to the title screen; somebody who held it on the way to this screen
@@ -1734,7 +1762,9 @@ never in its own words.
   never over the one sheet that offers the morning reminder, which is a question the game gets
   asked once ever and this one is not. A visit with any of that up is left alone entirely rather
   than merely kept quiet, since looking at all would spend the moment on a screen that could not
-  have shown anything.
+  have shown anything. The same goes for a visit in the same sitting as the store's offer or
+  the reminder's, or within the hour of either: the moment is left standing for a quieter
+  visit rather than spent.
 - **And a door that always opens.** None of the above is any use to a player who has decided on
   their own that they have something to say, so behind the gear there is a **Rate Pigpen** card
   that goes straight to the listing with the review sheet open on it. It is not drawn until
@@ -2374,6 +2404,7 @@ Pigpen/
 │   ├── LevelRation.swift        # The free game's one level a day past the meadow: the clock, and the list of what it has handed out
 │   ├── AppStoreStorefront.swift # The App Store on the other end of that purchase, in the one file that sells
 │   ├── RatingPrompt.swift       # When the game asks what a player thinks of it, and how rarely it may
+│   ├── AskLedger.swift          # Every ask the game makes — the store, a reminder, a rating — kept from piling up on one another
 │   ├── AppStoreReviews.swift    # Apple's own rating prompt, and the address of the listing behind it
 │   ├── AppRelease.swift         # Which version and build this is, read out of the bundle in one place
 │   ├── PigOutfit.swift          # The twelve outfits, and where each one hangs on the pig
@@ -2402,7 +2433,7 @@ Pigpen/
 │   ├── Haptics.swift            # Every buzz in the game, and the one switch that stops them
 │   ├── Sounds.swift             # Every noise in the game, named for its moment, and the one switch that stops them
 │   ├── Music.swift              # The waltz under the game: on while the game is up and the switch says so
-│   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once a day has been held
+│   ├── ReminderPromptView.swift # The game's own offer of a daily reminder, put up once two days have been held
 │   ├── WorldMapView.swift       # A world's map: signposts, the walking pig, the trail, its send-off
 │   ├── WorldMapScene.swift      # The meadow the trail runs through
 │   ├── UniverseMapView.swift    # The universe map: planets, boss silhouettes, and the unlock chain

@@ -438,17 +438,28 @@ extension AnalyticsSignal {
     // MARK: The book of days
 
     /// A day's board opened. Whether it was today or one out of the archive is the
-    /// difference between a habit and a browse.
-    static func dailyOpened(isToday: Bool) -> AnalyticsSignal {
-        AnalyticsSignal("Daily.opened", ["today": String(isToday)])
+    /// difference between a habit and a browse — and which day it was, so a chart can tell
+    /// this morning's board from last Tuesday's without trusting the flag alone.
+    static func dailyOpened(_ date: DailyDate, isToday: Bool) -> AnalyticsSignal {
+        AnalyticsSignal("Daily.opened", ["today": String(isToday), "date": date.id])
     }
 
     /// A day held, and the run of days behind it. The streak is what says whether the
-    /// dailies are bringing anybody back.
-    static func dailyHeld(stars: Int, score: Int, seconds: TimeInterval, streak: Int) -> AnalyticsSignal {
+    /// dailies are bringing anybody back. The day held and whether it was today's go with it,
+    /// since a board out of the archive held at lunch is a different thing from the morning's.
+    static func dailyHeld(
+        _ date: DailyDate,
+        isToday: Bool,
+        stars: Int,
+        score: Int,
+        seconds: TimeInterval,
+        streak: Int
+    ) -> AnalyticsSignal {
         AnalyticsSignal(
             "Daily.held",
             [
+                "date": date.id,
+                "today": String(isToday),
                 "stars": String(stars),
                 "score": String(score),
                 "seconds": String(Int(seconds.rounded())),
@@ -456,6 +467,13 @@ extension AnalyticsSignal {
             ],
             value: Double(streak)
         )
+    }
+
+    /// Where a player went from a held day's card, on one of the ways onward it offers: on to
+    /// the trail, or back to yesterday's board. Whether a daily turns into a longer sitting is
+    /// the question those buttons were put there to answer.
+    static func dailyOnward(to destination: String) -> AnalyticsSignal {
+        AnalyticsSignal("Daily.onward", ["to": destination])
     }
 
     static let dailyArchiveOpened = AnalyticsSignal("Daily.archiveOpened")
@@ -487,19 +505,32 @@ extension AnalyticsSignal {
         AnalyticsSignal("Reminder.offered", ["about": offer.counted])
     }
 
-    /// What the offer got back.
+    /// What the offer got back, and which offer it was.
     ///
     /// `allowed` is the phone's answer rather than the player's, and it is the whole reason
     /// this is one signal with two fields instead of two signals. A game gets one go at the
     /// system prompt, and the question worth answering is not *how many said yes* but *how
     /// many said yes and were let through* — the two coming apart is the failure this sheet
     /// exists to prevent, and nothing else on the phone will report it.
-    static func reminderAnswered(taken: Bool, allowed: Bool? = nil) -> AnalyticsSignal {
-        var parameters = ["taken": String(taken)]
-        if let allowed {
-            parameters["allowed"] = String(allowed)
-        }
-        return AnalyticsSignal("Reminder.answered", parameters, value: taken ? 1 : 0)
+    ///
+    /// A *Not now* says so in `answer` rather than leaving `allowed` out, which a chart could
+    /// not tell apart from a signal that lost a field; the phone is never asked on a *Not now*,
+    /// so `allowed` reads `notAsked`.
+    static func reminderAnswered(
+        about kind: ReminderKind,
+        taken: Bool,
+        allowed: Bool? = nil
+    ) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Reminder.answered",
+            [
+                "about": kind.rawValue,
+                "answer": taken ? "yes" : "notNow",
+                "taken": String(taken),
+                "allowed": allowed.map { String($0) } ?? "notAsked"
+            ],
+            value: taken ? 1 : 0
+        )
     }
 
     /// The switch behind the gear, moved after the fact — which is a different question from
@@ -513,14 +544,17 @@ extension AnalyticsSignal {
         return AnalyticsSignal("Reminder.switched", parameters, value: on ? 1 : 0)
     }
 
-    /// A reminder tapped, and the board it opened. Everything above counts who agreed to be
-    /// reminded; this is the only signal that counts who came back because they were, which
-    /// is the only question a morning's interruption has to answer for itself.
-    static let reminderFollowed = AnalyticsSignal("Reminder.followed")
+    /// A reminder tapped, what it was about, and the board or trail it opened. Everything
+    /// above counts who agreed to be reminded; this is the only signal that counts who came
+    /// back because they were, which is the only question an interruption has to answer for
+    /// itself.
+    static func reminderFollowed(about kind: ReminderKind) -> AnalyticsSignal {
+        AnalyticsSignal("Reminder.followed", ["about": kind.rawValue])
+    }
 
-    /// The reminder that the next free level is ready, tapped, and the trail it opened. The
-    /// same question as the morning's, asked of the other reminder the game posts: whether
-    /// telling somebody the day's wait is up brings them back to the trail.
+    /// The reminder that the next free level is ready, tapped, and the trail it opened. Kept
+    /// beside `Reminder.followed` with `about` set to `level`, which counts the same tap, so the
+    /// charts drawn off this name before that one carried it do not stop short.
     static let levelReminderFollowed = AnalyticsSignal("Reminder.levelFollowed")
 
     /// The hour moved off the one the game picked. Charted as the hour alone, since what is
@@ -608,11 +642,17 @@ extension AnalyticsSignal {
         AnalyticsSignal("Store.offerShown", ["from": source])
     }
 
-    /// How a purchase went. `outcome` is one of the endings `PurchaseOutcome` names — bought,
-    /// backed out of, waiting on an approval, or gone wrong — and the funnel from `offerShown`
-    /// to a purchase that unlocked is the one number that says whether the wall is priced right.
-    static func purchaseFinished(outcome: String) -> AnalyticsSignal {
-        AnalyticsSignal("Store.purchase", ["outcome": outcome], value: outcome == "unlocked" ? 1 : 0)
+    /// How a purchase went, and where the offer it was bought from was raised. `outcome` is
+    /// one of the endings `PurchaseOutcome` names — bought, backed out of, waiting on an
+    /// approval, or gone wrong — and the funnel from `offerShown` to a purchase that unlocked
+    /// is the one number that says whether the wall is priced right. `from` is the same word
+    /// `offerShown` carries, so each unlock is tied to the wall that sold it.
+    static func purchaseFinished(outcome: String, from source: String) -> AnalyticsSignal {
+        AnalyticsSignal(
+            "Store.purchase",
+            ["outcome": outcome, "from": source],
+            value: outcome == "unlocked" ? 1 : 0
+        )
     }
 
     /// A restore, and whether it found anything. A restore that finds nothing is a player who

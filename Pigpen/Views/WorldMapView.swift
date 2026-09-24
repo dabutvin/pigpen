@@ -73,6 +73,8 @@ struct WorldMapView: View {
     @State private var isOffering = false
     /// How long that stop had left to wait when it was tapped, for the offer to say back.
     @State private var wait: LevelWait?
+    /// The reminder offered beside that offer, for when the wait is up — see `LevelNudge`.
+    @State private var nudge: LevelNudge?
 
     /// The world this trail belongs to: the look that dresses it, the film that sees it out, and
     /// the briefings it stops for. Held apart from `world` below, which is the trail itself —
@@ -235,7 +237,7 @@ struct WorldMapView: View {
             )
         }
         .sheet(isPresented: $isOffering) {
-            FullGameOffer(fullGame: fullGame, source: .trail, wait: wait)
+            FullGameOffer(fullGame: fullGame, source: .trail, wait: wait, nudge: nudge)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
         }
@@ -562,6 +564,11 @@ struct WorldMapView: View {
             // buying the game does about it, raised on the very stop the player reached for.
             Haptics.tap(.medium)
             wait = LevelWait(until: due, now: now)
+            // The wait is also the moment a reminder for the end of it is worth offering —
+            // the one moment the player has a reason to want it — so the offer carries one.
+            nudge = ration
+                .nextLevelWaiting(stars: progress.bestStars, isBought: fullGame.isUnlocked, now: now)
+                .map { LevelNudge(reminder: .shared, daily: DailyProgress(), level: $0) }
             Analytics.record(.offerShown(from: FullGameOfferSource.trail.rawValue))
             isOffering = true
             return
