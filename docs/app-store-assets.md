@@ -23,7 +23,8 @@ Run the **App Store Assets** workflow from the Actions tab (it is hand-cranked �
 It:
 
 1. builds the app and boots a 6.9″ iPhone and a 13″ iPad simulator, status bar
-   set to 9:41 on a fixed date, full wifi, a full battery and no cellular;
+   set to 9:41, full wifi, a full battery and no cellular (an iPad's date beside
+   the clock is the runner's own);
 2. shoots the seven screens the live listing has, in its order — Clocktower
    Square part way through, Smoulder Ridge's best pen, the gate left open, Stag
    Mere's two pens, the universe map, the daily archive and the Great Floe's best

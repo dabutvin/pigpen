@@ -122,15 +122,18 @@ jobs:
 
           # The status bar the listing wears: 9:41, full wifi and a full battery with no
           # charging bolt on it, and no cellular — the simulator has no carrier to show.
-          # The time is handed over as a whole date so an iPad, which prints the date
-          # beside the clock, shows the same day every run rather than the runner's.
+          # (An iPad prints the date beside the clock, and that stays the runner's.)
           dress_status_bar() {
-            local udid="$1"
-            local common=(--batteryState discharging --batteryLevel 100
-              --wifiMode active --wifiBars 3 --cellularMode notSupported)
-            xcrun simctl status_bar "$udid" override --time "2026-09-08T09:41:00Z" "${common[@]}" 2>/dev/null \
-              || xcrun simctl status_bar "$udid" override --time "9:41" "${common[@]}" 2>/dev/null \
-              || true
+            xcrun simctl status_bar "$1" override --time "9:41" \
+              --batteryState discharging --batteryLevel 100 \
+              --wifiMode active --wifiBars 3 --cellularMode notSupported 2>/dev/null || true
+          }
+
+          # Whether a screenshot came out a single flat colour — the app caught before it
+          # had drawn anything, which a slow launch on the iPad does now and then. Only the
+          # middle of the shot is looked at, since the status bar is drawn either way.
+          blank() {
+            python3 -c "import sys; from PIL import Image; i = Image.open(sys.argv[1]).convert('L'); w, h = i.size; lo, hi = i.crop((w // 5, h // 5, w * 4 // 5, h * 4 // 5)).getextrema(); sys.exit(0 if hi - lo < 8 else 1)" "$1"
           }
 
           shoot() {
@@ -147,10 +150,17 @@ jobs:
               local slug="${entry%%:*}"; local rest="${entry#*:}"
               local arg="${rest%%:*}"; local caption="${rest#*:}"
               local raw="out/$label/raw/${slug}.png"
-              xcrun simctl launch "$udid" "$BUNDLE_ID" "$arg"
-              sleep 3
-              xcrun simctl io "$udid" screenshot "$raw"
-              xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
+              # Three goes at it, each given longer to draw, before a blank shot is let
+              # through to fail the run below rather than land on the listing.
+              for wait in 3 6 10; do
+                xcrun simctl launch "$udid" "$BUNDLE_ID" "$arg"
+                sleep "$wait"
+                xcrun simctl io "$udid" screenshot "$raw"
+                xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
+                blank "$raw" || break
+                echo "WARNING: $label $slug came out blank after ${wait}s; shooting it again"
+              done
+              if blank "$raw"; then echo "ERROR: $label $slug is still blank"; exit 1; fi
               python3 Tools/appstore_frames.py \
                 --input "$raw" \
                 --output "$(printf 'out/%s/framed/%02d_%s.png' "$label" "$order" "$slug")" \

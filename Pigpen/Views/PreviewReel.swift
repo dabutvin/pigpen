@@ -15,8 +15,9 @@ struct PreviewReel: View {
     @State private var game = PuzzleGame(level: .windfallOrchard)
 
     /// How long the untouched board is held before the first piece goes in, which is also
-    /// the slack the recording has to start in.
-    static let opening: Duration = .seconds(3)
+    /// the slack the recording has to start in — an iPad simulator can take three seconds
+    /// or more to start recording, and the film should still open on a bare board there.
+    static let opening: Duration = .seconds(5)
     /// The gap between one piece and the next: slow enough to follow, quick enough that
     /// twelve of them leave room in thirty seconds for the pig.
     static let perPiece: Duration = .milliseconds(850)
