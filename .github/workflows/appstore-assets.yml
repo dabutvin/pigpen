@@ -29,7 +29,10 @@ jobs:
   assets:
     name: Capture App Store Assets
     runs-on: macos-26
-    timeout-minutes: 40
+    # Two devices' worth of screens, a retake for any that come out blank, and a
+    # 35-second recording on each: a slow runner has taken 38 minutes to get through
+    # the capture alone.
+    timeout-minutes: 60
 
     steps:
       - name: Checkout

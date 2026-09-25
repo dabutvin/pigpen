@@ -30,8 +30,9 @@ struct PreviewReel: View {
     /// The still first board held before the film proper starts: slack the workflow cuts
     /// off, so the recording never has to catch the app's launch exactly.
     static let preRoll: Duration = .seconds(4)
-    /// The gap between one tap and the next — a player who knows where the wall goes.
-    static let perPiece: Duration = .milliseconds(370)
+    /// The gap in seconds between one tap and the next — a player who knows where the
+    /// wall goes.
+    static let perPiece = 0.37
     /// How long the film proper runs, which is what the workflow cuts it to.
     static let length: Duration = .seconds(20)
     /// What the reel prints, followed by the time since 1970 in seconds, the moment the
@@ -99,33 +100,46 @@ struct PreviewReel: View {
     private func play() async {
         // The floe's pen, held still until the film starts, then let go into.
         await wait(Self.preRoll)
+        let start = ContinuousClock.now
         markTheStart()
+        // Every beat is set against the film's own start rather than after the one
+        // before it, so a slow simulator can make a beat late but never makes the rest
+        // of the film later with it. The times are the listing's preview, beat for beat.
+        func at(_ seconds: Double) async {
+            try? await Task.sleep(until: start + .milliseconds(Int(seconds * 1000)), clock: .continuous)
+        }
         game.openTheGate()
-        await wait(.seconds(2))
 
         // The orchard, laid from bare mud.
+        await at(2.0)
         cut(to: .orchard, PuzzleGame(level: .windfallOrchard))
-        await wait(.milliseconds(300))
-        await lay(Self.orchardPieces)
-        await wait(.milliseconds(300))
+        for (i, tile) in Self.orchardPieces.enumerated() {
+            await at(2.3 + Double(i) * Self.perPiece)
+            lay(tile)
+        }
+        await at(6.7)
         game.openTheGate()
-        await wait(.milliseconds(1300))
 
         // The ridge, finished off.
+        await at(8.0)
         cut(to: .smoulder, Self.bestPen(.theSmoulderRidgesBestPen(), leaving: Self.smoulderLastPieces))
-        await wait(.milliseconds(300))
-        await lay(Self.smoulderLastPieces)
-        await wait(.milliseconds(200))
+        for (i, tile) in Self.smoulderLastPieces.enumerated() {
+            await at(8.3 + Double(i) * Self.perPiece)
+            lay(tile)
+        }
+        await at(9.3)
         game.openTheGate()
-        await wait(.milliseconds(1300))
 
         // The floe, finished off, held, and cleared for the loop.
+        await at(11.0)
         cut(to: .floe, Self.bestPen(.theGreatFloesBestPen(), leaving: Self.floeLastPieces))
-        await wait(.milliseconds(300))
-        await lay(Self.floeLastPieces)
-        await wait(.milliseconds(300))
+        for (i, tile) in Self.floeLastPieces.enumerated() {
+            await at(11.3 + Double(i) * Self.perPiece)
+            lay(tile)
+        }
+        await at(12.4)
         game.openTheGate()
-        await wait(.milliseconds(4800))
+        await at(17.5)
         game.startOver()
     }
 
@@ -141,16 +155,13 @@ struct PreviewReel: View {
         board = next
     }
 
-    private func lay(_ pieces: [GridPoint]) async {
-        for tile in pieces {
-            game.beginStroke()
-            if game.buildFence(on: tile) {
-                Haptics.tap(.rigid)
-                Sounds.play(.fenceIn)
-            }
-            game.endStroke()
-            await wait(Self.perPiece)
+    private func lay(_ tile: GridPoint) {
+        game.beginStroke()
+        if game.buildFence(on: tile) {
+            Haptics.tap(.rigid)
+            Sounds.play(.fenceIn)
         }
+        game.endStroke()
     }
 
     private func wait(_ duration: Duration) async {
