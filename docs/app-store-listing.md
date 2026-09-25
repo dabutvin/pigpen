@@ -1,7 +1,8 @@
 # The App Store listing
 
 Every word the store asks for, written down here so filling in App Store Connect is
-transcription rather than composition. Each field fits its limit as written — the limits are
+transcription rather than composition. The live listing is the source of truth: when it is
+changed in App Store Connect, the change is copied back here, not the other way round. Each field fits its limit as written — the limits are
 noted so an edit here knows what it is editing against. Screenshots come from the **App Store
 Assets** workflow ([app-store-assets.md](app-store-assets.md)); the URLs and the checklist
 that goes with all of this are in the README under *Before a submission*.
@@ -10,73 +11,91 @@ that goes with all of this are in the README under *Before a submission*.
 
 | Field | Value | Limit |
 | --- | --- | --- |
-| Name | `Pigpen` | 30 |
-| Subtitle | `A cozy puzzle about a pig` | 30 |
+| Name | `Pigpen - Build the perfect pen` | 30 |
+| Subtitle | `A cozy fence puzzle adventure` | 30 |
 | Primary category | Games → Puzzle | |
 | Secondary category | Games → Board | |
 | Privacy Policy URL | `https://pigpen.app/privacy.html` | |
 | Content rights | Does not contain third-party content | |
 
-Short names get taken: if `Pigpen` alone is refused, `Pigpen — Pen the Pig` (21) says the
-same thing and keeps the word a player would search for at the front.
+The name is at the limit to the character: `Pigpen` alone keeps the word a player searches
+for at the front, and the rest says what the game is before the subtitle gets a word in.
 
 ## The version page
 
 **Promotional text** — the one field that can change without a new build, so it carries the
-seasonal line if there ever is one. 170 characters; this is 150:
+seasonal line if there ever is one. 170 characters; this is 150. The store's web page does not
+show it, so it is the one field here not checked against the live listing:
 
 > A cozy puzzle about a pig and some fences. Twelve worlds, a boss at the end of
 > each, and a new board every morning. No ads, no account — just the pig.
 
-**Description** — 4,000 characters allowed, and deliberately nowhere near it: only the first
-few lines show before the fold, so the hook does the selling and everything after it earns
-its line or goes. What earns one: how it plays, how much game there is, and what is free and
-what the one purchase opens — said plainly, since a paywall a player did not see coming is
-what one-star reviews are made of. The cut scenes, the privacy talk and the rest of the
-game's furniture live better in the screenshots, the promotional text's six words and the
-policy page than in prose here:
+**Description** — 4,000 characters allowed, and nowhere near it: only the first few lines
+show before the fold, so the hook does the selling. As it stands on the listing:
 
-> You get a grid, a pig, and a strict number of fence pieces. Pen the pig in — and pen in as
-> much mud as you can while you are at it.
+> Pig needs a bigger pen. You need a good puzzle.
 >
-> The pig walks up, down, left and right, never diagonally. Tap a tile to wall it off; press
-> and drag to lay a whole run. When you let the pig go it tries every route it has, and one
-> gap that reaches the edge of the map is an escape.
+> Pigpen is a daily puzzle game about building the biggest pen you can with a limited number
+> of fence pieces.
 >
-> Holding the pig is only half of it. A pen is scored on the ground it shuts in: water walls
-> a pen for free, an apple inside is worth five tiles, a skull costs five. Your best pen is
-> kept the moment it closes, and finding the best pen a map has in it turns the ground
-> rainbow.
+> Each puzzle gives you a new board, a set number of fences, and one simple goal: use every
+> piece and enclose as much space as possible. Tap to place fences, plan your route, and
+> watch out for obstacles, bonuses, and other surprises along the way.
 >
-> Twelve worlds, nine puzzles each — 108 in all, every one solvable with the pieces it gives
-> you — and a boss at the end of every world that stands a second animal on the field and
-> changes a rule. Past those, a new puzzle every morning: the same board for everybody, with
-> an archive that keeps every day so far.
+> The rules are simple. Finding the best solution is not.
 >
-> Free to start: the download holds the whole first world and today's daily puzzle, and every
-> world after the first opens one new level a day. One purchase opens every level at once and
-> every day, for good — a single one-time payment, no subscription.
+> Play a new puzzle every day, build your streak, and see if you can earn all three stars.
+> Then keep exploring new worlds, each with its own layouts, challenges, and twists.
+>
+> • A fresh puzzle every day
+> • Quick, satisfying puzzles that are easy to learn
+> • Streaks to keep you coming back
+> • Three-star challenges for better solutions
+> • New worlds with unique boards and mechanics
+> • A small pig with very big pen ambitions
+>
+> How big can you build?
+
+(Line breaks inside a paragraph above are only this file's wrapping — each paragraph is one
+line in App Store Connect.)
 
 **Keywords** — 100 characters, commas and all; this is 86. The name and subtitle are already
-searched, so `pigpen`, `cozy` and `puzzle` are not spent again here:
+searched, so `pigpen`, `cozy` and `puzzle` are not spent again here. Like the promotional
+text, the store never shows these, so they are as written here rather than as checked:
 
 ```
 pig,puzzle,logic,cozy,daily,brain,fence,farm,grid,relax,casual,pen,animal,board,teaser
 ```
 
 **What's New** — one entry per shipped version, newest first, each written to be read by a
-player deciding whether to update:
+player deciding whether to update. As the listing's version history has them:
 
-For 1.1.0:
+For 1.4:
 
-> Pigpen's first update gives the words a polish:
+> Improved Pigpen notifications!
 >
-> • The story films between worlds have been rewritten — the same tale, better told.
-> • The tutorial explains the game more clearly, so new players get penning faster.
-> • Your morning reminder now has a hundred different lines, and picks a fresh one
->   every day.
+> Make it easier to get to the next free level unlock and other fixes and improvements
+> throughout.
+
+For 1.3:
+
+> You can now share your daily puzzle wins with your friends!
 >
-> Happy penning! 🐷
+> Also added a few more outfits for Pig to wear, some stats hidden in the map, and a round of
+> improvements and fixes throughout.
+
+For 1.2:
+
+> Pigpen has sound now! If you'd rather play in quiet, the sound and haptics switches are
+> right at the top of Settings.
+>
+> There's also a new dressing barn in the meadow with 10 accessories for Pig to wear!
+>
+> Elsewhere, a round of improvements and minor fixes.
+
+For 1.1:
+
+> All new story cut scenes and improvements to the user interface.
 
 For 1.0.0:
 
@@ -119,7 +138,7 @@ submitted alongside it leaves the map selling a thing the store has never heard 
 | Reference name | `Full Game` | 64 |
 | Product ID | `com.pigpen.app.fullgame` | |
 | Price | $3.99 (USD tier; let the store set the others) | |
-| Family Sharing | Off | |
+| Family Sharing | On (the listing carries the *Supports Family Sharing* badge) | |
 | Display name | `The Full Game` | 30 |
 | Description | `Every world and every day, yours for good.` | 45 |
 
