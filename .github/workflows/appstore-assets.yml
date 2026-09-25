@@ -176,22 +176,27 @@ jobs:
           # the live listing's twenty-second film, played by the app on a fixed clock
           # after four seconds held still on its first board. The recorder is started
           # before the launch, since it can take seconds to get going, and stopped well
-          # after the film ends. The reel prints the moment its film starts; the cut is
-          # measured back from the moment the recorder was stopped, both on this Mac's
-          # clock, so neither the recorder's start nor the app's launch has to be timed.
-          # ffmpeg brings the cut to the store's size for the device, a steady 30 fps,
-          # and a silent stereo track, which App Store Connect asks for.
+          # after the film ends. The recorder says "Recording started" the moment its
+          # first frame is taken, and the reel prints the moment its film starts; both
+          # are stamped on this Mac's clock, and the cut is the gap between them. (Not
+          # measured back from the stop: the recorder only writes a frame when the
+          # screen changes, so a still ending leaves the file shorter than the wait.)
+          # ffmpeg brings the cut to the store's size for the device, a steady 30 fps
+          # (holding the last frame if the still ending left the file short), and a
+          # silent stereo track, which App Store Connect asks for.
           record() {
             local label="$1" udid="$2" size="$3"
             local dir="$PWD/out/$label/preview"
             mkdir -p "$dir"
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
-            xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" &
+            # Every line the recorder says, stamped with the time it said it.
+            xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" \
+              > >(python3 -u -c 'import sys, time
+          for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
             local recorder=$!
             sleep 3
             xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" -preview
             sleep 32
-            local stopped; stopped=$(python3 -c 'import time; print(time.time())')
             kill -INT "$recorder"
             wait "$recorder" || true
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
@@ -200,14 +205,18 @@ jobs:
             if [ -z "$started" ]; then
               echo "ERROR: the reel never said when its film started"; cat "$dir/app.log" || true; exit 1
             fi
-            local back; back=$(python3 -c "print(round($stopped - $started, 3))")
-            echo "$label: the film starts ${back}s before the end of the recording"
+            local recording; recording=$(awk '/Recording started/ { print $1; exit }' "$dir/recorder.log" || true)
+            if [ -z "$recording" ]; then
+              echo "ERROR: the recorder never said it had started"; cat "$dir/recorder.log" || true; exit 1
+            fi
+            local into; into=$(python3 -c "print(round($started - $recording, 3))")
+            echo "$label: the film starts ${into}s into the recording"
 
             ffmpeg -hide_banner -loglevel error -y \
-              -sseof "-$back" -i "$dir/raw.mov" \
+              -ss "$into" -i "$dir/raw.mov" \
               -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
               -map 0:v:0 -map 1:a:0 -t 20 -shortest \
-              -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30" \
+              -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30,tpad=stop_mode=clone:stop_duration=20" \
               -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p \
               -b:v 10M -maxrate 12M -bufsize 20M \
               -c:a aac -b:a 256k -ar 44100 -ac 2 \

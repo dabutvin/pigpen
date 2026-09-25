@@ -86,10 +86,11 @@ fixed clock (`Pigpen/Views/PreviewReel.swift`). Like the one on the listing, it 
 | 11–20 s | The Great Floe with three left, finished, let go, the verdict card, then *Start over* back to the bare floe the film loops into |
 
 `xcrun simctl io … recordVideo` is started before the launch and stopped well after
-the film ends. The reel prints the moment its film starts (`PREVIEW_REEL_START`,
-caught with `simctl launch --stdout`), and the 20 seconds are cut from there,
-measured back from when the recorder was stopped, so neither a slow recorder nor a
-slow launch can move the cut. ffmpeg brings the cut to what App Store Connect
+the film ends. The recorder says "Recording started" when its first frame is taken,
+and the reel prints the moment its film starts (`PREVIEW_REEL_START`, caught with
+`simctl launch --stdout`). Both are stamped on the same clock and the 20 seconds
+are cut from the gap between them, so neither a slow recorder nor a slow launch
+can move the cut. ffmpeg brings the cut to what App Store Connect
 takes:
 
 | Set | Preview size (px) | File |
