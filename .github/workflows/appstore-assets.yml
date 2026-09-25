@@ -76,16 +76,18 @@ jobs:
           APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
           if [ -z "$APP_PATH" ]; then echo "ERROR: no .app built"; exit 1; fi
 
-          # The five screens the store leads with, each with the line of copy it
+          # The seven screens the store leads with, each with the line of copy it
           # carries. Kept here, in the order they will sit on the listing, so the
-          # story a browser reads is set in one place: what it is, playing it, how
-          # much of it there is, the daily, and the chase.
+          # story a browser reads is set in one place: the boards a player will see,
+          # the moment the meadow opens, the whole map, the daily, and the city.
           SCREENS=(
-            "title:-title-fresh:A cozy pig puzzle"
-            "board:-orchard:Build the pig a home"
+            "floe:-floe:Every board has one right answer"
+            "smoulder:-embers:Twelve worlds, twelve grounds"
+            "stag:-boss:Bosses want two pens at once"
+            "gate:-opening-gate:Then someone left the gate open"
             "universe:-universe:A whole universe to solve"
-            "daily:-archive:A new puzzle every day"
-            "stars:-boss:Chase every last star"
+            "daily:-archive:One new puzzle every morning"
+            "clocktower:-pies:Fence the biggest pen you can"
           )
 
           # Pick the first simulator on offer whose name matches one we want, and
