@@ -175,30 +175,36 @@ jobs:
           # preview only as a recording of the app. `-preview` opens PreviewReel.swift:
           # the live listing's twenty-second film, played by the app on a fixed clock
           # after four seconds held still on its first board. The recorder is started
-          # before the launch, since it can take seconds to get going, and stopped a
-          # fixed time after it; the film is then cut counting back from that stop, so
-          # however late the recorder started, the cut lands on the reel's own clock.
-          # ffmpeg brings it to the store's size for the device, a steady 30 fps, and a
-          # silent stereo track, which App Store Connect asks for.
-          #
-          # The reel is up about a second after launch, so the film runs from launch+5
-          # to launch+25; stopping at launch+26.5 puts its start 21.5 s before the end.
+          # before the launch, since it can take seconds to get going, and stopped well
+          # after the film ends. The reel prints the moment its film starts; the cut is
+          # measured back from the moment the recorder was stopped, both on this Mac's
+          # clock, so neither the recorder's start nor the app's launch has to be timed.
+          # ffmpeg brings the cut to the store's size for the device, a steady 30 fps,
+          # and a silent stereo track, which App Store Connect asks for.
           record() {
             local label="$1" udid="$2" size="$3"
-            local dir="out/$label/preview"
+            local dir="$PWD/out/$label/preview"
             mkdir -p "$dir"
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
             xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" &
             local recorder=$!
             sleep 3
-            xcrun simctl launch "$udid" "$BUNDLE_ID" -preview
-            sleep 26.5
+            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" -preview
+            sleep 32
+            local stopped; stopped=$(python3 -c 'import time; print(time.time())')
             kill -INT "$recorder"
             wait "$recorder" || true
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
 
+            local started; started=$(awk '/PREVIEW_REEL_START/ { print $2; exit }' "$dir/app.log" || true)
+            if [ -z "$started" ]; then
+              echo "ERROR: the reel never said when its film started"; cat "$dir/app.log" || true; exit 1
+            fi
+            local back; back=$(python3 -c "print(round($stopped - $started, 3))")
+            echo "$label: the film starts ${back}s before the end of the recording"
+
             ffmpeg -hide_banner -loglevel error -y \
-              -sseof -21.5 -i "$dir/raw.mov" \
+              -sseof "-$back" -i "$dir/raw.mov" \
               -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
               -map 0:v:0 -map 1:a:0 -t 20 -shortest \
               -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30" \

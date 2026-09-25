@@ -15,8 +15,9 @@ import SwiftUI
 ///    over*, which leaves the bare floe the film loops back to the top of.
 ///
 /// Every beat is on a fixed clock, so the same film comes out of every run. The reel opens
-/// with `preRoll` held still on the first board, which is slack for the app to launch and
-/// the recording to settle; the workflow cuts the film to the twenty seconds after it.
+/// with `preRoll` held still on the first board, which is slack for the recording to
+/// settle, and when the film proper starts it prints the moment to standard output
+/// (`startMark`), which the workflow reads to cut the recording to the twenty seconds after.
 struct PreviewReel: View {
     /// The boards the film cuts between, in the order it shows them.
     enum Board: Hashable {
@@ -33,6 +34,9 @@ struct PreviewReel: View {
     static let perPiece: Duration = .milliseconds(370)
     /// How long the film proper runs, which is what the workflow cuts it to.
     static let length: Duration = .seconds(20)
+    /// What the reel prints, followed by the time since 1970 in seconds, the moment the
+    /// film proper starts. The workflow finds this line in the app's standard output.
+    static let startMark = "PREVIEW_REEL_START"
 
     /// The orchard's best pen in the order a player lays it: down the west side, along
     /// the foot, and back up the east. The same twelve pieces
@@ -95,6 +99,7 @@ struct PreviewReel: View {
     private func play() async {
         // The floe's pen, held still until the film starts, then let go into.
         await wait(Self.preRoll)
+        markTheStart()
         game.openTheGate()
         await wait(.seconds(2))
 
@@ -122,6 +127,13 @@ struct PreviewReel: View {
         game.openTheGate()
         await wait(.milliseconds(4800))
         game.startOver()
+    }
+
+    /// Says when the film proper starts. Written straight to the file descriptor rather
+    /// than through `print`, which buffers when standard output is not a terminal.
+    private func markTheStart() {
+        let line = "\(Self.startMark) \(Date().timeIntervalSince1970)\n"
+        FileHandle.standardOutput.write(Data(line.utf8))
     }
 
     private func cut(to next: Board, _ nextGame: PuzzleGame) {
