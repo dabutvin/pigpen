@@ -218,6 +218,7 @@ struct PigpenApp: App {
         case reminder = "-reminder"
         case titleFresh = "-title-fresh"
         case title = "-title"
+        case preview = "-preview"
     }
 
     /// Every argument there is: the films above, and every screen beside them. The whole list
@@ -329,9 +330,10 @@ struct PigpenApp: App {
         case .embers:
             // A mountain board: the coin and the flame stand where the apple and
             // the skull would, the same +5 and -5 dressed for the peak, on ash with
-            // cinder still going in it and a tarn steaming where a mere would be.
+            // cinder still going in it and a tarn steaming where a mere would be. Its best
+            // pen is standing, the ground gone rainbow, as the store listing shows it.
             PuzzleView(
-                level: .smoulderRidge,
+                game: .theSmoulderRidgesBestPen(),
                 treatSkin: WorldTheme.emberpeak.treats,
                 skin: WorldTheme.emberpeak.field,
                 day: .emberDay,
@@ -340,9 +342,10 @@ struct PigpenApp: App {
         case .pies:
             // A city board: the pizza and the trash can stand where the apple and the
             // skull would, the same +5 and -5 dressed for the streets, on paving,
-            // with a canal for water and wrought iron for fencing.
+            // with a canal for water and wrought iron for fencing — nine pieces of it
+            // down, as the store listing shows it, so there is iron on the board to see.
             PuzzleView(
-                level: .clocktowerSquare,
+                game: .clocktowerSquarePartWayThrough(),
                 treatSkin: WorldTheme.cogsworth.treats,
                 skin: WorldTheme.cogsworth.field,
                 day: .cityDay,
@@ -351,14 +354,19 @@ struct PigpenApp: App {
         case .floe:
             // A tundra board: the ski and the ice slick stand where the apple and
             // the skull would, the same +5 and -5 dressed for the ice, on packed
-            // snow with dark water where a mere would be.
+            // snow with dark water where a mere would be. Its best pen is standing, as
+            // on the store listing, which opens on this board.
             PuzzleView(
-                level: .theGreatFloe,
+                game: .theGreatFloesBestPen(),
                 treatSkin: WorldTheme.frostwhiskerTundra.treats,
                 skin: WorldTheme.frostwhiskerTundra.field,
                 day: .frostDay,
                 chrome: WorldTheme.frostwhiskerTundra.chrome
             )
+        case .preview:
+            // Not a still: the orchard playing itself, recorded by the App Store Assets
+            // workflow as the listing's preview video.
+            PreviewReel()
         case .map:
             WorldMapView(progress: .partWayThrough())
         case .toll:

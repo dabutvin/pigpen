@@ -402,6 +402,69 @@ extension PuzzleGame {
         return game
     }
 
+    /// Smoulder Ridge with the best pen the mountain's widest board has in it standing:
+    /// sixteen pieces leaning on the tarn, two coins shut in and the flame at the south
+    /// gate left out. It is how the store listing shows the peak — the ground gone rainbow,
+    /// which an untouched board has no way to show.
+    static func theSmoulderRidgesBestPen() -> PuzzleGame {
+        let game = PuzzleGame(level: .smoulderRidge)
+        game.build("""
+            ..........
+            ..........
+            ..........
+            ......#...
+            .#.....#..
+            #.......#.
+            #........#
+            .#.......#
+            ..#.#...#.
+            ...#.#.#..
+            ......#...
+            """)
+        return game
+    }
+
+    /// The Great Floe with its best pen standing: the fourteen pieces that join the ends of
+    /// the two ridges into the lozenge they already imply, both skis inside it. The store
+    /// listing opens on the tundra, and on this pen.
+    static func theGreatFloesBestPen() -> PuzzleGame {
+        let game = PuzzleGame(level: .theGreatFloe)
+        game.build("""
+            ......#.....
+            .....#......
+            ....#.......
+            ...#........
+            ..#.........
+            .#.........#
+            ...........#
+            ..........#.
+            .........#..
+            ........#...
+            .....#.#....
+            ......#.....
+            """)
+        return game
+    }
+
+    /// Clocktower Square with the east and south of its best wall laid — nine of the
+    /// seventeen pieces — and the pen still open round the pig. It is the board a player
+    /// is half way through, the way the store listing shows the city.
+    static func clocktowerSquarePartWayThrough() -> PuzzleGame {
+        let game = PuzzleGame(level: .clocktowerSquare)
+        game.build("""
+            .....#...
+            ......#..
+            .......#.
+            ........#
+            ........#
+            .......#.
+            ......#..
+            ....##...
+            .........
+            """)
+        return game
+    }
+
     /// A daily puzzle with the south-west of its wall laid and the pen still open.
     ///
     /// The screenshots are taken on one fixed day of the almanac, and an untouched field
