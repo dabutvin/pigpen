@@ -364,8 +364,8 @@ struct PigpenApp: App {
                 chrome: WorldTheme.frostwhiskerTundra.chrome
             )
         case .preview:
-            // Not a still: the orchard playing itself, recorded by the App Store Assets
-            // workflow as the listing's preview video.
+            // Not a still: the listing's preview video played by the app — three boards
+            // laid and let go — recorded by the App Store Assets workflow.
             PreviewReel()
         case .map:
             WorldMapView(progress: .partWayThrough())

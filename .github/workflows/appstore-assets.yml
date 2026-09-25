@@ -172,30 +172,35 @@ jobs:
           }
 
           # The preview video, recorded rather than rendered, since Apple takes a
-          # preview only as a recording of the app. `-preview` opens Windfall Orchard
-          # playing itself on a fixed clock (PreviewReel.swift): a still board, the best
-          # pen laid a piece at a time, and the pig let go into it. The recording starts
-          # once the board is up, so the app's launch is never in it, and runs past the
-          # verdict card; ffmpeg then brings it to the store's size for the device, a
-          # steady 30 fps, and a silent stereo track, which App Store Connect asks for.
+          # preview only as a recording of the app. `-preview` opens PreviewReel.swift:
+          # the live listing's twenty-second film, played by the app on a fixed clock
+          # after four seconds held still on its first board. The recorder is started
+          # before the launch, since it can take seconds to get going, and stopped a
+          # fixed time after it; the film is then cut counting back from that stop, so
+          # however late the recorder started, the cut lands on the reel's own clock.
+          # ffmpeg brings it to the store's size for the device, a steady 30 fps, and a
+          # silent stereo track, which App Store Connect asks for.
+          #
+          # The reel is up about a second after launch, so the film runs from launch+5
+          # to launch+25; stopping at launch+26.5 puts its start 21.5 s before the end.
           record() {
             local label="$1" udid="$2" size="$3"
             local dir="out/$label/preview"
             mkdir -p "$dir"
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
-            xcrun simctl launch "$udid" "$BUNDLE_ID" -preview
-            sleep 1.5
             xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" &
             local recorder=$!
-            sleep 26
+            sleep 3
+            xcrun simctl launch "$udid" "$BUNDLE_ID" -preview
+            sleep 26.5
             kill -INT "$recorder"
             wait "$recorder" || true
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
 
             ffmpeg -hide_banner -loglevel error -y \
-              -i "$dir/raw.mov" \
+              -sseof -21.5 -i "$dir/raw.mov" \
               -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
-              -map 0:v:0 -map 1:a:0 -t 25 -shortest \
+              -map 0:v:0 -map 1:a:0 -t 20 -shortest \
               -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30" \
               -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p \
               -b:v 10M -maxrate 12M -bufsize 20M \
