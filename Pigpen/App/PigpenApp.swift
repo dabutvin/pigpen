@@ -195,6 +195,7 @@ struct PigpenApp: App {
         case truffles = "-truffles"
         case embers = "-embers"
         case pies = "-pies"
+        case floe = "-floe"
         case map = "-map"
         case toll = "-toll"
         case record = "-record"
@@ -346,6 +347,17 @@ struct PigpenApp: App {
                 skin: WorldTheme.cogsworth.field,
                 day: .cityDay,
                 chrome: WorldTheme.cogsworth.chrome
+            )
+        case .floe:
+            // A tundra board: the ski and the ice slick stand where the apple and
+            // the skull would, the same +5 and -5 dressed for the ice, on packed
+            // snow with dark water where a mere would be.
+            PuzzleView(
+                level: .theGreatFloe,
+                treatSkin: WorldTheme.frostwhiskerTundra.treats,
+                skin: WorldTheme.frostwhiskerTundra.field,
+                day: .frostDay,
+                chrome: WorldTheme.frostwhiskerTundra.chrome
             )
         case .map:
             WorldMapView(progress: .partWayThrough())
