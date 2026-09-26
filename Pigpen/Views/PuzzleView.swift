@@ -33,6 +33,13 @@ struct PuzzleView: View {
     /// day is finished and the title is what sits behind it.
     private let wayOutTitle: String
     private let wayOutImage: String
+    /// Somewhere to carry on to from a held pen, offered as the card's main button above the
+    /// way back — a held day's road on to the trail. Nothing for a board with nowhere onward
+    /// to go, which leaves the way back as the main button, as it always was.
+    private let onward: WayOnward?
+    /// A second way on, set beside the way back rather than over it — a held day's road back
+    /// to yesterday's board.
+    private let aside: WayOnward?
     /// How this world dresses its windfall and hazard, handed on to the field. Meadow levels,
     /// dailies and the tutorial keep the apple and the skull; a themed world passes its own.
     private let treatSkin: TreatSkin
@@ -114,6 +121,8 @@ struct PuzzleView: View {
         chrome: ChromeSkin = .meadow,
         wayOutTitle: String = String(localized: "Continue"),
         wayOutImage: String = "signpost.right.fill",
+        onward: WayOnward? = nil,
+        aside: WayOnward? = nil,
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
@@ -129,6 +138,8 @@ struct PuzzleView: View {
             chrome: chrome,
             wayOutTitle: wayOutTitle,
             wayOutImage: wayOutImage,
+            onward: onward,
+            aside: aside,
             trail: trail,
             wardrobe: wardrobe,
             onPenned: onPenned,
@@ -148,6 +159,8 @@ struct PuzzleView: View {
         chrome: ChromeSkin = .meadow,
         wayOutTitle: String = String(localized: "Continue"),
         wayOutImage: String = "signpost.right.fill",
+        onward: WayOnward? = nil,
+        aside: WayOnward? = nil,
         trail: (world: String, stop: Int)? = nil,
         wardrobe: PigWardrobe = .shared,
         onPenned: ((PenVerdict, TimeInterval, Set<GridPoint>) -> Void)? = nil,
@@ -163,6 +176,8 @@ struct PuzzleView: View {
         self.chrome = chrome
         self.wayOutTitle = wayOutTitle
         self.wayOutImage = wayOutImage
+        self.onward = onward
+        self.aside = aside
         self.trail = trail
         self.wardrobe = wardrobe
         _game = State(initialValue: game)
@@ -778,15 +793,57 @@ struct PuzzleView: View {
                     stayingStacked
                 }
 
-                // And the way out on a line of its own, the width of the card. It is the
-                // one thing on here that ends the go, so nothing shares its line.
-                Button { dismiss() } label: {
-                    Label(wayOutTitle, systemImage: wayOutImage)
-                        .frame(maxWidth: .infinity)
+                // Somewhere to carry on to, when the board has somewhere: the card's main
+                // button, the width of the card, since it is the thing most worth doing next.
+                if let onward {
+                    Button { onward.action() } label: {
+                        Label(onward.title, systemImage: "signpost.right.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .buttonStyle(.borderedProminent)
+
+                // And the way out, the width of the card when it is the only way on, and
+                // sharing its line with the second way on when there is one.
+                if let aside {
+                    ViewThatFits(in: .horizontal) {
+                        HStack(spacing: 10) {
+                            asideButton(aside)
+                            wayOut
+                        }
+                        VStack(spacing: 10) {
+                            asideButton(aside)
+                            wayOut
+                        }
+                    }
+                } else {
+                    wayOut
+                }
             }
         }
+    }
+
+    /// The button that leaves the board: prominent when it is the main thing the card offers,
+    /// and a plain one under a way onward that has taken that place.
+    @ViewBuilder
+    private var wayOut: some View {
+        let button = Button { dismiss() } label: {
+            Label(wayOutTitle, systemImage: wayOutImage)
+                .frame(maxWidth: .infinity)
+        }
+        if onward == nil {
+            button.buttonStyle(.borderedProminent)
+        } else {
+            button.buttonStyle(.bordered)
+        }
+    }
+
+    private func asideButton(_ aside: WayOnward) -> some View {
+        Button { aside.action() } label: {
+            Label(aside.title, systemImage: "calendar")
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
     }
 
     /// The ways to stay: start the field again, go back out for more ground, and tell
@@ -1361,4 +1418,10 @@ private struct StopwatchFace: View {
             )
         }
     }
+}
+
+/// Somewhere a held board's card can send the player next, and what its button says.
+struct WayOnward {
+    let title: String
+    let action: () -> Void
 }

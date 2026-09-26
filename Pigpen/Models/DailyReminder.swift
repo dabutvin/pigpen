@@ -140,22 +140,38 @@ struct ScheduledReminder: Hashable, Sendable, Identifiable {
     }
 }
 
+/// Which of the two things the game reminds about a reminder, an offer or a tap is about,
+/// in the one word the counting files it under.
+enum ReminderKind: String, Sendable {
+    /// The morning's board, and the run of days it keeps going.
+    case streak
+    /// The free game's next level, the moment the day's wait on it is up.
+    case level
+}
+
 /// What the game's own offer of a reminder is made over, which is what it says when it goes
 /// up: a run of days to keep, or a level a day away.
+///
+/// The two are offered apart, at different moments, and each once. The run of days is offered
+/// on the title screen once a player has held a couple of days and has a habit worth keeping;
+/// the level is offered up the trail, at the moment the free game's wait is the thing in front
+/// of them.
 enum ReminderOffer: Equatable, Sendable {
-    /// The player has held a daily puzzle, and so has a run of days to lose by forgetting.
+    /// The player has held daily puzzles, and so has a run of days to lose by forgetting.
     case theStreak
     /// The player has taken today's free level past the meadow, and the next is a day off —
     /// in the world named.
     case theNextLevel(in: String)
 
-    /// The one word the counting files it under.
-    var counted: String {
+    var kind: ReminderKind {
         switch self {
-        case .theStreak: "streak"
-        case .theNextLevel: "level"
+        case .theStreak: .streak
+        case .theNextLevel: .level
         }
     }
+
+    /// The one word the counting files it under.
+    var counted: String { kind.rawValue }
 }
 
 /// Where the player's mind on being reminded is kept: whether they want reminding, what hour
@@ -175,6 +191,10 @@ protocol ReminderStore {
     /// change their mind, not a sheet that keeps coming back.
     func loadHasBeenOffered() -> Bool
     func save(hasBeenOffered: Bool)
+    /// The same for the offer made at the free game's wait, which is its own ask at its own
+    /// moment: a player who said *Not now* to the run of days may well want the level.
+    func loadHasOfferedTheLevel() -> Bool
+    func save(hasOfferedTheLevel: Bool)
 }
 
 /// The real thing: an hour chosen on Tuesday is still the hour on Wednesday.
@@ -182,6 +202,7 @@ struct StoredReminderSettings: ReminderStore {
     private static let isOnKey = "pigpen.reminder-on"
     private static let timeKey = "pigpen.reminder-time"
     private static let offeredKey = "pigpen.reminder-offered"
+    private static let levelOfferedKey = "pigpen.reminder-level-offered"
     private let defaults: UserDefaults
 
     init(defaults: UserDefaults = .standard) {
@@ -204,6 +225,12 @@ struct StoredReminderSettings: ReminderStore {
     func loadHasBeenOffered() -> Bool { defaults.bool(forKey: Self.offeredKey) }
 
     func save(hasBeenOffered: Bool) { defaults.set(hasBeenOffered, forKey: Self.offeredKey) }
+
+    func loadHasOfferedTheLevel() -> Bool { defaults.bool(forKey: Self.levelOfferedKey) }
+
+    func save(hasOfferedTheLevel: Bool) {
+        defaults.set(hasOfferedTheLevel, forKey: Self.levelOfferedKey)
+    }
 }
 
 /// A setting that forgets itself the moment it is put down.
@@ -211,11 +238,18 @@ final class RememberedReminderSettings: ReminderStore {
     private var isOn: Bool
     private var time: ReminderTime
     private var hasBeenOffered: Bool
+    private var hasOfferedTheLevel: Bool
 
-    init(isOn: Bool = false, time: ReminderTime = .morning, hasBeenOffered: Bool = false) {
+    init(
+        isOn: Bool = false,
+        time: ReminderTime = .morning,
+        hasBeenOffered: Bool = false,
+        hasOfferedTheLevel: Bool = false
+    ) {
         self.isOn = isOn
         self.time = time
         self.hasBeenOffered = hasBeenOffered
+        self.hasOfferedTheLevel = hasOfferedTheLevel
     }
 
     func loadIsOn() -> Bool { isOn }
@@ -224,6 +258,8 @@ final class RememberedReminderSettings: ReminderStore {
     func save(time: ReminderTime) { self.time = time }
     func loadHasBeenOffered() -> Bool { hasBeenOffered }
     func save(hasBeenOffered: Bool) { self.hasBeenOffered = hasBeenOffered }
+    func loadHasOfferedTheLevel() -> Bool { hasOfferedTheLevel }
+    func save(hasOfferedTheLevel: Bool) { self.hasOfferedTheLevel = hasOfferedTheLevel }
 }
 
 /// The daily reminder: whether the game says anything when a new board goes up, at what
@@ -243,6 +279,12 @@ final class RememberedReminderSettings: ReminderStore {
 @MainActor
 @Observable
 final class DailyReminder {
+    /// The one the game itself reminds through. Shared rather than made by each screen that
+    /// needs it, because two of them read the same settings once and then drift: the title
+    /// screen's copy, left thinking the switch was off after the trail turned it on, would
+    /// take every reminder down again on the way back.
+    static let shared = DailyReminder()
+
     /// How far ahead the reminders are laid. Long enough that a player who does not open the
     /// game for a week is still reminded every morning of it, short enough to sit well
     /// inside the sixty-four pending notifications a phone will hold for one app.
@@ -261,8 +303,10 @@ final class DailyReminder {
     private(set) var time: ReminderTime
     /// Where the phone stands on letting this game post anything at all.
     private(set) var standing: ReminderStanding
-    /// Whether the offer has been put up once already.
+    /// Whether the offer over the run of days has been put up once already.
     private(set) var hasBeenOffered: Bool
+    /// Whether the offer over the next free level has been put up once already.
+    private(set) var hasOfferedTheLevel: Bool
 
     @ObservationIgnored private let store: any ReminderStore
     @ObservationIgnored private let scheduler: any ReminderScheduler
@@ -282,8 +326,14 @@ final class DailyReminder {
         self.isOn = store.loadIsOn()
         self.time = store.loadTime()
         self.hasBeenOffered = store.loadHasBeenOffered()
+        self.hasOfferedTheLevel = store.loadHasOfferedTheLevel()
         self.standing = standing
     }
+
+    /// How many days a player has to have held before the run of days is worth offering to
+    /// remind them about. One day is not yet a habit: the counting found a player who held
+    /// four mornings before saying yes, and then tapped two reminders in two days.
+    static let daysBeforeTheStreakOffer = 2
 
     // MARK: - Where things stand
 
@@ -292,6 +342,21 @@ final class DailyReminder {
     /// them — is left alone, and finds the switch behind the gear when they want it.
     var isDueAnOffer: Bool {
         !hasBeenOffered && standing == .notAsked
+    }
+
+    /// The same question about the offer made at the free game's wait. Its own flag, since it
+    /// is its own ask — but the phone's answer covers both, so a phone that has been asked
+    /// already, either way, is asked nothing more.
+    var isDueALevelOffer: Bool {
+        !hasOfferedTheLevel && standing == .notAsked
+    }
+
+    /// Whether an offer over a given thing is due.
+    func isDue(_ offer: ReminderOffer) -> Bool {
+        switch offer.kind {
+        case .streak: isDueAnOffer
+        case .level: isDueALevelOffer
+        }
     }
 
     /// Whether the player wants reminding and the phone is refusing to pass it on. The one
@@ -366,6 +431,21 @@ final class DailyReminder {
         guard !hasBeenOffered else { return }
         hasBeenOffered = true
         store.save(hasBeenOffered: true)
+    }
+
+    /// Notes that the offer over the next free level has been put up.
+    func markLevelOffered() {
+        guard !hasOfferedTheLevel else { return }
+        hasOfferedTheLevel = true
+        store.save(hasOfferedTheLevel: true)
+    }
+
+    /// Notes that an offer over a given thing has been put up.
+    func markOffered(_ offer: ReminderOffer) {
+        switch offer.kind {
+        case .streak: markOffered()
+        case .level: markLevelOffered()
+        }
     }
 
     // MARK: - Laying the reminders down

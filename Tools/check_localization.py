@@ -29,7 +29,7 @@ from pathlib import Path
 
 # The languages the game ships in. A catalog with a language not on this list, or
 # missing one that is, is a mistake in one place or the other.
-LANGUAGES = ["de", "en", "es", "fr", "it", "ja", "pt-BR"]
+LANGUAGES = ["de", "en", "es", "fr", "it", "ja", "pt-BR", "ru"]
 SOURCE_LANGUAGE = "en"
 
 # Where a localizable literal can appear. SwiftUI localises a bare literal handed to

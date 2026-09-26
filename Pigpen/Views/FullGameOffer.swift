@@ -40,6 +40,24 @@ struct FullGameOffer: View {
     /// the wall they walked into. Said on the first perk, so the offer answers the thing the
     /// player just met: the wait, and the fact that buying the game ends it.
     var wait: LevelWait? = nil
+    /// The offer of a reminder for when the wait is up, made on the same sheet as the offer to
+    /// end it: see `LevelNudge`. Nothing everywhere but the wait up a trail.
+    var nudge: LevelNudge? = nil
+    /// Every ask the game has made lately. The store's own offer is written into it, so the
+    /// others know to keep clear; the reminder offered here reads it to stay clear of them.
+    var asks: AskLedger = .shared
+
+    /// Where the reminder offered at the wait has got to, while this sheet is up.
+    @State private var nudging: Nudging = .notShown
+
+    private enum Nudging: Equatable {
+        /// Not offered here: not the wait, or not due, or too soon after another ask.
+        case notShown
+        /// Up, and not yet answered.
+        case offered
+        /// Taken, and what the phone said to it.
+        case taken(allowed: Bool)
+    }
 
     /// What the last purchase or restore had to say for itself, once it has said anything —
     /// a pending ask, a restore that found nothing, or something gone wrong. Held so the
@@ -82,11 +100,19 @@ struct FullGameOffer: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
         }
+        .onAppear { asks.note(.store) }
         .task {
             // The price is usually in hand by the time the sheet opens — the game asks for it
             // at launch — but a first run that reaches the wall quickly might beat it here, so
             // ask again rather than show a button with no price on it.
             if fullGame.price == nil { await fullGame.reconcile() }
+        }
+        .task { await offerTheNudgeIfItIsDue() }
+        // A reminder offered and left unanswered is a *Not now*: the sheet has no button that
+        // says so, since closing it says so.
+        .onDisappear {
+            guard nudging == .offered else { return }
+            Analytics.record(.reminderAnswered(about: .level, taken: false))
         }
         // Closes on the unlock however it arrived: bought here, restored here, or an approval
         // the store was holding that came through while this was up.
@@ -104,6 +130,9 @@ struct FullGameOffer: View {
     /// one. There is only one thing being sold here, so there is one card.
     private var offer: some View {
         card {
+            if nudging != .notShown {
+                nudgeRow
+            }
             pitch
             buy
         }
@@ -117,7 +146,7 @@ struct FullGameOffer: View {
     /// a title is read.
     private var header: some View {
         HStack(spacing: 12) {
-            Text("Unlock the full game")
+            Text(headline)
                 .font(.title3.weight(.heavy))
                 .foregroundStyle(GamePalette.post)
                 .fixedSize(horizontal: false, vertical: true)
@@ -174,14 +203,22 @@ struct FullGameOffer: View {
         )
     }
 
+    /// What the sheet is called. At the wait up a trail it says when the next level opens
+    /// before it says anything about money, so the wall reads as progress — the next level is
+    /// coming — with the purchase as the way to skip the wait rather than the only way on.
+    private var headline: String {
+        if let wait { return String(localized: "Next level in \(wait.spoken)") }
+        return String(localized: "Unlock the full game")
+    }
+
     /// What the first perk says. The free game already reaches every world, one level a day,
     /// so what the money buys there is the waiting taken away — and a player who has just been
-    /// told how long the wait is has that said back to them, with the way round it.
+    /// told how long the wait is, in the title, has the way round it said back to them.
     private var everyLevel: String {
-        if let wait {
+        if wait != nil {
             return String(localized: """
-                Your next free level opens in \(wait.spoken). Unlock the full game and there \
-                is no waiting — every level in every world, today.
+                Or skip the wait: unlock the full game and every level in every world is open \
+                today.
                 """)
         }
         return String(localized: """
@@ -278,10 +315,104 @@ struct FullGameOffer: View {
     /// is still on its way.
     private var buyTitle: String {
         if fullGame.isWorking { return String(localized: "One moment…") }
-        if let price = fullGame.price {
-            return String(localized: "Unlock the full game · \(price)")
+        if wait == nil {
+            if let price = fullGame.price {
+                return String(localized: "Unlock the full game · \(price)")
+            }
+            return String(localized: "Unlock the full game")
         }
-        return String(localized: "Unlock the full game")
+        if let price = fullGame.price {
+            return String(localized: "Unlock everything now · \(price)")
+        }
+        return String(localized: "Unlock everything now")
+    }
+
+    // MARK: - The reminder at the wait
+
+    /// The offer of a reminder when the wait is up, at the top of the card: the free way on,
+    /// before the paid one.
+    @ViewBuilder
+    private var nudgeRow: some View {
+        HStack(alignment: .center, spacing: 12) {
+            Image(systemName: "bell.badge.fill")
+                .font(.system(size: 17, weight: .black))
+                .foregroundStyle(GamePalette.clay)
+                .frame(width: 34, height: 34)
+                .background(Circle().fill(GamePalette.clay.opacity(0.14)))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(nudgeTitle)
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(GamePalette.post)
+                if let detail = nudgeDetail {
+                    Text(detail)
+                        .font(.caption2)
+                        .foregroundStyle(GamePalette.post.opacity(0.6))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Spacer(minLength: 0)
+
+            if nudging == .offered {
+                Button {
+                    Task { await takeTheNudge() }
+                } label: {
+                    Text("Remind me")
+                        .font(.footnote.weight(.heavy))
+                }
+                .buttonStyle(.bordered)
+                .tint(GamePalette.clay)
+            }
+        }
+        .padding(.bottom, 12)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var nudgeTitle: String {
+        switch nudging {
+        case .taken(allowed: true): String(localized: "We'll nudge you when it opens")
+        case .taken(allowed: false): String(localized: "Notifications are off for Pigpen")
+        default: String(localized: "Want a nudge when your next level opens?")
+        }
+    }
+
+    private var nudgeDetail: String? {
+        switch nudging {
+        case .taken(allowed: false):
+            String(localized: "Turn them on in the Settings app to be reminded.")
+        case .taken(allowed: true):
+            nil
+        default:
+            nudge.map {
+                String(localized: "Pig will let you know the moment \($0.level.worldName) has another level.")
+            }
+        }
+    }
+
+    /// Puts the reminder's offer up if this is the wait, the offer is due, and the game has
+    /// not just asked something else. Marked as made the moment it shows, whatever comes of
+    /// it, the same as the offer on the title screen: it is made once.
+    private func offerTheNudgeIfItIsDue() async {
+        guard let nudge, wait != nil else { return }
+        await nudge.reminder.readTheStanding()
+        guard nudge.reminder.isDueALevelOffer,
+              !asks.wasRecent(.reminder),
+              !asks.isCrowded(for: .reminder, alongside: [.store])
+        else { return }
+        nudge.reminder.markLevelOffered()
+        asks.note(.reminder)
+        Analytics.record(.reminderOffered(about: .theNextLevel(in: nudge.level.worldName)))
+        nudging = .offered
+    }
+
+    private func takeTheNudge() async {
+        guard let nudge else { return }
+        Haptics.tap(.light)
+        Sounds.play(.press)
+        let allowed = await nudge.reminder.turnOn(progress: nudge.daily, nextLevel: nudge.level)
+        Analytics.record(.reminderAnswered(about: .level, taken: true, allowed: allowed))
+        nudging = .taken(allowed: allowed)
     }
 
     private func words(for note: Note) -> String {
@@ -333,7 +464,7 @@ struct FullGameOffer: View {
         Sounds.play(.press)
         note = nil
         let outcome = await fullGame.buy()
-        Analytics.record(.purchaseFinished(outcome: outcome.word))
+        Analytics.record(.purchaseFinished(outcome: outcome.word, from: source.rawValue))
         switch outcome {
         case .unlocked:
             // The onChange on `isUnlocked` closes the sheet and the world behind it is open;
@@ -364,6 +495,15 @@ struct FullGameOffer: View {
             note = .nothingToRestore
         }
     }
+}
+
+/// What the offer at the free game's wait needs to offer a reminder beside it: the reminder
+/// itself, the book of days its mornings are laid down against, and the level it would be
+/// reminding about.
+struct LevelNudge {
+    let reminder: DailyReminder
+    let daily: DailyProgress
+    let level: NextLevel
 }
 
 extension PurchaseOutcome {

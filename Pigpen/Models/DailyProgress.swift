@@ -31,6 +31,14 @@ protocol DailyRecordStore {
     /// keeps the day as it was.
     func loadDrafts() -> [String: DailyDraft]
     func save(drafts: [String: DailyDraft])
+    /// The days that were first held late — more than a day after they were the day's board,
+    /// out of the archive — keyed the same way. They are complete, and gold on the calendar,
+    /// but they are not part of a run of days: see `DailyProgress.streak(upTo:)`.
+    ///
+    /// Kept as the late ones rather than the ones held on time so that every day held before
+    /// this was kept reads as on time, which is what the run always counted them as.
+    func loadLateDays() -> Set<String>
+    func save(lateDays: Set<String>)
     func erase()
 }
 
@@ -51,6 +59,11 @@ struct DailyDraft: Equatable, Codable, Sendable {
     /// spent on it, and a day left on Wednesday morning and opened again on Wednesday
     /// night has not been played for fourteen hours.
     var clockElapsed: TimeInterval?
+    /// Whether that clock had stopped for good: it was stopped when the board was put
+    /// away, on a day that had already given up the best pen it has in it. There is
+    /// nothing left on the day to be timed for, so it comes back stopped rather than
+    /// counting on. Optional, so a draft written before this was kept reads as running.
+    var clockSettled: Bool?
 
     var fenceTiles: Set<GridPoint> { Set(fences) }
     var bestPenTiles: Set<GridPoint>? { bestPen.map(Set.init) }
@@ -70,6 +83,7 @@ struct StoredDailyRecords: DailyRecordStore {
     private static let bestPensKey = "pigpen.daily-best-pens"
     private static let submittedPensKey = "pigpen.daily-submitted-pens"
     private static let draftsKey = "pigpen.daily-drafts"
+    private static let lateDaysKey = "pigpen.daily-late-days"
     private let defaults: UserDefaults
 
     init(defaults: UserDefaults = .standard) {
@@ -118,7 +132,16 @@ struct StoredDailyRecords: DailyRecordStore {
         defaults.set(data, forKey: Self.draftsKey)
     }
 
+    func loadLateDays() -> Set<String> {
+        Set(defaults.stringArray(forKey: Self.lateDaysKey) ?? [])
+    }
+
+    func save(lateDays: Set<String>) {
+        defaults.set(Array(lateDays), forKey: Self.lateDaysKey)
+    }
+
     func erase() {
+        defaults.removeObject(forKey: Self.lateDaysKey)
         defaults.removeObject(forKey: Self.starsKey)
         defaults.removeObject(forKey: Self.timesKey)
         defaults.removeObject(forKey: Self.bestPensKey)
@@ -134,19 +157,22 @@ final class RememberedDailyRecords: DailyRecordStore {
     private var bestPens: Set<String>
     private var submittedPens: [String: [String]]
     private var drafts: [String: DailyDraft]
+    private var lateDays: Set<String>
 
     init(
         stars: [String: Int] = [:],
         times: [String: Int] = [:],
         bestPens: Set<String> = [],
         submittedPens: [String: [String]] = [:],
-        drafts: [String: DailyDraft] = [:]
+        drafts: [String: DailyDraft] = [:],
+        lateDays: Set<String> = []
     ) {
         self.stars = stars
         self.times = times
         self.bestPens = bestPens
         self.submittedPens = submittedPens
         self.drafts = drafts
+        self.lateDays = lateDays
     }
 
     func loadStars() -> [String: Int] { stars }
@@ -159,8 +185,11 @@ final class RememberedDailyRecords: DailyRecordStore {
     func save(submittedPens: [String: [String]]) { self.submittedPens = submittedPens }
     func loadDrafts() -> [String: DailyDraft] { drafts }
     func save(drafts: [String: DailyDraft]) { self.drafts = drafts }
+    func loadLateDays() -> Set<String> { lateDays }
+    func save(lateDays: Set<String>) { self.lateDays = lateDays }
 
     func erase() {
+        lateDays = []
         stars = [:]
         times = [:]
         bestPens = []
@@ -185,6 +214,8 @@ final class DailyProgress {
     /// writes a day down.
     private(set) var submittedPensByDay: [String: [String]]
     private(set) var draftsByDay: [String: DailyDraft]
+    /// The days first held more than a day late, which a run of days does not count.
+    private(set) var lateDays: Set<String>
     @ObservationIgnored private let store: any DailyRecordStore
 
     init(store: any DailyRecordStore = StoredDailyRecords()) {
@@ -194,6 +225,7 @@ final class DailyProgress {
         self.bestPens = store.loadBestPens()
         self.submittedPensByDay = store.loadSubmittedPens()
         self.draftsByDay = store.loadDrafts()
+        self.lateDays = store.loadLateDays()
     }
 
     /// The best stars a day has ever given up, and 0 for one nobody has finished.
@@ -232,14 +264,26 @@ final class DailyProgress {
         month.days.filter { isComplete($0) }.count
     }
 
+    /// Whether a day is part of a run: held, and held while it was still the day's board or
+    /// the morning after — not dug out of the archive a week later.
+    func countsTowardTheRun(_ date: DailyDate) -> Bool {
+        isComplete(date) && !lateDays.contains(date.id)
+    }
+
     /// How many days in a row are complete, counting back from today. A day still to be
     /// played does not break the run — the run simply has not been added to yet — so a
     /// player who has not had their go this morning still sees yesterday's streak.
+    ///
+    /// Only days held on time count. A run of days is the promise of coming back each
+    /// morning, and the archive used to let a player keep it without doing so: one player
+    /// went from a run of one to a run of five in a single afternoon by filling in the four
+    /// days behind today. A day held the morning after still counts, since a reminder read
+    /// after midnight opens the board it was posted about.
     func streak(upTo today: DailyDate) -> Int {
-        var day = isComplete(today) ? today : today.dayBefore
+        var day = countsTowardTheRun(today) ? today : today.dayBefore
         var run = 0
         // A run cannot be longer than the book it is counted out of.
-        while isComplete(day), run <= starsByDay.count {
+        while countsTowardTheRun(day), run <= starsByDay.count {
             run += 1
             day = day.dayBefore
         }
@@ -250,13 +294,23 @@ final class DailyProgress {
     /// so a slower or worse second attempt costs nothing — the same bargain the meadow's
     /// signposts offer. The fencing of the best pen is kept with them, so the wall can be
     /// put back when the day is opened again.
+    ///
+    /// - Parameter heldOn: The day the phone is standing on as the pen holds, which is what
+    ///   says whether the day was held on time: see `streak(upTo:)`. Only a day's first hold
+    ///   is judged, so going back to better a day held on time never takes it off the run.
     func record(
         _ verdict: PenVerdict,
         seconds: TimeInterval,
         fences: Set<GridPoint>,
-        on date: DailyDate
+        on date: DailyDate,
+        heldOn: DailyDate = .today()
     ) {
         guard verdict.stars > 0 else { return }
+
+        if !isComplete(date), date.dayAfter < heldOn {
+            lateDays.insert(date.id)
+            store.save(lateDays: lateDays)
+        }
 
         if verdict.stars > stars(on: date) {
             starsByDay[date.id] = verdict.stars
@@ -306,6 +360,10 @@ final class DailyProgress {
     /// clock — so hitting back without releasing the animals does not throw the work out.
     /// An empty field with a clock that never started is forgotten rather than kept.
     func saveDraft(from game: PuzzleGame, clock: Stopwatch?, on date: DailyDate) {
+        // A clock stopped on a day that has given up its best pen has had its last word.
+        // One stopped on a lesser pen is only waiting for *Go bigger*, so it picks back up.
+        let isSettled = clock?.hasStarted == true && clock?.isRunning == false
+            && hasTheBestPen(on: date)
         let draft = DailyDraft(
             fences: game.fences.sorted { ($0.row, $0.column) < ($1.row, $1.column) },
             bestPen: game.bestPen.map {
@@ -313,8 +371,10 @@ final class DailyProgress {
             },
             // Banked as a span on the way out. A running clock left as the instant it
             // started would go on counting in the player's pocket, and a stopped one would
-            // come back with no way of ever starting again.
-            clockElapsed: clock?.hasStarted == true ? clock?.elapsed() : nil
+            // come back with no way of ever starting again — which is only wanted once
+            // the day has nothing left in it, and `clockSettled` says when that is.
+            clockElapsed: clock?.hasStarted == true ? clock?.elapsed() : nil,
+            clockSettled: isSettled ? true : nil
         )
 
         guard draft.hasAnythingOnIt else {
@@ -348,11 +408,15 @@ final class DailyProgress {
     /// when it was put away and running on from there, or a fresh clock when the day has
     /// never been timed. Picking a board back up is the same bargain *Go bigger* offers —
     /// the time already spent stands, and what happens next is charged.
+    ///
+    /// A day that has already given up its best pen, put away with its clock stopped,
+    /// comes back on that stopped clock: there is nothing bigger to go after, so there is
+    /// nothing left to charge for. *Start over* is what puts a fresh clock on it.
     func clock(on date: DailyDate) -> Stopwatch {
         guard let draft = draftsByDay[date.id], let spent = draft.clockElapsed else {
             return Stopwatch()
         }
-        return .resuming(spent)
+        return draft.clockSettled == true ? .showing(spent) : .resuming(spent)
     }
 
     /// Forgets a day's unfinished board, leaving the stars and times alone.
@@ -369,6 +433,7 @@ final class DailyProgress {
         bestPens = store.loadBestPens()
         submittedPensByDay = store.loadSubmittedPens()
         draftsByDay = store.loadDrafts()
+        lateDays = store.loadLateDays()
     }
 
     /// Forgets every day ever finished. Goes with the meadow's stars rather than on its own:
@@ -379,6 +444,7 @@ final class DailyProgress {
         bestPens = []
         submittedPensByDay = [:]
         draftsByDay = [:]
+        lateDays = []
         store.erase()
     }
 }

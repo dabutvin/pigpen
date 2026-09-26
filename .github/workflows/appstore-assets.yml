@@ -3,12 +3,13 @@ name: App Store Assets
 # The PR screenshots are shot on whatever iPhone the runner has and posted for a
 # reviewer to glance at — the wrong sizes for the store, and unframed. This is the
 # other job: it shoots a chosen few screens on the exact simulators App Review asks
-# for — iPhone 6.9 inch and iPad 13 inch — and frames each with a line of copy, so
-# what comes out of it uploads straight to App Store Connect.
+# for — iPhone 6.9 inch and iPad 13 inch — and frames each with a line of copy, then
+# records the app playing a board by itself for the preview video on each, so what
+# comes out of it uploads straight to App Store Connect.
 #
 # It is hand-cranked rather than run on every push: store assets are wanted at a
-# release, not a commit. Run it from the Actions tab; the framed and raw shots come
-# back as a downloadable artifact.
+# release, not a commit. Run it from the Actions tab; the framed and raw shots and the
+# preview videos come back as a downloadable artifact.
 
 on:
   workflow_dispatch:
@@ -28,7 +29,10 @@ jobs:
   assets:
     name: Capture App Store Assets
     runs-on: macos-26
-    timeout-minutes: 40
+    # Two devices' worth of screens, a retake for any that come out blank, and a
+    # 35-second recording on each: a slow runner has taken 38 minutes to get through
+    # the capture alone.
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -48,6 +52,12 @@ jobs:
 
       - name: Install Pillow
         run: python3 -m pip install --quiet --break-system-packages Pillow
+
+      # The preview video comes off the simulator as a variable-rate recording at the
+      # screen's own size, and App Store Connect wants a fixed 30 fps at its own sizes
+      # with an audio track in it — which is ffmpeg's job.
+      - name: Install ffmpeg
+        run: command -v ffmpeg >/dev/null || HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg
 
       - name: Build for Simulator
         run: |
@@ -76,16 +86,20 @@ jobs:
           APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
           if [ -z "$APP_PATH" ]; then echo "ERROR: no .app built"; exit 1; fi
 
-          # The five screens the store leads with, each with the line of copy it
-          # carries. Kept here, in the order they will sit on the listing, so the
-          # story a browser reads is set in one place: what it is, playing it, how
-          # much of it there is, the daily, and the chase.
+          # The seven screens the store leads with, each with the line of copy it
+          # carries. Kept here, in the order they sit on the listing today — which is
+          # the source of truth, so a change there is copied back here — so the story a
+          # browser reads is set in one place: a city board part way through, the peak's
+          # best pen, the moment the meadow opens, a boss, the whole map, the daily, and
+          # the tundra's best pen to finish.
           SCREENS=(
-            "title:-title-fresh:A cozy pig puzzle"
-            "board:-orchard:Build the pig a home"
+            "clocktower:-pies:Fence the biggest pen you can"
+            "smoulder:-embers:Twelve worlds, twelve grounds"
+            "gate:-opening-gate:Then someone left the gate open"
+            "stag:-boss:Bosses want two pens at once"
             "universe:-universe:A whole universe to solve"
-            "daily:-archive:A new puzzle every day"
-            "stars:-boss:Chase every last star"
+            "daily:-archive:One new puzzle every morning"
+            "floe:-floe:Every board has one right answer"
           )
 
           # Pick the first simulator on offer whose name matches one we want, and
@@ -109,16 +123,29 @@ jobs:
             return 1
           }
 
+          # The status bar the listing wears: 9:41, full wifi and a full battery with no
+          # charging bolt on it, and no cellular — the simulator has no carrier to show.
+          # (An iPad prints the date beside the clock, and that stays the runner's.)
+          dress_status_bar() {
+            xcrun simctl status_bar "$1" override --time "9:41" \
+              --batteryState discharging --batteryLevel 100 \
+              --wifiMode active --wifiBars 3 --cellularMode notSupported 2>/dev/null || true
+          }
+
+          # Whether a screenshot came out a single flat colour — the app caught before it
+          # had drawn anything, which a slow launch on the iPad does now and then. Only the
+          # middle of the shot is looked at, since the status bar is drawn either way.
+          blank() {
+            python3 -c "import sys; from PIL import Image; i = Image.open(sys.argv[1]).convert('L'); w, h = i.size; lo, hi = i.crop((w // 5, h // 5, w * 4 // 5, h * 4 // 5)).getextrema(); sys.exit(0 if hi - lo < 8 else 1)" "$1"
+          }
+
           shoot() {
             local label="$1" udid="$2"
             mkdir -p "out/$label/raw" "out/$label/framed"
             xcrun simctl boot "$udid" 2>/dev/null || true
             xcrun simctl bootstatus "$udid" -b
             xcrun simctl ui "$udid" appearance "$APPEARANCE"
-            # The status bar App Review likes: full bars, full battery, 9:41.
-            xcrun simctl status_bar "$udid" override \
-              --time "9:41" --batteryState charged --batteryLevel 100 \
-              --cellularBars 4 --wifiBars 3 --dataNetwork wifi 2>/dev/null || true
+            dress_status_bar "$udid"
             xcrun simctl install "$udid" "$APP_PATH"
 
             local order=1
@@ -126,10 +153,17 @@ jobs:
               local slug="${entry%%:*}"; local rest="${entry#*:}"
               local arg="${rest%%:*}"; local caption="${rest#*:}"
               local raw="out/$label/raw/${slug}.png"
-              xcrun simctl launch "$udid" "$BUNDLE_ID" "$arg"
-              sleep 3
-              xcrun simctl io "$udid" screenshot "$raw"
-              xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
+              # Three goes at it, each given longer to draw, before a blank shot is let
+              # through to fail the run below rather than land on the listing.
+              for wait in 3 6 10; do
+                xcrun simctl launch "$udid" "$BUNDLE_ID" "$arg"
+                sleep "$wait"
+                xcrun simctl io "$udid" screenshot "$raw"
+                xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
+                blank "$raw" || break
+                echo "WARNING: $label $slug came out blank after ${wait}s; shooting it again"
+              done
+              if blank "$raw"; then echo "ERROR: $label $slug is still blank"; exit 1; fi
               python3 Tools/appstore_frames.py \
                 --input "$raw" \
                 --output "$(printf 'out/%s/framed/%02d_%s.png' "$label" "$order" "$slug")" \
@@ -140,11 +174,69 @@ jobs:
             ls -la "out/$label/framed" || true
           }
 
+          # The preview video, recorded rather than rendered, since Apple takes a
+          # preview only as a recording of the app. `-preview` opens PreviewReel.swift:
+          # the live listing's twenty-second film, played by the app on a fixed clock
+          # after four seconds held still on its first board. The recorder is started
+          # before the launch, since it can take seconds to get going, and stopped well
+          # after the film ends. The recorder says "Recording started" the moment its
+          # first frame is taken, and the reel prints the moment its film starts; both
+          # are stamped on this Mac's clock, and the cut is the gap between them. (Not
+          # measured back from the stop: the recorder only writes a frame when the
+          # screen changes, so a still ending leaves the file shorter than the wait.)
+          # ffmpeg brings the cut to the store's size for the device, a steady 30 fps
+          # (holding the last frame if the still ending left the file short), and a
+          # silent stereo track, which App Store Connect asks for.
+          record() {
+            local label="$1" udid="$2" size="$3"
+            local dir="$PWD/out/$label/preview"
+            mkdir -p "$dir"
+            xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
+            # Every line the recorder says, stamped with the time it said it.
+            xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" \
+              > >(python3 -u -c 'import sys, time
+          for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
+            local recorder=$!
+            sleep 3
+            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" -preview
+            sleep 32
+            kill -INT "$recorder"
+            wait "$recorder" || true
+            xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
+
+            local started; started=$(awk '/PREVIEW_REEL_START/ { print $2; exit }' "$dir/app.log" || true)
+            if [ -z "$started" ]; then
+              echo "ERROR: the reel never said when its film started"; cat "$dir/app.log" || true; exit 1
+            fi
+            local recording; recording=$(awk '/Recording started/ { print $1; exit }' "$dir/recorder.log" || true)
+            if [ -z "$recording" ]; then
+              echo "ERROR: the recorder never said it had started"; cat "$dir/recorder.log" || true; exit 1
+            fi
+            local into; into=$(python3 -c "print(round($started - $recording, 3))")
+            echo "$label: the film starts ${into}s into the recording"
+
+            ffmpeg -hide_banner -loglevel error -y \
+              -ss "$into" -i "$dir/raw.mov" \
+              -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
+              -map 0:v:0 -map 1:a:0 -t 20 -shortest \
+              -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30,tpad=stop_mode=clone:stop_duration=20" \
+              -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p \
+              -b:v 10M -maxrate 12M -bufsize 20M \
+              -c:a aac -b:a 256k -ar 44100 -ac 2 \
+              -movflags +faststart \
+              "$dir/preview.mp4"
+            echo "== $label preview =="
+            ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,avg_frame_rate \
+              -of compact "$dir/preview.mp4"
+          }
+
           IPHONE=$(pick "iPhone 6.9-inch" "iPhone 16 Pro Max" "iPhone 17 Pro Max" "iPhone 15 Pro Max")
           IPAD=$(pick "iPad 13-inch" "iPad Pro 13-inch (M4)" "iPad Pro (12.9-inch) (6th generation)" "iPad Pro (12.9-inch) (5th generation)")
 
           shoot iphone_6_9 "$IPHONE"
+          record iphone_6_9 "$IPHONE" 886x1920
           shoot ipad_13 "$IPAD"
+          record ipad_13 "$IPAD" 1200x1600
 
           echo "Sizes captured:"
           python3 -c "import glob; from PIL import Image; [print(p, Image.open(p).size) for p in sorted(glob.glob('out/*/framed/*.png'))]"

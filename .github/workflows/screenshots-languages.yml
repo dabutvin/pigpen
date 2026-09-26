@@ -1,14 +1,14 @@
 name: PR Screenshots (languages)
 
 # The gallery the other workflow posts is the game in English. This one is the
-# same game in all seven, and it runs when the words change rather than on every
-# pull request: a branch that moves a button by three points does not need
-# thirty-five more pictures on it, and a branch that rewrites a sentence does.
+# same game beside it in every language it is translated into, and it runs when the words change rather than on every pull request: a
+# branch that moves a button by three points does not need more pictures on it,
+# and a branch that rewrites a sentence does.
 #
 # What it is looking for is not whether the translation is right — a person reads
-# that in the catalog — but whether it fits. German is the long one and the first
-# place a button gives way; Japanese is the one that needs a different font to
-# draw at all. Neither shows up in a diff.
+# that in the catalog — but whether it fits. German and Russian run long and are
+# the first places a button gives way; Japanese is the one that needs a different
+# font to draw at all. None of that shows up in a diff.
 on:
   pull_request:
     branches: [main]
@@ -155,6 +155,7 @@ jobs:
           shoot_language it it_IT
           shoot_language ja ja_JP
           shoot_language pt-BR pt_BR
+          shoot_language ru ru_RU
 
           xcrun simctl status_bar "$UDID" clear
           xcrun simctl shutdown "$UDID" 2>/dev/null || true
@@ -193,6 +194,7 @@ jobs:
               ['it', 'Italian'],
               ['ja', 'Japanese'],
               ['pt_BR', 'Portuguese (Brazil)'],
+              ['ru', 'Russian'],
             ];
 
             async function ensureBranch() {
@@ -290,8 +292,8 @@ jobs:
               `/pr-${prNumber}/languages/${file}?v=${cacheBust}`;
 
             // <order>_<screen>_<language>.png, gathered screen by screen so the same
-            // screen in seven languages sits in one row and an overflowing button
-            // shows up against the six that did not overflow.
+            // screen in every language sits in one row and an overflowing button
+            // shows up against the English that did not overflow.
             const screens = new Map();
             for (const file of files) {
               const parts = file.match(/^\d+_(.+)_([a-z]{2}(?:_[A-Z]{2})?)\.png$/);
@@ -311,9 +313,9 @@ jobs:
             body += ` What to look for is fit rather than wording — a button that has given`;
             body += ` way, a line that has been cut off, a font that has not loaded.\n\n`;
 
-            // Four across rather than seven: a GitHub comment is about eight hundred
-            // points wide, and seven phones in a row are each too small to see a
-            // truncated button in.
+            // Never more than four across: a GitHub comment is about eight hundred
+            // points wide, and more phones than that in a row are each too small to
+            // see a truncated button in.
             const inFours = (items) => {
               const rows = [];
               for (let at = 0; at < items.length; at += 4) rows.push(items.slice(at, at + 4));

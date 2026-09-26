@@ -60,13 +60,12 @@ struct TitleScreenView: View {
     /// archive this screen opens are both looking at the same switch the map is — handed in
     /// so a preview or a screenshot can stand the game up owned or for sale.
     private let fullGame: FullGame
-    /// Whether the game's own offer of a reminder is up. Raised once, after a day has been
-    /// held or a free level taken — never on the way in, when the player has nothing yet to
-    /// be reminded about.
+    /// Whether the game's own offer of a reminder is up. Raised once, after a couple of days
+    /// have been held — never on the way in, when the player has nothing yet to be reminded
+    /// about. The offer over the next free level is made up the trail instead, at the wait.
     @State private var isOfferingReminders = false
-    /// What that offer is being made over while it is up: the run of days, or the level a
-    /// day away. Decided as the offer goes up, since the sheet says something different
-    /// over each.
+    /// What that offer is being made over while it is up. Only ever the run of days from this
+    /// screen; held as a value because the sheet is written for either.
     @State private var offerAbout: ReminderOffer = .theStreak
     /// The free game's clock. Read here so the reminder about the next level is laid down
     /// beside the mornings every time they are — and handed in so a preview or a screenshot
@@ -77,6 +76,9 @@ struct TitleScreenView: View {
     /// where a player is standing the moment after they have done something worth asking about
     /// — and the one place the ask can be made over nothing at all.
     private let rating: RatingPrompt
+    /// Every ask the game has made lately, so this screen's two — the reminder's offer and
+    /// Apple's rating prompt — keep clear of one another and of the store.
+    private let asks: AskLedger
     /// Which square of the calendar the game is standing on. Read once when the screen
     /// arrives rather than on every redraw, so the card cannot change under a finger — and
     /// read again every time the screen comes back, which is what carries a player over
@@ -118,7 +120,7 @@ struct TitleScreenView: View {
     init(
         progress: WorldProgress = WorldProgress(),
         daily: DailyProgress = DailyProgress(),
-        reminder: DailyReminder = DailyReminder(),
+        reminder: DailyReminder = .shared,
         today: DailyDate? = nil,
         showsSettings: Bool = false,
         showsReminderPrompt: Bool = false,
@@ -126,7 +128,8 @@ struct TitleScreenView: View {
         fullGame: FullGame = .shared,
         wardrobe: PigWardrobe = .shared,
         rating: RatingPrompt = .shared,
-        ration: LevelRation = .shared
+        ration: LevelRation = .shared,
+        asks: AskLedger = .shared
     ) {
         _progress = State(initialValue: progress)
         _daily = State(initialValue: daily)
@@ -140,6 +143,7 @@ struct TitleScreenView: View {
         self.wardrobe = wardrobe
         self.rating = rating
         self.ration = ration
+        self.asks = asks
     }
 
     private var hasADailyPuzzle: Bool { DailyAlmanac.holdsAPuzzle(on: today) }
@@ -194,7 +198,12 @@ struct TitleScreenView: View {
             TutorialView()
         }
         .navigationDestination(item: $playingDaily) { date in
-            DailyPuzzleView(date: date, progress: daily)
+            DailyPuzzleView(
+                date: date,
+                progress: daily,
+                onward: onward(from: date),
+                yesterday: yesterday(from: date)
+            )
         }
         .navigationDestination(isPresented: $isArchiveOpen) {
             DailyArchiveView(today: today, progress: daily, fullGame: fullGame)
@@ -223,7 +232,7 @@ struct TitleScreenView: View {
                     // The offer is marked as made whichever way it goes, so the sheet is
                     // never put up twice — the phone's own prompt follows from here, and
                     // that one a phone only ever shows once anyway.
-                    reminder.markOffered()
+                    reminder.markOffered(offerAbout)
                     Task {
                         // Counted on what `turnOn` gives back rather than on the tap, so the
                         // phone's answer is counted beside the player's. A yes the phone then
@@ -234,15 +243,20 @@ struct TitleScreenView: View {
                             progress: daily,
                             nextLevel: nextLevel
                         )
-                        Analytics.record(.reminderAnswered(taken: true, allowed: allowed))
+                        Analytics.record(
+                            .reminderAnswered(about: offerAbout.kind, taken: true, allowed: allowed)
+                        )
                     }
                 },
                 onDecline: {
-                    reminder.markOffered()
-                    Analytics.record(.reminderAnswered(taken: false))
+                    reminder.markOffered(offerAbout)
+                    Analytics.record(.reminderAnswered(about: offerAbout.kind, taken: false))
                 }
             )
-            .onAppear { Analytics.record(.reminderOffered(about: offerAbout)) }
+            .onAppear {
+                asks.note(.reminder)
+                Analytics.record(.reminderOffered(about: offerAbout))
+            }
             // Half the screen: an offer, made while the title screen is still visible
             // behind it, rather than a wall the player has to get past to carry on.
             .presentationDetents([.medium, .large])
@@ -350,21 +364,22 @@ struct TitleScreenView: View {
     }
 
     /// Whether to put the game's own offer up, and the whole of when it is allowed to
-    /// appear: the player has something to be reminded about — a daily puzzle held, so there
-    /// is a run of days to lose, or a free level taken past the meadow, so there is a day's
-    /// wait on the next — and neither the game nor the phone has asked them about it before.
+    /// appear: the player has held a couple of daily puzzles, so there is a habit and a run
+    /// of days to lose, and neither the game nor the phone has asked them about it before.
     ///
     /// Never on the way in. A phone shows its permission sheet once and never again, and
     /// spending that on somebody who has not yet found out what a daily puzzle is spends it
-    /// for nothing.
+    /// for nothing. Never on the first day held, either: that used to be where it went up,
+    /// in the same few minutes as the store's offer and the rating prompt, and about five in
+    /// six players said *Not now*. And never on top of another ask — see `AskLedger`.
     ///
-    /// The run of days is what the offer is made over when there is one, since it is the
-    /// older promise and the one the sheet was written round; the level is the reason only
-    /// for a player the mornings have nothing to say to yet.
+    /// The level a day away is not offered here any more. It is offered up the trail, at the
+    /// wait itself, which is the moment a player has a reason to want it.
     private func offerTheReminderIfItIsDue() {
         guard reminder.isDueAnOffer else { return }
-        let hasARunToKeep = daily.completedCount > 0
-        guard hasARunToKeep || nextLevel != nil else { return }
+        guard daily.completedCount >= DailyReminder.daysBeforeTheStreakOffer else { return }
+        // Nor in the same sitting as the offer over the next level, made up the trail.
+        guard !asks.isCrowded(for: .reminder), !asks.wasRecent(.reminder) else { return }
         // Nothing else may be going up or already up. The walkthrough is the one worth
         // naming: a player who has only ever played dailies is owed both at once, and an
         // offer sheet arriving over a practice pen pushing itself onto the stack would be
@@ -373,11 +388,7 @@ struct TitleScreenView: View {
         guard !progress.isTheTutorialDue, !isTutorial,
               !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
         else { return }
-        if let level = nextLevel, !hasARunToKeep {
-            offerAbout = .theNextLevel(in: level.worldName)
-        } else {
-            offerAbout = .theStreak
-        }
+        offerAbout = .theStreak
         isOfferingReminders = true
     }
 
@@ -406,10 +417,11 @@ struct TitleScreenView: View {
             // Counted by the door it came in through: the mornings and the postcards are
             // each trying to bring somebody to this board, and the charts want to know
             // which does.
-            Analytics.record(wayIn == .link ? .dayLinkFollowed : .reminderFollowed)
+            Analytics.record(wayIn == .link ? .dayLinkFollowed : .reminderFollowed(about: .streak))
             putEverythingDown()
             open(day)
         case .trail(let world):
+            Analytics.record(.reminderFollowed(about: .level))
             Analytics.record(.levelReminderFollowed)
             putEverythingDown()
             playingDaily = nil
@@ -446,15 +458,68 @@ struct TitleScreenView: View {
     ///
     /// A visit with anything up is left alone entirely rather than merely kept quiet: the
     /// prompt writes down what it has looked at, so looking now would spend the moment on a
-    /// screen that could not have shown anything.
+    /// screen that could not have shown anything. The same goes for a visit on the heels of
+    /// another ask — the store's offer, or the reminder's — which leaves the moment standing
+    /// for the next quiet visit rather than spending it.
     private func askForARatingIfItIsDue() {
         guard !isOfferingReminders, !progress.isTheTutorialDue, !isTutorial, !showsOpening,
               !showsSettings, playDestination == nil, playingDaily == nil, !isArchiveOpen
         else { return }
+        guard !asks.isCrowded(for: .rating) else { return }
 
         let moment = rating.look(at: .read(from: progress, daily: daily, today: today))
         guard let moment else { return }
+        asks.note(.rating)
         Analytics.record(.ratingAsked(at: moment))
+    }
+
+    // MARK: - Onward from a held day
+
+    /// The way on to the trail from a held day's card: the world Play would carry on in, by
+    /// name, and the walk there.
+    ///
+    /// The daily brings players back, and most of those visits used to end half a minute
+    /// later on the card that said the day was done. A player who carried on from there was
+    /// the one who stayed for an hour, so the card now says where to carry on to. Nothing at
+    /// all once every world is held, since there is no trail left to continue.
+    private func onward(from date: DailyDate) -> WayOnward? {
+        let stars = progress.bestStars
+        guard progress.isTheWorldHeld else {
+            return WayOnward(title: String(localized: "Continue \(GameWorld.mudlarkMeadow.name)")) {
+                leaveTheDay(for: "meadow") { play() }
+            }
+        }
+        let universe = Universe.all
+        let reached = universe.frontier(stars: stars)
+        guard !universe.isCleared(reached, stars: stars), let game = universe.game(at: reached)
+        else { return nil }
+        let world = universe[reached].id
+        return WayOnward(title: String(localized: "Continue \(game.name)")) {
+            leaveTheDay(for: "trail") { playDestination = .trail(world: world) }
+        }
+    }
+
+    /// The way back to yesterday's board from today's card, for a player who owns the
+    /// archive and has not held yesterday yet. A player who has not bought the game is not
+    /// shown it: yesterday is behind the wall for them, and a button that opens an offer on
+    /// the card that just congratulated them is one ask too many.
+    private func yesterday(from date: DailyDate) -> WayOnward? {
+        let before = date.dayBefore
+        guard date == today, fullGame.isUnlocked, DailyAlmanac.isOpen(before, today: today),
+              !daily.isComplete(before)
+        else { return nil }
+        return WayOnward(title: String(localized: "Yesterday's puzzle")) {
+            leaveTheDay(for: "yesterday") { open(before) }
+        }
+    }
+
+    /// Takes the day's board down and does the next thing a beat later, once it has gone —
+    /// the same hand-off a tapped reminder makes, since a stack asked to push while it is
+    /// still popping keeps whichever it heard first.
+    private func leaveTheDay(for destination: String, then next: @escaping @MainActor () -> Void) {
+        Analytics.record(.dailyOnward(to: destination))
+        playingDaily = nil
+        Task { next() }
     }
 
     // MARK: - The bar across the top
@@ -802,7 +867,7 @@ struct TitleScreenView: View {
     /// the morning behind this one: a reminder posted at nine and read after midnight is
     /// about yesterday's board, and yesterday's board is what it should open.
     private func open(_ date: DailyDate) {
-        Analytics.record(.dailyOpened(isToday: date == today))
+        Analytics.record(.dailyOpened(date, isToday: date == today))
         playingDaily = date
     }
 

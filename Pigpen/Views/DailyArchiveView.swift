@@ -306,7 +306,7 @@ struct DailyArchiveView: View {
         Sounds.play(.press)
         // A day out of the archive rather than this morning's, which is the difference
         // between somebody catching up and somebody browsing.
-        Analytics.record(.dailyOpened(isToday: date == today))
+        Analytics.record(.dailyOpened(date, isToday: date == today))
         // Opened as it was left, submitted wall and all, the same as today's is off the
         // title screen. A day already held used to be asked about first — put the wall
         // back, or clear the field — in front of a board the player had not looked at yet;
