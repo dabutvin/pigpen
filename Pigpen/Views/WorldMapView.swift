@@ -503,7 +503,7 @@ struct WorldMapView: View {
             HStack(spacing: 4) {
                 Image(systemName: "star.fill")
                     .foregroundStyle(GamePalette.pen)
-                Text("\(progress.totalStars)/\(world.starTotal)")
+                Text(verbatim: "\(progress.totalStars)/\(world.starTotal)")
                     .foregroundStyle(GamePalette.cream)
                     .monospacedDigit()
             }

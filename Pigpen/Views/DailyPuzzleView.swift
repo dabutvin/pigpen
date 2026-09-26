@@ -32,7 +32,7 @@ struct DailyPuzzleView: View {
             PuzzleView(
                 game: game(for: level),
                 clock: progress.hasDraft(on: date) ? progress.clock(on: date) : clock,
-                wayOutTitle: "Done",
+                wayOutTitle: String(localized: "Done"),
                 wayOutImage: "checkmark.seal.fill",
                 onward: onward,
                 aside: yesterday,

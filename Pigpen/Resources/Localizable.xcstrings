@@ -1,0 +1,7241 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ as well.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ as well."
+          }
+        }
+      }
+    },
+    "%@ came with the place": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ came with the place"
+          }
+        }
+      }
+    },
+    "%@ got the smaller place": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ got the smaller place"
+          }
+        }
+      }
+    },
+    "%@ has no notes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ has no notes"
+          }
+        }
+      }
+    },
+    "%@ is locked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is locked"
+          }
+        }
+      }
+    },
+    "%@ is on its own": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is on its own"
+          }
+        }
+      }
+    },
+    "%@ is sharing the water": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is sharing the water"
+          }
+        }
+      }
+    },
+    "%@ of players get three stars here": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ of players get three stars here"
+          }
+        }
+      }
+    },
+    "%@ of players have found this pen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ of players have found this pen"
+          }
+        }
+      }
+    },
+    "%@ of the %lld it wants": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ of the %lld it wants"
+          }
+        }
+      }
+    },
+    "%@ walked out": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ walked out"
+          }
+        }
+      }
+    },
+    "%@ wants its own place": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ wants its own place"
+          }
+        }
+      }
+    },
+    "%@ will not live alone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ will not live alone"
+          }
+        }
+      }
+    },
+    "%@ with %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ with %@."
+          }
+        }
+      }
+    },
+    "%@ · %@ complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@ complete"
+          }
+        }
+      }
+    },
+    "%@ · %lld days": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld days"
+          }
+        }
+      }
+    },
+    "%@, about %@ in all — including the worlds you have not reached yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, about %@ in all — including the worlds you have not reached yet."
+          }
+        }
+      }
+    },
+    "%@, complete, %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, complete, %@"
+          }
+        }
+      }
+    },
+    "%@, complete, %@, the best pen there is": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, complete, %@, the best pen there is"
+          }
+        }
+      }
+    },
+    "%@, film %lld of %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, film %lld of %lld"
+          }
+        }
+      }
+    },
+    "%@, locked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, locked"
+          }
+        }
+      }
+    },
+    "%@, locked until %lld stars, %lld so far": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, locked until %lld stars, %lld so far"
+          }
+        }
+      }
+    },
+    "%@, no puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, no puzzle"
+          }
+        }
+      }
+    },
+    "%@, not open yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, not open yet"
+          }
+        }
+      }
+    },
+    "%@, not yet complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, not yet complete"
+          }
+        }
+      }
+    },
+    "%@, not yet played": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, not yet played"
+          }
+        }
+      }
+    },
+    "%@, open": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, open"
+          }
+        }
+      }
+    },
+    "%@, the best pen there is": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, the best pen there is"
+          }
+        }
+      }
+    },
+    "%@, your next free level, opens in %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, your next free level, opens in %@"
+          }
+        }
+      }
+    },
+    "%@: your record": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: your record"
+          }
+        }
+      }
+    },
+    "%lld daily puzzles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld daily puzzle"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld daily puzzles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld days and counting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day and counting"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days and counting"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld days in a row": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day in a row"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days in a row"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld days in a row.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld day in a row."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld days in a row."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld films": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld film"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld films"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld hours": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hour"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hours"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld minutes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minutes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld more star"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld more stars"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld mud tiles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld mud tile"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld mud tiles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld of %lld complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld complete"
+          }
+        }
+      }
+    },
+    "%lld of %lld fence pieces left": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld fence pieces left"
+          }
+        }
+      }
+    },
+    "%lld of %lld puzzles solved": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld puzzles solved"
+          }
+        }
+      }
+    },
+    "%lld of %lld stars earned": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld stars earned"
+          }
+        }
+      }
+    },
+    "%lld of %lld stars, %lld of %lld puzzles complete.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld stars, %lld of %lld puzzles complete."
+          }
+        }
+      }
+    },
+    "%lld of %lld worlds unlocked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld worlds unlocked"
+          }
+        }
+      }
+    },
+    "%lld outfits on the wall, and the bare peg she arrived on. Whatever is on her in there, she wears it on every board.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld outfits on the wall, and the bare peg she arrived on. Whatever is on her in there, she wears it on every board."
+          }
+        }
+      }
+    },
+    "%lld per cent of the game held.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld per cent of the game held."
+          }
+        }
+      }
+    },
+    "%lld pieces": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld piece"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pieces"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld points": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld point"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld points"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld seconds": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld second"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld seconds"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld star"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld stars"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld stars earned": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld star earned"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld stars earned"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld stars earned.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld star earned."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld stars earned."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld tiles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld tile"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld tiles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "A cozy place near the slopes sounded hard to beat.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cozy place near the slopes sounded hard to beat."
+          }
+        }
+      }
+    },
+    "A great pen — can you make it bigger?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A great pen — can you make it bigger?"
+          }
+        }
+      }
+    },
+    "A great pen. Could be bigger.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A great pen. Could be bigger."
+          }
+        }
+      }
+    },
+    "A mountain that never stops smoking. Coins in the ash, flames under it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A mountain that never stops smoking. Coins in the ash, flames under it."
+          }
+        }
+      }
+    },
+    "A new puzzle is waiting for you": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A new puzzle is waiting for you"
+          }
+        }
+      }
+    },
+    "A one-time purchase. Restores free on every device you sign in to.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A one-time purchase. Restores free on every device you sign in to."
+          }
+        }
+      }
+    },
+    "A pen worth bragging about.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A pen worth bragging about."
+          }
+        }
+      }
+    },
+    "A rainbow adds instant appeal. Severe weather is a notable drawback.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A rainbow adds instant appeal. Severe weather is a notable drawback."
+          }
+        }
+      }
+    },
+    "A reminder at %@ on any morning you have not yet finished the day's puzzle, and one the moment your next free level opens.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A reminder at %@ on any morning you have not yet finished the day's puzzle, and one the moment your next free level opens."
+          }
+        }
+      }
+    },
+    "A reminder at %@ on any morning you have not yet finished the day's puzzle.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A reminder at %@ on any morning you have not yet finished the day's puzzle."
+          }
+        }
+      }
+    },
+    "Affordable. Quiet. Extremely dark.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affordable. Quiet. Extremely dark."
+          }
+        }
+      }
+    },
+    "After all that, Pig finally knew exactly what he wanted.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After all that, Pig finally knew exactly what he wanted."
+          }
+        }
+      }
+    },
+    "Alleys, rooftops and a pig on the loose. Pizza on the pavement, trash cans along it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alleys, rooftops and a pig on the loose. Pizza on the pavement, trash cans along it."
+          }
+        }
+      }
+    },
+    "And make sure to close the fence. Pig is keeping his options open.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "And make sure to close the fence. Pig is keeping his options open."
+          }
+        }
+      }
+    },
+    "And that was it. Pig had toured every market imaginable.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "And that was it. Pig had toured every market imaginable."
+          }
+        }
+      }
+    },
+    "Anonymous usage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anonymous usage"
+          }
+        }
+      }
+    },
+    "Apparently the listing had excellent word of mouth.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apparently the listing had excellent word of mouth."
+          }
+        }
+      }
+    },
+    "At": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At"
+          }
+        }
+      }
+    },
+    "At least cities had building codes. Probably.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At least cities had building codes. Probably."
+          }
+        }
+      }
+    },
+    "Back": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
+          }
+        }
+      }
+    },
+    "Back to the title screen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to the title screen"
+          }
+        }
+      }
+    },
+    "Back to the trail": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to the trail"
+          }
+        }
+      }
+    },
+    "Baseball Cap": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baseball Cap"
+          }
+        }
+      }
+    },
+    "Beautiful views. Excellent beach access. One too many uninvited guests.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beautiful views. Excellent beach access. One too many uninvited guests."
+          }
+        }
+      }
+    },
+    "Best so far: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best so far: %@"
+          }
+        }
+      }
+    },
+    "Best time %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best time %@."
+          }
+        }
+      }
+    },
+    "Bonus tiles add points. Penalty tiles take points away. Try to fence in the bonus and leave the penalty out.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonus tiles add points. Penalty tiles take points away. Try to fence in the bonus and leave the penalty out."
+          }
+        }
+      }
+    },
+    "Both of them found a gap and showed themselves out. Follow the trails and close them.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them found a gap and showed themselves out. Follow the trails and close them."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but %@'s never touches the water. He keeps a breathing hole, so his ground has to lie against it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but %@'s never touches the water. He keeps a breathing hole, so his ground has to lie against it."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but it is the same place. %@ wants its own.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but it is the same place. %@ wants its own."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but no channel is wholly %@'s. Every bank of one channel has to be his own ground — half a wallow is nobody's.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but no channel is wholly %@'s. Every bank of one channel has to be his own ground — half a wallow is nobody's."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but one each. %@ goes where Pig goes.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but one each. %@ goes where Pig goes."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but one is bigger. %@ wants ground to match Pig's.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but one is bigger. %@ wants ground to match Pig's."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but one wall does for both — and %@ stings straight through a fence. Leave clear ground between them.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but one wall does for both — and %@ stings straight through a fence. Leave clear ground between them."
+          }
+        }
+      }
+    },
+    "Both of them have a place, but side by side. Pig's ground has to go the whole way round %@ — and it is ground she walks, so she needs a clear path the whole way round, with nothing she cannot cross breaking it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both of them have a place, but side by side. Pig's ground has to go the whole way round %@ — and it is ground she walks, so she needs a clear path the whole way round, with nothing she cannot cross breaking it."
+          }
+        }
+      }
+    },
+    "Both parties requested a little distance.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both parties requested a little distance."
+          }
+        }
+      }
+    },
+    "Briefing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Briefing"
+          }
+        }
+      }
+    },
+    "Build Pig and %@ separate pens. And don't let them share a fence. Adjoining properties were not approved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build Pig and %@ separate pens. And don't let them share a fence. Adjoining properties were not approved."
+          }
+        }
+      }
+    },
+    "Build Pig and %@ separate pens. Fence %@ in with one entire waterway.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build Pig and %@ separate pens. Fence %@ in with one entire waterway."
+          }
+        }
+      }
+    },
+    "Build Pig and %@ separate pens. The %@'s pen must border the water.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build Pig and %@ separate pens. The %@'s pen must border the water."
+          }
+        }
+      }
+    },
+    "Build Pig and %@ two separate pens. They must be exactly the same size. Equal square footage. No exceptions.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build Pig and %@ two separate pens. They must be exactly the same size. Equal square footage. No exceptions."
+          }
+        }
+      }
+    },
+    "Build faster": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build faster"
+          }
+        }
+      }
+    },
+    "Build separate pens. And don't let them share a fence. Adjoining properties were not approved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build separate pens. And don't let them share a fence. Adjoining properties were not approved."
+          }
+        }
+      }
+    },
+    "Build separate pens. Fence the crocodile in with one entire waterway.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build separate pens. Fence the crocodile in with one entire waterway."
+          }
+        }
+      }
+    },
+    "Build separate pens. The seal's pen must border the water.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build separate pens. The seal's pen must border the water."
+          }
+        }
+      }
+    },
+    "Build the perfect pen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build the perfect pen"
+          }
+        }
+      }
+    },
+    "Build two separate pens. They must be exactly the same size. Equal square footage. No exceptions.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build two separate pens. They must be exactly the same size. Equal square footage. No exceptions."
+          }
+        }
+      }
+    },
+    "By all accounts, Pig should have been satisfied.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By all accounts, Pig should have been satisfied."
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Check out my Pigpen daily puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check out my Pigpen daily puzzle"
+          }
+        }
+      }
+    },
+    "Choose what's inside": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose what's inside"
+          }
+        }
+      }
+    },
+    "Clear all game data": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear all game data"
+          }
+        }
+      }
+    },
+    "Clear all game data?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear all game data?"
+          }
+        }
+      }
+    },
+    "Clear everything": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear everything"
+          }
+        }
+      }
+    },
+    "Cleared. %@ is back to the start.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleared. %@ is back to the start."
+          }
+        }
+      }
+    },
+    "Close": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Close settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close settings"
+          }
+        }
+      }
+    },
+    "Close the dressing barn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close the dressing barn"
+          }
+        }
+      }
+    },
+    "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloudspire Heights. Fresh air. Endless views. Absolutely no flood risk."
+          }
+        }
+      }
+    },
+    "Cogsworth City. Walkable. Vibrant. Close to everything.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cogsworth City. Walkable. Vibrant. Close to everything."
+          }
+        }
+      }
+    },
+    "Coming soon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coming soon"
+          }
+        }
+      }
+    },
+    "Complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete"
+          }
+        }
+      }
+    },
+    "Complete, %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete, %@."
+          }
+        }
+      }
+    },
+    "Continue": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
+        }
+      }
+    },
+    "Continue %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue %@"
+          }
+        }
+      }
+    },
+    "Crown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crown"
+          }
+        }
+      }
+    },
+    "Cut scenes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cut scenes"
+          }
+        }
+      }
+    },
+    "Daily puzzle archive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily puzzle archive"
+          }
+        }
+      }
+    },
+    "Daily puzzle reminder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily puzzle reminder"
+          }
+        }
+      }
+    },
+    "Daily reminders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily reminders"
+          }
+        }
+      }
+    },
+    "Deep dark, and something with wings. Diamonds in the flowstone, boulders on it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deep dark, and something with wings. Diamonds in the flowstone, boulders on it."
+          }
+        }
+      }
+    },
+    "Do you?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do you?"
+          }
+        }
+      }
+    },
+    "Don't lose your %lld-day streak": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't lose your %lld-day streak"
+          }
+        }
+      }
+    },
+    "Don't stop now.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Don't stop now."
+          }
+        }
+      }
+    },
+    "Done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Dressing Barn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dressing Barn"
+          }
+        }
+      }
+    },
+    "Enable notifications to get daily reminders that help you build your streak.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable notifications to get daily reminders that help you build your streak."
+          }
+        }
+      }
+    },
+    "Enable notifications to hear the moment your next free level opens in %@, and for a daily puzzle reminder each morning.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable notifications to hear the moment your next free level opens in %@, and for a daily puzzle reminder each morning."
+          }
+        }
+      }
+    },
+    "Every daily puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every daily puzzle"
+          }
+        }
+      }
+    },
+    "Every daily puzzle so far is here. Each new day unlocks when it arrives.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every daily puzzle so far is here. Each new day unlocks when it arrives."
+          }
+        }
+      }
+    },
+    "Every daily puzzle there has been, a month at a time": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every daily puzzle there has been, a month at a time"
+          }
+        }
+      }
+    },
+    "Every film in the game, one after another: the opening, the boss briefing and the send-off of every world there is. Tap to move on, swipe back for the one before.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every film in the game, one after another: the opening, the boss briefing and the send-off of every world there is. Tap to move on, swipe back for the one before."
+          }
+        }
+      }
+    },
+    "Every level, right away": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every level, right away"
+          }
+        }
+      }
+    },
+    "Every star and every rainbow there is.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every star and every rainbow there is."
+          }
+        }
+      }
+    },
+    "Every star you have earned, every level you have opened and every daily puzzle you have finished will be forgotten, and %@ goes back to its first puzzle. There is no getting them back.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every star you have earned, every level you have opened and every daily puzzle you have finished will be forgotten, and %@ goes back to its first puzzle. There is no getting them back."
+          }
+        }
+      }
+    },
+    "Every world and every day is yours. Thank you for buying Pigpen.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every world and every day is yours. Thank you for buying Pigpen."
+          }
+        }
+      }
+    },
+    "Everybody else": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everybody else"
+          }
+        }
+      }
+    },
+    "Everything is held, but the roost is split between two places. %@ lives where the other bat lives.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything is held, but the roost is split between two places. %@ lives where the other bat lives."
+          }
+        }
+      }
+    },
+    "Excellent mineral rights. Boulders make expansion difficult.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excellent mineral rights. Boulders make expansion difficult."
+          }
+        }
+      }
+    },
+    "Fence Pig and %@ in together. Sometimes real estate is about compromise.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence Pig and %@ in together. Sometimes real estate is about compromise."
+          }
+        }
+      }
+    },
+    "Fence a pig loose among the stars. Stars in the dust, meteors under it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence a pig loose among the stars. Stars in the dust, meteors under it."
+          }
+        }
+      }
+    },
+    "Fence in Pig and %@ separately.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig and %@ separately."
+          }
+        }
+      }
+    },
+    "Fence in Pig and the boar separately.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig and the boar separately."
+          }
+        }
+      }
+    },
+    "Fence in Pig, %@, and his ring. But don't let your fence touch the ring. Apparently it's in the lease.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig, %@, and his ring. But don't let your fence touch the ring. Apparently it's in the lease."
+          }
+        }
+      }
+    },
+    "Fence in Pig, the ringmaster, and his ring. But don't let your fence touch the ring. Apparently it's in the lease.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig, the ringmaster, and his ring. But don't let your fence touch the ring. Apparently it's in the lease."
+          }
+        }
+      }
+    },
+    "Fence in Pig. Keep %@ out. Very, very out.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig. Keep %@ out. Very, very out."
+          }
+        }
+      }
+    },
+    "Fence in Pig. Keep every piece of fence out of the eagle's line of sight. The homeowners association is watching.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig. Keep every piece of fence out of the eagle's line of sight. The homeowners association is watching."
+          }
+        }
+      }
+    },
+    "Fence in Pig. Keep every tile of his pen out of the %@'s line of sight. The homeowners association is watching.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig. Keep every tile of his pen out of the %@'s line of sight. The homeowners association is watching."
+          }
+        }
+      }
+    },
+    "Fence in Pig. Keep the wyrm out. Very, very out.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in Pig. Keep the wyrm out. Very, very out."
+          }
+        }
+      }
+    },
+    "Fence in both Pig and %@. One pen or two. Whatever makes the floor plan work.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in both Pig and %@. One pen or two. Whatever makes the floor plan work."
+          }
+        }
+      }
+    },
+    "Fence in both Pig and the deer. One pen or two. Whatever makes the floor plan work.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence in both Pig and the deer. One pen or two. Whatever makes the floor plan work."
+          }
+        }
+      }
+    },
+    "Fence them in together. Sometimes real estate is about compromise.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fence them in together. Sometimes real estate is about compromise."
+          }
+        }
+      }
+    },
+    "Fields in the sky, and a long way down.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fields in the sky, and a long way down."
+          }
+        }
+      }
+    },
+    "Finally. No neighbors.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finally. No neighbors."
+          }
+        }
+      }
+    },
+    "Food. Entertainment. Nightlife. Constant nightlife.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food. Entertainment. Nightlife. Constant nightlife."
+          }
+        }
+      }
+    },
+    "Fortunately, both parties valued personal space. And fairness.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fortunately, both parties valued personal space. And fairness."
+          }
+        }
+      }
+    },
+    "Frostwhisker Tundra. Charming. Scenic. Excellent natural refrigeration.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frostwhisker Tundra. Charming. Scenic. Excellent natural refrigeration."
+          }
+        }
+      }
+    },
+    "Game data": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game data"
+          }
+        }
+      }
+    },
+    "Get access to every daily puzzle including all past puzzles.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get access to every daily puzzle including all past puzzles."
+          }
+        }
+      }
+    },
+    "Give %@ its own pen. Then build Pig's around it. No shared fences.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Give %@ its own pen. Then build Pig's around it. No shared fences."
+          }
+        }
+      }
+    },
+    "Give the crab its own pen. Then build Pig's around it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Give the crab its own pen. Then build Pig's around it."
+          }
+        }
+      }
+    },
+    "Gloamdeep Caverns. Solid construction. No street noise. No street, either.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gloamdeep Caverns. Solid construction. No street noise. No street, either."
+          }
+        }
+      }
+    },
+    "Go bigger": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go bigger"
+          }
+        }
+      }
+    },
+    "Good start — can you make the pen bigger?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good start — can you make the pen bigger?"
+          }
+        }
+      }
+    },
+    "Got a minute?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got a minute?"
+          }
+        }
+      }
+    },
+    "Graduation Cap": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graduation Cap"
+          }
+        }
+      }
+    },
+    "Great food. Excellent location. Minor rodent situation.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Great food. Excellent location. Minor rodent situation."
+          }
+        }
+      }
+    },
+    "Half water, half mud, all trouble.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Half water, half mud, all trouble."
+          }
+        }
+      }
+    },
+    "Haptics": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haptics"
+          }
+        }
+      }
+    },
+    "He'd met some interesting neighbors. Very interesting neighbors.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "He'd met some interesting neighbors. Very interesting neighbors."
+          }
+        }
+      }
+    },
+    "Held, just about.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Held, just about."
+          }
+        }
+      }
+    },
+    "Help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
+        }
+      }
+    },
+    "Help Pig build his pen.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help Pig build his pen."
+          }
+        }
+      }
+    },
+    "Help Pig explore the whole universe with no waiting. The free game opens one level a day past the meadow; this opens all of them at once.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help Pig explore the whole universe with no waiting. The free game opens one level a day past the meadow; this opens all of them at once."
+          }
+        }
+      }
+    },
+    "Holding %lld, best %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Holding %lld, best %lld"
+          }
+        }
+      }
+    },
+    "How this world has gone for you, and for everybody else": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How this world has gone for you, and for everybody else"
+          }
+        }
+      }
+    },
+    "How to play": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to play"
+          }
+        }
+      }
+    },
+    "Ice, snow, and a pig that will not stay put.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ice, snow, and a pig that will not stay put."
+          }
+        }
+      }
+    },
+    "If the game has been worth your time, a rating on the App Store is the single most useful thing you can do for it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If the game has been worth your time, a rating on the App Store is the single most useful thing you can do for it."
+          }
+        }
+      }
+    },
+    "It found a gap and showed itself out while the other stayed put — and both of them need a place. Follow the trail and close it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It found a gap and showed itself out while the other stayed put — and both of them need a place. Follow the trail and close it."
+          }
+        }
+      }
+    },
+    "It found a gap and showed itself out. Follow the trail and close it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It found a gap and showed itself out. Follow the trail and close it."
+          }
+        }
+      }
+    },
+    "It was certainly more lively than the cave.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It was certainly more lively than the cave."
+          }
+        }
+      }
+    },
+    "Just the pig": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Just the pig"
+          }
+        }
+      }
+    },
+    "Keep Pig in": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Pig in"
+          }
+        }
+      }
+    },
+    "Keep building": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep building"
+          }
+        }
+      }
+    },
+    "Keep it going.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep it going."
+          }
+        }
+      }
+    },
+    "Keep your %lld-day streak going": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep your %lld-day streak going"
+          }
+        }
+      }
+    },
+    "LEFT": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LEFT"
+          }
+        }
+      }
+    },
+    "Lantern Carnival. Bright. Bustling. Absolutely no shortage of entertainment.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lantern Carnival. Bright. Bustling. Absolutely no shortage of entertainment."
+          }
+        }
+      }
+    },
+    "Let's build.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let's build."
+          }
+        }
+      }
+    },
+    "Level %lld, %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %lld, %@"
+          }
+        }
+      }
+    },
+    "Lights, crowds and a pig on the loose. Popcorn in the sawdust, megaphones over it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lights, crowds and a pig on the loose. Popcorn in the sawdust, megaphones over it."
+          }
+        }
+      }
+    },
+    "Locked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked"
+          }
+        }
+      }
+    },
+    "Lotus flowers add a lovely pop of color. The mosquito situation is difficult to overlook.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lotus flowers add a lovely pop of color. The mosquito situation is difficult to overlook."
+          }
+        }
+      }
+    },
+    "Make it %lld.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make it %lld."
+          }
+        }
+      }
+    },
+    "Make sure your fence is completely closed. Leave a gap and Pig will wander off.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make sure your fence is completely closed. Leave a gap and Pig will wander off."
+          }
+        }
+      }
+    },
+    "Mirebog Fen. Waterfront property in every direction.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mirebog Fen. Waterfront property in every direction."
+          }
+        }
+      }
+    },
+    "More space means a better score. Apples improve the property. Skulls hurt the resale value.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More space means a better score. Apples improve the property. Skulls hurt the resale value."
+          }
+        }
+      }
+    },
+    "Much less.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Much less."
+          }
+        }
+      }
+    },
+    "Much, much better lighting.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Much, much better lighting."
+          }
+        }
+      }
+    },
+    "Mudlark Meadow had space. Good views. Plenty of apples.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mudlark Meadow had space. Good views. Plenty of apples."
+          }
+        }
+      }
+    },
+    "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mushrooms are a charming local amenity. Wilted flowers do nothing for curb appeal."
+          }
+        }
+      }
+    },
+    "Music": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music"
+          }
+        }
+      }
+    },
+    "Natural light was admittedly limited.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Natural light was admittedly limited."
+          }
+        }
+      }
+    },
+    "Never any ads": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never any ads"
+          }
+        }
+      }
+    },
+    "New day, new puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New day, new puzzle"
+          }
+        }
+      }
+    },
+    "Next cut scene": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next cut scene"
+          }
+        }
+      }
+    },
+    "Next level in %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next level in %@"
+          }
+        }
+      }
+    },
+    "No fence pieces left of %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No fence pieces left of %lld"
+          }
+        }
+      }
+    },
+    "No puzzle for %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No puzzle for %@"
+          }
+        }
+      }
+    },
+    "No puzzle today": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No puzzle today"
+          }
+        }
+      }
+    },
+    "No shared fences. Everyone likes a little privacy.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No shared fences. Everyone likes a little privacy."
+          }
+        }
+      }
+    },
+    "No water for %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No water for %@"
+          }
+        }
+      }
+    },
+    "None today — update Pigpen for more": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None today — update Pigpen for more"
+          }
+        }
+      }
+    },
+    "Not complete yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not complete yet"
+          }
+        }
+      }
+    },
+    "Not complete yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not complete yet."
+          }
+        }
+      }
+    },
+    "Not now": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not now"
+          }
+        }
+      }
+    },
+    "Not penned yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not penned yet."
+          }
+        }
+      }
+    },
+    "Nothing saved yet — %@ is untouched.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing saved yet — %@ is untouched."
+          }
+        }
+      }
+    },
+    "Nothing to restore on this Apple ID yet. Buying it above is what puts it there.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to restore on this Apple ID yet. Buying it above is what puts it there."
+          }
+        }
+      }
+    },
+    "Notifications are off for Pigpen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications are off for Pigpen"
+          }
+        }
+      }
+    },
+    "Notifications for Pigpen are turned off on this phone, so nothing will come through.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications for Pigpen are turned off on this phone, so nothing will come through."
+          }
+        }
+      }
+    },
+    "Now this is a pen worth bragging about": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now this is a pen worth bragging about"
+          }
+        }
+      }
+    },
+    "On-site concessions are a definite perk. The noise alone could sink the deal.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On-site concessions are a definite perk. The noise alone could sink the deal."
+          }
+        }
+      }
+    },
+    "One moment…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One moment…"
+          }
+        }
+      }
+    },
+    "One puzzle keeps your %lld-day streak alive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One puzzle keeps your %lld-day streak alive"
+          }
+        }
+      }
+    },
+    "One waterway is enough. But he wants the whole thing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One waterway is enough. But he wants the whole thing."
+          }
+        }
+      }
+    },
+    "Open house was a mistake.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open house was a mistake."
+          }
+        }
+      }
+    },
+    "Open iPhone Settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open iPhone Settings"
+          }
+        }
+      }
+    },
+    "Open the dressing barn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the dressing barn"
+          }
+        }
+      }
+    },
+    "Opening": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening"
+          }
+        }
+      }
+    },
+    "Or skip the wait: unlock the full game and every level in every world is open today.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Or skip the wait: unlock the full game and every level in every world is open today."
+          }
+        }
+      }
+    },
+    "Or write to %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Or write to %@."
+          }
+        }
+      }
+    },
+    "PIGPEN": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PIGPEN"
+          }
+        }
+      }
+    },
+    "Pen Windfall Orchard, the seventh stop in Mudlark Meadow, and the barn opens beside the trail.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pen Windfall Orchard, the seventh stop in Mudlark Meadow, and the barn opens beside the trail."
+          }
+        }
+      }
+    },
+    "Penned, %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Penned, %@."
+          }
+        }
+      }
+    },
+    "Pick a day and pen it in": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick a day and pen it in"
+          }
+        }
+      }
+    },
+    "Pig began wondering how far he'd have to go to get away from rats.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig began wondering how far he'd have to go to get away from rats."
+          }
+        }
+      }
+    },
+    "Pig could get used to city living.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig could get used to city living."
+          }
+        }
+      }
+    },
+    "Pig decided he wanted somewhere more peaceful.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig decided he wanted somewhere more peaceful."
+          }
+        }
+      }
+    },
+    "Pig decided he'd had enough of sand, surf, and surprise crustaceans.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig decided he'd had enough of sand, surf, and surprise crustaceans."
+          }
+        }
+      }
+    },
+    "Pig decided to try somewhere with less ice.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig decided to try somewhere with less ice."
+          }
+        }
+      }
+    },
+    "Pig finally met the nearest neighbor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig finally met the nearest neighbor."
+          }
+        }
+      }
+    },
+    "Pig gets his own pen. Both %@ share the other. Pig was absolutely not accepting roommates.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig gets his own pen. Both %@ share the other. Pig was absolutely not accepting roommates."
+          }
+        }
+      }
+    },
+    "Pig gets his own pen. Both bats share the other. Pig was absolutely not accepting roommates.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig gets his own pen. Both bats share the other. Pig was absolutely not accepting roommates."
+          }
+        }
+      }
+    },
+    "Pig had a home. Cozy. Rustic. Extremely limited square footage.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig had a home. Cozy. Rustic. Extremely limited square footage."
+          }
+        }
+      }
+    },
+    "Pig had found a promising piece of land. There was just one complication.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig had found a promising piece of land. There was just one complication."
+          }
+        }
+      }
+    },
+    "Pig has a fresh puzzle for you": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig has a fresh puzzle for you"
+          }
+        }
+      }
+    },
+    "Pig has a place, and %@ is on it. Leave that one outside the fence.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig has a place, and %@ is on it. Leave that one outside the fence."
+          }
+        }
+      }
+    },
+    "Pig has no notes.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig has no notes."
+          }
+        }
+      }
+    },
+    "Pig has no privacy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig has no privacy"
+          }
+        }
+      }
+    },
+    "Pig is next door, not around": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig is next door, not around"
+          }
+        }
+      }
+    },
+    "Pig is waiting for you in %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig is waiting for you in %@."
+          }
+        }
+      }
+    },
+    "Pig needs a little more room. Your job is to build him the biggest pen you can. Let's try one.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig needs a little more room. Your job is to build him the biggest pen you can. Let's try one."
+          }
+        }
+      }
+    },
+    "Pig needs your help": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig needs your help"
+          }
+        }
+      }
+    },
+    "Pig remembers your streak": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig remembers your streak"
+          }
+        }
+      }
+    },
+    "Pig still wasn't quite satisfied.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig still wasn't quite satisfied."
+          }
+        }
+      }
+    },
+    "Pig thought the sand would be more appealing with water attached.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig thought the sand would be more appealing with water attached."
+          }
+        }
+      }
+    },
+    "Pig was beginning to understand the ski-town premium.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig was beginning to understand the ski-town premium."
+          }
+        }
+      }
+    },
+    "Pig was ready to put in an offer.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig was ready to put in an offer."
+          }
+        }
+      }
+    },
+    "Pig was warming to the idea of living off the beaten path.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig was warming to the idea of living off the beaten path."
+          }
+        }
+      }
+    },
+    "Pig was willing to overlook a few issues for the right property.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig was willing to overlook a few issues for the right property."
+          }
+        }
+      }
+    },
+    "Pig will let you know the moment %@ has another level.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig will let you know the moment %@ has another level."
+          }
+        }
+      }
+    },
+    "Pig's property search had officially left the ground.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pig's property search had officially left the ground."
+          }
+        }
+      }
+    },
+    "Pigpen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pigpen"
+          }
+        }
+      }
+    },
+    "Pigpen will never have any ads. Buy it once, it is yours forever.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pigpen will never have any ads. Buy it once, it is yours forever."
+          }
+        }
+      }
+    },
+    "Pigpen. Build the perfect pen.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pigpen. Build the perfect pen."
+          }
+        }
+      }
+    },
+    "Pizza within walking distance is a strong selling point. Trash pickup appears to be… irregular.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pizza within walking distance is a strong selling point. Trash pickup appears to be… irregular."
+          }
+        }
+      }
+    },
+    "Place a fence": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Place a fence"
+          }
+        }
+      }
+    },
+    "Play": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play"
+          }
+        }
+      }
+    },
+    "Play again": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play again"
+          }
+        }
+      }
+    },
+    "Play today's puzzle.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play today's puzzle."
+          }
+        }
+      }
+    },
+    "Play. %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play. %@."
+          }
+        }
+      }
+    },
+    "Postcard for %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postcard for %@."
+          }
+        }
+      }
+    },
+    "Previous cut scene": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous cut scene"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
+    "Privacy policy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy policy"
+          }
+        }
+      }
+    },
+    "Private. Peaceful. Spacious. Almost perfect.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Private. Peaceful. Spacious. Almost perfect."
+          }
+        }
+      }
+    },
+    "Quiet. Beautiful. Very cool. Far too cool.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quiet. Beautiful. Very cool. Far too cool."
+          }
+        }
+      }
+    },
+    "Quite far, apparently.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quite far, apparently."
+          }
+        }
+      }
+    },
+    "Rate Pigpen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rate Pigpen"
+          }
+        }
+      }
+    },
+    "Rate it on the App Store": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rate it on the App Store"
+          }
+        }
+      }
+    },
+    "Release %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release %@"
+          }
+        }
+      }
+    },
+    "Release the pig": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release the pig"
+          }
+        }
+      }
+    },
+    "Release the pig. Earn up to 3 stars. More space + bonuses = a better score.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Release the pig. Earn up to 3 stars. More space + bonuses = a better score."
+          }
+        }
+      }
+    },
+    "Remind me": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remind me"
+          }
+        }
+      }
+    },
+    "Remind me at %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remind me at %@"
+          }
+        }
+      }
+    },
+    "Remind me when a new puzzle is ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remind me when a new puzzle is ready"
+          }
+        }
+      }
+    },
+    "Reminders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminders"
+          }
+        }
+      }
+    },
+    "Remote. Spacious. Peaceful. Mostly.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remote. Spacious. Peaceful. Mostly."
+          }
+        }
+      }
+    },
+    "Restore": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore"
+          }
+        }
+      }
+    },
+    "Restore a purchase": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore a purchase"
+          }
+        }
+      }
+    },
+    "Restore your best pen, %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore your best pen, %@"
+          }
+        }
+      }
+    },
+    "Ribbon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ribbon"
+          }
+        }
+      }
+    },
+    "Rosette": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rosette"
+          }
+        }
+      }
+    },
+    "Sand to the horizon, and a sting in it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sand to the horizon, and a sting in it."
+          }
+        }
+      }
+    },
+    "Scarf": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scarf"
+          }
+        }
+      }
+    },
+    "Seashells add coastal charm. Jellyfish add coastal hazard.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seashells add coastal charm. Jellyfish add coastal hazard."
+          }
+        }
+      }
+    },
+    "See how big you can build.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See how big you can build."
+          }
+        }
+      }
+    },
+    "See how you did": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See how you did"
+          }
+        }
+      }
+    },
+    "See past puzzles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See past puzzles"
+          }
+        }
+      }
+    },
+    "Send-off": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send-off"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "Share": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share"
+          }
+        }
+      }
+    },
+    "Share the day": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share the day"
+          }
+        }
+      }
+    },
+    "Share your score": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share your score"
+          }
+        }
+      }
+    },
+    "Show my fencing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show my fencing"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip"
+          }
+        }
+      }
+    },
+    "Slope access is a major amenity. Black ice hurts the walkability score.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slope access is a major amenity. Black ice hurts the walkability score."
+          }
+        }
+      }
+    },
+    "So close to another streak day": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "So close to another streak day"
+          }
+        }
+      }
+    },
+    "Something broken, something confusing, or an idea for the game — the support page has the common questions on it, and an address that reaches a person.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something broken, something confusing, or an idea for the game — the support page has the common questions on it, and an address that reaches a person."
+          }
+        }
+      }
+    },
+    "Somewhere quiet hours practically enforce themselves.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Somewhere quiet hours practically enforce themselves."
+          }
+        }
+      }
+    },
+    "Sound and feel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound and feel"
+          }
+        }
+      }
+    },
+    "Sounds": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sounds"
+          }
+        }
+      }
+    },
+    "Spectacles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spectacles"
+          }
+        }
+      }
+    },
+    "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starfall Reaches. No traffic. No crowds. Unbelievable lot sizes."
+          }
+        }
+      }
+    },
+    "Stars add a little sparkle. Meteor damage is not covered.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stars add a little sparkle. Meteor damage is not covered."
+          }
+        }
+      }
+    },
+    "Start over": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start over"
+          }
+        }
+      }
+    },
+    "Still, Pig wondered if maybe a city had more to offer.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Still, Pig wondered if maybe a city had more to offer."
+          }
+        }
+      }
+    },
+    "Stop %lld, %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop %lld, %@."
+          }
+        }
+      }
+    },
+    "Sun Hat": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sun Hat"
+          }
+        }
+      }
+    },
+    "Sunbaked Dunes. Warm. Secluded. Extremely low-maintenance landscaping.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunbaked Dunes. Warm. Secluded. Extremely low-maintenance landscaping."
+          }
+        }
+      }
+    },
+    "Sunflower": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunflower"
+          }
+        }
+      }
+    },
+    "Sunglasses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunglasses"
+          }
+        }
+      }
+    },
+    "Support and contact": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support and contact"
+          }
+        }
+      }
+    },
+    "Swipe left or right on the calendar to change month": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe left or right on the calendar to change month"
+          }
+        }
+      }
+    },
+    "TODAY'S PUZZLE": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TODAY'S PUZZLE"
+          }
+        }
+      }
+    },
+    "Tap a tile to place a fence piece. Try it now.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a tile to place a fence piece. Try it now."
+          }
+        }
+      }
+    },
+    "Tap and drag across tiles to place several pieces at once. Give it a try.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap and drag across tiles to place several pieces at once. Give it a try."
+          }
+        }
+      }
+    },
+    "That didn't go through, and you have not been charged. Have another go in a moment.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That didn't go through, and you have not been charged. Have another go in a moment."
+          }
+        }
+      }
+    },
+    "That's it. Go give Pig some room to roam.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's it. Go give Pig some room to roam."
+          }
+        }
+      }
+    },
+    "The App Store could not be reached just now. Check the connection and try again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The App Store could not be reached just now. Check the connection and try again."
+          }
+        }
+      }
+    },
+    "The Daily Archive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Daily Archive"
+          }
+        }
+      }
+    },
+    "The Universe": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Universe"
+          }
+        }
+      }
+    },
+    "The almanac this game shipped with does not go that far. The meadow is still there, and every day the book does have is in the archive.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The almanac this game shipped with does not go that far. The meadow is still there, and every day the book does have is in the archive."
+          }
+        }
+      }
+    },
+    "The animals have no notes": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The animals have no notes"
+          }
+        }
+      }
+    },
+    "The apartment came with a roommate.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The apartment came with a roommate."
+          }
+        }
+      }
+    },
+    "The bats were happy to share. Pig was not.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The bats were happy to share. Pig was not."
+          }
+        }
+      }
+    },
+    "The best pen there is.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The best pen there is."
+          }
+        }
+      }
+    },
+    "The best pen was already his. Plenty of space. Apples nearby. No fine print.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The best pen was already his. Plenty of space. Apples nearby. No fine print."
+          }
+        }
+      }
+    },
+    "The crocodile had one requirement: waterfront.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The crocodile had one requirement: waterfront."
+          }
+        }
+      }
+    },
+    "The current resident. Apparently this was not a vacant lot.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The current resident. Apparently this was not a vacant lot."
+          }
+        }
+      }
+    },
+    "The description did not mention the volcano.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The description did not mention the volcano."
+          }
+        }
+      }
+    },
+    "The dressing barn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dressing barn"
+          }
+        }
+      }
+    },
+    "The eagle sees everything directly above, below, and beside it. Everything.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The eagle sees everything directly above, below, and beside it. Everything."
+          }
+        }
+      }
+    },
+    "The full game": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The full game"
+          }
+        }
+      }
+    },
+    "The knock and the little buzz as fencing goes in, a pen holds, or the pig gets away, and the waltz under it all. Sounds and music follow the ring/silent switch on the side of the phone, and the music stays out of the way of anything you already have playing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The knock and the little buzz as fencing goes in, a pen holds, or the pig gets away, and the waltz under it all. Sounds and music follow the ring/silent switch on the side of the phone, and the music stays out of the way of anything you already have playing."
+          }
+        }
+      }
+    },
+    "The listing described it as \"lush.\" That was generous.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The listing described it as \"lush.\" That was generous."
+          }
+        }
+      }
+    },
+    "The lot was enormous. Shade was sold separately.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The lot was enormous. Shade was sold separately."
+          }
+        }
+      }
+    },
+    "The meadow and today's daily puzzle are free, and every world past the meadow opens a level a day. Unlock all of them at once, and the whole archive — once, for good.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The meadow and today's daily puzzle are free, and every world past the meadow opens a level a day. Unlock all of them at once, and the whole archive — once, for good."
+          }
+        }
+      }
+    },
+    "The month after": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The month after"
+          }
+        }
+      }
+    },
+    "The month before": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The month before"
+          }
+        }
+      }
+    },
+    "The pegs": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pegs"
+          }
+        }
+      }
+    },
+    "The pen is shut, but %@ can see into it. He looks along his row and his column, and only a fence blocks the view — a wall of the pen's own, or one piece planted in his way.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pen is shut, but %@ can see into it. He looks along his row and his column, and only a fence blocks the view — a wall of the pen's own, or one piece planted in his way."
+          }
+        }
+      }
+    },
+    "The pig took the tree line. Mushrooms in the leaf mould, wilted flowers in the dark.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pig took the tree line. Mushrooms in the leaf mould, wilted flowers in the dark."
+          }
+        }
+      }
+    },
+    "The pig wearing the %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pig wearing the %@"
+          }
+        }
+      }
+    },
+    "The pig, wearing nothing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pig, wearing nothing"
+          }
+        }
+      }
+    },
+    "The practice pen, start to finish: laying a fence, dragging a run of it, what a bonus and a penalty are worth, and what shutting the pig in is worth.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The practice pen, start to finish: laying a fence, dragging a run of it, what a bonus and a penalty are worth, and what shutting the pig in is worth."
+          }
+        }
+      }
+    },
+    "The property was already occupied. Twice.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The property was already occupied. Twice."
+          }
+        }
+      }
+    },
+    "The rat was not leaving. The rat had never considered leaving.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The rat was not leaving. The rat had never considered leaving."
+          }
+        }
+      }
+    },
+    "The ringmaster runs a tight ship. Keep your construction out of his personal space.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The ringmaster runs a tight ship. Keep your construction out of his personal space."
+          }
+        }
+      }
+    },
+    "The seal wanted its own place. With water access. Non-negotiable.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The seal wanted its own place. With water access. Non-negotiable."
+          }
+        }
+      }
+    },
+    "The seller had disclosed some local wildlife. They had undersold it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The seller had disclosed some local wildlife. They had undersold it."
+          }
+        }
+      }
+    },
+    "The views were excellent. The heating bill was unbeatable.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The views were excellent. The heating bill was unbeatable."
+          }
+        }
+      }
+    },
+    "The waterfront came with a resident.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The waterfront came with a resident."
+          }
+        }
+      }
+    },
+    "Then Pig discovered the property came with a guest house.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then Pig discovered the property came with a guest house."
+          }
+        }
+      }
+    },
+    "Then Pig found something listed below market.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then Pig found something listed below market."
+          }
+        }
+      }
+    },
+    "Then Pig met management.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then Pig met management."
+          }
+        }
+      }
+    },
+    "Then Pig met the neighbor.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then Pig met the neighbor."
+          }
+        }
+      }
+    },
+    "Then Pig saw somewhere with better lighting.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then Pig saw somewhere with better lighting."
+          }
+        }
+      }
+    },
+    "Then Pig spotted a listing with spectacular mountain views.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then Pig spotted a listing with spectacular mountain views."
+          }
+        }
+      }
+    },
+    "Then someone left the gate open. Pig decided it was time to explore the market for some new real estate.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then someone left the gate open. Pig decided it was time to explore the market for some new real estate."
+          }
+        }
+      }
+    },
+    "There is a barn beside the meadow's orchard. Get the pig that far and %lld outfits are hers to try on.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is a barn beside the meadow's orchard. Get the pig that far and %lld outfits are hers to try on."
+          }
+        }
+      }
+    },
+    "There was just one problem.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There was just one problem."
+          }
+        }
+      }
+    },
+    "There was really only one direction left.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There was really only one direction left."
+          }
+        }
+      }
+    },
+    "They agreed immediately on one thing: separate units.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "They agreed immediately on one thing: separate units."
+          }
+        }
+      }
+    },
+    "They both walked out": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "They both walked out"
+          }
+        }
+      }
+    },
+    "Think you can beat today's puzzle?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Think you can beat today's puzzle?"
+          }
+        }
+      }
+    },
+    "This neighbor will not be joining the homeowners association.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This neighbor will not be joining the homeowners association."
+          }
+        }
+      }
+    },
+    "Thornwood Thicket. Secluded. Wooded. Very private.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thornwood Thicket. Secluded. Wooded. Very private."
+          }
+        }
+      }
+    },
+    "Tidepool Cove. Ocean views. Fresh air. Prime waterfront.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tidepool Cove. Ocean views. Fresh air. Prime waterfront."
+          }
+        }
+      }
+    },
+    "Time on the clock, %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time on the clock, %@"
+          }
+        }
+      }
+    },
+    "Today's challenge is ready when you are": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's challenge is ready when you are"
+          }
+        }
+      }
+    },
+    "Today's pen won't build itself": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's pen won't build itself"
+          }
+        }
+      }
+    },
+    "Today's puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's puzzle"
+          }
+        }
+      }
+    },
+    "Today's puzzle is ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's puzzle is ready"
+          }
+        }
+      }
+    },
+    "Today's puzzle is ready.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's puzzle is ready."
+          }
+        }
+      }
+    },
+    "Today's puzzle is waiting.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's puzzle is waiting."
+          }
+        }
+      }
+    },
+    "Today's puzzle. %@.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's puzzle. %@."
+          }
+        }
+      }
+    },
+    "Today's puzzle. There is none — update Pigpen to get more daily puzzles.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's puzzle. There is none — update Pigpen to get more daily puzzles."
+          }
+        }
+      }
+    },
+    "Tons of space. Very low humidity.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tons of space. Very low humidity."
+          }
+        }
+      }
+    },
+    "Too close for comfort": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Too close for comfort"
+          }
+        }
+      }
+    },
+    "Top Hat": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top Hat"
+          }
+        }
+      }
+    },
+    "Turn on reminders": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on reminders"
+          }
+        }
+      }
+    },
+    "Turn them on in the Settings app to be reminded.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn them on in the Settings app to be reminded."
+          }
+        }
+      }
+    },
+    "Turns out the mineral rights have their perks. Open flames are a maintenance concern.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turns out the mineral rights have their perks. Open flames are a maintenance concern."
+          }
+        }
+      }
+    },
+    "Turns out, there were neighbors.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turns out, there were neighbors."
+          }
+        }
+      }
+    },
+    "Unfortunately, he'd started checking other listings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfortunately, he'd started checking other listings."
+          }
+        }
+      }
+    },
+    "Unfortunately, the neighborhood had very strict oversight.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfortunately, the neighborhood had very strict oversight."
+          }
+        }
+      }
+    },
+    "Unlock everything now": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock everything now"
+          }
+        }
+      }
+    },
+    "Unlock everything now · %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock everything now · %@"
+          }
+        }
+      }
+    },
+    "Unlock the full game": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock the full game"
+          }
+        }
+      }
+    },
+    "Unlock the full game · %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock the full game · %@"
+          }
+        }
+      }
+    },
+    "Unlocked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlocked"
+          }
+        }
+      }
+    },
+    "Update Pigpen to get more daily puzzles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update Pigpen to get more daily puzzles"
+          }
+        }
+      }
+    },
+    "Very far below market.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very far below market."
+          }
+        }
+      }
+    },
+    "Very green. Very wet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very green. Very wet."
+          }
+        }
+      }
+    },
+    "Waiting on approval. The full game opens as soon as it comes through — nothing more to do here.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting on approval. The full game opens as soon as it comes through — nothing more to do here."
+          }
+        }
+      }
+    },
+    "Walk through the tutorial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Walk through the tutorial"
+          }
+        }
+      }
+    },
+    "Want a nudge when your next level opens?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Want a nudge when your next level opens?"
+          }
+        }
+      }
+    },
+    "Watch every cut scene": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch every cut scene"
+          }
+        }
+      }
+    },
+    "Water access is worth a premium. Snakes tend to hurt buyer confidence.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Water access is worth a premium. Snakes tend to hurt buyer confidence."
+          }
+        }
+      }
+    },
+    "We'll nudge you when it opens": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We'll nudge you when it opens"
+          }
+        }
+      }
+    },
+    "Welcome to Emberpeak. Dramatic views. Naturally heated.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome to Emberpeak. Dramatic views. Naturally heated."
+          }
+        }
+      }
+    },
+    "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can."
+          }
+        }
+      }
+    },
+    "Welcome to Pigpen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome to Pigpen"
+          }
+        }
+      }
+    },
+    "Wellies": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wellies"
+          }
+        }
+      }
+    },
+    "What %@ has been keeping count of": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What %@ has been keeping count of"
+          }
+        }
+      }
+    },
+    "What could go wrong?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What could go wrong?"
+          }
+        }
+      }
+    },
+    "What to do": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What to do"
+          }
+        }
+      }
+    },
+    "What to do on this level. %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What to do on this level. %@"
+          }
+        }
+      }
+    },
+    "Where it all began. A pig, an open gate, and nine fields of nothing to stop it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where it all began. A pig, an open gate, and nine fields of nothing to stop it."
+          }
+        }
+      }
+    },
+    "Where the tide keeps rearranging the walls.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where the tide keeps rearranging the walls."
+          }
+        }
+      }
+    },
+    "Which puzzles get played and how they go — stars, scores, and how many tries a puzzle took. It shows which levels are too hard. No name, no account, no advertising identifier, and nothing that says who you are.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which puzzles get played and how they go — stars, scores, and how many tries a puzzle took. It shows which levels are too hard. No name, no account, no advertising identifier, and nothing that says who you are."
+          }
+        }
+      }
+    },
+    "Worn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Worn"
+          }
+        }
+      }
+    },
+    "Yesterday's puzzle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yesterday's puzzle"
+          }
+        }
+      }
+    },
+    "You can change the time, or turn it off, in Settings.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can change the time, or turn it off, in Settings."
+          }
+        }
+      }
+    },
+    "You have three-starred %lld stops that most players do not.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You have three-starred %lld stop that most players do not."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You have three-starred %lld stops that most players do not."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "You hold %lld best pens here that most players never find.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You hold %lld best pen here that most players never find."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You hold %lld best pens here that most players never find."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "You need %@ to play this level.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You need %@ to play this level."
+          }
+        }
+      }
+    },
+    "You will be asked first. It cannot be undone.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You will be asked first. It cannot be undone."
+          }
+        }
+      }
+    },
+    "You're ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're ready"
+          }
+        }
+      }
+    },
+    "You've played %lld days in a row": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You've played %lld day in a row"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "You've played %lld days in a row"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "You: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You: %@"
+          }
+        }
+      }
+    },
+    "You: %@, best pen found": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You: %@, best pen found"
+          }
+        }
+      }
+    },
+    "Your %lld-day streak is on the line": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your %lld-day streak is on the line"
+          }
+        }
+      }
+    },
+    "Your best yet: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your best yet: %@"
+          }
+        }
+      }
+    },
+    "Your daily puzzle is here": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your daily puzzle is here"
+          }
+        }
+      }
+    },
+    "Your next free level is ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your next free level is ready"
+          }
+        }
+      }
+    },
+    "Your record": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your record"
+          }
+        }
+      }
+    },
+    "Your streak needs you": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your streak needs you"
+          }
+        }
+      }
+    },
+    "Your streak won't save itself": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your streak won't save itself"
+          }
+        }
+      }
+    },
+    "a minute": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "a minute"
+          }
+        }
+      }
+    },
+    "animal.bat.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screech!"
+          }
+        }
+      }
+    },
+    "animal.bat.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bat"
+          }
+        }
+      }
+    },
+    "animal.bat.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the bat"
+          }
+        }
+      }
+    },
+    "animal.bat.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bats"
+          }
+        }
+      }
+    },
+    "animal.bat.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the bat"
+          }
+        }
+      }
+    },
+    "animal.boar.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grunt!"
+          }
+        }
+      }
+    },
+    "animal.boar.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "boar"
+          }
+        }
+      }
+    },
+    "animal.boar.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the boar"
+          }
+        }
+      }
+    },
+    "animal.boar.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "boars"
+          }
+        }
+      }
+    },
+    "animal.boar.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the boar"
+          }
+        }
+      }
+    },
+    "animal.crab.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click!"
+          }
+        }
+      }
+    },
+    "animal.crab.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "crab"
+          }
+        }
+      }
+    },
+    "animal.crab.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the crab"
+          }
+        }
+      }
+    },
+    "animal.crab.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "crabs"
+          }
+        }
+      }
+    },
+    "animal.crab.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the crab"
+          }
+        }
+      }
+    },
+    "animal.croc.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snap!"
+          }
+        }
+      }
+    },
+    "animal.croc.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "old croc"
+          }
+        }
+      }
+    },
+    "animal.croc.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the old croc"
+          }
+        }
+      }
+    },
+    "animal.croc.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "old crocs"
+          }
+        }
+      }
+    },
+    "animal.croc.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the old croc"
+          }
+        }
+      }
+    },
+    "animal.deer.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snort!"
+          }
+        }
+      }
+    },
+    "animal.deer.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "deer"
+          }
+        }
+      }
+    },
+    "animal.deer.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the deer"
+          }
+        }
+      }
+    },
+    "animal.deer.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "deer"
+          }
+        }
+      }
+    },
+    "animal.deer.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the deer"
+          }
+        }
+      }
+    },
+    "animal.eagle.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kree!"
+          }
+        }
+      }
+    },
+    "animal.eagle.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "eagle"
+          }
+        }
+      }
+    },
+    "animal.eagle.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the eagle"
+          }
+        }
+      }
+    },
+    "animal.eagle.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "eagles"
+          }
+        }
+      }
+    },
+    "animal.eagle.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the eagle"
+          }
+        }
+      }
+    },
+    "animal.pig.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oink!"
+          }
+        }
+      }
+    },
+    "animal.pig.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pig"
+          }
+        }
+      }
+    },
+    "animal.pig.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the pig"
+          }
+        }
+      }
+    },
+    "animal.pig.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pigs"
+          }
+        }
+      }
+    },
+    "animal.pig.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the pig"
+          }
+        }
+      }
+    },
+    "animal.pup.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peep!"
+          }
+        }
+      }
+    },
+    "animal.pup.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pup"
+          }
+        }
+      }
+    },
+    "animal.pup.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the pup"
+          }
+        }
+      }
+    },
+    "animal.pup.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pups"
+          }
+        }
+      }
+    },
+    "animal.pup.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the pup"
+          }
+        }
+      }
+    },
+    "animal.rat.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Squeak!"
+          }
+        }
+      }
+    },
+    "animal.rat.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rat king"
+          }
+        }
+      }
+    },
+    "animal.rat.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the rat king"
+          }
+        }
+      }
+    },
+    "animal.rat.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rat kings"
+          }
+        }
+      }
+    },
+    "animal.rat.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the rat king"
+          }
+        }
+      }
+    },
+    "animal.ringmaster.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ta-da!"
+          }
+        }
+      }
+    },
+    "animal.ringmaster.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ringmaster"
+          }
+        }
+      }
+    },
+    "animal.ringmaster.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the ringmaster"
+          }
+        }
+      }
+    },
+    "animal.ringmaster.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ringmasters"
+          }
+        }
+      }
+    },
+    "animal.ringmaster.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the ringmaster"
+          }
+        }
+      }
+    },
+    "animal.scorpion.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tik-tik!"
+          }
+        }
+      }
+    },
+    "animal.scorpion.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "scorpion"
+          }
+        }
+      }
+    },
+    "animal.scorpion.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the scorpion"
+          }
+        }
+      }
+    },
+    "animal.scorpion.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "scorpions"
+          }
+        }
+      }
+    },
+    "animal.scorpion.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the scorpion"
+          }
+        }
+      }
+    },
+    "animal.seal.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arf!"
+          }
+        }
+      }
+    },
+    "animal.seal.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bull seal"
+          }
+        }
+      }
+    },
+    "animal.seal.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the bull seal"
+          }
+        }
+      }
+    },
+    "animal.seal.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bull seals"
+          }
+        }
+      }
+    },
+    "animal.seal.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the bull seal"
+          }
+        }
+      }
+    },
+    "animal.visitor.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bleep!"
+          }
+        }
+      }
+    },
+    "animal.visitor.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "visitor"
+          }
+        }
+      }
+    },
+    "animal.visitor.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the visitor"
+          }
+        }
+      }
+    },
+    "animal.visitor.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "visitors"
+          }
+        }
+      }
+    },
+    "animal.visitor.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the visitor"
+          }
+        }
+      }
+    },
+    "animal.wyrm.call": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rumble!"
+          }
+        }
+      }
+    },
+    "animal.wyrm.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wyrm"
+          }
+        }
+      }
+    },
+    "animal.wyrm.object": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the wyrm"
+          }
+        }
+      }
+    },
+    "animal.wyrm.plural": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wyrms"
+          }
+        }
+      }
+    },
+    "animal.wyrm.subject": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the wyrm"
+          }
+        }
+      }
+    },
+    "app.version": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@ (%@)"
+          }
+        }
+      }
+    },
+    "apple": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "apple"
+          }
+        }
+      }
+    },
+    "boulder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "boulder"
+          }
+        }
+      }
+    },
+    "coin": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "coin"
+          }
+        }
+      }
+    },
+    "coming soon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "coming soon"
+          }
+        }
+      }
+    },
+    "complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "complete"
+          }
+        }
+      }
+    },
+    "date.fullTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      }
+    },
+    "date.month": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      }
+    },
+    "date.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %lld %@"
+          }
+        }
+      }
+    },
+    "date.written": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@ %lld"
+          }
+        }
+      }
+    },
+    "diamond": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "diamond"
+          }
+        }
+      }
+    },
+    "eight more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "eight more stars"
+          }
+        }
+      }
+    },
+    "film.position": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld"
+          }
+        }
+      }
+    },
+    "five more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "five more stars"
+          }
+        }
+      }
+    },
+    "flame": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "flame"
+          }
+        }
+      }
+    },
+    "four more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "four more stars"
+          }
+        }
+      }
+    },
+    "ice slick": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ice slick"
+          }
+        }
+      }
+    },
+    "jellyfish": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "jellyfish"
+          }
+        }
+      }
+    },
+    "locked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "locked"
+          }
+        }
+      }
+    },
+    "lotus flower": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "lotus flower"
+          }
+        }
+      }
+    },
+    "megaphone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "megaphone"
+          }
+        }
+      }
+    },
+    "melon": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "melon"
+          }
+        }
+      }
+    },
+    "meteor": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "meteor"
+          }
+        }
+      }
+    },
+    "month.april": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "April"
+          }
+        }
+      }
+    },
+    "month.august": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "August"
+          }
+        }
+      }
+    },
+    "month.december": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "December"
+          }
+        }
+      }
+    },
+    "month.february": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "February"
+          }
+        }
+      }
+    },
+    "month.january": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "January"
+          }
+        }
+      }
+    },
+    "month.july": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "July"
+          }
+        }
+      }
+    },
+    "month.june": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "June"
+          }
+        }
+      }
+    },
+    "month.march": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "March"
+          }
+        }
+      }
+    },
+    "month.may": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "May"
+          }
+        }
+      }
+    },
+    "month.november": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "November"
+          }
+        }
+      }
+    },
+    "month.october": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "October"
+          }
+        }
+      }
+    },
+    "month.september": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "September"
+          }
+        }
+      }
+    },
+    "mosquito": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mosquito"
+          }
+        }
+      }
+    },
+    "mushroom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mushroom"
+          }
+        }
+      }
+    },
+    "nine more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nine more stars"
+          }
+        }
+      }
+    },
+    "no stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no stars"
+          }
+        }
+      }
+    },
+    "not held yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "not held yet"
+          }
+        }
+      }
+    },
+    "of %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "of %lld"
+          }
+        }
+      }
+    },
+    "one more star": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "one more star"
+          }
+        }
+      }
+    },
+    "one star": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "one star"
+          }
+        }
+      }
+    },
+    "pizza": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pizza"
+          }
+        }
+      }
+    },
+    "popcorn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "popcorn"
+          }
+        }
+      }
+    },
+    "rainbow": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rainbow"
+          }
+        }
+      }
+    },
+    "record.bestPen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "best pen"
+          }
+        }
+      }
+    },
+    "record.bestPens": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "best pens"
+          }
+        }
+      }
+    },
+    "record.tally.spoken": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      }
+    },
+    "seashell": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "seashell"
+          }
+        }
+      }
+    },
+    "seven more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "seven more stars"
+          }
+        }
+      }
+    },
+    "signpost.cleared": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        }
+      }
+    },
+    "signpost.cleared.bestPen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@, the best pen there is"
+          }
+        }
+      }
+    },
+    "six more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "six more stars"
+          }
+        }
+      }
+    },
+    "ski": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ski"
+          }
+        }
+      }
+    },
+    "skull": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "skull"
+          }
+        }
+      }
+    },
+    "snake": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "snake"
+          }
+        }
+      }
+    },
+    "solved": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "solved"
+          }
+        }
+      }
+    },
+    "star": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "star"
+          }
+        }
+      }
+    },
+    "stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "stars"
+          }
+        }
+      }
+    },
+    "storm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "storm"
+          }
+        }
+      }
+    },
+    "ten more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ten more stars"
+          }
+        }
+      }
+    },
+    "the animals": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the animals"
+          }
+        }
+      }
+    },
+    "the barn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the barn"
+          }
+        }
+      }
+    },
+    "the big top": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the big top"
+          }
+        }
+      }
+    },
+    "the boar": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the boar"
+          }
+        }
+      }
+    },
+    "the bridge head": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the bridge head"
+          }
+        }
+      }
+    },
+    "the bull seal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the bull seal"
+          }
+        }
+      }
+    },
+    "the cairn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the cairn"
+          }
+        }
+      }
+    },
+    "the cave mouth": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the cave mouth"
+          }
+        }
+      }
+    },
+    "the clocktower": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the clocktower"
+          }
+        }
+      }
+    },
+    "the crab": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the crab"
+          }
+        }
+      }
+    },
+    "the eagle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the eagle"
+          }
+        }
+      }
+    },
+    "the first crater": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the first crater"
+          }
+        }
+      }
+    },
+    "the hollow stump": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the hollow stump"
+          }
+        }
+      }
+    },
+    "the igloo": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the igloo"
+          }
+        }
+      }
+    },
+    "the old croc": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the old croc"
+          }
+        }
+      }
+    },
+    "the rat king": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the rat king"
+          }
+        }
+      }
+    },
+    "the ringmaster": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the ringmaster"
+          }
+        }
+      }
+    },
+    "the rock arch": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the rock arch"
+          }
+        }
+      }
+    },
+    "the roost": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the roost"
+          }
+        }
+      }
+    },
+    "the scorpion": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the scorpion"
+          }
+        }
+      }
+    },
+    "the stag": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the stag"
+          }
+        }
+      }
+    },
+    "the stilt hut": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the stilt hut"
+          }
+        }
+      }
+    },
+    "the visitor": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the visitor"
+          }
+        }
+      }
+    },
+    "the wreck": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the wreck"
+          }
+        }
+      }
+    },
+    "the wyrm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the wyrm"
+          }
+        }
+      }
+    },
+    "three more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "three more stars"
+          }
+        }
+      }
+    },
+    "three stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "three stars"
+          }
+        }
+      }
+    },
+    "trash can": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "trash can"
+          }
+        }
+      }
+    },
+    "treat.points": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ points"
+          }
+        }
+      }
+    },
+    "two more stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "two more stars"
+          }
+        }
+      }
+    },
+    "two stars": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "two stars"
+          }
+        }
+      }
+    },
+    "universe.planet.spoken": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@. %@."
+          }
+        }
+      }
+    },
+    "unlock the full game to play it": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unlock the full game to play it"
+          }
+        }
+      }
+    },
+    "wait.hours.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lldh"
+          }
+        }
+      }
+    },
+    "wait.minutes.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lldm"
+          }
+        }
+      }
+    },
+    "weekday.friday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Friday"
+          }
+        }
+      }
+    },
+    "weekday.friday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "F"
+          }
+        }
+      }
+    },
+    "weekday.friday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fri"
+          }
+        }
+      }
+    },
+    "weekday.monday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monday"
+          }
+        }
+      }
+    },
+    "weekday.monday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "M"
+          }
+        }
+      }
+    },
+    "weekday.monday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mon"
+          }
+        }
+      }
+    },
+    "weekday.saturday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saturday"
+          }
+        }
+      }
+    },
+    "weekday.saturday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S"
+          }
+        }
+      }
+    },
+    "weekday.saturday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sat"
+          }
+        }
+      }
+    },
+    "weekday.sunday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunday"
+          }
+        }
+      }
+    },
+    "weekday.sunday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S"
+          }
+        }
+      }
+    },
+    "weekday.sunday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sun"
+          }
+        }
+      }
+    },
+    "weekday.thursday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thursday"
+          }
+        }
+      }
+    },
+    "weekday.thursday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "T"
+          }
+        }
+      }
+    },
+    "weekday.thursday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu"
+          }
+        }
+      }
+    },
+    "weekday.tuesday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuesday"
+          }
+        }
+      }
+    },
+    "weekday.tuesday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "T"
+          }
+        }
+      }
+    },
+    "weekday.tuesday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tue"
+          }
+        }
+      }
+    },
+    "weekday.wednesday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wednesday"
+          }
+        }
+      }
+    },
+    "weekday.wednesday.initial": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W"
+          }
+        }
+      }
+    },
+    "weekday.wednesday.short": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wed"
+          }
+        }
+      }
+    },
+    "wilted flower": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wilted flower"
+          }
+        }
+      }
+    },
+    "“%@”": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@”"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

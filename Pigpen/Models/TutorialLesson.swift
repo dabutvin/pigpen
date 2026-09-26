@@ -1,3 +1,4 @@
+import Foundation
 import Observation
 
 /// The scripted walkthrough that teaches the game on the practice pen.
@@ -123,32 +124,40 @@ final class TutorialLesson {
     /// touches a lesson, so neither of them waits for the main actor to hand one over.
     nonisolated static func headline(for step: Step) -> String {
         switch step {
-        case .welcome: "Welcome to Pigpen"
-        case .tap: "Place a fence"
-        case .drag: "Build faster"
-        case .treats: "Choose what's inside"
-        case .close: "Keep Pig in"
-        case .release: "See how you did"
-        case .finished: "You're ready"
+        case .welcome: String(localized: "Welcome to Pigpen")
+        case .tap: String(localized: "Place a fence")
+        case .drag: String(localized: "Build faster")
+        case .treats: String(localized: "Choose what's inside")
+        case .close: String(localized: "Keep Pig in")
+        case .release: String(localized: "See how you did")
+        case .finished: String(localized: "You're ready")
         }
     }
 
     nonisolated static func detail(for step: Step) -> String {
         switch step {
         case .welcome:
-            "Pig needs a little more room. Your job is to build him the biggest pen you can. Let's try one."
+            String(localized: """
+                Pig needs a little more room. Your job is to build him the biggest pen you can. \
+                Let's try one.
+                """)
         case .tap:
-            "Tap a tile to place a fence piece. Try it now."
+            String(localized: "Tap a tile to place a fence piece. Try it now.")
         case .drag:
-            "Tap and drag across tiles to place several pieces at once. Give it a try."
+            String(localized: "Tap and drag across tiles to place several pieces at once. Give it a try.")
         case .treats:
-            "Bonus tiles add points. Penalty tiles take points away. Try to fence in the bonus and leave the penalty out."
+            String(localized: """
+                Bonus tiles add points. Penalty tiles take points away. Try to fence in the \
+                bonus and leave the penalty out.
+                """)
         case .close:
-            "Make sure your fence is completely closed. Leave a gap and Pig will wander off."
+            String(localized: """
+                Make sure your fence is completely closed. Leave a gap and Pig will wander off.
+                """)
         case .release:
-            "Release the pig. Earn up to 3 stars. More space + bonuses = a better score."
+            String(localized: "Release the pig. Earn up to 3 stars. More space + bonuses = a better score.")
         case .finished:
-            "That's it. Go give Pig some room to roam."
+            String(localized: "That's it. Go give Pig some room to roam.")
         }
     }
 
