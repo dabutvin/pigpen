@@ -23063,25 +23063,25 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jetzt alles freischalten · %@"
+            "value": "Alles freischalten · %@"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Desbloquéalo todo ya · %@"
+            "value": "Desbloquéalo todo · %@"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tout débloquer maintenant · %@"
+            "value": "Tout débloquer · %@"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sblocca tutto subito · %@"
+            "value": "Sblocca tutto · %@"
           }
         },
         "ja": {
@@ -23093,7 +23093,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Desbloquear tudo agora · %@"
+            "value": "Desbloquear tudo · %@"
           }
         }
       }
@@ -23169,25 +23169,25 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vollversion freischalten · %@"
+            "value": "Vollversion · %@"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Desbloquea el juego completo · %@"
+            "value": "Juego completo · %@"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Débloquer le jeu complet · %@"
+            "value": "Jeu complet · %@"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sblocca il gioco completo · %@"
+            "value": "Gioco completo · %@"
           }
         },
         "ja": {
@@ -23199,7 +23199,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Desbloquear o jogo completo · %@"
+            "value": "Jogo completo · %@"
           }
         }
       }
