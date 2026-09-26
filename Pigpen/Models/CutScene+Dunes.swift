@@ -93,15 +93,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .dunes(.theSandSea),
-                    caption: "Sunbaked Dunes. Warm. Secluded. Extremely low-maintenance landscaping."
+                    caption: String(localized: "Sunbaked Dunes. Warm. Secluded. Extremely low-maintenance landscaping.")
                 ),
                 Shot(
                     picture: .dunes(.melonsAndSnakes),
-                    caption: "Water access is worth a premium. Snakes tend to hurt buyer confidence."
+                    caption: String(localized: "Water access is worth a premium. Snakes tend to hurt buyer confidence.")
                 ),
                 Shot(
                     picture: .dunes(.shadeSoldSeparately),
-                    caption: "The lot was enormous. Shade was sold separately."
+                    caption: String(localized: "The lot was enormous. Shade was sold separately.")
                 )
             ],
             start: start
@@ -123,15 +123,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .dunes(.theNearestNeighbor),
-                    caption: "Pig finally met the nearest neighbor."
+                    caption: String(localized: "Pig finally met the nearest neighbor.")
                 ),
                 Shot(
                     picture: .dunes(.aLittleDistance),
-                    caption: "Both parties requested a little distance."
+                    caption: String(localized: "Both parties requested a little distance.")
                 ),
                 Shot(
                     picture: .dunes(.noSharedFence),
-                    caption: "Build separate pens. And don't let them share a fence. Adjoining properties were not approved."
+                    caption: String(localized: "Build separate pens. And don't let them share a fence. Adjoining properties were not approved.")
                 )
             ],
             start: start
@@ -151,15 +151,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .dunes(.dunesHeld),
-                    caption: "Tons of space. Very low humidity."
+                    caption: String(localized: "Tons of space. Very low humidity.")
                 ),
                 Shot(
                     picture: .dunes(.waterAttached),
-                    caption: "Pig thought the sand would be more appealing with water attached."
+                    caption: String(localized: "Pig thought the sand would be more appealing with water attached.")
                 ),
                 Shot(
                     picture: .dunes(.theSea),
-                    caption: "What could go wrong?"
+                    caption: String(localized: "What could go wrong?")
                 )
             ],
             start: start

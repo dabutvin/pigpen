@@ -99,14 +99,16 @@ extension WorldTheme {
     static let meadow = WorldTheme(
         id: "mudlark-meadow",
         name: "Mudlark Meadow",
-        blurb: "Where it all began. A pig, an open gate, and nine fields of nothing to stop it.",
+        blurb: String(localized: """
+            Where it all began. A pig, an open gate, and nine fields of nothing to stop it.
+            """),
         day: .day,
         treats: TreatSkin(
-            bonusGlyph: "🍎", bonusScale: 0.58, bonusName: "apple",
-            hazardGlyph: "☠️", hazardScale: 0.68, hazardName: "skull"
+            bonusGlyph: "🍎", bonusScale: 0.58, bonusName: String(localized: "apple"),
+            hazardGlyph: "☠️", hazardScale: 0.68, hazardName: String(localized: "skull")
         ),
         field: .meadow,
-        boss: BossMark(glyph: "🦌", name: "the stag"),
+        boss: BossMark(glyph: "🦌", name: String(localized: "the stag")),
         accent: Color(red: 0.58, green: 0.78, blue: 0.45),
         accentDeep: Color(red: 0.36, green: 0.58, blue: 0.30),
         chrome: .meadow,
@@ -119,14 +121,16 @@ extension WorldTheme {
     static let thornwood = WorldTheme(
         id: "thornwood-thicket",
         name: "Thornwood Thicket",
-        blurb: "The pig took the tree line. Mushrooms in the leaf mould, wilted flowers in the dark.",
+        blurb: String(localized: """
+            The pig took the tree line. Mushrooms in the leaf mould, wilted flowers in the dark.
+            """),
         day: .forestDay,
         treats: TreatSkin(
-            bonusGlyph: "🍄", bonusScale: 0.56, bonusName: "mushroom",
-            hazardGlyph: "🥀", hazardScale: 0.60, hazardName: "wilted flower"
+            bonusGlyph: "🍄", bonusScale: 0.56, bonusName: String(localized: "mushroom"),
+            hazardGlyph: "🥀", hazardScale: 0.60, hazardName: String(localized: "wilted flower")
         ),
         field: .thornwood,
-        boss: BossMark(glyph: "🐗", name: "the boar"),
+        boss: BossMark(glyph: "🐗", name: String(localized: "the boar")),
         accent: Color(red: 0.40, green: 0.62, blue: 0.36),
         accentDeep: Color(red: 0.20, green: 0.38, blue: 0.22),
         chrome: .thornwood,
@@ -140,14 +144,16 @@ extension WorldTheme {
     static let emberpeak = WorldTheme(
         id: "emberpeak",
         name: "Emberpeak",
-        blurb: "A mountain that never stops smoking. Coins in the ash, flames under it.",
+        blurb: String(localized: """
+            A mountain that never stops smoking. Coins in the ash, flames under it.
+            """),
         day: .emberDay,
         treats: TreatSkin(
-            bonusGlyph: "🪙", bonusScale: 0.56, bonusName: "coin",
-            hazardGlyph: "🔥", hazardScale: 0.62, hazardName: "flame"
+            bonusGlyph: "🪙", bonusScale: 0.56, bonusName: String(localized: "coin"),
+            hazardGlyph: "🔥", hazardScale: 0.62, hazardName: String(localized: "flame")
         ),
         field: .emberpeak,
-        boss: BossMark(glyph: "🐉", name: "the wyrm"),
+        boss: BossMark(glyph: "🐉", name: String(localized: "the wyrm")),
         accent: Color(red: 0.92, green: 0.47, blue: 0.26),
         accentDeep: Color(red: 0.55, green: 0.18, blue: 0.12),
         chrome: .emberpeak,
@@ -164,14 +170,16 @@ extension WorldTheme {
     static let cogsworth = WorldTheme(
         id: "cogsworth-city",
         name: "Cogsworth City",
-        blurb: "Alleys, rooftops and a pig on the loose. Pizza on the pavement, trash cans along it.",
+        blurb: String(localized: """
+            Alleys, rooftops and a pig on the loose. Pizza on the pavement, trash cans along it.
+            """),
         day: .cityDay,
         treats: TreatSkin(
-            bonusGlyph: "🍕", bonusScale: 0.58, bonusName: "pizza",
-            hazardGlyph: "🗑️", hazardScale: 0.60, hazardName: "trash can"
+            bonusGlyph: "🍕", bonusScale: 0.58, bonusName: String(localized: "pizza"),
+            hazardGlyph: "🗑️", hazardScale: 0.60, hazardName: String(localized: "trash can")
         ),
         field: .cogsworth,
-        boss: BossMark(glyph: "🐀", name: "the rat king"),
+        boss: BossMark(glyph: "🐀", name: String(localized: "the rat king")),
         accent: Color(red: 0.62, green: 0.66, blue: 0.73),
         accentDeep: Color(red: 0.31, green: 0.35, blue: 0.42),
         chrome: .cogsworth,
@@ -189,14 +197,16 @@ extension WorldTheme {
     static let starfall = WorldTheme(
         id: "starfall-reaches",
         name: "Starfall Reaches",
-        blurb: "Fence a pig loose among the stars. Stars in the dust, meteors under it.",
+        blurb: String(localized: """
+            Fence a pig loose among the stars. Stars in the dust, meteors under it.
+            """),
         day: .starDay,
         treats: TreatSkin(
-            bonusGlyph: "🌟", bonusScale: 0.58, bonusName: "star",
-            hazardGlyph: "☄️", hazardScale: 0.62, hazardName: "meteor"
+            bonusGlyph: "🌟", bonusScale: 0.58, bonusName: String(localized: "star"),
+            hazardGlyph: "☄️", hazardScale: 0.62, hazardName: String(localized: "meteor")
         ),
         field: .starfall,
-        boss: BossMark(glyph: "🛸", name: "the visitor"),
+        boss: BossMark(glyph: "🛸", name: String(localized: "the visitor")),
         accent: Color(red: 0.61, green: 0.53, blue: 0.89),
         accentDeep: Color(red: 0.29, green: 0.23, blue: 0.52),
         chrome: .starfall,
@@ -215,14 +225,16 @@ extension WorldTheme {
     static let gloamdeep = WorldTheme(
         id: "gloamdeep-caverns",
         name: "Gloamdeep Caverns",
-        blurb: "Deep dark, and something with wings. Diamonds in the flowstone, boulders on it.",
+        blurb: String(localized: """
+            Deep dark, and something with wings. Diamonds in the flowstone, boulders on it.
+            """),
         day: .gloamDay,
         treats: TreatSkin(
-            bonusGlyph: "💎", bonusScale: 0.56, bonusName: "diamond",
-            hazardGlyph: "🪨", hazardScale: 0.60, hazardName: "boulder"
+            bonusGlyph: "💎", bonusScale: 0.56, bonusName: String(localized: "diamond"),
+            hazardGlyph: "🪨", hazardScale: 0.60, hazardName: String(localized: "boulder")
         ),
         field: .gloamdeep,
-        boss: BossMark(glyph: "🦇", name: "the roost"),
+        boss: BossMark(glyph: "🦇", name: String(localized: "the roost")),
         accent: Color(red: 0.53, green: 0.47, blue: 0.63),
         accentDeep: Color(red: 0.24, green: 0.20, blue: 0.34),
         chrome: .gloamdeep,
@@ -241,14 +253,16 @@ extension WorldTheme {
     static let lanternCarnival = WorldTheme(
         id: "lantern-carnival",
         name: "Lantern Carnival",
-        blurb: "Lights, crowds and a pig on the loose. Popcorn in the sawdust, megaphones over it.",
+        blurb: String(localized: """
+            Lights, crowds and a pig on the loose. Popcorn in the sawdust, megaphones over it.
+            """),
         day: .lanternDay,
         treats: TreatSkin(
-            bonusGlyph: "🍿", bonusScale: 0.58, bonusName: "popcorn",
-            hazardGlyph: "📣", hazardScale: 0.58, hazardName: "megaphone"
+            bonusGlyph: "🍿", bonusScale: 0.58, bonusName: String(localized: "popcorn"),
+            hazardGlyph: "📣", hazardScale: 0.58, hazardName: String(localized: "megaphone")
         ),
         field: .lanternCarnival,
-        boss: BossMark(glyph: "🤹", name: "the ringmaster"),
+        boss: BossMark(glyph: "🤹", name: String(localized: "the ringmaster")),
         accent: Color(red: 0.93, green: 0.43, blue: 0.67),
         accentDeep: Color(red: 0.55, green: 0.20, blue: 0.41),
         chrome: .lanternCarnival,
@@ -266,14 +280,14 @@ extension WorldTheme {
     static let sunbakedDunes = WorldTheme(
         id: "sunbaked-dunes",
         name: "Sunbaked Dunes",
-        blurb: "Sand to the horizon, and a sting in it.",
+        blurb: String(localized: "Sand to the horizon, and a sting in it."),
         day: .duneDay,
         treats: TreatSkin(
-            bonusGlyph: "🍈", bonusScale: 0.58, bonusName: "melon",
-            hazardGlyph: "🐍", hazardScale: 0.60, hazardName: "snake"
+            bonusGlyph: "🍈", bonusScale: 0.58, bonusName: String(localized: "melon"),
+            hazardGlyph: "🐍", hazardScale: 0.60, hazardName: String(localized: "snake")
         ),
         field: .sunbakedDunes,
-        boss: BossMark(glyph: "🦂", name: "the scorpion"),
+        boss: BossMark(glyph: "🦂", name: String(localized: "the scorpion")),
         accent: Color(red: 0.93, green: 0.77, blue: 0.43),
         accentDeep: Color(red: 0.62, green: 0.44, blue: 0.20),
         chrome: .sunbakedDunes,
@@ -291,14 +305,14 @@ extension WorldTheme {
     static let tidepoolCove = WorldTheme(
         id: "tidepool-cove",
         name: "Tidepool Cove",
-        blurb: "Where the tide keeps rearranging the walls.",
+        blurb: String(localized: "Where the tide keeps rearranging the walls."),
         day: .coveDay,
         treats: TreatSkin(
-            bonusGlyph: "🐚", bonusScale: 0.58, bonusName: "seashell",
-            hazardGlyph: "🪼", hazardScale: 0.60, hazardName: "jellyfish"
+            bonusGlyph: "🐚", bonusScale: 0.58, bonusName: String(localized: "seashell"),
+            hazardGlyph: "🪼", hazardScale: 0.60, hazardName: String(localized: "jellyfish")
         ),
         field: .tidepoolCove,
-        boss: BossMark(glyph: "🦀", name: "the crab"),
+        boss: BossMark(glyph: "🦀", name: String(localized: "the crab")),
         accent: Color(red: 0.37, green: 0.74, blue: 0.72),
         accentDeep: Color(red: 0.16, green: 0.44, blue: 0.46),
         chrome: .tidepoolCove,
@@ -316,14 +330,14 @@ extension WorldTheme {
     static let frostwhiskerTundra = WorldTheme(
         id: "frostwhisker-tundra",
         name: "Frostwhisker Tundra",
-        blurb: "Ice, snow, and a pig that will not stay put.",
+        blurb: String(localized: "Ice, snow, and a pig that will not stay put."),
         day: .frostDay,
         treats: TreatSkin(
-            bonusGlyph: "🎿", bonusScale: 0.58, bonusName: "ski",
-            hazardGlyph: "🧊", hazardScale: 0.58, hazardName: "ice slick"
+            bonusGlyph: "🎿", bonusScale: 0.58, bonusName: String(localized: "ski"),
+            hazardGlyph: "🧊", hazardScale: 0.58, hazardName: String(localized: "ice slick")
         ),
         field: .frostwhiskerTundra,
-        boss: BossMark(glyph: "🦭", name: "the bull seal"),
+        boss: BossMark(glyph: "🦭", name: String(localized: "the bull seal")),
         accent: Color(red: 0.69, green: 0.84, blue: 0.93),
         accentDeep: Color(red: 0.36, green: 0.56, blue: 0.71),
         chrome: .frostwhiskerTundra,
@@ -341,14 +355,14 @@ extension WorldTheme {
     static let mirebogFen = WorldTheme(
         id: "mirebog-fen",
         name: "Mirebog Fen",
-        blurb: "Half water, half mud, all trouble.",
+        blurb: String(localized: "Half water, half mud, all trouble."),
         day: .fenDay,
         treats: TreatSkin(
-            bonusGlyph: "🪷", bonusScale: 0.56, bonusName: "lotus flower",
-            hazardGlyph: "🦟", hazardScale: 0.58, hazardName: "mosquito"
+            bonusGlyph: "🪷", bonusScale: 0.56, bonusName: String(localized: "lotus flower"),
+            hazardGlyph: "🦟", hazardScale: 0.58, hazardName: String(localized: "mosquito")
         ),
         field: .mirebogFen,
-        boss: BossMark(glyph: "🐊", name: "the old croc"),
+        boss: BossMark(glyph: "🐊", name: String(localized: "the old croc")),
         accent: Color(red: 0.47, green: 0.56, blue: 0.35),
         accentDeep: Color(red: 0.24, green: 0.32, blue: 0.18),
         chrome: .mirebogFen,
@@ -368,14 +382,14 @@ extension WorldTheme {
     static let cloudspireHeights = WorldTheme(
         id: "cloudspire-heights",
         name: "Cloudspire Heights",
-        blurb: "Fields in the sky, and a long way down.",
+        blurb: String(localized: "Fields in the sky, and a long way down."),
         day: .spireDay,
         treats: TreatSkin(
-            bonusGlyph: "🌈", bonusScale: 0.58, bonusName: "rainbow",
-            hazardGlyph: "🌩️", hazardScale: 0.58, hazardName: "storm"
+            bonusGlyph: "🌈", bonusScale: 0.58, bonusName: String(localized: "rainbow"),
+            hazardGlyph: "🌩️", hazardScale: 0.58, hazardName: String(localized: "storm")
         ),
         field: .cloudspireHeights,
-        boss: BossMark(glyph: "🦅", name: "the eagle"),
+        boss: BossMark(glyph: "🦅", name: String(localized: "the eagle")),
         accent: Color(red: 0.73, green: 0.83, blue: 0.96),
         accentDeep: Color(red: 0.44, green: 0.58, blue: 0.79),
         chrome: .cloudspireHeights,

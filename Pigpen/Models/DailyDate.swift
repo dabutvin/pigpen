@@ -98,24 +98,64 @@ struct DailyDate: Hashable, Comparable, Sendable, Identifiable {
 
     /// The day as a puzzle's name: `Wednesday 8 April`. The year is left off, since the
     /// month it belongs to is written over whatever screen led here.
-    var title: String { "\(weekday.name) \(day) \(Self.monthName(month))" }
+    var title: String {
+        String(localized: "date.title", defaultValue: "\(weekday.name) \(day) \(Self.monthName(month))")
+    }
 
     /// The day with the year on it, for anywhere the month is not already written down.
-    var fullTitle: String { "\(title) \(year)" }
+    ///
+    /// The year goes in as words rather than as a number. A number handed to a localised
+    /// format is grouped by the locale's rules, and 2026 comes back as "2,026"; a year is
+    /// never grouped in any language the game speaks, because it is a label and not a count.
+    var fullTitle: String {
+        String(localized: "date.fullTitle", defaultValue: "\(title) \(String(year))")
+    }
 
     /// The day as a line under a button's own name: `Tue, September 8`. The month comes
     /// before the day and the weekday takes a comma, which is how a date is read rather than
     /// how a puzzle is named — and the weekday is shortened, since the line has a run of days
     /// to carry beside it and the day of the week reads at a glance from three letters.
-    var written: String { "\(weekday.short), \(Self.monthName(month)) \(day)" }
+    var written: String {
+        String(localized: "date.written", defaultValue: "\(weekday.short), \(Self.monthName(month)) \(day)")
+    }
 
     static func monthName(_ month: Int) -> String {
-        let names = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ]
-        guard (1...12).contains(month) else { return "" }
-        return names[month - 1]
+        switch month {
+        case 1: String(localized: "month.january", defaultValue: "January")
+        case 2: String(localized: "month.february", defaultValue: "February")
+        case 3: String(localized: "month.march", defaultValue: "March")
+        case 4: String(localized: "month.april", defaultValue: "April")
+        case 5: String(localized: "month.may", defaultValue: "May")
+        case 6: String(localized: "month.june", defaultValue: "June")
+        case 7: String(localized: "month.july", defaultValue: "July")
+        case 8: String(localized: "month.august", defaultValue: "August")
+        case 9: String(localized: "month.september", defaultValue: "September")
+        case 10: String(localized: "month.october", defaultValue: "October")
+        case 11: String(localized: "month.november", defaultValue: "November")
+        case 12: String(localized: "month.december", defaultValue: "December")
+        default: ""
+        }
+    }
+
+    /// The month standing on its own, as a heading — "September 2026" over a page of the
+    /// archive — rather than inside a date. English cannot tell the two apart; Russian can,
+    /// and says «сентябрь» on its own but «8 сентября» in a date, so each has keys of its own.
+    static func monthHeading(_ month: Int) -> String {
+        switch month {
+        case 1: String(localized: "month.heading.january", defaultValue: "January")
+        case 2: String(localized: "month.heading.february", defaultValue: "February")
+        case 3: String(localized: "month.heading.march", defaultValue: "March")
+        case 4: String(localized: "month.heading.april", defaultValue: "April")
+        case 5: String(localized: "month.heading.may", defaultValue: "May")
+        case 6: String(localized: "month.heading.june", defaultValue: "June")
+        case 7: String(localized: "month.heading.july", defaultValue: "July")
+        case 8: String(localized: "month.heading.august", defaultValue: "August")
+        case 9: String(localized: "month.heading.september", defaultValue: "September")
+        case 10: String(localized: "month.heading.october", defaultValue: "October")
+        case 11: String(localized: "month.heading.november", defaultValue: "November")
+        case 12: String(localized: "month.heading.december", defaultValue: "December")
+        default: ""
+        }
     }
 
     private static func padded(_ number: Int) -> String {
@@ -136,22 +176,48 @@ enum Weekday: Int, CaseIterable, Sendable {
 
     var name: String {
         switch self {
-        case .sunday: "Sunday"
-        case .monday: "Monday"
-        case .tuesday: "Tuesday"
-        case .wednesday: "Wednesday"
-        case .thursday: "Thursday"
-        case .friday: "Friday"
-        case .saturday: "Saturday"
+        case .sunday: String(localized: "weekday.sunday", defaultValue: "Sunday")
+        case .monday: String(localized: "weekday.monday", defaultValue: "Monday")
+        case .tuesday: String(localized: "weekday.tuesday", defaultValue: "Tuesday")
+        case .wednesday: String(localized: "weekday.wednesday", defaultValue: "Wednesday")
+        case .thursday: String(localized: "weekday.thursday", defaultValue: "Thursday")
+        case .friday: String(localized: "weekday.friday", defaultValue: "Friday")
+        case .saturday: String(localized: "weekday.saturday", defaultValue: "Saturday")
         }
     }
 
     /// The day shortened to the three letters a calendar uses, for a line with other things
     /// on it. Never spoken — VoiceOver is handed `name` wherever this is drawn.
-    var short: String { String(name.prefix(3)) }
+    ///
+    /// Written down a day at a time rather than cut off the front of `name`, because three
+    /// letters is an English habit: German shortens Mittwoch to two, and a language that does
+    /// not write its days in letters at all has nothing to take a prefix of.
+    var short: String {
+        switch self {
+        case .sunday: String(localized: "weekday.sunday.short", defaultValue: "Sun")
+        case .monday: String(localized: "weekday.monday.short", defaultValue: "Mon")
+        case .tuesday: String(localized: "weekday.tuesday.short", defaultValue: "Tue")
+        case .wednesday: String(localized: "weekday.wednesday.short", defaultValue: "Wed")
+        case .thursday: String(localized: "weekday.thursday.short", defaultValue: "Thu")
+        case .friday: String(localized: "weekday.friday.short", defaultValue: "Fri")
+        case .saturday: String(localized: "weekday.saturday.short", defaultValue: "Sat")
+        }
+    }
 
-    /// The letter over its column in the archive.
-    var initial: String { String(name.prefix(1)) }
+    /// The letter over its column in the archive. Written down for the same reason as `short`,
+    /// and with one more: Saturday and Sunday share a letter in English and the archive has
+    /// always lived with it, but a language where they do not should not have to.
+    var initial: String {
+        switch self {
+        case .sunday: String(localized: "weekday.sunday.initial", defaultValue: "S")
+        case .monday: String(localized: "weekday.monday.initial", defaultValue: "M")
+        case .tuesday: String(localized: "weekday.tuesday.initial", defaultValue: "T")
+        case .wednesday: String(localized: "weekday.wednesday.initial", defaultValue: "W")
+        case .thursday: String(localized: "weekday.thursday.initial", defaultValue: "T")
+        case .friday: String(localized: "weekday.friday.initial", defaultValue: "F")
+        case .saturday: String(localized: "weekday.saturday.initial", defaultValue: "S")
+        }
+    }
 }
 
 /// A month of the archive: the year and the month, and the days in it.
@@ -174,7 +240,12 @@ struct DailyMonth: Hashable, Comparable, Sendable, Identifiable {
         (left.year, left.month) < (right.year, right.month)
     }
 
-    var name: String { "\(DailyDate.monthName(month)) \(year)" }
+    /// The year is written out rather than counted, for the reason `DailyDate.fullTitle`
+    /// gives: a localised format would group it into "2,026".
+    var name: String {
+        String(localized: "date.month",
+               defaultValue: "\(DailyDate.monthHeading(month)) \(String(year))")
+    }
 
     var days: [DailyDate] {
         (1...DailyDate.days(inMonth: month, of: year)).map {

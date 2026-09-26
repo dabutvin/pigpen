@@ -16,7 +16,9 @@ enum AppRelease {
     static var build: String { string("CFBundleVersion") ?? "1" }
 
     /// Both of them, the way the settings card prints them.
-    static var full: String { "Version \(marketing) (\(build))" }
+    static var full: String {
+        String(localized: "app.version", defaultValue: "Version \(marketing) (\(build))")
+    }
 
     private static func string(_ key: String) -> String? {
         Bundle.main.infoDictionary?[key] as? String
