@@ -137,6 +137,27 @@ struct DailyDate: Hashable, Comparable, Sendable, Identifiable {
         }
     }
 
+    /// The month standing on its own, as a heading — "September 2026" over a page of the
+    /// archive — rather than inside a date. English cannot tell the two apart; Russian can,
+    /// and says «сентябрь» on its own but «8 сентября» in a date, so each has keys of its own.
+    static func monthHeading(_ month: Int) -> String {
+        switch month {
+        case 1: String(localized: "month.heading.january", defaultValue: "January")
+        case 2: String(localized: "month.heading.february", defaultValue: "February")
+        case 3: String(localized: "month.heading.march", defaultValue: "March")
+        case 4: String(localized: "month.heading.april", defaultValue: "April")
+        case 5: String(localized: "month.heading.may", defaultValue: "May")
+        case 6: String(localized: "month.heading.june", defaultValue: "June")
+        case 7: String(localized: "month.heading.july", defaultValue: "July")
+        case 8: String(localized: "month.heading.august", defaultValue: "August")
+        case 9: String(localized: "month.heading.september", defaultValue: "September")
+        case 10: String(localized: "month.heading.october", defaultValue: "October")
+        case 11: String(localized: "month.heading.november", defaultValue: "November")
+        case 12: String(localized: "month.heading.december", defaultValue: "December")
+        default: ""
+        }
+    }
+
     private static func padded(_ number: Int) -> String {
         number < 10 ? "0\(number)" : "\(number)"
     }
@@ -223,7 +244,7 @@ struct DailyMonth: Hashable, Comparable, Sendable, Identifiable {
     /// gives: a localised format would group it into "2,026".
     var name: String {
         String(localized: "date.month",
-               defaultValue: "\(DailyDate.monthName(month)) \(String(year))")
+               defaultValue: "\(DailyDate.monthHeading(month)) \(String(year))")
     }
 
     var days: [DailyDate] {
