@@ -74,29 +74,42 @@ at or above 640 × 920 px does; a 6.9″ shot is comfortably past it.
 
 Apple takes a preview only as a **recording of the app** — 15–30 seconds, portrait,
 at its own sizes per device — never a rendered video. So the workflow records one:
-the app is launched with `-preview`, which opens Windfall Orchard playing itself on
-a fixed clock (`Pigpen/Views/PreviewReel.swift`): the board held still a moment,
-the orchard's best pen laid a piece at a time, and the pig let go into it for the
-lap of honour and the verdict card. `xcrun simctl io … recordVideo` records the
-simulator once the board is up, and ffmpeg brings the recording to what App Store
-Connect takes:
+the app is launched with `-preview`, which plays the live listing's preview on a
+fixed clock (`Pigpen/Views/PreviewReel.swift`). Like the one on the listing, it is
+20 seconds cut across three boards at a player's pace, and it loops:
+
+| Time | What plays |
+| --- | --- |
+| 0–2 s | The Great Floe's best pen, let go into: the lap of honour |
+| 2–8 s | Windfall Orchard from bare mud, twelve pieces tapped in, the pig let go |
+| 8–11 s | Smoulder Ridge with three pieces left, finished and let go |
+| 11–20 s | The Great Floe with three left, finished, let go, the verdict card, then *Start over* back to the bare floe the film loops into |
+
+`xcrun simctl io … recordVideo` is started before the launch and stopped well after
+the film ends. The recorder says "Recording started" when its first frame is taken,
+and the reel prints the moment its film starts (`PREVIEW_REEL_START`, caught with
+`simctl launch --stdout`). Both are stamped on the same clock and the 20 seconds
+are cut from the gap between them, so neither a slow recorder nor a slow launch
+can move the cut. ffmpeg brings the cut to what App Store Connect
+takes:
 
 | Set | Preview size (px) | File |
 | --- | --- | --- |
 | iPhone 6.9″ | 886 × 1920 | `iphone_6_9/preview/preview.mp4` |
 | iPad 13″ | 1200 × 1600 | `ipad_13/preview/preview.mp4` |
 
-Both are 25 seconds, H.264 High at 30 fps, with a silent stereo AAC track — the
+Both are 20 seconds, H.264 High at 30 fps, with a silent stereo AAC track — the
 simulator records no sound, and App Store Connect wants an audio track all the
 same. The unconverted recording sits beside each as `raw.mov`.
 
 Upload the `.mp4` in App Store Connect beside the screenshots, where it plays
-before them. Pick the poster frame there; a moment with the pen closed and the
-ground gone rainbow is the one that sells it.
+before them. Pick the poster frame there; the listing's is the orchard with eight
+of its twelve pieces down, about 4.5 seconds in.
 
-To change what the video shows, change the reel: the level, the pieces and the
-beats are all in `PreviewReel`, and `PuzzleGameTests` checks the pieces still
-close the best pen. Anything the reel cannot do — a real finger dragging a run of
+To change what the video shows, change the reel: the boards, the pieces and the
+beats are all in `PreviewReel`, and `PuzzleGameTests` checks the pieces it lays
+still close each board's best pen. The one thing on the listing's video the reel
+does not do is the grey circle a hand recording shows under each tap. Anything the reel cannot do — a real finger dragging a run of
 fence, say — is still a recording made by hand, the same way: run the app on a
 6.9″ simulator or a device, record with `xcrun simctl io <udid> recordVideo
 preview.mov` or QuickTime, and trim to 15–30 seconds.

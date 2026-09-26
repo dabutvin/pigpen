@@ -29,7 +29,10 @@ jobs:
   assets:
     name: Capture App Store Assets
     runs-on: macos-26
-    timeout-minutes: 40
+    # Two devices' worth of screens, a retake for any that come out blank, and a
+    # 35-second recording on each: a slow runner has taken 38 minutes to get through
+    # the capture alone.
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -172,31 +175,51 @@ jobs:
           }
 
           # The preview video, recorded rather than rendered, since Apple takes a
-          # preview only as a recording of the app. `-preview` opens Windfall Orchard
-          # playing itself on a fixed clock (PreviewReel.swift): a still board, the best
-          # pen laid a piece at a time, and the pig let go into it. The recording starts
-          # once the board is up, so the app's launch is never in it, and runs past the
-          # verdict card; ffmpeg then brings it to the store's size for the device, a
-          # steady 30 fps, and a silent stereo track, which App Store Connect asks for.
+          # preview only as a recording of the app. `-preview` opens PreviewReel.swift:
+          # the live listing's twenty-second film, played by the app on a fixed clock
+          # after four seconds held still on its first board. The recorder is started
+          # before the launch, since it can take seconds to get going, and stopped well
+          # after the film ends. The recorder says "Recording started" the moment its
+          # first frame is taken, and the reel prints the moment its film starts; both
+          # are stamped on this Mac's clock, and the cut is the gap between them. (Not
+          # measured back from the stop: the recorder only writes a frame when the
+          # screen changes, so a still ending leaves the file shorter than the wait.)
+          # ffmpeg brings the cut to the store's size for the device, a steady 30 fps
+          # (holding the last frame if the still ending left the file short), and a
+          # silent stereo track, which App Store Connect asks for.
           record() {
             local label="$1" udid="$2" size="$3"
-            local dir="out/$label/preview"
+            local dir="$PWD/out/$label/preview"
             mkdir -p "$dir"
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
-            xcrun simctl launch "$udid" "$BUNDLE_ID" -preview
-            sleep 1.5
-            xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" &
+            # Every line the recorder says, stamped with the time it said it.
+            xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" \
+              > >(python3 -u -c 'import sys, time
+          for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
             local recorder=$!
-            sleep 26
+            sleep 3
+            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" -preview
+            sleep 32
             kill -INT "$recorder"
             wait "$recorder" || true
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
 
+            local started; started=$(awk '/PREVIEW_REEL_START/ { print $2; exit }' "$dir/app.log" || true)
+            if [ -z "$started" ]; then
+              echo "ERROR: the reel never said when its film started"; cat "$dir/app.log" || true; exit 1
+            fi
+            local recording; recording=$(awk '/Recording started/ { print $1; exit }' "$dir/recorder.log" || true)
+            if [ -z "$recording" ]; then
+              echo "ERROR: the recorder never said it had started"; cat "$dir/recorder.log" || true; exit 1
+            fi
+            local into; into=$(python3 -c "print(round($started - $recording, 3))")
+            echo "$label: the film starts ${into}s into the recording"
+
             ffmpeg -hide_banner -loglevel error -y \
-              -i "$dir/raw.mov" \
+              -ss "$into" -i "$dir/raw.mov" \
               -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
-              -map 0:v:0 -map 1:a:0 -t 25 -shortest \
-              -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30" \
+              -map 0:v:0 -map 1:a:0 -t 20 -shortest \
+              -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30,tpad=stop_mode=clone:stop_duration=20" \
               -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p \
               -b:v 10M -maxrate 12M -bufsize 20M \
               -c:a aac -b:a 256k -ar 44100 -ac 2 \
