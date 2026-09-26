@@ -1964,7 +1964,7 @@ of the rest, and what remains is the listing agreeing with them:
 | UI | SwiftUI |
 | Min iOS | 17.0 |
 | Project | XcodeGen (no `.xcodeproj` in repo) |
-| Languages | English, Russian |
+| Languages | English, German, Spanish, French, Italian, Japanese, Brazilian Portuguese, Russian |
 | CI/CD | GitHub Actions |
 | Distribution | TestFlight + App Store |
 
@@ -2036,7 +2036,7 @@ The four verdicts are one climb cut at four heights, so a player hears how well 
 
 ### Languages
 
-The game is written in English and shipped in Russian as well, the first of the languages it is being translated into. Everything a player reads is translated — the settings sheet and the buttons, but also the hundred and fourteen film captions, the boss's one line on the board, the ten things a morning reminder can say, and every label the screen reader is handed. What is not translated is the map: level names, world names and the pig's own name stay as they are, so a player following `solutions/` or comparing a day's board with somebody in another country is looking at the same words for the same places.
+The game is written in English and shipped in seven more: German, Spanish, French, Italian, Japanese, Brazilian Portuguese and Russian. Everything a player reads is translated — the settings sheet and the buttons, but also the hundred and fourteen film captions, the boss's one line on the board, the ten things a morning reminder can say, and every label the screen reader is handed. What is not translated is the map: level names, world names and the pig's own name stay as they are, so a player following `solutions/` or comparing a day's board with somebody in another country is looking at the same words for the same places.
 
 All of it lives in one Xcode string catalog, `Pigpen/Resources/Localizable.xcstrings`. There is no second file to keep in step and no code that picks a language: the system reads the phone's preferred languages, and a phone set to something else falls back to English.
 
@@ -2066,7 +2066,7 @@ Use one when the English alone would not identify the string — a bare format l
 String(localized: "\(stars) stars")
 ```
 
-One exception, and it is the catalog's rule rather than a choice: a plural variation has to print the number it counts. A caption that reads *best pens* under a figure that already reads *3* cannot be one string with two endings, because `xcstringstool` refuses to compile it — so `WorldRecordView` picks between two strings itself, which is what Apple's own error message tells you to do. English splits one from the rest, and Russian splits the same caption three ways — *одна*, *две*, *пять* — so it would want more strings still if it ever counted in words rather than digits.
+One exception, and it is the catalog's rule rather than a choice: a plural variation has to print the number it counts. A caption that reads *best pens* under a figure that already reads *3* cannot be one string with two endings, because `xcstringstool` refuses to compile it — so `WorldRecordView` picks between two strings itself, which is what Apple's own error message tells you to do. Six of the languages split one from the rest, and Russian splits the same caption three ways — *одна*, *две*, *пять* — so it would want more strings still if it ever counted in words rather than digits.
 
 **Grammar the template cannot see.** An animal's name is composed into sentences the whole game over — the boss's rule, the verdict on a pen that will not hold, the button that releases it. English needs one word for that; a language with genders needs an article it cannot choose from a template shared by fourteen animals. So the article travels with the noun. `Animal` carries `name` (the bare noun), `subject` and `object` (the same with its article, in the two cases German tells apart — and in Russian, the nominative and the accusative, which for every animal but the pig is also the genitive, so *для %@* and *у %@* read right), `subjectCapitalized` for the head of a sentence, and `plural` for the one rule that fences a flock. A template puts the animal where a preposition will not contract in front of it — never `à %@`, because `à` + `le` is `au` and no format string spells that — and a translation is allowed to use *fewer* arguments than it is given, which is how German says "his pen" where English says "the croc's pen".
 
@@ -2511,7 +2511,7 @@ Pigpen/
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
-    ├── Localizable.xcstrings    # Every word the game says, in English and Russian
+    ├── Localizable.xcstrings    # Every word the game says, in English and seven more
     ├── Sounds/                  # Generated: one short WAV for every noise the game makes
     ├── Music/                   # Generated: the sixteen-bar waltz the game loops
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words

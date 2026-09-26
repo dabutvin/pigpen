@@ -1,15 +1,14 @@
 name: PR Screenshots (languages)
 
 # The gallery the other workflow posts is the game in English. This one is the
-# same game beside it in every language it is translated into — Russian, to start
-# with — and it runs when the words change rather than on every pull request: a
+# same game beside it in every language it is translated into, and it runs when the words change rather than on every pull request: a
 # branch that moves a button by three points does not need more pictures on it,
 # and a branch that rewrites a sentence does.
 #
 # What it is looking for is not whether the translation is right — a person reads
-# that in the catalog — but whether it fits. Russian runs long, and its words are
-# long: a button gives way to it before it gives way to English, and that does not
-# show up in a diff.
+# that in the catalog — but whether it fits. German and Russian run long and are
+# the first places a button gives way; Japanese is the one that needs a different
+# font to draw at all. None of that shows up in a diff.
 on:
   pull_request:
     branches: [main]
@@ -150,6 +149,12 @@ jobs:
           }
 
           shoot_language en en_US
+          shoot_language de de_DE
+          shoot_language es es_ES
+          shoot_language fr fr_FR
+          shoot_language it it_IT
+          shoot_language ja ja_JP
+          shoot_language pt-BR pt_BR
           shoot_language ru ru_RU
 
           xcrun simctl status_bar "$UDID" clear
@@ -183,6 +188,12 @@ jobs:
             // one the others are being compared against.
             const LANGUAGES = [
               ['en', 'English'],
+              ['de', 'German'],
+              ['es', 'Spanish'],
+              ['fr', 'French'],
+              ['it', 'Italian'],
+              ['ja', 'Japanese'],
+              ['pt_BR', 'Portuguese (Brazil)'],
               ['ru', 'Russian'],
             ];
 

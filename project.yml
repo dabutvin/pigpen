@@ -1,11 +1,11 @@
 name: Pigpen
 options:
   bundleIdPrefix: com.pigpen
-  # The game is written in English and translated into Russian. The catalog under
+  # The game is written in English and translated into seven more. The catalog under
   # Resources is the whole of it; these are the regions the project knows to build
   # out of it, and `CFBundleLocalizations` below is what the store listing reads.
   developmentLanguage: en
-  knownRegions: [en, ru]
+  knownRegions: [en, de, es, fr, it, ja, pt-BR, ru]
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "26.0"
@@ -38,8 +38,8 @@ targets:
       # and the one tune it loops under them.
       - path: Pigpen/Resources/Sounds
       - path: Pigpen/Resources/Music
-      # Every word the game says, in English and in the Russian it is translated
-      # into. Checked by Tools/check_localization.py on every pull request.
+      # Every word the game says, in English and in the seven languages it is
+      # translated into. Checked by Tools/check_localization.py on every pull request.
       - path: Pigpen/Resources/Localizable.xcstrings
     settings:
       base:
@@ -67,8 +67,8 @@ targets:
         CFBundleName: Pigpen
         CFBundleDevelopmentRegion: en
         # What the App Store listing says the game is playable in, and what a phone
-        # negotiates its language against. The same two as `knownRegions` above.
-        CFBundleLocalizations: [en, ru]
+        # negotiates its language against. The same eight as `knownRegions` above.
+        CFBundleLocalizations: [en, de, es, fr, it, ja, pt-BR, ru]
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         TelemetryDeckAppID: "$(TELEMETRYDECK_APP_ID)"
