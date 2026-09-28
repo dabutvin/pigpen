@@ -1,3 +1,5 @@
+import Foundation
+
 /// What a boss field asks, in the one line a player needs while they are building it.
 ///
 /// Every world's last field adds a rule the other eight do not use, and each world's briefing
@@ -34,43 +36,62 @@ extension PuzzleLevel {
 
         switch question {
         case .herd:
-            return "Fence in both Pig and the \(boss.name). One pen or two. Whatever makes "
-                + "the floor plan work."
+            return String(localized: """
+                Fence in both Pig and \(boss.object). One pen or two. Whatever makes the \
+                floor plan work.
+                """)
         case .apart:
-            return "Fence in Pig and the \(boss.name) separately."
+            return String(localized: "Fence in Pig and \(boss.object) separately.")
         case .exclude:
-            return "Fence in Pig. Keep the \(boss.name) out. Very, very out."
+            return String(localized: "Fence in Pig. Keep \(boss.object) out. Very, very out.")
         case .together:
-            return "Fence Pig and the \(boss.name) in together. Sometimes real estate is "
-                + "about compromise."
+            return String(localized: """
+                Fence Pig and \(boss.object) in together. Sometimes real estate is about \
+                compromise.
+                """)
         case .even:
-            return "Build Pig and the \(boss.name) two separate pens. They must be exactly "
-                + "the same size. Equal square footage. No exceptions."
+            return String(localized: """
+                Build Pig and \(boss.object) two separate pens. They must be exactly the same \
+                size. Equal square footage. No exceptions.
+                """)
         case .roost:
             // The flock is named for the one hanging at the top of it — the same animal the
             // rule itself is anchored on — rather than for whichever of them the map happens
             // to write down first, so moving the pup up a row does not rename the roost.
             let mother: Animal = otherAnimals.contains(.bat) ? .bat : boss
-            return "Pig gets his own pen. Both \(mother.name)s share the other. Pig was "
-                + "absolutely not accepting roommates."
+            return String(localized: """
+                Pig gets his own pen. Both \(mother.plural) share the other. Pig was absolutely \
+                not accepting roommates.
+                """)
         case .ring:
-            return "Fence in Pig, the \(boss.name), and his ring. But don't let your fence "
-                + "touch the ring. Apparently it's in the lease."
+            return String(localized: """
+                Fence in Pig, \(boss.object), and his ring. But don't let your fence touch the \
+                ring. Apparently it's in the lease.
+                """)
         case .berth:
-            return "Build Pig and the \(boss.name) separate pens. And don't let them share a "
-                + "fence. Adjoining properties were not approved."
+            return String(localized: """
+                Build Pig and \(boss.object) separate pens. And don't let them share a fence. \
+                Adjoining properties were not approved.
+                """)
         case .moat:
-            return "Give the \(boss.name) its own pen. Then build Pig's around it. No shared "
-                + "fences."
+            return String(localized: """
+                Give \(boss.object) its own pen. Then build Pig's around it. No shared fences.
+                """)
         case .hole:
-            return "Build Pig and the \(boss.name) separate pens. The \(boss.name)'s pen "
-                + "must border the water."
+            return String(localized: """
+                Build Pig and \(boss.object) separate pens. The \(boss.name)'s pen must border \
+                the water.
+                """)
         case .wallow:
-            return "Build Pig and the \(boss.name) separate pens. Fence the \(boss.name) in "
-                + "with one entire waterway."
+            return String(localized: """
+                Build Pig and \(boss.object) separate pens. Fence \(boss.object) in with one \
+                entire waterway.
+                """)
         case .stoop:
-            return "Fence in Pig. Keep every tile of his pen out of the \(boss.name)'s line "
-                + "of sight. The homeowners association is watching."
+            return String(localized: """
+                Fence in Pig. Keep every tile of his pen out of the \(boss.name)'s line of \
+                sight. The homeowners association is watching.
+                """)
         case .shore, .basin, .span, .gap, .corner, .constellation, .detour, .obstruction, .bare:
             // The game's own question, asked on new ground. There is nothing to say about it
             // that the ground does not say itself.

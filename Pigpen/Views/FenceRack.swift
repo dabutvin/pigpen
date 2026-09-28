@@ -41,7 +41,7 @@ struct FenceRack: View {
     /// hangs the pair either side of the number's middle, which is where the eye expects them.
     private var count: some View {
         HStack(alignment: .center, spacing: 5) {
-            Text("\(left)")
+            Text(verbatim: "\(left)")
                 .font(.system(size: 30, weight: .black, design: .rounded))
                 .monospacedDigit()
                 .contentTransition(.numericText())
@@ -134,8 +134,8 @@ struct FenceRack: View {
     }
 
     private var spoken: String {
-        guard !isSpent else { return "No fence pieces left of \(budget)" }
-        return "\(left) of \(budget) fence pieces left"
+        guard !isSpent else { return String(localized: "No fence pieces left of \(budget)") }
+        return String(localized: "\(left) of \(budget) fence pieces left")
     }
 }
 

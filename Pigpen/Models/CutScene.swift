@@ -543,23 +543,23 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .meadow(.homePen),
-                    caption: "Pig had a home. Cozy. Rustic. Extremely limited square footage."
+                    caption: String(localized: "Pig had a home. Cozy. Rustic. Extremely limited square footage.")
                 ),
                 Shot(
                     picture: .meadow(.theOpenGate),
-                    caption: "Then someone left the gate open. Pig decided it was time to explore the market for some new real estate."
+                    caption: String(localized: "Then someone left the gate open. Pig decided it was time to explore the market for some new real estate.")
                 ),
                 Shot(
                     picture: .meadow(.welcomeMeadow),
-                    caption: "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can."
+                    caption: String(localized: "Welcome to Mudlark Meadow. Use the fence you're given to build Pig the biggest pen you can.")
                 ),
                 Shot(
                     picture: .meadow(.applesAndSkulls),
-                    caption: "More space means a better score. Apples improve the property. Skulls hurt the resale value."
+                    caption: String(localized: "More space means a better score. Apples improve the property. Skulls hurt the resale value.")
                 ),
                 Shot(
                     picture: .meadow(.closeTheFence),
-                    caption: "And make sure to close the fence. Pig is keeping his options open."
+                    caption: String(localized: "And make sure to close the fence. Pig is keeping his options open.")
                 )
             ],
             start: start
@@ -581,15 +581,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .meadow(.promisingLand),
-                    caption: "Pig had found a promising piece of land. There was just one complication."
+                    caption: String(localized: "Pig had found a promising piece of land. There was just one complication.")
                 ),
                 Shot(
                     picture: .meadow(.theResident),
-                    caption: "The current resident. Apparently this was not a vacant lot."
+                    caption: String(localized: "The current resident. Apparently this was not a vacant lot.")
                 ),
                 Shot(
                     picture: .meadow(.oneOrTwo),
-                    caption: "Fence in both Pig and the deer. One pen or two. Whatever makes the floor plan work."
+                    caption: String(localized: "Fence in both Pig and the deer. One pen or two. Whatever makes the floor plan work.")
                 )
             ],
             start: start
@@ -608,15 +608,15 @@ extension CutScene {
             shots: [
                 Shot(
                     picture: .meadow(.finishedPen),
-                    caption: "Mudlark Meadow had space. Good views. Plenty of apples."
+                    caption: String(localized: "Mudlark Meadow had space. Good views. Plenty of apples.")
                 ),
                 Shot(
                     picture: .meadow(.forestEdge),
-                    caption: "By all accounts, Pig should have been satisfied."
+                    caption: String(localized: "By all accounts, Pig should have been satisfied.")
                 ),
                 Shot(
                     picture: .meadow(.intoTheForest),
-                    caption: "Unfortunately, he'd started checking other listings."
+                    caption: String(localized: "Unfortunately, he'd started checking other listings.")
                 )
             ],
             start: start

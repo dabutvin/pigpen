@@ -37,7 +37,7 @@ struct DailySquare: View {
     var body: some View {
         VStack(spacing: 3) {
             square
-            Text("\(date.day)")
+            Text(verbatim: "\(date.day)")
                 .font(.system(size: 11, weight: .heavy, design: .rounded))
                 // Dark lettering, the same ink as the weekday letters heading the calendar
                 // and the month's name on the pill above them. These were cream with a
@@ -145,18 +145,18 @@ struct DailySquare: View {
     // MARK: - Out loud
 
     private var spokenLabel: String {
-        let spelled = ["no", "one", "two", "three"]
         switch standing {
         case .missing:
-            return "\(date.fullTitle), no puzzle"
+            return String(localized: "\(date.fullTitle), no puzzle")
         case .locked:
-            return "\(date.fullTitle), not open yet"
+            return String(localized: "\(date.fullTitle), not open yet")
         case .open:
-            return "\(date.fullTitle), not yet complete"
+            return String(localized: "\(date.fullTitle), not yet complete")
         case .complete(let stars, let best):
-            let count = spelled[min(max(stars, 0), 3)]
-            let said = "\(date.fullTitle), complete, \(count) star\(stars == 1 ? "" : "s")"
-            return best ? said + ", the best pen there is" : said
+            let count = StarsInWords.said(stars)
+            return best
+                ? String(localized: "\(date.fullTitle), complete, \(count), the best pen there is")
+                : String(localized: "\(date.fullTitle), complete, \(count)")
         }
     }
 }

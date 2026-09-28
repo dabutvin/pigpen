@@ -42,7 +42,15 @@ struct WorldRecord {
     /// Best pens found, out of the stops there are — the rarest thing a trail gives up.
     let bestPens: Int
 
-    init(world: WorldMap, stars bestStars: [String: Int], bestPens foundPens: Set<String>) {
+    /// - Parameter benchmark: What the field has made of each level. The baked-in table,
+    ///   save for a test that wants to stand a rule up on figures of its own rather than on
+    ///   whatever the counting said the last time the table was regenerated.
+    init(
+        world: WorldMap,
+        stars bestStars: [String: Int],
+        bestPens foundPens: Set<String>,
+        benchmark: (String) -> LevelBenchmark? = LevelBenchmarks.benchmark(for:)
+    ) {
         self.world = world.name
         self.count = world.count
         self.starTotal = world.starTotal
@@ -54,7 +62,7 @@ struct WorldRecord {
                 name: node.level.name,
                 stars: bestStars[node.id] ?? 0,
                 hasTheBestPen: foundPens.contains(node.id),
-                benchmark: LevelBenchmarks.benchmark(for: node.id)
+                benchmark: benchmark(node.id)
             )
         }
         self.rows = rows

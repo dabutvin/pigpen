@@ -1,3 +1,5 @@
+import Foundation
+
 /// One stop on the world map: a puzzle, and where its signpost stands in the meadow.
 ///
 /// Positions are held as fractions rather than points so the same world lays itself out
@@ -149,7 +151,10 @@ extension WorldMap {
             // the unearned meadow still covers it until the orchard has been penned. It is not
             // a puzzle and never was: pen the orchard and the doors are open. Its sign carries a
             // small painting of the barn at the foot of the trail, so the two read as one building.
-            WorldSpur(name: "Dressing Barn", junction: 6, across: 0.04, up: 6.70, mark: .barn)
+            WorldSpur(
+                name: String(localized: "Dressing Barn"),
+                junction: 6, across: 0.04, up: 6.70, mark: .barn
+            )
         ]
     )
 }

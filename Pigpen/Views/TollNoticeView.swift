@@ -133,13 +133,20 @@ struct TollNoticeView: View {
         HStack(spacing: 5) {
             Image(systemName: "star.fill")
                 .foregroundStyle(GamePalette.pen)
-            Text("\(notice.have)/\(notice.need)")
+            Text(verbatim: "\(notice.have)/\(notice.need)")
                 .foregroundStyle(GamePalette.post)
                 .monospacedDigit()
         }
         .font(.system(size: 27, weight: .black, design: .rounded))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(notice.have) stars of the \(notice.need) it wants")
+        .accessibilityLabel(held)
+    }
+
+    /// The tally said out loud. The stars in hand are counted out through the same words the
+    /// rest of the game counts stars with, so that one star is one star here too.
+    private var held: String {
+        let stars = String(localized: "\(notice.have) stars")
+        return String(localized: "\(stars) of the \(notice.need) it wants")
     }
 
     // MARK: - Words
@@ -149,18 +156,25 @@ struct TollNoticeView: View {
     /// the tally above, and where the rest of the stars are to be won is the trail itself —
     /// so the sentence says the one thing neither of those says, and stops.
     private var shortfall: String {
-        "You need \(missing) to play this level."
+        String(localized: "You need \(missing) to play this level.")
     }
 
     /// The shortfall in words, since a sentence reads better with one and the tally above it
     /// is already showing the figures.
     private var missing: String {
-        let spelled = [
-            "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"
-        ]
-        let short = notice.shortBy
-        let count = short >= 1 && short <= spelled.count ? spelled[short - 1] : "\(short)"
-        return "\(count) more star\(short == 1 ? "" : "s")"
+        switch notice.shortBy {
+        case 1: String(localized: "one more star")
+        case 2: String(localized: "two more stars")
+        case 3: String(localized: "three more stars")
+        case 4: String(localized: "four more stars")
+        case 5: String(localized: "five more stars")
+        case 6: String(localized: "six more stars")
+        case 7: String(localized: "seven more stars")
+        case 8: String(localized: "eight more stars")
+        case 9: String(localized: "nine more stars")
+        case 10: String(localized: "ten more stars")
+        default: String(localized: "\(notice.shortBy) more stars")
+        }
     }
 }
 
