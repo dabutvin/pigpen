@@ -20,7 +20,10 @@ ships on iPad; make the app iPhone-only and it goes away.
 
 Run the **App Store Assets** workflow from the Actions tab (it is hand-cranked —
 `workflow_dispatch` — since assets are wanted at a release, not on every commit).
-It:
+It makes a full set for every language the game is translated into — English and
+Russian — as parallel jobs, each launching the app in its language
+(`-AppleLanguages`/`-AppleLocale`, as the language gallery does) and framing it
+with captions written in it. For each language it:
 
 1. builds the app and boots a 6.9″ iPhone and a 13″ iPad simulator, status bar
    set to 9:41, full wifi, a full battery and no cellular (an iPad's date beside
@@ -31,24 +34,30 @@ It:
    pen — off the same launch arguments the PR screenshots use;
 3. frames each one with a line of copy through `Tools/appstore_frames.py`;
 4. records the preview video on each (below);
-5. uploads a single **appstore-assets** artifact holding, per device, the `raw`
-   shots, the `framed` ones and the `preview` video.
+5. uploads an **appstore-assets-en** or **appstore-assets-ru** artifact holding,
+   per device, the `raw` shots, the `framed` ones and the `preview` video.
 
 Download the artifact, and upload the `framed` PNGs to App Store Connect →
-your app → the version → Media Manager, in numbered order. The `raw` ones are
+your app → the version → Media Manager, in numbered order — each language's set
+under that localization of the listing (English (U.S.), Russian). The `raw` ones are
 there if you would rather submit bare shots or reframe them by hand.
 
 The live listing is the source of truth for which screens, in what order, with
 what captions: when it changes in App Store Connect, copy the change back into
 `SCREENS`.
 
-Light or dark is a choice on the run; the default is light.
+Light or dark is a choice on the run; the default is light. So is the language:
+`all` (the default), or one on its own.
 
 ### Changing the copy or the screens
 
-Both live in one place — the `SCREENS` array in
-`.github/workflows/appstore-assets.yml`, each entry a `slug:-launch-argument:caption`.
-Add, drop or reword a line there. The launch arguments the app understands are
+Both live in one place — the `SCREENS` arrays in
+`.github/workflows/appstore-assets.yml`, one per language, each entry a
+`slug:-launch-argument:caption`. Add, drop or reword a line there, and keep the
+languages' lists to the same screens in the same order. The Russian captions are
+written in the voice of the game's own catalog: «ты», Pig by name, a pen a «загон»,
+a board a «головоломка». A new language is a new `case` with its locale and
+captions, and its code in the matrix's `all` list. The launch arguments the app understands are
 the `Photograph` cases in `Pigpen/App/PigpenApp.swift`.
 
 To try a caption without a whole CI run, frame any PNG by hand:
