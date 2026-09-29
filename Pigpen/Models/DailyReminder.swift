@@ -337,18 +337,29 @@ final class DailyReminder {
 
     // MARK: - Where things stand
 
-    /// Whether the game should put its own offer up: the player has never been asked, and
-    /// the phone has never been asked either. A player who has said no once — to either of
-    /// them — is left alone, and finds the switch behind the gear when they want it.
+    /// Whether the game should put its own offer up: the player has never been asked, is not
+    /// being reminded already, and the phone has not refused. A player who has said no once —
+    /// to either of them — is left alone, and finds the switch behind the gear when they want it.
+    ///
+    /// A phone that already allows it is still offered. The phone's answer can outlive the
+    /// game: an app deleted and put back soon after, or a new build laid over an old one, can
+    /// come back allowed with the game's own switch off and its flags gone. Offering only to a
+    /// phone never asked left that player with no offer and no reminders at all. Taking the
+    /// offer there raises nothing — `turnOn` only asks a phone that has never been asked.
     var isDueAnOffer: Bool {
-        !hasBeenOffered && standing == .notAsked
+        !hasBeenOffered && isOfferable
     }
 
     /// The same question about the offer made at the free game's wait. Its own flag, since it
-    /// is its own ask — but the phone's answer covers both, so a phone that has been asked
-    /// already, either way, is asked nothing more.
+    /// is its own ask, and the same rule about the phone.
     var isDueALevelOffer: Bool {
-        !hasOfferedTheLevel && standing == .notAsked
+        !hasOfferedTheLevel && isOfferable
+    }
+
+    /// Whether an offer could come to anything: the switch is off, so there is something to
+    /// turn on, and the phone has not refused, which no answer to the offer could change.
+    private var isOfferable: Bool {
+        !isOn && standing != .refused
     }
 
     /// Whether an offer over a given thing is due.
@@ -405,7 +416,13 @@ final class DailyReminder {
 
     /// The player has said no, or has changed their mind later. Every reminder this game has
     /// standing is taken back.
+    ///
+    /// Counts as an answer to both offers: a player who has turned the switch off behind the
+    /// gear has made their mind up, and on a phone that allows reminders nothing else would
+    /// keep the offers from coming round again.
     func turnOff() async {
+        markOffered()
+        markLevelOffered()
         set(isOn: false)
         await scheduler.clear()
     }
