@@ -7,9 +7,14 @@ name: App Store Assets
 # records the app playing a board by itself for the preview video on each, so what
 # comes out of it uploads straight to App Store Connect.
 #
+# Every language the game is translated into gets its own set, shot with the app
+# launched in that language and framed with captions written in it — the listing
+# carries screenshots and a preview per localization. Each language is a job of its
+# own, run side by side, with its own artifact: appstore-assets-en, appstore-assets-ru.
+#
 # It is hand-cranked rather than run on every push: store assets are wanted at a
 # release, not a commit. Run it from the Actions tab; the framed and raw shots and the
-# preview videos come back as a downloadable artifact.
+# preview videos come back as a downloadable artifact per language.
 
 on:
   workflow_dispatch:
@@ -20,6 +25,12 @@ on:
         default: light
         type: choice
         options: [light, dark]
+      language:
+        description: Which language's set to make
+        required: false
+        default: all
+        type: choice
+        options: [all, en, ru]
 
 concurrency:
   group: appstore-assets-${{ github.ref_name }}
@@ -27,8 +38,14 @@ concurrency:
 
 jobs:
   assets:
-    name: Capture App Store Assets
+    name: Capture App Store Assets (${{ matrix.language }})
     runs-on: macos-26
+    strategy:
+      # One language failing is no reason to throw away the other's run.
+      fail-fast: false
+      matrix:
+        # Every language in the app's `knownRegions`, or the one asked for.
+        language: ${{ fromJSON((github.event.inputs.language || 'all') == 'all' && '["en","ru"]' || format('["{0}"]', github.event.inputs.language)) }}
     # Two devices' worth of screens, a retake for any that come out blank, and a
     # 35-second recording on each: a slow runner has taken 38 minutes to get through
     # the capture alone.
@@ -79,6 +96,7 @@ jobs:
       - name: Capture and frame
         env:
           APPEARANCE: ${{ github.event.inputs.appearance || 'light' }}
+          LANGUAGE: ${{ matrix.language }}
         run: |
           set -euo pipefail
 
@@ -91,16 +109,38 @@ jobs:
           # the source of truth, so a change there is copied back here — so the story a
           # browser reads is set in one place: a city board part way through, the peak's
           # best pen, the moment the meadow opens, a boss, the whole map, the daily, and
-          # the tundra's best pen to finish.
-          SCREENS=(
-            "clocktower:-pies:Fence the biggest pen you can"
-            "smoulder:-embers:Twelve worlds, twelve grounds"
-            "gate:-opening-gate:Then someone left the gate open"
-            "stag:-boss:Bosses want two pens at once"
-            "universe:-universe:A whole universe to solve"
-            "daily:-archive:One new puzzle every morning"
-            "floe:-floe:Every board has one right answer"
-          )
+          # the tundra's best pen to finish. Each language has the same seven, in the same
+          # order, with its own captions — the Russian in the voice of the game's own
+          # catalog: «ты», Pig by name, a pen a «загон», a board a «головоломка».
+          case "$LANGUAGE" in
+            en)
+              LOCALE=en_US
+              SCREENS=(
+                "clocktower:-pies:Fence the biggest pen you can"
+                "smoulder:-embers:Twelve worlds, twelve grounds"
+                "gate:-opening-gate:Then someone left the gate open"
+                "stag:-boss:Bosses want two pens at once"
+                "universe:-universe:A whole universe to solve"
+                "daily:-archive:One new puzzle every morning"
+                "floe:-floe:Every board has one right answer"
+              ) ;;
+            ru)
+              LOCALE=ru_RU
+              SCREENS=(
+                "clocktower:-pies:Построй загон как можно больше"
+                "smoulder:-embers:Двенадцать миров, двенадцать ландшафтов"
+                "gate:-opening-gate:А потом кто-то оставил калитку открытой"
+                "stag:-boss:Боссам нужны два загона сразу"
+                "universe:-universe:Целая вселенная головоломок"
+                "daily:-archive:Каждое утро — новая головоломка"
+                "floe:-floe:У каждой головоломки один верный ответ"
+              ) ;;
+            *) echo "ERROR: no captions for language '$LANGUAGE'"; exit 1 ;;
+          esac
+          # How every screenshot tool photographs a build in a language the runner is
+          # not set to: the language picks the catalog's entries, the locale how dates
+          # and numbers are written. The same pair the language gallery launches with.
+          LANG_ARGS=(-AppleLanguages "($LANGUAGE)" -AppleLocale "$LOCALE")
 
           # Pick the first simulator on offer whose name matches one we want, and
           # make it if the runner has the device type but has not built one yet.
@@ -156,7 +196,7 @@ jobs:
               # Three goes at it, each given longer to draw, before a blank shot is let
               # through to fail the run below rather than land on the listing.
               for wait in 3 6 10; do
-                xcrun simctl launch "$udid" "$BUNDLE_ID" "$arg"
+                xcrun simctl launch "$udid" "$BUNDLE_ID" "${LANG_ARGS[@]}" "$arg"
                 sleep "$wait"
                 xcrun simctl io "$udid" screenshot "$raw"
                 xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
@@ -170,7 +210,7 @@ jobs:
                 --caption "$caption"
               order=$((order + 1))
             done
-            echo "== $label ($APPEARANCE) =="
+            echo "== $label ($LANGUAGE, $APPEARANCE) =="
             ls -la "out/$label/framed" || true
           }
 
@@ -198,7 +238,7 @@ jobs:
           for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
             local recorder=$!
             sleep 3
-            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" -preview
+            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" "${LANG_ARGS[@]}" -preview
             sleep 32
             kill -INT "$recorder"
             wait "$recorder" || true
@@ -244,6 +284,6 @@ jobs:
       - name: Upload assets
         uses: actions/upload-artifact@v4
         with:
-          name: appstore-assets
+          name: appstore-assets-${{ matrix.language }}
           path: out/
           if-no-files-found: error
