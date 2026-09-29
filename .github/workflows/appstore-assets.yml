@@ -30,7 +30,7 @@ on:
         required: false
         default: all
         type: choice
-        options: [all, en, ru]
+        options: [all, en, de, ru]
 
 concurrency:
   group: appstore-assets-${{ github.ref_name }}
@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         # Every language in the app's `knownRegions`, or the one asked for.
-        language: ${{ fromJSON((github.event.inputs.language || 'all') == 'all' && '["en","ru"]' || format('["{0}"]', github.event.inputs.language)) }}
+        language: ${{ fromJSON((github.event.inputs.language || 'all') == 'all' && '["en","de","ru"]' || format('["{0}"]', github.event.inputs.language)) }}
     # Two devices' worth of screens, a retake for any that come out blank, and a
     # 35-second recording on each: a slow runner has taken 38 minutes to get through
     # the capture alone.
@@ -110,8 +110,9 @@ jobs:
           # browser reads is set in one place: a city board part way through, the peak's
           # best pen, the moment the meadow opens, a boss, the whole map, the daily, and
           # the tundra's best pen to finish. Each language has the same seven, in the same
-          # order, with its own captions — the Russian in the voice of the game's own
-          # catalog: «ты», Pig by name, a pen a «загон», a board a «головоломка».
+          # order, with its own captions, each in the voice of the game's own catalog —
+          # the German with «du», Pig by name, a pen a «Gehege» and a puzzle a «Rätsel»;
+          # the Russian with «ты», a pen a «загон», a board a «головоломка».
           case "$LANGUAGE" in
             en)
               LOCALE=en_US
@@ -123,6 +124,17 @@ jobs:
                 "universe:-universe:A whole universe to solve"
                 "daily:-archive:One new puzzle every morning"
                 "floe:-floe:Every board has one right answer"
+              ) ;;
+            de)
+              LOCALE=de_DE
+              SCREENS=(
+                "clocktower:-pies:Bau das größte Gehege, das du kannst"
+                "smoulder:-embers:Zwölf Welten, zwölf Landschaften"
+                "gate:-opening-gate:Dann ließ jemand das Tor offen"
+                "stag:-boss:Bosse wollen zwei Gehege auf einmal"
+                "universe:-universe:Ein ganzes Universum voller Rätsel"
+                "daily:-archive:Jeden Morgen ein neues Rätsel"
+                "floe:-floe:Jedes Rätsel hat genau eine Lösung"
               ) ;;
             ru)
               LOCALE=ru_RU
