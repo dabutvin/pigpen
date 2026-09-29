@@ -1964,7 +1964,7 @@ of the rest, and what remains is the listing agreeing with them:
 | UI | SwiftUI |
 | Min iOS | 17.0 |
 | Project | XcodeGen (no `.xcodeproj` in repo) |
-| Languages | English, Russian |
+| Languages | English, German, Russian |
 | CI/CD | GitHub Actions |
 | Distribution | TestFlight + App Store |
 
@@ -2036,7 +2036,7 @@ The four verdicts are one climb cut at four heights, so a player hears how well 
 
 ### Languages
 
-The game is written in English and shipped in Russian as well, the first of the languages it is being translated into. Everything a player reads is translated — the settings sheet and the buttons, but also the hundred and fourteen film captions, the boss's one line on the board, the ten things a morning reminder can say, and every label the screen reader is handed. What is not translated is the map: level names, world names and the pig's own name stay as they are, so a player following `solutions/` or comparing a day's board with somebody in another country is looking at the same words for the same places.
+The game is written in English and shipped in German and Russian as well, the first of the languages it is being translated into. Everything a player reads is translated — the settings sheet and the buttons, but also the hundred and fourteen film captions, the boss's one line on the board, the ten things a morning reminder can say, and every label the screen reader is handed. What is not translated is the map: level names, world names and the pig's own name stay as they are, so a player following `solutions/` or comparing a day's board with somebody in another country is looking at the same words for the same places.
 
 All of it lives in one Xcode string catalog, `Pigpen/Resources/Localizable.xcstrings`. There is no second file to keep in step and no code that picks a language: the system reads the phone's preferred languages, and a phone set to something else falls back to English.
 
@@ -2511,7 +2511,7 @@ Pigpen/
 │   └── Scatter.swift            # The seeded generator every drawn scene scatters things with
 └── Resources/
     ├── Assets.xcassets          # App icon, accent color
-    ├── Localizable.xcstrings    # Every word the game says, in English and Russian
+    ├── Localizable.xcstrings    # Every word the game says, in English, German and Russian
     ├── Sounds/                  # Generated: one short WAV for every noise the game makes
     ├── Music/                   # Generated: the sixteen-bar waltz the game loops
     ├── PrivacyInfo.xcprivacy    # What the game collects, in Apple's words
