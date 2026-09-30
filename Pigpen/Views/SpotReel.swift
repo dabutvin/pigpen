@@ -37,8 +37,10 @@ struct SpotReel: View {
     /// The still board held before the film proper starts: slack the workflow cuts off, so
     /// the recording never has to catch the app's launch exactly.
     static let preRoll: Duration = .seconds(4)
-    /// How long the film proper runs, which is what the workflow cuts it to: six pieces, the
-    /// lap of honour, and the card with three stars on it held long enough to read.
+    /// How long the film proper runs, which is the least the workflow cuts it to: six pieces,
+    /// the lap of honour, and the card with three stars on it held long enough to read. The
+    /// cut runs longer when the recording shows the card coming up late, which on a busy
+    /// runner it does by up to most of a second.
     static let length: Duration = .milliseconds(4100)
     /// What the reel prints, followed by the time since 1970 in seconds and the film's
     /// length in seconds, the moment the film proper starts. The workflow finds this line in
@@ -64,14 +66,15 @@ struct SpotReel: View {
         /// The first piece goes in; the rest follow at `perPiece`.
         static let firstPiece = 0.2
         /// The gap between one piece and the next: quicker than the preview's player, since
-        /// a spot has no time to spare, and every knock still lands as its own.
-        static let perPiece = 0.2
+        /// a spot has no time to spare, but no quicker, since the simulator's recorder on a
+        /// busy runner catches knocks closer together than this in one frame.
+        static let perPiece = 0.25
         /// When the last piece goes in, and the ground washes rainbow.
         static var lastPiece: Double { firstPiece + Double(SpotReel.pieces.count - 1) * perPiece }
         /// The gate opens on the pen that holds. The lap of honour is a second and a half on
         /// paper and runs a quarter second longer on a simulator, and the card with three
         /// stars on it wants most of a second before the cut, which is what sets this.
-        static let release = 1.5
+        static let release = 1.75
     }
 
     /// Windfall Orchard with its best pen standing but for `pieces`, which the film lays

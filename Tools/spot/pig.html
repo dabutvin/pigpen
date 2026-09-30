@@ -364,7 +364,7 @@ const films = {};
 
 // The open: behind the fence, along it, the gap, the look, the dash out past the lens.
 films.open = (() => {
-  const length = 3.5;
+  const length = 3.4;
   // A post every 1.6 from -12.8, so there is a post at 0 and the missing panel is the one
   // between it and 1.6.
   const rail = fence(-12.8, 12.8, 0, 0.8);
@@ -386,7 +386,7 @@ films.open = (() => {
     captions: [
       ["This is Pig.", 0.45, 1.45],
       ["Pig needs a pen.", 1.55, 2.25],
-      ["Can you build Pig the perfect pen?", 2.35, 3.5]
+      ["Can you build Pig the perfect pen?", 2.35, 3.4]
     ],
     render(t) {
       const walkIn = smooth(0.0, 1.45, t);
@@ -429,7 +429,7 @@ films.open = (() => {
 // The end: head on to the fence, and the pig up on her hind legs against it, trotters
 // over the rail, while the name plants itself over her.
 films.end = (() => {
-  const length = 2.3;
+  const length = 2.1;
   // Posts at plus and minus 0.8, so she stands in the middle of a panel.
   const rail = fence(-8.8, 8.8, 0);
   const her = pig();

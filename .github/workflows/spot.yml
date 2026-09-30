@@ -126,9 +126,10 @@ jobs:
           xcrun simctl install "$UDID" "$APP_PATH"
 
           # `-spot` opens SpotReel.swift, which holds still for four seconds and then plays
-          # its four; twenty seconds of recording is that with slack either side.
+          # its four; the wait is that, a cold simulator's slow launch before it, and the
+          # second or so the recorder can run behind by the end.
           DIR="$PWD/out/spot"
-          INTO=$(Tools/roll_reel.sh "$DIR" "$UDID" "$BUNDLE_ID" -spot SPOT_REEL_START 20)
+          INTO=$(Tools/roll_reel.sh "$DIR" "$UDID" "$BUNDLE_ID" -spot SPOT_REEL_START 26)
           echo "the board starts ${INTO}s into the recording"
           Tools/cut_spot.sh "$DIR" "$INTO"
 

@@ -31,45 +31,26 @@ set -euo pipefail
 dir=$1 into=$2
 cd "$(dirname "$0")/.."
 
-# Where the board's film really starts in the recording. INTO is the gap between the
-# recorder saying it had started and the reel saying its film had, both on the Mac's
-# clock — and the recorder says so a little before its first frame is taken, so on a
-# runner the picture has run a tenth of a second or two behind the log, which is enough
-# to hear a knock land before the piece does. The board is held still through the
-# pre-roll and the first thing to move on it is the first piece going in, at a moment
-# the reel wrote down; so the recording is searched around that moment for the first
-# frame that differs from the one before it, and the cut is moved to match. A recording
-# that will not give up a first knock near there is left where the clocks put it.
-first=$(awk '$1 == "SPOT_REEL_SOUND" && $2 == "fence-in" { print $3; exit }' "$dir/app.log" || true)
-if [ -n "$first" ]; then
-  from=$(python3 -c "print(max(0, round($into + $first - 0.6, 3)))")
-  seen=$(ffmpeg -hide_banner -loglevel error -nostats -ss "$from" -t 1.4 -i "$dir/raw.mov" \
-    -vf "fps=30,scale=66:143,format=gray" -f rawvideo - | python3 -c '
-import sys
-data = sys.stdin.buffer.read(); n = 66 * 143; prev = None
-for i in range(len(data) // n):
-    frame = data[i * n:(i + 1) * n]
-    if prev is not None and sum(1 for a, b in zip(frame, prev) if abs(a - b) > 24) > 30:
-        print(round(i / 30, 3)); break
-    prev = frame')
-  if [ -n "$seen" ]; then
-    shift=$(python3 -c "print(round($from + $seen - ($into + $first), 3))")
-    into=$(python3 -c "print(round($into + $shift, 3))")
-    echo "the first piece is seen ${shift}s from where the clocks put it; the film starts ${into}s in"
-  else
-    echo "WARNING: no first piece seen near ${from}s; the cut stays where the clocks put it"
-  fi
-fi
+# Where the board's moments really are in the recording. The reel played on a fixed
+# clock and wrote down when it knocked each piece in and when the card came up; the
+# simulator's recorder, on a busy runner, runs a little behind that clock and further
+# behind under the confetti, so Tools/spot/sync_board.py reads the recording and says
+# where to cut into it, how long the board runs (longer, if the card came up late and
+# wants its time on screen), and the second each noise is seen at rather than asked for.
+board_sounds=$(mktemp)
+python3 Tools/spot/sync_board.py "$dir/raw.mov" "$dir/app.log" "$into" > "$board_sounds"
+origin=$(awk '$1 == "ORIGIN" { print $2 }' "$board_sounds")
+skip=$(awk '$1 == "SKIP" { print $2 }' "$board_sounds")
+board=$(awk '$1 == "BOARD" { print $2 }' "$board_sounds")
+echo "the board is read from ${origin}s, starts ${skip}s into that, and runs ${board}s"
 
 node Tools/spot/render.mjs --out "$dir/pig"
 
 # The three lengths, and so where each part starts in the whole.
-read -r open board end <<< "$(python3 - "$dir" <<'PY'
+read -r open end <<< "$(python3 - "$dir" <<'PY'
 import json, sys
-dir = sys.argv[1]
-films = json.load(open(f"{dir}/pig/beats.json"))["films"]
-board = next(float(line.split()[2]) for line in open(f"{dir}/app.log") if line.startswith("SPOT_REEL_START "))
-print(films["open"]["length"], board, films["end"]["length"])
+films = json.load(open(f"{sys.argv[1]}/pig/beats.json"))["films"]
+print(films["open"]["length"], films["end"]["length"])
 PY
 )"
 total=$(python3 -c "print(round($open + $board + $end, 3))")
@@ -77,7 +58,7 @@ echo "open ${open}s, board ${board}s, end ${end}s: ${total}s in all"
 
 inputs=(
   -framerate 30 -i "$dir/pig/open/frame_%04d.png"
-  -ss "$into" -i "$dir/raw.mov"
+  -i "$dir/raw.mov"
   -framerate 30 -i "$dir/pig/end/frame_%04d.png"
   -i Pigpen/Resources/Music/meadow-waltz.wav
 )
@@ -86,7 +67,7 @@ fade=$(python3 -c "print(round($total - 1, 3))")
 filter="[3:a]${voice},volume=0.35,afade=t=out:st=${fade}:d=1[music]"
 mix="[music]" count=1 next=4
 # Every noise in the whole spot, as "file seconds": the pig films' from the beat sheet,
-# the board's from what the reel printed, each offset to its part.
+# the board's from where the recording shows them, each offset to its part.
 while read -r name at; do
   if [ ! -f "Pigpen/Resources/Sounds/$name.wav" ]; then
     echo "WARNING: a sound was asked for that there is no file for: $name"; continue
@@ -96,28 +77,32 @@ while read -r name at; do
   filter+=";[$next:a]${voice},adelay=${ms}|${ms}[noise$next]"
   mix+="[noise$next]"
   count=$((count + 1)); next=$((next + 1))
-done < <(python3 - "$dir" "$open" "$board" <<'PY'
+done < <(python3 - "$dir" "$open" "$board" "$board_sounds" <<'PY'
 import json, sys
-dir, open_, board = sys.argv[1], float(sys.argv[2]), float(sys.argv[3])
+dir, open_, board, board_sounds = sys.argv[1], float(sys.argv[2]), float(sys.argv[3]), sys.argv[4]
 films = json.load(open(f"{dir}/pig/beats.json"))["films"]
 for name, at in films["open"]["sounds"]:
     print(name, round(at, 3))
-for line in open(f"{dir}/app.log"):
+for line in open(board_sounds):
     parts = line.split()
-    if len(parts) == 3 and parts[0] == "SPOT_REEL_SOUND" and float(parts[2]) >= 0:
+    if parts and parts[0] == "SOUND":
         print(parts[1], round(open_ + float(parts[2]), 3))
 for name, at in films["end"]["sounds"]:
     print(name, round(open_ + board + at, 3))
 PY
 )
+rm -f "$board_sounds"
 echo "$((count - 1)) noises under the spot"
 filter+=";${mix}amix=inputs=${count}:normalize=0[audio]"
 filter+=";[0:v]fps=30,setsar=1,format=yuv420p[pigopen]"
-filter+=";[1:v]split=2[back][front]"
+# The board, read from the recording exactly as sync_board.py read it — trimmed on the
+# recording's own timestamps from the same origin, then brought to a steady 30 fps —
+# and only then cut to where the film starts, which on a steady stream is exact.
+filter+=";[1:v]trim=start=${origin},setpts=PTS-STARTPTS,fps=30,trim=start=${skip},setpts=PTS-STARTPTS,split=2[back][front]"
 filter+=";[back]scale=1080:1920:flags=lanczos,boxblur=luma_radius=30:luma_power=2,setsar=1[blur]"
 filter+=";[front]scale=-2:1920:flags=lanczos,setsar=1[phone]"
-# A steady 30 fps, and the last frame held if the still ending left the recording short.
-filter+=";[blur][phone]overlay=(W-w)/2:(H-h)/2,fps=30,tpad=stop_mode=clone:stop_duration=${board},trim=duration=${board},setpts=PTS-STARTPTS,format=yuv420p[boardcut]"
+# The last frame held if the still ending left the recording short.
+filter+=";[blur][phone]overlay=(W-w)/2:(H-h)/2,tpad=stop_mode=clone:stop_duration=${board},trim=duration=${board},setpts=PTS-STARTPTS,format=yuv420p[boardcut]"
 filter+=";[2:v]fps=30,setsar=1,format=yuv420p[pigend]"
 # And 30 fps out of the join as well as into it: the encoder guesses otherwise.
 filter+=";[pigopen][boardcut][pigend]concat=n=3:v=1:a=0,fps=30[video]"
