@@ -10,8 +10,9 @@
   horizon, two green hills, a run of brown fence, a pink pig.
 
     open   The pig trots along behind the fence, finds the one gap in it, gives the camera
-           a look, and dashes out through the gap past the lens. The joke the board then
-           answers.
+           a look, and dashes out through the gap past the lens — under three lines of
+           type: this is Pig, Pig needs a pen, can you build Pig the perfect pen? The
+           question the board then answers.
     end    Head on to the fence. The pig springs up from behind it and hangs there with her
            trotters over the rail, while the name plants itself over her and the sign hangs
            under it.
@@ -44,6 +45,16 @@
     filter: drop-shadow(0 22px 26px rgba(60, 60, 60, 0.45));
     transform-origin: 50% 60%;
   }
+  /* The intro's three lines, one at a time, high in the sky where the picture is empty. */
+  #caption {
+    position: absolute; left: 60px; right: 60px; top: 330px;
+    text-align: center;
+    font-family: "Nunito", "Helvetica Neue", Arial, sans-serif; font-weight: 900;
+    font-size: 74px; line-height: 1.15; color: #fffaf0;
+    text-shadow: 0 3px 0 rgba(69, 48, 28, 0.55), 0 14px 28px rgba(40, 60, 90, 0.45);
+    transform-origin: 50% 50%;
+    pointer-events: none;
+  }
   #sign {
     font-family: "Nunito", "Helvetica Neue", Arial, sans-serif; font-weight: 900;
     font-size: 54px; letter-spacing: 0.5px; color: #45301c;
@@ -57,6 +68,7 @@
 <body>
 <div id="stage">
   <canvas id="canvas" width="1080" height="1920"></canvas>
+  <div id="caption" style="opacity: 0"></div>
   <div id="card" style="opacity: 0">
     <img id="wordmark" src="../../site/img/wordmark.png" alt="Pigpen">
     <div id="sign">Build the perfect pen</div>
@@ -352,7 +364,7 @@ const films = {};
 
 // The open: behind the fence, along it, the gap, the look, the dash out past the lens.
 films.open = (() => {
-  const length = 3.0;
+  const length = 3.5;
   // A post every 1.6 from -12.8, so there is a post at 0 and the missing panel is the one
   // between it and 1.6.
   const rail = fence(-12.8, 12.8, 0, 0.8);
@@ -368,6 +380,14 @@ films.open = (() => {
     length,
     props: [rail, her.root],
     sounds: [["callout", 1.55], ["pig-away", 2.2]],
+    // What is said over it, and from when to when. The name is hers: the game calls her
+    // Pig. The question stays up after she has bolted, over the gap she left through, and
+    // the board is the cut that answers it.
+    captions: [
+      ["This is Pig.", 0.45, 1.45],
+      ["Pig needs a pen.", 1.55, 2.25],
+      ["Can you build Pig the perfect pen?", 2.35, 3.5]
+    ],
     render(t) {
       const walkIn = smooth(0.0, 1.45, t);
       const going = smooth(2.2, 3.0, t);
@@ -384,7 +404,8 @@ films.open = (() => {
         // Along the fence, then round on the spot to face the gap, which is where the
         // dash's curve sets off toward.
         const start = dash.getTangent(0);
-        her.root.position.set(lerp(-8.0, 0.7, walkIn), 0, -1.6);
+        // From just outside the left of the frame, so she is on screen by the time she is named.
+        her.root.position.set(lerp(-4.2, 0.7, walkIn), 0, -1.6);
         yaw = lerp(0, -Math.atan2(start.z, start.x), smooth(1.95, 2.25, t));
       }
       her.root.rotation.y = yaw;
@@ -408,7 +429,7 @@ films.open = (() => {
 // The end: head on to the fence, and the pig up on her hind legs against it, trotters
 // over the rail, while the name plants itself over her.
 films.end = (() => {
-  const length = 2.6;
+  const length = 2.3;
   // Posts at plus and minus 0.8, so she stands in the middle of a panel.
   const rail = fence(-8.8, 8.8, 0);
   const her = pig();
@@ -449,6 +470,7 @@ films.end = (() => {
 // the other is being photographed.
 const stages = { open: films.open.props, end: films.end.props };
 
+const caption = document.getElementById("caption");
 const card = document.getElementById("card");
 const wordmark = document.getElementById("wordmark");
 const sign = document.getElementById("sign");
@@ -466,6 +488,19 @@ window.spot = {
     for (const c of clouds) c.group.position.x = c.x + t * c.speed;
     const film = films[name];
     film.render(t);
+    // One line at a time: each springs in over its first quarter second and is gone a
+    // tenth of a second after its time is up.
+    const line = (film.captions ?? []).find(([, from, to]) => t >= from && t < to + 0.1);
+    if (line) {
+      const [text, from, to] = line;
+      const rise = spring((t - from) / 0.45, 0.35);
+      const gone = clamp01((t - to) / 0.1);
+      caption.textContent = text;
+      caption.style.opacity = clamp01((t - from) * 8) * (1 - gone);
+      caption.style.transform = `scale(${0.88 + 0.12 * rise}) translateY(${(1 - rise) * 18}px)`;
+    } else {
+      caption.style.opacity = 0;
+    }
     if (film.card) {
       card.style.opacity = 1;
       const w = spring((t - film.card.wordmark) / 0.8, 0.5);
