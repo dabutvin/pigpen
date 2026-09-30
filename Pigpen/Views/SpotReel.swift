@@ -62,14 +62,16 @@ struct SpotReel: View {
     /// confetti.
     enum Beat {
         /// The first piece goes in; the rest follow at `perPiece`.
-        static let firstPiece = 0.3
+        static let firstPiece = 0.2
         /// The gap between one piece and the next: quicker than the preview's player, since
         /// a spot has no time to spare, and every knock still lands as its own.
-        static let perPiece = 0.24
+        static let perPiece = 0.2
         /// When the last piece goes in, and the ground washes rainbow.
         static var lastPiece: Double { firstPiece + Double(SpotReel.pieces.count - 1) * perPiece }
-        /// The gate opens on the pen that holds.
-        static let release = 1.9
+        /// The gate opens on the pen that holds. The lap of honour is a second and a half on
+        /// paper and runs a quarter second longer on a simulator, and the card with three
+        /// stars on it wants most of a second before the cut, which is what sets this.
+        static let release = 1.5
     }
 
     /// Windfall Orchard with its best pen standing but for `pieces`, which the film lays

@@ -31,6 +31,36 @@ set -euo pipefail
 dir=$1 into=$2
 cd "$(dirname "$0")/.."
 
+# Where the board's film really starts in the recording. INTO is the gap between the
+# recorder saying it had started and the reel saying its film had, both on the Mac's
+# clock — and the recorder says so a little before its first frame is taken, so on a
+# runner the picture has run a tenth of a second or two behind the log, which is enough
+# to hear a knock land before the piece does. The board is held still through the
+# pre-roll and the first thing to move on it is the first piece going in, at a moment
+# the reel wrote down; so the recording is searched around that moment for the first
+# frame that differs from the one before it, and the cut is moved to match. A recording
+# that will not give up a first knock near there is left where the clocks put it.
+first=$(awk '$1 == "SPOT_REEL_SOUND" && $2 == "fence-in" { print $3; exit }' "$dir/app.log" || true)
+if [ -n "$first" ]; then
+  from=$(python3 -c "print(max(0, round($into + $first - 0.6, 3)))")
+  seen=$(ffmpeg -hide_banner -loglevel error -nostats -ss "$from" -t 1.4 -i "$dir/raw.mov" \
+    -vf "fps=30,scale=66:143,format=gray" -f rawvideo - | python3 -c '
+import sys
+data = sys.stdin.buffer.read(); n = 66 * 143; prev = None
+for i in range(len(data) // n):
+    frame = data[i * n:(i + 1) * n]
+    if prev is not None and sum(1 for a, b in zip(frame, prev) if abs(a - b) > 24) > 30:
+        print(round(i / 30, 3)); break
+    prev = frame')
+  if [ -n "$seen" ]; then
+    shift=$(python3 -c "print(round($from + $seen - ($into + $first), 3))")
+    into=$(python3 -c "print(round($into + $shift, 3))")
+    echo "the first piece is seen ${shift}s from where the clocks put it; the film starts ${into}s in"
+  else
+    echo "WARNING: no first piece seen near ${from}s; the cut stays where the clocks put it"
+  fi
+fi
+
 node Tools/spot/render.mjs --out "$dir/pig"
 
 # The three lengths, and so where each part starts in the whole.
