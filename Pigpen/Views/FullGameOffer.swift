@@ -331,42 +331,56 @@ struct FullGameOffer: View {
 
     /// The offer of a reminder when the wait is up, at the top of the card: the free way on,
     /// before the paid one.
-    @ViewBuilder
+    ///
+    /// A panel of its own, tinted apart from the perks below it, since it is not one of the
+    /// things the money buys. The button sits under the words rather than beside them, so the
+    /// question gets the card's full width instead of being squeezed into a column beside a
+    /// pill.
     private var nudgeRow: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Image(systemName: "bell.badge.fill")
-                .font(.system(size: 17, weight: .black))
-                .foregroundStyle(GamePalette.clay)
-                .frame(width: 34, height: 34)
-                .background(Circle().fill(GamePalette.clay.opacity(0.14)))
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "bell.badge.fill")
+                    .font(.system(size: 17, weight: .black))
+                    .foregroundStyle(GamePalette.clay)
+                    .frame(width: 34, height: 34)
+                    .background(Circle().fill(GamePalette.clay.opacity(0.14)))
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(nudgeTitle)
-                    .font(.subheadline.weight(.heavy))
-                    .foregroundStyle(GamePalette.post)
-                if let detail = nudgeDetail {
-                    Text(detail)
-                        .font(.caption2)
-                        .foregroundStyle(GamePalette.post.opacity(0.6))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(nudgeTitle)
+                        .font(.subheadline.weight(.heavy))
+                        .foregroundStyle(GamePalette.post)
                         .fixedSize(horizontal: false, vertical: true)
+                    if let detail = nudgeDetail {
+                        Text(detail)
+                            .font(.caption2)
+                            .foregroundStyle(GamePalette.post.opacity(0.6))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
-            }
 
-            Spacer(minLength: 0)
+                Spacer(minLength: 0)
+            }
+            .accessibilityElement(children: .combine)
 
             if nudging == .offered {
                 Button {
                     Task { await takeTheNudge() }
                 } label: {
                     Text("Remind me")
-                        .font(.footnote.weight(.heavy))
+                        .font(.subheadline.weight(.heavy))
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
+                .controlSize(.large)
                 .tint(GamePalette.clay)
             }
         }
-        .padding(.bottom, 12)
-        .accessibilityElement(children: .combine)
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(GamePalette.clay.opacity(0.08))
+        )
+        .padding(.bottom, 6)
     }
 
     private var nudgeTitle: String {
@@ -448,14 +462,16 @@ struct FullGameOffer: View {
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(GamePalette.cream)
+                // A darker, longer drop than a card on timber needed: on a cream page the
+                // shadow is the whole of what lifts a cream card off it. Cast by the card's
+                // shape alone — laid on the whole card, SwiftUI gave every line of text and
+                // every button inside it a blurred shadow of its own.
+                .shadow(color: .black.opacity(0.3), radius: 10, y: 5)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .strokeBorder(GamePalette.post.opacity(0.15), lineWidth: 1)
         )
-        // A darker, longer drop than a card on timber needed: on a cream page the shadow
-        // is the whole of what lifts a cream card off it.
-        .shadow(color: .black.opacity(0.3), radius: 10, y: 5)
     }
 
     // MARK: - Actions
