@@ -5,9 +5,8 @@ name: App Store Assets
 # other job: it shoots a chosen few screens on the exact simulators App Review asks
 # for — iPhone 6.9 inch and iPad 13 inch — and frames each with a line of copy, then
 # records the app playing a board by itself for the preview video on each, so what
-# comes out of it uploads straight to App Store Connect. On the phone it also makes
-# the spot: the nine-second commercial, a painted 3D pig either side of the app playing
-# a board, cut for a feed with the game's own noises and tune under it.
+# comes out of it uploads straight to App Store Connect. (The commercial is not a store
+# asset and has a job of its own, spot.yml.)
 #
 # Every language the game is translated into gets its own set, shot with the app
 # launched in that language and framed with captions written in it — the listing
@@ -48,11 +47,10 @@ jobs:
       matrix:
         # Every language in the app's `knownRegions`, or the one asked for.
         language: ${{ fromJSON((github.event.inputs.language || 'all') == 'all' && '["en","ru"]' || format('["{0}"]', github.event.inputs.language)) }}
-    # Two devices' worth of screens, a retake for any that come out blank, a
-    # 35-second recording on each and a 20-second one more on the phone, and a couple of
-    # minutes drawing the pig: a slow runner has taken 38 minutes to get through the
-    # capture alone.
-    timeout-minutes: 70
+    # Two devices' worth of screens, a retake for any that come out blank, and a
+    # 35-second recording on each: a slow runner has taken 38 minutes to get through
+    # the capture alone.
+    timeout-minutes: 60
 
     steps:
       - name: Checkout
@@ -78,21 +76,6 @@ jobs:
       # with an audio track in it — which is ffmpeg's job.
       - name: Install ffmpeg
         run: command -v ffmpeg >/dev/null || HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg
-
-      # The pig either side of the spot is a Three.js scene photographed a frame at a time
-      # under headless Chromium (Tools/spot). Node is on the runner; the page's packages
-      # and the browser are not.
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: Tools/spot/package-lock.json
-
-      - name: Install the spot's renderer
-        run: |
-          npm ci --prefix Tools/spot --no-audit --no-fund
-          npx --prefix Tools/spot playwright install chromium
 
       - name: Build for Simulator
         run: |
@@ -232,57 +215,24 @@ jobs:
             ls -la "out/$label/framed" || true
           }
 
-          # Both films are recorded rather than rendered, since Apple takes a preview
-          # only as a recording of the app and the spot is made the same way for the same
-          # reason: what it shows is what the app does. `roll` is the camera. It starts
-          # the recorder before the launch, since it can take seconds to get going,
-          # launches the app on the argument that opens the film, and stops the recorder
-          # well after the film ends. The recorder says "Recording started" the moment
-          # its first frame is taken, and a reel prints its own mark the moment its film
-          # starts; both are stamped on this Mac's clock, and the cut is the gap between
-          # them, left in INTO. (Not measured back from the stop: the recorder only
-          # writes a frame when the screen changes, so a still ending leaves the file
-          # shorter than the wait.)
-          roll() {
-            local dir="$1" udid="$2" argument="$3" mark="$4" seconds="$5"
-            mkdir -p "$dir"
-            xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
-            # Every line the recorder says, stamped with the time it said it.
-            xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" \
-              > >(python3 -u -c 'import sys, time
-          for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
-            local recorder=$!
-            sleep 3
-            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" "${LANG_ARGS[@]}" "$argument"
-            sleep "$seconds"
-            kill -INT "$recorder"
-            wait "$recorder" || true
-            xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
-
-            local started; started=$(awk -v mark="$mark" '$1 == mark { print $2; exit }' "$dir/app.log" || true)
-            if [ -z "$started" ]; then
-              echo "ERROR: the reel never said when its film started"; cat "$dir/app.log" || true; exit 1
-            fi
-            local recording; recording=$(awk '/Recording started/ { print $1; exit }' "$dir/recorder.log" || true)
-            if [ -z "$recording" ]; then
-              echo "ERROR: the recorder never said it had started"; cat "$dir/recorder.log" || true; exit 1
-            fi
-            INTO=$(python3 -c "print(round($started - $recording, 3))")
-          }
-
-          # The preview video. `-preview` opens PreviewReel.swift: the live listing's
-          # twenty-second film, played by the app on a fixed clock after four seconds held
-          # still on its first board. ffmpeg brings the cut to the store's size for the
-          # device, a steady 30 fps (holding the last frame if the still ending left the
-          # file short), and a silent stereo track, which App Store Connect asks for.
+          # The preview video, recorded rather than rendered, since Apple takes a
+          # preview only as a recording of the app. `-preview` opens PreviewReel.swift:
+          # the live listing's twenty-second film, played by the app on a fixed clock
+          # after four seconds held still on its first board. Tools/roll_reel.sh is the
+          # camera — it starts the recorder, launches the reel, and says how far into the
+          # recording the film starts — and the same camera shoots the spot in its own
+          # job. ffmpeg brings the cut to the store's size for the device, a steady 30 fps
+          # (holding the last frame if the still ending left the file short), and a
+          # silent stereo track, which App Store Connect asks for.
           record() {
             local label="$1" udid="$2" size="$3"
             local dir="$PWD/out/$label/preview"
-            roll "$dir" "$udid" -preview PREVIEW_REEL_START 32
-            echo "$label: the film starts ${INTO}s into the recording"
+            local into
+            into=$(Tools/roll_reel.sh "$dir" "$udid" "$BUNDLE_ID" -preview PREVIEW_REEL_START 32 "${LANG_ARGS[@]}")
+            echo "$label: the film starts ${into}s into the recording"
 
             ffmpeg -hide_banner -loglevel error -y \
-              -ss "$INTO" -i "$dir/raw.mov" \
+              -ss "$into" -i "$dir/raw.mov" \
               -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
               -map 0:v:0 -map 1:a:0 -t 20 -shortest \
               -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30,tpad=stop_mode=clone:stop_duration=20" \
@@ -296,116 +246,11 @@ jobs:
               -of compact "$dir/preview.mp4"
           }
 
-          # The spot: nine seconds in three parts, and only the middle is the app.
-          #
-          #   open   The 3D pig trots along behind a fence, finds the one gap in it, gives
-          #          the camera a look, and bolts out through the gap past the lens.
-          #   board  `-spot` opens SpotReel.swift: the same gap on Windfall Orchard, the
-          #          last piece knocked in, the pen let go into and held — the lap of
-          #          honour, the confetti, three stars — played by the app on a fixed clock
-          #          after the same four seconds held still, and recorded like the preview.
-          #   end    The pig again, up on her hind legs against the fence, and the name
-          #          planting itself over her.
-          #
-          # The two pig films come out of Tools/spot/render.mjs as PNG frames with a beat
-          # sheet beside them; the board comes off the simulator. The cut is 1080 by 1920
-          # for a feed, the phone's own picture stood in the middle of a blurred copy of
-          # itself where a phone's screen is narrower than nine by sixteen. The simulator
-          # records no sound, so the soundtrack is built here: the pig films say which of
-          # the game's noises they want and when, the reel prints one SPOT_REEL_SOUND line
-          # per noise the game made — naming the file and the second of the film it was
-          # asked for — and every one is laid in at its moment, offset by the film before
-          # it, over the game's own tune at about a third of their level, which is how the
-          # app itself mixes them. A noise from before the board's film started has a
-          # negative time and is left out.
-          spot() {
-            local label="$1" udid="$2"
-            local dir="$PWD/out/$label/spot"
-            roll "$dir" "$udid" -spot SPOT_REEL_START 20
-            echo "$label: the board starts ${INTO}s into the recording"
-            node Tools/spot/render.mjs --out "$dir/pig"
-
-            # The three lengths, and where each part starts in the whole.
-            local lengths; lengths=$(python3 - "$dir" <<'PY'
-          import json, sys
-          dir = sys.argv[1]
-          films = json.load(open(f"{dir}/pig/beats.json"))["films"]
-          board = next(float(line.split()[2]) for line in open(f"{dir}/app.log") if line.startswith("SPOT_REEL_START "))
-          print(films["open"]["length"], board, films["end"]["length"])
-          PY
-          )
-            local open board end; read -r open board end <<< "$lengths"
-            local total; total=$(python3 -c "print(round($open + $board + $end, 3))")
-            echo "$label: open ${open}s, board ${board}s, end ${end}s: ${total}s in all"
-
-            local inputs=(
-              -framerate 30 -i "$dir/pig/open/frame_%04d.png"
-              -ss "$INTO" -i "$dir/raw.mov"
-              -framerate 30 -i "$dir/pig/end/frame_%04d.png"
-              -i Pigpen/Resources/Music/meadow-waltz.wav
-            )
-            local voice="aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo"
-            local fade; fade=$(python3 -c "print(round($total - 1, 3))")
-            local filter="[3:a]${voice},volume=0.35,afade=t=out:st=${fade}:d=1[music]"
-            local mix="[music]" count=1 next=4
-            # Every noise in the whole spot, as "file seconds": the pig films' from the
-            # beat sheet, the board's from what the reel printed, each offset to its part.
-            while read -r name at; do
-              if [ ! -f "Pigpen/Resources/Sounds/$name.wav" ]; then
-                echo "WARNING: a sound was asked for that there is no file for: $name"; continue
-              fi
-              local ms; ms=$(python3 -c "print(round($at * 1000))")
-              inputs+=(-i "Pigpen/Resources/Sounds/$name.wav")
-              filter+=";[$next:a]${voice},adelay=${ms}|${ms}[noise$next]"
-              mix+="[noise$next]"
-              count=$((count + 1)); next=$((next + 1))
-            done < <(python3 - "$dir" "$open" "$board" <<'PY'
-          import json, sys
-          dir, open_, board = sys.argv[1], float(sys.argv[2]), float(sys.argv[3])
-          films = json.load(open(f"{dir}/pig/beats.json"))["films"]
-          for name, at in films["open"]["sounds"]:
-              print(name, round(at, 3))
-          for line in open(f"{dir}/app.log"):
-              parts = line.split()
-              if len(parts) == 3 and parts[0] == "SPOT_REEL_SOUND" and float(parts[2]) >= 0:
-                  print(parts[1], round(open_ + float(parts[2]), 3))
-          for name, at in films["end"]["sounds"]:
-              print(name, round(open_ + board + at, 3))
-          PY
-          )
-            echo "$label: $((count - 1)) noises under the spot"
-            filter+=";${mix}amix=inputs=${count}:normalize=0[audio]"
-            filter+=";[0:v]fps=30,setsar=1,format=yuv420p[pigopen]"
-            filter+=";[1:v]split=2[back][front]"
-            filter+=";[back]scale=1080:1920:flags=lanczos,boxblur=luma_radius=30:luma_power=2,setsar=1[blur]"
-            filter+=";[front]scale=-2:1920:flags=lanczos,setsar=1[phone]"
-            filter+=";[blur][phone]overlay=(W-w)/2:(H-h)/2,fps=30,tpad=stop_mode=clone:stop_duration=${board},trim=duration=${board},setpts=PTS-STARTPTS,format=yuv420p[boardcut]"
-            filter+=";[2:v]fps=30,setsar=1,format=yuv420p[pigend]"
-            # A steady 30 fps out of the join as well as into it: the encoder guesses otherwise.
-            filter+=";[pigopen][boardcut][pigend]concat=n=3:v=1:a=0,fps=30[video]"
-
-            ffmpeg -hide_banner -loglevel error -y \
-              "${inputs[@]}" \
-              -filter_complex "$filter" \
-              -map "[video]" -map "[audio]" -t "$total" -r 30 \
-              -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p \
-              -b:v 10M -maxrate 12M -bufsize 20M \
-              -c:a aac -b:a 256k -ar 44100 -ac 2 \
-              -movflags +faststart \
-              "$dir/spot.mp4"
-            # The frames are a few hundred megabytes nobody needs once the film is cut.
-            rm -rf "$dir/pig/open" "$dir/pig/end"
-            echo "== $label spot =="
-            ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,avg_frame_rate \
-              -of compact "$dir/spot.mp4"
-          }
-
           IPHONE=$(pick "iPhone 6.9-inch" "iPhone 16 Pro Max" "iPhone 17 Pro Max" "iPhone 15 Pro Max")
           IPAD=$(pick "iPad 13-inch" "iPad Pro 13-inch (M4)" "iPad Pro (12.9-inch) (6th generation)" "iPad Pro (12.9-inch) (5th generation)")
 
           shoot iphone_6_9 "$IPHONE"
           record iphone_6_9 "$IPHONE" 886x1920
-          spot iphone_6_9 "$IPHONE"
           shoot ipad_13 "$IPAD"
           record ipad_13 "$IPAD" 1200x1600
 
