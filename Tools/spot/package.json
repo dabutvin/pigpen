@@ -1,0 +1,15 @@
+{
+  "name": "pigpen-spot",
+  "private": true,
+  "description": "Renders the 3D pig that opens and closes the spot: a Three.js scene stepped a frame at a time under headless Chromium, written out as PNGs for ffmpeg.",
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

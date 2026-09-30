@@ -178,6 +178,11 @@ final class Sounds {
 
     @ObservationIgnored private let store: any SoundsStore
     @ObservationIgnored private let engine: any SoundEngine
+    /// A second ear on everything the game asks for, told before the switch is consulted.
+    /// The spot's reel keeps its beat sheet through it: the simulator records no sound, so
+    /// the reel writes down what noise the game made and when, and the workflow lays the
+    /// same files under the recording at those moments. Nothing else listens.
+    @ObservationIgnored var listener: ((Sound) -> Void)?
 
     init(store: any SoundsStore = StoredSounds(), engine: any SoundEngine = SpeakerSounds()) {
         self.store = store
@@ -188,6 +193,7 @@ final class Sounds {
     /// The gate. Everything the game says out loud comes through here, and with the switch
     /// off nothing beyond it is even asked for.
     func play(_ sound: Sound) {
+        listener?(sound)
         guard isOn else { return }
         engine.play(sound)
     }

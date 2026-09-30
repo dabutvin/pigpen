@@ -1,0 +1,524 @@
+<!doctype html>
+<!--
+  The 3D pig that opens and closes the spot.
+
+  Two short films, each a function of time rather than a running animation, so a frame can
+  be asked for at any moment and comes out the same every time: render.mjs steps them a
+  thirtieth of a second at a time under headless Chromium and photographs each step, and
+  ffmpeg makes the clips. Everything is built here out of spheres, cylinders and boxes with
+  a toon shader over them, in the title screen's own colours: a blue sky going pale at the
+  horizon, two green hills, a run of brown fence, a pink pig.
+
+    open   The pig trots along behind the fence, finds the one gap in it, gives the camera
+           a look, and dashes out through the gap past the lens — under three lines of
+           type: this is Pig, Pig needs a pen, can you build Pig the perfect pen? The
+           question the board then answers.
+    end    Head on to the fence. The pig springs up from behind it and hangs there with her
+           trotters over the rail, while the name plants itself over her and the sign hangs
+           under it.
+
+  window.spot is the whole contract with render.mjs: segments(), with each film's length
+  and the noises it wants laid under it and when, and render(segment, seconds).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pigpen spot</title>
+<style>
+  @font-face {
+    font-family: "Nunito";
+    font-weight: 900;
+    src: url("./fonts/Nunito-Black.woff2") format("woff2");
+  }
+  html, body { margin: 0; background: #000; overflow: hidden; }
+  #stage { position: relative; width: 1080px; height: 1920px; transform-origin: 0 0; }
+  canvas { display: block; }
+  /* The name and the sign, laid over the picture the way the title screen lays them over
+     the pasture. Sized for the 1080-wide frame; the stage is scaled as a whole for previews. */
+  #card {
+    position: absolute; left: 0; right: 0; top: 250px;
+    display: flex; flex-direction: column; align-items: center; gap: 44px;
+    pointer-events: none;
+  }
+  #wordmark {
+    width: 640px; height: auto;
+    filter: drop-shadow(0 22px 26px rgba(60, 60, 60, 0.45));
+    transform-origin: 50% 60%;
+  }
+  /* The intro's three lines, one at a time, high in the sky where the picture is empty. */
+  #caption {
+    position: absolute; left: 60px; right: 60px; top: 330px;
+    text-align: center;
+    font-family: "Nunito", "Helvetica Neue", Arial, sans-serif; font-weight: 900;
+    font-size: 74px; line-height: 1.15; color: #fffaf0;
+    text-shadow: 0 3px 0 rgba(69, 48, 28, 0.55), 0 14px 28px rgba(40, 60, 90, 0.45);
+    transform-origin: 50% 50%;
+    pointer-events: none;
+  }
+  #sign {
+    font-family: "Nunito", "Helvetica Neue", Arial, sans-serif; font-weight: 900;
+    font-size: 54px; letter-spacing: 0.5px; color: #45301c;
+    padding: 22px 64px; border-radius: 22px;
+    background: linear-gradient(#f2dcbf, #d9b88f 55%);
+    box-shadow: inset 0 0 0 4px rgba(69, 48, 28, 0.28), 0 14px 22px rgba(60, 60, 60, 0.28);
+    transform-origin: 50% 50%;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="canvas" width="1080" height="1920"></canvas>
+  <div id="caption" style="opacity: 0"></div>
+  <div id="card" style="opacity: 0">
+    <img id="wordmark" src="../../site/img/wordmark.png" alt="Pigpen">
+    <div id="sign">Build the perfect pen</div>
+  </div>
+</div>
+
+<script type="importmap">
+  { "imports": { "three": "./node_modules/three/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from "three";
+
+const WIDTH = 1080, HEIGHT = 1920;
+
+// MARK: - Palette, from the title screen
+
+const palette = {
+  skyTop: 0x4f9de6, skyHorizon: 0xcfe8f8,
+  hillBack: 0x8cc463, hillFront: 0x74b34d, grass: 0x88c95c,
+  post: 0x5b3d27, rail: 0x8a5a34,
+  pig: 0xf7b3c4, pigDark: 0xe58aa5, snout: 0xf0a0b5, hoof: 0x6b4838,
+  eye: 0x2a1f1f, sun: 0xffe27a, cloud: 0xffffff, petal: 0xfff7e6, pollen: 0xffd25a,
+};
+
+// MARK: - The stage
+
+const canvas = document.getElementById("canvas");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(WIDTH, HEIGHT, false);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(38, WIDTH / HEIGHT, 0.1, 200);
+
+// Three steps of light, which is what makes a sphere read as a painted ball rather than a
+// rendered one.
+const steps = new Uint8Array([90, 170, 255]);
+const gradient = new THREE.DataTexture(steps, 3, 1, THREE.RedFormat);
+gradient.minFilter = gradient.magFilter = THREE.NearestFilter;
+gradient.needsUpdate = true;
+const toon = (color) => new THREE.MeshToonMaterial({ color, gradientMap: gradient });
+
+// The sky: a gradient painted onto a canvas and hung behind everything.
+{
+  const sky = document.createElement("canvas");
+  sky.width = 4; sky.height = 512;
+  const paint = sky.getContext("2d");
+  const wash = paint.createLinearGradient(0, 0, 0, 512);
+  wash.addColorStop(0, "#" + palette.skyTop.toString(16).padStart(6, "0"));
+  wash.addColorStop(0.62, "#8fc3ee");
+  wash.addColorStop(1, "#" + palette.skyHorizon.toString(16).padStart(6, "0"));
+  paint.fillStyle = wash;
+  paint.fillRect(0, 0, 4, 512);
+  const texture = new THREE.CanvasTexture(sky);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  scene.background = texture;
+}
+
+scene.add(new THREE.HemisphereLight(0xdbeeff, 0x4f8a33, 1.15));
+const sun = new THREE.DirectionalLight(0xfff3d6, 2.2);
+sun.position.set(-6, 12, 9);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -14; sun.shadow.camera.right = 14;
+sun.shadow.camera.top = 14; sun.shadow.camera.bottom = -14;
+sun.shadow.camera.near = 1; sun.shadow.camera.far = 40;
+sun.shadow.bias = -0.0008;
+sun.shadow.radius = 4;
+scene.add(sun);
+
+// MARK: - The meadow
+
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), toon(palette.grass));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+function hill(x, z, radius, squash, color) {
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, 48, 24), toon(color));
+  mesh.scale.set(1, squash, 1);
+  mesh.position.set(x, -0.2, z);
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+}
+hill(-16, -40, 26, 0.26, palette.hillBack);
+hill(18, -46, 30, 0.24, palette.hillBack);
+hill(4, -30, 18, 0.22, palette.hillFront);
+hill(-24, -26, 16, 0.2, palette.hillFront);
+
+// The sun, and a few clouds that drift with the clock.
+const sunDisc = new THREE.Mesh(
+  new THREE.CircleGeometry(3.2, 48),
+  new THREE.MeshBasicMaterial({ color: palette.sun })
+);
+sunDisc.position.set(16, 26, -70);
+sunDisc.lookAt(0, 4, 0);
+scene.add(sunDisc);
+
+const clouds = [];
+function cloud(x, y, z, size) {
+  const group = new THREE.Group();
+  const puff = toon(palette.cloud);
+  for (const [dx, dy, r] of [[0, 0, 1], [-0.9, -0.15, 0.7], [0.95, -0.1, 0.75], [0.3, 0.45, 0.6], [-0.35, 0.4, 0.55]]) {
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(r * size, 20, 14), puff);
+    ball.position.set(dx * size, dy * size, 0);
+    group.add(ball);
+  }
+  group.position.set(x, y, z);
+  scene.add(group);
+  clouds.push({ group, x, speed: 0.12 + size * 0.03 });
+}
+cloud(-14, 17, -60, 2.2);
+cloud(6, 21, -66, 1.7);
+cloud(20, 15, -58, 1.9);
+cloud(-4, 13, -50, 1.1);
+
+// Daisies: the same flower a hundred times, scattered by a seeded generator so the meadow
+// is the same meadow in every frame.
+{
+  let seed = 7;
+  const random = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  const petals = new THREE.InstancedMesh(new THREE.SphereGeometry(0.11, 10, 8), toon(palette.petal), 140);
+  const pollen = new THREE.InstancedMesh(new THREE.SphereGeometry(0.05, 8, 6), toon(palette.pollen), 140);
+  const place = new THREE.Object3D();
+  for (let i = 0; i < 140; i++) {
+    const x = (random() - 0.5) * 50;
+    const z = -20 + random() * 30;
+    place.position.set(x, 0.06, z);
+    place.scale.set(1, 0.45, 1);
+    place.updateMatrix();
+    petals.setMatrixAt(i, place.matrix);
+    place.position.y = 0.1;
+    place.scale.set(1, 1, 1);
+    place.updateMatrix();
+    pollen.setMatrixAt(i, place.matrix);
+  }
+  scene.add(petals, pollen);
+}
+
+// MARK: - The fence
+
+/// A run of fence along x at depth z, from `from` to `to`, with a panel missing wherever
+/// `gapAt` falls. Posts every 1.6, two rails between them.
+function fence(from, to, z, gapAt) {
+  const group = new THREE.Group();
+  const post = new THREE.BoxGeometry(0.22, 1.35, 0.22);
+  const cap = new THREE.SphereGeometry(0.15, 12, 8);
+  const rail = new THREE.BoxGeometry(1.6, 0.16, 0.1);
+  const posts = toon(palette.post), rails = toon(palette.rail);
+  for (let x = from; x <= to + 0.01; x += 1.6) {
+    const p = new THREE.Mesh(post, posts);
+    p.position.set(x, 0.675, z);
+    p.castShadow = true;
+    group.add(p);
+    const c = new THREE.Mesh(cap, posts);
+    c.position.set(x, 1.36, z);
+    group.add(c);
+    if (x + 1.6 > to + 0.01) break;
+    const middle = x + 0.8;
+    if (gapAt !== undefined && Math.abs(middle - gapAt) < 0.8) continue;
+    for (const y of [0.55, 1.05]) {
+      const r = new THREE.Mesh(rail, rails);
+      r.position.set(middle, y, z);
+      r.castShadow = true;
+      group.add(r);
+    }
+  }
+  // Lower than the posts and rails were drawn: a fence a pig can see over, and rear up onto.
+  group.scale.y = 0.82;
+  scene.add(group);
+  return group;
+}
+
+// MARK: - The pig
+
+/// Built facing +x. Returns the group and the parts the films move.
+function pig() {
+  const root = new THREE.Group();
+  root.scale.setScalar(0.62);
+  const group = new THREE.Group();
+  root.add(group);
+  const skin = toon(palette.pig), dark = toon(palette.pigDark), hoof = toon(palette.hoof);
+  const cast = (mesh) => { mesh.castShadow = true; return mesh; };
+
+  const body = cast(new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), skin));
+  body.scale.set(1.35, 1.0, 1.05);
+  body.position.y = 1.05;
+  group.add(body);
+
+  const head = new THREE.Group();
+  head.position.set(1.05, 1.35, 0);
+  group.add(head);
+  const skull = cast(new THREE.Mesh(new THREE.SphereGeometry(0.72, 36, 24), skin));
+  head.add(skull);
+  const snout = cast(new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.34, 0.26, 28), toon(palette.snout)));
+  snout.rotation.z = -Math.PI / 2;
+  snout.position.set(0.72, -0.12, 0);
+  head.add(snout);
+  for (const side of [-1, 1]) {
+    const nostril = new THREE.Mesh(new THREE.SphereGeometry(0.055, 10, 8), dark);
+    nostril.position.set(0.86, -0.1, side * 0.11);
+    head.add(nostril);
+    // On the skull's surface rather than inside it: the direction, at the skull's radius.
+    const gaze = new THREE.Vector3(0.62, 0.22, side * 0.4).normalize();
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.085, 14, 10), toon(palette.eye));
+    eye.position.copy(gaze).multiplyScalar(0.7);
+    head.add(eye);
+    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    glint.position.copy(gaze).multiplyScalar(0.76).add(new THREE.Vector3(0.02, 0.03, side * -0.02));
+    head.add(glint);
+  }
+  const ears = [];
+  for (const side of [-1, 1]) {
+    const pivot = new THREE.Group();
+    pivot.position.set(0.05, 0.6, side * 0.36);
+    const ear = cast(new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.5, 4), skin));
+    ear.scale.set(1, 1, 0.45);
+    ear.position.y = 0.22;
+    ear.rotation.y = Math.PI / 4;
+    pivot.add(ear);
+    pivot.rotation.z = -0.35;
+    pivot.rotation.x = side * 0.55;
+    head.add(pivot);
+    ears.push(pivot);
+  }
+
+  const legs = [];
+  for (const [dx, dz] of [[0.62, 0.45], [0.62, -0.45], [-0.62, 0.45], [-0.62, -0.45]]) {
+    const pivot = new THREE.Group();
+    pivot.position.set(dx, 0.7, dz);
+    const leg = cast(new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.62, 16), skin));
+    leg.position.y = -0.31;
+    pivot.add(leg);
+    const trotter = cast(new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.19, 0.18, 16), hoof));
+    trotter.position.y = -0.66;
+    pivot.add(trotter);
+    group.add(pivot);
+    legs.push(pivot);
+  }
+
+  // The tail: a curl of tube behind, standing up off the rump.
+  const curl = new THREE.CatmullRomCurve3(
+    Array.from({ length: 14 }, (_, i) => {
+      const a = i / 13 * Math.PI * 2.4;
+      return new THREE.Vector3(-1.3 - i * 0.012, 1.35 + Math.sin(a) * 0.16 + i * 0.012, Math.cos(a) * 0.16);
+    })
+  );
+  const tail = cast(new THREE.Mesh(new THREE.TubeGeometry(curl, 40, 0.055, 8, false), skin));
+  group.add(tail);
+
+  scene.add(root);
+  return { root, group, body, head, ears, legs };
+}
+
+// MARK: - Motion
+
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const smooth = (a, b, t) => { const s = clamp01((t - a) / (b - a)); return s * s * (3 - 2 * s); };
+const lerp = (a, b, t) => a + (b - a) * t;
+/// A spring's settle from 0 to 1, overshooting on the way.
+const spring = (t, bounce = 0.45) => {
+  if (t <= 0) return 0;
+  if (t >= 1) return 1;
+  return 1 - Math.exp(-6 * t) * Math.cos(t * Math.PI * (2 + bounce * 4)) * (1 + bounce);
+};
+
+/// A trot at `speed` tiles a second: legs swinging in diagonal pairs, the body bobbing on
+/// each footfall. Zero speed stands her square.
+function trot(parts, clock, speed) {
+  const stride = clock * speed * 2.6;
+  const swing = speed > 0 ? 0.7 : 0;
+  const phase = Math.sin(stride * Math.PI * 2);
+  parts.legs[0].rotation.z = phase * swing;
+  parts.legs[3].rotation.z = phase * swing;
+  parts.legs[1].rotation.z = -phase * swing;
+  parts.legs[2].rotation.z = -phase * swing;
+  const bob = speed > 0 ? Math.abs(Math.sin(stride * Math.PI * 2)) : 0;
+  parts.group.position.y = bob * 0.12;
+  parts.body.rotation.x = phase * 0.04;
+  parts.head.rotation.z = -bob * 0.08;
+  for (const [i, ear] of parts.ears.entries()) {
+    ear.rotation.z = -0.35 - bob * 0.25;
+    ear.rotation.x = (i === 0 ? -1 : 1) * (0.55 + bob * 0.12);
+  }
+}
+
+// MARK: - The films
+
+const films = {};
+
+// The open: behind the fence, along it, the gap, the look, the dash out past the lens.
+films.open = (() => {
+  const length = 3.5;
+  // A post every 1.6 from -12.8, so there is a post at 0 and the missing panel is the one
+  // between it and 1.6.
+  const rail = fence(-12.8, 12.8, 0, 0.8);
+  const her = pig();
+  // The dash: a curve from her pause behind the gap, straight out through it, and away
+  // to the right in front of the camera.
+  const dash = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(0.7, 0, -1.6),
+    new THREE.Vector3(0.8, 0, 1.6),
+    new THREE.Vector3(2.7, 0, 4.7)
+  );
+  return {
+    length,
+    props: [rail, her.root],
+    sounds: [["callout", 1.55], ["pig-away", 2.2]],
+    // What is said over it, and from when to when. The name is hers: the game calls her
+    // Pig. The question stays up after she has bolted, over the gap she left through, and
+    // the board is the cut that answers it.
+    captions: [
+      ["This is Pig.", 0.45, 1.45],
+      ["Pig needs a pen.", 1.55, 2.25],
+      ["Can you build Pig the perfect pen?", 2.35, 3.5]
+    ],
+    render(t) {
+      const walkIn = smooth(0.0, 1.45, t);
+      const going = smooth(2.2, 3.0, t);
+      const speed = t < 1.45 ? 1.0 : t < 2.2 ? 0 : 1.7;
+      trot(her, t, speed);
+      her.group.rotation.z = 0;
+      let yaw;
+      if (going > 0) {
+        const at = dash.getPoint(going);
+        const heading = dash.getTangent(going);
+        her.root.position.set(at.x, 0, at.z);
+        yaw = -Math.atan2(heading.z, heading.x);
+      } else {
+        // Along the fence, then round on the spot to face the gap, which is where the
+        // dash's curve sets off toward.
+        const start = dash.getTangent(0);
+        // From just outside the left of the frame, so she is on screen by the time she is named.
+        her.root.position.set(lerp(-4.2, 0.7, walkIn), 0, -1.6);
+        yaw = lerp(0, -Math.atan2(start.z, start.x), smooth(1.95, 2.25, t));
+      }
+      her.root.rotation.y = yaw;
+      // The look: the head turns to the camera and holds there while the body comes round
+      // under it, so she is watching the lens right up to the moment she bolts.
+      const look = smooth(1.45, 1.75, t) - smooth(2.4, 2.7, t);
+      her.head.rotation.y = Math.min(0, -1.2 * look - yaw);
+      her.head.rotation.z += look * 0.1;
+      // Ears prick on the look.
+      for (const ear of her.ears) ear.rotation.z -= 0.3 * look;
+      // The camera, standing in the grass in front of the fence, pushing in a touch.
+      const push = smooth(0, 3, t);
+      camera.fov = 42;
+      camera.updateProjectionMatrix();
+      camera.position.set(0.9 - push * 0.3, 2.4, 7.4 - push * 0.6);
+      camera.lookAt(0.2, 0.85, -0.6);
+    }
+  };
+})();
+
+// The end: head on to the fence, and the pig up on her hind legs against it, trotters
+// over the rail, while the name plants itself over her.
+films.end = (() => {
+  const length = 2.3;
+  // Posts at plus and minus 0.8, so she stands in the middle of a panel.
+  const rail = fence(-8.8, 8.8, 0);
+  const her = pig();
+  return {
+    length,
+    props: [rail, her.root],
+    sounds: [["hop", 0.2]],
+    card: { wordmark: 0.5, sign: 1.0 },
+    render(t) {
+      trot(her, 0, 0);
+      her.root.rotation.y = -Math.PI / 2;
+      // Rearing up: pitched nose-up about her hind trotters, with a little hop forward
+      // from where she stood so the trotters come down on the rail.
+      const up = spring((t - 0.15) / 0.7, 0.3);
+      const forward = smooth(0.15, 0.6, t);
+      her.root.position.set(0, Math.sin(forward * Math.PI) * 0.22, lerp(-1.05, -0.05, forward));
+      const pitch = up * 1.05;
+      her.group.rotation.z = pitch;
+      her.group.position.set(-0.62 + 0.62 * Math.cos(pitch), 0.62 * Math.sin(pitch), 0);
+      // Front legs forward and drooping over the rail; hind legs straight down to the ground.
+      her.legs[0].rotation.z = her.legs[1].rotation.z = up * (1.8 - pitch);
+      her.legs[2].rotation.z = her.legs[3].rotation.z = -pitch;
+      her.head.rotation.z = -0.55 * up;
+      // Ears flop as she lands on the rail.
+      const flop = Math.sin(clamp01((t - 0.55) / 0.5) * Math.PI) * 0.5;
+      for (const ear of her.ears) ear.rotation.z = -0.35 + flop;
+      // A slow blink, once.
+      her.head.scale.y = 1 - Math.sin(clamp01((t - 1.8) / 0.22) * Math.PI) * 0.08;
+      camera.fov = 42;
+      camera.updateProjectionMatrix();
+      camera.position.set(0, 1.6, 4.2);
+      camera.lookAt(0, 0.62, -0.6);
+    }
+  };
+})();
+
+// Only one film's props on stage at a time: each film's fence and pig are hidden while
+// the other is being photographed.
+const stages = { open: films.open.props, end: films.end.props };
+
+const caption = document.getElementById("caption");
+const card = document.getElementById("card");
+const wordmark = document.getElementById("wordmark");
+const sign = document.getElementById("sign");
+
+window.spot = {
+  segments() {
+    return Object.fromEntries(
+      Object.entries(films).map(([name, film]) => [name, { length: film.length, sounds: film.sounds }])
+    );
+  },
+  render(name, t) {
+    for (const [stage, props] of Object.entries(stages)) {
+      for (const prop of props) prop.visible = stage === name;
+    }
+    for (const c of clouds) c.group.position.x = c.x + t * c.speed;
+    const film = films[name];
+    film.render(t);
+    // One line at a time: each springs in over its first quarter second and is gone a
+    // tenth of a second after its time is up.
+    const line = (film.captions ?? []).find(([, from, to]) => t >= from && t < to + 0.1);
+    if (line) {
+      const [text, from, to] = line;
+      const rise = spring((t - from) / 0.45, 0.35);
+      const gone = clamp01((t - to) / 0.1);
+      caption.textContent = text;
+      caption.style.opacity = clamp01((t - from) * 8) * (1 - gone);
+      caption.style.transform = `scale(${0.88 + 0.12 * rise}) translateY(${(1 - rise) * 18}px)`;
+    } else {
+      caption.style.opacity = 0;
+    }
+    if (film.card) {
+      card.style.opacity = 1;
+      const w = spring((t - film.card.wordmark) / 0.8, 0.5);
+      wordmark.style.opacity = clamp01((t - film.card.wordmark) * 6);
+      wordmark.style.transform = `scale(${0.6 + 0.4 * w}) translateY(${(1 - w) * -30}px)`;
+      const s = spring((t - film.card.sign) / 0.6, 0.3);
+      sign.style.opacity = clamp01((t - film.card.sign) * 5);
+      sign.style.transform = `scale(${0.85 + 0.15 * s})`;
+    } else {
+      card.style.opacity = 0;
+    }
+    renderer.render(scene, camera);
+  },
+  ready: new Promise((resolve) => {
+    Promise.all([document.fonts.ready, new Promise((r) => (wordmark.complete ? r() : (wordmark.onload = r)))]).then(resolve);
+  })
+};
+window.spot.render("open", 0);
+</script>
+</body>
+</html>

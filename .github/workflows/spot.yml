@@ -1,0 +1,140 @@
+name: Spot
+
+# The commercial: under ten seconds, a painted 3D pig either side of the app playing one
+# board, cut for a feed with the game's own noises and tune under it. It is its own job
+# rather than a corner of the App Store Assets one because it is not a store asset, and
+# because a ten-second film should not cost forty minutes of screenshots to remake.
+#
+# Three parts, and only the middle is the app. Tools/spot/pig.html is the pig — a
+# Three.js scene photographed a frame at a time under headless Chromium by
+# Tools/spot/render.mjs — and SpotReel.swift is the board, played by the app on a fixed
+# clock and recorded off the simulator by Tools/roll_reel.sh, since the app is the one
+# thing that cannot be rendered. Tools/cut_spot.sh puts the three together and lays the
+# sound under them. It is hand-cranked: run it from the Actions tab, and the film comes
+# back as the `spot` artifact, with the raw recording and the beat sheet beside it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      appearance:
+        description: Light or dark board
+        required: false
+        default: light
+        type: choice
+        options: [light, dark]
+
+concurrency:
+  group: spot-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  spot:
+    name: Cut the spot
+    runs-on: macos-26
+    # The build, a simulator woken from cold, a twenty-second recording, a minute of
+    # drawing the pig, and the cut.
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1 || true)
+          if [ -n "$XCODE" ]; then sudo xcode-select -s "$XCODE/Contents/Developer"; fi
+          xcodebuild -version
+
+      - name: Install XcodeGen
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      # The cut is ffmpeg's: three parts joined, the phone picture stood on a blurred copy
+      # of itself, a dozen noises laid in at their moments over the tune.
+      - name: Install ffmpeg
+        run: command -v ffmpeg >/dev/null || HOMEBREW_NO_AUTO_UPDATE=1 brew install ffmpeg
+
+      # The pig is drawn under headless Chromium. Node is on the runner; the page's
+      # packages and the browser are not.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Tools/spot/package-lock.json
+
+      - name: Install the pig's renderer
+        run: |
+          npm ci --prefix Tools/spot --no-audit --no-fund
+          npx --prefix Tools/spot playwright install chromium
+
+      - name: Build for Simulator
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Pigpen.xcodeproj \
+            -scheme Pigpen \
+            -destination "generic/platform=iOS Simulator" \
+            -configuration Debug \
+            -derivedDataPath DerivedData \
+            ARCHS="$(uname -m)" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee build.log
+          if grep -q "BUILD FAILED" build.log; then exit 1; fi
+
+      - name: Record the board and cut the spot
+        env:
+          APPEARANCE: ${{ github.event.inputs.appearance || 'light' }}
+        run: |
+          set -euo pipefail
+
+          BUNDLE_ID="com.pigpen.app"
+          APP_PATH=$(find DerivedData/Build/Products/Debug-iphonesimulator -name "*.app" -maxdepth 1 | head -1)
+          if [ -z "$APP_PATH" ]; then echo "ERROR: no .app built"; exit 1; fi
+
+          # The phone the store's preview is shot on, so the board in the spot is the board
+          # on the listing. The same pick the App Store Assets job makes: the first
+          # simulator on offer whose name matches one we want, made if the runner has the
+          # device type but has not built one yet.
+          available=$(xcrun simctl list devices available)
+          UDID=""
+          for name in "iPhone 16 Pro Max" "iPhone 17 Pro Max" "iPhone 15 Pro Max"; do
+            UDID=$(grep -m1 "^ *$name (" <<< "$available" | sed -E 's/.*\(([0-9A-Fa-f-]{36})\).*/\1/' || true)
+            [ -n "$UDID" ] && break
+          done
+          if [ -z "$UDID" ]; then
+            runtime=$(xcrun simctl list runtimes | grep -E 'iOS' | tail -1 | sed -E 's/.*(com\.apple[^ ]*).*/\1/')
+            for name in "iPhone 16 Pro Max" "iPhone 17 Pro Max" "iPhone 15 Pro Max"; do
+              UDID=$(xcrun simctl create "$name" "$name" "$runtime" 2>/dev/null || true)
+              [ -n "$UDID" ] && break
+            done
+          fi
+          if [ -z "$UDID" ]; then echo "ERROR: no iPhone simulator available"; echo "$available"; exit 1; fi
+
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" appearance "$APPEARANCE"
+          # The status bar the listing wears: 9:41, full wifi, a full battery, no carrier.
+          xcrun simctl status_bar "$UDID" override --time "9:41" \
+            --batteryState discharging --batteryLevel 100 \
+            --wifiMode active --wifiBars 3 --cellularMode notSupported 2>/dev/null || true
+          xcrun simctl install "$UDID" "$APP_PATH"
+
+          # `-spot` opens SpotReel.swift, which holds still for four seconds and then plays
+          # its four; twenty seconds of recording is that with slack either side.
+          DIR="$PWD/out/spot"
+          INTO=$(Tools/roll_reel.sh "$DIR" "$UDID" "$BUNDLE_ID" -spot SPOT_REEL_START 20)
+          echo "the board starts ${INTO}s into the recording"
+          Tools/cut_spot.sh "$DIR" "$INTO"
+
+      - name: Upload the spot
+        uses: actions/upload-artifact@v4
+        with:
+          name: spot
+          path: out/spot/
+          if-no-files-found: error
