@@ -93,7 +93,7 @@ jobs:
           # read the colour scheme out of the environment, so flipping the
           # simulator under a running app re-draws it, and the two shots then show
           # the same board rather than two rolls of the dice. `-universe`, `-map`,
-          # `-woods-map`, `-woods-rationed`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
+          # `-woods-map`, `-woods-rationed`, `-wait-offer`, `-peak-map`, `-city-map`, `-puzzle`, `-beaten`,
           # `-orchard`, `-sour`, `-boss`, `-truffles`, `-embers`, `-pies`, `-tutorial`, `-daily`,
           # `-archive`, `-title`, `-title-fresh`, `-settings`, `-reminder`, `-toll`, `-barn-map`,
           # `-barn`, `-dressed-board`, `-dressed-title`, `-postcard`, `-record` and
@@ -189,6 +189,11 @@ jobs:
           # first free level there: the next stop under a lock, with the rest of the free
           # game's day counted down over it. Numbered high for the same reason.
           capture 81 woods_rationed -woods-rationed
+
+          # The same trail with its waiting stop tapped: the sheet that says how long the
+          # wait is, with the offer of a reminder for when it is over. Numbered past the
+          # landmark's records so nothing already in the gallery shifts.
+          capture 105 wait_offer -wait-offer
 
           # The fork off the orchard — the one branch on any trail in the game — and the
           # dressing barn at the end of it, with something already on the pig. Then the two

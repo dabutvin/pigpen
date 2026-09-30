@@ -208,6 +208,7 @@ struct PigpenApp: App {
         case universeLocked = "-universe-locked"
         case woodsMap = "-woods-map"
         case woodsRationed = "-woods-rationed"
+        case waitOffer = "-wait-offer"
         case peakMap = "-peak-map"
         case cityMap = "-city-map"
         case tutorial = "-tutorial"
@@ -456,6 +457,35 @@ struct PigpenApp: App {
                 fullGame: .locked(),
                 ration: .partWayThrough(world: .thornwoodThicket)
             )
+        case .waitOffer:
+            // The same trail with its waiting stop tapped: the sheet that says how long the
+            // wait is, with the offer of a reminder for the end of it at the top. The reminder
+            // is held in memory and never asked, so the runner is never asked for permission
+            // to post a notification and the row photographs as a phone that has not been.
+            WorldMapView(
+                world: .thornwoodThicket,
+                progress: .partWayThrough(world: .thornwoodThicket),
+                fullGame: .locked(),
+                ration: .partWayThrough(world: .thornwoodThicket)
+            )
+            .sheet(isPresented: .constant(true)) {
+                FullGameOffer(
+                    fullGame: .locked(),
+                    source: .trail,
+                    wait: LevelWait(minutes: 14 * 60),
+                    nudge: LevelNudge(
+                        reminder: .neverAsked(),
+                        daily: DailyProgress(store: RememberedDailyRecords()),
+                        level: NextLevel(
+                            world: WorldTheme.thornwood.id,
+                            worldName: GameWorld.thornwoodThicket.name,
+                            due: Date().addingTimeInterval(14 * 60 * 60)
+                        )
+                    ),
+                    asks: .empty()
+                )
+                .presentationDetents([.large])
+            }
         case .peakMap:
             WorldMapView(
                 world: .emberpeak,
