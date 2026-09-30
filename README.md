@@ -2304,7 +2304,7 @@ tag vX.Y.Z ──► release.yml ──► App Store Connect + GitHub Release
 | `testflight.yml` | Push to main | Archive, sign, upload to TestFlight |
 | `release.yml` | Tag `v*.*.*` | Archive with the tag's version, submit to App Store Connect, cut a GitHub Release |
 | `signing-setup.yml` | Manual | Create, list or revoke the signing certificate and profile over the App Store Connect API |
-| `appstore-assets.yml` | Manual | Per language, on the exact iPhone and iPad App Review asks for: shoot the seven screens the listing leads with and frame each with its line of copy; record the app playing the listing's twenty-second preview (`-preview`, `PreviewReel.swift`) and cut it to the store's sizes; and on the phone make the spot — the nine-second commercial: a painted 3D pig (`Tools/spot`, a Three.js scene photographed a frame at a time under headless Chromium) who finds the gap in a fence and bolts through it, then the app playing the same gap on a board (`-spot`, `SpotReel.swift`), then the pig up against the fence with the name over her — cut to 1080 by 1920 for a feed with the game's own noises and tune laid under it, since the simulator records no sound. Everything comes back as a downloadable artifact per language |
+| `appstore-assets.yml` | Manual | Per language, on the exact iPhone and iPad App Review asks for: shoot the seven screens the listing leads with and frame each with its line of copy; record the app playing the listing's twenty-second preview (`-preview`, `PreviewReel.swift`) and cut it to the store's sizes; and on the phone make the spot — the nine-second commercial: a painted 3D pig (`Tools/spot`, a Three.js scene photographed a frame at a time under headless Chromium) who finds the gap in a fence and bolts through it, then the app laying the east side of a pen piece by piece and letting the pig go into it (`-spot`, `SpotReel.swift`), then the pig up against the fence with the name over her — cut to 1080 by 1920 for a feed with the game's own noises and tune laid under it, since the simulator records no sound. Everything comes back as a downloadable artifact per language |
 | Netlify `pigpenapp` | PR, push to main | Publish `site/` — a deploy preview per pull request, pigpen.app on merge. Configured in the Netlify project rather than in this repository, so it is the one row here with nothing behind it to read |
 
 Notes on the details:
@@ -2471,7 +2471,7 @@ Pigpen/
 │   ├── TitleScreenView.swift    # Start screen
 │   ├── TitleSceneView.swift     # The animated pasture behind the title
 │   ├── PreviewReel.swift        # The App Store preview, played by the app on a fixed clock for the store job to record
-│   ├── SpotReel.swift           # The middle of the commercial: the gap on the board, shut, and the lap of honour — played the same way, between the 3D pig's two films
+│   ├── SpotReel.swift           # The middle of the commercial: six pieces laid, the pen held, the lap of honour — played the same way, between the 3D pig's two films
 │   ├── DailyCard.swift          # Today's puzzle on the title screen: the day, its stars, its clock
 │   ├── DailyArchiveView.swift   # The calendar of every daily there has been
 │   ├── DailySquare.swift        # One day in the archive: a little field, washed once it is done
