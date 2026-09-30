@@ -275,3 +275,25 @@ extension LevelRation {
         return NextLevel(world: universe[reached].id, worldName: game.name, due: due)
     }
 }
+
+extension LevelRation {
+    /// The level the clock is shutting at one stop the player has tapped, if the clock is
+    /// what is shutting it: the stop's own due time, in the world it stands in.
+    ///
+    /// What the wait sheet up a trail builds its reminder from. It used to ask
+    /// `nextLevelWaiting`, which reads the world's first unfinished stop rather than the one
+    /// tapped, and came back empty whenever the two differed — leaving a sheet that said
+    /// *Next level in 14 hours* with no way to be reminded when it opened.
+    func levelWaiting(
+        at levelID: String,
+        in game: GameWorld,
+        isCleared: Bool,
+        isBought: Bool,
+        now: Date = .now
+    ) -> NextLevel? {
+        guard !isBought, !game.isFree,
+              case .waiting(let due) = standing(of: levelID, isCleared: isCleared, now: now)
+        else { return nil }
+        return NextLevel(world: game.theme.id, worldName: game.name, due: due)
+    }
+}

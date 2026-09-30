@@ -51,7 +51,7 @@ struct FullGameOffer: View {
     @State private var nudging: Nudging = .notShown
 
     private enum Nudging: Equatable {
-        /// Not offered here: not the wait, or not due, or too soon after another ask.
+        /// Not offered here: not the wait, or the reminders are already on or refused.
         case notShown
         /// Up, and not yet answered.
         case offered
@@ -390,17 +390,18 @@ struct FullGameOffer: View {
         }
     }
 
-    /// Puts the reminder's offer up if this is the wait, the offer is due, and the game has
-    /// not just asked something else. Marked as made the moment it shows, whatever comes of
-    /// it, the same as the offer on the title screen: it is made once.
+    /// Puts the reminder's offer up if this is the wait and the offer is due — every time the
+    /// sheet opens, until the reminders are on.
+    ///
+    /// Not once, and not held back for the asks made lately, as the title screen's offer is:
+    /// the player opened this sheet themselves by tapping the waiting stop, so nothing is
+    /// interrupted, and a sheet that says how long the wait is without offering to say when
+    /// it is over leaves them nothing to do but buy or come back and guess. Still written into
+    /// the ledger, so the title screen's own offer keeps clear of it.
     private func offerTheNudgeIfItIsDue() async {
         guard let nudge, wait != nil else { return }
         await nudge.reminder.readTheStanding()
-        guard nudge.reminder.isDueALevelOffer,
-              !asks.wasRecent(.reminder),
-              !asks.isCrowded(for: .reminder, alongside: [.store])
-        else { return }
-        nudge.reminder.markLevelOffered()
+        guard nudge.reminder.isDueALevelOffer else { return }
         asks.note(.reminder)
         Analytics.record(.reminderOffered(about: .theNextLevel(in: nudge.level.worldName)))
         nudging = .offered
