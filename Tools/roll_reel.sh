@@ -29,7 +29,10 @@ xcrun simctl io "$udid" recordVideo --codec=h264 --force "$dir/raw.mov" \
 for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
 recorder=$!
 sleep 3
-xcrun simctl launch --stdout="$dir/app.log" "$udid" "$bundle" "$@" "$argument"
+# The launch prints the app's process id — "com.pigpen.app: 6192" — to standard output,
+# and standard output is where this script's one number goes, so that line is sent to
+# standard error with the rest of the chatter. (The app's own output goes to app.log.)
+xcrun simctl launch --stdout="$dir/app.log" "$udid" "$bundle" "$@" "$argument" >&2
 sleep "$seconds"
 kill -INT "$recorder"
 wait "$recorder" || true
