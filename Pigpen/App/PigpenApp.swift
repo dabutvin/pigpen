@@ -219,6 +219,7 @@ struct PigpenApp: App {
         case titleFresh = "-title-fresh"
         case title = "-title"
         case preview = "-preview"
+        case spot = "-spot"
     }
 
     /// Every argument there is: the films above, and every screen beside them. The whole list
@@ -367,6 +368,11 @@ struct PigpenApp: App {
             // Not a still: the listing's preview video played by the app — three boards
             // laid and let go — recorded by the App Store Assets workflow.
             PreviewReel()
+        case .spot:
+            // Not a still either: the commercial — the pig out through a gap, the gap
+            // shut, the lap of honour, the name — played by the app on a fixed clock and
+            // recorded by the same workflow, with the game's own noises laid under it.
+            SpotReel()
         case .map:
             WorldMapView(progress: .partWayThrough())
         case .toll:

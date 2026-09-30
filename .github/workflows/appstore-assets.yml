@@ -5,7 +5,9 @@ name: App Store Assets
 # other job: it shoots a chosen few screens on the exact simulators App Review asks
 # for — iPhone 6.9 inch and iPad 13 inch — and frames each with a line of copy, then
 # records the app playing a board by itself for the preview video on each, so what
-# comes out of it uploads straight to App Store Connect.
+# comes out of it uploads straight to App Store Connect. On the phone it also records
+# the spot: the nine-second commercial the app plays itself, cut for a feed with the
+# game's own noises and tune under it.
 #
 # Every language the game is translated into gets its own set, shot with the app
 # launched in that language and framed with captions written in it — the listing
@@ -46,9 +48,9 @@ jobs:
       matrix:
         # Every language in the app's `knownRegions`, or the one asked for.
         language: ${{ fromJSON((github.event.inputs.language || 'all') == 'all' && '["en","ru"]' || format('["{0}"]', github.event.inputs.language)) }}
-    # Two devices' worth of screens, a retake for any that come out blank, and a
-    # 35-second recording on each: a slow runner has taken 38 minutes to get through
-    # the capture alone.
+    # Two devices' worth of screens, a retake for any that come out blank, a
+    # 35-second recording on each and a 20-second one more on the phone: a slow runner
+    # has taken 38 minutes to get through the capture alone.
     timeout-minutes: 60
 
     steps:
@@ -214,22 +216,19 @@ jobs:
             ls -la "out/$label/framed" || true
           }
 
-          # The preview video, recorded rather than rendered, since Apple takes a
-          # preview only as a recording of the app. `-preview` opens PreviewReel.swift:
-          # the live listing's twenty-second film, played by the app on a fixed clock
-          # after four seconds held still on its first board. The recorder is started
-          # before the launch, since it can take seconds to get going, and stopped well
-          # after the film ends. The recorder says "Recording started" the moment its
-          # first frame is taken, and the reel prints the moment its film starts; both
-          # are stamped on this Mac's clock, and the cut is the gap between them. (Not
-          # measured back from the stop: the recorder only writes a frame when the
-          # screen changes, so a still ending leaves the file shorter than the wait.)
-          # ffmpeg brings the cut to the store's size for the device, a steady 30 fps
-          # (holding the last frame if the still ending left the file short), and a
-          # silent stereo track, which App Store Connect asks for.
-          record() {
-            local label="$1" udid="$2" size="$3"
-            local dir="$PWD/out/$label/preview"
+          # Both films are recorded rather than rendered, since Apple takes a preview
+          # only as a recording of the app and the spot is made the same way for the same
+          # reason: what it shows is what the app does. `roll` is the camera. It starts
+          # the recorder before the launch, since it can take seconds to get going,
+          # launches the app on the argument that opens the film, and stops the recorder
+          # well after the film ends. The recorder says "Recording started" the moment
+          # its first frame is taken, and a reel prints its own mark the moment its film
+          # starts; both are stamped on this Mac's clock, and the cut is the gap between
+          # them, left in INTO. (Not measured back from the stop: the recorder only
+          # writes a frame when the screen changes, so a still ending leaves the file
+          # shorter than the wait.)
+          roll() {
+            local dir="$1" udid="$2" argument="$3" mark="$4" seconds="$5"
             mkdir -p "$dir"
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
             # Every line the recorder says, stamped with the time it said it.
@@ -238,13 +237,13 @@ jobs:
           for line in sys.stdin: print(time.time(), line, end="", flush=True)' > "$dir/recorder.log") 2>&1 &
             local recorder=$!
             sleep 3
-            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" "${LANG_ARGS[@]}" -preview
-            sleep 32
+            xcrun simctl launch --stdout="$dir/app.log" "$udid" "$BUNDLE_ID" "${LANG_ARGS[@]}" "$argument"
+            sleep "$seconds"
             kill -INT "$recorder"
             wait "$recorder" || true
             xcrun simctl terminate "$udid" "$BUNDLE_ID" 2>/dev/null || true
 
-            local started; started=$(awk '/PREVIEW_REEL_START/ { print $2; exit }' "$dir/app.log" || true)
+            local started; started=$(awk -v mark="$mark" '$1 == mark { print $2; exit }' "$dir/app.log" || true)
             if [ -z "$started" ]; then
               echo "ERROR: the reel never said when its film started"; cat "$dir/app.log" || true; exit 1
             fi
@@ -252,11 +251,22 @@ jobs:
             if [ -z "$recording" ]; then
               echo "ERROR: the recorder never said it had started"; cat "$dir/recorder.log" || true; exit 1
             fi
-            local into; into=$(python3 -c "print(round($started - $recording, 3))")
-            echo "$label: the film starts ${into}s into the recording"
+            INTO=$(python3 -c "print(round($started - $recording, 3))")
+          }
+
+          # The preview video. `-preview` opens PreviewReel.swift: the live listing's
+          # twenty-second film, played by the app on a fixed clock after four seconds held
+          # still on its first board. ffmpeg brings the cut to the store's size for the
+          # device, a steady 30 fps (holding the last frame if the still ending left the
+          # file short), and a silent stereo track, which App Store Connect asks for.
+          record() {
+            local label="$1" udid="$2" size="$3"
+            local dir="$PWD/out/$label/preview"
+            roll "$dir" "$udid" -preview PREVIEW_REEL_START 32
+            echo "$label: the film starts ${INTO}s into the recording"
 
             ffmpeg -hide_banner -loglevel error -y \
-              -ss "$into" -i "$dir/raw.mov" \
+              -ss "$INTO" -i "$dir/raw.mov" \
               -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 \
               -map 0:v:0 -map 1:a:0 -t 20 -shortest \
               -vf "scale=${size/x/:}:flags=lanczos,setsar=1,fps=30,tpad=stop_mode=clone:stop_duration=20" \
@@ -270,11 +280,64 @@ jobs:
               -of compact "$dir/preview.mp4"
           }
 
+          # The spot. `-spot` opens SpotReel.swift: the nine-second commercial — the pig
+          # out through a gap, the gap shut, the lap of honour, the name — played by the
+          # app on a fixed clock after the same four seconds held still. It is cut for a
+          # feed rather than the store: 1080 by 1920, the phone's own picture stood in the
+          # middle of a blurred copy of itself where a phone's screen is narrower than
+          # nine by sixteen. The simulator records no sound, so the soundtrack is built
+          # here from what the reel wrote down — one SPOT_REEL_SOUND line per noise the
+          # game made, naming the file and the second of the film it was asked for — laid
+          # in at those moments over the game's own tune at about a third of their level,
+          # which is how the app itself mixes them. A noise from before the film started
+          # has a negative time and is left out.
+          spot() {
+            local label="$1" udid="$2"
+            local dir="$PWD/out/$label/spot"
+            roll "$dir" "$udid" -spot SPOT_REEL_START 20
+            echo "$label: the spot starts ${INTO}s into the recording"
+
+            local inputs=(-ss "$INTO" -i "$dir/raw.mov" -i Pigpen/Resources/Music/meadow-waltz.wav)
+            local voice="aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo"
+            local filter="[1:a]${voice},volume=0.35,afade=t=out:st=8:d=1[music]"
+            local mix="[music]" count=1 next=2
+            while read -r name at; do
+              if [ ! -f "Pigpen/Resources/Sounds/$name.wav" ]; then
+                echo "WARNING: the reel named a sound there is no file for: $name"; continue
+              fi
+              local ms; ms=$(python3 -c "print(round($at * 1000))")
+              inputs+=(-i "Pigpen/Resources/Sounds/$name.wav")
+              filter+=";[$next:a]${voice},adelay=${ms}|${ms}[noise$next]"
+              mix+="[noise$next]"
+              count=$((count + 1)); next=$((next + 1))
+            done < <(awk '$1 == "SPOT_REEL_SOUND" && $3 >= 0 { print $2, $3 }' "$dir/app.log")
+            echo "$label: $((count - 1)) noises under the spot"
+            filter+=";${mix}amix=inputs=${count}:normalize=0[audio]"
+            filter+=";[0:v]split=2[back][front]"
+            filter+=";[back]scale=1080:1920:flags=lanczos,boxblur=luma_radius=30:luma_power=2,setsar=1[blur]"
+            filter+=";[front]scale=-2:1920:flags=lanczos,setsar=1[phone]"
+            filter+=";[blur][phone]overlay=(W-w)/2:(H-h)/2,fps=30,tpad=stop_mode=clone:stop_duration=9[video]"
+
+            ffmpeg -hide_banner -loglevel error -y \
+              "${inputs[@]}" \
+              -filter_complex "$filter" \
+              -map "[video]" -map "[audio]" -t 9 \
+              -c:v libx264 -profile:v high -level 4.0 -pix_fmt yuv420p \
+              -b:v 10M -maxrate 12M -bufsize 20M \
+              -c:a aac -b:a 256k -ar 44100 -ac 2 \
+              -movflags +faststart \
+              "$dir/spot.mp4"
+            echo "== $label spot =="
+            ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,avg_frame_rate \
+              -of compact "$dir/spot.mp4"
+          }
+
           IPHONE=$(pick "iPhone 6.9-inch" "iPhone 16 Pro Max" "iPhone 17 Pro Max" "iPhone 15 Pro Max")
           IPAD=$(pick "iPad 13-inch" "iPad Pro 13-inch (M4)" "iPad Pro (12.9-inch) (6th generation)" "iPad Pro (12.9-inch) (5th generation)")
 
           shoot iphone_6_9 "$IPHONE"
           record iphone_6_9 "$IPHONE" 886x1920
+          spot iphone_6_9 "$IPHONE"
           shoot ipad_13 "$IPAD"
           record ipad_13 "$IPAD" 1200x1600
 
