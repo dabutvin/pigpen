@@ -1,9 +1,9 @@
 # Pigpen
 
 <p align="center">
-  <img src="docs/title-screen.png" alt="Title screen: PIGPEN in wooden letters over green hills, a pig peeking over a fence, and buttons for Play, Daily, Archive, and Tutorial" width="320">
+  <img src="docs/title-screen.png" alt="Title screen: PIGPEN on a sign over green hills, a pig peeking over a fence, and cards for Play, Today's puzzle, and the daily puzzle archive" width="320">
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="docs/screenshot.png" alt="Windfall Orchard, its pen closed: a rainbow-washed pen of mud holding the pig and two apples, hemmed in by fencing and a lake" width="320">
+  <img src="docs/screenshot.png" alt="Windfall Orchard, its pen closed: a rainbow-washed pen of mud holding the pig and two apples, hemmed in by fencing and a lake, with two more apples left outside the wall" width="320">
 </p>
 
 <p align="center">
