@@ -20,8 +20,8 @@ ships on iPad; make the app iPhone-only and it goes away.
 
 Run the **App Store Assets** workflow from the Actions tab (it is hand-cranked —
 `workflow_dispatch` — since assets are wanted at a release, not on every commit).
-It makes a full set for every language the game is translated into — English and
-Russian — as parallel jobs, each launching the app in its language
+It makes a full set for every language the game is translated into — English,
+German and Russian — as parallel jobs, each launching the app in its language
 (`-AppleLanguages`/`-AppleLocale`, as the language gallery does) and framing it
 with captions written in it. For each language it:
 
@@ -34,12 +34,12 @@ with captions written in it. For each language it:
    pen — off the same launch arguments the PR screenshots use;
 3. frames each one with a line of copy through `Tools/appstore_frames.py`;
 4. records the preview video on each (below);
-5. uploads an **appstore-assets-en** or **appstore-assets-ru** artifact holding,
+5. uploads an **appstore-assets-en**, **appstore-assets-de** or **appstore-assets-ru** artifact holding,
    per device, the `raw` shots, the `framed` ones and the `preview` video.
 
 Download the artifact, and upload the `framed` PNGs to App Store Connect →
 your app → the version → Media Manager, in numbered order — each language's set
-under that localization of the listing (English (U.S.), Russian). The `raw` ones are
+under that localization of the listing (English (U.S.), German, Russian). The `raw` ones are
 there if you would rather submit bare shots or reframe them by hand.
 
 The live listing is the source of truth for which screens, in what order, with
@@ -54,9 +54,10 @@ Light or dark is a choice on the run; the default is light. So is the language:
 Both live in one place — the `SCREENS` arrays in
 `.github/workflows/appstore-assets.yml`, one per language, each entry a
 `slug:-launch-argument:caption`. Add, drop or reword a line there, and keep the
-languages' lists to the same screens in the same order. The Russian captions are
-written in the voice of the game's own catalog: «ты», Pig by name, a pen a «загон»,
-a board a «головоломка». A new language is a new `case` with its locale and
+languages' lists to the same screens in the same order. Each language's captions are
+written in the voice of the game's own catalog: the German with «du», Pig by name, a
+pen a «Gehege» and a puzzle a «Rätsel»; the Russian with «ты», a pen a «загон», a
+board a «головоломка». A new language is a new `case` with its locale and
 captions, and its code in the matrix's `all` list. The launch arguments the app understands are
 the `Photograph` cases in `Pigpen/App/PigpenApp.swift`.
 
