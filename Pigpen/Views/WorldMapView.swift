@@ -565,9 +565,17 @@ struct WorldMapView: View {
             Haptics.tap(.medium)
             wait = LevelWait(until: due, now: now)
             // The wait is also the moment a reminder for the end of it is worth offering —
-            // the one moment the player has a reason to want it — so the offer carries one.
+            // the one moment the player has a reason to want it — so the offer carries one,
+            // built from this stop's own due time: the sheet never says how long the wait is
+            // without offering to say when it is over.
             nudge = ration
-                .nextLevelWaiting(stars: progress.bestStars, isBought: fullGame.isUnlocked, now: now)
+                .levelWaiting(
+                    at: world[index].id,
+                    in: game,
+                    isCleared: progress.isCleared(index),
+                    isBought: fullGame.isUnlocked,
+                    now: now
+                )
                 .map { LevelNudge(reminder: .shared, daily: DailyProgress(), level: $0) }
             Analytics.record(.offerShown(from: FullGameOfferSource.trail.rawValue))
             isOffering = true
